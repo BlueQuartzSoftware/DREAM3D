@@ -1,40 +1,40 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without
-* modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of
-* its
-* contributors may be used to endorse or promote products derived from this
-* software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of
+ * its
+ * contributors may be used to endorse or promote products derived from this
+ * software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "InsertPrecipitatePhases.h"
 
@@ -173,7 +173,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Number of Features", NumFeaturesArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
-    
+
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Precipitate Generation");
@@ -193,14 +193,13 @@ void InsertPrecipitatePhases::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  
-  
+
   linkedProps.clear();
-  linkedProps << "PrecipInputFile" << "InputStatsArrayPath";
+  linkedProps << "PrecipInputFile"
+              << "InputStatsArrayPath";
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Precipitates Input File", PrecipInputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.txt", "Text File", 1));
   linkedProps.clear();
-  
-  
+
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Save Shape Description Arrays");
@@ -409,9 +408,9 @@ void InsertPrecipitatePhases::dataCheck()
   }
   if(getFeatureGeneration() > 1 || getFeatureGeneration() < 0)
   {
-      QString ss = QObject::tr("The value for 'Precipitate Generation' can only be 0 or 1. The value being used is ").arg(getFeatureGeneration());
-      setErrorCondition(-78001);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    QString ss = QObject::tr("The value for 'Precipitate Generation' can only be 0 or 1. The value being used is ").arg(getFeatureGeneration());
+    setErrorCondition(-78001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   if(getErrorCondition() >= 0)
   {
@@ -628,7 +627,9 @@ void InsertPrecipitatePhases::execute()
   std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
-      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+      static_cast<int64_t>(udims[0]),
+      static_cast<int64_t>(udims[1]),
+      static_cast<int64_t>(udims[2]),
   };
 
   m_TotalPoints = static_cast<size_t>(dims[0] * dims[1] * dims[2]);
@@ -693,8 +694,6 @@ void InsertPrecipitatePhases::execute()
   }
 
   moveShapeDescriptions();
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -785,7 +784,9 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
-      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+      static_cast<int64_t>(udims[0]),
+      static_cast<int64_t>(udims[1]),
+      static_cast<int64_t>(udims[2]),
   };
 
   m_XPoints = static_cast<int64_t>(dims[0]);
@@ -1348,6 +1349,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
         testFile << "\n" << m_RdfRandom[i];
       }
       testFile.close();
+    }
   }
 
   if(m_MatchRDF)
@@ -1359,167 +1361,167 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
       m_oldRDFerror = check_RDFerror(int32_t(i), -1000, false);
     }
 
-      std::ofstream testFile;
-      if(write_test_outputs)
+    std::ofstream testFile;
+    if(write_test_outputs)
+    {
+      testFile.open(getNameOfClass().toStdString() + "_BC.txt");
+    }
+
+    // begin swaping/moving/adding/removing features to try to improve packing
+    // The totalAdjustments are roughly equal to the prefactor (1000, right
+    // now) times the number of precipitates.
+    // This is not based on convergence or any physics - it's just a factor
+    // and there's probably room for improvement here
+    int32_t totalAdjustments = static_cast<int32_t>(1000 * ((numfeatures - m_FirstPrecipitateFeature) - 1));
+    for(int32_t iteration = 0; iteration < totalAdjustments; ++iteration)
+    {
+      QString ss;
+      ss = QObject::tr("Packing Features - Swapping/Moving/Adding/Removing "
+                       "Features Iteration %1/%2")
+               .arg(iteration)
+               .arg(totalAdjustments);
+      if(iteration % 100 == 0)
       {
-        testFile.open(getNameOfClass().toStdString() + "_BC.txt");
+        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       }
 
-      // begin swaping/moving/adding/removing features to try to improve packing
-      // The totalAdjustments are roughly equal to the prefactor (1000, right
-      // now) times the number of precipitates.
-      // This is not based on convergence or any physics - it's just a factor
-      // and there's probably room for improvement here
-      int32_t totalAdjustments = static_cast<int32_t>(1000 * ((numfeatures - m_FirstPrecipitateFeature) - 1));
-      for(int32_t iteration = 0; iteration < totalAdjustments; ++iteration)
+      if(writeErrorFile && iteration % 25 == 0)
       {
-        QString ss;
-        ss = QObject::tr("Packing Features - Swapping/Moving/Adding/Removing "
-                         "Features Iteration %1/%2")
-                 .arg(iteration)
-                 .arg(totalAdjustments);
-        if(iteration % 100 == 0)
-        {
-          notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-        }
+        outFile << iteration << " " << m_oldRDFerror << " " << acceptedmoves << "\n";
+      }
 
-        if(writeErrorFile && iteration % 25 == 0)
-        {
-          outFile << iteration << " " << m_oldRDFerror << " " << acceptedmoves << "\n";
-        }
+      // JUMP - this one feature  random spot in the volume
+      randomfeature = m_FirstPrecipitateFeature + int32_t(rg.genrand_res53() * (int32_t(numfeatures) - m_FirstPrecipitateFeature));
+      if(randomfeature < m_FirstPrecipitateFeature)
+      {
+        randomfeature = m_FirstPrecipitateFeature;
+      }
+      if(randomfeature >= static_cast<int32_t>(numfeatures))
+      {
+        randomfeature = static_cast<int32_t>(numfeatures) - 1;
+      }
+      m_Seed++;
 
-        // JUMP - this one feature  random spot in the volume
-        randomfeature = m_FirstPrecipitateFeature + int32_t(rg.genrand_res53() * (int32_t(numfeatures) - m_FirstPrecipitateFeature));
-        if(randomfeature < m_FirstPrecipitateFeature)
-        {
-          randomfeature = m_FirstPrecipitateFeature;
-        }
-        if(randomfeature >= static_cast<int32_t>(numfeatures))
-        {
-          randomfeature = static_cast<int32_t>(numfeatures) - 1;
-        }
-        m_Seed++;
+      PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[m_FeaturePhases[randomfeature]]);
+      if(nullptr == pp)
+      {
+        continue;
+      }
 
-        PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[m_FeaturePhases[randomfeature]]);
-        if(nullptr == pp)
+      precipboundaryfraction = pp->getPrecipBoundaryFraction();
+      random = static_cast<float>(rg.genrand_res53());
+      if(boundaryFraction != 0)
+      {
+        if(random <= precipboundaryfraction)
         {
-          continue;
-        }
-
-        precipboundaryfraction = pp->getPrecipBoundaryFraction();
-        random = static_cast<float>(rg.genrand_res53());
-        if(boundaryFraction != 0)
-        {
-          if(random <= precipboundaryfraction)
-          {
-            // figure out if we want this to be a boundary centroid voxel or not
-            // for the proposed precipitate
-            if(m_AvailablePointsCount > 0)
-            {
-              key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
-              featureOwnersIdx = availablePointsInv[key];
-              while(m_BoundaryCells[featureOwnersIdx] == 0)
-              {
-                key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
-                featureOwnersIdx = availablePointsInv[key];
-              }
-            }
-            else
-            {
-              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-              while(m_BoundaryCells[featureOwnersIdx] == 0)
-              {
-                featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-              }
-            }
-          }
-          else if(random > precipboundaryfraction)
-          {
-            if(m_AvailablePointsCount > 0)
-            {
-              key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
-              featureOwnersIdx = availablePointsInv[key];
-              while(m_BoundaryCells[featureOwnersIdx] != 0)
-              {
-                key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
-                featureOwnersIdx = availablePointsInv[key];
-              }
-            }
-            else
-            {
-              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-              while(m_BoundaryCells[featureOwnersIdx] != 0)
-              {
-                featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-              }
-            }
-          }
-        }
-        else
-        {
-
-          if(precipboundaryfraction > 0)
-          {
-            QString msg("There are no Feature boundaries to place precipitates "
-                        "on and the target statistics precipitate fraction is "
-                        "greater than 0. This Filter will run without trying "
-                        "to match the "
-                        "precipitate fraction");
-            setWarningCondition(-5010);
-            notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
-          }
-
+          // figure out if we want this to be a boundary centroid voxel or not
+          // for the proposed precipitate
           if(m_AvailablePointsCount > 0)
           {
             key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
             featureOwnersIdx = availablePointsInv[key];
+            while(m_BoundaryCells[featureOwnersIdx] == 0)
+            {
+              key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
+              featureOwnersIdx = availablePointsInv[key];
+            }
           }
           else
           {
             featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+            while(m_BoundaryCells[featureOwnersIdx] == 0)
+            {
+              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+            }
           }
         }
-        column = static_cast<int64_t>(featureOwnersIdx % m_XPoints);
-        row = static_cast<int64_t>(featureOwnersIdx / m_XPoints) % m_YPoints;
-        plane = static_cast<int64_t>(featureOwnersIdx / (m_XPoints * m_YPoints));
-        xc = static_cast<float>((column * m_XRes) + (m_XRes * 0.5));
-        yc = static_cast<float>((row * m_YRes) + (m_YRes * 0.5));
-        zc = static_cast<float>((plane * m_ZRes) + (m_ZRes * 0.5));
-        oldxc = m_Centroids[3 * randomfeature];
-        oldyc = m_Centroids[3 * randomfeature + 1];
-        oldzc = m_Centroids[3 * randomfeature + 2];
-        m_currentRDFerror = check_RDFerror(-1000, randomfeature, true);
-        update_exclusionZones(-1000, randomfeature, exclusionZonesPtr);
-        move_precipitate(randomfeature, xc, yc, zc);
-        m_currentRDFerror = check_RDFerror(randomfeature, -1000, true);
-        update_exclusionZones(randomfeature, -1000, exclusionZonesPtr);
-        if(m_currentRDFerror >= m_oldRDFerror)
+        else if(random > precipboundaryfraction)
         {
-          m_oldRDFerror = m_currentRDFerror;
-          update_availablepoints(availablePoints, availablePointsInv);
-          acceptedmoves++;
+          if(m_AvailablePointsCount > 0)
+          {
+            key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
+            featureOwnersIdx = availablePointsInv[key];
+            while(m_BoundaryCells[featureOwnersIdx] != 0)
+            {
+              key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
+              featureOwnersIdx = availablePointsInv[key];
+            }
+          }
+          else
+          {
+            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+            while(m_BoundaryCells[featureOwnersIdx] != 0)
+            {
+              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+            }
+          }
+        }
+      }
+      else
+      {
+
+        if(precipboundaryfraction > 0)
+        {
+          QString msg("There are no Feature boundaries to place precipitates "
+                      "on and the target statistics precipitate fraction is "
+                      "greater than 0. This Filter will run without trying "
+                      "to match the "
+                      "precipitate fraction");
+          setWarningCondition(-5010);
+          notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
+        }
+
+        if(m_AvailablePointsCount > 0)
+        {
+          key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
+          featureOwnersIdx = availablePointsInv[key];
         }
         else
         {
-          m_currentRDFerror = check_RDFerror(-1000, randomfeature, true);
-          update_exclusionZones(-1000, randomfeature, exclusionZonesPtr);
-          move_precipitate(randomfeature, oldxc, oldyc, oldzc);
-          m_currentRDFerror = check_RDFerror(randomfeature, -1000, true);
-          update_exclusionZones(randomfeature, -1000, exclusionZonesPtr);
-          m_oldRDFerror = m_currentRDFerror;
-          m_PointsToRemove.clear();
-          m_PointsToAdd.clear();
-        }
-
-        if(write_test_outputs && iteration % 100 == 0)
-        {
-          testFile << "\n" << m_oldRDFerror;
+          featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
         }
       }
-      if(write_test_outputs)
+      column = static_cast<int64_t>(featureOwnersIdx % m_XPoints);
+      row = static_cast<int64_t>(featureOwnersIdx / m_XPoints) % m_YPoints;
+      plane = static_cast<int64_t>(featureOwnersIdx / (m_XPoints * m_YPoints));
+      xc = static_cast<float>((column * m_XRes) + (m_XRes * 0.5));
+      yc = static_cast<float>((row * m_YRes) + (m_YRes * 0.5));
+      zc = static_cast<float>((plane * m_ZRes) + (m_ZRes * 0.5));
+      oldxc = m_Centroids[3 * randomfeature];
+      oldyc = m_Centroids[3 * randomfeature + 1];
+      oldzc = m_Centroids[3 * randomfeature + 2];
+      m_currentRDFerror = check_RDFerror(-1000, randomfeature, true);
+      update_exclusionZones(-1000, randomfeature, exclusionZonesPtr);
+      move_precipitate(randomfeature, xc, yc, zc);
+      m_currentRDFerror = check_RDFerror(randomfeature, -1000, true);
+      update_exclusionZones(randomfeature, -1000, exclusionZonesPtr);
+      if(m_currentRDFerror >= m_oldRDFerror)
       {
-        testFile.close();
+        m_oldRDFerror = m_currentRDFerror;
+        update_availablepoints(availablePoints, availablePointsInv);
+        acceptedmoves++;
       }
+      else
+      {
+        m_currentRDFerror = check_RDFerror(-1000, randomfeature, true);
+        update_exclusionZones(-1000, randomfeature, exclusionZonesPtr);
+        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
+        m_currentRDFerror = check_RDFerror(randomfeature, -1000, true);
+        update_exclusionZones(randomfeature, -1000, exclusionZonesPtr);
+        m_oldRDFerror = m_currentRDFerror;
+        m_PointsToRemove.clear();
+        m_PointsToAdd.clear();
+      }
+
+      if(write_test_outputs && iteration % 100 == 0)
+      {
+        testFile << "\n" << m_oldRDFerror;
+      }
+    }
+    if(write_test_outputs)
+    {
+      testFile.close();
+    }
   }
 
   if(write_test_outputs)
@@ -1540,8 +1542,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     }
     testFile2.close();
   }
-
-  // std::cout << "Done Jumping" << std::endl;
+// std::cout << "Done Jumping" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -2426,7 +2427,9 @@ void InsertPrecipitatePhases::assign_voxels()
   std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
-      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+      static_cast<int64_t>(udims[0]),
+      static_cast<int64_t>(udims[1]),
+      static_cast<int64_t>(udims[2]),
   };
 
   int64_t index;

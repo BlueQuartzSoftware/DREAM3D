@@ -10,6 +10,19 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.5.133 ##
+
+### 6.5.## Version 6.5.133 ##
+
+New Filters & Features ###
+
++ None
+
+### 6.5.133 Fixed DREAM3D Issues ###
+
++ Insert Precipitate with Mask removes all features from all phases. #925
+
+
 ## Version 6.5.131 ##
 
 ### 6.5.131 New Filters & Features ###
