@@ -762,7 +762,7 @@ void InsertPrecipitatePhases::load_precipitates()
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusionZonesPtr)
 {
-  bool writeErrorFile = true;
+  bool writeErrorFile = false;
   bool write_test_outputs = false;
 
   std::ofstream outFile;
@@ -775,7 +775,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   setErrorCondition(0);
   setWarningCondition(0);
   m_Seed = QDateTime::currentMSecsSinceEpoch();
-  SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
+  SIMPL_RANDOMNG_NEW_SEEDED(m_Seed)
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
@@ -1341,15 +1341,13 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
     if(write_test_outputs)
     {
-
-      std::ofstream testFile6;
-      testFile6.open("/Users/Shared/Data/PW_Work/OUTFILE/randomRDFCurrent.txt");
+      std::ofstream testFile;
+      testFile.open(getNameOfClass().toStdString() + "_randomRDFCurrent.txt");
       for(size_t i = 0; i < m_RdfRandom.size(); i++)
       {
-        testFile6 << "\n" << m_RdfRandom[i];
+        testFile << "\n" << m_RdfRandom[i];
       }
-      testFile6.close();
-    }
+      testFile.close();
   }
 
   if(m_MatchRDF)
@@ -1361,12 +1359,10 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
       m_oldRDFerror = check_RDFerror(int32_t(i), -1000, false);
     }
 
-    if(true)
-    {
       std::ofstream testFile;
       if(write_test_outputs)
       {
-        testFile.open("/Users/Shared/Data/PW_Work/OUTFILE/BC.txt");
+        testFile.open(getNameOfClass().toStdString() + "_BC.txt");
       }
 
       // begin swaping/moving/adding/removing features to try to improve packing
@@ -1524,13 +1520,12 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
       {
         testFile.close();
       }
-    }
   }
 
   if(write_test_outputs)
   {
     std::ofstream testFile3;
-    testFile3.open("/Users/Shared/Data/PW_Work/OUTFILE/current.txt");
+    testFile3.open(getNameOfClass().toStdString() + "_current.txt");
     for(size_t i = 0; i < m_RdfCurrentDistNorm.size(); i++)
     {
       testFile3 << "\n" << m_RdfCurrentDistNorm[i];
@@ -1538,7 +1533,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     testFile3.close();
 
     std::ofstream testFile2;
-    testFile2.open("/Users/Shared/Data/PW_Work/OUTFILE/target.txt");
+    testFile2.open(getNameOfClass().toStdString() + "_target.txt");
     for(size_t i = 0; i < m_RdfTargetDist.size(); i++)
     {
       testFile2 << "\n" << m_RdfTargetDist[i];
@@ -2631,7 +2626,11 @@ void InsertPrecipitatePhases::assign_voxels()
               // oldname = m_FeatureIds[currentpoint];
               m_FeatureIds[currentpoint] = -2;
             }
-            if(m_FeatureIds[currentpoint] < m_FirstPrecipitateFeature && m_FeatureIds[currentpoint] != -2)
+            if(m_UseMask && !m_Mask[currentpoint])
+            {
+              m_FeatureIds[currentpoint] = 0;
+            }
+            else if(m_FeatureIds[currentpoint] < m_FirstPrecipitateFeature && m_FeatureIds[currentpoint] != -2)
             {
               m_FeatureIds[currentpoint] = static_cast<int32_t>(i);
             }
@@ -2645,10 +2644,6 @@ void InsertPrecipitatePhases::assign_voxels()
   int32_t gnum = 0;
   for(size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
   {
-    if(m_UseMask && !m_Mask[i])
-    {
-      m_FeatureIds[i] = 0;
-    }
     gnum = m_FeatureIds[i];
     if(gnum >= 0)
     {
