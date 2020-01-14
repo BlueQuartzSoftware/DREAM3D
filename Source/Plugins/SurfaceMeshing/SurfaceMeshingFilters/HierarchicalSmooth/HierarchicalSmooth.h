@@ -44,15 +44,15 @@
 namespace HSmoothMain
 {
 
-SpMat Laplacian2D(int N, std::string type = "serial");            // the options are 'serial' and 'cyclic'.
-std::tuple<SpMat, std::vector<int>> GraphLaplacian(trimesh& tri); // multiple returns
+SparseMatrixD Laplacian2D(int N, std::string type = "serial");            // the options are 'serial' and 'cyclic'.
+std::tuple<SparseMatrixD, std::vector<int>> GraphLaplacian(TriMesh& tri); // multiple returns
 
-meshnode Smooth(meshnode&, std::string = "serial", double = 0.001, int = 53);
-meshnode Smooth(meshnode&, matindex&, SpMat&, double = 0.001, int = 53);
+MeshNode Smooth(MeshNode&, std::string = "serial", double = 0.001, int = 53);
+MeshNode Smooth(MeshNode&, MatIndex&, SparseMatrixD&, double = 0.001, int = 53);
 
-std::tuple<SpMat, SpMat> GetDirichletBVP(SpMat&, SpMat&, matindex&, matindex&);
-std::tuple<SpMat, SpMat> AnalyzeLaplacian(SpMat&);
+std::tuple<SparseMatrixD, SparseMatrixD> GetDirichletBVP(SparseMatrixD&, SparseMatrixD&, MatIndex&, MatIndex&);
+std::tuple<SparseMatrixD, SparseMatrixD> AnalyzeLaplacian(SparseMatrixD&);
 
-double GetObjFn(Smoother&, double, SpMat&, SpMat&, SpMat&, SpMat&, matindex&, SpMat&, SpMat&, SpMat&, SpMat&);
+double GetObjFn(Smoother&, double, SparseMatrixD&, SparseMatrixD&, SparseMatrixD&, SparseMatrixD&, MatIndex&, SparseMatrixD&, SparseMatrixD&, SparseMatrixD&, SparseMatrixD&);
 
 } // namespace HSmoothMain

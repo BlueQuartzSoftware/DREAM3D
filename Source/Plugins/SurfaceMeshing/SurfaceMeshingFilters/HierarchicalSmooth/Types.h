@@ -52,52 +52,52 @@
 // NOTE: 'int' is typedefed in iostream as unsigned long long, or something.
 
 /*
- * trimesh:
+ * TriMesh:
  * Eigen array of integer triplets; the prototype of Delaunay
  * triangulations in this library.
  */
-typedef Eigen::Array<int, Eigen::Dynamic, 3> trimesh;
+typedef Eigen::Array<int, Eigen::Dynamic, 3> TriMesh;
 
 /*
- * meshnode:
+ * MeshNode:
  * Eigen array of float triplets, each column representing
  * a 3D cartesian mesh node.
  */
-typedef Eigen::Matrix<double, 3, Eigen::Dynamic> meshnode;
+typedef Eigen::Matrix<double, 3, Eigen::Dynamic> MeshNode;
 
 /*
- * facelabel:
+ * FaceLabel:
  * This data type is analogous to Dream.3D's FaceLabels property
  * and represents a grain boundary patch by specifying the
  * grain IDs on either side of the patch.
  */
-typedef Eigen::Array<int, Eigen::Dynamic, 2> facelabel;
+typedef Eigen::Array<int, Eigen::Dynamic, 2> FaceLabel;
 
 /*
- * nodetype:
+ * NodeType:
  * Dream.3D-specific dataset which indicates the type of node
  * in a surface mesh: interior, triple junction or quad junction
  * ( denoted by 2, 3, 4 respectively if on the interior and
  * 12, 13, 14 if on the volume surface.
  */
-typedef Eigen::Array<int, Eigen::Dynamic, 1> nodetype;
+typedef Eigen::Array<int, Eigen::Dynamic, 1> NodeType;
 
 /*
- * is_smoothed:
+ * IsSmoothed:
  * Boolean array specifying whether each node has been smoothed
- * or not. At the beginning, only the nodetypes 4 and 14 should
+ * or not. At the beginning, only the NodeTypes 4 and 14 should
  * be initialized to true, the others should be false.
  */
-typedef Eigen::Array<bool, Eigen::Dynamic, 1> is_smoothed;
+typedef Eigen::Array<bool, Eigen::Dynamic, 1> IsSmoothed;
 
 /*
- * matindex:
+ * MatIndex:
  * Special typedef of an Eigen vector of integers to indicate
  * an array of indices, to be used in slicing with libigl.
  * Also, need to set data type int and not int because of
  * compatibility with libigl.
  */
-typedef Eigen::Matrix<int, Eigen::Dynamic, 1> matindex;
+typedef Eigen::Matrix<int, Eigen::Dynamic, 1> MatIndex;
 
 /*
  * EdgePair, EdgeList:
@@ -151,27 +151,27 @@ struct DictBase
  */
 
 /*
- * SpMat:
+ * SparseMatrixD:
  * Shorthand for Eigen's sparse matrix type.
  *
- * T:
+ * TripletD:
  * Triplet containing a position indices for
  * a single sparse matrix element (i, j ) and
  * the floating point value at that position.
  * Defined in Eigen/Sparse
  *
- * SpMatMask:
- * Boolean mask for type SpMat
+ * SparseMatrixB:
+ * Boolean mask for type SparseMatrixD
  *
- * bT:
+ * TripletB:
  * Equivalent of T for boolean variables.
  */
-typedef Eigen::SparseMatrix<double> SpMat;
-typedef Eigen::Triplet<double> T;
-typedef Eigen::SparseMatrix<bool> SpMatMask;
-typedef Eigen::Triplet<bool> bT;
+typedef Eigen::SparseMatrix<double> SparseMatrixD;
+typedef Eigen::Triplet<double> TripletD;
+typedef Eigen::SparseMatrix<bool> SparseMatrixB;
+typedef Eigen::Triplet<bool> TripletB;
 
 /*
  * Typedef for the conjugate gradient solver for sparse systems.
  */
-typedef Eigen::ConjugateGradient<SpMat, Eigen::Upper | Eigen::Lower> Smoother;
+typedef Eigen::ConjugateGradient<SparseMatrixD, Eigen::Upper | Eigen::Lower> Smoother;

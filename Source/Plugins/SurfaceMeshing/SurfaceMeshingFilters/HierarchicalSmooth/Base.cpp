@@ -42,12 +42,12 @@
 
 //============================================================================================
 
-trimesh HSmoothBase::ismember(trimesh& Array1, std::vector<int>& Array2)
+TriMesh HSmoothBase::ismember(TriMesh& Array1, std::vector<int>& Array2)
 {
   std::unordered_map<int, int> MyDict; // dictionary lookup for faster access
   for(int i = 0; i < Array2.size(); i++)
     MyDict.insert({Array2[i], i});
-  trimesh NewTri = trimesh::Zero(Array1.rows(), Array1.cols());
+  TriMesh NewTri = TriMesh::Zero(Array1.rows(), Array1.cols());
   // running through Array1 in column-major order, Eigen's default
   for(int col = 0; col < Array1.cols(); col++)
   {
@@ -62,9 +62,9 @@ trimesh HSmoothBase::ismember(trimesh& Array1, std::vector<int>& Array2)
 
 //============================================================================================
 
-matindex HSmoothBase::getindex(std::vector<int>& FromThis)
+MatIndex HSmoothBase::getindex(std::vector<int>& FromThis)
 {
-  matindex I(FromThis.size());
+  MatIndex I(FromThis.size());
   for(int i = 0; i < FromThis.size(); i++)
     I(i) = FromThis[i];
 
@@ -73,7 +73,7 @@ matindex HSmoothBase::getindex(std::vector<int>& FromThis)
 
 //============================================================================================
 
-matindex HSmoothBase::getindex(std::vector<int>& FromThis, matindex& InThis)
+MatIndex HSmoothBase::getindex(std::vector<int>& FromThis, MatIndex& InThis)
 {
   std::unordered_map<int, int> dict;
   for(int i = 0; i < InThis.rows(); i++)
@@ -89,9 +89,9 @@ matindex HSmoothBase::getindex(std::vector<int>& FromThis, matindex& InThis)
 
 //============================================================================================
 
-matindex HSmoothBase::getcomplement(matindex& nSet, int N)
+MatIndex HSmoothBase::getcomplement(MatIndex& nSet, int N)
 {
-  matindex nAll = -1 * matindex::Ones(N, 1);
+  MatIndex nAll = -1 * MatIndex::Ones(N, 1);
   for(int i = 0; i < nSet.size(); i++)
     nAll(nSet(i)) = nSet(i);
   std::vector<int> nComplement;
@@ -104,7 +104,7 @@ matindex HSmoothBase::getcomplement(matindex& nSet, int N)
 
 //============================================================================================
 
-matindex HSmoothBase::matunion(matindex& mat1, matindex& mat2)
+MatIndex HSmoothBase::matunion(MatIndex& mat1, MatIndex& mat2)
 {
   std::vector<int> v;
   for(int i = 0; i < mat1.size(); i++)
@@ -119,7 +119,7 @@ matindex HSmoothBase::matunion(matindex& mat1, matindex& mat2)
 
 //============================================================================================
 
-void HSmoothBase::merge(meshnode& Source, meshnode& Target, matindex& Locations)
+void HSmoothBase::merge(MeshNode& Source, MeshNode& Target, MatIndex& Locations)
 {
   for(int i = 0; i < Source.cols(); i++)
     Target.col(Locations(i)) << Source.col(i);
@@ -128,10 +128,10 @@ void HSmoothBase::merge(meshnode& Source, meshnode& Target, matindex& Locations)
 
 //============================================================================================
 
-void HSmoothBase::merge(SpMat& Source, SpMat& Target, matindex& Locations)
+void HSmoothBase::merge(SparseMatrixD& Source, SparseMatrixD& Target, MatIndex& Locations)
 {
-  meshnode src = Eigen::MatrixXd(Source).transpose();
-  meshnode trg = Eigen::MatrixXd(Target).transpose();
+  MeshNode src = Eigen::MatrixXd(Source).transpose();
+  MeshNode trg = Eigen::MatrixXd(Target).transpose();
   merge(src, trg, Locations);
 
   Target = trg.transpose().sparseView();

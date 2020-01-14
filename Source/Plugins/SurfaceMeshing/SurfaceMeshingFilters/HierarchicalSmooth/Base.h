@@ -47,35 +47,35 @@ namespace HSmoothBase
  * Mimics the basic functionality of Matlab's 'ismember' function, currently only for
  * integer arrays with 3 columns because it is used on triangulations.
  */
-trimesh ismember(trimesh& Array1, std::vector<int>& Array2);
+TriMesh ismember(TriMesh& Array1, std::vector<int>& Array2);
 
 /* getindex:
- * Returns a matindex object (defined in Types.h) of integers given an
+ * Returns a MatIndex object (defined in Types.h) of integers given an
  * STL std::vector< int > object. Variant returns position of each integer
- * with respect to a user-supplied matindex.
+ * with respect to a user-supplied MatIndex.
  */
-matindex getindex(std::vector<int>&);
-matindex getindex(std::vector<int>&, matindex&);
+MatIndex getindex(std::vector<int>&);
+MatIndex getindex(std::vector<int>&, MatIndex&);
 
 /* getcomplement:
- * Given a matindex M and an integer N > max( M ), returns a matindex containing
+ * Given a MatIndex M and an integer N > max( M ), returns a MatIndex containing
  * { integer i | i < N and i not in M }. Used to find indices of mobile nodes
  * given the foxed ones and vice versa.
  */
-matindex getcomplement(matindex&, int);
+MatIndex getcomplement(MatIndex&, int);
 
 /* matunion:
- * Returns the set union of the indexes in the two input matindexes,
+ * Returns the set union of the indexes in the two input MatIndexes,
  * sorted in ascending order.
  */
-matindex matunion(matindex&, matindex&);
+MatIndex matunion(MatIndex&, MatIndex&);
 
 /* merge:
  * Copies row data from source array into target array at the locations specified
- * by the input matindex. NOTE: Source array should have same number of rows
- * as elements in the matindex. Two versions are provided, for sparse and dense.
+ * by the input MatIndex. NOTE: Source array should have same number of rows
+ * as elements in the MatIndex. Two versions are provided, for sparse and dense.
  */
-void merge(meshnode&, meshnode&, matindex&);
-void merge(SpMat&, SpMat&, matindex&);
+void merge(MeshNode&, MeshNode&, MatIndex&);
+void merge(SpMat&, SpMat&, MatIndex&);
 
 } // namespace HSmoothBase

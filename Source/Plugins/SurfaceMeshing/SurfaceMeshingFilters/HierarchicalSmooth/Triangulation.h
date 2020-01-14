@@ -65,23 +65,23 @@ public:
   Triangulation()
   {
   }                        // default constructor
-  Triangulation(trimesh&); // not taking points for now; this will come later.
+  Triangulation(TriMesh&); // not taking points for now; this will come later.
 
-  trimesh connectivityList(void);
+  TriMesh connectivityList(void);
   EdgeList allEdges(void);
   std::tuple<EdgeList, EdgeList> freeBoundary(void); // in proper winding order!
-  std::tuple<SpMat, matindex> GraphLaplacian(void);
+  std::tuple<SparseMatrixD, MatIndex> GraphLaplacian(void);
 
 private:
   // member objects
-  trimesh Mesh, nSubTri; // the Delaunay triangulation from which everything is derived
+  TriMesh Mesh, nSubTri; // the Delaunay triangulation from which everything is derived
   EdgeList edge_list, free_boundary, free_boundary_segments;
   std::vector<int> nUnique;
   DictBase<EdgeCount>::EdgeDict MyDict;
   std::vector<double> fDiagCount;
 
   // member functions
-  std::tuple<EdgeList, EdgeList> GetEdges(trimesh&);
+  std::tuple<EdgeList, EdgeList> GetEdges(TriMesh&);
   EdgeList FastChainLinkSort(EdgeList&);
   void differentiateFaces(void);
 };

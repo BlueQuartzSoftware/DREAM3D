@@ -50,7 +50,7 @@ namespace tri = HSmoothTri;
 
 //=======================================================================================
 
-VolumeSolver::VolumeSolver::VolumeSolver(trimesh& VolumeMesh, meshnode& SurfaceNodes, facelabel& FLabels, nodetype& NodeType, int nIterations)
+VolumeSolver::VolumeSolver::VolumeSolver(TriMesh& VolumeMesh, MeshNode& SurfaceNodes, FaceLabel& FLabels, NodeType& NodeType, int nIterations)
 {
   // loading primary data into solver
   vsMesh = VolumeMesh;
@@ -59,7 +59,7 @@ VolumeSolver::VolumeSolver::VolumeSolver(trimesh& VolumeMesh, meshnode& SurfaceN
   vsType = NodeType;
   MaxIterations = nIterations;
 
-  Status = is_smoothed(vsType.size());
+  Status = IsSmoothed(vsType.size());
   for(int i = 0; i < vsType.size(); i++)
     Status(i) = (vsType(i) % 10 == 4); // quad jn points considered already smoothed.
 
@@ -110,7 +110,7 @@ VolumeSolver::VolumeSolver::VolumeSolver(trimesh& VolumeMesh, meshnode& SurfaceN
 
 //=======================================================================================
 
-meshnode VolumeSolver::VolumeSolver::HierarchicalSmooth(bool logging, std::string logfile)
+MeshNode VolumeSolver::VolumeSolver::HierarchicalSmooth(bool logging, std::string logfile)
 {
   fout.open(logfile.c_str());
   std::ostream& outfile = (logging ? fout : std::cout);
@@ -120,12 +120,12 @@ meshnode VolumeSolver::VolumeSolver::HierarchicalSmooth(bool logging, std::strin
   for(DictBase<std::vector<int>>::EdgeDict::iterator it = vsBoundaryDict.begin(); it != vsBoundaryDict.end(); ++it)
   {
     //		outfile << "Boundary " << ncount<< " of " << vsBoundaryDict.size() << '\n';
-    trimesh triSub = SliceMesh(it->second);
+    TriMesh triSub = SliceMesh(it->second);
     tri::Triangulation T(triSub);
 
-    std::tuple<SpMat, matindex> Topology = T.GraphLaplacian();
-    SpMat GL = std::get<0>(Topology);
-    matindex nUniq = std::get<1>(Topology);
+    std::tuple<SparseMatrixD, MatIndex> Topology = T.GraphLaplacian();
+    SparseMatrixD GL = std::get<0>(Topology);
+    MatIndex nUniq = std::get<1>(Topology);
 
     std::tuple<EdgeList, EdgeList> FreeBndData = T.freeBoundary();
     EdgeList FB = std::get<0>(FreeBndData);
@@ -145,10 +145,10 @@ meshnode VolumeSolver::VolumeSolver::HierarchicalSmooth(bool logging, std::strin
         // no quad jns in this free boundary. smooth without constraints and get out.
         for(count = start; count <= stop; count++)
           vtemp.push_back(std::get<0>(FB[count]));
-        matindex thisFreeBoundaryIdx = base::getindex(vtemp);
-        meshnode thisFreeBoundary;
+        MatIndex thisFreeBoundaryIdx = base::getindex(vtemp);
+        MeshNode thisFreeBoundary;
         slice::slice(vsNodeSmooth, three, thisFreeBoundaryIdx, thisFreeBoundary);
-        meshnode thisFreeBoundarySmooth = smooth::Smooth(thisFreeBoundary, std::string("cyclic"));
+        MeshNode thisFreeBoundarySmooth = smooth::Smooth(thisFreeBoundary, std::string("cyclic"));
         base::merge(thisFreeBoundarySmooth, vsNodeSmooth, thisFreeBoundaryIdx);
         MarkSectionAsComplete(thisFreeBoundaryIdx);
       }
@@ -164,12 +164,12 @@ meshnode VolumeSolver::VolumeSolver::HierarchicalSmooth(bool logging, std::strin
           if(vsType(std::get<0>(FB[effective_j])) % 10 == 4)
           {
             // reached terminal quad point
-            matindex thisTripleLineIndex = base::getindex(vtemp);
-            is_smoothed thisStatus;
+            MatIndex thisTripleLineIndex = base::getindex(vtemp);
+            IsSmoothed thisStatus;
             slice::slice(Status, thisTripleLineIndex, one, thisStatus);
             if(!thisStatus.all())
             {
-              meshnode thisTripleLine, thisTripleLineSmoothed;
+              MeshNode thisTripleLine, thisTripleLineSmoothed;
               slice::slice(vsNodeSmooth, three, thisTripleLineIndex, thisTripleLine);
               thisTripleLineSmoothed = smooth::Smooth(thisTripleLine);
               base::merge(thisTripleLineSmoothed, vsNodeSmooth, thisTripleLineIndex); /* HAVEN'T CHECKED FOR BUGS */
@@ -182,13 +182,13 @@ meshnode VolumeSolver::VolumeSolver::HierarchicalSmooth(bool logging, std::strin
       }
     }
     // NOW, smooth entire boundary subject to fixed triple points.
-    meshnode BoundaryNode;
+    MeshNode BoundaryNode;
     slice::slice(vsNodeSmooth, three, nUniq, BoundaryNode);
     std::vector<int> fixed;
     for(int i = 0; i < FB.size(); i++)
       fixed.push_back(std::get<0>(FB[i]));
-    matindex nFixed = base::getindex(fixed, nUniq);
-    meshnode BoundaryNodeSmooth = smooth::Smooth(BoundaryNode, nFixed, GL);
+    MatIndex nFixed = base::getindex(fixed, nUniq);
+    MeshNode BoundaryNodeSmooth = smooth::Smooth(BoundaryNode, nFixed, GL);
     base::merge(BoundaryNodeSmooth, vsNodeSmooth, nUniq);
     MarkSectionAsComplete(nUniq);
     ncount++;
@@ -218,16 +218,16 @@ meshnode VolumeSolver::VolumeSolver::HierarchicalSmooth(bool logging, std::strin
 
 //=======================================================================================
 
-trimesh VolumeSolver::VolumeSolver::SliceMesh(std::vector<int>& FromThesePatches)
+TriMesh VolumeSolver::VolumeSolver::SliceMesh(std::vector<int>& FromThesePatches)
 {
-  trimesh triSub;
+  TriMesh triSub;
   slice::slice(vsMesh, base::getindex(FromThesePatches), three, triSub);
   return triSub;
 }
 
 //=======================================================================================
 
-void VolumeSolver::VolumeSolver::MarkSectionAsComplete(matindex& idx)
+void VolumeSolver::VolumeSolver::MarkSectionAsComplete(MatIndex& idx)
 {
   for(int i = 0; i < idx.size(); i++)
     Status(idx(i)) = true;

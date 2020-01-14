@@ -51,7 +51,7 @@ class VolumeSolver
 
 public:
   // constructor
-  VolumeSolver(trimesh&, meshnode&, facelabel&, nodetype&, int = 53);
+  VolumeSolver(TriMesh&, MeshNode&, FaceLabel&, NodeType&, int = 53);
   // the last integer default is the number of bisections in each call
   // to the core smoothing routine. Obtained from a typical machine
   // zero value of ~10^16.
@@ -59,36 +59,36 @@ public:
   // machine in use.
 
   // smoother
-  meshnode HierarchicalSmooth(bool = false, std::string = "Smooth.Default.log");
+  MeshNode HierarchicalSmooth(bool = false, std::string = "Smooth.Default.log");
 
   // writers
-  meshnode GetSmoothed(void)
+  MeshNode GetSmoothed(void)
   {
     return vsNodeSmooth;
   }
-  is_smoothed GetNodeSmoothStatus(void)
+  IsSmoothed GetNodeSmoothStatus(void)
   {
     return Status;
   }
 
 private:
   // member objects; all these are instantiated in the constructor
-  is_smoothed Status;
-  trimesh vsMesh;
-  meshnode vsNode, vsNodeSmooth;
-  facelabel vsLabel;
-  nodetype vsType;
+  IsSmoothed Status;
+  TriMesh vsMesh;
+  MeshNode vsNode, vsNodeSmooth;
+  FaceLabel vsLabel;
+  NodeType vsType;
   int MaxIterations;
   double fError, fErrorThreshold;
   std::ofstream fout; // log file handle
   DictBase<std::vector<int>>::EdgeDict vsBoundaryDict;
 
   // member functions
-  trimesh SliceMesh(std::vector<int>&);
-  void MarkSectionAsComplete(matindex&);
+  TriMesh SliceMesh(std::vector<int>&);
+  void MarkSectionAsComplete(MatIndex&);
 
   // scratch
-  matindex one, three;
+  MatIndex one, three;
 };
 
 } // namespace VolumeSolver

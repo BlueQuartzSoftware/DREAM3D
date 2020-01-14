@@ -38,7 +38,7 @@
 
 //===================================================================================
 
-HSmoothTri::Triangulation::Triangulation(trimesh& inTri)
+HSmoothTri::Triangulation::Triangulation(TriMesh& inTri)
 {
   Mesh = inTri;
   std::tuple<EdgeList, EdgeList> GetAllEdges = GetEdges(Mesh);
@@ -49,7 +49,7 @@ HSmoothTri::Triangulation::Triangulation(trimesh& inTri)
 
 //===================================================================================
 
-trimesh HSmoothTri::Triangulation::connectivityList(void)
+TriMesh HSmoothTri::Triangulation::connectivityList(void)
 {
   return Mesh;
 }
@@ -104,7 +104,7 @@ void HSmoothTri::Triangulation::differentiateFaces(void)
  * is provided for choice.
  */
 
-std::tuple<EdgeList, EdgeList> HSmoothTri::Triangulation::GetEdges(trimesh& inTri)
+std::tuple<EdgeList, EdgeList> HSmoothTri::Triangulation::GetEdges(TriMesh& inTri)
 {
   for(int i = 0; i < inTri.rows(); i++)
     for(int j = 0; j < inTri.cols(); j++)
@@ -192,22 +192,22 @@ EdgeList HSmoothTri::Triangulation::FastChainLinkSort(EdgeList& inList)
 
 //===================================================================================
 
-std::tuple<SpMat, matindex> HSmoothTri::Triangulation::GraphLaplacian(void)
+std::tuple<SparseMatrixD, MatIndex> HSmoothTri::Triangulation::GraphLaplacian(void)
 {
   // most of the work already done in method GetEdges
-  std::vector<T> tripletList;
+  std::vector<TripletD> tripletList;
   tripletList.reserve(nUnique.size() + 2 * Mesh.rows() * Mesh.cols());
   for(DictBase<EdgeCount>::EdgeDict::iterator it = MyDict.begin(); it != MyDict.end(); ++it)
   {
     int l = std::get<0>(it->first);
     int m = std::get<1>(it->first);
-    tripletList.push_back(T(l, m, -1.0));
-    tripletList.push_back(T(m, l, -1.0));
+    tripletList.push_back(TripletD(l, m, -1.0));
+    tripletList.push_back(TripletD(m, l, -1.0));
   }
   for(int i = 0; i < fDiagCount.size(); i++)
-    tripletList.push_back(T(i, i, fDiagCount[i]));
+    tripletList.push_back(TripletD(i, i, fDiagCount[i]));
 
-  SpMat GL = SpMat(nUnique.size(), nUnique.size());
+  SparseMatrixD GL = SparseMatrixD(nUnique.size(), nUnique.size());
   GL.setFromTriplets(tripletList.begin(), tripletList.end());
   GL.makeCompressed();
 
