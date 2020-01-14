@@ -32,18 +32,15 @@
  *    United States Prime Contract Navy N00173-07-C-2068
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#include <memory>
-
 #include "VtkStructuredPointsReader.h"
+
+
 #include <fstream>
 
 #include <QtCore/QFileInfo>
-
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -932,11 +929,11 @@ int32_t VtkStructuredPointsReader::readScalarData(std::istream& in, int32_t numP
   }
   else if(scalarType.compare("unsigned_long") == 0)
   {
-    err = readDataChunk<qint64>(m_CurrentAttrMat, in, getInPreflight(), getFileIsBinary(), name, numComp);
+    err = readDataChunk<int64_t>(m_CurrentAttrMat, in, getInPreflight(), getFileIsBinary(), name, numComp);
   }
   else if(scalarType.compare("long") == 0)
   {
-    err = readDataChunk<quint64>(m_CurrentAttrMat, in, getInPreflight(), getFileIsBinary(), name, numComp);
+    err = readDataChunk<uint64_t>(m_CurrentAttrMat, in, getInPreflight(), getFileIsBinary(), name, numComp);
   }
   else if(scalarType.compare("float") == 0)
   {
