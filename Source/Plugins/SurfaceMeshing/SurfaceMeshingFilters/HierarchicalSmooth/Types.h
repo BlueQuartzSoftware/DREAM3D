@@ -56,14 +56,14 @@
  * Eigen array of integer triplets; the prototype of Delaunay
  * triangulations in this library.
  */
-typedef Eigen::Array<int, Eigen::Dynamic, 3> TriMesh;
+using TriMesh = Eigen::Array<int, Eigen::Dynamic, 3>;
 
 /*
  * MeshNode:
  * Eigen array of float triplets, each column representing
  * a 3D cartesian mesh node.
  */
-typedef Eigen::Matrix<double, 3, Eigen::Dynamic> MeshNode;
+using MeshNode = Eigen::Matrix<double, 3, Eigen::Dynamic>;
 
 /*
  * FaceLabel:
@@ -71,7 +71,7 @@ typedef Eigen::Matrix<double, 3, Eigen::Dynamic> MeshNode;
  * and represents a grain boundary patch by specifying the
  * grain IDs on either side of the patch.
  */
-typedef Eigen::Array<int, Eigen::Dynamic, 2> FaceLabel;
+using FaceLabel = Eigen::Array<int, Eigen::Dynamic, 2> ;
 
 /*
  * NodeType:
@@ -80,7 +80,7 @@ typedef Eigen::Array<int, Eigen::Dynamic, 2> FaceLabel;
  * ( denoted by 2, 3, 4 respectively if on the interior and
  * 12, 13, 14 if on the volume surface.
  */
-typedef Eigen::Array<int, Eigen::Dynamic, 1> NodeType;
+using NodeType = Eigen::Array<int, Eigen::Dynamic, 1>;
 
 /*
  * IsSmoothed:
@@ -88,7 +88,7 @@ typedef Eigen::Array<int, Eigen::Dynamic, 1> NodeType;
  * or not. At the beginning, only the NodeTypes 4 and 14 should
  * be initialized to true, the others should be false.
  */
-typedef Eigen::Array<bool, Eigen::Dynamic, 1> IsSmoothed;
+using IsSmoothed = Eigen::Array<bool, Eigen::Dynamic, 1>;
 
 /*
  * MatIndex:
@@ -97,15 +97,15 @@ typedef Eigen::Array<bool, Eigen::Dynamic, 1> IsSmoothed;
  * Also, need to set data type int and not int because of
  * compatibility with libigl.
  */
-typedef Eigen::Matrix<int, Eigen::Dynamic, 1> MatIndex;
+using MatIndex = Eigen::Matrix<int, Eigen::Dynamic, 1>;
 
 /*
  * EdgePair, EdgeList:
  * Bookkeeping devices for edges in a Delaunay mesh, each
  * edge being represented by an ordered pair of integers.
  */
-typedef std::pair<int, int> EdgePair;
-typedef std::vector<EdgePair> EdgeList;
+using EdgePair = std::pair<int, int>;
+using EdgeList = std::vector<EdgePair>;
 
 /*
  * EdgePairEqual:
@@ -140,7 +140,7 @@ struct hash<EdgePair>
 template <typename T>
 struct DictBase
 {
-  typedef std::unordered_map<EdgePair, T, std::hash<EdgePair>, EdgePairEqual> EdgeDict;
+  using EdgeDict = std::unordered_map<EdgePair, T, std::hash<EdgePair>, EdgePairEqual>;
 };
 
 /*
@@ -166,12 +166,12 @@ struct DictBase
  * TripletB:
  * Equivalent of T for boolean variables.
  */
-typedef Eigen::SparseMatrix<double> SparseMatrixD;
-typedef Eigen::Triplet<double> TripletD;
-typedef Eigen::SparseMatrix<bool> SparseMatrixB;
-typedef Eigen::Triplet<bool> TripletB;
+using SparseMatrixD = Eigen::SparseMatrix<double>;
+using TripletD = Eigen::Triplet<double>;
+using SparseMatrixB = Eigen::SparseMatrix<bool>;
+using TripletB = Eigen::Triplet<bool>;
 
 /*
  * Typedef for the conjugate gradient solver for sparse systems.
  */
-typedef Eigen::ConjugateGradient<SparseMatrixD, Eigen::Upper | Eigen::Lower> Smoother;
+using Smoother = Eigen::ConjugateGradient<SparseMatrixD, Eigen::Upper | Eigen::Lower>;
