@@ -39,8 +39,6 @@
 
 #pragma once
 
-#include <fstream>
-
 #include "Types.h"
 
 namespace VolumeSolver
@@ -59,7 +57,7 @@ public:
   // machine in use.
 
   // smoother
-  MeshNode hierarchicalSmooth(bool logging = false, const std::string& logfile = "Smooth.Default.log");
+  MeshNode hierarchicalSmooth();
 
   // writers
   MeshNode getSmoothed() const;
@@ -76,7 +74,6 @@ private:
   int MaxIterations;
   double fError;
   double fErrorThreshold;
-  std::ofstream fout; // log file handle
   DictBase<std::vector<int>>::EdgeDict vsBoundaryDict;
 
   // member functions

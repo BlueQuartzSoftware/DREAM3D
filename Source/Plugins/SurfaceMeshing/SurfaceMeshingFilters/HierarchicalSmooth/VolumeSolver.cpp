@@ -44,6 +44,8 @@
 #include "Slice.h"
 #include "Triangulation.h"
 
+#include <QDebug>
+
 namespace base = HSmoothBase;
 namespace smooth = HSmoothMain;
 namespace tri = HSmoothTri;
@@ -110,11 +112,8 @@ VolumeSolver::VolumeSolver::VolumeSolver(const TriMesh& volumeMesh, const MeshNo
 
 //=======================================================================================
 
-MeshNode VolumeSolver::VolumeSolver::hierarchicalSmooth(bool logging, const std::string& logfile)
+MeshNode VolumeSolver::VolumeSolver::hierarchicalSmooth()
 {
-  fout.open(logfile.c_str());
-  std::ostream& outfile = (logging ? fout : std::cout);
-
   int ncount = 1;
 
   for(DictBase<std::vector<int>>::EdgeDict::iterator it = vsBoundaryDict.begin(); it != vsBoundaryDict.end(); ++it)
@@ -208,11 +207,15 @@ MeshNode VolumeSolver::VolumeSolver::hierarchicalSmooth(bool logging, const std:
   }
 
   if(!Status.all())
-    outfile << "WARNING: " << (fNorm > fErrorThreshold).count() << " of " << vsNodeSmooth.cols() << " nodes not smoothed. "
-            << "Query VolumeSolver::Status for more information. " << '\n';
+  {
+    qDebug().nospace() << "WARNING: " << (fNorm > fErrorThreshold).count() << " of " << vsNodeSmooth.cols() << " nodes not smoothed. "
+                       << "Query VolumeSolver::Status for more information. ";
+  }
   else
-    outfile << "All nodes smoothed. " << '\n';
-  fout.close();
+  {
+    qDebug() << "All nodes smoothed";
+  }
+
   return vsNodeSmooth;
 }
 
