@@ -37,8 +37,7 @@
  * bookkeeping with node types, connectivity and smoothed status.
  */
 
-#ifndef _HSMOOTH_VOLSOLVER
-#define _HSMOOTH_VOLSOLVER
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -105,5 +104,3 @@ private:
 };
 
 } // namespace VolumeSolver
-
-#endif

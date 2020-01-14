@@ -37,8 +37,7 @@
  *
  */
 
-#ifndef _HSMOOTH_HSMOOTH
-#define _HSMOOTH_HSMOOTH
+#pragma once
 
 #include <cmath>
 
@@ -60,5 +59,3 @@ std::tuple<SpMat, SpMat> AnalyzeLaplacian(SpMat&);
 double GetObjFn(Smoother&, double, SpMat&, SpMat&, SpMat&, SpMat&, matindex&, SpMat&, SpMat&, SpMat&, SpMat&);
 
 } // namespace HSmoothMain
-
-#endif

@@ -41,8 +41,7 @@
  * added later as needed.
  */
 
-#ifndef _HSMOOTH_TRI
-#define _HSMOOTH_TRI
+#pragma once
 
 #include "Types.h"
 #include "Base.h"
@@ -89,5 +88,3 @@ private:
 };
 
 } // namespace HSmoothTri
-
-#endif

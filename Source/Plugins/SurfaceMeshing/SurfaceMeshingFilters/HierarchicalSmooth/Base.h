@@ -36,8 +36,7 @@
  *
  */
 
-#ifndef _HSMOOTH_BASE
-#define _HSMOOTH_BASE
+#pragma once
 
 #include "igl/slice.h"
 
@@ -82,5 +81,3 @@ void merge(meshnode&, meshnode&, matindex&);
 void merge(SpMat&, SpMat&, matindex&);
 
 } // namespace HSmoothBase
-
-#endif

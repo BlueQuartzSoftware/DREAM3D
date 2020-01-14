@@ -34,8 +34,7 @@
  * Types.h -- contains all user-defined types.
  */
 
-#ifndef _HSMOOTH_TYPES
-#define _HSMOOTH_TYPES
+#pragma once
 
 #include <iostream>
 #include <unordered_map>
@@ -175,5 +174,3 @@ typedef Eigen::Triplet<bool> bT;
  * Typedef for the conjugate gradient solver for sparse systems.
  */
 typedef Eigen::ConjugateGradient<SpMat, Eigen::Upper | Eigen::Lower> Smoother;
-
-#endif
