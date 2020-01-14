@@ -53,7 +53,8 @@ class SurfaceMeshing_EXPORT HierarchicalSmooth : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath VertexListPath READ getVertexListPath WRITE setVertexListPath)
   PYB11_PROPERTY(DataArrayPath FaceLabelsPath READ getFaceLabelsPath WRITE setFaceLabelsPath)
   PYB11_PROPERTY(DataArrayPath NodeTypePath READ getNodeTypePath WRITE setNodeTypePath)
-  PYB11_PROPERTY(DataArrayPath SmoothedVertexListPath READ getSmoothedVertexListPath WRITE setSmoothedVertexListPath)
+  PYB11_PROPERTY(QString SmoothedVertexArrayName READ getSmoothedVertexArrayName WRITE setSmoothedVertexArrayName)
+  PYB11_PROPERTY(QString SmoothedVertexMatrixName READ getSmoothedVertexMatrixName WRITE setSmoothedVertexMatrixName)
 #endif
 
 public:
@@ -136,18 +137,32 @@ public:
   Q_PROPERTY(DataArrayPath NodeTypesPath READ getNodeTypesPath WRITE setNodeTypesPath)
 
   /**
-   * @brief Getter property for SmoothedVertexListPath
+   * @brief Getter property for SmoothedVertexArrayName
    * @return
    */
-  DataArrayPath getSmoothedVertexListPath() const;
+  QString getSmoothedVertexArrayName() const;
 
   /**
-   * @brief Setter property for SmoothedVertexListPath
+   * @brief Setter property for SmoothedVertexArrayName
    * @param value
    */
-  void setSmoothedVertexListPath(const DataArrayPath& value);
+  void setSmoothedVertexArrayName(const QString& value);
 
-  Q_PROPERTY(DataArrayPath SmoothedVertexListPath READ getSmoothedVertexListPath WRITE setSmoothedVertexListPath)
+  Q_PROPERTY(QString SmoothedVertexArrayName READ getSmoothedVertexArrayName WRITE setSmoothedVertexArrayName)
+
+  /**
+   * @brief Getter property for SmoothedVertexMatrixName
+   * @return
+   */
+  QString getSmoothedVertexMatrixName() const;
+
+  /**
+   * @brief Setter property for SmoothedVertexMatrixName
+   * @param value
+   */
+  void setSmoothedVertexMatrixName(const QString& value);
+
+  Q_PROPERTY(QString SmoothedVertexMatrixName READ getSmoothedVertexMatrixName WRITE setSmoothedVertexMatrixName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -261,7 +276,9 @@ private:
   DataArrayPath m_VertexListPath;
   DataArrayPath m_FaceLabelsPath;
   DataArrayPath m_NodeTypesPath;
-  DataArrayPath m_SmoothedVertexListPath;
+
+  QString m_SmoothedVertexArrayName;
+  QString m_SmoothedVertexMatrixName;
 
 public:
   HierarchicalSmooth(const HierarchicalSmooth&) = delete;            // Copy Constructor Not Implemented
