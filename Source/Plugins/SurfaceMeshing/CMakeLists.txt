@@ -59,6 +59,8 @@ set(Project_SRCS "")
 # Add in our Filter classes
 include(${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/SourceList.cmake)
 
+include(${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/HierarchicalSmooth/SourceList.cmake)
+
 # -- Include all the resources
 include(${${PLUGIN_NAME}_SOURCE_DIR}/Resources/SourceList.cmake)
 
@@ -180,6 +182,8 @@ target_sources(${plug_target_name}
   # -- Add in the DLL Export Header File
   ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}DLLExport.h
 
+  ${${PLUGIN_NAME}_HSMOOTH_HDRS}
+  ${${PLUGIN_NAME}_HSMOOTH_SRCS}
 )
 
 #------------------------------- 
