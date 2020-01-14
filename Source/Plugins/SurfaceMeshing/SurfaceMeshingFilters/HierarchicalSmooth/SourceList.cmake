@@ -1,6 +1,7 @@
 set(${PLUGIN_NAME}_HSMOOTH_HDRS
   ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/HierarchicalSmooth/Base.h
   ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/HierarchicalSmooth/HierarchicalSmooth.h
+  ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/HierarchicalSmooth/Slice.h
   ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/HierarchicalSmooth/Triangulation.h
   ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/HierarchicalSmooth/Types.h
   ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/HierarchicalSmooth/VolumeSolver.h
