@@ -1,8 +1,31 @@
+/*
+ This code was extracted from libigl, https://github.com/libigl/libigl,
+ from commit 87b54fc4dcc5aea182dd842a55ac75536fb69e1a.
+ This file is a composition of the following files:
+  slice.h
+  slice.cpp
+  igl_inline.h
+  colon.h
+  colon.cpp
+  LinSpaced.h
+*/
+
+// This file is part of libigl, a simple c++ geometry processing library.
+//
+// Copyright (C) 2013 Alec Jacobson <alecjacobson@gmail.com>
+//
+// This Source Code Form is subject to the terms of the Mozilla Public License
+// v. 2.0. If a copy of the MPL was not distributed with this file, You can
+// obtain one at http://mozilla.org/MPL/2.0/.
+
 #pragma once
 
 #include <Eigen/Core>
 #include <Eigen/Sparse>
 #include <unsupported/Eigen/SparseExtra>
+
+namespace slice
+{
 
 template <typename Derived>
 // inline typename Eigen::DenseBase< Derived >::RandomAccessLinSpacedReturnType
@@ -191,3 +214,5 @@ DerivedX slice(const Eigen::DenseBase<DerivedX>& X, const Eigen::Matrix<int, Eig
   slice(X, R, dim, Y);
   return Y;
 }
+
+} // namespace slice

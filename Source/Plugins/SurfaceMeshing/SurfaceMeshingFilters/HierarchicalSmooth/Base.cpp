@@ -1,3 +1,8 @@
+/*
+ This code was extracted from HierarchicalSmooth, https://github.com/siddharth-maddali/HierarchicalSmooth,
+ from commit 31ef680011f4bbaef59c0944876e84222ea7c49f
+*/
+
 // Copyright (c) 2016-2018, Siddharth Maddali 
 // All rights reserved. 
 // 
