@@ -39,21 +39,9 @@
 
 #pragma once
 
-#include <iostream>
 #include <fstream>
 
-#include "Eigen/Eigen"
-
 #include "Types.h"
-#include "Base.h"
-#include "Triangulation.h"
-#include "HierarchicalSmooth.h"
-
-#include "igl/slice.h" // for slicing operations on Eigen matrix types
-
-namespace base = HSmoothBase;
-namespace smooth = HSmoothMain;
-namespace tri = HSmoothTri;
 
 namespace VolumeSolver
 {

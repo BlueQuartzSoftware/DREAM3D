@@ -37,6 +37,17 @@
 
 #include "VolumeSolver.h"
 
+#include <iostream>
+
+#include "Base.h"
+#include "HierarchicalSmooth.h"
+#include "Slice.h"
+#include "Triangulation.h"
+
+namespace base = HSmoothBase;
+namespace smooth = HSmoothMain;
+namespace tri = HSmoothTri;
+
 //=======================================================================================
 
 VolumeSolver::VolumeSolver::VolumeSolver(trimesh& VolumeMesh, meshnode& SurfaceNodes, facelabel& FLabels, nodetype& NodeType, int nIterations)
@@ -137,7 +148,7 @@ meshnode VolumeSolver::VolumeSolver::HierarchicalSmooth(bool logging, std::strin
           vtemp.push_back(std::get<0>(FB[count]));
         matindex thisFreeBoundaryIdx = base::getindex(vtemp);
         meshnode thisFreeBoundary;
-        igl::slice(vsNodeSmooth, three, thisFreeBoundaryIdx, thisFreeBoundary);
+        slice::slice(vsNodeSmooth, three, thisFreeBoundaryIdx, thisFreeBoundary);
         meshnode thisFreeBoundarySmooth = smooth::Smooth(thisFreeBoundary, std::string("cyclic"));
         base::merge(thisFreeBoundarySmooth, vsNodeSmooth, thisFreeBoundaryIdx);
         MarkSectionAsComplete(thisFreeBoundaryIdx);
@@ -156,11 +167,11 @@ meshnode VolumeSolver::VolumeSolver::HierarchicalSmooth(bool logging, std::strin
             // reached terminal quad point
             matindex thisTripleLineIndex = base::getindex(vtemp);
             is_smoothed thisStatus;
-            igl::slice(Status, thisTripleLineIndex, one, thisStatus);
+            slice::slice(Status, thisTripleLineIndex, one, thisStatus);
             if(!thisStatus.all())
             {
               meshnode thisTripleLine, thisTripleLineSmoothed;
-              igl::slice(vsNodeSmooth, three, thisTripleLineIndex, thisTripleLine);
+              slice::slice(vsNodeSmooth, three, thisTripleLineIndex, thisTripleLine);
               thisTripleLineSmoothed = smooth::Smooth(thisTripleLine);
               base::merge(thisTripleLineSmoothed, vsNodeSmooth, thisTripleLineIndex); /* HAVEN'T CHECKED FOR BUGS */
               MarkSectionAsComplete(thisTripleLineIndex);
@@ -173,7 +184,7 @@ meshnode VolumeSolver::VolumeSolver::HierarchicalSmooth(bool logging, std::strin
     }
     // NOW, smooth entire boundary subject to fixed triple points.
     meshnode BoundaryNode;
-    igl::slice(vsNodeSmooth, three, nUniq, BoundaryNode);
+    slice::slice(vsNodeSmooth, three, nUniq, BoundaryNode);
     std::vector<int> fixed;
     for(int i = 0; i < FB.size(); i++)
       fixed.push_back(std::get<0>(FB[i]));
@@ -211,7 +222,7 @@ meshnode VolumeSolver::VolumeSolver::HierarchicalSmooth(bool logging, std::strin
 trimesh VolumeSolver::VolumeSolver::SliceMesh(std::vector<int>& FromThesePatches)
 {
   trimesh triSub;
-  igl::slice(vsMesh, base::getindex(FromThesePatches), three, triSub);
+  slice::slice(vsMesh, base::getindex(FromThesePatches), three, triSub);
   return triSub;
 }
 

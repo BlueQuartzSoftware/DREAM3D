@@ -38,6 +38,11 @@
 
 #include "HierarchicalSmooth.h"
 
+#include <cmath>
+
+#include "Base.h"
+#include "Slice.h"
+
 //============================================================================================
 
 SpMat HSmoothMain::Laplacian2D(int N, std::string type)
@@ -158,7 +163,7 @@ meshnode HSmoothMain::Smooth(meshnode& NodesIn, matindex& nFixed, SpMat& GL, dou
   mtemp.setIdentity();
   fSmallEye = mtemp.sparseView();
   fSmallEye.makeCompressed();
-  igl::slice(Data, nMobile, 1, yMobile);
+  slice::slice(Data, nMobile, 1, yMobile);
   LTL = SpMat(GLRed.transpose() * GLRed);
   LTK = SpMat(GLRed.transpose() * fConst); // casting as SpMat to make column-major
   yOut = Data;
@@ -204,11 +209,11 @@ std::tuple<SpMat, SpMat> HSmoothMain::GetDirichletBVP(SpMat& GL, SpMat& yIn, mat
   //	SpMat GLRed, sm1, sm2, sm3, fConst;
   SpMat GLRed(nMobile.size(), nMobile.size()), sm1(nAll.size(), nFixed.size()), sm2(nFixed.size(), dims.size()), sm3(nAll.size(), dims.size()), fConst(nMobile.size(), dims.size());
 
-  igl::slice(GL, nMobile, nMobile, GLRed); // thank goodness for igl::slice!
-  igl::slice(GL, nAll, nFixed, sm1);
-  igl::slice(yIn, nFixed, dims, sm2);
+  slice::slice(GL, nMobile, nMobile, GLRed); // thank goodness for igl::slice!
+  slice::slice(GL, nAll, nFixed, sm1);
+  slice::slice(yIn, nFixed, dims, sm2);
   sm3 = sm1 * sm2;
-  igl::slice(sm3, nMobile, dims, fConst);
+  slice::slice(sm3, nMobile, dims, fConst);
 
   return std::make_tuple(GLRed, fConst);
 }

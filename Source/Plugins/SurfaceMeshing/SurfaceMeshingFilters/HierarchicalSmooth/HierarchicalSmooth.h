@@ -39,10 +39,7 @@
 
 #pragma once
 
-#include <cmath>
-
 #include "Types.h"
-#include "Base.h"
 
 namespace HSmoothMain
 {

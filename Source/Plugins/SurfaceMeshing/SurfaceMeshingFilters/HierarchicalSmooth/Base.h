@@ -38,8 +38,6 @@
 
 #pragma once
 
-#include "igl/slice.h"
-
 #include "Types.h"
 
 namespace HSmoothBase

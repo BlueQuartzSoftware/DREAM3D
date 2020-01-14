@@ -44,7 +44,6 @@
 #pragma once
 
 #include "Types.h"
-#include "Base.h"
 
 struct EdgeCount
 {

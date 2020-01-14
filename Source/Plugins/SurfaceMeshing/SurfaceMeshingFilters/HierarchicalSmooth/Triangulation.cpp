@@ -34,6 +34,8 @@
 
 #include "Triangulation.h"
 
+#include "Base.h"
+
 //===================================================================================
 
 HSmoothTri::Triangulation::Triangulation(trimesh& inTri)
