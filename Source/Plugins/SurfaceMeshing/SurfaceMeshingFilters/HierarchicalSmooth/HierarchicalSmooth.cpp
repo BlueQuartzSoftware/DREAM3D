@@ -45,7 +45,7 @@
 
 //============================================================================================
 
-SparseMatrixD HSmoothMain::Laplacian2D(int N, std::string type)
+SparseMatrixD HSmoothMain::laplacian2D(int N, const std::string& type)
 {
   std::vector<TripletD> tripletList;
   tripletList.reserve(3 * N); // approx. number of nonzero elements
@@ -76,7 +76,7 @@ SparseMatrixD HSmoothMain::Laplacian2D(int N, std::string type)
 
 //============================================================================================
 
-std::tuple<SparseMatrixD, std::vector<int>> HSmoothMain::GraphLaplacian(TriMesh& tri)
+std::tuple<SparseMatrixD, std::vector<int>> HSmoothMain::graphLaplacian(const TriMesh& tri)
 {
   std::vector<int> nUnique;
   for(int i = 0; i < tri.rows(); i++)
@@ -90,7 +90,7 @@ std::tuple<SparseMatrixD, std::vector<int>> HSmoothMain::GraphLaplacian(TriMesh&
 
   std::vector<double> fDiagCount(nUnique.size(), 0.0);
 
-  TriMesh nSubTri = HSmoothBase::ismember(tri, nUnique);
+  TriMesh nSubTri = HSmoothBase::isMember(tri, nUnique);
 
   DictBase<int>::EdgeDict MyDict;
   for(int i = 0; i < nSubTri.rows(); i++)
@@ -126,35 +126,35 @@ std::tuple<SparseMatrixD, std::vector<int>> HSmoothMain::GraphLaplacian(TriMesh&
 
 //============================================================================================
 
-MeshNode HSmoothMain::Smooth(MeshNode& NodesIn, std::string type, double fThresh, int nIter)
+MeshNode HSmoothMain::smooth(const MeshNode& nodes, const std::string& type, double threshold, int iterations)
 {
-  SparseMatrixD L = Laplacian2D(NodesIn.cols(), type);
+  SparseMatrixD L = laplacian2D(nodes.cols(), type);
   std::vector<int> vidx;
   if(type == "serial")
     vidx = std::vector<int>{(int)0, (int)(L.cols() - 1)};
   else
     vidx = std::vector<int>{};
-  MatIndex nFixed = HSmoothBase::getindex(vidx);
-  return Smooth(NodesIn, nFixed, L, fThresh, nIter);
+  MatIndex nFixed = HSmoothBase::getIndex(vidx);
+  return smooth(nodes, nFixed, L, threshold, iterations);
 }
 
 //============================================================================================
 
-MeshNode HSmoothMain::Smooth(MeshNode& NodesIn, MatIndex& nFixed, SparseMatrixD& GL, double fThresh, int nIter)
+MeshNode HSmoothMain::smooth(const MeshNode& nodes, const MatIndex& nFixed, const SparseMatrixD& GL, double threshold, int iterations)
 {
-  MatIndex nMobile = HSmoothBase::getcomplement(nFixed, GL.cols());
+  MatIndex nMobile = HSmoothBase::getComplement(nFixed, GL.cols());
   if(nMobile.size() == 0)
-    return NodesIn;
+    return nodes;
 
-  SparseMatrixD Data = NodesIn.transpose().sparseView();
+  SparseMatrixD Data = nodes.transpose().sparseView();
 
   SparseMatrixD GLRed, fConst, D, A, AyIn, yMobile, fSmallEye, LTL, LTK, yOut;
 
-  std::tuple<SparseMatrixD, SparseMatrixD> dbvp = GetDirichletBVP(GL, Data, nFixed, nMobile);
+  std::tuple<SparseMatrixD, SparseMatrixD> dbvp = getDirichletBVP(GL, Data, nFixed, nMobile);
   GLRed = std::get<0>(dbvp);
   fConst = std::get<1>(dbvp);
 
-  std::tuple<SparseMatrixD, SparseMatrixD> pieces = AnalyzeLaplacian(GL);
+  std::tuple<SparseMatrixD, SparseMatrixD> pieces = analyzeLaplacian(GL);
   D = std::get<0>(pieces);
   A = std::get<1>(pieces);
 
@@ -175,11 +175,11 @@ MeshNode HSmoothMain::Smooth(MeshNode& NodesIn, MatIndex& nFixed, SparseMatrixD&
   int nCount = 1;
 
   double fobj1, fobj2, fslope;
-  fobj1 = GetObjFn(smth, fEps, fSmallEye, LTL, LTK, Data, nMobile, yMobile, D, AyIn, yOut); // only the last parameter is actually modified
-  fobj2 = GetObjFn(smth, fEps + fThresh, fSmallEye, LTL, LTK, Data, nMobile, yMobile, D, AyIn, yOut);
-  fslope = (fobj2 - fobj1) / fThresh;
+  fobj1 = getObjFn(smth, fEps, fSmallEye, LTL, LTK, Data, nMobile, yMobile, D, AyIn, yOut); // only the last parameter is actually modified
+  fobj2 = getObjFn(smth, fEps + threshold, fSmallEye, LTL, LTK, Data, nMobile, yMobile, D, AyIn, yOut);
+  fslope = (fobj2 - fobj1) / threshold;
 
-  while(fabs(fslope) < fThresh && nCount < nIter)
+  while(fabs(fslope) < threshold && nCount < iterations)
   {
     if(fStep > 0.0)
       fEps -= fStep;
@@ -187,9 +187,9 @@ MeshNode HSmoothMain::Smooth(MeshNode& NodesIn, MatIndex& nFixed, SparseMatrixD&
       fEps += fStep;
 
     fEps /= 2.0;
-    fobj1 = GetObjFn(smth, fEps, fSmallEye, LTL, LTK, Data, nMobile, yMobile, D, AyIn, yOut); // only the last parameter is actually modified
-    fobj2 = GetObjFn(smth, fEps + fThresh, fSmallEye, LTL, LTK, Data, nMobile, yMobile, D, AyIn, yOut);
-    fslope = (fobj2 - fobj1) / fThresh;
+    fobj1 = getObjFn(smth, fEps, fSmallEye, LTL, LTK, Data, nMobile, yMobile, D, AyIn, yOut); // only the last parameter is actually modified
+    fobj2 = getObjFn(smth, fEps + threshold, fSmallEye, LTL, LTK, Data, nMobile, yMobile, D, AyIn, yOut);
+    fslope = (fobj2 - fobj1) / threshold;
     nCount++;
   }
 
@@ -198,20 +198,20 @@ MeshNode HSmoothMain::Smooth(MeshNode& NodesIn, MatIndex& nFixed, SparseMatrixD&
 
 //============================================================================================
 
-std::tuple<SparseMatrixD, SparseMatrixD> HSmoothMain::GetDirichletBVP(SparseMatrixD& GL, SparseMatrixD& yIn, MatIndex& nFixed, MatIndex& nMobile)
+std::tuple<SparseMatrixD, SparseMatrixD> HSmoothMain::getDirichletBVP(const SparseMatrixD& GL, const SparseMatrixD& y, const MatIndex& nFixed, const MatIndex& nMobile)
 {
-  MatIndex nAll = HSmoothBase::matunion(nFixed, nMobile);
+  MatIndex nAll = HSmoothBase::matUnion(nFixed, nMobile);
   std::vector<int> v;
-  for(int i = 0; i < yIn.cols(); i++)
+  for(int i = 0; i < y.cols(); i++)
     v.push_back(i);
-  MatIndex dims = HSmoothBase::getindex(v);
+  MatIndex dims = HSmoothBase::getIndex(v);
 
   //	SparseMatrixD GLRed, sm1, sm2, sm3, fConst;
   SparseMatrixD GLRed(nMobile.size(), nMobile.size()), sm1(nAll.size(), nFixed.size()), sm2(nFixed.size(), dims.size()), sm3(nAll.size(), dims.size()), fConst(nMobile.size(), dims.size());
 
   slice::slice(GL, nMobile, nMobile, GLRed); // thank goodness for igl::slice!
   slice::slice(GL, nAll, nFixed, sm1);
-  slice::slice(yIn, nFixed, dims, sm2);
+  slice::slice(y, nFixed, dims, sm2);
   sm3 = sm1 * sm2;
   slice::slice(sm3, nMobile, dims, fConst);
 
@@ -220,7 +220,7 @@ std::tuple<SparseMatrixD, SparseMatrixD> HSmoothMain::GetDirichletBVP(SparseMatr
 
 //============================================================================================
 
-std::tuple<SparseMatrixD, SparseMatrixD> HSmoothMain::AnalyzeLaplacian(SparseMatrixD& GL)
+std::tuple<SparseMatrixD, SparseMatrixD> HSmoothMain::analyzeLaplacian(const SparseMatrixD& GL)
 {
   // NOTE: GL should be column-major
 
@@ -248,7 +248,8 @@ std::tuple<SparseMatrixD, SparseMatrixD> HSmoothMain::AnalyzeLaplacian(SparseMat
 
 //============================================================================================
 
-double HSmoothMain::GetObjFn(Smoother& smth, double feps, SparseMatrixD& fSmallEye, SparseMatrixD& LTL, SparseMatrixD& LTK, SparseMatrixD& Data, MatIndex& nMobile, SparseMatrixD& yMobile, SparseMatrixD& D, SparseMatrixD& AyIn, SparseMatrixD& yOut)
+double HSmoothMain::getObjFn(Smoother& smth, double feps, const SparseMatrixD& fSmallEye, const SparseMatrixD& LTL, const SparseMatrixD& LTK, const SparseMatrixD& Data, const MatIndex& nMobile,
+                             const SparseMatrixD& yMobile, const SparseMatrixD& D, const SparseMatrixD& AyIn, SparseMatrixD& yOut)
 {
   SparseMatrixD ySmooth;
 

@@ -38,10 +38,12 @@
 
 //===================================================================================
 
-HSmoothTri::Triangulation::Triangulation(TriMesh& inTri)
+HSmoothTri::Triangulation::Triangulation() = default;
+
+HSmoothTri::Triangulation::Triangulation(const TriMesh& tri)
 {
-  Mesh = inTri;
-  std::tuple<EdgeList, EdgeList> GetAllEdges = GetEdges(Mesh);
+  Mesh = tri;
+  std::tuple<EdgeList, EdgeList> GetAllEdges = getEdges(Mesh);
   edge_list = std::get<0>(GetAllEdges);
   free_boundary = std::get<1>(GetAllEdges);
   differentiateFaces();
@@ -49,27 +51,27 @@ HSmoothTri::Triangulation::Triangulation(TriMesh& inTri)
 
 //===================================================================================
 
-TriMesh HSmoothTri::Triangulation::connectivityList(void)
+TriMesh HSmoothTri::Triangulation::connectivityList() const
 {
   return Mesh;
 }
 
 //===================================================================================
 
-EdgeList HSmoothTri::Triangulation::allEdges(void)
+EdgeList HSmoothTri::Triangulation::allEdges() const
 {
   return edge_list;
 }
 
 //===================================================================================
 
-std::tuple<EdgeList, EdgeList> HSmoothTri::Triangulation::freeBoundary(void)
+std::tuple<EdgeList, EdgeList> HSmoothTri::Triangulation::freeBoundary() const
 {
   return std::make_tuple(free_boundary, free_boundary_segments);
 }
 
 //===================================================================================
-void HSmoothTri::Triangulation::differentiateFaces(void)
+void HSmoothTri::Triangulation::differentiateFaces()
 {
   int start = std::get<0>(free_boundary[0]);
   std::vector<int> thissec{0};
@@ -104,16 +106,16 @@ void HSmoothTri::Triangulation::differentiateFaces(void)
  * is provided for choice.
  */
 
-std::tuple<EdgeList, EdgeList> HSmoothTri::Triangulation::GetEdges(TriMesh& inTri)
+std::tuple<EdgeList, EdgeList> HSmoothTri::Triangulation::getEdges(const TriMesh& tri)
 {
-  for(int i = 0; i < inTri.rows(); i++)
-    for(int j = 0; j < inTri.cols(); j++)
-      nUnique.push_back(inTri(i, j));
+  for(int i = 0; i < tri.rows(); i++)
+    for(int j = 0; j < tri.cols(); j++)
+      nUnique.push_back(tri(i, j));
   std::sort(nUnique.begin(), nUnique.end());
   nUnique.erase(std::unique(nUnique.begin(), nUnique.end()), nUnique.end());
 
   fDiagCount = std::vector<double>(nUnique.size(), 0.0);
-  nSubTri = HSmoothBase::ismember(inTri, nUnique);
+  nSubTri = HSmoothBase::isMember(tri, nUnique);
 
   for(int i = 0; i < nSubTri.rows(); i++)
   {
@@ -148,18 +150,18 @@ std::tuple<EdgeList, EdgeList> HSmoothTri::Triangulation::GetEdges(TriMesh& inTr
     if((it->second).ncount == 1)
       free_boundary.push_back((it->second).orig_pair);
   }
-  return std::make_tuple(edge_list, FastChainLinkSort(free_boundary));
+  return std::make_tuple(edge_list, fastChainLinkSort(free_boundary));
 }
 
 //===================================================================================
 
-EdgeList HSmoothTri::Triangulation::FastChainLinkSort(EdgeList& inList)
+EdgeList HSmoothTri::Triangulation::fastChainLinkSort(const EdgeList& list)
 {
   std::unordered_map<int, std::vector<int>> WindingDict;
-  for(int i = 0; i < inList.size(); i++)
+  for(int i = 0; i < list.size(); i++)
   {
-    int ltemp = std::get<0>(inList[i]);
-    int rtemp = std::get<1>(inList[i]);
+    int ltemp = std::get<0>(list[i]);
+    int rtemp = std::get<1>(list[i]);
     std::unordered_map<int, std::vector<int>>::iterator got = WindingDict.find(ltemp);
     if(got == WindingDict.end())
     {
@@ -192,12 +194,12 @@ EdgeList HSmoothTri::Triangulation::FastChainLinkSort(EdgeList& inList)
 
 //===================================================================================
 
-std::tuple<SparseMatrixD, MatIndex> HSmoothTri::Triangulation::GraphLaplacian(void)
+std::tuple<SparseMatrixD, MatIndex> HSmoothTri::Triangulation::graphLaplacian() const
 {
   // most of the work already done in method GetEdges
   std::vector<TripletD> tripletList;
   tripletList.reserve(nUnique.size() + 2 * Mesh.rows() * Mesh.cols());
-  for(DictBase<EdgeCount>::EdgeDict::iterator it = MyDict.begin(); it != MyDict.end(); ++it)
+  for(auto it = MyDict.cbegin(); it != MyDict.cend(); ++it)
   {
     int l = std::get<0>(it->first);
     int m = std::get<1>(it->first);
@@ -211,7 +213,7 @@ std::tuple<SparseMatrixD, MatIndex> HSmoothTri::Triangulation::GraphLaplacian(vo
   GL.setFromTriplets(tripletList.begin(), tripletList.end());
   GL.makeCompressed();
 
-  return std::make_tuple(GL, HSmoothBase::getindex(nUnique));
+  return std::make_tuple(GL, HSmoothBase::getIndex(nUnique));
 }
 
 //===================================================================================

@@ -45,6 +45,9 @@
 
 #include "Types.h"
 
+namespace HSmoothTri
+{
+
 struct EdgeCount
 {
   EdgePair orig_pair;
@@ -56,34 +59,32 @@ struct EdgeCount
   }
 };
 
-namespace HSmoothTri
-{
-
 class Triangulation
 {
 public:
-  Triangulation()
-  {
-  }                        // default constructor
-  Triangulation(TriMesh&); // not taking points for now; this will come later.
+  Triangulation();                   // default constructor
+  Triangulation(const TriMesh& tri); // not taking points for now; this will come later.
 
-  TriMesh connectivityList(void);
-  EdgeList allEdges(void);
-  std::tuple<EdgeList, EdgeList> freeBoundary(void); // in proper winding order!
-  std::tuple<SparseMatrixD, MatIndex> GraphLaplacian(void);
+  TriMesh connectivityList() const;
+  EdgeList allEdges() const;
+  std::tuple<EdgeList, EdgeList> freeBoundary() const; // in proper winding order!
+  std::tuple<SparseMatrixD, MatIndex> graphLaplacian() const;
 
 private:
   // member objects
-  TriMesh Mesh, nSubTri; // the Delaunay triangulation from which everything is derived
-  EdgeList edge_list, free_boundary, free_boundary_segments;
+  TriMesh Mesh;
+  TriMesh nSubTri; // the Delaunay triangulation from which everything is derived
+  EdgeList edge_list;
+  EdgeList free_boundary;
+  EdgeList free_boundary_segments;
   std::vector<int> nUnique;
   DictBase<EdgeCount>::EdgeDict MyDict;
   std::vector<double> fDiagCount;
 
   // member functions
-  std::tuple<EdgeList, EdgeList> GetEdges(TriMesh&);
-  EdgeList FastChainLinkSort(EdgeList&);
-  void differentiateFaces(void);
+  std::tuple<EdgeList, EdgeList> getEdges(const TriMesh& tri);
+  EdgeList fastChainLinkSort(const EdgeList&);
+  void differentiateFaces();
 };
 
 } // namespace HSmoothTri

@@ -47,35 +47,35 @@ namespace HSmoothBase
  * Mimics the basic functionality of Matlab's 'ismember' function, currently only for
  * integer arrays with 3 columns because it is used on triangulations.
  */
-TriMesh ismember(TriMesh& Array1, std::vector<int>& Array2);
+TriMesh isMember(const TriMesh& array1, const std::vector<int>& array2);
 
 /* getindex:
  * Returns a MatIndex object (defined in Types.h) of integers given an
  * STL std::vector< int > object. Variant returns position of each integer
  * with respect to a user-supplied MatIndex.
  */
-MatIndex getindex(std::vector<int>&);
-MatIndex getindex(std::vector<int>&, MatIndex&);
+MatIndex getIndex(const std::vector<int>& inputVec);
+MatIndex getIndex(const std::vector<int>& inputVec, const MatIndex& matIndex);
 
 /* getcomplement:
  * Given a MatIndex M and an integer N > max( M ), returns a MatIndex containing
  * { integer i | i < N and i not in M }. Used to find indices of mobile nodes
  * given the foxed ones and vice versa.
  */
-MatIndex getcomplement(MatIndex&, int);
+MatIndex getComplement(const MatIndex& nSet, int N);
 
 /* matunion:
  * Returns the set union of the indexes in the two input MatIndexes,
  * sorted in ascending order.
  */
-MatIndex matunion(MatIndex&, MatIndex&);
+MatIndex matUnion(const MatIndex& mat1, const MatIndex& mat2);
 
 /* merge:
  * Copies row data from source array into target array at the locations specified
  * by the input MatIndex. NOTE: Source array should have same number of rows
  * as elements in the MatIndex. Two versions are provided, for sparse and dense.
  */
-void merge(MeshNode&, MeshNode&, MatIndex&);
-void merge(SpMat&, SpMat&, MatIndex&);
+void merge(const MeshNode& source, MeshNode& target, const MatIndex& locations);
+void merge(const SparseMatrixD& source, SparseMatrixD& target, const MatIndex& locations);
 
 } // namespace HSmoothBase
