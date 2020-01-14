@@ -52,7 +52,6 @@ namespace tri = HSmoothTri;
 
 VolumeSolver::VolumeSolver::VolumeSolver(trimesh& VolumeMesh, meshnode& SurfaceNodes, facelabel& FLabels, nodetype& NodeType, int nIterations)
 {
-
   // loading primary data into solver
   vsMesh = VolumeMesh;
   vsNode = SurfaceNodes;

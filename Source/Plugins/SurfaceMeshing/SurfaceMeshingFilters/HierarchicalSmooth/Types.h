@@ -142,6 +142,7 @@ struct DictBase
 {
   typedef std::unordered_map<EdgePair, T, std::hash<EdgePair>, EdgePairEqual> EdgeDict;
 };
+
 /*
  * The dictionary initialization happens like this:
  *
