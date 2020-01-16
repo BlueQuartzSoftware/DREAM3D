@@ -36,9 +36,8 @@
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
-#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/UInt64FilterParameter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -90,6 +89,7 @@ struct HierarchicalSmooth::Impl
 // -----------------------------------------------------------------------------
 HierarchicalSmooth::HierarchicalSmooth()
 : p_Impl(std::make_unique<Impl>())
+, m_Iterations(53)
 {
   initialize();
 
@@ -111,6 +111,8 @@ void HierarchicalSmooth::initialize()
 void HierarchicalSmooth::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
+
+  parameters.push_back(SIMPL_NEW_UINT64_FP("Number of Iterations", Iterations, FilterParameter::Category::Parameter, HierarchicalSmooth));
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 3, AttributeMatrix::Type::Any, IGeometry::Type::Any);
@@ -256,7 +258,7 @@ void HierarchicalSmooth::execute()
   FaceLabel faceLabels = Eigen::Map<const FaceLabelR>(faceLabelList->data(), faceLabelList->getNumberOfTuples(), k_FaceLabelsDimY).array();
   NodeType nodeTypes = Eigen::Map<const NodeType>(nodeTypesList->data(), nodeTypesList->getNumberOfTuples(), k_NodeTypesDimY).array();
 
-  VolumeSolver::VolumeSolver volumeSolver(triangles, vertices, faceLabels, nodeTypes);
+  VolumeSolver::VolumeSolver volumeSolver(triangles, vertices, faceLabels, nodeTypes, m_Iterations);
   auto logFunc = [this](const std::string& message) { notifyStatusMessage(QString::fromStdString(message)); };
   MeshNode smoothedVertices = volumeSolver.hierarchicalSmooth(logFunc);
 
@@ -344,6 +346,18 @@ QString HierarchicalSmooth::getNameOfClass() const
 QString HierarchicalSmooth::ClassName()
 {
   return QString("HierarchicalSmooth");
+}
+
+// -----------------------------------------------------------------------------
+void HierarchicalSmooth::setIterations(uint64_t value)
+{
+  m_Iterations = value;
+}
+
+// -----------------------------------------------------------------------------
+uint64_t HierarchicalSmooth::getIterations() const
+{
+  return m_Iterations;
 }
 
 // -----------------------------------------------------------------------------

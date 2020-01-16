@@ -49,6 +49,7 @@ class SurfaceMeshing_EXPORT HierarchicalSmooth : public AbstractFilter
   PYB11_CREATE_BINDINGS(HierarchicalSmooth SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(HierarchicalSmooth)
   PYB11_STATIC_NEW_MACRO(HierarchicalSmooth)
+  PYB11_PROPERTY(uint64_t Iterations READ getIterations WRITE setIterations)
   PYB11_PROPERTY(DataArrayPath TriListPath READ getTriListPath WRITE setTriListPath)
   PYB11_PROPERTY(DataArrayPath VertexListPath READ getVertexListPath WRITE setVertexListPath)
   PYB11_PROPERTY(DataArrayPath FaceLabelsPath READ getFaceLabelsPath WRITE setFaceLabelsPath)
@@ -78,6 +79,20 @@ public:
   static QString ClassName();
 
   ~HierarchicalSmooth() override;
+
+  /**
+   * @brief Getter property for Iterations
+   * @return
+   */
+  uint64_t getIterations() const;
+
+  /**
+   * @brief Setter property for Iterations
+   * @param value
+   */
+  void setIterations(uint64_t value);
+
+  Q_PROPERTY(uint64_t Iterations READ getIterations WRITE setIterations)
 
   /**
    * @brief Getter property for TriListPath
@@ -256,6 +271,8 @@ protected:
 private:
   struct Impl;
   std::unique_ptr<Impl> p_Impl;
+
+  uint64_t m_Iterations;
 
   DataArrayPath m_TriListPath;
   DataArrayPath m_VertexListPath;
