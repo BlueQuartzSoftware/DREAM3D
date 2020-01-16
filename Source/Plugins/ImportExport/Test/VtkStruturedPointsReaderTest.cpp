@@ -189,37 +189,37 @@ public:
     FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
     FloatVec3Type scaling = {0.25f, 0.35f, 0.45f};
 
-    size_t total = dims[0] * dims[1] * dims[2];
+    size_t total = static_cast<size_t>(dims[0] * dims[1] * dims[2]);
 
     WriteHeader(f, binary, dims, origin.data(), scaling.data());
 
     // Start the POINT_DATA Section
     fprintf(f, "POINT_DATA %lu\n", static_cast<unsigned long>(total));
-    WriteScalars<quint8>(f, "unsigned_char", "Data_uint8", dims, binary);
-    WriteScalars<qint8>(f, "char", "Data_int8", dims, binary);
-    WriteScalars<quint16>(f, "unsigned_short", "Data_uint16", dims, binary);
-    WriteScalars<qint16>(f, "short", "Data_int16", dims, binary);
-    WriteScalars<quint32>(f, "unsigned_int", "Data_uint32", dims, binary);
-    WriteScalars<qint32>(f, "int", "Data_int32", dims, binary);
-    WriteScalars<quint64>(f, "unsigned_long", "Data_uint64", dims, binary);
-    WriteScalars<qint64>(f, "long", "Data_int64", dims, binary);
+    WriteScalars<uint8_t>(f, "unsigned_char", "Data_uint8", dims, binary);
+    WriteScalars<int8_t>(f, "char", "Data_int8", dims, binary);
+    WriteScalars<uint16_t>(f, "unsigned_short", "Data_uint16", dims, binary);
+    WriteScalars<int16_t>(f, "short", "Data_int16", dims, binary);
+    WriteScalars<uint32_t>(f, "unsigned_int", "Data_uint32", dims, binary);
+    WriteScalars<int32_t>(f, "int", "Data_int32", dims, binary);
+    WriteScalars<uint64_t>(f, "unsigned_long", "Data_uint64", dims, binary);
+    WriteScalars<int64_t>(f, "long", "Data_int64", dims, binary);
     WriteScalars<float>(f, "float", "Data_float", dims, binary);
     WriteScalars<double>(f, "double", "Data_double", dims, binary);
 
     dims[0] -= 1;
     dims[1] -= 1;
     dims[2] -= 1;
-    total = dims[0] * dims[1] * dims[2];
+    total = static_cast<size_t>(dims[0] * dims[1] * dims[2]);
     fprintf(f, "\n");
     fprintf(f, "CELL_DATA %lu\n", static_cast<unsigned long>(total));
-    WriteScalars<quint8>(f, "unsigned_char", "Data_uint8", dims, binary);
-    WriteScalars<qint8>(f, "char", "Data_int8", dims, binary);
-    WriteScalars<quint16>(f, "unsigned_short", "Data_uint16", dims, binary);
-    WriteScalars<qint16>(f, "short", "Data_int16", dims, binary);
-    WriteScalars<quint32>(f, "unsigned_int", "Data_uint32", dims, binary);
-    WriteScalars<qint32>(f, "int", "Data_int32", dims, binary);
-    WriteScalars<quint64>(f, "unsigned_long", "Data_uint64", dims, binary);
-    WriteScalars<qint64>(f, "long", "Data_int64", dims, binary);
+    WriteScalars<uint8_t>(f, "unsigned_char", "Data_uint8", dims, binary);
+    WriteScalars<int8_t>(f, "char", "Data_int8", dims, binary);
+    WriteScalars<uint16_t>(f, "unsigned_short", "Data_uint16", dims, binary);
+    WriteScalars<int16_t>(f, "short", "Data_int16", dims, binary);
+    WriteScalars<uint32_t>(f, "unsigned_int", "Data_uint32", dims, binary);
+    WriteScalars<int32_t>(f, "int", "Data_int32", dims, binary);
+    WriteScalars<uint64_t>(f, "unsigned_long", "Data_uint64", dims, binary);
+    WriteScalars<int64_t>(f, "long", "Data_int64", dims, binary);
     WriteScalars<float>(f, "float", "Data_float", dims, binary);
     WriteScalars<double>(f, "double", "Data_double", dims, binary);
 
