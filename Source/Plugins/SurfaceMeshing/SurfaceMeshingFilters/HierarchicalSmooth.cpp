@@ -113,26 +113,25 @@ void HierarchicalSmooth::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 3, AttributeMatrix::Type::Any, IGeometry::Type::Triangle);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 3, AttributeMatrix::Type::Any, IGeometry::Type::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Triangle List", TriListPath, FilterParameter::Category::RequiredArray, HierarchicalSmooth, req));
   }
 
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 3, AttributeMatrix::Type::Any, IGeometry::Type::Triangle);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 3, AttributeMatrix::Type::Any, IGeometry::Type::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Vertex List", VertexListPath, FilterParameter::Category::RequiredArray, HierarchicalSmooth, req));
   }
 
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Any, IGeometry::Type::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", FaceLabelsPath, FilterParameter::Category::RequiredArray, HierarchicalSmooth, req));
   }
 
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Vertex, IGeometry::Type::Triangle);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Any, IGeometry::Type::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Node Types", NodeTypesPath, FilterParameter::Category::RequiredArray, HierarchicalSmooth, req));
   }
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Smoothed Matrix", SmoothedVertexMatrixName, FilterParameter::Category::CreatedArray, HierarchicalSmooth));
   parameters.push_back(SIMPL_NEW_STRING_FP("Smoothed Array", SmoothedVertexArrayName, FilterParameter::Category::CreatedArray, HierarchicalSmooth));
 
   setFilterParameters(parameters);
@@ -185,7 +184,7 @@ void HierarchicalSmooth::dataCheck()
 
   std::vector<size_t> tDims = {vertexList->getNumberOfTuples()};
 
-  auto matrix = dc->createNonPrereqAttributeMatrix(this, getSmoothedVertexMatrixName(), tDims, AttributeMatrix::Type::Any, createdPathID::AttributeMatrixID);
+  auto matrix = dc->getAttributeMatrix(getVertexListPath());
 
   if(matrix == nullptr)
   {
@@ -405,16 +404,4 @@ void HierarchicalSmooth::setSmoothedVertexArrayName(const QString& value)
 QString HierarchicalSmooth::getSmoothedVertexArrayName() const
 {
   return m_SmoothedVertexArrayName;
-}
-
-// -----------------------------------------------------------------------------
-void HierarchicalSmooth::setSmoothedVertexMatrixName(const QString& value)
-{
-  m_SmoothedVertexMatrixName = value;
-}
-
-// -----------------------------------------------------------------------------
-QString HierarchicalSmooth::getSmoothedVertexMatrixName() const
-{
-  return m_SmoothedVertexMatrixName;
 }

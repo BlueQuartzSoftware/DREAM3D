@@ -54,7 +54,6 @@ class SurfaceMeshing_EXPORT HierarchicalSmooth : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath FaceLabelsPath READ getFaceLabelsPath WRITE setFaceLabelsPath)
   PYB11_PROPERTY(DataArrayPath NodeTypePath READ getNodeTypePath WRITE setNodeTypePath)
   PYB11_PROPERTY(QString SmoothedVertexArrayName READ getSmoothedVertexArrayName WRITE setSmoothedVertexArrayName)
-  PYB11_PROPERTY(QString SmoothedVertexMatrixName READ getSmoothedVertexMatrixName WRITE setSmoothedVertexMatrixName)
 #endif
 
 public:
@@ -149,20 +148,6 @@ public:
   void setSmoothedVertexArrayName(const QString& value);
 
   Q_PROPERTY(QString SmoothedVertexArrayName READ getSmoothedVertexArrayName WRITE setSmoothedVertexArrayName)
-
-  /**
-   * @brief Getter property for SmoothedVertexMatrixName
-   * @return
-   */
-  QString getSmoothedVertexMatrixName() const;
-
-  /**
-   * @brief Setter property for SmoothedVertexMatrixName
-   * @param value
-   */
-  void setSmoothedVertexMatrixName(const QString& value);
-
-  Q_PROPERTY(QString SmoothedVertexMatrixName READ getSmoothedVertexMatrixName WRITE setSmoothedVertexMatrixName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -278,7 +263,6 @@ private:
   DataArrayPath m_NodeTypesPath;
 
   QString m_SmoothedVertexArrayName;
-  QString m_SmoothedVertexMatrixName;
 
 public:
   HierarchicalSmooth(const HierarchicalSmooth&) = delete;            // Copy Constructor Not Implemented
