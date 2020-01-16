@@ -145,7 +145,7 @@ MeshNode VolumeSolver::VolumeSolver::hierarchicalSmooth(LogCallback logFunction)
         MatIndex thisFreeBoundaryIdx = base::getIndex(vtemp);
         MeshNode thisFreeBoundary;
         slice::slice(vsNodeSmooth, three, thisFreeBoundaryIdx, thisFreeBoundary);
-        MeshNode thisFreeBoundarySmooth = smooth::smooth(thisFreeBoundary, smooth::Type::Cyclic);
+        MeshNode thisFreeBoundarySmooth = smooth::smooth(thisFreeBoundary, smooth::Type::Cyclic, 0.001, MaxIterations);
         base::merge(thisFreeBoundarySmooth, vsNodeSmooth, thisFreeBoundaryIdx);
         markSectionAsComplete(thisFreeBoundaryIdx);
       }
@@ -168,7 +168,7 @@ MeshNode VolumeSolver::VolumeSolver::hierarchicalSmooth(LogCallback logFunction)
             {
               MeshNode thisTripleLine, thisTripleLineSmoothed;
               slice::slice(vsNodeSmooth, three, thisTripleLineIndex, thisTripleLine);
-              thisTripleLineSmoothed = smooth::smooth(thisTripleLine);
+              thisTripleLineSmoothed = smooth::smooth(thisTripleLine, smooth::Type::Serial, 0.001, MaxIterations);
               base::merge(thisTripleLineSmoothed, vsNodeSmooth, thisTripleLineIndex); /* HAVEN'T CHECKED FOR BUGS */
               markSectionAsComplete(thisTripleLineIndex);
             }
@@ -185,7 +185,7 @@ MeshNode VolumeSolver::VolumeSolver::hierarchicalSmooth(LogCallback logFunction)
     for(int i = 0; i < FB.size(); i++)
       fixed.push_back(std::get<0>(FB[i]));
     MatIndex nFixed = base::getIndex(fixed, nUniq);
-    MeshNode BoundaryNodeSmooth = smooth::smooth(BoundaryNode, nFixed, GL);
+    MeshNode BoundaryNodeSmooth = smooth::smooth(BoundaryNode, nFixed, GL, 0.001, MaxIterations);
     base::merge(BoundaryNodeSmooth, vsNodeSmooth, nUniq);
     markSectionAsComplete(nUniq);
     ncount++;
