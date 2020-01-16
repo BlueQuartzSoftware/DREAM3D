@@ -40,12 +40,14 @@
 
 #include <cmath>
 
+#include <QtCore/QDebug>
+
 #include "Base.h"
 #include "Slice.h"
 
 //============================================================================================
 
-SparseMatrixD HSmoothMain::laplacian2D(int N, const std::string& type)
+SparseMatrixD HSmoothMain::laplacian2D(int N, Type type)
 {
   std::vector<TripletD> tripletList;
   tripletList.reserve(3 * N); // approx. number of nonzero elements
@@ -58,17 +60,26 @@ SparseMatrixD HSmoothMain::laplacian2D(int N, const std::string& type)
   SparseMatrixD temp(N, N);
   temp.setFromTriplets(tripletList.begin(), tripletList.end());
   SparseMatrixD L = SparseMatrixD(temp.transpose()) * temp;
-  if(type == "serial")
+
+  switch(type)
+  {
+  case Type::Serial:
   {
     L.coeffRef(N - 1, N - 1) = 1.0;
   }
-  else if(type == "cyclic")
+  break;
+  case Type::Cyclic:
   {
     L.coeffRef(0, 0) = 2.0;
     L.coeffRef(0, N - 1) = L.coeffRef(N - 1, 0) = -1.0;
   }
-  else
-    std::cerr << "HSmoothMain::Laplacian2D: Unrecognized type. " << std::endl;
+  break;
+  default:
+  {
+    qDebug() << "HSmoothMain::Laplacian2D: Unrecognized type.";
+  }
+  break;
+  }
 
   L.makeCompressed();
   return L;
@@ -126,14 +137,20 @@ std::tuple<SparseMatrixD, std::vector<int>> HSmoothMain::graphLaplacian(const Tr
 
 //============================================================================================
 
-MeshNode HSmoothMain::smooth(const MeshNode& nodes, const std::string& type, double threshold, int iterations)
+MeshNode HSmoothMain::smooth(const MeshNode& nodes, Type type, double threshold, int iterations)
 {
   SparseMatrixD L = laplacian2D(nodes.cols(), type);
   std::vector<int> vidx;
-  if(type == "serial")
+
+  if(type == Type::Serial)
+  {
     vidx = std::vector<int>{(int)0, (int)(L.cols() - 1)};
+  }
   else
+  {
     vidx = std::vector<int>{};
+  }
+
   MatIndex nFixed = HSmoothBase::getIndex(vidx);
   return smooth(nodes, nFixed, L, threshold, iterations);
 }

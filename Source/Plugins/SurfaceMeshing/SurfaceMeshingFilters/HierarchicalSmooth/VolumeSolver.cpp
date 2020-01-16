@@ -39,12 +39,12 @@
 
 #include <iostream>
 
+#include <QtCore/QDebug>
+
 #include "Base.h"
 #include "HierarchicalSmooth.h"
 #include "Slice.h"
 #include "Triangulation.h"
-
-#include <QDebug>
 
 namespace base = HSmoothBase;
 namespace smooth = HSmoothMain;
@@ -147,7 +147,7 @@ MeshNode VolumeSolver::VolumeSolver::hierarchicalSmooth()
         MatIndex thisFreeBoundaryIdx = base::getIndex(vtemp);
         MeshNode thisFreeBoundary;
         slice::slice(vsNodeSmooth, three, thisFreeBoundaryIdx, thisFreeBoundary);
-        MeshNode thisFreeBoundarySmooth = smooth::smooth(thisFreeBoundary, std::string("cyclic"));
+        MeshNode thisFreeBoundarySmooth = smooth::smooth(thisFreeBoundary, smooth::Type::Cyclic);
         base::merge(thisFreeBoundarySmooth, vsNodeSmooth, thisFreeBoundaryIdx);
         markSectionAsComplete(thisFreeBoundaryIdx);
       }

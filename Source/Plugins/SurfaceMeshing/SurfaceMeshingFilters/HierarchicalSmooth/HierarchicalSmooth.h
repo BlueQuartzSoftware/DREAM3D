@@ -44,10 +44,16 @@
 namespace HSmoothMain
 {
 
-SparseMatrixD laplacian2D(int N, const std::string& type = "serial");           // the options are 'serial' and 'cyclic'.
-std::tuple<SparseMatrixD, std::vector<int>> graphLaplacian(const TriMesh& tri); // multiple returns
+enum class Type
+{
+  Serial,
+  Cyclic
+};
 
-MeshNode smooth(const MeshNode& nodes, const std::string& types = "serial", double threshold = 0.001, int iterations = 53);
+SparseMatrixD laplacian2D(int N, Type type = Type::Serial);
+std::tuple<SparseMatrixD, std::vector<int>> graphLaplacian(const TriMesh& tri);
+
+MeshNode smooth(const MeshNode& nodes, Type type = Type::Serial, double threshold = 0.001, int iterations = 53);
 MeshNode smooth(const MeshNode& nodes, const MatIndex& nFixed, const SparseMatrixD& GL, double threshold = 0.001, int iterations = 53);
 
 std::tuple<SparseMatrixD, SparseMatrixD> getDirichletBVP(const SparseMatrixD& GL, const SparseMatrixD& y, const MatIndex& nFixed, const MatIndex& nMobile);
