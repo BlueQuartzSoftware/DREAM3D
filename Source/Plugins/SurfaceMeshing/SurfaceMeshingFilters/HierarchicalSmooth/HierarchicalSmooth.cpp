@@ -58,7 +58,7 @@ SparseMatrixD HSmoothMain::laplacian2D(int N, Type type)
       tripletList.push_back(TripletD(i, i + 1, 1.0));
   }
   SparseMatrixD temp(N, N);
-  temp.setFromTriplets(tripletList.begin(), tripletList.end());
+  temp.setFromTriplets(tripletList.cbegin(), tripletList.cend());
   SparseMatrixD L = SparseMatrixD(temp.transpose()) * temp;
 
   switch(type)
