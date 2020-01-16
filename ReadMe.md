@@ -1,6 +1,6 @@
-# ![DREAM3D Logo](https://github.com/BlueQuartzSoftware/DREAM3D/raw/develop/Resources/OpenSourceEdition/icons/DREAM3D%20(PNG)/128x128.png) #
-
 # About DREAM.3D #
+
+![DREAM3D Logo](https://github.com/BlueQuartzSoftware/DREAM3D/raw/develop/Resources/OpenSourceEdition/icons/DREAM3D%20(PNG)/128x128.png)
 
 DREAM.3D is an open source, cross-platform and modular software package that allows users to reconstruct, instantiate, quantify, mesh, handle and visualize multidimensional, multimodal data. DREAM.3D is built on top of the SIMPL and SIMPLView software projects and contains a filter suite designed for the materials scientist to utilize to reconstruct 3D  microstructures or synthetically generate microstructures. The core software package has many major functionalities, including:
 
