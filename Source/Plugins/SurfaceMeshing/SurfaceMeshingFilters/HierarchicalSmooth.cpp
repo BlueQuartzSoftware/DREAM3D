@@ -247,9 +247,9 @@ void HierarchicalSmooth::execute()
     return;
   }
 
-  using TriMeshR = Eigen::Matrix<int, Eigen::Dynamic, 3, Eigen::RowMajor>;
-  using MeshNodeR = Eigen::Matrix<double, Eigen::Dynamic, 3, Eigen::RowMajor>;
-  using FaceLabelR = Eigen::Matrix<int, Eigen::Dynamic, 2, Eigen::RowMajor>;
+  using TriMeshR = Eigen::Matrix<int, Eigen::Dynamic, k_VolumeMeshDimY, Eigen::RowMajor>;
+  using MeshNodeR = Eigen::Matrix<double, Eigen::Dynamic, k_SurfaceNodesDimY, Eigen::RowMajor>;
+  using FaceLabelR = Eigen::Matrix<int, Eigen::Dynamic, k_FaceLabelsDimY, Eigen::RowMajor>;
 
   TriMesh triangles = Eigen::Map<const TriMeshR>(triList->data(), triList->getNumberOfTuples(), k_VolumeMeshDimY).array();
   MeshNode vertices = Eigen::Map<const MeshNodeR>(vertexList->data(), vertexList->getNumberOfTuples(), k_SurfaceNodesDimY).transpose();
