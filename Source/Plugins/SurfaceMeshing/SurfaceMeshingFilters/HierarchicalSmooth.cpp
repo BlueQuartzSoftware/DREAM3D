@@ -258,7 +258,8 @@ void HierarchicalSmooth::execute()
   NodeType nodeTypes = Eigen::Map<const NodeType>(nodeTypesList->data(), nodeTypesList->getNumberOfTuples(), k_NodeTypesDimY).array();
 
   VolumeSolver::VolumeSolver volumeSolver(triangles, vertices, faceLabels, nodeTypes);
-  MeshNode smoothedVertices = volumeSolver.hierarchicalSmooth();
+  auto logFunc = [this](const std::string& message) { notifyStatusMessage(QString::fromStdString(message)); };
+  MeshNode smoothedVertices = volumeSolver.hierarchicalSmooth(logFunc);
 
   Eigen::Map<MeshNode>(smoothedVertexList->data(), k_SurfaceNodesDimY, smoothedVertexList->getNumberOfTuples()) = smoothedVertices;
 }

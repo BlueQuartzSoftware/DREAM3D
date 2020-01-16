@@ -39,6 +39,9 @@
 
 #pragma once
 
+#include <functional>
+#include <string>
+
 #include "Types.h"
 
 namespace VolumeSolver
@@ -46,8 +49,9 @@ namespace VolumeSolver
 
 class VolumeSolver
 {
-
 public:
+  using LogCallback = std::function<void(const std::string&)>; 
+
   // constructor
   VolumeSolver(const TriMesh& volumeMesh, const MeshNode& surfaceNodes, const FaceLabel& faceLabels, const NodeType& nodeType, int iterations = 53);
   // the last integer default is the number of bisections in each call
@@ -57,7 +61,7 @@ public:
   // machine in use.
 
   // smoother
-  MeshNode hierarchicalSmooth();
+  MeshNode hierarchicalSmooth(LogCallback logFunction = LogCallback());
 
   // writers
   MeshNode getSmoothed() const;

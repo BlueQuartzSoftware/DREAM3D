@@ -37,9 +37,7 @@
 
 #include "VolumeSolver.h"
 
-#include <iostream>
-
-#include <QtCore/QDebug>
+#include <sstream>
 
 #include "Base.h"
 #include "HierarchicalSmooth.h"
@@ -112,7 +110,7 @@ VolumeSolver::VolumeSolver::VolumeSolver(const TriMesh& volumeMesh, const MeshNo
 
 //=======================================================================================
 
-MeshNode VolumeSolver::VolumeSolver::hierarchicalSmooth()
+MeshNode VolumeSolver::VolumeSolver::hierarchicalSmooth(LogCallback logFunction)
 {
   int ncount = 1;
 
@@ -206,14 +204,19 @@ MeshNode VolumeSolver::VolumeSolver::hierarchicalSmooth()
       }
   }
 
-  if(!Status.all())
+  if(logFunction)
   {
-    qDebug().nospace() << "WARNING: " << (fNorm > fErrorThreshold).count() << " of " << vsNodeSmooth.cols() << " nodes not smoothed. "
-                       << "Query VolumeSolver::Status for more information. ";
-  }
-  else
-  {
-    qDebug() << "All nodes smoothed";
+    std::stringstream ss;
+    if(!Status.all())
+    {
+      ss << "WARNING: " << (fNorm > fErrorThreshold).count() << " of " << vsNodeSmooth.cols() << " nodes not smoothed. "
+         << "Query VolumeSolver::Status for more information.";
+    }
+    else
+    {
+      ss << "All nodes smoothed";
+    }
+    logFunction(ss.str());
   }
 
   return vsNodeSmooth;
