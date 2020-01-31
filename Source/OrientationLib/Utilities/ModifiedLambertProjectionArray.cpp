@@ -38,6 +38,7 @@
 
 
 #include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
 
 // -----------------------------------------------------------------------------
 //

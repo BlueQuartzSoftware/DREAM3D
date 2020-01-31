@@ -8,22 +8,15 @@
 
 Spaces should be used instead of hard tabs. This helps file portability across different editors. DREAM.3D uses a standard whereby all indents  use two spaces.
 
-##  Always Use an Include Guard ##
+## Always Use an Include Guard ##
 
-Always use an "include guard" in your headers:
+Always use
 
-    ##ifndef _MY_HEADER_H_
-    ##define _MY_HEADER_H_
-    
-    Your Code Goes Here
+    #pragme once
 
-    ##endif
+at the top of *EVERY* header file.
 
-Include guards are _##define_ preprocessor directives used in header files that ensure
-the header is only ever included **once** during the compiling process for a
-given source file. If these guards are not included, it is up to the programmer to make sure that headers are only included a single time, which can become tedious or impossible in some situations with larger projects.
-
-## Use Only ANSI-C99 Integer Types ##
+## Use Only C++11 Integer Types Defined in \<cstdint\> ##
 
 The ANSI-C99 standard defines typedefs for 8, 16, 32 and 64 bit integer types. These should be used if possible. Platform specific types such as **int64** and ambiguous types such as
 
@@ -31,9 +24,13 @@ The ANSI-C99 standard defines typedefs for 8, 16, 32 and 64 bit integer types. T
     signed long int
     unsigned long int
 
-should be avoided at all costs. This usage is important since the number of bytes that a "long" variable occupies will change depending on CPU type and compiler used. This can have an impact on many important operations, such as pointer arithmetic and binary file IO. All Unix  systems have a *stdint.h*  file included with the compiler that defines the proper types. The Microsoft Visual Studio Compiler does not have this file included. There are lots of examples of creating one on the internet. An exemplar file is  also included with the Electronic Imaging software distribution that is generated using CMake.
+should be avoided at all costs. This usage is important since the number of bytes that a "long" variable occupies will change depending on CPU type and compiler used. This can have an impact on many important operations, such as pointer arithmetic and binary file IO.
 
-## C99 Integer Types ##
+Prefer the use of:
+
+    #include <cstdint>
+
+## cstdint Integer Types ##
 
     int8_t    8  Bit Signed Integer
     uint8_t   8  Bit Unsigned Integer
@@ -43,6 +40,7 @@ should be avoided at all costs. This usage is important since the number of byte
     uint32_t  32 Bit Unsigned Integer
     int64_t   64 Bit Signed Integer
     uint64_t  64 Bit Unsigned Integer
+    size_t    64 Bit Unsigned Integer used for array access
 
 ## Special Constants ##
 
@@ -60,28 +58,23 @@ nullptr should be used in conjunction with only raw pointers and 0 (zero) should
 
     int i; // Bad, unless this is pure "C" then you have NO choice
     i = 0; // Good. The variable has a known starting value
-    float* f = nullptr; // Good (if the compiler will let you do this)
-    char buffer[512]; // Allocation of char buffer but will be filled with junk
-    memset(buffer, 0, 512); // Good. Splat Zeros across the array
+    float* f = nullptr; // Good
 
 ### Rationale ###
 
 Initializing your own variables ensures that you are starting from a known state when execution of the code reaches that point. Subtle bugs can occur if you do not initialize your variables and then perform checks on them to see if they are valid. A classic example is the following:
 
-    int* ptr;
-    if (!ptr) { initializePointer(ptr); }
+    int* ptr; // Bad
+    if (ptr == nullptr) { initializePointer(ptr); }
 
 When compiled in Debug on *some* compilers this will execute as you would expect. The problems come when the code is compiled in *Release* mode. The _ptr_ variable will **NOT** be set to _NULL_ but instead some random memory address, which can cause problems because the initialization code that should have been running will be skipped due to the conditional _if (!ptr)_ will be true. Remembering to always initialize variables avoids these issues.
 
 ## Array Initialization ##
 
-    define MY_ARRAY_SIZE  10;
-    int array[10];              // Good - Will compile on all platforms
-    int array[MY_ARRAY_SIZE];   // Good - Will compile on all platforms
-    const int size = 10;
-    int array[size];            // Bad - Will NOT compile on all platforms
+Prefer the use of C++11 std::array<N, T> instead of "C" style arrays.
 
-An array is declared as *datatype name[constant-size]* and groups one or more instances of a data type into  one addressable place. Constant-size may be an expression,  but the expression must evaluate to a constant.
+    int32_t foo[3]; // BAD.. No initialization of the internal data
+    std::array<int32_t, 3> foo = {0,0,0};
 
 ## The Dereference operator `*` and the Address-Of Operator `&` Should Be Directly Connected with the Type-Specifier ##
 
@@ -101,14 +94,13 @@ When writing code, never assume that a CPU has a specific capability such as SSE
        Generic Code or error message stating the cpu is missing the functionality
     ##endif
 
-
 ## Copyright & License Information ##
 
 Always include a copyright and/or license block at the start of **every** source file. It is good practice to document in the source code any copyright or licensing restrictions in every file that you write. An example license block is shown below.
 
     ///////////////////////////////////////////////////////////////////////////////
     //
-    //  Copyright (c) 2007, 2013 Michael A. Jackson for BlueQuartz Software
+    //  Copyright (c) 2008~2019 BlueQuartz Software, LLC
     //  All rights reserved.
     //  BSD License: http://www.opensource.org/licenses/bsd-license.html
     //
@@ -117,7 +109,7 @@ Always include a copyright and/or license block at the start of **every** source
     More stringent notices can also be written into the source code.
     /***************************************************************************
     **
-    ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+    ** Copyright (C) 2019 Nokia Corporation and/or its subsidiary(-ies).
     ** All rights reserved.
     ** Contact: Nokia Corporation (qt-info@nokia.com)
     **
@@ -156,24 +148,29 @@ Always include a copyright and/or license block at the start of **every** source
     **
     ***************************************************************************/
 
-## Always Implement the "Big Three" in C++ Classes ##
+## Always Implement the "Big Five" in C++ Classes ##
 
 When writing C++ classes the programmer will always define the "Big Three" which are defined as:
 
 - copy constructor
 - copy assignment operator
+- move constructor
+- move assignment
 - destructor
 
-The programmer should **never** allow the compiler to implement these methods. This will happen if they are not explicitly defined in the class declaration. Further more if the destructor is declared _public_ then it **will** have the **virtual** modifier applied to the declaration.
+The programmer should **never** allow the compiler to implement these methods. This will happen if they are not explicitly defined in the class declaration. It is up to the develop to decide if the methods
+should be marked as deleted or default'ed or manually implemented.
 
-    class A
+    class Foo
     {
       public:
-         A();
-         virtual ~A();
-      private:
-       A(const A&);               //Copy Constructor Not Implemented
-       void operator=(const A&);  //Copy Assignment Not Implemented
+        Foo();
+        ~Foo();
+
+        Foo(const Foo&) = delete;            // Copy Constructor Not Implemented
+        Foo(Foo&&) = delete;                 // Move Constructor Not Implemented
+        Foo& operator=(const Foo&) = delete; // Copy Assignment Not Implemented
+        Foo& operator=(Foo&&) = delete;      // Move Assignment Not Implemented
     };
 
 Note that with C++11, programmers now have the ability to inform the compiler which of these operations can be constructed by default and which can be ignored using the `default` and `delete` keywords.
@@ -187,7 +184,7 @@ String constants in C++ should be declared as:
 Like constants should be grouped into a namespace.
 
     namespace MyConstants {
-        const std::string MyFile("SoimeFile");
+        const std::string MyFile("SomeFile");
     }
 
 When using ANSI C one should use a char* for constant strings:

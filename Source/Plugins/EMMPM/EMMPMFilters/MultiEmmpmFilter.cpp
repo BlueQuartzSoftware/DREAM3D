@@ -34,11 +34,12 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include <memory>
 
+#include <QtCore/QTextStream>
+
 #include "MultiEmmpmFilter.h"
 
 #include "EMMPM/EMMPMConstants.h"
 #include "EMMPM/EMMPMLib/Common/EMMPM_Math.h"
-#include "EMMPM/EMMPMLib/Common/EMTime.h"
 #include "EMMPM/EMMPMLib/Common/StatsDelegate.h"
 #include "EMMPM/EMMPMLib/Core/EMMPM.h"
 #include "EMMPM/EMMPMLib/Core/EMMPMUtilities.h"
@@ -46,10 +47,7 @@
 #include "EMMPM/EMMPMLib/Core/InitializationFunctions.h"
 #include "EMMPM/EMMPMLib/EMMPMLib.h"
 
-#include <QtCore/QTextStream>
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"

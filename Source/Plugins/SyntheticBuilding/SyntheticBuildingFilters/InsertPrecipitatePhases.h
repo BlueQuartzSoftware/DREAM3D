@@ -778,13 +778,13 @@ protected:
   void moveShapeDescriptions();
 
 private:
-  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  std::weak_ptr<Int32ArrayType> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
-  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  std::weak_ptr<Int32ArrayType> m_CellPhasesPtr;
   int32_t* m_CellPhases = nullptr;
   std::weak_ptr<DataArray<bool>> m_MaskPtr;
   bool* m_Mask = nullptr;
-  std::weak_ptr<DataArray<int8_t>> m_BoundaryCellsPtr;
+  std::weak_ptr<Int8ArrayType> m_BoundaryCellsPtr;
   int8_t* m_BoundaryCells = nullptr;
   std::weak_ptr<DataArray<float>> m_AxisEulerAnglesPtr;
   float* m_AxisEulerAngles = nullptr;
@@ -798,15 +798,15 @@ private:
   float* m_Omega3s = nullptr;
   std::weak_ptr<DataArray<float>> m_EquivalentDiametersPtr;
   float* m_EquivalentDiameters = nullptr;
-  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  std::weak_ptr<Int32ArrayType> m_FeaturePhasesPtr;
   int32_t* m_FeaturePhases = nullptr;
-  std::weak_ptr<DataArray<int32_t>> m_NumCellsPtr;
+  std::weak_ptr<Int32ArrayType> m_NumCellsPtr;
   int32_t* m_NumCells = nullptr;
   std::weak_ptr<DataArray<PhaseType::EnumType>> m_PhaseTypesPtr;
   PhaseType::EnumType* m_PhaseTypes = nullptr;
   std::weak_ptr<DataArray<ShapeType::EnumType>> m_ShapeTypesPtr;
   ShapeType::EnumType* m_ShapeTypes = nullptr;
-  std::weak_ptr<DataArray<int32_t>> m_NumFeaturesPtr;
+  std::weak_ptr<Int32ArrayType> m_NumFeaturesPtr;
   int32_t* m_NumFeatures = nullptr;
 
   QString m_ClusteringListArrayName = {};
