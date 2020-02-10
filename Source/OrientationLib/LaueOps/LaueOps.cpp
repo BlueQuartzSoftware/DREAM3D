@@ -403,10 +403,10 @@ LaueOps::Pointer LaueOps::getOrientationOpsFromSpaceGroupNumber(size_t sgNumber)
   size_t pgNumber = 0;
   for(size_t i = 0; i < sgpg.size(); i++)
   {
-    size_t value = sgpg[i];
-    if(value > sgNumber)
+    if(sgpg[i] > sgNumber)
     {
       pgNumber = i;
+      break;
     }
   }
 
