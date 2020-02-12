@@ -400,7 +400,7 @@ LaueOps::Pointer LaueOps::getOrientationOpsFromSpaceGroupNumber(size_t sgNumber)
   std::array<size_t, 32> sgpg = {1, 2, 3, 6, 10, 16, 25, 47, 75, 81, 83, 89, 99, 111, 123, 143, 147, 149, 156, 162, 168, 174, 175, 177, 183, 187, 191, 195, 200, 207, 215, 221};
   std::array<size_t, 32> pgLaue = {1, 1, 2, 2, 2, 22, 22, 22, 4, 4, 4, 42, 42, 42, 42, 3, 3, 32, 32, 32, 6, 6, 6, 62, 62, 62, 62, 23, 23, 43, 43, 43};
 
-  size_t pgNumber = 0;
+  size_t pgNumber = sgpg.size() - 1;
   for(size_t i = 0; i < sgpg.size(); i++)
   {
     if(sgpg[i] > sgNumber)
