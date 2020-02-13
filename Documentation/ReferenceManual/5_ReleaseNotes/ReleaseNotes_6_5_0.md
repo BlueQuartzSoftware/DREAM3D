@@ -10,18 +10,30 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.5.134 ##
+
+### Version 6.5.134  New Filters & Features ###
+
++ None
+
+### 6.5.134 Fixed DREAM3D Issues ###
+
++ Fix generation of documentation using Mkdocs on macOS
++ Fix DataContainerArray unit test
+
+### 6.5.134 Fixed SIMPL Issues ###
+
++ Fix issue where all prior filters stored in a .dream3d file would be written out to a JSON file if the pipeline included a Read DREAM3D Data file filter and the pipeline was executed.
+
 ## Version 6.5.133 ##
 
-### 6.5.## Version 6.5.133 ##
-
-New Filters & Features ###
+### Version 6.5.133  New Filters & Features ###
 
 + None
 
 ### 6.5.133 Fixed DREAM3D Issues ###
 
 + Insert Precipitate with Mask removes all features from all phases. #925
-
 
 ## Version 6.5.131 ##
 

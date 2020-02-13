@@ -1,5 +1,5 @@
-Funding and Contribution Acknowledgements
-=============
+# Funding and Contribution Acknowledgements #
+
 
 ## Funding Sources ##
 
