@@ -228,13 +228,13 @@ void FindDifferenceMap::dataCheck()
 
   QVector<IDataArray::Pointer> dataArrays;
 
-  m_FirstInputArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getFirstInputArrayPath());
+  m_FirstInputArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, getFirstInputArrayPath());
   if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_FirstInputArrayPtr.lock());
   }
 
-  m_SecondInputArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSecondInputArrayPath());
+  m_SecondInputArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, getSecondInputArrayPath());
   if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_SecondInputArrayPtr.lock());
@@ -276,7 +276,7 @@ void FindDifferenceMap::dataCheck()
     dataArrays.push_back(m_DifferenceMapPtr.lock());
   }
 
-  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrays);
+  getDataContainerArray()->validateNumberOfTuples(this, dataArrays);
 }
 
 // -----------------------------------------------------------------------------

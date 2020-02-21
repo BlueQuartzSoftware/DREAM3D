@@ -212,7 +212,7 @@ void InitializeSyntheticVolume::dataCheck()
   clearWarningCode();
 
   // Create the output Data Container
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer(this, getDataContainerName(), DataContainerID);
   if(getErrorCode() < 0)
   {
     return;
@@ -309,7 +309,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3Type dims, FloatVe
 
   // Get the PhaseTypes - Remember there is a Dummy PhaseType in the first slot of the array
   std::vector<size_t> cDims(1, 1); // This states that we are looking for an array with a single component
-  UInt32ArrayType::Pointer phaseType = dca->getPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(nullptr, getInputPhaseTypesArrayPath(), cDims);
+  UInt32ArrayType::Pointer phaseType = dca->getPrereqArrayFromPath<UInt32ArrayType>(nullptr, getInputPhaseTypesArrayPath(), cDims);
   if(phaseType == nullptr)
   {
     QString ss =
@@ -325,7 +325,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3Type dims, FloatVe
   }
 
   std::vector<size_t> statsDims(1, 1);
-  StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), statsDims);
+  StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray>(this, getInputStatsArrayPath(), statsDims);
   if(statsPtr == nullptr)
   {
     QString ss =

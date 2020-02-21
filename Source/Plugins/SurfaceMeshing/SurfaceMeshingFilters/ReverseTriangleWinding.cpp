@@ -148,7 +148,7 @@ void ReverseTriangleWinding::initialize()
 // -----------------------------------------------------------------------------
 void ReverseTriangleWinding::dataCheck()
 {
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceDataContainerName());
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom>(this, getSurfaceDataContainerName());
 }
 
 // -----------------------------------------------------------------------------

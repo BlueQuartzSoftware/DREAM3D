@@ -402,13 +402,13 @@ void InsertPrecipitatePhases::dataCheck()
   clearWarningCode();
   DataArrayPath tempPath;
 
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   QVector<DataArrayPath> cellDataArrayPaths;
   QVector<DataArrayPath> ensembleDataArrayPaths;
 
   std::vector<size_t> cDims(1, 1);
-  m_PhaseTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
+  m_PhaseTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>>(this, getInputPhaseTypesArrayPath(), cDims);
   if(nullptr != m_PhaseTypesPtr.lock())
   {
     m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
@@ -418,7 +418,7 @@ void InsertPrecipitatePhases::dataCheck()
     ensembleDataArrayPaths.push_back(getInputPhaseTypesArrayPath());
   }
 
-  m_ShapeTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputShapeTypesArrayPath(), cDims);
+  m_ShapeTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>>(this, getInputShapeTypesArrayPath(), cDims);
   if(nullptr != m_ShapeTypesPtr.lock())
   {
     m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0);
@@ -430,7 +430,7 @@ void InsertPrecipitatePhases::dataCheck()
 
   if(getFeatureGeneration() == 0)
   {
-    m_StatsDataArray = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), cDims);
+    m_StatsDataArray = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray>(this, getInputStatsArrayPath(), cDims);
     if(m_StatsDataArray.lock() == nullptr)
     {
       QString ss = QObject::tr("Statistics array is not initialized correctly. The path is %1").arg(getInputStatsArrayPath().serialize());
@@ -448,7 +448,7 @@ void InsertPrecipitatePhases::dataCheck()
   }
 
   // Cell Data
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeatureIdsArrayPath(), cDims);
 
   if(nullptr != m_FeatureIdsPtr.lock())
   {
@@ -459,7 +459,7 @@ void InsertPrecipitatePhases::dataCheck()
     cellDataArrayPaths.push_back(getFeatureIdsArrayPath());
   }
 
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims);
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getCellPhasesArrayPath(), cDims);
 
   if(nullptr != m_CellPhasesPtr.lock())
   {
@@ -470,7 +470,7 @@ void InsertPrecipitatePhases::dataCheck()
     cellDataArrayPaths.push_back(getCellPhasesArrayPath());
   }
 
-  m_BoundaryCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getBoundaryCellsArrayPath(), cDims);
+  m_BoundaryCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>>(this, getBoundaryCellsArrayPath(), cDims);
 
   if(nullptr != m_BoundaryCellsPtr.lock())
   {
@@ -483,7 +483,7 @@ void InsertPrecipitatePhases::dataCheck()
 
   if(m_UseMask)
   {
-    m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), cDims);
+    m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>>(this, getMaskArrayPath(), cDims);
     if(nullptr != m_MaskPtr.lock())
     {
       m_Mask = m_MaskPtr.lock()->getPointer(0);
@@ -513,7 +513,7 @@ void InsertPrecipitatePhases::dataCheck()
   }
 
   // Feature Data
-  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims);
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeaturePhasesArrayPath(), cDims);
 
   if(nullptr != m_FeaturePhasesPtr.lock())
   {
@@ -521,28 +521,28 @@ void InsertPrecipitatePhases::dataCheck()
   }
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getNumCellsArrayName());
-  m_NumCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, getNumCellsArrayName(), DataArrayID31);
+  m_NumCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>>(this, tempPath, 0, cDims, getNumCellsArrayName(), DataArrayID31);
   if(nullptr != m_NumCellsPtr.lock())
   {
     m_NumCells = m_NumCellsPtr.lock()->getPointer(0);
   }
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getEquivalentDiametersArrayName());
-  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, getEquivalentDiametersArrayName(), DataArrayID32);
+  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims, getEquivalentDiametersArrayName(), DataArrayID32);
   if(nullptr != m_EquivalentDiametersPtr.lock())
   {
     m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
   }
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getVolumesArrayName());
-  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, getVolumesArrayName(), DataArrayID33);
+  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims, getVolumesArrayName(), DataArrayID33);
   if(nullptr != m_VolumesPtr.lock())
   {
     m_Volumes = m_VolumesPtr.lock()->getPointer(0);
   }
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getOmega3sArrayName());
-  m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, getOmega3sArrayName(), DataArrayID34);
+  m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims, getOmega3sArrayName(), DataArrayID34);
   if(nullptr != m_Omega3sPtr.lock())
   {
     m_Omega3s = m_Omega3sPtr.lock()->getPointer(0);
@@ -550,21 +550,21 @@ void InsertPrecipitatePhases::dataCheck()
 
   cDims[0] = 3;
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getCentroidsArrayName());
-  m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, getCentroidsArrayName(), DataArrayID35);
+  m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims, getCentroidsArrayName(), DataArrayID35);
   if(nullptr != m_CentroidsPtr.lock())
   {
     m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
   }
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAxisEulerAnglesArrayName());
-  m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, getAxisEulerAnglesArrayName(), DataArrayID36);
+  m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims, getAxisEulerAnglesArrayName(), DataArrayID36);
   if(nullptr != m_AxisEulerAnglesPtr.lock())
   {
     m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0);
   }
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAxisLengthsArrayName());
-  m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, getAxisLengthsArrayName(), DataArrayID37);
+  m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims, getAxisLengthsArrayName(), DataArrayID37);
   if(nullptr != m_AxisLengthsPtr.lock())
   {
     m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0);
@@ -572,7 +572,7 @@ void InsertPrecipitatePhases::dataCheck()
 
   // Ensemble Data
   cDims[0] = 1;
-  m_NumFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNumFeaturesArrayPath(), cDims);
+  m_NumFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getNumFeaturesArrayPath(), cDims);
 
   if(nullptr != m_NumFeaturesPtr.lock())
   {
@@ -600,8 +600,8 @@ void InsertPrecipitatePhases::dataCheck()
     }
   }
 
-  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, cellDataArrayPaths);
-  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, ensembleDataArrayPaths);
+  getDataContainerArray()->validateNumberOfTuples(this, cellDataArrayPaths);
+  getDataContainerArray()->validateNumberOfTuples(this, ensembleDataArrayPaths);
 }
 
 // -----------------------------------------------------------------------------
@@ -3046,7 +3046,7 @@ void InsertPrecipitatePhases::appendToExistingAttributeMatrix(QList<IDataArray::
     foreach(IDataArray::Pointer incomingArray, incomingArrays)
     {
       int err = 0;
-      IDataArray::Pointer existingArray = existingAM->getPrereqIDataArray<IDataArray, AbstractFilter>(this, incomingArray->getName(), err);
+      IDataArray::Pointer existingArray = existingAM->getPrereqIDataArray<IDataArray>(this, incomingArray->getName(), err);
       if(existingArray != IDataArray::NullPointer())
       {
         // ATTENTION: This "append" code is making the assumption that there will be 0's preceding the precipitate phase data.  The number of preceding

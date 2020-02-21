@@ -117,7 +117,7 @@ void LammpsFileWriter::dataCheck()
     return;
   }
 
-  VertexGeom::Pointer vertices = v->getPrereqGeometry<VertexGeom, AbstractFilter>(this);
+  VertexGeom::Pointer vertices = v->getPrereqGeometry<VertexGeom>(this);
   if(getErrorCode() < 0)
   {
     return;

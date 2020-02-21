@@ -121,7 +121,7 @@ void AddBadData::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getGBEuclideanDistancesArrayPath().getDataContainerName());
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getGBEuclideanDistancesArrayPath().getDataContainerName());
 
   if((!m_PoissonNoise) && (!m_BoundaryNoise))
   {
@@ -130,7 +130,7 @@ void AddBadData::dataCheck()
   }
 
   std::vector<size_t> cDims(1, 1);
-  m_GBEuclideanDistancesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getGBEuclideanDistancesArrayPath(),
+  m_GBEuclideanDistancesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getGBEuclideanDistancesArrayPath(),
                                                                                                                   cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_GBEuclideanDistancesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {

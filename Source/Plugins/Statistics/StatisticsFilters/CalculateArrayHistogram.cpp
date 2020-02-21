@@ -185,7 +185,7 @@ void CalculateArrayHistogram::dataCheck()
     newArrayName = getNewDataArrayName();
   }
 
-  m_InDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedArrayPath());
+  m_InDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, getSelectedArrayPath());
   if(getErrorCode() < 0)
   {
     return;
@@ -203,7 +203,7 @@ void CalculateArrayHistogram::dataCheck()
 
   if(m_NewDataContainer) // create a new data container
   {
-    DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName(), DataContainerID);
+    DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer(this, getNewDataContainerName(), DataContainerID);
     if(getErrorCode() < 0)
     {
       return;
@@ -227,7 +227,7 @@ void CalculateArrayHistogram::dataCheck()
   }
 
   // histogram array
-  m_NewDataArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter>(
+  m_NewDataArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>>(
       this, tempPath, 0, cDims);                /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_NewDataArrayPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {

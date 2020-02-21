@@ -139,7 +139,7 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
 
   FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFilePath(), true);
 
-  DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "SpecifiedPoints", DataContainerID);
+  DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer(this, "SpecifiedPoints", DataContainerID);
   if(getErrorCode() < 0 || nullptr == v.get())
   {
     return;
@@ -153,7 +153,7 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
 
   std::vector<size_t> cDims(1, 1);
   tempPath.update("SpecifiedPoints", "SpecifiedPointsData", "FeatureIds");
-  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>>(
       this, tempPath, 0, cDims);              /* Assigns the shared_ptr<>(this, tempPath, -301, dims);  Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_FeatureIdsPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {

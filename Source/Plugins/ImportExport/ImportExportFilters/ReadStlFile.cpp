@@ -225,7 +225,7 @@ void ReadStlFile::dataCheck()
   }
 
   // Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
-  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshDataContainerName(), DataContainerID);
+  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer(this, getSurfaceMeshDataContainerName(), DataContainerID);
   if(getErrorCode() < 0)
   {
     return;
@@ -241,7 +241,7 @@ void ReadStlFile::dataCheck()
 
   std::vector<size_t> cDims(1, 3);
   tempPath.update(getSurfaceMeshDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), getFaceNormalsArrayName());
-  m_FaceNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims, "", DataArrayID31);
+  m_FaceNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_FaceNormalsPtr.lock())
   {
     m_FaceNormals = m_FaceNormalsPtr.lock()->getPointer(0);

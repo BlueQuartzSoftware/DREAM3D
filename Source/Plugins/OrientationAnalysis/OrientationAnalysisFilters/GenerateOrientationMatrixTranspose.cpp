@@ -133,14 +133,14 @@ void GenerateOrientationMatrixTranspose::dataCheck()
 
   std::vector<size_t> cDims(1, 1);
   cDims[0] = 9;
-  m_OrientationMatrixPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getOrientationMatrixDataArrayPath(), cDims);
+  m_OrientationMatrixPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getOrientationMatrixDataArrayPath(), cDims);
   if(nullptr != m_OrientationMatrixPtr.lock())
   {
     m_OrientationMatrix = m_OrientationMatrixPtr.lock()->getPointer(0);
   }
 
   cDims[0] = 9;
-  m_OutputOrientationMatrixPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
+  m_OutputOrientationMatrixPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_OutputOrientationMatrixPtr.lock())
   {
     m_OutputOrientationMatrix = m_OutputOrientationMatrixPtr.lock()->getPointer(0);

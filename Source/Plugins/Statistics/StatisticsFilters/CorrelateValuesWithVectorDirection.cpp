@@ -119,7 +119,7 @@ void CorrelateValuesWithVectorDirection::dataCheck()
   DataArrayPath tempPath;
 
   std::vector<size_t> dims(1, 3);
-  m_VectorDataPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getVectorDataArrayPath(),
+  m_VectorDataPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getVectorDataArrayPath(),
                                                                                                       dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_VectorDataPtr.lock())                                                                      /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {

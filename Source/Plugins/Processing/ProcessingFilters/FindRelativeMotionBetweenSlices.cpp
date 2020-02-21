@@ -232,7 +232,7 @@ void FindRelativeMotionBetweenSlices::dataCheck()
   DataArrayPath tempPath;
   QString ss;
 
-  m_InDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedArrayPath());
+  m_InDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, getSelectedArrayPath());
   if(nullptr != m_InDataPtr.lock())
   {
     if(TemplateHelpers::CanDynamicCast<BoolArrayType>()(m_InDataPtr.lock()))
@@ -244,14 +244,14 @@ void FindRelativeMotionBetweenSlices::dataCheck()
 
   std::vector<size_t> cDims(1, 3);
   tempPath.update(m_SelectedArrayPath.getDataContainerName(), m_SelectedArrayPath.getAttributeMatrixName(), getMotionDirectionArrayName());
-  m_MotionDirectionPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+  m_MotionDirectionPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(
       this, tempPath, 0, cDims);                   /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_MotionDirectionPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_MotionDirection = m_MotionDirectionPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getSelectedArrayPath().getDataContainerName());
+  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getSelectedArrayPath().getDataContainerName());
   if(getErrorCode() < 0)
   {
     return;

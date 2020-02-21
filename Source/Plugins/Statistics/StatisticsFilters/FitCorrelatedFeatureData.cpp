@@ -159,7 +159,7 @@ void FitCorrelatedFeatureData::dataCheck()
   clearWarningCode();
 
   std::vector<size_t> dims(1, 1);
-  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeaturePhasesArrayPath(),
                                                                                                            dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_FeaturePhasesPtr.lock())                                                                        /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -196,7 +196,7 @@ void FitCorrelatedFeatureData::dataCheck()
   dims.resize(2);
   dims[0] = m_NumberOfCorrelatedBins;
   dims[1] = numComp;
-  m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(
+  m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(
       this, getNewEnsembleArrayArrayPath(), 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_NewEnsembleArrayPtr.lock())         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -207,7 +207,7 @@ void FitCorrelatedFeatureData::dataCheck()
   {
     dims.resize(1);
     dims[0] = 1;
-    m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(),
+    m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>>(this, getBiasedFeaturesArrayPath(),
                                                                                                            dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_BiasedFeaturesPtr.lock())                                                                     /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {

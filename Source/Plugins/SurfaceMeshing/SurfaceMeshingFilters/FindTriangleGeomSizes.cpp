@@ -115,7 +115,7 @@ void FindTriangleGeomSizes::dataCheck()
 
   QVector<IDataArray::Pointer> dataArrays;
 
-  TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getFaceLabelsArrayPath().getDataContainerName());
+  TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom>(this, getFaceLabelsArrayPath().getDataContainerName());
 
   if(getErrorCode() < 0)
   {
@@ -127,7 +127,7 @@ void FindTriangleGeomSizes::dataCheck()
   std::vector<size_t> cDims(1, 2);
 
   m_FaceLabelsPtr =
-      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_FaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0);
@@ -137,13 +137,13 @@ void FindTriangleGeomSizes::dataCheck()
     dataArrays.push_back(m_FaceLabelsPtr.lock());
   }
 
-  getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getFeatureAttributeMatrixName(), -301);
+  getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, getFeatureAttributeMatrixName(), -301);
 
   DataArrayPath path(getFaceLabelsArrayPath().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getVolumesArrayName());
 
   cDims[0] = 1;
 
-  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, path, 0, cDims, "", DataArrayID31);
+  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, path, 0, cDims, "", DataArrayID31);
   if(nullptr != m_VolumesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Volumes = m_VolumesPtr.lock()->getPointer(0);

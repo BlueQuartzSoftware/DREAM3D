@@ -151,14 +151,14 @@ void ConvertQuaternion::dataCheck()
 
   std::vector<size_t> cDims(1, 1);
   cDims[0] = 4;
-  m_QuaternionsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuaternionDataArrayPath(), cDims);
+  m_QuaternionsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getQuaternionDataArrayPath(), cDims);
   if(nullptr != m_QuaternionsPtr.lock())
   {
     m_Quaternions = m_QuaternionsPtr.lock()->getPointer(0);
   }
 
   cDims[0] = 4;
-  m_OutputQuaternionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
+  m_OutputQuaternionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_OutputQuaternionsPtr.lock())
   {
     m_OutputQuaternions = m_OutputQuaternionsPtr.lock()->getPointer(0);

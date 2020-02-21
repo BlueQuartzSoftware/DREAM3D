@@ -398,9 +398,9 @@ void ReplaceElementAttributesWithNeighborValues::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getConfidenceIndexArrayPath().getDataContainerName());
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getConfidenceIndexArrayPath().getDataContainerName());
 
-  m_InArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getConfidenceIndexArrayPath());
+  m_InArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, getConfidenceIndexArrayPath());
   if(getErrorCode() < 0)
   {
     return;

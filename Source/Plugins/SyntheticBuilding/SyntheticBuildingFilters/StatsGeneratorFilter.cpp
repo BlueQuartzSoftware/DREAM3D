@@ -257,7 +257,7 @@ void StatsGeneratorFilter::dataCheck()
 {
   if(nullptr != m_StatsDataArray)
   {
-    getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getStatsGeneratorDataContainerName(), DataContainerID);
+    getDataContainerArray()->createNonPrereqDataContainer(this, getStatsGeneratorDataContainerName(), DataContainerID);
 
     if(getErrorCode() < 0)
     {
