@@ -117,9 +117,6 @@ void SPParksDumpReader::updateCellInstancePointers()
 {
   setErrorCondition(0);
   setWarningCondition(0);
-
-  // if(nullptr != m_FeatureIdsPtr.lock() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  //{ m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -277,11 +274,24 @@ int32_t SPParksDumpReader::readHeader()
   buf = m_InStream.readLine();            // 106480
   buf = buf.trimmed();
   int64_t numAtoms = buf.toInt(&ok); // Parse out the number of atoms
+  if(!ok)
+  {
+    setErrorCondition(-26000);
+    QString ss = QString("Error reading the number of atoms. Current line read was: %1").arg(QString(buf));
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return getErrorCondition();
+  }
   buf = m_InStream.readLine();       // ITEM: BOX BOUNDS
-
   buf = m_InStream.readLine(); // 0.5 44.5
   buf = buf.trimmed();
   QList<QByteArray> tokens = buf.split(' ');
+  if(tokens.size() < 2)
+  {
+    setErrorCondition(-26001);
+    QString ss = QString("Error reading the box bounds. Current line read was: %1").arg(QString(buf));
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return getErrorCondition();
+  }
   ok = false;
   float low = 0.0f;
   int lowInt = tokens[0].toInt(&ok);
@@ -292,6 +302,13 @@ int32_t SPParksDumpReader::readHeader()
   else
   {
     low = tokens[0].toFloat(&ok);
+    if(!ok)
+    {
+      setErrorCondition(-26002);
+      QString ss = QString("Error reading the low box bounds. Current line read was: %1").arg(QString(buf));
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return getErrorCondition();
+    }
   }
 
   float high = 0.0f;
@@ -304,12 +321,26 @@ int32_t SPParksDumpReader::readHeader()
   else
   {
     high = tokens[1].toFloat(&ok);
+    if(!ok)
+    {
+      setErrorCondition(-26003);
+      QString ss = QString("Error reading the low box bounds. Current line read was: %1").arg(QString(buf));
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return getErrorCondition();
+    }
     nx = static_cast<int64_t>(floor(high - 0.01f) - ceil(low)) + oneBase;
   }
 
   buf = m_InStream.readLine(); // 0.5 44.5
   buf = buf.trimmed();
   tokens = buf.split(' ');
+  if(tokens.size() < 2)
+  {
+    setErrorCondition(-26004);
+    QString ss = QString("Error reading the high box bounds. Current line read was: %1").arg(QString(buf));
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return getErrorCondition();
+  }
   lowInt = tokens[0].toInt(&ok);
   if(ok)
   {
@@ -318,6 +349,13 @@ int32_t SPParksDumpReader::readHeader()
   else
   {
     low = tokens[0].toFloat(&ok);
+    if(!ok)
+    {
+      setErrorCondition(-26005);
+      QString ss = QString("Error reading the high box bounds. Current line read was: %1").arg(QString(buf));
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return getErrorCondition();
+    }
   }
   highInt = tokens[1].toInt(&ok);
   if(ok)
@@ -328,12 +366,27 @@ int32_t SPParksDumpReader::readHeader()
   else
   {
     high = tokens[1].toFloat(&ok);
+    if(!ok)
+    {
+      setErrorCondition(-26006);
+      QString ss = QString("Error reading the high box bounds. Current line read was: %1").arg(QString(buf));
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return getErrorCondition();
+    }
     ny = static_cast<int64_t>(floor(high - 0.01f) - ceil(low)) + oneBase;
   }
 
   buf = m_InStream.readLine(); // 0.5 55.5
   buf = buf.trimmed();
   tokens = buf.split(' ');
+  if(tokens.size() < 2)
+  {
+    setErrorCondition(-26007);
+    QString ss = QString("Error reading the low box bounds. Current line read was: %1").arg(QString(buf));
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return getErrorCondition();
+  }
+
   lowInt = tokens[0].toInt(&ok);
   if(ok)
   {
@@ -342,6 +395,13 @@ int32_t SPParksDumpReader::readHeader()
   else
   {
     low = tokens[0].toFloat(&ok);
+    if(!ok)
+    {
+      setErrorCondition(-26008);
+      QString ss = QString("Error reading the low box bounds. Current line read was: %1").arg(QString(buf));
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return getErrorCondition();
+    }
   }
   highInt = tokens[1].toInt(&ok);
   if(ok)
@@ -352,6 +412,13 @@ int32_t SPParksDumpReader::readHeader()
   else
   {
     high = tokens[1].toFloat(&ok);
+    if(!ok)
+    {
+      setErrorCondition(-26009);
+      QString ss = QString("Error reading the high box bounds. Current line read was: %1").arg(QString(buf));
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return getErrorCondition();
+    }
     nz = static_cast<int64_t>(floor(high - 0.01f) - ceil(low)) + oneBase;
   }
 
@@ -360,7 +427,7 @@ int32_t SPParksDumpReader::readHeader()
     QString msg = QObject::tr("Number of sites does not match the calculated number of sites %1 != %2 * %3 * %4").arg(numAtoms).arg(nx).arg(ny).arg(nz);
     setErrorCondition(-101);
     notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
-    return -100;
+    return getErrorCondition();
   }
 
   m_CachedGeometry = m->getGeometryAs<ImageGeom>().get();
