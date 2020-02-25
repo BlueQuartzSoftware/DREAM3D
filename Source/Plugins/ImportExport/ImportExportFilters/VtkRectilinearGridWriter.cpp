@@ -307,7 +307,7 @@ void VtkRectilinearGridWriter::dataCheck()
   for(int32_t i = 0; i < paths.count(); i++)
   {
     DataArrayPath path = paths.at(i);
-    IDataArray::WeakPointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, path);
+    IDataArray::WeakPointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, path);
     m_SelectedWeakPtrVector.push_back(ptr);
   }
 
@@ -410,7 +410,7 @@ void VtkRectilinearGridWriter::execute()
   QVector<DataArrayPath> dataPaths = getSelectedDataArrayPaths();
   foreach(const DataArrayPath arrayPath, dataPaths)
   {
-    IDataArray::Pointer iDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, arrayPath);
+    IDataArray::Pointer iDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, arrayPath);
 
     EXECUTE_FUNCTION_TEMPLATE(this, Detail::WriteDataArray, iDataPtr, this, f, iDataPtr, m_WriteBinaryFile);
 

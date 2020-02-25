@@ -228,13 +228,13 @@ void FindDifferenceMap::dataCheck()
 
   QVector<IDataArray::Pointer> dataArrays;
 
-  m_FirstInputArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, getFirstInputArrayPath());
+  m_FirstInputArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, getFirstInputArrayPath());
   if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_FirstInputArrayPtr.lock());
   }
 
-  m_SecondInputArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, getSecondInputArrayPath());
+  m_SecondInputArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, getSecondInputArrayPath());
   if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_SecondInputArrayPtr.lock());

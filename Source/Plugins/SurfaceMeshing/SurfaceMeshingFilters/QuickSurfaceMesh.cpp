@@ -283,7 +283,7 @@ void QuickSurfaceMesh::dataCheck()
 
   for(const auto& path : paths)
   {
-    IDataArray::WeakPointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, path);
+    IDataArray::WeakPointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, path);
     if(getErrorCode() >= 0)
     {
       dataArrayPaths.push_back(path);

@@ -156,7 +156,7 @@ void FitFeatureData::dataCheck()
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_InDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, getSelectedFeatureArrayPath());
+  m_InDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, getSelectedFeatureArrayPath());
 
   int32_t numComp = 0;
   QString distType("UNKNOWN");

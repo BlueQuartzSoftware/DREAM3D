@@ -3521,7 +3521,7 @@ void PackPrimaryPhases::moveShapeDescriptions()
       foreach(IDataArray::Pointer incomingArray, attrArrays)
       {
         int err = 0;
-        IDataArray::Pointer existingArray = existingAM->getPrereqIDataArray<IDataArray>(this, incomingArray->getName(), err);
+        IDataArray::Pointer existingArray = existingAM->getPrereqIDataArray(this, incomingArray->getName(), err);
         if(existingArray != IDataArray::NullPointer())
         {
           existingArray->copyFromArray(tDims[0], incomingArray);

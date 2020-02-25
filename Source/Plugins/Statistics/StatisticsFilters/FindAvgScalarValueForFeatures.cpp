@@ -138,7 +138,7 @@ void FindAvgScalarValueForFeatures::dataCheck()
     m_NewFeatureArray = m_NewFeatureArrayPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_InDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, getSelectedCellArrayPath());
+  m_InDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, getSelectedCellArrayPath());
   if(getErrorCode() < 0)
   {
     return;

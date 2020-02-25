@@ -400,7 +400,7 @@ void ReplaceElementAttributesWithNeighborValues::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getConfidenceIndexArrayPath().getDataContainerName());
 
-  m_InArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, getConfidenceIndexArrayPath());
+  m_InArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, getConfidenceIndexArrayPath());
   if(getErrorCode() < 0)
   {
     return;

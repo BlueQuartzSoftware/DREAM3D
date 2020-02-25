@@ -3046,7 +3046,7 @@ void InsertPrecipitatePhases::appendToExistingAttributeMatrix(QList<IDataArray::
     foreach(IDataArray::Pointer incomingArray, incomingArrays)
     {
       int err = 0;
-      IDataArray::Pointer existingArray = existingAM->getPrereqIDataArray<IDataArray>(this, incomingArray->getName(), err);
+      IDataArray::Pointer existingArray = existingAM->getPrereqIDataArray(this, incomingArray->getName(), err);
       if(existingArray != IDataArray::NullPointer())
       {
         // ATTENTION: This "append" code is making the assumption that there will be 0's preceding the precipitate phase data.  The number of preceding

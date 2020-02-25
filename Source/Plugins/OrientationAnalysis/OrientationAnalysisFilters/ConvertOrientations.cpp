@@ -175,7 +175,7 @@ void ConvertOrientations::dataCheck()
 
   // Figure out what kind of Array the user selected
   // Get the input data and create the output Data appropriately
-  IDataArray::Pointer iDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, getInputOrientationArrayPath());
+  IDataArray::Pointer iDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, getInputOrientationArrayPath());
   if(getErrorCode() < 0)
   {
     return;
@@ -281,7 +281,7 @@ void ConvertOrientations::execute()
     return;
   }
 
-  IDataArray::Pointer iDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, getInputOrientationArrayPath());
+  IDataArray::Pointer iDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, getInputOrientationArrayPath());
 
   DataArrayPath outputArrayPath = getInputOrientationArrayPath();
   outputArrayPath.setDataArrayName(getOutputOrientationArrayName());

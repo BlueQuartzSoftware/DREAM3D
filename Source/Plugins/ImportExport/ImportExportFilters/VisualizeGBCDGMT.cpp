@@ -163,7 +163,7 @@ void VisualizeGBCDGMT::dataCheck()
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  IDataArray::Pointer tmpGBCDPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, getGBCDArrayPath());
+  IDataArray::Pointer tmpGBCDPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, getGBCDArrayPath());
   if(getErrorCode() < 0)
   {
     return;

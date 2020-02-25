@@ -127,7 +127,7 @@ void NearestPointFuseRegularGrids::dataCheck()
   for(QList<QString>::iterator iter = sampleArrayNames.begin(); iter != sampleArrayNames.end(); ++iter)
   {
     tempPath.update(getReferenceCellAttributeMatrixPath().getDataContainerName(), getReferenceCellAttributeMatrixPath().getAttributeMatrixName(), *iter);
-    IDataArray::Pointer tmpDataArray = sampleAttrMat->getPrereqIDataArray<IDataArray>(this, *iter, -90001);
+    IDataArray::Pointer tmpDataArray = sampleAttrMat->getPrereqIDataArray(this, *iter, -90001);
     if(getErrorCode() >= 0)
     {
       if(refArrayNames.contains(*iter))

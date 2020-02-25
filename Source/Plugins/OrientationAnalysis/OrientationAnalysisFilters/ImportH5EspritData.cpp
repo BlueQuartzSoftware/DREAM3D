@@ -405,7 +405,7 @@ void ImportH5EspritData::dataCheckOEM()
     {
       m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
     }
-    ebsdArrayMap.insert(Ebsd::Esprit::EulerAngles, getDataContainerArray()->getPrereqIDataArrayFromPath<FloatArrayType>(this, tempPath));
+    ebsdArrayMap.insert(Ebsd::Esprit::EulerAngles, IDataArray::Pointer(m_CellEulerAnglesPtr));
   }
 
 
@@ -416,7 +416,7 @@ void ImportH5EspritData::dataCheckOEM()
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   }
-  ebsdArrayMap.insert(Ebsd::Esprit::CrystalStructures, getDataContainerArray()->getPrereqIDataArrayFromPath<UInt32ArrayType>(this, tempPath));
+  ebsdArrayMap.insert(Ebsd::Esprit::CrystalStructures, IDataArray::Pointer(m_CrystalStructuresPtr));
 
   cDims[0] = 6;
   tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::Esprit::LatticeConstants);
@@ -425,7 +425,7 @@ void ImportH5EspritData::dataCheckOEM()
   {
     m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0);
   }
-  ebsdArrayMap.insert(Ebsd::Esprit::LatticeConstants, getDataContainerArray()->getPrereqIDataArrayFromPath<FloatArrayType>(this, tempPath));
+  ebsdArrayMap.insert(Ebsd::Esprit::LatticeConstants, IDataArray::Pointer(m_LatticeConstantsPtr));
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::MaterialName, true);
   cellEnsembleAttrMat->insertOrAssign(materialNames);
@@ -448,7 +448,7 @@ void ImportH5EspritData::dataCheckOEM()
       {
         m_CellPatternData = m_CellPatternDataPtr.lock()->getPointer(0);
       }
-      ebsdArrayMap.insert(Ebsd::H5Esprit::RawPatterns, getDataContainerArray()->getPrereqIDataArrayFromPath<UInt8ArrayType>(this, tempPath));
+      ebsdArrayMap.insert(Ebsd::H5Esprit::RawPatterns, IDataArray::Pointer(m_CellPatternDataPtr));
       setInPreflight(areWeInPreflight);
     }
     else

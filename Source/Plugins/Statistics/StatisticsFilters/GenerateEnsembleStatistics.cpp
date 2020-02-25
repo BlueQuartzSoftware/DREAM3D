@@ -511,7 +511,7 @@ void GenerateEnsembleStatistics::dataCheck()
 
   if(m_IncludeRadialDistFunc)
   {
-    DataArray<float>::Pointer tempPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<float>>(this, getRDFArrayPath());
+    DataArray<float>::Pointer tempPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getRDFArrayPath(), cDims);
     if(nullptr != tempPtr.get())
     {
       m_RadialDistFuncPtr = tempPtr;

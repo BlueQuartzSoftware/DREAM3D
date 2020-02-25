@@ -300,7 +300,7 @@ void ScalarSegmentFeatures::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m_InputDataPtr =
-      getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, getScalarArrayPath()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      getDataContainerArray()->getPrereqIDataArrayFromPath(this, getScalarArrayPath()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_InputDataPtr.lock())
   {
     m_InputData = m_InputDataPtr.lock()->getVoidPointer(0);

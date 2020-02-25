@@ -232,7 +232,7 @@ void FindRelativeMotionBetweenSlices::dataCheck()
   DataArrayPath tempPath;
   QString ss;
 
-  m_InDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, getSelectedArrayPath());
+  m_InDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, getSelectedArrayPath());
   if(nullptr != m_InDataPtr.lock())
   {
     if(TemplateHelpers::CanDynamicCast<BoolArrayType>()(m_InDataPtr.lock()))

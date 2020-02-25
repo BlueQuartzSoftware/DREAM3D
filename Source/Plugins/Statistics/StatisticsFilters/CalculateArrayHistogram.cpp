@@ -185,7 +185,7 @@ void CalculateArrayHistogram::dataCheck()
     newArrayName = getNewDataArrayName();
   }
 
-  m_InDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, getSelectedArrayPath());
+  m_InDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, getSelectedArrayPath());
   if(getErrorCode() < 0)
   {
     return;

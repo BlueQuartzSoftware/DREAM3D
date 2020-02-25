@@ -891,7 +891,7 @@ void ImportH5OimData::dataCheckOEM()
   {
     m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
   }
-  m_EbsdArrayMap.insert(Ebsd::AngFile::EulerAngles, getDataContainerArray()->getPrereqIDataArrayFromPath<FloatArrayType>(this, tempPath));
+  m_EbsdArrayMap.insert(Ebsd::AngFile::EulerAngles, IDataArray::Pointer(m_CellEulerAnglesPtr));
 
   cDims[0] = 1;
   tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::AngFile::Phases);
@@ -900,7 +900,7 @@ void ImportH5OimData::dataCheckOEM()
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   }
-  m_EbsdArrayMap.insert(Ebsd::AngFile::Phases, getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(this, tempPath));
+  m_EbsdArrayMap.insert(Ebsd::AngFile::Phases, IDataArray::Pointer(m_CellPhasesPtr));
 
   tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::AngFile::CrystalStructures);
   m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims);
@@ -908,7 +908,7 @@ void ImportH5OimData::dataCheckOEM()
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   }
-  m_EbsdArrayMap.insert(Ebsd::AngFile::CrystalStructures, getDataContainerArray()->getPrereqIDataArrayFromPath<UInt32ArrayType>(this, tempPath));
+  m_EbsdArrayMap.insert(Ebsd::AngFile::CrystalStructures, IDataArray::Pointer(m_CrystalStructuresPtr));
 
   cDims[0] = 6;
   tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::AngFile::LatticeConstants);
@@ -917,7 +917,7 @@ void ImportH5OimData::dataCheckOEM()
   {
     m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0);
   }
-  m_EbsdArrayMap.insert(Ebsd::AngFile::LatticeConstants, getDataContainerArray()->getPrereqIDataArrayFromPath<FloatArrayType>(this, tempPath));
+  m_EbsdArrayMap.insert(Ebsd::AngFile::LatticeConstants, IDataArray::Pointer(m_LatticeConstantsPtr));
 
   if(getReadPatternData())
   {
@@ -933,7 +933,7 @@ void ImportH5OimData::dataCheckOEM()
         m_CellPatternData = m_CellPatternDataPtr.lock()->getPointer(0);
       }
 
-      m_EbsdArrayMap.insert(Ebsd::Ang::PatternData, getDataContainerArray()->getPrereqIDataArrayFromPath<UInt8ArrayType>(this, tempPath));
+      m_EbsdArrayMap.insert(Ebsd::Ang::PatternData, IDataArray::Pointer(m_CellPatternDataPtr));
     }
     else
     {
