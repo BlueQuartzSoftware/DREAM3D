@@ -366,7 +366,33 @@ int32_t FeatureInfoReader::readFile()
   QString ss;
   QTextStream errStream(&ss);
 
-  for(int32_t i = 0; i < numfeatures; i++)
+  char d;
+
+  switch(m_Delimiter)
+  {
+  case 0:
+    d = ',';
+    break;
+  case 1:
+    d = ';';
+    break;
+  case 2:
+    d = ':';
+    break;
+  case 3:
+    d = '\t';
+    break;
+  case 4:
+    d = ' ';
+    break;
+  default:
+    d = ',';
+    break;
+  }
+
+  // Read each line of data in the file. we assume here that the user has NOT used a feature id value that is greater
+  // than the max found in the cell data. If they have bad things will probably happen.
+  while(!inStream.atEnd())
   {
     buf = inStream.readLine();
     lineNum++;
@@ -375,30 +401,6 @@ int32_t FeatureInfoReader::readFile()
     if(buf.at(0) == '#')
     {
       continue;
-    }
-
-    char d;
-
-    switch(m_Delimiter)
-    {
-    case 0:
-      d = ',';
-      break;
-    case 1:
-      d = ';';
-      break;
-    case 2:
-      d = ':';
-      break;
-    case 3:
-      d = '\t';
-      break;
-    case 4:
-      d = ' ';
-      break;
-    default:
-      d = ',';
-      break;
     }
 
     QList<QByteArray> tokens = buf.split(d); // Split into tokens
