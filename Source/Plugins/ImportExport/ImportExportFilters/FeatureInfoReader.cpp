@@ -359,7 +359,30 @@ int32_t FeatureInfoReader::readFile()
   QString ss;
   QTextStream errStream(&ss);
 
-  for(int32_t i = 0; i < numfeatures; i++)
+  char d;
+  switch(m_Delimiter)
+  {
+  case 0:
+    d = ',';
+    break;
+  case 1:
+    d = ';';
+    break;
+  case 2:
+    d = ':';
+    break;
+  case 3:
+    d = '\t';
+    break;
+  case 4:
+    d = ' ';
+    break;
+  default:
+    d = ',';
+    break;
+  }
+
+  while(!inStream.atEnd())
   {
     buf = inStream.readLine();
     lineNum++;
@@ -368,30 +391,6 @@ int32_t FeatureInfoReader::readFile()
     if(buf.at(0) == '#')
     {
       continue;
-    }
-
-    char d;
-
-    switch(m_Delimiter)
-    {
-    case 0:
-      d = ',';
-      break;
-    case 1:
-      d = ';';
-      break;
-    case 2:
-      d = ':';
-      break;
-    case 3:
-      d = '\t';
-      break;
-    case 4:
-      d = ' ';
-      break;
-    default:
-      d = ',';
-      break;
     }
 
     QList<QByteArray> tokens = buf.split(d); // Split into tokens
