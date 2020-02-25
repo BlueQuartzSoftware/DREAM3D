@@ -10,6 +10,21 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.5.137 ##
+
+### Version 6.5.137 New Filters & Features ###
+
++ None
+
+### 6.5.137 Fixed DREAM3D Issues ###
+
++ Fixed crash when reading ill formed SPPARKS Dump files(#931)
++ Fixed issue in FeatureInfoReader where not all the data in the file was read (#930)
+
+### 6.5.137 Fixed SIMPL Issues ###
+
++ Allow user to select multi-component arrays to conditionally set values (#389)
+
 ## Version 6.5.134 ##
 
 ### Version 6.5.134  New Filters & Features ###
