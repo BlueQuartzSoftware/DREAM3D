@@ -199,7 +199,7 @@ void SPParksDumpReader::dataCheck()
 
       if(error < 0)
       {
-        QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file");
+        QString ss = QObject::tr("Error occurred trying to parse the header. Is this a correctly formatted SPPARKS Dump File?");
         setErrorCondition(error, ss);
       }
     }
@@ -291,11 +291,20 @@ int32_t SPParksDumpReader::readHeader()
   buf = m_InStream.readLine();            // 106480
   buf = buf.trimmed();
   int64_t numAtoms = buf.toInt(&ok); // Parse out the number of atoms
+  if(!ok)
+  {
+    setErrorCondition(-26000, QString("Error reading the number of atoms. Current line read was: %1").arg(QString(buf)));
+    return getErrorCode();
+  }
   buf = m_InStream.readLine();       // ITEM: BOX BOUNDS
-
   buf = m_InStream.readLine(); // 0.5 44.5
   buf = buf.trimmed();
   QList<QByteArray> tokens = buf.split(' ');
+  if(tokens.size() < 2)
+  {
+    setErrorCondition(-26001, QString("Error reading the box bounds. Current line read was: %1").arg(QString(buf)));
+    return getErrorCode();
+  }
   ok = false;
   float low = 0.0f;
   int lowInt = tokens[0].toInt(&ok);
@@ -306,6 +315,11 @@ int32_t SPParksDumpReader::readHeader()
   else
   {
     low = tokens[0].toFloat(&ok);
+    if(!ok)
+    {
+      setErrorCondition(-26002, QString("Error reading the low box bounds. Current line read was: %1").arg(QString(buf)));
+      return getErrorCode();
+    }
   }
 
   float high = 0.0f;
@@ -318,12 +332,22 @@ int32_t SPParksDumpReader::readHeader()
   else
   {
     high = tokens[1].toFloat(&ok);
+    if(!ok)
+    {
+      setErrorCondition(-26003, QString("Error reading the low box bounds. Current line read was: %1").arg(QString(buf)));
+      return getErrorCode();
+    }
     nx = static_cast<int64_t>(floor(high - 0.01f) - ceil(low)) + oneBase;
   }
 
   buf = m_InStream.readLine(); // 0.5 44.5
   buf = buf.trimmed();
   tokens = buf.split(' ');
+  if(tokens.size() < 2)
+  {
+    setErrorCondition(-26004, QString("Error reading the high box bounds. Current line read was: %1").arg(QString(buf)));
+    return getErrorCode();
+  }
   lowInt = tokens[0].toInt(&ok);
   if(ok)
   {
@@ -332,6 +356,11 @@ int32_t SPParksDumpReader::readHeader()
   else
   {
     low = tokens[0].toFloat(&ok);
+    if(!ok)
+    {
+      setErrorCondition(-26005, QString("Error reading the high box bounds. Current line read was: %1").arg(QString(buf)));
+      return getErrorCode();
+    }
   }
   highInt = tokens[1].toInt(&ok);
   if(ok)
@@ -342,12 +371,23 @@ int32_t SPParksDumpReader::readHeader()
   else
   {
     high = tokens[1].toFloat(&ok);
+    if(!ok)
+    {
+      setErrorCondition(-26006, QString("Error reading the high box bounds. Current line read was: %1").arg(QString(buf)));
+      return getErrorCode();
+    }
     ny = static_cast<int64_t>(floor(high - 0.01f) - ceil(low)) + oneBase;
   }
 
   buf = m_InStream.readLine(); // 0.5 55.5
   buf = buf.trimmed();
   tokens = buf.split(' ');
+  if(tokens.size() < 2)
+  {
+    setErrorCondition(-26007, QString("Error reading the low box bounds. Current line read was: %1").arg(QString(buf)));
+    return getErrorCode();
+  }
+
   lowInt = tokens[0].toInt(&ok);
   if(ok)
   {
@@ -356,6 +396,11 @@ int32_t SPParksDumpReader::readHeader()
   else
   {
     low = tokens[0].toFloat(&ok);
+    if(!ok)
+    {
+      setErrorCondition(-26008, QString("Error reading the low box bounds. Current line read was: %1").arg(QString(buf)));
+      return getErrorCode();
+    }
   }
   highInt = tokens[1].toInt(&ok);
   if(ok)
@@ -366,6 +411,11 @@ int32_t SPParksDumpReader::readHeader()
   else
   {
     high = tokens[1].toFloat(&ok);
+    if(!ok)
+    {
+      setErrorCondition(-26009, QString("Error reading the high box bounds. Current line read was: %1").arg(QString(buf)));
+      return getErrorCode();
+    }
     nz = static_cast<int64_t>(floor(high - 0.01f) - ceil(low)) + oneBase;
   }
 
