@@ -281,64 +281,69 @@ void verifySignals()
   }
 }
 
-#if 0
-if ( (L) == (R) )
-{
-  \
-  QString buf;
-  \
-  QTextStream ss(&buf);
-  \
-  ss << "Your test required the following\n            '";
-  \
-  ss << #L << " != " << #R << "'\n             but this condition was not met.\n";\
-  ss << "             " << L << "==" << R;\
-  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
-#endif
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void verifyPreflightEmitsProperly()
 {
   qDebug() << "-------------- verifyPreflightEmitsProperly ------------------------------";
-  FilterManager* fm = FilterManager::Instance();
-  FilterManager::Collection factories = fm->getFactories();
-  QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
 
-  while(iter.hasNext())
+  FilterManager* fm = FilterManager::Instance();
+
+  FilterManager::Collection factories = fm->getFactories();
+
+  for(const auto& factory : factories)
   {
-    PreflightVerify p(nullptr);
-    iter.next();
-    IFilterFactory::Pointer factory = iter.value();
+    DREAM3D_REQUIRE_VALID_POINTER(factory)
+
     AbstractFilter::Pointer filter = factory->create();
-    filter->connect(filter.get(), SIGNAL(preflightAboutToExecute()), &p, SLOT(beforePreflight()));
-    filter->connect(filter.get(), SIGNAL(preflightExecuted()), &p, SLOT(afterPreflight()));
-    filter->connect(filter.get(), SIGNAL(updateFilterParameters(AbstractFilter*)), &p, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+    DREAM3D_REQUIRE_VALID_POINTER(filter)
+
+    bool activatedPreflightAboutToExecute = false;
+    bool activatedPreflightExecuted = false;
+    bool activatedUpdateFilterParameters = false;
+
+    QObject::connect(filter.get(), &AbstractFilter::preflightAboutToExecute, [&activatedPreflightAboutToExecute]() { activatedPreflightAboutToExecute = true; });
+    QObject::connect(filter.get(), &AbstractFilter::preflightExecuted, [&activatedPreflightExecuted]() { activatedPreflightExecuted = true; });
+    QObject::connect(filter.get(), &AbstractFilter::updateFilterParameters, [&activatedUpdateFilterParameters]() { activatedUpdateFilterParameters = true; });
 
     filter->preflight();
 
-    QString buf;
-    QTextStream ss(&buf);
-    if(p.m_beforePreflight == false)
+    bool signalsEmitted = activatedPreflightAboutToExecute && activatedPreflightExecuted && activatedUpdateFilterParameters;
+
+    if(!signalsEmitted || filter->getInPreflight())
     {
-      ss << filter->getNameOfClass() << " Missing emit preflightAboutToExecute()";
-    }
-    if(p.m_afterPreflight == false)
-    {
-      ss << filter->getNameOfClass() << " Missing emit preflightExecuted()";
-    }
-    if(p.m_filterNeedsInputParameters == false)
-    {
-      ss << filter->getNameOfClass() << " Missing emit updateFilterParameters()";
-    }
-    if(filter->getInPreflight() == true)
-    {
-      ss << filter->getNameOfClass() << " Bool 'InPreflight' was NOT set correctly at end of 'preflight()'";
-    }
-    if(buf.isEmpty() == false)
-    {
-      DREAM3D_TEST_THROW_EXCEPTION(buf.toStdString())
+      std::string name = factory->getFilterClassName().toStdString();
+
+      std::string message;
+
+      if(filter->getInPreflight())
+      {
+        message += name + " Bool 'InPreflight' was NOT set correctly at end of 'preflight()'";
+        message += "\n            ";
+      }
+
+      if(!signalsEmitted)
+      {
+        message += "The following signals of " + name + " failed to emit properly:\n";
+
+        if(!activatedPreflightAboutToExecute)
+        {
+          message += "              preflightAboutToExecute\n";
+        }
+
+        if(!activatedPreflightExecuted)
+        {
+          message += "              preflightExecuted\n";
+        }
+
+        if(!activatedUpdateFilterParameters)
+        {
+          message += "              updateFilterParameters\n";
+        }
+      }
+
+      DREAM3D_TEST_THROW_EXCEPTION(message)
     }
   }
 }
@@ -526,50 +531,6 @@ void PrintFilterInfo()
   }
 }
 
-#define DREAM3D_REQUIRE_MESSAGE(P, M)                                                                                                                                                                  \
-  {                                                                                                                                                                                                    \
-    bool b = (P);                                                                                                                                                                                      \
-    if((b) == (false))                                                                                                                                                                                 \
-    {                                                                                                                                                                                                  \
-      std::string s("Your test required the following\n            '");                                                                                                                                \
-      s = s.append(#P).append("'\n             but this condition was not met.");                                                                                                                      \
-      s += "\n             " + (M);                                                                                                                                                                    \
-      DREAM3D_TEST_THROW_EXCEPTION(s)                                                                                                                                                                  \
-    }                                                                                                                                                                                                  \
-  }
-
-// -----------------------------------------------------------------------------
-void TestAbstractFilterSignals()
-{
-  qDebug() << "-------------- TestAbstractFilterSignals ------------------------------";
-
-  FilterManager* fm = FilterManager::Instance();
-
-  FilterManager::Collection factories = fm->getFactories();
-
-  for(const auto& factory : factories)
-  {
-    DREAM3D_REQUIRE_VALID_POINTER(factory)
-    std::string name = factory->getFilterClassName().toStdString();
-    AbstractFilter::Pointer filter = factory->create();
-    DREAM3D_REQUIRE_VALID_POINTER(filter)
-    bool activatedPreflightAboutToExecute = false;
-    bool activatedPreflightExecuted = false;
-    bool activatedParametersChanged = false;
-    bool activatedUpdateFilterParameters = false;
-    QObject::connect(filter.get(), &AbstractFilter::preflightAboutToExecute, [&activatedPreflightAboutToExecute]() { activatedPreflightAboutToExecute = true; });
-    QObject::connect(filter.get(), &AbstractFilter::preflightExecuted, [&activatedPreflightExecuted]() { activatedPreflightExecuted = true; });
-    QObject::connect(filter.get(), &AbstractFilter::parametersChanged, [&activatedParametersChanged]() { activatedParametersChanged = true; });
-    QObject::connect(filter.get(), &AbstractFilter::updateFilterParameters, [&activatedUpdateFilterParameters]() { activatedUpdateFilterParameters = true; });
-    filter->preflight();
-    filter->parametersChanged();
-    DREAM3D_REQUIRE_MESSAGE(activatedPreflightAboutToExecute, name + "'s preflightAboutToExecute signal is shadowed")
-    DREAM3D_REQUIRE_MESSAGE(activatedPreflightExecuted, name + "'s preflightExecuted signal is shadowed")
-    DREAM3D_REQUIRE_MESSAGE(activatedParametersChanged, name + "'s parametersChanged signal is shadowed")
-    DREAM3D_REQUIRE_MESSAGE(activatedUpdateFilterParameters, name + "'s updateFilterParameters signal is shadowed")
-  }
-}
-
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
@@ -609,7 +570,6 @@ int main(int argc, char** argv)
   DREAM3D_REGISTER_TEST(TestPreflight(true, true, true))
   DREAM3D_REGISTER_TEST(TestUniqueHumanLabels())
   DREAM3D_REGISTER_TEST(TestNewInstanceAvailable())
-  DREAM3D_REGISTER_TEST(TestAbstractFilterSignals())
   DREAM3D_REGISTER_TEST(TestUncategorizedFilterParameters())
   PRINT_TEST_SUMMARY();
 
