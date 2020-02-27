@@ -117,11 +117,11 @@ FilterParameter* EMMPMWidget::getFilterParameter() const
 void EMMPMWidget::setupGui()
 {
 
-  connect(getFilter(), SIGNAL(preflightAboutToExecute()), this, SLOT(beforePreflight()));
+  connect(getFilter(), &AbstractFilter::preflightAboutToExecute, this, &EMMPMWidget::beforePreflight);
 
-  connect(getFilter(), SIGNAL(preflightExecuted()), this, SLOT(afterPreflight()));
+  connect(getFilter(), &AbstractFilter::preflightExecuted, this, &EMMPMWidget::afterPreflight);
 
-  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)), this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+  connect(getFilter(), &AbstractFilter::updateFilterParameters, this, &EMMPMWidget::filterNeedsInputParameters);
 
   if(m_Filter != nullptr)
   {
