@@ -526,6 +526,50 @@ void PrintFilterInfo()
   }
 }
 
+#define DREAM3D_REQUIRE_MESSAGE(P, M)                                                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    bool b = (P);                                                                                                                                                                                      \
+    if((b) == (false))                                                                                                                                                                                 \
+    {                                                                                                                                                                                                  \
+      std::string s("Your test required the following\n            '");                                                                                                                                \
+      s = s.append(#P).append("'\n             but this condition was not met.");                                                                                                                      \
+      s += "\n             " + (M);                                                                                                                                                                    \
+      DREAM3D_TEST_THROW_EXCEPTION(s)                                                                                                                                                                  \
+    }                                                                                                                                                                                                  \
+  }
+
+// -----------------------------------------------------------------------------
+void TestAbstractFilterSignals()
+{
+  qDebug() << "-------------- TestAbstractFilterSignals ------------------------------";
+
+  FilterManager* fm = FilterManager::Instance();
+
+  FilterManager::Collection factories = fm->getFactories();
+
+  for(const auto& factory : factories)
+  {
+    DREAM3D_REQUIRE_VALID_POINTER(factory)
+    std::string name = factory->getFilterClassName().toStdString();
+    AbstractFilter::Pointer filter = factory->create();
+    DREAM3D_REQUIRE_VALID_POINTER(filter)
+    bool activatedPreflightAboutToExecute = false;
+    bool activatedPreflightExecuted = false;
+    bool activatedParametersChanged = false;
+    bool activatedUpdateFilterParameters = false;
+    QObject::connect(filter.get(), &AbstractFilter::preflightAboutToExecute, [&activatedPreflightAboutToExecute]() { activatedPreflightAboutToExecute = true; });
+    QObject::connect(filter.get(), &AbstractFilter::preflightExecuted, [&activatedPreflightExecuted]() { activatedPreflightExecuted = true; });
+    QObject::connect(filter.get(), &AbstractFilter::parametersChanged, [&activatedParametersChanged]() { activatedParametersChanged = true; });
+    QObject::connect(filter.get(), &AbstractFilter::updateFilterParameters, [&activatedUpdateFilterParameters]() { activatedUpdateFilterParameters = true; });
+    filter->preflight();
+    filter->parametersChanged();
+    DREAM3D_REQUIRE_MESSAGE(activatedPreflightAboutToExecute, name + "'s preflightAboutToExecute signal is shadowed")
+    DREAM3D_REQUIRE_MESSAGE(activatedPreflightExecuted, name + "'s preflightExecuted signal is shadowed")
+    DREAM3D_REQUIRE_MESSAGE(activatedParametersChanged, name + "'s parametersChanged signal is shadowed")
+    DREAM3D_REQUIRE_MESSAGE(activatedUpdateFilterParameters, name + "'s updateFilterParameters signal is shadowed")
+  }
+}
+
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
@@ -565,6 +609,7 @@ int main(int argc, char** argv)
   DREAM3D_REGISTER_TEST(TestPreflight(true, true, true))
   DREAM3D_REGISTER_TEST(TestUniqueHumanLabels())
   DREAM3D_REGISTER_TEST(TestNewInstanceAvailable())
+  DREAM3D_REGISTER_TEST(TestAbstractFilterSignals())
   DREAM3D_REGISTER_TEST(TestUncategorizedFilterParameters())
   PRINT_TEST_SUMMARY();
 
