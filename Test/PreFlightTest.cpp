@@ -341,6 +341,8 @@ void verifyPreflightEmitsProperly()
         {
           message += "              updateFilterParameters\n";
         }
+
+        message += "            This error may be due to duplicate signal definitions in the filter.";
       }
 
       DREAM3D_TEST_THROW_EXCEPTION(message)
