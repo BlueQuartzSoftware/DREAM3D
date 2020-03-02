@@ -374,13 +374,13 @@ std::shared_ptr<ImportAvxmMDSim> ImportAvxmMDSim::New()
 // -----------------------------------------------------------------------------
 QString ImportAvxmMDSim::getNameOfClass() const
 {
-  return QString("_SUPERImportAvxmMDSim");
+  return QString("ImportAvxmMDSim");
 }
 
 // -----------------------------------------------------------------------------
 QString ImportAvxmMDSim::ClassName()
 {
-  return QString("_SUPERImportAvxmMDSim");
+  return QString("ImportAvxmMDSim");
 }
 
 // -----------------------------------------------------------------------------

@@ -324,13 +324,13 @@ std::shared_ptr<ConvertQuaternion> ConvertQuaternion::New()
 // -----------------------------------------------------------------------------
 QString ConvertQuaternion::getNameOfClass() const
 {
-  return QString("_SUPERConvertQuaternion");
+  return QString("ConvertQuaternion");
 }
 
 // -----------------------------------------------------------------------------
 QString ConvertQuaternion::ClassName()
 {
-  return QString("_SUPERConvertQuaternion");
+  return QString("ConvertQuaternion");
 }
 
 // -----------------------------------------------------------------------------

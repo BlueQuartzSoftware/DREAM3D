@@ -328,13 +328,13 @@ std::shared_ptr<RodriguesConvertor> RodriguesConvertor::New()
 // -----------------------------------------------------------------------------
 QString RodriguesConvertor::getNameOfClass() const
 {
-  return QString("_SUPERRodriguesConvertor");
+  return QString("RodriguesConvertor");
 }
 
 // -----------------------------------------------------------------------------
 QString RodriguesConvertor::ClassName()
 {
-  return QString("_SUPERRodriguesConvertor");
+  return QString("RodriguesConvertor");
 }
 
 // -----------------------------------------------------------------------------

@@ -138,7 +138,7 @@ public:
    */
   QString getNameOfClass() const
   {
-    return QString("_SUPERGreaterThanComparison<T>");
+    return QString("GreaterThanComparison<T>");
   }
 
   /**
@@ -146,7 +146,7 @@ public:
    */
   QString ClassName()
   {
-    return QString("_SUPERGreaterThanComparison<T>");
+    return QString("GreaterThanComparison<T>");
   }
 
   ~GreaterThanComparison() override = default;

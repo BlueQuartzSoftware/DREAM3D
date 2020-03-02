@@ -305,13 +305,13 @@ std::shared_ptr<GenerateOrientationMatrixTranspose> GenerateOrientationMatrixTra
 // -----------------------------------------------------------------------------
 QString GenerateOrientationMatrixTranspose::getNameOfClass() const
 {
-  return QString("_SUPERGenerateOrientationMatrixTranspose");
+  return QString("GenerateOrientationMatrixTranspose");
 }
 
 // -----------------------------------------------------------------------------
 QString GenerateOrientationMatrixTranspose::ClassName()
 {
-  return QString("_SUPERGenerateOrientationMatrixTranspose");
+  return QString("GenerateOrientationMatrixTranspose");
 }
 
 // -----------------------------------------------------------------------------

@@ -295,13 +295,13 @@ std::shared_ptr<GenerateQuaternionConjugate> GenerateQuaternionConjugate::New()
 // -----------------------------------------------------------------------------
 QString GenerateQuaternionConjugate::getNameOfClass() const
 {
-  return QString("_SUPERGenerateQuaternionConjugate");
+  return QString("GenerateQuaternionConjugate");
 }
 
 // -----------------------------------------------------------------------------
 QString GenerateQuaternionConjugate::ClassName()
 {
-  return QString("_SUPERGenerateQuaternionConjugate");
+  return QString("GenerateQuaternionConjugate");
 }
 
 // -----------------------------------------------------------------------------
