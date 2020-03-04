@@ -175,7 +175,7 @@ void ConvertOrientations::dataCheck()
 
   // Figure out what kind of Array the user selected
   // Get the input data and create the output Data appropriately
-  IDataArray::Pointer iDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getInputOrientationArrayPath());
+  IDataArray::Pointer iDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, getInputOrientationArrayPath());
   if(getErrorCode() < 0)
   {
     return;
@@ -206,14 +206,14 @@ void ConvertOrientations::dataCheck()
   if(nullptr != fArray.get())
   {
     std::vector<size_t> outputCDims(1, componentCounts[getOutputType()]);
-    getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, outputArrayPath, 0, outputCDims, "", DataArrayID31);
+    getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, outputArrayPath, 0, outputCDims, "", DataArrayID31);
   }
 
   DoubleArrayType::Pointer dArray = std::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
   if(nullptr != dArray.get())
   {
     std::vector<size_t> outputCDims(1, componentCounts[getOutputType()]);
-    getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, outputArrayPath, 0, outputCDims, "", DataArrayID32);
+    getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>>(this, outputArrayPath, 0, outputCDims, "", DataArrayID32);
   }
 }
 
@@ -281,7 +281,7 @@ void ConvertOrientations::execute()
     return;
   }
 
-  IDataArray::Pointer iDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getInputOrientationArrayPath());
+  IDataArray::Pointer iDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, getInputOrientationArrayPath());
 
   DataArrayPath outputArrayPath = getInputOrientationArrayPath();
   outputArrayPath.setDataArrayName(getOutputOrientationArrayName());
@@ -291,7 +291,7 @@ void ConvertOrientations::execute()
   {
     QVector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts();
     std::vector<size_t> outputCDims(1, componentCounts[getOutputType()]);
-    FloatArrayType::Pointer outData = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, outputArrayPath, outputCDims);
+    FloatArrayType::Pointer outData = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, outputArrayPath, outputCDims);
     generateRepresentation<float>(this, fArray, outData);
   }
 
@@ -300,7 +300,7 @@ void ConvertOrientations::execute()
   {
     QVector<int32_t> componentCounts = OrientationConverter<double>::GetComponentCounts();
     std::vector<size_t> outputCDims(1, componentCounts[getOutputType()]);
-    DoubleArrayType::Pointer outData = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, outputArrayPath, outputCDims);
+    DoubleArrayType::Pointer outData = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>>(this, outputArrayPath, outputCDims);
     generateRepresentation<double>(this, dArray, outData);
   }
 

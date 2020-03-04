@@ -111,11 +111,11 @@ void NearestPointFuseRegularGrids::dataCheck()
   clearWarningCode();
   DataArrayPath tempPath;
 
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getReferenceCellAttributeMatrixPath().getDataContainerName());
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getSamplingCellAttributeMatrixPath().getDataContainerName());
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getReferenceCellAttributeMatrixPath().getDataContainerName());
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getSamplingCellAttributeMatrixPath().getDataContainerName());
 
-  AttributeMatrix::Pointer refAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getReferenceCellAttributeMatrixPath(), -301);
-  AttributeMatrix::Pointer sampleAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getSamplingCellAttributeMatrixPath(), -301);
+  AttributeMatrix::Pointer refAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, getReferenceCellAttributeMatrixPath(), -301);
+  AttributeMatrix::Pointer sampleAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, getSamplingCellAttributeMatrixPath(), -301);
   if(getErrorCode() < 0)
   {
     return;
@@ -127,7 +127,7 @@ void NearestPointFuseRegularGrids::dataCheck()
   for(QList<QString>::iterator iter = sampleArrayNames.begin(); iter != sampleArrayNames.end(); ++iter)
   {
     tempPath.update(getReferenceCellAttributeMatrixPath().getDataContainerName(), getReferenceCellAttributeMatrixPath().getAttributeMatrixName(), *iter);
-    IDataArray::Pointer tmpDataArray = sampleAttrMat->getPrereqIDataArray<IDataArray, AbstractFilter>(this, *iter, -90001);
+    IDataArray::Pointer tmpDataArray = sampleAttrMat->getPrereqIDataArray(this, *iter, -90001);
     if(getErrorCode() >= 0)
     {
       if(refArrayNames.contains(*iter))

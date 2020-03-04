@@ -190,7 +190,7 @@ void QuiltCellData::dataCheck()
     return;
   }
 
-  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom>(this);
   if(getErrorCode() < 0 || nullptr == image.get())
   {
     return;
@@ -200,7 +200,7 @@ void QuiltCellData::dataCheck()
   SizeVec3Type dcDims = m->getGeometryAs<ImageGeom>()->getDimensions();
   FloatVec3Type res = m->getGeometryAs<ImageGeom>()->getSpacing();
   // Create a new DataContainer
-  DataContainer::Pointer m2 = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getOutputDataContainerName(), DataContainerID);
+  DataContainer::Pointer m2 = getDataContainerArray()->createNonPrereqDataContainer(this, getOutputDataContainerName(), DataContainerID);
   if(getErrorCode() < 0)
   {
     return;
@@ -244,7 +244,7 @@ void QuiltCellData::dataCheck()
   // Get the name and create the array in the new data attrMat
   std::vector<size_t> dims(1, 1);
   tempPath.update(getOutputDataContainerName().getDataContainerName(), getOutputAttributeMatrixName(), getOutputArrayName());
-  m_OutputArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims, "", DataArrayID31);
+  m_OutputArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, dims, "", DataArrayID31);
   if(nullptr != m_OutputArrayPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_OutputArray = m_OutputArrayPtr.lock()->getPointer(0);

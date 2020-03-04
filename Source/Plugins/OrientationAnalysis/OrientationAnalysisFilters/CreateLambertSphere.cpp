@@ -195,7 +195,7 @@ void CreateLambertSphere::dataCheck()
   
   if(getUseExistingImage())
   {
-    m_ImageDataPtr = getDataContainerArray()->getPrereqArrayFromPath<UInt8ArrayType, AbstractFilter>(this, getImageDataArrayPath(), cDims);
+    m_ImageDataPtr = getDataContainerArray()->getPrereqArrayFromPath<UInt8ArrayType>(this, getImageDataArrayPath(), cDims);
     if(nullptr != m_ImageDataPtr.lock())
     {
       m_ImageData = m_ImageDataPtr.lock()->getPointer(0);
@@ -251,7 +251,7 @@ void CreateLambertSphere::dataCheck()
   // Create a Vertex Geometry
   if(getCreateVertexGeometry())
   {
-    DataContainer::Pointer vertDC = dca->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName(), DataContainerID);
+    DataContainer::Pointer vertDC = dca->createNonPrereqDataContainer(this, getVertexDataContainerName(), DataContainerID);
     if(getErrorCode() < 0)
     {
       return;
@@ -266,7 +266,7 @@ void CreateLambertSphere::dataCheck()
 
     //    std::vector<size_t> cDims = {1};
     //    DataArrayPath path(getVertexDataContainerName(), getVertexAttributeMatrixName(), m_VertexDataName);
-    //    m_VertexDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID31);    //
+    //    m_VertexDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>>(this, path, 0, cDims, "", DataArrayID31);    //
     //    if(nullptr != m_VertexDataPtr.lock())
     //    {
     //      m_VertexData = m_VertexDataPtr.lock()->getPointer(0);
@@ -276,7 +276,7 @@ void CreateLambertSphere::dataCheck()
   // Create a Edge Geometry
   if(getCreateEdgeGeometry())
   {
-    DataContainer::Pointer edgeDC = dca->createNonPrereqDataContainer<AbstractFilter>(this, getEdgeDataContainerName(), DataContainerID);
+    DataContainer::Pointer edgeDC = dca->createNonPrereqDataContainer(this, getEdgeDataContainerName(), DataContainerID);
     if(getErrorCode() < 0)
     {
       return;
@@ -296,7 +296,7 @@ void CreateLambertSphere::dataCheck()
     
     cDims[0] = 1;
     DataArrayPath path(getEdgeDataContainerName().getDataContainerName(), getEdgeAttributeMatrixName(), m_EdgeDataName);
-    m_EdgeDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID32);
+    m_EdgeDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>>(this, path, 0, cDims, "", DataArrayID32);
     if(nullptr != m_EdgeDataPtr.lock())
     {
       m_EdgeData = m_EdgeDataPtr.lock()->getPointer(0);
@@ -306,7 +306,7 @@ void CreateLambertSphere::dataCheck()
   // Create a Triangle Geometry
   if(getCreateTriangleGeometry())
   {
-    DataContainer::Pointer triangleDC = dca->createNonPrereqDataContainer<AbstractFilter>(this, getTriangleDataContainerName(), DataContainerID);
+    DataContainer::Pointer triangleDC = dca->createNonPrereqDataContainer(this, getTriangleDataContainerName(), DataContainerID);
     if(getErrorCode() < 0)
     {
       return;
@@ -325,7 +325,7 @@ void CreateLambertSphere::dataCheck()
 
     cDims[0] = 1;
     DataArrayPath path(getTriangleDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), m_TriangleDataName);
-    m_TriangleFaceDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID33);
+    m_TriangleFaceDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>>(this, path, 0, cDims, "", DataArrayID33);
     if(nullptr != m_TriangleFaceDataPtr.lock())
     {
       m_TriangleFaceData = m_TriangleFaceDataPtr.lock()->getPointer(0);
@@ -335,7 +335,7 @@ void CreateLambertSphere::dataCheck()
   // Create a QuadGeometry
   if(getCreateQuadGeometry())
   {
-    DataContainer::Pointer quadDC = dca->createNonPrereqDataContainer<AbstractFilter>(this, getQuadDataContainerName(), DataContainerID);
+    DataContainer::Pointer quadDC = dca->createNonPrereqDataContainer(this, getQuadDataContainerName(), DataContainerID);
     if(getErrorCode() < 0)
     {
       return;
@@ -352,7 +352,7 @@ void CreateLambertSphere::dataCheck()
 
     cDims[0] = 1;
     DataArrayPath path(getQuadDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), m_QuadDataName);
-    m_QuadFaceDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID34);
+    m_QuadFaceDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>>(this, path, 0, cDims, "", DataArrayID34);
     if(nullptr != m_QuadFaceDataPtr.lock())
     {
       m_QuadFaceData = m_QuadFaceDataPtr.lock()->getPointer(0);

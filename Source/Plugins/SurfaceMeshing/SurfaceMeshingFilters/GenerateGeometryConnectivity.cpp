@@ -105,7 +105,7 @@ void GenerateGeometryConnectivity::initialize()
 // -----------------------------------------------------------------------------
 void GenerateGeometryConnectivity::dataCheck()
 {
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry, AbstractFilter>(this, getSurfaceDataContainerName());
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry>(this, getSurfaceDataContainerName());
 }
 
 // -----------------------------------------------------------------------------

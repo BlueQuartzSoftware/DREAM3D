@@ -194,8 +194,8 @@ void CropImageGeometry::dataCheck()
   // Validate the incoming DataContainer, Geometry, and AttributeMatrix ; bail if any do not exist since we plan on using them later on in the dataCheck
   // Error messages are handled by the getPrereq functions
   DataContainer::Pointer srcCellDataContainer = getDataContainerArray()->getPrereqDataContainer(this, getCellAttributeMatrixPath().getDataContainerName());
-  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
-  AttributeMatrix::Pointer srcCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellAttributeMatrixPath(), -301);
+  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getCellAttributeMatrixPath().getDataContainerName());
+  AttributeMatrix::Pointer srcCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, getCellAttributeMatrixPath(), -301);
   if(getErrorCode() < 0)
   {
     return;
@@ -213,7 +213,7 @@ void CropImageGeometry::dataCheck()
 
   if(m_SaveAsNewDataContainer)
   {
-    destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName(), DataContainerID);
+    destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer(this, getNewDataContainerName(), DataContainerID);
     if(nullptr == destCellDataContainer.get() || getErrorCode() < 0)
     {
       return;
@@ -354,7 +354,7 @@ void CropImageGeometry::dataCheck()
   if(m_RenumberFeatures)
   {
     std::vector<size_t> cDims(1, 1);
-    m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(nullptr, getFeatureIdsArrayPath(), cDims);
+    m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(nullptr, getFeatureIdsArrayPath(), cDims);
     if(nullptr != m_FeatureIdsPtr.lock())
     {
       m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
@@ -417,7 +417,7 @@ void CropImageGeometry::execute()
     FloatVec3Type o = srcCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin();
     FloatVec3Type r = srcCellDataContainer->getGeometryAs<ImageGeom>()->getSpacing();
 
-    destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName(), DataContainerID);
+    destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer(this, getNewDataContainerName(), DataContainerID);
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
     destCellDataContainer->setGeometry(image);
 

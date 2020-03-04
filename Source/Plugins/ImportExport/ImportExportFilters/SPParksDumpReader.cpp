@@ -161,7 +161,7 @@ void SPParksDumpReader::dataCheck()
   clearWarningCode();
   initialize();
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName(), DataContainerID);
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer(this, getVolumeDataContainerName(), DataContainerID);
   if(getErrorCode() < 0)
   {
     return;
@@ -443,7 +443,7 @@ int32_t SPParksDumpReader::readHeader()
   m->createNonPrereqAttributeMatrix(this, fIdsPath, tDims, AttributeMatrix::Type::Cell);
 
   std::vector<size_t> cDims = {1};
-  getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, fIdsPath, 0, cDims);
+  getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>>(this, fIdsPath, 0, cDims);
 
   return 0;
 }

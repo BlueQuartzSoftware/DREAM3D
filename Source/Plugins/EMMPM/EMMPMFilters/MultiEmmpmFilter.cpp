@@ -258,7 +258,7 @@ void MultiEmmpmFilter::dataCheck()
 
   DataArrayPath inputAMPath = DataArrayPath::GetAttributeMatrixPath(getInputDataArrayVector());
 
-  AttributeMatrix::Pointer inAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, inputAMPath, -301);
+  AttributeMatrix::Pointer inAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, inputAMPath, -301);
   if(getErrorCode() < 0 || nullptr == inAM.get())
   {
     return;
@@ -283,13 +283,13 @@ void MultiEmmpmFilter::dataCheck()
     QString newName = getOutputArrayPrefix() + arrayNames.at(i);
     inputAMPath.setDataArrayName(daName);
 
-    getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, inputAMPath, cDims);
+    getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>>(this, inputAMPath, cDims);
     if(getErrorCode() < 0)
     {
       return;
     }
 
-    outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, newName, 0, cDims, DataArrayID32);
+    outAM->createAndAddAttributeArray<UInt8ArrayType>(this, newName, 0, cDims, DataArrayID32);
   }
 
   // The EM/MPM Library has a hard coded MAX Classes of 16

@@ -86,7 +86,7 @@ void SegmentFeatures::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometryGrid, AbstractFilter>(this, getDataContainerName());
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometryGrid>(this, getDataContainerName());
 }
 
 // -----------------------------------------------------------------------------

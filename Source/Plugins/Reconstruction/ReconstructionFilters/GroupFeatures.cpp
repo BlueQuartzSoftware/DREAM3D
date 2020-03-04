@@ -118,11 +118,11 @@ void GroupFeatures::dataCheck()
   initialize();
 
   std::vector<size_t> cDims(1, 1);
-  m_ContiguousNeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter>(this, getContiguousNeighborListArrayPath(), cDims);
+  m_ContiguousNeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int32_t>>(this, getContiguousNeighborListArrayPath(), cDims);
 
   if(m_UseNonContiguousNeighbors)
   {
-    m_NonContiguousNeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter>(this, getNonContiguousNeighborListArrayPath(), cDims);
+    m_NonContiguousNeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int32_t>>(this, getNonContiguousNeighborListArrayPath(), cDims);
   }
 }
 

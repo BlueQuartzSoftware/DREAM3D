@@ -157,7 +157,7 @@ void TriangleCentroidFilter::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshTriangleCentroidsArrayPath().getDataContainerName());
+  TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom>(this, getSurfaceMeshTriangleCentroidsArrayPath().getDataContainerName());
 
   QVector<IDataArray::Pointer> dataArrays;
 
@@ -168,7 +168,7 @@ void TriangleCentroidFilter::dataCheck()
 
   std::vector<size_t> cDims(1, 3);
   m_SurfaceMeshTriangleCentroidsPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getSurfaceMeshTriangleCentroidsArrayPath(), 0, cDims, "", DataArrayID31);
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>>(this, getSurfaceMeshTriangleCentroidsArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_SurfaceMeshTriangleCentroidsPtr.lock())          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceMeshTriangleCentroids = m_SurfaceMeshTriangleCentroidsPtr.lock()->getPointer(0);
@@ -178,7 +178,7 @@ void TriangleCentroidFilter::dataCheck()
     dataArrays.push_back(m_SurfaceMeshTriangleCentroidsPtr.lock());
   }
 
-  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrays);
+  getDataContainerArray()->validateNumberOfTuples(this, dataArrays);
 }
 
 // -----------------------------------------------------------------------------

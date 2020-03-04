@@ -202,10 +202,10 @@ void DetectEllipsoids::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, m_FeatureIdsArrayPath, std::vector<size_t>(1, 1));
+  getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(this, m_FeatureIdsArrayPath, std::vector<size_t>(1, 1));
 
   m_DetectedEllipsoidsFeatureIdsPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType, AbstractFilter, int32_t>(this, m_DetectedEllipsoidsFeatureIdsArrayPath, 0, std::vector<size_t>(1, 1), "", DataArrayID31);
+      getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType>(this, m_DetectedEllipsoidsFeatureIdsArrayPath, 0, std::vector<size_t>(1, 1), "", DataArrayID31);
   DataContainer::Pointer ellipseDC = getDataContainerArray()->getPrereqDataContainer(this, m_EllipseFeatureAttributeMatrixPath.getDataContainerName());
   if(getErrorCode() < 0)
   {
@@ -213,7 +213,7 @@ void DetectEllipsoids::dataCheck()
   }
 
   int err = 0;
-  AttributeMatrix::Pointer featureAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, m_FeatureAttributeMatrixPath, err);
+  AttributeMatrix::Pointer featureAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, m_FeatureAttributeMatrixPath, err);
   if(getErrorCode() < 0)
   {
     return;
@@ -227,16 +227,16 @@ void DetectEllipsoids::dataCheck()
   DataArrayPath tmp = m_EllipseFeatureAttributeMatrixPath;
   tmp.setDataArrayName(m_CenterCoordinatesArrayName);
   m_CenterCoordinatesPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 2), "", DataArrayID32);
+      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 2), "", DataArrayID32);
   tmp.setDataArrayName(m_MajorAxisLengthArrayName);
   m_MajorAxisLengthArrayPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 1), "", DataArrayID33);
+      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 1), "", DataArrayID33);
   tmp.setDataArrayName(m_MinorAxisLengthArrayName);
   m_MinorAxisLengthArrayPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 1), "", DataArrayID34);
+      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 1), "", DataArrayID34);
   tmp.setDataArrayName(m_RotationalAnglesArrayName);
   m_RotationalAnglesArrayPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 1), "", DataArrayID35);
+      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 1), "", DataArrayID35);
 }
 
 // -----------------------------------------------------------------------------
@@ -266,7 +266,7 @@ void DetectEllipsoids::execute()
   }
 
   /* Finding the top-left and bottom-right corners of each featureId  */
-  Int32ArrayType::Pointer cellFeatureIds = getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, m_FeatureIdsArrayPath, std::vector<size_t>(1, 1));
+  Int32ArrayType::Pointer cellFeatureIds = getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(this, m_FeatureIdsArrayPath, std::vector<size_t>(1, 1));
   if(getErrorCode() < 0)
   {
     return;
@@ -279,7 +279,7 @@ void DetectEllipsoids::execute()
     size_t numComps = 6;
     std::vector<size_t> cDims(1, numComps);
     int err = 0;
-    AttributeMatrix::Pointer featureAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, m_FeatureAttributeMatrixPath, err);
+    AttributeMatrix::Pointer featureAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, m_FeatureAttributeMatrixPath, err);
 
     // Create corners array, which stores pixel coordinates for the top-left and bottom-right coordinates of each feature object
     UInt32ArrayType::Pointer corners = UInt32ArrayType::CreateArray(featureAM->getTupleDimensions(), cDims, "Corners of Feature", true);

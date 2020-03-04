@@ -481,7 +481,7 @@ public:
 
         DataArrayPath daPath(DCName, AMName, diffMapArrayName);
         std::vector<size_t> cDims(1, k_CompDims[cDim]);
-        typename DataArray<K>::Pointer diff = dca->getPrereqArrayFromPath<DataArray<K>, AbstractFilter>(diffMapFilt.get(), daPath, cDims);
+        typename DataArray<K>::Pointer diff = dca->getPrereqArrayFromPath<DataArray<K>>(diffMapFilt.get(), daPath, cDims);
 
         size_t tuples = diff->getNumberOfTuples();
         // printf("Total Tuples: %lu\n", tuples);
