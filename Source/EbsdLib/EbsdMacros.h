@@ -39,6 +39,8 @@
 /* Define our buffer size for reading data */
 #define kBufferSize 1024
 
+#include <QtCore/QtGlobal>
+
 /**
  * @brief These macros are used to read header values from an HDF5 file, NOT From a .ang or .ctf file
  */
@@ -133,6 +135,18 @@
     phase->set##key(static_cast<cast>(t));                                                                                                                                                             \
   }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
+
+#ifndef QVECTOR_FROM_STD_VECTOR
+#define QVECTOR_FROM_STD_VECTOR(def, qvector, svector) def qvector = def::fromStdVector(svector);
+#endif
+#else
+#ifndef QVECTOR_FROM_STD_VECTOR
+#define QVECTOR_FROM_STD_VECTOR(def, qvecVarName, svector) def qvecVarName(svector.begin(), svector.end());
+#endif
+
+#endif
+
 #define READ_PHASE_HEADER_ARRAY(cname, pid, Type, fqKey, key, phase)                                                                                                                                   \
   {                                                                                                                                                                                                    \
     std::vector<Type> t;                                                                                                                                                                               \
@@ -148,7 +162,9 @@
       H5Gclose(gid);                                                                                                                                                                                   \
       return -1;                                                                                                                                                                                       \
     }                                                                                                                                                                                                  \
-    phase->set##key(QVector<Type>::fromStdVector(t));                                                                                                                                                  \
+                                                                                                                                                                                                       \
+    QVECTOR_FROM_STD_VECTOR(QVector<Type>, temp##key, t)                                                                                                                                               \
+    phase->set##key(temp##key);                                                                                                                                                                        \
   }
 
 #define SHUFFLE_ARRAY(name, var, Type)                                                                                                                                                                 \

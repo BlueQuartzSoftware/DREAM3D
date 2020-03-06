@@ -44,6 +44,8 @@
 #include "QuatWidget.h"
 #include "RodriguesWidget.h"
 
+#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

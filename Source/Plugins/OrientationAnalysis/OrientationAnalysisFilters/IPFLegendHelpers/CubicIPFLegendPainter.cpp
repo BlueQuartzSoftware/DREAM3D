@@ -101,7 +101,7 @@ QImage CubicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, QImag
     painter.setFont(font);
     QFontMetrics metrics = painter.fontMetrics();
     fontHeight = metrics.height();
-    fontWidth = metrics.width(ops->getSymmetryName());
+    fontWidth = metrics.QFONTMETRICS_WIDTH(ops->getSymmetryName());
     painter.end();
   }
 
@@ -134,22 +134,22 @@ QImage CubicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, QImag
 
   // Draw the [111] label in the Upper Right corner
   QString label("[111]");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText(pImageWidth - (fontWidth * 1.25), fontHeight * 2, label);
 
   label = QString("[101]");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText(pImageWidth - (fontWidth * 1.05), fontHeight * 1.75 + imageSize.height(), label);
 
   label = QString("[001]");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText(10, fontHeight*1.75 + imageSize.height(), label);
 
   label = ops->getSymmetryName();
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText(pImageWidth/2 - fontWidth/2, fontHeight * 1.0, label);
 

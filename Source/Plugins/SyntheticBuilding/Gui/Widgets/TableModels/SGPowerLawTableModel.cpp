@@ -161,7 +161,7 @@ QVariant SGPowerLawTableModel::data(const QModelIndex& index, qint32 role) const
     }
     QFontMetrics fontMetrics(data(index, Qt::FontRole).value<QFont>());
     comboBox.fontMetrics = fontMetrics;
-    QSize size(fontMetrics.width(comboBox.currentText), fontMetrics.height());
+    QSize size(fontMetrics.QFONTMETRICS_WIDTH(comboBox.currentText), fontMetrics.height());
     return qApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
   if(role == Qt::TextAlignmentRole)

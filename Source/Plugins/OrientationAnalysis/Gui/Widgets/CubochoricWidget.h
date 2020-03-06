@@ -36,11 +36,13 @@
 #pragma once
 
 #include "OrientationWidget.h"
-
-#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
-
 #include "ui_CubochoricWidget.h"
 
+class OrientationUtilityCalculator;
+
+/**
+ * @brief The CubochoricWidget class
+ */
 class CubochoricWidget : public OrientationWidget, private Ui::CubochoricWidget
 {
   Q_OBJECT

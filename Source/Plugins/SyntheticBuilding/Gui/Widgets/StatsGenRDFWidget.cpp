@@ -211,7 +211,7 @@ void StatsGenRDFWidget::on_generateRDFBtn_clicked()
 
   // Generate the RDF Frequencies
   std::vector<float> rdfFrequencies = RadialDistributionFunction::GenerateRandomDistribution(minDist, maxDist, numBins, boxDims, boxRes);
-  QVector<float> qFreq = QVector<float>::fromStdVector(rdfFrequencies);
+  QVECTOR_FROM_STD_VECTOR(QVector<float>, qFreq, rdfFrequencies)
 
   // Update the Table model with the latest values
   m_RDFTableModel->setTableData(qFreq);
@@ -445,7 +445,7 @@ RdfData::Pointer StatsGenRDFWidget::getStatisticsData()
     }
   }
 
-  rdf->setFrequencies(qRdfDataFinal.toStdVector());
+  rdf->setFrequencies(std::vector<float>(qRdfDataFinal.begin(), qRdfDataFinal.end()));
 
   return rdf;
 }

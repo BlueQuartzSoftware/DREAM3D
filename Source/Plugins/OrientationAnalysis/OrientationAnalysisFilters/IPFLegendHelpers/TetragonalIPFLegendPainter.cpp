@@ -101,7 +101,7 @@ QImage TetragonalIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, 
     painter.setFont(font);
     QFontMetrics metrics = painter.fontMetrics();
     fontHeight = metrics.height();
-    fontWidth = metrics.width(ops->getSymmetryName());
+    fontWidth = metrics.QFONTMETRICS_WIDTH(ops->getSymmetryName());
     painter.end();
   }
 
@@ -134,22 +134,22 @@ QImage TetragonalIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, 
 
   // Draw the [111] label in the Upper Right corner
   QString label("[100]");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText(10, imageSize.height() + fontHeight * 3, label);
 
   label = QString("[110]");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText(0.707106781186548 * pImageWidth, fontHeight * 2 + 0.707106781186548 * imageSize.height(), label);
 
   label = QString("[001]");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText(10, fontHeight*2, label);
 
   label = ops->getSymmetryName();
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText(pImageWidth/2 - fontWidth/2, fontHeight * 1.0, label);
 

@@ -30,6 +30,7 @@
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -609,7 +610,7 @@ void GeneratePrecipitateStatsData::execute()
 
     // Generate the RDF Frequencies
     std::vector<float> rdfFrequencies = RadialDistributionFunction::GenerateRandomDistribution(m_RdfMinMaxDistance[0], m_RdfMinMaxDistance[1], m_RdfNumBins, boxDims, boxRes);
-    QVector<float> qFreq = QVector<float>::fromStdVector(rdfFrequencies);
+    QVECTOR_FROM_STD_VECTOR(QVector<float>, qFreq, rdfFrequencies)
   }
 
 }

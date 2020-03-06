@@ -101,7 +101,7 @@ QImage TriclinicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, Q
     painter.setFont(font);
     QFontMetrics metrics = painter.fontMetrics();
     fontHeight = metrics.height();
-    fontWidth = metrics.width(ops->getSymmetryName());
+    fontWidth = metrics.QFONTMETRICS_WIDTH(ops->getSymmetryName());
     painter.end();
   }
 
@@ -134,18 +134,18 @@ QImage TriclinicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, Q
 
   // Draw the [111] label in the Upper Right corner
   QString label("(010)");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText(pImageWidth/2 - fontWidth/2, fontHeight * 2, label);
 
   label = QString("Center || [001]");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText(pImageWidth/2 - fontWidth/2, fontHeight * 2.75 + imageSize.height(), label);
 
   label = ops->getSymmetryName();
   label = label.replace("-", "_");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   int x = pImageWidth/2 - fontWidth/2;
   int y = fontHeight * 1.0;

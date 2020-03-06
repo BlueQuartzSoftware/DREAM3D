@@ -48,9 +48,8 @@
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
 #include "OrientationLib/OrientationLib.h"
-
 #include "OrientationLib/Core/Orientation.hpp"
-
+#include "OrientationLib/OrientationMath/OrientationRepresentation.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
@@ -59,20 +58,6 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-namespace OrientationRepresentation
-{
-enum class Type : int
-{
-  Euler = 0,
-  OrientationMatrix,
-  Quaternion,
-  AxisAngle,
-  Rodrigues,
-  Homochoric,
-  Cubochoric,
-  Unknown
-};
-}
 
 /**
  * @brief This is the top level superclass for doing the conversions between orientation

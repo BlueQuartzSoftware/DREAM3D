@@ -469,7 +469,8 @@ QList<int> DetectEllipsoidsImpl::findExtrema(DoubleArrayType::Pointer thresholdA
 
   // Find and store peaks in rows that were found in Step 1
   QList<int> extremaRow_flatIndices;
-  QList<int> extremaCols_list = extremaCols.toList();
+  QLIST_FROM_QSET(QList<int>, extremaCols_list, extremaCols)
+
   int extremaColSize = extremaCols_list.size();
   for(int i = 0; i < extremaColSize; i++)
   {
@@ -509,7 +510,8 @@ QList<int> DetectEllipsoidsImpl::findExtrema(DoubleArrayType::Pointer thresholdA
   }
 
   // Peaks through diagonals
-  QList<int> rcIntersectionList = rcIntersection.toList();
+  QLIST_FROM_QSET(QList<int>, rcIntersectionList, rcIntersection)
+
   int rcIntersectionListSize = rcIntersectionList.size();
   for(int i = 0; i < rcIntersectionListSize; i++)
   {
@@ -576,7 +578,8 @@ QList<int> DetectEllipsoidsImpl::findExtrema(DoubleArrayType::Pointer thresholdA
     extrema.insert(extremaIndex);
   }
 
-  QList<int> extremaList = extrema.toList();
+  QLIST_FROM_QSET(QList<int>, extremaList, extrema)
+
   std::sort(extremaList.begin(), extremaList.end());
 
   return extremaList;

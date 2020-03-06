@@ -41,6 +41,8 @@
 
 #include "OrientationLib/Core/OrientationTransformation.hpp"
 
+#include "OrientationUtilityCalculator.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
