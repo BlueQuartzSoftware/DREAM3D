@@ -216,15 +216,15 @@ public:
    */
   void execute() override;
 
-  /**
-   * @brief preflight Reimplemented from @see AbstractFilter class
-   */
-  void preflight() override;
-
 
 
 protected:
   GenerateFaceMisorientationColoring();
+
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck() override;
 
   /**
    * @brief dataCheckSurfaceMesh Checks for the appropriate parameter values and availability of arrays

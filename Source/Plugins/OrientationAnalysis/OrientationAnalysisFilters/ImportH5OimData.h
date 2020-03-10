@@ -322,11 +322,6 @@ public:
    */
   void execute() override;
 
-  /**
-   * @brief preflight Reimplemented from @see AbstractFilter class
-   */
-  void preflight() override;
-
   /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
   /**
    * @brief Setter property for RefFrameZDir
@@ -429,7 +424,7 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  void dataCheck();
+  void dataCheck() override;
 
   /**
    * @brief Initializes all the private instance variables.

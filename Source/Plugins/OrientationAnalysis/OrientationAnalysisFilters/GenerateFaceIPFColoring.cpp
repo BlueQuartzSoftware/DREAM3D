@@ -383,15 +383,10 @@ void GenerateFaceIPFColoring::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateFaceIPFColoring::preflight()
+void GenerateFaceIPFColoring::dataCheck()
 {
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
   dataCheckSurfaceMesh();
   dataCheckVoxel();
-  emit preflightExecuted();
-  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -401,12 +396,7 @@ void GenerateFaceIPFColoring::execute()
 {
   clearErrorCode();
   clearWarningCode();
-  dataCheckSurfaceMesh();
-  if(getErrorCode() < 0)
-  {
-    return;
-  }
-  dataCheckVoxel();
+  dataCheck();
   if(getErrorCode() < 0)
   {
     return;

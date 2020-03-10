@@ -296,15 +296,10 @@ void GenerateFaceSchuhMisorientationColoring::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateFaceSchuhMisorientationColoring::preflight()
+void GenerateFaceSchuhMisorientationColoring::dataCheck()
 {
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
   dataCheckSurfaceMesh();
   dataCheckVoxel();
-  emit preflightExecuted();
-  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -314,13 +309,7 @@ void GenerateFaceSchuhMisorientationColoring::execute()
 {
   clearErrorCode();
   clearWarningCode();
-  dataCheckSurfaceMesh();
-  if(getErrorCode() < 0)
-  {
-    return;
-  }
-
-  dataCheckVoxel();
+  dataCheck();
   if(getErrorCode() < 0)
   {
     return;

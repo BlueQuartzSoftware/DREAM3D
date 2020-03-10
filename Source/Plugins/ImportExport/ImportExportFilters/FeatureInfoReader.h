@@ -296,11 +296,6 @@ public:
    */
   void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
-  /**
-   * @brief preflight Reimplemented from @see AbstractFilter class
-   */
-  void preflight() override;
-
 protected:
   FeatureInfoReader();
 

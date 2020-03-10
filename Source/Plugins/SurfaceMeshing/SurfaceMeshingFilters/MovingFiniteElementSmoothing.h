@@ -201,11 +201,6 @@ class SurfaceMeshing_EXPORT MovingFiniteElementSmoothing : public SurfaceMeshFil
      */
     void execute() override;
 
-    /**
-     * @brief This function runs some sanity checks on the DataContainer and inputs
-     * in an attempt to ensure the filter can process the inputs.
-     */
-    void preflight() override;
 
   protected:
     MovingFiniteElementSmoothing();

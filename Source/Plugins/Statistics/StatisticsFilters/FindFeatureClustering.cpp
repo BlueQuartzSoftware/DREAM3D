@@ -234,18 +234,6 @@ void FindFeatureClustering::dataCheck()
   m_ClusteringList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>>(this, tempPath, 0, cDims, "", DataArrayID32);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindFeatureClustering::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //

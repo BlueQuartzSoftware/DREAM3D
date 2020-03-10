@@ -194,15 +194,10 @@ void GBCDTriangleDumper::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GBCDTriangleDumper::preflight()
+void GBCDTriangleDumper::dataCheck()
 {
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
   dataCheckSurfaceMesh();
   dataCheckVoxel();
-  emit preflightExecuted();
-  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -212,8 +207,7 @@ void GBCDTriangleDumper::execute()
 {
   clearErrorCode();
   clearWarningCode();
-  dataCheckSurfaceMesh();
-  dataCheckVoxel();
+  dataCheck();
   if(getErrorCode() < 0)
   {
     return;

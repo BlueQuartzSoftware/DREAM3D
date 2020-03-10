@@ -216,24 +216,17 @@ public:
    */
   void execute() override;
 
-  /**
-   * @brief preflight Reimplemented from @see AbstractFilter class
-   */
-  void preflight() override;
-
 
 
 protected:
   GBCDTriangleDumper();
 
   /**
-   * @brief dataCheckSurfaceMesh Checks for the appropriate parameter values and availability of arrays
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  void dataCheckSurfaceMesh();
+  void dataCheck() override;
 
-  /**
-   * @brief dataCheckVoxel Checks for the appropriate parameter values and availability of arrays
-   */
+  void dataCheckSurfaceMesh();
   void dataCheckVoxel();
 
 private:

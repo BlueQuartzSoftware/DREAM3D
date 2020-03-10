@@ -108,18 +108,6 @@ void GenerateGeometryConnectivity::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry>(this, getSurfaceDataContainerName());
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GenerateGeometryConnectivity::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //

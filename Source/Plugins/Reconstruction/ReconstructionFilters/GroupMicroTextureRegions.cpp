@@ -302,20 +302,6 @@ void GroupMicroTextureRegions::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GroupMicroTextureRegions::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  GroupFeatures::preflight();
-  setInPreflight(false);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures)
 {
   notifyStatusMessage("Randomizing Parent Ids");

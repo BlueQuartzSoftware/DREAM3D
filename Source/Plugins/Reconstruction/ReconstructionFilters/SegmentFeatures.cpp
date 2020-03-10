@@ -89,18 +89,6 @@ void SegmentFeatures::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometryGrid>(this, getDataContainerName());
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SegmentFeatures::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //

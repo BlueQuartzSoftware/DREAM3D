@@ -239,19 +239,6 @@ void DetectEllipsoids::dataCheck()
       getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 1), "", DataArrayID35);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DetectEllipsoids::preflight()
-{
-  // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true);              // Set the fact that we are preflighting.
-  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
-  emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted();          // We are done preflighting this filter
-  setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
-}
 
 // -----------------------------------------------------------------------------
 //

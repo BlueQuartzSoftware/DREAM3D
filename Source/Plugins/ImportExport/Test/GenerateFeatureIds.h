@@ -169,10 +169,6 @@ public:
       m_FeatureIds[i] = i + UnitTest::FeatureIdsTest::Offset;
     }
   }
-  void preflight() override
-  {
-    dataCheck();
-  }
 
   void readFilterParameters(AbstractFilterParametersReader* reader, int index) override
   {
@@ -351,15 +347,6 @@ public:
    * @brief Reimplemented from @see AbstractFilter class
    */
   void execute() override
-  {
-    dataCheck();
-  }
-
-  /**
-   * @brief This function runs some sanity checks on the DataContainer and inputs
-   * in an attempt to ensure the filter can process the inputs.
-   */
-  void preflight() override
   {
     dataCheck();
   }

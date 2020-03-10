@@ -220,18 +220,6 @@ void FindSlipTransmissionMetrics::dataCheck()
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindSlipTransmissionMetrics::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //

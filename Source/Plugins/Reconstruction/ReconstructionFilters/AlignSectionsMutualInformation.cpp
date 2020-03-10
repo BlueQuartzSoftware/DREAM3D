@@ -208,18 +208,6 @@ void AlignSectionsMutualInformation::dataCheck()
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //

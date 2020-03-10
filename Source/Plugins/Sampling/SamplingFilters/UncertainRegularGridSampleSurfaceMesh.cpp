@@ -190,20 +190,6 @@ void UncertainRegularGridSampleSurfaceMesh::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void UncertainRegularGridSampleSurfaceMesh::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  SampleSurfaceMesh::preflight();
-  setInPreflight(false);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 VertexGeom::Pointer UncertainRegularGridSampleSurfaceMesh::generate_points()
 {
   VertexGeom::Pointer points = VertexGeom::CreateGeometry((m_XPoints * m_YPoints * m_ZPoints), "Points");

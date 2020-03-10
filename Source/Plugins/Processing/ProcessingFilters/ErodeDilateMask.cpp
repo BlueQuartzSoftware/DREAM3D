@@ -156,18 +156,6 @@ void ErodeDilateMask::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ErodeDilateMask::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //

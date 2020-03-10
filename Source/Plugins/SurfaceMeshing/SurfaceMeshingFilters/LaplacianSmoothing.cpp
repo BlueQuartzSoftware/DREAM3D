@@ -191,18 +191,6 @@ void LaplacianSmoothing::dataCheck()
   setSurfaceDataContainerName(DataArrayPath(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName(), "", ""));
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void LaplacianSmoothing::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //

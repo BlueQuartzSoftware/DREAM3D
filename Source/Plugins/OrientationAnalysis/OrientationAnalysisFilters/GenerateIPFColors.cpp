@@ -292,18 +292,6 @@ void GenerateIPFColors::dataCheck()
   getDataContainerArray()->validateNumberOfTuples(this, dataArraypaths);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GenerateIPFColors::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //

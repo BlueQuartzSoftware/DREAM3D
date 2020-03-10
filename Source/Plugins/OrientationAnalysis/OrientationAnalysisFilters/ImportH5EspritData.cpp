@@ -142,17 +142,6 @@ void ImportH5EspritData::setupFilterParameters()
 }
 
 // -----------------------------------------------------------------------------
-void ImportH5EspritData::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
-
-// -----------------------------------------------------------------------------
 void ImportH5EspritData::execute()
 {
   clearErrorCode();

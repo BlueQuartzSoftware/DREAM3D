@@ -602,29 +602,12 @@ void InsertPrecipitatePhases::dataCheck()
 
   getDataContainerArray()->validateNumberOfTuples(this, cellDataArrayPaths);
   getDataContainerArray()->validateNumberOfTuples(this, ensembleDataArrayPaths);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
 
   AttributeMatrix::Pointer attrMat = getDataContainerArray()->getAttributeMatrix(getFeaturePhasesArrayPath());
-  if(attrMat == nullptr)
+  if(attrMat != nullptr)
   {
-    setInPreflight(false);
-    return;
+    moveShapeDescriptions();
   }
-
-  moveShapeDescriptions();
-
-  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

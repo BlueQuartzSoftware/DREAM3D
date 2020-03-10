@@ -209,18 +209,6 @@ void SurfaceMeshToVtk::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SurfaceMeshToVtk::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 /**
  * @brief The ScopedFileMonitor class will automatically close an open FILE pointer

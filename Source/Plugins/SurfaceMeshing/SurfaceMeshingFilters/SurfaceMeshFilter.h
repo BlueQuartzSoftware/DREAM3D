@@ -66,12 +66,6 @@ public:
   static Pointer NullPointer();
 
   /**
-   * @brief Creates a new object wrapped in a shared_ptr<>
-   * @return
-   */
-  static Pointer New();
-
-  /**
    * @brief Returns the name of the class for SurfaceMeshFilter
    */
   QString getNameOfClass() const override;
