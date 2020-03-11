@@ -265,7 +265,7 @@ void AlignSections::execute()
 {
   clearErrorCode();
   clearWarningCode();
-  dataCheck();
+  AlignSections::dataCheck();
   if(getErrorCode() < 0)
   {
     return;

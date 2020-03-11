@@ -333,6 +333,18 @@ class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public FileReader
      */
     void initialize();
 
+    /**
+     * @brief readHeader Reads the header of the input file
+     * @return Integer error value
+     */
+    int32_t readHeader() override;
+
+    /**
+     * @brief readFile Reads the contents of the input file
+     * @return Integer error value
+     */
+    virtual int32_t readFile() override;
+
   private:
     std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
     int32_t* m_FeatureIds = nullptr;

@@ -808,3 +808,15 @@ QString YSChoiAbaqusReader::getCrystalStructuresArrayName() const
 {
   return m_CrystalStructuresArrayName;
 }
+
+// -----------------------------------------------------------------------------
+int32_t YSChoiAbaqusReader::readHeader()
+{
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+int32_t YSChoiAbaqusReader::readFile()
+{
+  return 0;
+}

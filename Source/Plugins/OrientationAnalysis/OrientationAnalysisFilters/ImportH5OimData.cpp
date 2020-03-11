@@ -621,7 +621,7 @@ void ImportH5OimData::execute()
 {
   clearErrorCode();
   clearWarningCode();
-  dataCheck();
+  ImportH5OimData::dataCheck();
   if(getErrorCode() < 0)
   {
     return;

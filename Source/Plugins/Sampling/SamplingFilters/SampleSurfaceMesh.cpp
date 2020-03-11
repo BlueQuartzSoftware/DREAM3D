@@ -320,7 +320,7 @@ void SampleSurfaceMesh::execute()
 {
   clearErrorCode();
   clearWarningCode();
-  dataCheck();
+  SampleSurfaceMesh::dataCheck();
   if(getErrorCode() < 0)
   {
     return;
