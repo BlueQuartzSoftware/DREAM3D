@@ -113,7 +113,7 @@ void SegmentFeatures::execute()
 {
   clearErrorCode();
   clearWarningCode();
-  dataCheck();
+  SegmentFeatures::dataCheck();
   if(getErrorCode() < 0)
   {
     return;
