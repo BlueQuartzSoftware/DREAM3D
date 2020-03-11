@@ -468,7 +468,7 @@ void FindEuclideanDistMap::dataCheck()
     m_NearestNeighbors = m_NearestNeighborsPtr.lock()->getPointer(0);
   }
 
-  if(!m_SaveNearestNeighbors)
+  if(getErrorCode() >= 0 && !m_SaveNearestNeighbors)
   {
     DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
     AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(getFeatureIdsArrayPath().getAttributeMatrixName());
