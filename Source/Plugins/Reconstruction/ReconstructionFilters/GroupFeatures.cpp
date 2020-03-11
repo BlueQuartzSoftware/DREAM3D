@@ -166,7 +166,7 @@ void GroupFeatures::execute()
 {
   clearErrorCode();
   clearWarningCode();
-  dataCheck();
+  GroupFeatures::dataCheck();
   if(getErrorCode() < 0)
   {
     return;
