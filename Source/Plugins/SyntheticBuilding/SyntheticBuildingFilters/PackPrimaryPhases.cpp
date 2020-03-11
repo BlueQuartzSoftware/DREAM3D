@@ -822,16 +822,35 @@ void PackPrimaryPhases::dataCheck()
       setErrorCondition(-78004, ss);
     }
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::preflight()
+{
+  setInPreflight(true);
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
+  dataCheck();
+  emit preflightExecuted();
 
   DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath());
-  if(dc != nullptr)
+  if(dc == nullptr)
   {
-    AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName());
-    if(attrMat != nullptr)
-    {
-      moveShapeDescriptions();
-    }
+    setInPreflight(false);
+    return;
   }
+  AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName());
+  if(attrMat == nullptr)
+  {
+    setInPreflight(false);
+    return;
+  }
+
+  moveShapeDescriptions();
+
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

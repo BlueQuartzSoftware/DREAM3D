@@ -277,9 +277,6 @@ void ReadH5Ebsd::dataCheck()
   clearWarningCode();
   initialize();
 
-  readVolumeInfo(); // This is specific to "readers" in general (I think), or at least those readers that need to show
-  // a structure to the user to allow them to select only specific parts of the file to read
-
   DataArrayPath tempPath;
 
   m_DataArrayNames.clear(); // Remove all the data arrays
@@ -444,6 +441,24 @@ void ReadH5Ebsd::dataCheck()
   {
     m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::preflight()
+{
+  setInPreflight(true);
+  // Read the file to get the data arrays, size, meta data
+  readVolumeInfo(); // This is specific to "readers" in general (I think), or at least those readers that need to show
+  // a structure to the user to allow them to select only specific parts of the file to read
+  // Now signal that any GUI widget is ready to read the information from this instance
+  emit preflightAboutToExecute();
+  // Let the GUI Widget (or anything else) update the parameters for this filter
+  emit updateFilterParameters(this);
+  dataCheck();
+  emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

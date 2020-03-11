@@ -309,7 +309,13 @@ void GenerateFaceSchuhMisorientationColoring::execute()
 {
   clearErrorCode();
   clearWarningCode();
-  dataCheck();
+  dataCheckSurfaceMesh();
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
+
+  dataCheckVoxel();
   if(getErrorCode() < 0)
   {
     return;

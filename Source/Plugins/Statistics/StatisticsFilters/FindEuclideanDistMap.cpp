@@ -467,13 +467,31 @@ void FindEuclideanDistMap::dataCheck()
   {
     m_NearestNeighbors = m_NearestNeighborsPtr.lock()->getPointer(0);
   }
+}
 
-  if(getErrorCode() >= 0 && !m_SaveNearestNeighbors)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindEuclideanDistMap::preflight()
+{
+  setInPreflight(true);
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
+  dataCheck();
+  if(getErrorCode() < 0)
+  {
+    emit preflightExecuted();
+    setInPreflight(false);
+    return;
+  }
+  if(!m_SaveNearestNeighbors)
   {
     DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
     AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(getFeatureIdsArrayPath().getAttributeMatrixName());
     attrMat->removeAttributeArray(getNearestNeighborsArrayName());
   }
+  emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
