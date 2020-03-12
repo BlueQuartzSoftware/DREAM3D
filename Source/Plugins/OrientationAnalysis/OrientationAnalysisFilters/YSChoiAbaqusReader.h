@@ -41,13 +41,13 @@
 #include <cstring> // needed for the ::memcpy function below
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/CoreFilters/FileReader.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
 
-class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public FileReader
+class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public AbstractFilter
 {
     Q_OBJECT
 
@@ -332,18 +332,6 @@ class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public FileReader
      * @brief Initializes all the private instance variables.
      */
     void initialize();
-
-    /**
-     * @brief readHeader Reads the header of the input file
-     * @return Integer error value
-     */
-    int32_t readHeader() override;
-
-    /**
-     * @brief readFile Reads the contents of the input file
-     * @return Integer error value
-     */
-    virtual int32_t readFile() override;
 
   private:
     std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;

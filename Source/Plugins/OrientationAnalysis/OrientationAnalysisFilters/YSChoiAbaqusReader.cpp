@@ -121,7 +121,6 @@ YSChoiAbaqusReader::~YSChoiAbaqusReader() = default;
 // -----------------------------------------------------------------------------
 void YSChoiAbaqusReader::setupFilterParameters()
 {
-  FileReader::setupFilterParameters();
   FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, YSChoiAbaqusReader));
@@ -807,16 +806,4 @@ void YSChoiAbaqusReader::setCrystalStructuresArrayName(const QString& value)
 QString YSChoiAbaqusReader::getCrystalStructuresArrayName() const
 {
   return m_CrystalStructuresArrayName;
-}
-
-// -----------------------------------------------------------------------------
-int32_t YSChoiAbaqusReader::readHeader()
-{
-  return 0;
-}
-
-// -----------------------------------------------------------------------------
-int32_t YSChoiAbaqusReader::readFile()
-{
-  return 0;
 }
