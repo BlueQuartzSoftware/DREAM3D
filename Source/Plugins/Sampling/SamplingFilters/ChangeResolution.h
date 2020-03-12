@@ -245,13 +245,6 @@ public:
    */
   void execute() override;
 
-  /**
-  * @brief preflight Reimplemented from @see AbstractFilter class
-  */
-  void preflight() override;
-
-
-
 protected:
   ChangeResolution();
 

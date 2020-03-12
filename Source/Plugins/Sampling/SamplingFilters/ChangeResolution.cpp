@@ -183,104 +183,87 @@ void ChangeResolution::dataCheck()
       m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ChangeResolution::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-
-  if(getErrorCode() < 0)
+  if(getErrorCode() >= 0)
   {
-    emit preflightExecuted();
-    setInPreflight(false);
-    return;
-  }
-
-  DataContainer::Pointer m;
-  if(!m_SaveAsNewDataContainer)
-  {
-    m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
-  }
-  else
-  {
-    m = getDataContainerArray()->getDataContainer(getNewDataContainerName());
-  }
-
-  ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
-  SizeVec3Type dims = image->getDimensions();
-
-  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
-  spacing[0] *= static_cast<float>(dims[0]);
-  spacing[1] *= static_cast<float>(dims[1]);
-  spacing[2] *= static_cast<float>(dims[2]);
-
-  size_t m_XP = size_t(spacing[0] / m_Spacing[0]);
-  size_t m_YP = size_t(spacing[1] / m_Spacing[1]);
-  size_t m_ZP = size_t(spacing[2] / m_Spacing[2]);
-  if(m_XP == 0)
-  {
-    m_XP = 1;
-  }
-  if(m_YP == 0)
-  {
-    m_YP = 1;
-  }
-  if(m_ZP == 0)
-  {
-    m_ZP = 1;
-  }
-
-  image->setDimensions(std::make_tuple(m_XP, m_YP, m_ZP));
-  image->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
-
-  std::vector<size_t> tDims(3, 0);
-  tDims[0] = m_XP;
-  tDims[1] = m_YP;
-  tDims[2] = m_ZP;
-  // m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName())->setTupleDimensions(tDims);
-
-  AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-
-  size_t totalPoints = 1;
-  for(int i = 0; i < 3; i++)
-  {
-    if(tDims[i] != 0)
+    DataContainer::Pointer m;
+    if(!m_SaveAsNewDataContainer)
     {
-      totalPoints *= tDims[i];
+      m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
+    }
+    else
+    {
+      m = getDataContainerArray()->getDataContainer(getNewDataContainerName());
+    }
+
+    ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
+    SizeVec3Type dims = image->getDimensions();
+
+    FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
+    spacing[0] *= static_cast<float>(dims[0]);
+    spacing[1] *= static_cast<float>(dims[1]);
+    spacing[2] *= static_cast<float>(dims[2]);
+
+    size_t m_XP = size_t(spacing[0] / m_Spacing[0]);
+    size_t m_YP = size_t(spacing[1] / m_Spacing[1]);
+    size_t m_ZP = size_t(spacing[2] / m_Spacing[2]);
+    if(m_XP == 0)
+    {
+      m_XP = 1;
+    }
+    if(m_YP == 0)
+    {
+      m_YP = 1;
+    }
+    if(m_ZP == 0)
+    {
+      m_ZP = 1;
+    }
+
+    image->setDimensions(std::make_tuple(m_XP, m_YP, m_ZP));
+    image->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
+
+    std::vector<size_t> tDims(3, 0);
+    tDims[0] = m_XP;
+    tDims[1] = m_YP;
+    tDims[2] = m_ZP;
+    // m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName())->setTupleDimensions(tDims);
+
+    AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
+
+    size_t totalPoints = 1;
+    for(int i = 0; i < 3; i++)
+    {
+      if(tDims[i] != 0)
+      {
+        totalPoints *= tDims[i];
+      }
+    }
+    AttributeMatrix::Pointer newCellAttrMat = AttributeMatrix::New(tDims, cellAttrMat->getName(), cellAttrMat->getType());
+
+    QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNames();
+    for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+    {
+      IDataArray::Pointer p = cellAttrMat->getAttributeArray(*iter);
+      //
+      IDataArray::Pointer data = p->createNewArray(totalPoints, p->getComponentDimensions(), p->getName(), false);
+
+      cellAttrMat->removeAttributeArray(*iter);
+      newCellAttrMat->insertOrAssign(data);
+    }
+    m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
+    m->addOrReplaceAttributeMatrix(newCellAttrMat);
+
+    if(m_RenumberFeatures)
+    {
+      AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
+      if(nullptr != cellFeatureAttrMat.get())
+      {
+        QVector<bool> activeObjects(cellFeatureAttrMat->getNumberOfTuples(), true);
+        cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
+      }
     }
   }
-  AttributeMatrix::Pointer newCellAttrMat = AttributeMatrix::New(tDims, cellAttrMat->getName(), cellAttrMat->getType());
-
-  QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNames();
-  for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-  {
-    IDataArray::Pointer p = cellAttrMat->getAttributeArray(*iter);
-    //
-    IDataArray::Pointer data = p->createNewArray(totalPoints, p->getComponentDimensions(), p->getName(), false);
-
-    cellAttrMat->removeAttributeArray(*iter);
-    newCellAttrMat->insertOrAssign(data);
-  }
-  m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-  m->addOrReplaceAttributeMatrix(newCellAttrMat);
-
-  if(m_RenumberFeatures)
-  {
-    AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-    if(nullptr != cellFeatureAttrMat.get())
-    {
-      QVector<bool> activeObjects(cellFeatureAttrMat->getNumberOfTuples(), true);
-      cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
-    }
-  }
-  emit preflightExecuted();
-  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
