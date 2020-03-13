@@ -468,7 +468,7 @@ void FindEuclideanDistMap::dataCheck()
     m_NearestNeighbors = m_NearestNeighborsPtr.lock()->getPointer(0);
   }
 
-  if(getErrorCode() < 0)
+  if(getErrorCode() >= 0)
   {
     if(!m_SaveNearestNeighbors)
     {
