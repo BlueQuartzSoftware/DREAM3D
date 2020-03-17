@@ -386,10 +386,10 @@ void FindEuclideanDistMap::dataCheck()
   clearWarningCode();
   DataArrayPath tempPath;
 
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   std::vector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeatureIdsArrayPath(),
                                                                                                         cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_FeatureIdsPtr.lock())
   {
@@ -401,7 +401,7 @@ void FindEuclideanDistMap::dataCheck()
     tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getGBDistancesArrayName());
     if(m_CalcManhattanDist)
     {
-      m_GBManhattanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims, "", DataArrayID31);
+      m_GBManhattanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>>(this, tempPath, -1, cDims, "", DataArrayID31);
       if(nullptr != m_GBManhattanDistancesPtr.lock())
       {
         m_GBManhattanDistances = m_GBManhattanDistancesPtr.lock()->getPointer(0);
@@ -409,7 +409,7 @@ void FindEuclideanDistMap::dataCheck()
     }
     else
     {
-      m_GBEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, -1, cDims, "", DataArrayID32);
+      m_GBEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, -1, cDims, "", DataArrayID32);
       if(nullptr != m_GBEuclideanDistancesPtr.lock())
       {
         m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0);
@@ -422,7 +422,7 @@ void FindEuclideanDistMap::dataCheck()
     tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getTJDistancesArrayName());
     if(m_CalcManhattanDist)
     {
-      m_TJManhattanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims, "", DataArrayID33);
+      m_TJManhattanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>>(this, tempPath, -1, cDims, "", DataArrayID33);
       if(nullptr != m_TJManhattanDistancesPtr.lock())
       {
         m_TJManhattanDistances = m_TJManhattanDistancesPtr.lock()->getPointer(0);
@@ -430,7 +430,7 @@ void FindEuclideanDistMap::dataCheck()
     }
     else
     {
-      m_TJEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, -1, cDims, "", DataArrayID34);
+      m_TJEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, -1, cDims, "", DataArrayID34);
       if(nullptr != m_TJEuclideanDistancesPtr.lock())
       {
         m_TJEuclideanDistances = m_TJEuclideanDistancesPtr.lock()->getPointer(0);
@@ -443,7 +443,7 @@ void FindEuclideanDistMap::dataCheck()
     tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getQPDistancesArrayName());
     if(m_CalcManhattanDist)
     {
-      m_QPManhattanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims, "", DataArrayID35);
+      m_QPManhattanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>>(this, tempPath, -1, cDims, "", DataArrayID35);
       if(nullptr != m_QPManhattanDistancesPtr.lock())
       {
         m_QPManhattanDistances = m_QPManhattanDistancesPtr.lock()->getPointer(0);
@@ -451,7 +451,7 @@ void FindEuclideanDistMap::dataCheck()
     }
     else
     {
-      m_QPEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, -1, cDims, "", DataArrayID36);
+      m_QPEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, -1, cDims, "", DataArrayID36);
       if(nullptr != m_QPEuclideanDistancesPtr.lock())
       {
         m_QPEuclideanDistances = m_QPEuclideanDistancesPtr.lock()->getPointer(0);
@@ -461,7 +461,7 @@ void FindEuclideanDistMap::dataCheck()
 
   cDims[0] = 3;
   tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getNearestNeighborsArrayName());
-  m_NearestNeighborsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+  m_NearestNeighborsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>>(
         this, tempPath, 0, cDims);                    /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_NearestNeighborsPtr.lock())
   {

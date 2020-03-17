@@ -657,14 +657,14 @@ public:
     DataArrayPath dap(k_DataContainerName, k_CellAttributeMatrixName, k_DataArrayName);
 
     // Get the data array so we can print it to the console - for debugging only
-    Int32ArrayType::Pointer data = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
+    Int32ArrayType::Pointer data = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
     if(0)
     {
       printArraySlice<int>(data, s_OriginalX, s_OriginalY, s_OriginalZ);
     }
     // Now get the 4 comp (UInt8 array)
     dap.setDataArrayName(k_4CompDataArrayName);
-    UInt8ArrayType::Pointer four = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<UInt8ArrayType>(cropVolume.get(), dap);
+    UInt8ArrayType::Pointer four = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<UInt8ArrayType>(cropVolume.get(), dap);
     if(0) // And possibly print it out
     {
       printArraySlice<unsigned char>(four, s_OriginalX, s_OriginalY, s_OriginalZ);
@@ -683,11 +683,11 @@ public:
     require_greater_than<int, int>(err, "err", -1, "Value");
     // Get the data array and check the crop on it.
     dap.setDataArrayName(k_DataArrayName);
-    data = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
+    data = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
     checkCrop<int, int>(data, s_CroppedX, s_CroppedY, s_CroppedZ);
     // Now get the 4 comp (UInt8 array)
     dap.setDataArrayName(k_4CompDataArrayName);
-    four = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<UInt8ArrayType>(cropVolume.get(), dap);
+    four = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<UInt8ArrayType>(cropVolume.get(), dap);
     checkCrop<uint8_t, uint8_t>(four, s_CroppedX, s_CroppedY, s_CroppedZ);
 
     if(0)
@@ -699,7 +699,7 @@ public:
     }
     // Now we need to check that the FeatureIds got cropped correctly
     dap = DataArrayPath(k_DataContainerName, k_CellAttributeMatrixName, k_FeatureIdsName);
-    data = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
+    data = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
     DREAM3D_REQUIRE_VALID_POINTER(data.get());
     if(0)
     {
@@ -725,14 +725,14 @@ public:
     DataArrayPath dap(k_DataContainerName, k_CellAttributeMatrixName, k_DataArrayName);
 
     // Get the data array so we can print it to the console - for debugging only
-    Int32ArrayType::Pointer data = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
+    Int32ArrayType::Pointer data = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
     if(0)
     {
       printArraySlice<int>(data, s_OriginalX, s_OriginalY, s_OriginalZ);
     }
     // Now get the 4 comp (UInt8 array)
     dap.setDataArrayName(k_4CompDataArrayName);
-    UInt8ArrayType::Pointer four = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<UInt8ArrayType>(cropVolume.get(), dap);
+    UInt8ArrayType::Pointer four = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<UInt8ArrayType>(cropVolume.get(), dap);
     if(0) // And possibly print it out
     {
       printArraySlice<unsigned char>(four, s_OriginalX, s_OriginalY, s_OriginalZ);
@@ -752,7 +752,7 @@ public:
     require_greater_than<int, int>(err, "err", -1, "Value");
     // Get the data array and check the crop on it.
     dap = DataArrayPath(k_NewDataContainerName, k_CellAttributeMatrixName, k_DataArrayName);
-    data = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
+    data = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
     checkCrop<int, int>(data, s_CroppedX, s_CroppedY, s_CroppedZ);
 
     if(0)
@@ -764,7 +764,7 @@ public:
     }
     // Now get the 4 comp (UInt8 array)
     dap.setDataArrayName(k_4CompDataArrayName);
-    four = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<UInt8ArrayType>(cropVolume.get(), dap);
+    four = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<UInt8ArrayType>(cropVolume.get(), dap);
     checkCrop<uint8_t, uint8_t>(four, s_CroppedX, s_CroppedY, s_CroppedZ);
     if(0)
     {
@@ -776,7 +776,7 @@ public:
 
     // Now we need to check that the FeatureIds got cropped correctly
     dap.setDataArrayName(k_FeatureIdsName);
-    data = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
+    data = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
     DREAM3D_REQUIRE_VALID_POINTER(data.get());
     if(0)
     {
@@ -800,21 +800,21 @@ public:
     DataArrayPath dap(k_DataContainerName, k_CellAttributeMatrixName, k_DataArrayName);
 
     // Get the data array so we can print it to the console - for debugging only
-    Int32ArrayType::Pointer data = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
+    Int32ArrayType::Pointer data = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
     if(0)
     {
       printArraySlice<int>(data, s_OriginalX, s_OriginalY, s_OriginalZ);
     }
     // Now get the 4 comp (UInt8 array)
     dap.setDataArrayName(k_4CompDataArrayName);
-    UInt8ArrayType::Pointer four = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<UInt8ArrayType>(cropVolume.get(), dap);
+    UInt8ArrayType::Pointer four = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<UInt8ArrayType>(cropVolume.get(), dap);
     if(0) // And possibly print it out
     {
       printArraySlice<unsigned char>(four, s_OriginalX, s_OriginalY, s_OriginalZ);
     }
 
     dap = DataArrayPath(k_DataContainerName, k_CellAttributeMatrixName, k_FeatureIdsName);
-    data = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
+    data = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
     if(0)
     {
       printArraySlice<int32_t>(data, s_OriginalX, s_OriginalY, s_OriginalZ);
@@ -840,7 +840,7 @@ public:
 
     // Get the data array and check the crop on it.
     dap = DataArrayPath(k_DataContainerName, k_CellAttributeMatrixName, k_DataArrayName);
-    data = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
+    data = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
     DREAM3D_REQUIRE_VALID_POINTER(data.get())
 
     checkCrop<int, int>(data, s_CroppedX, s_CroppedY, s_CroppedZ);
@@ -854,7 +854,7 @@ public:
     }
     // Now get the 4 comp (UInt8 array)
     dap.setDataArrayName(k_4CompDataArrayName);
-    four = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<UInt8ArrayType>(cropVolume.get(), dap);
+    four = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<UInt8ArrayType>(cropVolume.get(), dap);
     checkCrop<uint8_t, uint8_t>(four, s_CroppedX, s_CroppedY, s_CroppedZ);
     if(0)
     {
@@ -866,7 +866,7 @@ public:
 
     // Now we need to check that the FeatureIds got cropped correctly
     dap.setDataArrayName(k_FeatureIdsName);
-    data = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
+    data = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
     DREAM3D_REQUIRE_VALID_POINTER(data.get());
     if(0)
     {
@@ -890,21 +890,21 @@ public:
     DataArrayPath dap(k_DataContainerName, k_CellAttributeMatrixName, k_DataArrayName);
 
     // Get the data array so we can print it to the console - for debugging only
-    Int32ArrayType::Pointer data = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
+    Int32ArrayType::Pointer data = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
     if(0)
     {
       printArraySlice<int>(data, s_OriginalX, s_OriginalY, s_OriginalZ);
     }
     // Now get the 4 comp (UInt8 array)
     dap.setDataArrayName(k_4CompDataArrayName);
-    UInt8ArrayType::Pointer four = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<UInt8ArrayType>(cropVolume.get(), dap);
+    UInt8ArrayType::Pointer four = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<UInt8ArrayType>(cropVolume.get(), dap);
     if(0) // And possibly print it out
     {
       printArraySlice<unsigned char>(four, s_OriginalX, s_OriginalY, s_OriginalZ);
     }
 
     dap = DataArrayPath(k_DataContainerName, k_CellAttributeMatrixName, k_FeatureIdsName);
-    data = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
+    data = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
     if(0)
     {
       printArraySlice<int32_t>(data, s_OriginalX, s_OriginalY, s_OriginalZ);
@@ -924,7 +924,7 @@ public:
     require_greater_than<int, int>(err, "err", -1, "Value");
     // Get the data array and check the crop on it.
     dap = DataArrayPath(k_NewDataContainerName, k_CellAttributeMatrixName, k_DataArrayName);
-    data = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
+    data = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
     DREAM3D_REQUIRE_VALID_POINTER(data.get());
 
     checkCrop<int, int>(data, s_CroppedX, s_CroppedY, s_CroppedZ);
@@ -938,7 +938,7 @@ public:
     }
     // Now get the 4 comp (UInt8 array)
     dap.setDataArrayName(k_4CompDataArrayName);
-    four = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<UInt8ArrayType>(cropVolume.get(), dap);
+    four = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<UInt8ArrayType>(cropVolume.get(), dap);
     checkCrop<uint8_t, uint8_t>(four, s_CroppedX, s_CroppedY, s_CroppedZ);
     if(0)
     {
@@ -950,7 +950,7 @@ public:
 
     // Now we need to check that the FeatureIds got renumbered correctly
     dap.setDataArrayName(k_FeatureIdsName);
-    data = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
+    data = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
     DREAM3D_REQUIRE_VALID_POINTER(data.get());
 
     AbstractFilter::Pointer writer = CreateDataContainerWriter(UnitTest::CropVolumeTest::CropVolumeTest_4);
@@ -964,7 +964,7 @@ public:
 
     // Now we need to check that the FeatureIds got cropped correctly
     dap.setDataArrayName(k_FeatureIdsName);
-    data = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
+    data = cropVolume->getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
     DREAM3D_REQUIRE_VALID_POINTER(data.get());
     if(0)
     {

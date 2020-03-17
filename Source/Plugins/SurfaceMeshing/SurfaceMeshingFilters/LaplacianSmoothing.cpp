@@ -150,7 +150,7 @@ void LaplacianSmoothing::initialize()
 // -----------------------------------------------------------------------------
 void LaplacianSmoothing::dataCheck()
 {
-  TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
+  TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
   QVector<IDataArray::Pointer> faceDataArrays;
   QVector<IDataArray::Pointer> nodeDataArrays;
@@ -162,7 +162,7 @@ void LaplacianSmoothing::dataCheck()
   }
 
   std::vector<size_t> cDims(1, 1);
-  m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(),
+  m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>>(this, getSurfaceMeshNodeTypeArrayPath(),
                                                                                                                 cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshNodeTypePtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -174,7 +174,7 @@ void LaplacianSmoothing::dataCheck()
   }
 
   cDims[0] = 2;
-  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(),
+  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getSurfaceMeshFaceLabelsArrayPath(),
                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshFaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -185,24 +185,12 @@ void LaplacianSmoothing::dataCheck()
     faceDataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock());
   }
 
-  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, faceDataArrays);
-  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, nodeDataArrays);
+  getDataContainerArray()->validateNumberOfTuples(this, faceDataArrays);
+  getDataContainerArray()->validateNumberOfTuples(this, nodeDataArrays);
 
   setSurfaceDataContainerName(DataArrayPath(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName(), "", ""));
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void LaplacianSmoothing::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //

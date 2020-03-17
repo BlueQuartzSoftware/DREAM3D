@@ -239,7 +239,7 @@ public:
       // Now lets get the output data
       path = DataArrayPath(DCName, Hist_AMName, DurationHistogram_Name);
       cDims[0] = 2; // the output array has 2 components
-      IDataArray::Pointer histArray = dca->getPrereqArrayFromPath<DoubleArrayType, AbstractFilter>(filter.get(), path, cDims);
+      IDataArray::Pointer histArray = dca->getPrereqArrayFromPath<DoubleArrayType>(filter.get(), path, cDims);
       DoubleArrayType::Pointer durationPtr = std::dynamic_pointer_cast<DoubleArrayType>(histArray);
 
       // Validate the pointer before we go any further

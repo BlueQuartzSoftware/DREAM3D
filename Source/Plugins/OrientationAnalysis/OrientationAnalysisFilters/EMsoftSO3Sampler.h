@@ -299,11 +299,6 @@ public:
   void execute() override;
 
   /**
-  * @brief preflight Reimplemented from @see AbstractFilter class
-  */
-  void preflight() override;
-
-  /**
    * @brief RodriguesComposition
    * @param sigma
    * @param rod
@@ -354,35 +349,14 @@ public:
    */
   void setUpdateProgress(int tuplesCompleted);
 
-signals:
-  /**
-   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-   * be pushed from a user-facing control (such as a widget)
-   * @param filter Filter instance pointer
-   */
-  void updateFilterParameters(AbstractFilter* filter);
 
-  /**
-   * @brief parametersChanged Emitted when any Filter parameter is changed internally
-   */
-  void parametersChanged();
-
-  /**
-   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-   */
-  void preflightAboutToExecute();
-
-  /**
-   * @brief preflightExecuted Emitted just after calling dataCheck()
-   */
-  void preflightExecuted();
 
 protected:
   EMsoftSO3Sampler();
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  void dataCheck();
+  void dataCheck() override;
 
   /**
    * @brief Initializes all the private instance variables.

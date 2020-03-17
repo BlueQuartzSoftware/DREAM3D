@@ -109,7 +109,7 @@ void ComputeMomentInvariants2D::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  IGeometry::Pointer igeom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
+  IGeometry::Pointer igeom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry>(this, getFeatureIdsArrayPath().getDataContainerName());
   if(nullptr == igeom.get())
   {
     QString ss = QObject::tr("The ImageGeometry or DataContainer for %1 does not exist or is invalid.").arg(getFeatureIdsArrayPath().getDataContainerName());
@@ -125,26 +125,26 @@ void ComputeMomentInvariants2D::dataCheck()
   }
 
   std::vector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeatureIdsArrayPath(), cDims);
   if(nullptr != m_FeatureIdsPtr.lock())
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   }
 
   cDims[0] = 6;
-  m_FeatureRectPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getFeatureRectArrayPath(), cDims);
+  m_FeatureRectPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>>(this, getFeatureRectArrayPath(), cDims);
   if(nullptr != m_FeatureRectPtr.lock())
   {
     m_FeatureRect = m_FeatureRectPtr.lock()->getPointer(0);
   }
 
   cDims[0] = 1;
-  m_Omega1Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getOmega1ArrayPath(), 0.0f, cDims, "", DataArrayID31);
+  m_Omega1Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, getOmega1ArrayPath(), 0.0f, cDims, "", DataArrayID31);
   if(nullptr != m_Omega1Ptr.lock())
   {
     m_Omega1 = m_Omega1Ptr.lock()->getPointer(0);
   }
-  m_Omega2Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getOmega2ArrayPath(), 0.0f, cDims, "", DataArrayID32);
+  m_Omega2Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, getOmega2ArrayPath(), 0.0f, cDims, "", DataArrayID32);
   if(nullptr != m_Omega2Ptr.lock())
   {
     m_Omega2 = m_Omega2Ptr.lock()->getPointer(0);
@@ -155,7 +155,7 @@ void ComputeMomentInvariants2D::dataCheck()
   cDims[1] = 3;
   if(getSaveCentralMoments())
   {
-    m_CentralMomentsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getCentralMomentsArrayPath(), 0.0f, cDims, "", DataArrayID33);
+    m_CentralMomentsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, getCentralMomentsArrayPath(), 0.0f, cDims, "", DataArrayID33);
   }
   if(nullptr != m_CentralMomentsPtr.lock())
   {
@@ -163,19 +163,6 @@ void ComputeMomentInvariants2D::dataCheck()
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ComputeMomentInvariants2D::preflight()
-{
-  // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true);              // Set the fact that we are preflighting.
-  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
-  emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted();          // We are done preflighting this filter
-  setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -194,7 +181,7 @@ void ComputeMomentInvariants2D::execute()
     return;
   }
 
-  IGeometry::Pointer igeom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
+  IGeometry::Pointer igeom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   ImageGeom::Pointer imageGeom = std::dynamic_pointer_cast<ImageGeom>(igeom);
   SizeVec3Type volDims = imageGeom->getDimensions();

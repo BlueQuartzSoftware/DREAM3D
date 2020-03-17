@@ -228,13 +228,13 @@ void FindDifferenceMap::dataCheck()
 
   QVector<IDataArray::Pointer> dataArrays;
 
-  m_FirstInputArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getFirstInputArrayPath());
+  m_FirstInputArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, getFirstInputArrayPath());
   if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_FirstInputArrayPtr.lock());
   }
 
-  m_SecondInputArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSecondInputArrayPath());
+  m_SecondInputArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, getSecondInputArrayPath());
   if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_SecondInputArrayPtr.lock());
@@ -276,22 +276,9 @@ void FindDifferenceMap::dataCheck()
     dataArrays.push_back(m_DifferenceMapPtr.lock());
   }
 
-  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrays);
+  getDataContainerArray()->validateNumberOfTuples(this, dataArrays);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindDifferenceMap::preflight()
-{
-  // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true);              // Set the fact that we are preflighting.
-  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
-  emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted();          // We are done preflighting this filter
-  setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
-}
 
 // -----------------------------------------------------------------------------
 //

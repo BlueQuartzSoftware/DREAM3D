@@ -133,14 +133,14 @@ void GenerateOrientationMatrixTranspose::dataCheck()
 
   std::vector<size_t> cDims(1, 1);
   cDims[0] = 9;
-  m_OrientationMatrixPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getOrientationMatrixDataArrayPath(), cDims);
+  m_OrientationMatrixPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getOrientationMatrixDataArrayPath(), cDims);
   if(nullptr != m_OrientationMatrixPtr.lock())
   {
     m_OrientationMatrix = m_OrientationMatrixPtr.lock()->getPointer(0);
   }
 
   cDims[0] = 9;
-  m_OutputOrientationMatrixPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
+  m_OutputOrientationMatrixPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_OutputOrientationMatrixPtr.lock())
   {
     m_OutputOrientationMatrix = m_OutputOrientationMatrixPtr.lock()->getPointer(0);
@@ -156,19 +156,6 @@ void GenerateOrientationMatrixTranspose::dataCheck()
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GenerateOrientationMatrixTranspose::preflight()
-{
-  // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true);              // Set the fact that we are preflighting.
-  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
-  emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted();          // We are done preflighting this filter
-  setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
-}
 
 // -----------------------------------------------------------------------------
 //

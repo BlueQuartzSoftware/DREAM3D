@@ -54,17 +54,6 @@ SurfaceMeshFilter::Pointer SurfaceMeshFilter::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-std::shared_ptr<SurfaceMeshFilter> SurfaceMeshFilter::New()
-{
-  struct make_shared_enabler : public SurfaceMeshFilter
-  {
-  };
-  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
-  val->setupFilterParameters();
-  return val;
-}
-
-// -----------------------------------------------------------------------------
 QString SurfaceMeshFilter::getNameOfClass() const
 {
   return QString("SurfaceMeshFilter");

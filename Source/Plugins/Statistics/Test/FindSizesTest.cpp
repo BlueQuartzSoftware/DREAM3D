@@ -430,14 +430,14 @@ public:
 
     std::vector<size_t> cDims(1, 1);
 
-    FloatArrayType::Pointer image2D_volumes = dca->getPrereqArrayFromPath<FloatArrayType, AbstractFilter>(NULL, imageGeom2D_featureAttrMat, cDims);
-    FloatArrayType::Pointer image3D_volumes = dca->getPrereqArrayFromPath<FloatArrayType, AbstractFilter>(NULL, imageGeom3D_featureAttrMat, cDims);
-    FloatArrayType::Pointer rectGrid_volumes = dca->getPrereqArrayFromPath<FloatArrayType, AbstractFilter>(NULL, rectGrid_featureAttrMat, cDims);
-    FloatArrayType::Pointer vertex_volumes = dca->getPrereqArrayFromPath<FloatArrayType, AbstractFilter>(NULL, vertex_featureAttrMat, cDims);
-    FloatArrayType::Pointer edge_volumes = dca->getPrereqArrayFromPath<FloatArrayType, AbstractFilter>(NULL, edge_featureAttrMat, cDims);
-    FloatArrayType::Pointer tri_volumes = dca->getPrereqArrayFromPath<FloatArrayType, AbstractFilter>(NULL, tri_featureAttrMat, cDims);
-    FloatArrayType::Pointer quad_volumes = dca->getPrereqArrayFromPath<FloatArrayType, AbstractFilter>(NULL, quad_featureAttrMat, cDims);
-    FloatArrayType::Pointer tet_volumes = dca->getPrereqArrayFromPath<FloatArrayType, AbstractFilter>(NULL, tet_featureAttrMat, cDims);
+    FloatArrayType::Pointer image2D_volumes = dca->getPrereqArrayFromPath<FloatArrayType>(NULL, imageGeom2D_featureAttrMat, cDims);
+    FloatArrayType::Pointer image3D_volumes = dca->getPrereqArrayFromPath<FloatArrayType>(NULL, imageGeom3D_featureAttrMat, cDims);
+    FloatArrayType::Pointer rectGrid_volumes = dca->getPrereqArrayFromPath<FloatArrayType>(NULL, rectGrid_featureAttrMat, cDims);
+    FloatArrayType::Pointer vertex_volumes = dca->getPrereqArrayFromPath<FloatArrayType>(NULL, vertex_featureAttrMat, cDims);
+    FloatArrayType::Pointer edge_volumes = dca->getPrereqArrayFromPath<FloatArrayType>(NULL, edge_featureAttrMat, cDims);
+    FloatArrayType::Pointer tri_volumes = dca->getPrereqArrayFromPath<FloatArrayType>(NULL, tri_featureAttrMat, cDims);
+    FloatArrayType::Pointer quad_volumes = dca->getPrereqArrayFromPath<FloatArrayType>(NULL, quad_featureAttrMat, cDims);
+    FloatArrayType::Pointer tet_volumes = dca->getPrereqArrayFromPath<FloatArrayType>(NULL, tet_featureAttrMat, cDims);
 
     DREAM3D_REQUIRE_EQUAL(image2D_volumes->getValue(1), 2.0f);
     DREAM3D_REQUIRE_EQUAL(image2D_volumes->getValue(2), 2.0f);

@@ -86,21 +86,9 @@ void SegmentFeatures::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometryGrid, AbstractFilter>(this, getDataContainerName());
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometryGrid>(this, getDataContainerName());
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SegmentFeatures::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -125,7 +113,7 @@ void SegmentFeatures::execute()
 {
   clearErrorCode();
   clearWarningCode();
-  dataCheck();
+  SegmentFeatures::dataCheck();
   if(getErrorCode() < 0)
   {
     return;

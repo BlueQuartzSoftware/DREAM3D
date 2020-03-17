@@ -130,25 +130,12 @@ void ImportAvxmMDSim::dataCheck()
     std::vector<size_t> tDims(1, 0);
     std::vector<size_t> cDims(1, 1);
 
-    DataContainerShPtr dc = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, typeDAPath.getDataContainerName());
+    DataContainerShPtr dc = getDataContainerArray()->createNonPrereqDataContainer(this, typeDAPath.getDataContainerName());
     AttributeMatrixShPtr am = dc->createNonPrereqAttributeMatrix(this, typeDAPath, tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
-    UInt8ArrayType::Pointer da = am->createNonPrereqArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, typeDAPath.getDataArrayName(), 0, cDims, DataArrayID31);
+    UInt8ArrayType::Pointer da = am->createNonPrereqArray<UInt8ArrayType>(this, typeDAPath.getDataArrayName(), 0, cDims, DataArrayID31);
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ImportAvxmMDSim::preflight()
-{
-  // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true);              // Set the fact that we are preflighting.
-  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
-  emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted();          // We are done preflighting this filter
-  setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
-}
 
 // -----------------------------------------------------------------------------
 //
