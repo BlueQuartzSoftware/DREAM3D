@@ -571,17 +571,21 @@ void AngReader::parseHeaderLine(QByteArray& buf)
   if(word == Ebsd::Ang::Phase)
   {
     m_CurrentPhase = AngPhase::New();
-    int32_t phaseIndex = tokens.at(1).toInt(&ok, 10);
-    if(!ok)
+    int32_t phaseIndex = -1;
+    if(tokens.size() >= 2)
     {
-      phaseIndex = -1;
+      phaseIndex = tokens.at(1).toInt(&ok, 10);
+      if(!ok)
+      {
+        phaseIndex = -1;
+      }
     }
     m_CurrentPhase->setPhaseIndex(phaseIndex);
     // Version 7 of the .ang file has the keyword # Phase XXXX twice in the file where the second occurance is just a comment
     // line in the file. So the logic we are going to use is that if we didn't parse a valid integer in the last step which
     // makes our phaseIndex -1, then we are *not* going to push back the m_CurrentPhase into the m_PhaseVector.
     // Parsing the phase is complete, now add it to the vector of Phases
-    if(phaseIndex > -1)
+    if(phaseIndex != -1)
     {
       m_PhaseVector.push_back(m_CurrentPhase);
     }
