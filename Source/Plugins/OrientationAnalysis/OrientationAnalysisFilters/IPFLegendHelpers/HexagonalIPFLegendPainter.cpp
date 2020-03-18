@@ -101,7 +101,7 @@ QImage HexagonalIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, Q
     painter.setFont(font);
     QFontMetrics metrics = painter.fontMetrics();
     fontHeight = metrics.height();
-    fontWidth = metrics.width(ops->getSymmetryName());
+    fontWidth = metrics.QFONTMETRICS_WIDTH(ops->getSymmetryName());
     painter.end();
   }
 
@@ -134,26 +134,26 @@ QImage HexagonalIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, Q
 
   // Draw the [111] label in the Upper Right corner
   QString label("[10_10]");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   int x = pImageWidth - (fontWidth * 1.25);
   int y = pixelHeight * 0.57735026f;
   paintSymmetryDirection(label, &metrics, &painter, x, y);
 
   label = QString("[2_1_10]");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   x = pImageWidth - (fontWidth * 1.05);
   y = fontHeight * 1.75 + imageSize.height();
   paintSymmetryDirection(label, &metrics, &painter, x, y);
 
   label = QString("[0001]");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText(10, fontHeight*1.75 + imageSize.height(), label);
 
   label = ops->getSymmetryName();
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   x = pImageWidth/2 - fontWidth/2;
   y = fontHeight * 1.0;

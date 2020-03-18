@@ -37,11 +37,13 @@
 
 #include <iostream>
 
+#include <QtCore/QTextStream>
 #include <QtCore/QFileInfo>
 
 #include <QtGui/QColor>
 #include <QtGui/QFont>
 #include <QtGui/QPainter>
+
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMessageBox>
@@ -49,10 +51,7 @@
 #include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
 
-#include <QtCore/QTextStream>
-
 #include "SIMPLib/CoreFilters/GenerateColorTable.h"
-
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
@@ -715,7 +714,7 @@ QImage QEbsdReferenceFrameDialog::paintImage(QImage image)
     painter.setFont(font);
     QFontMetrics metrics = painter.fontMetrics();
     pxHigh = metrics.height();
-    pxWide = metrics.width(QString("TD"));
+    pxWide = metrics.QFONTMETRICS_WIDTH(QString("TD"));
     painter.end();
   }
 
@@ -737,7 +736,7 @@ QImage QEbsdReferenceFrameDialog::paintImage(QImage image)
   painter.setFont(font);
   QFontMetrics metrics = painter.fontMetrics();
   pxHigh = metrics.height();
-  pxWide = metrics.width(QString("TD"));
+  pxWide = metrics.QFONTMETRICS_WIDTH(QString("TD"));
 
   QPoint point(pxOffset, pyOffset);
   painter.drawImage(point, image); // Draw the image we just generated into the QPainter's canvas
@@ -752,7 +751,7 @@ QImage QEbsdReferenceFrameDialog::paintImage(QImage image)
 
   painter.drawText(pxOffset / 2, pImageHeight / 2 + pxHigh / 3, "Y");
 
-  pxWide = metrics.width(QString("X"));
+  pxWide = metrics.QFONTMETRICS_WIDTH(QString("X"));
   painter.drawText(pImageWidth / 2 - pxWide / 2, pImageHeight - pyOffset + pxHigh + 2, "X");
 
   painter.drawText(pxOffset / 2, pImageHeight - pyOffset + pxHigh + 2, "(0,0)");

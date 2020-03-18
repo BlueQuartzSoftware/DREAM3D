@@ -101,7 +101,7 @@ QImage MonoclinicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, 
     painter.setFont(font);
     QFontMetrics metrics = painter.fontMetrics();
     fontHeight = metrics.height();
-    fontWidth = metrics.width(ops->getSymmetryName());
+    fontWidth = metrics.QFONTMETRICS_WIDTH(ops->getSymmetryName());
     painter.end();
   }
 
@@ -134,7 +134,7 @@ QImage MonoclinicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, 
 
   //
   QString label("[0_10]");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   int x =10;
   int y = fontHeight * 2;
@@ -142,22 +142,22 @@ QImage MonoclinicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, 
 
 
   label = QString("[001]");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText( pImageWidth/2 - fontWidth/2, fontHeight * 2, label);
 
   label = QString("[010]");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText(pImageWidth - (fontWidth * 1.05), fontHeight * 2, label);
 
   label = QString("[100]");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText(pImageWidth/2 - fontWidth/2, fontHeight*2 + imageSize.height()/2.0 + fontHeight * 1.5, label);
 
   label = ops->getSymmetryName();
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   x = pImageWidth/2 - fontWidth/2;
   y = fontHeight * 1.0;

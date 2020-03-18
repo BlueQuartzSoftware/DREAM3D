@@ -42,6 +42,7 @@
 
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/ColorTable.h"
+#include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -246,10 +247,10 @@ QImage PoleFigureImageUtilities::GenerateScalarBar(int imageWidth, int imageHeig
     QString label("Upper & Lower");
     QString label2 = QString("Samples: ") + QString::number(config.eulers->getNumberOfTuples());
     fontPixelsHeight = metrics.height();   // Update the font height
-    int labelWidth = metrics.width(label); // Figure out which string is longer (pixel wise)
-    if(labelWidth < metrics.width(label2))
+    int labelWidth = metrics.QFONTMETRICS_WIDTH(label); // Figure out which string is longer (pixel wise)
+    if(labelWidth < metrics.QFONTMETRICS_WIDTH(label2))
     {
-      labelWidth = metrics.width(label2);
+      labelWidth = metrics.QFONTMETRICS_WIDTH(label2);
     }
     endOfStringYPos = topLeft.x() + (imageWidth * scaleBarRelativeWidth) + 10 + labelWidth;
   }
@@ -259,10 +260,10 @@ QImage PoleFigureImageUtilities::GenerateScalarBar(int imageWidth, int imageHeig
   QString label("Upper & Lower");
   QString label2 = QString("Samples: ") + QString::number(config.eulers->getNumberOfTuples());
 
-  labelWidth = metrics.width(label);
-  if(labelWidth < metrics.width(label2))
+  labelWidth = metrics.QFONTMETRICS_WIDTH(label);
+  if(labelWidth < metrics.QFONTMETRICS_WIDTH(label2))
   {
-    labelWidth = metrics.width(label2);
+    labelWidth = metrics.QFONTMETRICS_WIDTH(label2);
   }
 
   // Set the font into the Painter
@@ -295,10 +296,10 @@ void PoleFigureImageUtilities::PaintSymmetryDirection(const QString& text, QFont
   {
     if(text.at(i) == '-')
     {
-      int offset = metrics->width(mod);
+      int offset = metrics->QFONTMETRICS_WIDTH(mod);
       i++;
       mod = mod + text.at(i);
-      int width = metrics->width(text.at(i)) * .80;
+      int width = metrics->QFONTMETRICS_WIDTH(text.at(i)) * .80;
       painter->drawRect(x + offset, y - 0.80 * fontHeight, width, 1);
     }
     else
@@ -326,7 +327,7 @@ QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imag
   QFont font("Lato", fontPtSize, QFont::Bold);
   QFontMetrics metrics(font);
   pxHigh = metrics.height();
-  pxWide = metrics.width(QString("Y"));
+  pxWide = metrics.QFONTMETRICS_WIDTH(QString("Y"));
 
   int pxOffset = 2 * pxWide;
   int pyOffset = 2 * pxHigh;
@@ -362,7 +363,7 @@ QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imag
   // Label the X Axis
   painter.drawText(pImageWidth - (pxWide * 1.5), pImageHeight / 2 + pxHigh / 3, "X");
   // Label the Y Axis
-  pxWide = metrics.width(QString("Y"));
+  pxWide = metrics.QFONTMETRICS_WIDTH(QString("Y"));
   painter.drawText(pImageWidth / 2 - pxWide / 2, pyOffset - penWidth - 1, "Y");
 
   // Draw the name of the Pole Figure
@@ -373,7 +374,7 @@ QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imag
     fontPtSize++;
     font = QFont("Lato", fontPtSize, QFont::Bold);
     metrics = QFontMetrics(font);
-    labelWidth = metrics.width(label); // Figure out which string is longer (pixel wise)
+    labelWidth = metrics.QFONTMETRICS_WIDTH(label); // Figure out which string is longer (pixel wise)
   }
   painter.setFont(font);
   pxHigh = metrics.height() + 2;

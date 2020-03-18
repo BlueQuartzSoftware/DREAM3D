@@ -40,6 +40,8 @@
 #include <QtWidgets/QAbstractItemDelegate>
 #include <QtWidgets/QApplication>
 
+#include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
+
 #include "SyntheticBuilding/Gui/Widgets/Delegates/SGMDFItemDelegate.h"
 
 // -----------------------------------------------------------------------------
@@ -141,7 +143,7 @@ QVariant SGMDFTableModel::data(const QModelIndex& index, qint32 role) const
     }
     QFontMetrics fontMetrics(data(index, Qt::FontRole).value<QFont>());
     comboBox.fontMetrics = fontMetrics;
-    QSize size(fontMetrics.width(contents.text()), fontMetrics.height());
+    QSize size(fontMetrics.QFONTMETRICS_WIDTH(contents.text()), fontMetrics.height());
     return qApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
   if(role == Qt::TextAlignmentRole)

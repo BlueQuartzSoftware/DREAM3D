@@ -157,7 +157,8 @@ void GenerateFZQuaternions::initialize()
 void GenerateFZQuaternions::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  QVector<QString> choices = QVector<QString>::fromStdVector(LaueOps::GetLaueNames());
+  std::vector<QString> names = LaueOps::GetLaueNames();
+  QVECTOR_FROM_STD_VECTOR(QVector<QString>, choices, names)
   choices.pop_back(); // Remove the last name because we don't need it.
 
   QStringList linkedProps("GoodVoxelsArrayPath");

@@ -1,6 +1,7 @@
 
 set(OrientationLib_OrientationMath_HDRS
   ${OrientationLib_SOURCE_DIR}/OrientationMath/OrientationConverter.hpp
+  ${OrientationLib_SOURCE_DIR}/OrientationMath/OrientationRepresentation.h
 )
 
 set(OrientationLib_OrientationMath_SRCS
