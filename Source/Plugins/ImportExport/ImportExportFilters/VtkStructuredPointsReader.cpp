@@ -172,7 +172,7 @@ void VtkStructuredPointsReader::dataCheck()
 
   // Create a Vertex Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
-  DataContainer::Pointer pointData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName(), DataContainerID);
+  DataContainer::Pointer pointData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer(this, getVertexDataContainerName(), DataContainerID);
   if(getErrorCode() < 0 && nullptr == pointData_DataContainer)
   {
     return;
@@ -190,7 +190,7 @@ void VtkStructuredPointsReader::dataCheck()
 
   // Create a Volume Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
-  DataContainer::Pointer cellData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName(), DataContainerID);
+  DataContainer::Pointer cellData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer(this, getVolumeDataContainerName(), DataContainerID);
   if(getErrorCode() < 0 && nullptr == cellData_DataContainer)
   {
     return;
@@ -236,18 +236,6 @@ void VtkStructuredPointsReader::dataCheck()
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VtkStructuredPointsReader::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //

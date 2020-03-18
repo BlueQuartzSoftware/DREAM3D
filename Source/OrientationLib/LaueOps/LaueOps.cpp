@@ -43,7 +43,7 @@
 #include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/Utilities/ColorTable.h"
 
-
+#include "EbsdLib/EbsdConstants.h"
 
 #include "OrientationLib/LaueOps/CubicLowOps.h"
 #include "OrientationLib/LaueOps/CubicOps.h"
@@ -392,6 +392,52 @@ std::vector<LaueOps::Pointer> LaueOps::getOrientationOpsVector()
   m_OrientationOps.push_back(OrthoRhombicOps::New()); // Axis OrthorhombicOps
 
   return m_OrientationOps;
+}
+
+// -----------------------------------------------------------------------------
+LaueOps::Pointer LaueOps::getOrientationOpsFromSpaceGroupNumber(size_t sgNumber)
+{
+  std::array<size_t, 32> sgpg = {1, 2, 3, 6, 10, 16, 25, 47, 75, 81, 83, 89, 99, 111, 123, 143, 147, 149, 156, 162, 168, 174, 175, 177, 183, 187, 191, 195, 200, 207, 215, 221};
+  std::array<size_t, 32> pgLaue = {1, 1, 2, 2, 2, 22, 22, 22, 4, 4, 4, 42, 42, 42, 42, 3, 3, 32, 32, 32, 6, 6, 6, 62, 62, 62, 62, 23, 23, 43, 43, 43};
+
+  size_t pgNumber = sgpg.size() - 1;
+  for(size_t i = 0; i < sgpg.size(); i++)
+  {
+    if(sgpg[i] > sgNumber)
+    {
+      pgNumber = i;
+      break;
+    }
+  }
+
+  size_t value = pgLaue.at(pgNumber);
+  switch(value)
+  {
+  case 1:
+    return TriclinicOps::New();
+  case 2:
+    return MonoclinicOps::New();
+  case 22:
+    return OrthoRhombicOps::New();
+  case 4:
+    return TetragonalLowOps::New();
+  case 42:
+    return TetragonalOps::New();
+  case 3:
+    return TrigonalLowOps::New();
+  case 32:
+    return TrigonalOps::New();
+  case 6:
+    return HexagonalLowOps::New();
+  case 62:
+    return HexagonalOps::New();
+  case 23:
+    return CubicLowOps::New();
+  case 43:
+    return CubicOps::New();
+  default:
+    return LaueOps::NullPointer();
+  }
 }
 
 // -----------------------------------------------------------------------------

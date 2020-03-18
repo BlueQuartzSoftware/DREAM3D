@@ -111,26 +111,26 @@ void AppendImageGeometryZSlice::dataCheck()
   clearWarningCode();
 
   // Validate the Source & Destination Attribute Matrix are available
-  AttributeMatrix::Pointer inputCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getInputAttributeMatrix(), -8201);
+  AttributeMatrix::Pointer inputCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, getInputAttributeMatrix(), -8201);
   if(getErrorCode() < 0)
   {
     return;
   }
 
-  AttributeMatrix::Pointer destCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getDestinationAttributeMatrix(), -8200);
+  AttributeMatrix::Pointer destCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, getDestinationAttributeMatrix(), -8200);
   if(getErrorCode() < 0)
   {
     return;
   }
 
   // Validate each AttributeMatrix is associated with an Image Geometry.
-  ImageGeom::Pointer inputGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getInputAttributeMatrix().getDataContainerName());
+  ImageGeom::Pointer inputGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getInputAttributeMatrix().getDataContainerName());
   if(nullptr == inputGeometry.get() || getErrorCode() < 0)
   {
     return;
   }
 
-  ImageGeom::Pointer destGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDestinationAttributeMatrix().getDataContainerName());
+  ImageGeom::Pointer destGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getDestinationAttributeMatrix().getDataContainerName());
   if(nullptr == destGeometry.get() || getErrorCode() < 0)
   {
     return;
@@ -213,18 +213,6 @@ void AppendImageGeometryZSlice::dataCheck()
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AppendImageGeometryZSlice::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -241,13 +229,13 @@ void AppendImageGeometryZSlice::execute()
   }
 
   // Validate each AttributeMatrix is associated with an Image Geometry.
-  ImageGeom::Pointer inputGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getInputAttributeMatrix().getDataContainerName());
+  ImageGeom::Pointer inputGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getInputAttributeMatrix().getDataContainerName());
 
-  ImageGeom::Pointer destGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDestinationAttributeMatrix().getDataContainerName());
+  ImageGeom::Pointer destGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getDestinationAttributeMatrix().getDataContainerName());
 
-  AttributeMatrix::Pointer inputCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getInputAttributeMatrix(), -8201);
+  AttributeMatrix::Pointer inputCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, getInputAttributeMatrix(), -8201);
 
-  AttributeMatrix::Pointer destCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getDestinationAttributeMatrix(), -8200);
+  AttributeMatrix::Pointer destCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, getDestinationAttributeMatrix(), -8200);
 
   SizeVec3Type inputGeomDims = inputGeometry->getDimensions();
 

@@ -37,8 +37,13 @@
 
 #include <QtWidgets/QWidget>
 
-#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
+#include "OrientationLib/OrientationMath/OrientationRepresentation.h"
 
+class OrientationUtilityCalculator;
+
+/**
+ * @brief The OrientationUtilityCalculator class
+ */
 class OrientationUtilityCalculator : public QWidget
 {
   Q_OBJECT

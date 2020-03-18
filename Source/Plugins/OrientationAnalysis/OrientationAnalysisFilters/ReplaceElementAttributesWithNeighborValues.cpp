@@ -138,7 +138,7 @@ public:
    */
   QString getNameOfClass() const
   {
-    return QString("_SUPERGreaterThanComparison<T>");
+    return QString("GreaterThanComparison<T>");
   }
 
   /**
@@ -146,7 +146,7 @@ public:
    */
   QString ClassName()
   {
-    return QString("_SUPERGreaterThanComparison<T>");
+    return QString("GreaterThanComparison<T>");
   }
 
   ~GreaterThanComparison() override = default;
@@ -398,9 +398,9 @@ void ReplaceElementAttributesWithNeighborValues::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getConfidenceIndexArrayPath().getDataContainerName());
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getConfidenceIndexArrayPath().getDataContainerName());
 
-  m_InArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getConfidenceIndexArrayPath());
+  m_InArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, getConfidenceIndexArrayPath());
   if(getErrorCode() < 0)
   {
     return;
@@ -414,18 +414,6 @@ void ReplaceElementAttributesWithNeighborValues::dataCheck()
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ReplaceElementAttributesWithNeighborValues::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //

@@ -169,10 +169,6 @@ public:
       m_FeatureIds[i] = i + UnitTest::FeatureIdsTest::Offset;
     }
   }
-  void preflight() override
-  {
-    dataCheck();
-  }
 
   void readFilterParameters(AbstractFilterParametersReader* reader, int index) override
   {
@@ -217,7 +213,7 @@ private:
 
     std::vector<size_t> dims(1, 1);
     m_FeatureIdsPtr =
-        cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+        cellAttrMat->createNonPrereqArray<DataArray<int32_t>>(this, m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_FeatureIdsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
@@ -351,15 +347,6 @@ public:
    * @brief Reimplemented from @see AbstractFilter class
    */
   void execute() override
-  {
-    dataCheck();
-  }
-
-  /**
-   * @brief This function runs some sanity checks on the DataContainer and inputs
-   * in an attempt to ensure the filter can process the inputs.
-   */
-  void preflight() override
   {
     dataCheck();
   }

@@ -41,13 +41,13 @@
 #include <cstring> // needed for the ::memcpy function below
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/CoreFilters/FileReader.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
 
-class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public FileReader
+class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public AbstractFilter
 {
     Q_OBJECT
 
@@ -319,11 +319,6 @@ class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public FileReader
      * @brief execute Reimplemented from @see AbstractFilter class
      */
     void execute() override;
-
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    void preflight() override;
 
   protected:
     YSChoiAbaqusReader();

@@ -217,7 +217,7 @@ void AlignSections::dataCheck()
   clearWarningCode();
   DataArrayPath tempPath;
 
-  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDataContainerName());
+  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getDataContainerName());
   if(getErrorCode() < 0)
   {
     return;
@@ -231,7 +231,7 @@ void AlignSections::dataCheck()
   }
 
   tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), "");
-  getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, tempPath, -301);
+  getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, tempPath, -301);
 
   if(m_WriteAlignmentShifts)
   {
@@ -239,18 +239,6 @@ void AlignSections::dataCheck()
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AlignSections::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -277,7 +265,7 @@ void AlignSections::execute()
 {
   clearErrorCode();
   clearWarningCode();
-  dataCheck();
+  AlignSections::dataCheck();
   if(getErrorCode() < 0)
   {
     return;

@@ -92,6 +92,12 @@ class OrientationLib_EXPORT LaueOps
      */
     static std::vector<LaueOps::Pointer> getOrientationOpsVector();
 
+    /**
+     * @brief getOrientationOpsFromSpaceGroupNumber
+     * @param sgNumber
+     * @return
+     */
+    static Pointer getOrientationOpsFromSpaceGroupNumber(size_t sgNumber);
 
     /**
      * @brief GetLaueNames Returns the names of the Laue Classes

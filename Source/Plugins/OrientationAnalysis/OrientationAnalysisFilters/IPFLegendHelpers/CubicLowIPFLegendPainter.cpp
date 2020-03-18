@@ -102,7 +102,7 @@ QImage CubicLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, QI
     painter.setFont(font);
     QFontMetrics metrics0 = painter.fontMetrics();
     fontHeight = metrics0.height();
-    fontWidth = metrics0.width(ops->getSymmetryName());
+    fontWidth = metrics0.QFONTMETRICS_WIDTH(ops->getSymmetryName());
     painter.end();
   }
 
@@ -154,12 +154,12 @@ QImage CubicLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, QI
 
   //label = ops->getSymmetryName();
   label = QString("Cubic 3m IPF Legend");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText(pImageWidth/2 - fontWidth/2, fontHeight * 1.0, label);
 
   label = QString("is NOT implemented");
-  fontWidth = metrics.width(label);
+  fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText(pImageWidth/2 - fontWidth/2, fontHeight * 2.0, label);
 

@@ -139,13 +139,13 @@ void EbsdToH5EbsdWidget::setupGui()
 {
 
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()), this, SLOT(beforePreflight()));
+  connect(getFilter(), &AbstractFilter::preflightAboutToExecute, this, &EbsdToH5EbsdWidget::beforePreflight);
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()), this, SLOT(afterPreflight()));
+  connect(getFilter(), &AbstractFilter::preflightExecuted, this, &EbsdToH5EbsdWidget::afterPreflight);
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)), this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+  connect(getFilter(), &AbstractFilter::updateFilterParameters, this, &EbsdToH5EbsdWidget::filterNeedsInputParameters);
 
   QtSFileCompleter* com = new QtSFileCompleter(this, true);
   m_LineEdit->setCompleter(com);

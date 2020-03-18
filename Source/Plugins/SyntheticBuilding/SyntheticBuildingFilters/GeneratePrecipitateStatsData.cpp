@@ -30,6 +30,7 @@
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -366,19 +367,6 @@ void GeneratePrecipitateStatsData::dataCheck()
   m_FeatureESD = loc.toString(esd);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GeneratePrecipitateStatsData::preflight()
-{
-  // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true);              // Set the fact that we are preflighting.
-  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
-  emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted();          // We are done preflighting this filter
-  setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -622,7 +610,7 @@ void GeneratePrecipitateStatsData::execute()
 
     // Generate the RDF Frequencies
     std::vector<float> rdfFrequencies = RadialDistributionFunction::GenerateRandomDistribution(m_RdfMinMaxDistance[0], m_RdfMinMaxDistance[1], m_RdfNumBins, boxDims, boxRes);
-    QVector<float> qFreq = QVector<float>::fromStdVector(rdfFrequencies);
+    QVECTOR_FROM_STD_VECTOR(QVector<float>, qFreq, rdfFrequencies)
   }
 
 }

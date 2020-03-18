@@ -160,7 +160,7 @@ QVariant EnsembleInfoTableModel::data(const QModelIndex& index, qint32 role) con
     }
     QFontMetrics fontMetrics(data(index, Qt::FontRole).value<QFont>());
     comboBox.fontMetrics = fontMetrics;
-    QSize size(fontMetrics.width(comboBox.currentText), fontMetrics.height());
+    QSize size(fontMetrics.QFONTMETRICS_WIDTH(comboBox.currentText), fontMetrics.height());
     // FIXME: Is this size correct? Can we get a more accurate size without using QApplication
     return size;
 

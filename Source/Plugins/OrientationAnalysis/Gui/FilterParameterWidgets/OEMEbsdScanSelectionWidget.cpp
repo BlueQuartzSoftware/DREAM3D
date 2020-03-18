@@ -104,13 +104,13 @@ FilterParameter* OEMEbsdScanSelectionWidget::getFilterParameter() const
 void OEMEbsdScanSelectionWidget::setupGui()
 {
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()), this, SLOT(beforePreflight()));
+  connect(getFilter(), &AbstractFilter::preflightAboutToExecute, this, &OEMEbsdScanSelectionWidget::beforePreflight);
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()), this, SLOT(afterPreflight()));
+  connect(getFilter(), &AbstractFilter::preflightExecuted, this, &OEMEbsdScanSelectionWidget::afterPreflight);
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)), this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+  connect(getFilter(), &AbstractFilter::updateFilterParameters, this, &OEMEbsdScanSelectionWidget::filterNeedsInputParameters);
 
   QStringList selectedList = m_Filter->getSelectedScanNames();
   selectedScanNames->addItems(selectedList);

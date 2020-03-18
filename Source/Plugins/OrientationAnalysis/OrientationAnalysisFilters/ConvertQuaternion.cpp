@@ -151,14 +151,14 @@ void ConvertQuaternion::dataCheck()
 
   std::vector<size_t> cDims(1, 1);
   cDims[0] = 4;
-  m_QuaternionsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuaternionDataArrayPath(), cDims);
+  m_QuaternionsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getQuaternionDataArrayPath(), cDims);
   if(nullptr != m_QuaternionsPtr.lock())
   {
     m_Quaternions = m_QuaternionsPtr.lock()->getPointer(0);
   }
 
   cDims[0] = 4;
-  m_OutputQuaternionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
+  m_OutputQuaternionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_OutputQuaternionsPtr.lock())
   {
     m_OutputQuaternions = m_OutputQuaternionsPtr.lock()->getPointer(0);
@@ -178,20 +178,6 @@ void ConvertQuaternion::dataCheck()
     QString ss = QObject::tr("The conversion type must be either 0 (ToScalarVector) or 1 (ToVectorScalar). DREAM.3D expects Quaternions to be  in the Vector-Scalar form, i.e., <x,y,z> w");
     setErrorCondition(-52500, ss);
   }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ConvertQuaternion::preflight()
-{
-  // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true); // Set the fact that we are preflighting.
-  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
-  emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
 }
 
 // -----------------------------------------------------------------------------
@@ -324,13 +310,13 @@ std::shared_ptr<ConvertQuaternion> ConvertQuaternion::New()
 // -----------------------------------------------------------------------------
 QString ConvertQuaternion::getNameOfClass() const
 {
-  return QString("_SUPERConvertQuaternion");
+  return QString("ConvertQuaternion");
 }
 
 // -----------------------------------------------------------------------------
 QString ConvertQuaternion::ClassName()
 {
-  return QString("_SUPERConvertQuaternion");
+  return QString("ConvertQuaternion");
 }
 
 // -----------------------------------------------------------------------------

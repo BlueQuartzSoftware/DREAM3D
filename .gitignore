@@ -1,30 +1,39 @@
 slnx.sqlite
-/DREAM3DProj.includes
+# Project Related Files
 CMakeLists.txt.*
+.cproject
+.project
+.idea
+.ctags
+.vscode
+.settings
+
+# Where we sometimes put all the other subprojects
+/ExternalProjects
+
+# Build Folders that are commonly used
+/Debug/
+/Release/
 /[Bb]uild/
 /[Bb]uilds/
 /Build-ninja/
 /Build-Xcode/
 /zRel/
 /CleanBuild/
-.cproject
-.project
-/clang/
 /xcode/
 /x64/
 /i386/
 /qtcreator/
 /Build2/
 /QT_BUILD/
-Support/Scripts/GMT/gmt.history
-.settings
-.floo
 /ninja/
 /linux/
-.idea
-/Debug/
-.ctags
-.vscode
+/clang/
+
+# Misc Other files that get Created that we don't want
+/DREAM3DProj.includes
+Support/Scripts/GMT/gmt.history
+.floo
 .commit-template
-/ExternalProjects
 .DS_Store
+.cmake

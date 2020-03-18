@@ -307,31 +307,19 @@ void VtkRectilinearGridWriter::dataCheck()
   for(int32_t i = 0; i < paths.count(); i++)
   {
     DataArrayPath path = paths.at(i);
-    IDataArray::WeakPointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);
+    IDataArray::WeakPointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, path);
     m_SelectedWeakPtrVector.push_back(ptr);
   }
 
   QString dcName = DataArrayPath::GetAttributeMatrixPath(getSelectedDataArrayPaths()).getDataContainerName();
 
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(dcName)->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(dcName)->getPrereqGeometry<ImageGeom>(this);
   if(getErrorCode() < 0 || nullptr == image.get())
   {
     return;
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VtkRectilinearGridWriter::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -410,7 +398,7 @@ void VtkRectilinearGridWriter::execute()
   QVector<DataArrayPath> dataPaths = getSelectedDataArrayPaths();
   foreach(const DataArrayPath arrayPath, dataPaths)
   {
-    IDataArray::Pointer iDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, arrayPath);
+    IDataArray::Pointer iDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, arrayPath);
 
     EXECUTE_FUNCTION_TEMPLATE(this, Detail::WriteDataArray, iDataPtr, this, f, iDataPtr, m_WriteBinaryFile);
 

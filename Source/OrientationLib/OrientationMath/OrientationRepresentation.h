@@ -1,5 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2017 BlueQuartz Software, LLC
+ * Copyright (c) 2019 BlueQuartz Software, LLC
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,49 +29,19 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "IPFLegendPainter.h"
+#pragma once
 
-#include <QtGui/QFontMetrics>
-#include <QtGui/QPainter>
-
-#include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IPFLegendPainter::IPFLegendPainter() = default;
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IPFLegendPainter::~IPFLegendPainter() = default;
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void IPFLegendPainter::paintSymmetryDirection(const QString& text, QFontMetrics *metrics, QPainter *painter, int x, int y)
+namespace OrientationRepresentation
 {
-
-  QVector<int> offsets;
-  int i = 0;
-  QString mod;
-  int fontHeight = metrics->height();
-
-  while(i < text.length())
-  {
-    if(text.at(i) == '-')
-    {
-      int offset = metrics->QFONTMETRICS_WIDTH(mod);
-      i++;
-      mod = mod + text.at(i);
-      int width = metrics->QFONTMETRICS_WIDTH(text.at(i)) * .80;
-      painter->drawRect(x + offset, y - 0.80 * fontHeight, width, 1);
-    }
-    else
-    {
-      mod = mod + text.at(i);
-    }
-    i++;
-  }
-  painter->drawText(x, y, mod);
+enum class Type : int
+{
+  Euler = 0,
+  OrientationMatrix,
+  Quaternion,
+  AxisAngle,
+  Rodrigues,
+  Homochoric,
+  Cubochoric,
+  Unknown
+};
 }
