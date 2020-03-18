@@ -155,43 +155,43 @@ AngReader::~AngReader()
 // -----------------------------------------------------------------------------
 void* AngReader::getPointerByName(const QString& featureName)
 {
-  if(featureName.compare(Ebsd::Ang::Phi1) == 0)
+  if(featureName == Ebsd::Ang::Phi1)
   {
     return static_cast<void*>(m_Phi1);
   }
-  if(featureName.compare(Ebsd::Ang::Phi) == 0)
+  if(featureName == Ebsd::Ang::Phi)
   {
     return static_cast<void*>(m_Phi);
   }
-  if(featureName.compare(Ebsd::Ang::Phi2) == 0)
+  if(featureName == Ebsd::Ang::Phi2)
   {
     return static_cast<void*>(m_Phi2);
   }
-  if(featureName.compare(Ebsd::Ang::ImageQuality) == 0)
+  if(featureName == Ebsd::Ang::ImageQuality)
   {
     return static_cast<void*>(m_Iq);
   }
-  if(featureName.compare(Ebsd::Ang::ConfidenceIndex) == 0)
+  if(featureName == Ebsd::Ang::ConfidenceIndex)
   {
     return static_cast<void*>(m_Ci);
   }
-  if(featureName.compare(Ebsd::Ang::PhaseData) == 0)
+  if(featureName == Ebsd::Ang::PhaseData)
   {
     return static_cast<void*>(m_PhaseData);
   }
-  if(featureName.compare(Ebsd::Ang::XPosition) == 0)
+  if(featureName == Ebsd::Ang::XPosition)
   {
     return static_cast<void*>(m_X);
   }
-  if(featureName.compare(Ebsd::Ang::YPosition) == 0)
+  if(featureName == Ebsd::Ang::YPosition)
   {
     return static_cast<void*>(m_Y);
   }
-  if(featureName.compare(Ebsd::Ang::SEMSignal) == 0)
+  if(featureName == Ebsd::Ang::SEMSignal)
   {
     return static_cast<void*>(m_SEMSignal);
   }
-  if(featureName.compare(Ebsd::Ang::Fit) == 0)
+  if(featureName == Ebsd::Ang::Fit)
   {
     return static_cast<void*>(m_Fit);
   }
@@ -203,43 +203,43 @@ void* AngReader::getPointerByName(const QString& featureName)
 // -----------------------------------------------------------------------------
 Ebsd::NumType AngReader::getPointerType(const QString& featureName)
 {
-  if(featureName.compare(Ebsd::Ang::Phi1) == 0)
+  if(featureName == Ebsd::Ang::Phi1)
   {
     return Ebsd::Float;
   }
-  if(featureName.compare(Ebsd::Ang::Phi) == 0)
+  if(featureName == Ebsd::Ang::Phi)
   {
     return Ebsd::Float;
   }
-  if(featureName.compare(Ebsd::Ang::Phi2) == 0)
+  if(featureName == Ebsd::Ang::Phi2)
   {
     return Ebsd::Float;
   }
-  if(featureName.compare(Ebsd::Ang::ImageQuality) == 0)
+  if(featureName == Ebsd::Ang::ImageQuality)
   {
     return Ebsd::Float;
   }
-  if(featureName.compare(Ebsd::Ang::ConfidenceIndex) == 0)
+  if(featureName == Ebsd::Ang::ConfidenceIndex)
   {
     return Ebsd::Float;
   }
-  if(featureName.compare(Ebsd::Ang::PhaseData) == 0)
+  if(featureName == Ebsd::Ang::PhaseData)
   {
     return Ebsd::Int32;
   }
-  if(featureName.compare(Ebsd::Ang::XPosition) == 0)
+  if(featureName == Ebsd::Ang::XPosition)
   {
     return Ebsd::Float;
   }
-  if(featureName.compare(Ebsd::Ang::YPosition) == 0)
+  if(featureName == Ebsd::Ang::YPosition)
   {
     return Ebsd::Float;
   }
-  if(featureName.compare(Ebsd::Ang::SEMSignal) == 0)
+  if(featureName == Ebsd::Ang::SEMSignal)
   {
     return Ebsd::Float;
   }
-  if(featureName.compare(Ebsd::Ang::Fit) == 0)
+  if(featureName == Ebsd::Ang::Fit)
   {
     return Ebsd::Float;
   }
@@ -568,56 +568,67 @@ void AngReader::parseHeaderLine(QByteArray& buf)
   // parsing data for the phase then stick the Phase instance into the header
   // map or stick it into a vector<Phase::Pointer> and stick the vector into
   // the map under the "Phase" key
-  if(word.compare(Ebsd::Ang::Phase) == 0)
+  if(word == Ebsd::Ang::Phase)
   {
     m_CurrentPhase = AngPhase::New();
-    m_CurrentPhase->setPhaseIndex(tokens.at(1).toInt(&ok, 10));
+    int32_t phaseIndex = tokens.at(1).toInt(&ok, 10);
+    if(!ok)
+    {
+      phaseIndex = -1;
+    }
+    m_CurrentPhase->setPhaseIndex(phaseIndex);
+    // Version 7 of the .ang file has the keyword # Phase XXXX twice in the file where the second occurance is just a comment
+    // line in the file. So the logic we are going to use is that if we didn't parse a valid integer in the last step which
+    // makes our phaseIndex -1, then we are *not* going to push back the m_CurrentPhase into the m_PhaseVector.
     // Parsing the phase is complete, now add it to the vector of Phases
-    m_PhaseVector.push_back(m_CurrentPhase);
+    if(phaseIndex > -1)
+    {
+      m_PhaseVector.push_back(m_CurrentPhase);
+    }
   }
-  else if(word.compare(Ebsd::Ang::MaterialName) == 0 && m_CurrentPhase.get() != nullptr)
+  else if(word == Ebsd::Ang::MaterialName && m_CurrentPhase.get() != nullptr)
   {
     if(tokens.size() > 1)
     {
       m_CurrentPhase->parseMaterialName(tokens);
     }
   }
-  else if(word.compare(Ebsd::Ang::Formula) == 0 && m_CurrentPhase.get() != nullptr)
+  else if(word == Ebsd::Ang::Formula && m_CurrentPhase.get() != nullptr)
   {
     if(tokens.size() > 1)
     {
       m_CurrentPhase->parseFormula(tokens);
     }
   }
-  else if(word.compare(Ebsd::Ang::Info) == 0 && m_CurrentPhase.get() != nullptr)
+  else if(word == Ebsd::Ang::Info && m_CurrentPhase.get() != nullptr)
   {
     if(tokens.size() > 1)
     {
       m_CurrentPhase->parseInfo(tokens);
     }
   }
-  else if(word.compare(Ebsd::Ang::Symmetry) == 0 && m_CurrentPhase.get() != nullptr)
+  else if(word == Ebsd::Ang::Symmetry && m_CurrentPhase.get() != nullptr)
   {
     if(tokens.size() > 1)
     {
       m_CurrentPhase->setSymmetry(tokens.at(1).toUInt(&ok, 10));
     }
   }
-  else if(word.compare(Ebsd::Ang::LatticeConstants) == 0 && m_CurrentPhase.get() != nullptr)
+  else if(word == Ebsd::Ang::LatticeConstants && m_CurrentPhase.get() != nullptr)
   {
     if(tokens.size() > 1)
     {
       m_CurrentPhase->parseLatticeConstants(tokens);
     }
   }
-  else if(word.compare(Ebsd::Ang::NumberFamilies) == 0 && m_CurrentPhase.get() != nullptr)
+  else if(word == Ebsd::Ang::NumberFamilies && m_CurrentPhase.get() != nullptr)
   {
     if(tokens.size() > 1)
     {
       m_CurrentPhase->setNumberFamilies(tokens.at(1).toInt(&ok, 10));
     }
   }
-  else if(word.compare(Ebsd::Ang::HKLFamilies) == 0 && m_CurrentPhase.get() != nullptr)
+  else if(word == Ebsd::Ang::HKLFamilies && m_CurrentPhase.get() != nullptr)
   {
     if(tokens.size() > 1)
     {
