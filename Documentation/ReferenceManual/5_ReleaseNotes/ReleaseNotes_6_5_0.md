@@ -10,6 +10,16 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.5.138 ##
+
+### Version 6.5.138 New Filters & Features ###
+
++ None
+
+### 6.5.138 Fixed DREAM3D Issues ###
+
++ Fixed issue when reading EDAX .ang version 7 files where the phase information would become corrupt (#934)
+
 ## Version 6.5.137 ##
 
 ### Version 6.5.137 New Filters & Features ###

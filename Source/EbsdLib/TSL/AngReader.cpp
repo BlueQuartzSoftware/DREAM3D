@@ -563,61 +563,76 @@ void AngReader::parseHeaderLine(QByteArray& buf)
     word.chop(1);
   }
 
-  // If the word is "Phase" then we need to construct a "Phase" class and
+ // If the word is "Phase" then we need to construct a "Phase" class and
   // store all the meta data for the phase into that class. When we are done
   // parsing data for the phase then stick the Phase instance into the header
   // map or stick it into a vector<Phase::Pointer> and stick the vector into
   // the map under the "Phase" key
-  if(word.compare(Ebsd::Ang::Phase) == 0)
+  if(word == Ebsd::Ang::Phase)
   {
     m_CurrentPhase = AngPhase::New();
-    m_CurrentPhase->setPhaseIndex(tokens.at(1).toInt(&ok, 10));
+    int32_t phaseIndex = -1;
+    if(tokens.size() >= 2)
+    {
+      phaseIndex = tokens.at(1).toInt(&ok, 10);
+      if(!ok)
+      {
+        phaseIndex = -1;
+      }
+    }
+    m_CurrentPhase->setPhaseIndex(phaseIndex);
+    // Version 7 of the .ang file has the keyword # Phase XXXX twice in the file where the second occurance is just a comment
+    // line in the file. So the logic we are going to use is that if we didn't parse a valid integer in the last step which
+    // makes our phaseIndex -1, then we are *not* going to push back the m_CurrentPhase into the m_PhaseVector.
     // Parsing the phase is complete, now add it to the vector of Phases
-    m_PhaseVector.push_back(m_CurrentPhase);
+    if(phaseIndex != -1)
+    {
+      m_PhaseVector.push_back(m_CurrentPhase);
+    }
   }
-  else if(word.compare(Ebsd::Ang::MaterialName) == 0 && m_CurrentPhase.get() != nullptr)
+  else if(word == Ebsd::Ang::MaterialName && m_CurrentPhase.get() != nullptr)
   {
     if(tokens.size() > 1)
     {
       m_CurrentPhase->parseMaterialName(tokens);
     }
   }
-  else if(word.compare(Ebsd::Ang::Formula) == 0 && m_CurrentPhase.get() != nullptr)
+  else if(word == Ebsd::Ang::Formula && m_CurrentPhase.get() != nullptr)
   {
     if(tokens.size() > 1)
     {
       m_CurrentPhase->parseFormula(tokens);
     }
   }
-  else if(word.compare(Ebsd::Ang::Info) == 0 && m_CurrentPhase.get() != nullptr)
+  else if(word == Ebsd::Ang::Info && m_CurrentPhase.get() != nullptr)
   {
     if(tokens.size() > 1)
     {
       m_CurrentPhase->parseInfo(tokens);
     }
   }
-  else if(word.compare(Ebsd::Ang::Symmetry) == 0 && m_CurrentPhase.get() != nullptr)
+  else if(word == Ebsd::Ang::Symmetry && m_CurrentPhase.get() != nullptr)
   {
     if(tokens.size() > 1)
     {
       m_CurrentPhase->setSymmetry(tokens.at(1).toUInt(&ok, 10));
     }
   }
-  else if(word.compare(Ebsd::Ang::LatticeConstants) == 0 && m_CurrentPhase.get() != nullptr)
+  else if(word == Ebsd::Ang::LatticeConstants && m_CurrentPhase.get() != nullptr)
   {
     if(tokens.size() > 1)
     {
       m_CurrentPhase->parseLatticeConstants(tokens);
     }
   }
-  else if(word.compare(Ebsd::Ang::NumberFamilies) == 0 && m_CurrentPhase.get() != nullptr)
+  else if(word == Ebsd::Ang::NumberFamilies && m_CurrentPhase.get() != nullptr)
   {
     if(tokens.size() > 1)
     {
       m_CurrentPhase->setNumberFamilies(tokens.at(1).toInt(&ok, 10));
     }
   }
-  else if(word.compare(Ebsd::Ang::HKLFamilies) == 0 && m_CurrentPhase.get() != nullptr)
+  else if(word == Ebsd::Ang::HKLFamilies && m_CurrentPhase.get() != nullptr)
   {
     if(tokens.size() > 1)
     {
