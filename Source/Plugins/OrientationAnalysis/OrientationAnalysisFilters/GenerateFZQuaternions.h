@@ -21,23 +21,18 @@ class OrientationAnalysis_EXPORT GenerateFZQuaternions : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(GenerateFZQuaternions SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(GenerateFZQuaternions SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(GenerateFZQuaternions)
   PYB11_FILTER_NEW_MACRO(GenerateFZQuaternions)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  PYB11_FILTER_PARAMETER(bool, UseGoodVoxels)
-  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FZQuatsArrayPath)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
   PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
   PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
   PYB11_PROPERTY(DataArrayPath FZQuatsArrayPath READ getFZQuatsArrayPath WRITE setFZQuatsArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = GenerateFZQuaternions;

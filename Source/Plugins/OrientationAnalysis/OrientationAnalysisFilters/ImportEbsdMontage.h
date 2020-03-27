@@ -55,24 +55,18 @@ class OrientationAnalysis_EXPORT ImportEbsdMontage : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ImportEbsdMontage SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ImportEbsdMontage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ImportEbsdMontage)
   PYB11_FILTER_NEW_MACRO(ImportEbsdMontage)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
-  PYB11_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(EbsdMontageListInfo, InputFileListInfo)
-  PYB11_FILTER_PARAMETER(bool, GenerateIPFColorMap)
-  PYB11_FILTER_PARAMETER(QString, CellIPFColorsArrayName)
-
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(EbsdMontageListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
   PYB11_PROPERTY(bool GenerateIPFColorMap READ getGenerateIPFColorMap WRITE setGenerateIPFColorMap)
   PYB11_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = ImportEbsdMontage;

@@ -56,25 +56,10 @@ class EMMPM_EXPORT EMMPMFilter : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(EMMPMFilter SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(EMMPMFilter SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(EMMPMFilter)
   PYB11_FILTER_NEW_MACRO(EMMPMFilter)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputDataArrayPath)
-  PYB11_FILTER_PARAMETER(bool, UseOneBasedValues)
-  PYB11_FILTER_PARAMETER(int, NumClasses)
-  PYB11_FILTER_PARAMETER(float, ExchangeEnergy)
-  PYB11_FILTER_PARAMETER(int, HistogramLoops)
-  PYB11_FILTER_PARAMETER(int, SegmentationLoops)
-  PYB11_FILTER_PARAMETER(DynamicTableData, EMMPMTableData)
-  PYB11_FILTER_PARAMETER(bool, UseSimulatedAnnealing)
-  PYB11_FILTER_PARAMETER(bool, UseGradientPenalty)
-  PYB11_FILTER_PARAMETER(double, GradientBetaE)
-  PYB11_FILTER_PARAMETER(bool, UseCurvaturePenalty)
-  PYB11_FILTER_PARAMETER(double, CurvatureBetaC)
-  PYB11_FILTER_PARAMETER(double, CurvatureRMax)
-  PYB11_FILTER_PARAMETER(int, CurvatureEMLoopDelay)
-  PYB11_FILTER_PARAMETER(DataArrayPath, OutputDataArrayPath)
   PYB11_PROPERTY(DataArrayPath InputDataArrayPath READ getInputDataArrayPath WRITE setInputDataArrayPath)
   PYB11_PROPERTY(bool UseOneBasedValues READ getUseOneBasedValues WRITE setUseOneBasedValues)
   PYB11_PROPERTY(int NumClasses READ getNumClasses WRITE setNumClasses)
@@ -90,7 +75,8 @@ class EMMPM_EXPORT EMMPMFilter : public AbstractFilter
   PYB11_PROPERTY(double CurvatureRMax READ getCurvatureRMax WRITE setCurvatureRMax)
   PYB11_PROPERTY(int CurvatureEMLoopDelay READ getCurvatureEMLoopDelay WRITE setCurvatureEMLoopDelay)
   PYB11_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = EMMPMFilter;

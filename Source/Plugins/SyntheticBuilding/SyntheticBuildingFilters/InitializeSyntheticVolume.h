@@ -51,21 +51,10 @@ class SyntheticBuilding_EXPORT InitializeSyntheticVolume : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(InitializeSyntheticVolume SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(InitializeSyntheticVolume SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(InitializeSyntheticVolume)
   PYB11_FILTER_NEW_MACRO(InitializeSyntheticVolume)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, EnsembleAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(int32_t, LengthUnit)
-  PYB11_FILTER_PARAMETER(IntVec3Type, Dimensions)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputPhaseNamesArrayPath)
-  PYB11_FILTER_PARAMETER(bool, EstimateNumberOfFeatures)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString EnsembleAttributeMatrixName READ getEnsembleAttributeMatrixName WRITE setEnsembleAttributeMatrixName)
@@ -77,7 +66,8 @@ class SyntheticBuilding_EXPORT InitializeSyntheticVolume : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
   PYB11_PROPERTY(DataArrayPath InputPhaseNamesArrayPath READ getInputPhaseNamesArrayPath WRITE setInputPhaseNamesArrayPath)
   PYB11_PROPERTY(bool EstimateNumberOfFeatures READ getEstimateNumberOfFeatures WRITE setEstimateNumberOfFeatures)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = InitializeSyntheticVolume;

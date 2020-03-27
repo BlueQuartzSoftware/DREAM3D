@@ -53,18 +53,10 @@ class OrientationAnalysis_EXPORT FindSlipTransmissionMetrics : public AbstractFi
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindSlipTransmissionMetrics SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindSlipTransmissionMetrics SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindSlipTransmissionMetrics)
   PYB11_FILTER_NEW_MACRO(FindSlipTransmissionMetrics)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
-  PYB11_FILTER_PARAMETER(QString, F1ListArrayName)
-  PYB11_FILTER_PARAMETER(QString, F1sptListArrayName)
-  PYB11_FILTER_PARAMETER(QString, F7ListArrayName)
-  PYB11_FILTER_PARAMETER(QString, mPrimeListArrayName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
   PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
   PYB11_PROPERTY(QString F1ListArrayName READ getF1ListArrayName WRITE setF1ListArrayName)
   PYB11_PROPERTY(QString F1sptListArrayName READ getF1sptListArrayName WRITE setF1sptListArrayName)
@@ -73,7 +65,8 @@ class OrientationAnalysis_EXPORT FindSlipTransmissionMetrics : public AbstractFi
   PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
   PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindSlipTransmissionMetrics;

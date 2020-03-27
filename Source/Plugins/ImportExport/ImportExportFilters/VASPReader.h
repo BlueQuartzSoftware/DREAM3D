@@ -59,21 +59,17 @@ class ImportExport_EXPORT VASPReader : public FileReader
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(VASPReader SUPERCLASS FileReader)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(VASPReader SUPERCLASS FileReader)
   PYB11_SHARED_POINTERS(VASPReader)
   PYB11_FILTER_NEW_MACRO(VASPReader)
-  PYB11_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
-  PYB11_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, InputFile)
-  PYB11_FILTER_PARAMETER(QString, AtomVelocitiesArrayName)
-  PYB11_FILTER_PARAMETER(QString, AtomTypesArrayName)
   PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
   PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(QString AtomVelocitiesArrayName READ getAtomVelocitiesArrayName WRITE setAtomVelocitiesArrayName)
   PYB11_PROPERTY(QString AtomTypesArrayName READ getAtomTypesArrayName WRITE setAtomTypesArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = VASPReader;

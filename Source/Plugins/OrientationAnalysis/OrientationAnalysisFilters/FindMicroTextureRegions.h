@@ -59,19 +59,16 @@ class OrientationAnalysis_EXPORT FindMicroTextureRegions : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindMicroTextureRegions SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindMicroTextureRegions SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindMicroTextureRegions)
   PYB11_FILTER_NEW_MACRO(FindMicroTextureRegions)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(QString, MicroTextureRegionNumCellsArrayName)
-  PYB11_FILTER_PARAMETER(QString, MicroTextureRegionFractionOccupiedArrayName)
   PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(QString MicroTextureRegionNumCellsArrayName READ getMicroTextureRegionNumCellsArrayName WRITE setMicroTextureRegionNumCellsArrayName)
   PYB11_PROPERTY(QString MicroTextureRegionFractionOccupiedArrayName READ getMicroTextureRegionFractionOccupiedArrayName WRITE setMicroTextureRegionFractionOccupiedArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindMicroTextureRegions;

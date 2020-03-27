@@ -56,21 +56,17 @@ class ImportExport_EXPORT VisualizeGBCDPoleFigure : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(VisualizeGBCDPoleFigure SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(VisualizeGBCDPoleFigure SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(VisualizeGBCDPoleFigure)
   PYB11_FILTER_NEW_MACRO(VisualizeGBCDPoleFigure)
-  PYB11_FILTER_PARAMETER(QString, OutputFile)
-  PYB11_FILTER_PARAMETER(int, PhaseOfInterest)
-  PYB11_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
-  PYB11_FILTER_PARAMETER(DataArrayPath, GBCDArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   PYB11_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
   PYB11_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
   PYB11_PROPERTY(DataArrayPath GBCDArrayPath READ getGBCDArrayPath WRITE setGBCDArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = VisualizeGBCDPoleFigure;

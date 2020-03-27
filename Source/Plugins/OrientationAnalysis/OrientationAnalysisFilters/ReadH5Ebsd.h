@@ -58,18 +58,10 @@ class OrientationAnalysis_EXPORT ReadH5Ebsd : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ReadH5Ebsd SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ReadH5Ebsd SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ReadH5Ebsd)
   PYB11_FILTER_NEW_MACRO(ReadH5Ebsd)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
-  PYB11_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, InputFile)
-  PYB11_FILTER_PARAMETER(int, ZStartIndex)
-  PYB11_FILTER_PARAMETER(int, ZEndIndex)
-  PYB11_FILTER_PARAMETER(bool, UseTransformations)
-  PYB11_FILTER_PARAMETER(int, AngleRepresentation)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -79,7 +71,8 @@ class OrientationAnalysis_EXPORT ReadH5Ebsd : public AbstractFilter
   PYB11_PROPERTY(bool UseTransformations READ getUseTransformations WRITE setUseTransformations)
   PYB11_PROPERTY(int AngleRepresentation READ getAngleRepresentation WRITE setAngleRepresentation)
   PYB11_PROPERTY(QSet<QString> SelectedArrayNames READ getSelectedArrayNames WRITE setSelectedArrayNames)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = ReadH5Ebsd;

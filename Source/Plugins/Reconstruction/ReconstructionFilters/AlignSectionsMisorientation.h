@@ -53,23 +53,18 @@ class Reconstruction_EXPORT AlignSectionsMisorientation : public AlignSections
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(AlignSectionsMisorientation SUPERCLASS AlignSections)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(AlignSectionsMisorientation SUPERCLASS AlignSections)
   PYB11_SHARED_POINTERS(AlignSectionsMisorientation)
   PYB11_FILTER_NEW_MACRO(AlignSectionsMisorientation)
-  PYB11_FILTER_PARAMETER(float, MisorientationTolerance)
-  PYB11_FILTER_PARAMETER(bool, UseGoodVoxels)
-  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
   PYB11_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
   PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
   PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = AlignSectionsMisorientation;

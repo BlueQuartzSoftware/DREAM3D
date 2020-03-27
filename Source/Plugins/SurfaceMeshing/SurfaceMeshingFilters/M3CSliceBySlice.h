@@ -74,7 +74,7 @@
 class SurfaceMeshing_EXPORT M3CSliceBySlice : public AbstractFilter
 {
   Q_OBJECT
-  //  PYB11_CREATE_BINDINGS(M3CSliceBySlice SUPERCLASS AbstractFilter)
+  //  PYB11_BEGIN_BINDINGS(M3CSliceBySlice SUPERCLASS AbstractFilter)
   // PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
   // PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
   // PYB11_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)

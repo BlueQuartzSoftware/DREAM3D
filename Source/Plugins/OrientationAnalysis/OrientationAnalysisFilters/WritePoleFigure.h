@@ -51,25 +51,10 @@ class OrientationAnalysis_EXPORT WritePoleFigure : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(WritePoleFigure SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(WritePoleFigure SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(WritePoleFigure)
   PYB11_FILTER_NEW_MACRO(WritePoleFigure)
-  PYB11_FILTER_PARAMETER(QString, ImagePrefix)
-  PYB11_FILTER_PARAMETER(QString, OutputPath)
-  PYB11_FILTER_PARAMETER(int, ImageFormat)
-  PYB11_FILTER_PARAMETER(int, ImageSize)
-  PYB11_FILTER_PARAMETER(int, LambertSize)
-  PYB11_FILTER_PARAMETER(int, NumColors)
-  PYB11_FILTER_PARAMETER(int, ImageLayout)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
-  PYB11_FILTER_PARAMETER(bool, UseGoodVoxels)
-  PYB11_FILTER_PARAMETER(int, GenerationAlgorithm)
-  PYB11_FILTER_PARAMETER(QString, Title)
-  PYB11_FILTER_PARAMETER(DataArrayPath, MaterialNameArrayPath)
   PYB11_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
   PYB11_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
   PYB11_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
@@ -84,7 +69,8 @@ class OrientationAnalysis_EXPORT WritePoleFigure : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
   PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
   PYB11_PROPERTY(int GenerationAlgorithm READ getGenerationAlgorithm WRITE setGenerationAlgorithm)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
   //  PYB11_PROPERTY(bool UseDiscreteHeatMap READ getUseDiscreteHeatMap WRITE setUseDiscreteHeatMap)
 public:

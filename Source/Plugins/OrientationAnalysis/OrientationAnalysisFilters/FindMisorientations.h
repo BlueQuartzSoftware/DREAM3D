@@ -53,17 +53,10 @@ class OrientationAnalysis_EXPORT FindMisorientations : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindMisorientations SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindMisorientations SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindMisorientations)
   PYB11_FILTER_NEW_MACRO(FindMisorientations)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
-  PYB11_FILTER_PARAMETER(QString, MisorientationListArrayName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  PYB11_FILTER_PARAMETER(QString, AvgMisorientationsArrayName)
-  PYB11_FILTER_PARAMETER(bool, FindAvgMisors)
   PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
   PYB11_PROPERTY(QString MisorientationListArrayName READ getMisorientationListArrayName WRITE setMisorientationListArrayName)
   PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
@@ -71,7 +64,8 @@ class OrientationAnalysis_EXPORT FindMisorientations : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
   PYB11_PROPERTY(QString AvgMisorientationsArrayName READ getAvgMisorientationsArrayName WRITE setAvgMisorientationsArrayName)
   PYB11_PROPERTY(bool FindAvgMisors READ getFindAvgMisors WRITE setFindAvgMisors)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindMisorientations;

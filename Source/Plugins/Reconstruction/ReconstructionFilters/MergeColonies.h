@@ -53,23 +53,10 @@ class Reconstruction_EXPORT MergeColonies : public GroupFeatures
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(MergeColonies SUPERCLASS GroupFeatures)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(MergeColonies SUPERCLASS GroupFeatures)
   PYB11_SHARED_POINTERS(MergeColonies)
   PYB11_FILTER_NEW_MACRO(MergeColonies)
-  PYB11_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  PYB11_FILTER_PARAMETER(QString, CellParentIdsArrayName)
-  PYB11_FILTER_PARAMETER(QString, GlobAlphaArrayName)
-  PYB11_FILTER_PARAMETER(QString, FeatureParentIdsArrayName)
-  PYB11_FILTER_PARAMETER(QString, ActiveArrayName)
-  PYB11_FILTER_PARAMETER(float, AxisTolerance)
-  PYB11_FILTER_PARAMETER(float, AngleTolerance)
-  PYB11_FILTER_PARAMETER(bool, IdentifyGlobAlpha)
   PYB11_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
@@ -83,7 +70,8 @@ class Reconstruction_EXPORT MergeColonies : public GroupFeatures
   PYB11_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)
   PYB11_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
   PYB11_PROPERTY(bool IdentifyGlobAlpha READ getIdentifyGlobAlpha WRITE setIdentifyGlobAlpha)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = MergeColonies;

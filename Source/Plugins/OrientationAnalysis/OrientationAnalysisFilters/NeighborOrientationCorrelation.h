@@ -52,18 +52,10 @@ class OrientationAnalysis_EXPORT NeighborOrientationCorrelation : public Abstrac
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(NeighborOrientationCorrelation SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(NeighborOrientationCorrelation SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(NeighborOrientationCorrelation)
   PYB11_FILTER_NEW_MACRO(NeighborOrientationCorrelation)
-  PYB11_FILTER_PARAMETER(float, MisorientationTolerance)
-  PYB11_FILTER_PARAMETER(float, MinConfidence)
-  PYB11_FILTER_PARAMETER(int, Level)
-  PYB11_FILTER_PARAMETER(DataArrayPath, ConfidenceIndexArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
-  PYB11_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
   PYB11_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
   PYB11_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
   PYB11_PROPERTY(int Level READ getLevel WRITE setLevel)
@@ -71,7 +63,8 @@ class OrientationAnalysis_EXPORT NeighborOrientationCorrelation : public Abstrac
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
   PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = NeighborOrientationCorrelation;

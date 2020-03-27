@@ -53,15 +53,14 @@ class Sampling_EXPORT SampleSurfaceMeshSpecifiedPoints : public SampleSurfaceMes
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(SampleSurfaceMeshSpecifiedPoints SUPERCLASS SampleSurfaceMesh)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(SampleSurfaceMeshSpecifiedPoints SUPERCLASS SampleSurfaceMesh)
   PYB11_SHARED_POINTERS(SampleSurfaceMeshSpecifiedPoints)
   PYB11_FILTER_NEW_MACRO(SampleSurfaceMeshSpecifiedPoints)
-  PYB11_FILTER_PARAMETER(QString, InputFilePath)
-  PYB11_FILTER_PARAMETER(QString, OutputFilePath)
   PYB11_PROPERTY(QString InputFilePath READ getInputFilePath WRITE setInputFilePath)
   PYB11_PROPERTY(QString OutputFilePath READ getOutputFilePath WRITE setOutputFilePath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = SampleSurfaceMeshSpecifiedPoints;

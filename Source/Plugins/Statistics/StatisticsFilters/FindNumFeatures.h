@@ -50,15 +50,14 @@ class Statistics_EXPORT FindNumFeatures : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindNumFeatures SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindNumFeatures SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindNumFeatures)
   PYB11_FILTER_NEW_MACRO(FindNumFeatures)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
   PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindNumFeatures;

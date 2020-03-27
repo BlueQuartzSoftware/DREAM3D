@@ -51,13 +51,13 @@ class Sampling_EXPORT SampleSurfaceMesh : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(SampleSurfaceMesh SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(SampleSurfaceMesh SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(SampleSurfaceMesh)
   PYB11_FILTER_NEW_MACRO(SampleSurfaceMesh)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = SampleSurfaceMesh;

@@ -52,23 +52,18 @@ class OrientationAnalysis_EXPORT FindKernelAvgMisorientations : public AbstractF
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindKernelAvgMisorientations SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindKernelAvgMisorientations SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindKernelAvgMisorientations)
   PYB11_FILTER_NEW_MACRO(FindKernelAvgMisorientations)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
-  PYB11_FILTER_PARAMETER(QString, KernelAverageMisorientationsArrayName)
-  PYB11_FILTER_PARAMETER(IntVec3Type, KernelSize)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
   PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
   PYB11_PROPERTY(QString KernelAverageMisorientationsArrayName READ getKernelAverageMisorientationsArrayName WRITE setKernelAverageMisorientationsArrayName)
   PYB11_PROPERTY(IntVec3Type KernelSize READ getKernelSize WRITE setKernelSize)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindKernelAvgMisorientations;

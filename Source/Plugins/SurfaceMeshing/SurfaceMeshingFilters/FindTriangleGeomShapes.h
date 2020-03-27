@@ -51,18 +51,10 @@ class SurfaceMeshing_EXPORT FindTriangleGeomShapes : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindTriangleGeomShapes SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindTriangleGeomShapes SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindTriangleGeomShapes)
   PYB11_FILTER_NEW_MACRO(FindTriangleGeomShapes)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FaceLabelsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, VolumesArrayPath)
-  PYB11_FILTER_PARAMETER(QString, Omega3sArrayName)
-  PYB11_FILTER_PARAMETER(QString, AxisLengthsArrayName)
-  PYB11_FILTER_PARAMETER(QString, AxisEulerAnglesArrayName)
-  PYB11_FILTER_PARAMETER(QString, AspectRatiosArrayName)
   PYB11_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
   PYB11_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
   PYB11_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
@@ -71,7 +63,8 @@ class SurfaceMeshing_EXPORT FindTriangleGeomShapes : public AbstractFilter
   PYB11_PROPERTY(QString AxisLengthsArrayName READ getAxisLengthsArrayName WRITE setAxisLengthsArrayName)
   PYB11_PROPERTY(QString AxisEulerAnglesArrayName READ getAxisEulerAnglesArrayName WRITE setAxisEulerAnglesArrayName)
   PYB11_PROPERTY(QString AspectRatiosArrayName READ getAspectRatiosArrayName WRITE setAspectRatiosArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindTriangleGeomShapes;

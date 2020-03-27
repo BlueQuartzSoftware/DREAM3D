@@ -51,17 +51,10 @@ class Sampling_EXPORT ChangeResolution : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ChangeResolution SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ChangeResolution SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ChangeResolution)
   PYB11_FILTER_NEW_MACRO(ChangeResolution)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NewDataContainerName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
-  PYB11_FILTER_PARAMETER(bool, RenumberFeatures)
-  PYB11_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
   PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
   PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
@@ -69,7 +62,8 @@ class Sampling_EXPORT ChangeResolution : public AbstractFilter
   PYB11_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
   PYB11_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = ChangeResolution;

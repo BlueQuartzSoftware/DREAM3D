@@ -129,3 +129,5 @@ if(MSVC)
   set_source_files_properties(${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp PROPERTIES COMPILE_FLAGS /bigobj)
 endif()
 
+#add_executable(Misorientation "${${PLUGIN_NAME}_SOURCE_DIR}/Test/Misorientation.cpp")
+#target_link_libraries(Misorientation OrientationLib)

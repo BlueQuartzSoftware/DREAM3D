@@ -52,13 +52,13 @@ class SurfaceMeshing_EXPORT TriangleCentroidFilter : public SurfaceMeshFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(TriangleCentroidFilter SUPERCLASS SurfaceMeshFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(TriangleCentroidFilter SUPERCLASS SurfaceMeshFilter)
   PYB11_SHARED_POINTERS(TriangleCentroidFilter)
   PYB11_FILTER_NEW_MACRO(TriangleCentroidFilter)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleCentroidsArrayPath)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = TriangleCentroidFilter;

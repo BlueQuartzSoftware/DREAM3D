@@ -60,8 +60,8 @@
 class SurfaceMeshing_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
 {
     Q_OBJECT
-  //  PYB11_CREATE_BINDINGS(VerifyTriangleWinding SUPERCLASS SurfaceMeshFilter)
-  //  PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+    //  PYB11_BEGIN_BINDINGS(VerifyTriangleWinding SUPERCLASS SurfaceMeshFilter)
+    //  PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
   public:
     using Self = VerifyTriangleWinding;
     using Pointer = std::shared_ptr<Self>;

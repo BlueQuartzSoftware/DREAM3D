@@ -55,13 +55,13 @@ class Reconstruction_EXPORT AlignSectionsFeature : public AlignSections
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(AlignSectionsFeature SUPERCLASS AlignSections)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(AlignSectionsFeature SUPERCLASS AlignSections)
   PYB11_SHARED_POINTERS(AlignSectionsFeature)
   PYB11_FILTER_NEW_MACRO(AlignSectionsFeature)
-  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
   PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = AlignSectionsFeature;

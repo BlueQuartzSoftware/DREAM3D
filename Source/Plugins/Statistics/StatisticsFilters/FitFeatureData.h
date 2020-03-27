@@ -51,23 +51,18 @@ class Statistics_EXPORT FitFeatureData : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FitFeatureData SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FitFeatureData SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FitFeatureData)
   PYB11_FILTER_NEW_MACRO(FitFeatureData)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
-  PYB11_FILTER_PARAMETER(unsigned int, DistributionType)
-  PYB11_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NewEnsembleArrayArray)
   PYB11_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
   PYB11_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType)
   PYB11_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
   PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
   PYB11_PROPERTY(DataArrayPath NewEnsembleArrayArray READ getNewEnsembleArrayArray WRITE setNewEnsembleArrayArray)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FitFeatureData;

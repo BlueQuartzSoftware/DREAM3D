@@ -52,19 +52,10 @@ class OrientationAnalysis_EXPORT FindFeatureReferenceMisorientations : public Ab
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindFeatureReferenceMisorientations SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindFeatureReferenceMisorientations SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindFeatureReferenceMisorientations)
   PYB11_FILTER_NEW_MACRO(FindFeatureReferenceMisorientations)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, GBEuclideanDistancesArrayPath)
-  PYB11_FILTER_PARAMETER(QString, FeatureAvgMisorientationsArrayName)
-  PYB11_FILTER_PARAMETER(QString, FeatureReferenceMisorientationsArrayName)
-  PYB11_FILTER_PARAMETER(int, ReferenceOrientation)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
@@ -74,7 +65,8 @@ class OrientationAnalysis_EXPORT FindFeatureReferenceMisorientations : public Ab
   PYB11_PROPERTY(QString FeatureAvgMisorientationsArrayName READ getFeatureAvgMisorientationsArrayName WRITE setFeatureAvgMisorientationsArrayName)
   PYB11_PROPERTY(QString FeatureReferenceMisorientationsArrayName READ getFeatureReferenceMisorientationsArrayName WRITE setFeatureReferenceMisorientationsArrayName)
   PYB11_PROPERTY(int ReferenceOrientation READ getReferenceOrientation WRITE setReferenceOrientation)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindFeatureReferenceMisorientations;

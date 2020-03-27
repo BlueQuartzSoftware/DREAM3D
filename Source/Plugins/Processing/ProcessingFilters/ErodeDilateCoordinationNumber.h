@@ -50,18 +50,15 @@ class Processing_EXPORT ErodeDilateCoordinationNumber : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ErodeDilateCoordinationNumber SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ErodeDilateCoordinationNumber SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ErodeDilateCoordinationNumber)
   PYB11_FILTER_NEW_MACRO(ErodeDilateCoordinationNumber)
-  PYB11_FILTER_PARAMETER(bool, Loop)
-  PYB11_FILTER_PARAMETER(int, CoordinationNumber)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
   PYB11_PROPERTY(bool Loop READ getLoop WRITE setLoop)
   PYB11_PROPERTY(int CoordinationNumber READ getCoordinationNumber WRITE setCoordinationNumber)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = ErodeDilateCoordinationNumber;

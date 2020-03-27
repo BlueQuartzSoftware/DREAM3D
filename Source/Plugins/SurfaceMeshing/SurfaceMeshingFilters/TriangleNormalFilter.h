@@ -52,13 +52,13 @@ class SurfaceMeshing_EXPORT TriangleNormalFilter : public SurfaceMeshFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(TriangleNormalFilter SUPERCLASS SurfaceMeshFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(TriangleNormalFilter SUPERCLASS SurfaceMeshFilter)
   PYB11_SHARED_POINTERS(TriangleNormalFilter)
   PYB11_FILTER_NEW_MACRO(TriangleNormalFilter)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleNormalsArrayPath)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleNormalsArrayPath READ getSurfaceMeshTriangleNormalsArrayPath WRITE setSurfaceMeshTriangleNormalsArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = TriangleNormalFilter;

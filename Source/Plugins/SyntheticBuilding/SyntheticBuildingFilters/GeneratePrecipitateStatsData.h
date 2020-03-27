@@ -26,31 +26,10 @@ class SyntheticBuilding_EXPORT GeneratePrecipitateStatsData : public AbstractFil
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(GeneratePrecipitateStatsData SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(GeneratePrecipitateStatsData SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(GeneratePrecipitateStatsData)
   PYB11_FILTER_NEW_MACRO(GeneratePrecipitateStatsData)
-  PYB11_FILTER_PARAMETER(QString, PhaseName)
-  PYB11_FILTER_PARAMETER(int, PhaseIndex)
-  PYB11_FILTER_PARAMETER(int, CrystalSymmetry)
-  PYB11_FILTER_PARAMETER(int, MicroPresetModel)
-  PYB11_FILTER_PARAMETER(double, PhaseFraction)
-  PYB11_FILTER_PARAMETER(double, Mu)
-  PYB11_FILTER_PARAMETER(double, Sigma)
-  PYB11_FILTER_PARAMETER(double, MinCutOff)
-  PYB11_FILTER_PARAMETER(double, MaxCutOff)
-  PYB11_FILTER_PARAMETER(double, BinStepSize)
-  PYB11_FILTER_PARAMETER(bool, CreateEnsembleAttributeMatrix)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
-  PYB11_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(bool, AppendToExistingAttributeMatrix)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SelectedEnsembleAttributeMatrix)
-  PYB11_FILTER_PARAMETER(DynamicTableData, OdfData)
-  PYB11_FILTER_PARAMETER(DynamicTableData, MdfData)
-  PYB11_FILTER_PARAMETER(DynamicTableData, AxisOdfData)
-  PYB11_FILTER_PARAMETER(FloatVec2Type, RdfMinMaxDistance)
-  PYB11_FILTER_PARAMETER(int, RdfNumBins)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, RdfBoxSize)
   PYB11_PROPERTY(QString PhaseName READ getPhaseName WRITE setPhaseName)
   PYB11_PROPERTY(int PhaseIndex READ getPhaseIndex WRITE setPhaseIndex)
   PYB11_PROPERTY(int CrystalSymmetry READ getCrystalSymmetry WRITE setCrystalSymmetry)
@@ -72,7 +51,8 @@ class SyntheticBuilding_EXPORT GeneratePrecipitateStatsData : public AbstractFil
   PYB11_PROPERTY(FloatVec2Type RdfMinMaxDistance READ getRdfMinMaxDistance WRITE setRdfMinMaxDistance)
   PYB11_PROPERTY(int RdfNumBins READ getRdfNumBins WRITE setRdfNumBins)
   PYB11_PROPERTY(FloatVec3Type RdfBoxSize READ getRdfBoxSize WRITE setRdfBoxSize)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = GeneratePrecipitateStatsData;

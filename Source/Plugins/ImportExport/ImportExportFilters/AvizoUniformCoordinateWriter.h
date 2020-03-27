@@ -61,19 +61,16 @@ class ImportExport_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(AvizoUniformCoordinateWriter SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(AvizoUniformCoordinateWriter SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(AvizoUniformCoordinateWriter)
   PYB11_FILTER_NEW_MACRO(AvizoUniformCoordinateWriter)
-  PYB11_FILTER_PARAMETER(QString, OutputFile)
-  PYB11_FILTER_PARAMETER(bool, WriteBinaryFile)
-  PYB11_FILTER_PARAMETER(QString, Units)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   PYB11_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
   PYB11_PROPERTY(QString Units READ getUnits WRITE setUnits)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = AvizoUniformCoordinateWriter;

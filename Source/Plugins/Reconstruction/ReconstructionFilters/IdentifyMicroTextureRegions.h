@@ -52,19 +52,10 @@ class Reconstruction_EXPORT IdentifyMicroTextureRegions : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(IdentifyMicroTextureRegions SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(IdentifyMicroTextureRegions SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(IdentifyMicroTextureRegions)
   PYB11_FILTER_NEW_MACRO(IdentifyMicroTextureRegions)
-  PYB11_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(float, CAxisTolerance)
-  PYB11_FILTER_PARAMETER(float, MinMTRSize)
-  PYB11_FILTER_PARAMETER(float, MinVolFrac)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CAxisLocationsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  PYB11_FILTER_PARAMETER(QString, MTRIdsArrayName)
-  PYB11_FILTER_PARAMETER(QString, ActiveArrayName)
   PYB11_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
   PYB11_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
   PYB11_PROPERTY(float MinMTRSize READ getMinMTRSize WRITE setMinMTRSize)
@@ -74,7 +65,8 @@ class Reconstruction_EXPORT IdentifyMicroTextureRegions : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
   PYB11_PROPERTY(QString MTRIdsArrayName READ getMTRIdsArrayName WRITE setMTRIdsArrayName)
   PYB11_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = IdentifyMicroTextureRegions;

@@ -51,17 +51,15 @@ class OrientationAnalysis_EXPORT RotateEulerRefFrame : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(RotateEulerRefFrame SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(RotateEulerRefFrame SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(RotateEulerRefFrame)
   PYB11_FILTER_NEW_MACRO(RotateEulerRefFrame)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, RotationAxis)
-  PYB11_FILTER_PARAMETER(float, RotationAngle)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
   PYB11_PROPERTY(FloatVec3Type RotationAxis READ getRotationAxis WRITE setRotationAxis)
   PYB11_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
   PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = RotateEulerRefFrame;

@@ -58,15 +58,14 @@ class Statistics_EXPORT FindSaltykovSizes : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindSaltykovSizes SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindSaltykovSizes SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindSaltykovSizes)
   PYB11_FILTER_NEW_MACRO(FindSaltykovSizes)
-  PYB11_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SaltykovEquivalentDiametersArrayPath)
   PYB11_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
   PYB11_PROPERTY(DataArrayPath SaltykovEquivalentDiametersArrayPath READ getSaltykovEquivalentDiametersArrayPath WRITE setSaltykovEquivalentDiametersArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindSaltykovSizes;

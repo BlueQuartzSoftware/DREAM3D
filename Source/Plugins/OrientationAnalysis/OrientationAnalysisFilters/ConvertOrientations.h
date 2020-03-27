@@ -52,19 +52,16 @@ class OrientationAnalysis_EXPORT ConvertOrientations : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ConvertOrientations SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ConvertOrientations SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ConvertOrientations)
   PYB11_FILTER_NEW_MACRO(ConvertOrientations)
-  PYB11_FILTER_PARAMETER(int, InputType)
-  PYB11_FILTER_PARAMETER(int, OutputType)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputOrientationArrayPath)
-  PYB11_FILTER_PARAMETER(QString, OutputOrientationArrayName)
   PYB11_PROPERTY(int InputType READ getInputType WRITE setInputType)
   PYB11_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
   PYB11_PROPERTY(DataArrayPath InputOrientationArrayPath READ getInputOrientationArrayPath WRITE setInputOrientationArrayPath)
   PYB11_PROPERTY(QString OutputOrientationArrayName READ getOutputOrientationArrayName WRITE setOutputOrientationArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = ConvertOrientations;

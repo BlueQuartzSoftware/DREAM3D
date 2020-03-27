@@ -50,15 +50,14 @@ class OrientationAnalysis_EXPORT ChangeAngleRepresentation : public AbstractFilt
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ChangeAngleRepresentation SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ChangeAngleRepresentation SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ChangeAngleRepresentation)
   PYB11_FILTER_NEW_MACRO(ChangeAngleRepresentation)
-  PYB11_FILTER_PARAMETER(int, ConversionType)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
   PYB11_PROPERTY(int ConversionType READ getConversionType WRITE setConversionType)
   PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = ChangeAngleRepresentation;

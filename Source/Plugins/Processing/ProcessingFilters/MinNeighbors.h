@@ -53,24 +53,18 @@ class Processing_EXPORT MinNeighbors : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(MinNeighbors SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(MinNeighbors SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(MinNeighbors)
   PYB11_FILTER_NEW_MACRO(MinNeighbors)
-  PYB11_FILTER_PARAMETER(int, MinNumNeighbors)
-  PYB11_FILTER_PARAMETER(bool, ApplyToSinglePhase)
-  PYB11_FILTER_PARAMETER(int, PhaseNumber)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NumNeighborsArrayPath)
-  PYB11_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
   PYB11_PROPERTY(int MinNumNeighbors READ getMinNumNeighbors WRITE setMinNumNeighbors)
   PYB11_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
   PYB11_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath NumNeighborsArrayPath READ getNumNeighborsArrayPath WRITE setNumNeighborsArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = MinNeighbors;

@@ -53,19 +53,16 @@ class Reconstruction_EXPORT GroupFeatures : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(GroupFeatures SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(GroupFeatures SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(GroupFeatures)
   PYB11_FILTER_NEW_MACRO(GroupFeatures)
-  PYB11_FILTER_PARAMETER(DataArrayPath, ContiguousNeighborListArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NonContiguousNeighborListArrayPath)
-  PYB11_FILTER_PARAMETER(bool, UseNonContiguousNeighbors)
-  PYB11_FILTER_PARAMETER(bool, PatchGrouping)
   PYB11_PROPERTY(DataArrayPath ContiguousNeighborListArrayPath READ getContiguousNeighborListArrayPath WRITE setContiguousNeighborListArrayPath)
   PYB11_PROPERTY(DataArrayPath NonContiguousNeighborListArrayPath READ getNonContiguousNeighborListArrayPath WRITE setNonContiguousNeighborListArrayPath)
   PYB11_PROPERTY(bool UseNonContiguousNeighbors READ getUseNonContiguousNeighbors WRITE setUseNonContiguousNeighbors)
   PYB11_PROPERTY(bool PatchGrouping READ getPatchGrouping WRITE setPatchGrouping)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = GroupFeatures;

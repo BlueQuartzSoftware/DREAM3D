@@ -18,6 +18,40 @@ class RemoveSIMPLMacros : public Sandbox
 public:
   RemoveSIMPLMacros() = default;
 
+  QString check_SIMPL_ENABLE_PYTHON(const QString& inLine)
+  {
+    QString searchString = "#ifdef SIMPL_ENABLE_PYTHON";
+    QString pubCode;
+    QTextStream pubCodeOut(&pubCode);
+    QString line = inLine;
+    if(line.trimmed().startsWith("//"))
+    {
+      return inLine;
+    }
+    if(inLine.contains(searchString))
+    {
+      return "";
+    }
+    return inLine;
+  }
+
+  QString check_PYB11_FILTER_PARAMETER(const QString& inLine)
+  {
+    QString searchString = "PYB11_FILTER_PARAMETER";
+    QString pubCode;
+    QTextStream pubCodeOut(&pubCode);
+    QString line = inLine;
+    if(line.trimmed().startsWith("//"))
+    {
+      return inLine;
+    }
+    if(inLine.contains(searchString))
+    {
+      return "";
+    }
+    return inLine;
+  }
+
   // -----------------------------------------------------------------------------
   QString check_SIMPL_FILTER_PARAMETER(const QString& inLine, QTextStream& privCodeOut, QTextStream& definitionCodeOut, bool& hasSearchString, const QFileInfo& fi)
   {
@@ -944,6 +978,11 @@ public:
     {
       return;
     }
+
+    //    if(fi.baseName() != "ArrayCalculator")
+    //    {
+    //      return;
+    //    }
     {
       // Read the Source File
       QFile source(hFile);
@@ -953,6 +992,7 @@ public:
     }
 
     bool hasSearchString = false;
+    bool removedPythonMacro = false;
 
     QString searchString = "#include \"SIMPLib/Common/SIMPLibSetGetMacros.h\"";
     int includeIndex = 0;
@@ -970,6 +1010,8 @@ public:
     QString definitionCode;
     QTextStream definitionCodeOut(&definitionCode);
 
+    bool mSIMPL_ENABLE_PYTHON = false;
+
     while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
@@ -979,7 +1021,7 @@ public:
         //  qDebug() << privLineIndex;
       }
 
-#if 1
+#if 0
       line = check_SIMPL_SHARED_POINTERS(line, privCodeOut, definitionCodeOut, hasSearchString, fi);
       line = check_SIMPL_FILTER_NEW_MACRO(line, privCodeOut, definitionCodeOut, hasSearchString, fi);
       line = check_SIMPL_STATIC_NEW_MACRO(line, privCodeOut, definitionCodeOut, hasSearchString, fi);
@@ -998,8 +1040,25 @@ public:
       line = check_SIMPL_PIMPL_PROPERTY_DECL(line, privCodeOut, definitionCodeOut, hasSearchString, fi);
       line = check_SIMPL_PIMPL_PROPERTY_DEF(line, privCodeOut, definitionCodeOut, hasSearchString, fi);
       line = check_SIMPL_DECLARE_ARRAY(line, privCodeOut, definitionCodeOut, hasSearchString, fi);
-
 #endif
+
+      if(line.trimmed().startsWith("#ifdef SIMPL_ENABLE_PYTHON"))
+      {
+        mSIMPL_ENABLE_PYTHON = true;
+        removedPythonMacro = true;
+        line = "    // Start Python bindings declarations";
+      }
+
+      if(line.trimmed().startsWith("PYB11_FILTER_PARAMETER"))
+      {
+        line.clear();
+        removedPythonMacro = true;
+      }
+      if(line.trimmed().startsWith("#endif") && mSIMPL_ENABLE_PYTHON)
+      {
+        line = "  PYB11_END_BINDINGS()";
+        mSIMPL_ENABLE_PYTHON = false;
+      }
 
       if(line.startsWith(searchString))
       {
@@ -1007,7 +1066,14 @@ public:
       }
 
       lineIndex++;
-      outLines.push_back(line);
+      if(!mSIMPL_ENABLE_PYTHON)
+      {
+        outLines.push_back(line);
+      }
+      if(!line.isEmpty() && mSIMPL_ENABLE_PYTHON)
+      {
+        outLines.push_back(line);
+      }
     }
 
     if(hasSearchString)
@@ -1044,7 +1110,7 @@ public:
       }
     }
 
-    writeOutput(hasSearchString, outLines, hFile);
+    writeOutput(removedPythonMacro, outLines, hFile);
 
     if(hasSearchString && hFile.endsWith(".h"))
     {

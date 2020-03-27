@@ -51,23 +51,10 @@ class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public AbstractFilter
 {
     Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-    PYB11_CREATE_BINDINGS(YSChoiAbaqusReader SUPERCLASS FileReader)
+    // Start Python bindings declarations
+    PYB11_BEGIN_BINDINGS(YSChoiAbaqusReader SUPERCLASS FileReader)
     PYB11_SHARED_POINTERS(YSChoiAbaqusReader)
     PYB11_FILTER_NEW_MACRO(YSChoiAbaqusReader)
-    PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
-    PYB11_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
-    PYB11_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
-    PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-    PYB11_FILTER_PARAMETER(QString, InputFile)
-    PYB11_FILTER_PARAMETER(QString, InputFeatureInfoFile)
-    PYB11_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
-    PYB11_FILTER_PARAMETER(QString, QuatsArrayName)
-    PYB11_FILTER_PARAMETER(QString, AvgQuatsArrayName)
-    PYB11_FILTER_PARAMETER(QString, CellPhasesArrayName)
-    PYB11_FILTER_PARAMETER(QString, SurfaceFeaturesArrayName)
-    PYB11_FILTER_PARAMETER(QString, FeatureIdsArrayName)
-    PYB11_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
     PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
     PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
     PYB11_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
@@ -81,7 +68,8 @@ class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public AbstractFilter
     PYB11_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
     PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
     PYB11_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
-#endif
+    PYB11_END_BINDINGS()
+    // End Python bindings declarations
 
   public:
     using Self = YSChoiAbaqusReader;

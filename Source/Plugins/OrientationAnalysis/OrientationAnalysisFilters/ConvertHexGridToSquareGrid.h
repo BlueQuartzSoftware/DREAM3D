@@ -53,18 +53,10 @@ class OrientationAnalysis_EXPORT ConvertHexGridToSquareGrid : public AbstractFil
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ConvertHexGridToSquareGrid SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ConvertHexGridToSquareGrid SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ConvertHexGridToSquareGrid)
   PYB11_FILTER_NEW_MACRO(ConvertHexGridToSquareGrid)
-  PYB11_FILTER_PARAMETER(QString, InputPath)
-  PYB11_FILTER_PARAMETER(QString, OutputPath)
-  PYB11_FILTER_PARAMETER(QString, OutputPrefix)
-  PYB11_FILTER_PARAMETER(QString, FilePrefix)
-  PYB11_FILTER_PARAMETER(QString, FileSuffix)
-  PYB11_FILTER_PARAMETER(QString, FileExtension)
-  PYB11_FILTER_PARAMETER(int, PaddingDigits)
-  PYB11_FILTER_PARAMETER(int, HexGridStack)
   PYB11_PROPERTY(QString InputPath READ getInputPath WRITE setInputPath)
   PYB11_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
   PYB11_PROPERTY(QString OutputPrefix READ getOutputPrefix WRITE setOutputPrefix)
@@ -73,7 +65,8 @@ class OrientationAnalysis_EXPORT ConvertHexGridToSquareGrid : public AbstractFil
   PYB11_PROPERTY(QString FileExtension READ getFileExtension WRITE setFileExtension)
   PYB11_PROPERTY(int PaddingDigits READ getPaddingDigits WRITE setPaddingDigits)
   PYB11_PROPERTY(int HexGridStack READ getHexGridStack WRITE setHexGridStack)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = ConvertHexGridToSquareGrid;

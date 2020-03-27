@@ -51,21 +51,10 @@ class Statistics_EXPORT FindFeatureClustering : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindFeatureClustering SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindFeatureClustering SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindFeatureClustering)
   PYB11_FILTER_NEW_MACRO(FindFeatureClustering)
-  PYB11_FILTER_PARAMETER(int, NumberOfBins)
-  PYB11_FILTER_PARAMETER(int, PhaseNumber)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
-  PYB11_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
-  PYB11_FILTER_PARAMETER(QString, ClusteringListArrayName)
-  PYB11_FILTER_PARAMETER(QString, NewEnsembleArrayArrayName)
-  PYB11_FILTER_PARAMETER(QString, MaxMinArrayName)
   PYB11_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
   PYB11_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
   PYB11_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
@@ -77,7 +66,8 @@ class Statistics_EXPORT FindFeatureClustering : public AbstractFilter
   PYB11_PROPERTY(QString ClusteringListArrayName READ getClusteringListArrayName WRITE setClusteringListArrayName)
   PYB11_PROPERTY(QString NewEnsembleArrayArrayName READ getNewEnsembleArrayArrayName WRITE setNewEnsembleArrayArrayName)
   PYB11_PROPERTY(QString MaxMinArrayName READ getMaxMinArrayName WRITE setMaxMinArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindFeatureClustering;

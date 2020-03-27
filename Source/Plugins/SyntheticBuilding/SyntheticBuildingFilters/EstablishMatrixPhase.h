@@ -51,20 +51,10 @@ class SyntheticBuilding_EXPORT EstablishMatrixPhase : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(EstablishMatrixPhase SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(EstablishMatrixPhase SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(EstablishMatrixPhase)
   PYB11_FILTER_NEW_MACRO(EstablishMatrixPhase)
-  PYB11_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrixPath)
-  PYB11_FILTER_PARAMETER(QString, FeatureIdsArrayName)
-  PYB11_FILTER_PARAMETER(QString, CellPhasesArrayName)
-  PYB11_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
-  PYB11_FILTER_PARAMETER(QString, NumFeaturesArrayName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
-  PYB11_FILTER_PARAMETER(bool, UseMask)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputPhaseNamesArrayPath)
   PYB11_PROPERTY(DataArrayPath OutputCellAttributeMatrixPath READ getOutputCellAttributeMatrixPath WRITE setOutputCellAttributeMatrixPath)
   PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
   PYB11_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
@@ -75,7 +65,8 @@ class SyntheticBuilding_EXPORT EstablishMatrixPhase : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
   PYB11_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
   PYB11_PROPERTY(DataArrayPath InputPhaseNamesArrayPath READ getInputPhaseNamesArrayPath WRITE setInputPhaseNamesArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = EstablishMatrixPhase;

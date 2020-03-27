@@ -60,23 +60,10 @@ class Processing_EXPORT DetectEllipsoids : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(DetectEllipsoids SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(DetectEllipsoids SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(DetectEllipsoids)
   PYB11_FILTER_NEW_MACRO(DetectEllipsoids)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DetectedEllipsoidsFeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, EllipseFeatureAttributeMatrixPath)
-  PYB11_FILTER_PARAMETER(QString, CenterCoordinatesArrayName)
-  PYB11_FILTER_PARAMETER(QString, MajorAxisLengthArrayName)
-  PYB11_FILTER_PARAMETER(QString, MinorAxisLengthArrayName)
-  PYB11_FILTER_PARAMETER(QString, RotationalAnglesArrayName)
-  PYB11_FILTER_PARAMETER(int, MinFiberAxisLength)
-  PYB11_FILTER_PARAMETER(int, MaxFiberAxisLength)
-  PYB11_FILTER_PARAMETER(float, HoughTransformThreshold)
-  PYB11_FILTER_PARAMETER(float, MinAspectRatio)
-  PYB11_FILTER_PARAMETER(int, ImageScaleBarLength)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath DetectedEllipsoidsFeatureIdsArrayPath READ getDetectedEllipsoidsFeatureIdsArrayPath WRITE setDetectedEllipsoidsFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath FeatureAttributeMatrixPath READ getFeatureAttributeMatrixPath WRITE setFeatureAttributeMatrixPath)
@@ -90,7 +77,8 @@ class Processing_EXPORT DetectEllipsoids : public AbstractFilter
   PYB11_PROPERTY(float HoughTransformThreshold READ getHoughTransformThreshold WRITE setHoughTransformThreshold)
   PYB11_PROPERTY(float MinAspectRatio READ getMinAspectRatio WRITE setMinAspectRatio)
   PYB11_PROPERTY(int ImageScaleBarLength READ getImageScaleBarLength WRITE setImageScaleBarLength)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = DetectEllipsoids;

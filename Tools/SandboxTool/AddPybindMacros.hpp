@@ -45,7 +45,7 @@ public:
     QString simplibInclude("#include \"SIMPLib/SIMPLib.h\"");
     int32_t simplibIncludeIndex = 0;
 
-    QString pybindStart("PYB11_CREATE_BINDINGS");
+    QString pybindStart("PYB11_BEGIN_BINDINGS");
     int32_t pybindStartIndex = 0;
 
     int32_t lastPybindMacroIndex = 0;

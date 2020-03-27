@@ -49,17 +49,15 @@ class Sampling_EXPORT AppendImageGeometryZSlice : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(AppendImageGeometryZSlice SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(AppendImageGeometryZSlice SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(AppendImageGeometryZSlice)
   PYB11_FILTER_NEW_MACRO(AppendImageGeometryZSlice)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputAttributeMatrix)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DestinationAttributeMatrix)
-  PYB11_FILTER_PARAMETER(bool, CheckResolution)
   PYB11_PROPERTY(DataArrayPath InputAttributeMatrix READ getInputAttributeMatrix WRITE setInputAttributeMatrix)
   PYB11_PROPERTY(DataArrayPath DestinationAttributeMatrix READ getDestinationAttributeMatrix WRITE setDestinationAttributeMatrix)
   PYB11_PROPERTY(bool CheckResolution READ getCheckResolution WRITE setCheckResolution)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = AppendImageGeometryZSlice;

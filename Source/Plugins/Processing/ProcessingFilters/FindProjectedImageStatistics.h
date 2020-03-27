@@ -53,17 +53,10 @@ class Processing_EXPORT FindProjectedImageStatistics : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindProjectedImageStatistics SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindProjectedImageStatistics SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindProjectedImageStatistics)
   PYB11_FILTER_NEW_MACRO(FindProjectedImageStatistics)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
-  PYB11_FILTER_PARAMETER(unsigned int, Plane)
-  PYB11_FILTER_PARAMETER(QString, ProjectedImageMinArrayName)
-  PYB11_FILTER_PARAMETER(QString, ProjectedImageMaxArrayName)
-  PYB11_FILTER_PARAMETER(QString, ProjectedImageAvgArrayName)
-  PYB11_FILTER_PARAMETER(QString, ProjectedImageStdArrayName)
-  PYB11_FILTER_PARAMETER(QString, ProjectedImageVarArrayName)
   PYB11_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
   PYB11_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
   PYB11_PROPERTY(QString ProjectedImageMinArrayName READ getProjectedImageMinArrayName WRITE setProjectedImageMinArrayName)
@@ -71,7 +64,8 @@ class Processing_EXPORT FindProjectedImageStatistics : public AbstractFilter
   PYB11_PROPERTY(QString ProjectedImageAvgArrayName READ getProjectedImageAvgArrayName WRITE setProjectedImageAvgArrayName)
   PYB11_PROPERTY(QString ProjectedImageStdArrayName READ getProjectedImageStdArrayName WRITE setProjectedImageStdArrayName)
   PYB11_PROPERTY(QString ProjectedImageVarArrayName READ getProjectedImageVarArrayName WRITE setProjectedImageVarArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindProjectedImageStatistics;

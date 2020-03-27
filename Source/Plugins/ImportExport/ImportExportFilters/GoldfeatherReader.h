@@ -58,21 +58,10 @@ class ImportExport_EXPORT GoldfeatherReader : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(GoldfeatherReader SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(GoldfeatherReader SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(GoldfeatherReader)
   PYB11_FILTER_NEW_MACRO(GoldfeatherReader)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
-  PYB11_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature1sArrayName)
-  PYB11_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature2sArrayName)
-  PYB11_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection1sArrayName)
-  PYB11_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection2sArrayName)
-  PYB11_FILTER_PARAMETER(QString, SurfaceMeshNodeNormalsArrayName)
-  PYB11_FILTER_PARAMETER(QString, SurfaceMeshFaceLabelsArrayName)
-  PYB11_FILTER_PARAMETER(QString, SurfaceMeshFaceNormalsArrayName)
-  PYB11_FILTER_PARAMETER(QString, InputFile)
   PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
   PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
   PYB11_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
@@ -84,7 +73,8 @@ class ImportExport_EXPORT GoldfeatherReader : public AbstractFilter
   PYB11_PROPERTY(QString SurfaceMeshFaceLabelsArrayName READ getSurfaceMeshFaceLabelsArrayName WRITE setSurfaceMeshFaceLabelsArrayName)
   PYB11_PROPERTY(QString SurfaceMeshFaceNormalsArrayName READ getSurfaceMeshFaceNormalsArrayName WRITE setSurfaceMeshFaceNormalsArrayName)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = GoldfeatherReader;

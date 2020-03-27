@@ -53,19 +53,10 @@ class SurfaceMeshing_EXPORT QuickSurfaceMesh : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(QuickSurfaceMesh SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(QuickSurfaceMesh SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(QuickSurfaceMesh)
   PYB11_FILTER_NEW_MACRO(QuickSurfaceMesh)
-  PYB11_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, TripleLineDataContainerName)
-  PYB11_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(QString, FaceLabelsArrayName)
-  PYB11_FILTER_PARAMETER(QString, NodeTypesArrayName)
-  PYB11_FILTER_PARAMETER(QString, FeatureAttributeMatrixName)
   PYB11_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
   PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
   PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
@@ -74,7 +65,8 @@ class SurfaceMeshing_EXPORT QuickSurfaceMesh : public AbstractFilter
   PYB11_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
   PYB11_PROPERTY(QString NodeTypesArrayName READ getNodeTypesArrayName WRITE setNodeTypesArrayName)
   PYB11_PROPERTY(QString FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = QuickSurfaceMesh;

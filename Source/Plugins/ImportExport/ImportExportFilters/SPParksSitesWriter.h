@@ -52,13 +52,13 @@ class ImportExport_EXPORT SPParksSitesWriter : public FileWriter
 
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(SPParksSitesWriter SUPERCLASS FileWriter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(SPParksSitesWriter SUPERCLASS FileWriter)
   PYB11_SHARED_POINTERS(SPParksSitesWriter)
   PYB11_FILTER_NEW_MACRO(SPParksSitesWriter)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = SPParksSitesWriter;
