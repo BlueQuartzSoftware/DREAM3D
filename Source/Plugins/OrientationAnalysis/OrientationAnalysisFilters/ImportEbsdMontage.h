@@ -54,11 +54,10 @@ class OrientationAnalysis_EXPORT ImportEbsdMontage : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ImportEbsdMontage SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ImportEbsdMontage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ImportEbsdMontage)
   PYB11_FILTER_NEW_MACRO(ImportEbsdMontage)
-
   PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
@@ -68,7 +67,8 @@ class OrientationAnalysis_EXPORT ImportEbsdMontage : public AbstractFilter
   PYB11_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
   PYB11_PROPERTY(int32_t DefineScanOverlap READ getDefineScanOverlap WRITE setDefineScanOverlap)
   PYB11_PROPERTY(FloatVec2Type ScanOverlapPercent READ getScanOverlapPercent WRITE setScanOverlapPercent)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = ImportEbsdMontage;
