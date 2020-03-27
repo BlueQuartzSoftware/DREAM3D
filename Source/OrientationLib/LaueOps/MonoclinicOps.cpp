@@ -55,32 +55,34 @@
 
 #include "OrientationLib/Utilities/ComputeStereographicProjection.h"
 
-
-namespace Detail
-{
-static const double MonoclinicDim1InitValue = std::pow((0.75f * ((SIMPLib::Constants::k_Pi)-sinf((SIMPLib::Constants::k_Pi)))), (1.0f / 3.0));
-static const double MonoclinicDim2InitValue = std::pow((0.75f * ((SIMPLib::Constants::k_PiOver2)-sinf((SIMPLib::Constants::k_PiOver2)))), (1.0f / 3.0));
-static const double MonoclinicDim3InitValue = std::pow((0.75f * ((SIMPLib::Constants::k_Pi)-sinf((SIMPLib::Constants::k_Pi)))), (1.0f / 3.0));
-static const double MonoclinicDim1StepValue = MonoclinicDim1InitValue / 36.0f;
-static const double MonoclinicDim2StepValue = MonoclinicDim2InitValue / 18.0f;
-static const double MonoclinicDim3StepValue = MonoclinicDim3InitValue / 36.0f;
 namespace Monoclinic
 {
+
+static const std::array<size_t, 3> OdfNumBins = {72, 36, 72}; // Represents a 5Deg bin
+
+static const std::array<double, 3> OdfDimInitValue = {std::pow((0.75f * ((SIMPLib::Constants::k_Pi)-sinf((SIMPLib::Constants::k_Pi)))), (1.0f / 3.0)),
+                                                      std::pow((0.75f * ((SIMPLib::Constants::k_PiOver2)-sinf((SIMPLib::Constants::k_PiOver2)))), (1.0f / 3.0)),
+                                                      std::pow((0.75f * ((SIMPLib::Constants::k_Pi)-sinf((SIMPLib::Constants::k_Pi)))), (1.0f / 3.0))};
+static const std::array<double, 3> OdfDimStepValue = {OdfDimInitValue[0] / static_cast<double>(OdfNumBins[0] / 2), OdfDimInitValue[1] / static_cast<double>(OdfNumBins[1] / 2),
+                                                      OdfDimInitValue[2] / static_cast<double>(OdfNumBins[2] / 2)};
+
 static const int symSize0 = 2;
 static const int symSize1 = 2;
 static const int symSize2 = 2;
+
+static const int k_OdfSize = 186624;
+static const int k_MdfSize = 186624;
+static const int k_NumSymQuats = 2;
+
+static const QuatType QuatSym[2] = {QuatType(0.000000000, 0.000000000, 0.000000000, 1.000000000), QuatType(0.000000000, 1.000000000, 0.000000000, 0.000000000)};
+
+static const double RodSym[2][3] = {{0.0, 0.0, 0.0}, {0.0, 10000000000.0, 0.0}};
+
+static const double MatSym[2][3][3] = {{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}},
+
+                                       {{-1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}}};
+
 } // namespace Monoclinic
-} // namespace Detail
-
-static const QuatType MonoclinicQuatSym[2] = {QuatType(0.000000000, 0.000000000, 0.000000000, 1.000000000), QuatType(0.000000000, 1.000000000, 0.000000000, 0.000000000)};
-
-static const double MonoclinicRodSym[2][3] = {{0.0, 0.0, 0.0}, {0.0, 10000000000.0, 0.0}};
-
-static const double MonoclinicMatSym[2][3][3] = {{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}},
-
-                                                 {{-1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}}};
-
-using namespace Detail;
 
 // -----------------------------------------------------------------------------
 //
@@ -105,7 +107,7 @@ bool MonoclinicOps::getHasInversion() const
 // -----------------------------------------------------------------------------
 int MonoclinicOps::getODFSize() const
 {
-  return k_OdfSize;
+  return Monoclinic::k_OdfSize;
 }
 
 // -----------------------------------------------------------------------------
@@ -113,7 +115,7 @@ int MonoclinicOps::getODFSize() const
 // -----------------------------------------------------------------------------
 int MonoclinicOps::getMDFSize() const
 {
-  return k_MdfSize;
+  return Monoclinic::k_MdfSize;
 }
 
 // -----------------------------------------------------------------------------
@@ -121,7 +123,13 @@ int MonoclinicOps::getMDFSize() const
 // -----------------------------------------------------------------------------
 int MonoclinicOps::getNumSymOps() const
 {
-  return k_NumSymQuats;
+  return Monoclinic::k_NumSymQuats;
+}
+
+// -----------------------------------------------------------------------------
+std::array<size_t, 3> MonoclinicOps::getOdfNumBins() const
+{
+  return Monoclinic::OdfNumBins;
 }
 
 // -----------------------------------------------------------------------------
@@ -137,7 +145,7 @@ QString MonoclinicOps::getSymmetryName() const
 // -----------------------------------------------------------------------------
 double MonoclinicOps::getMisoQuat(QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
 {
-  return _calcMisoQuat(MonoclinicQuatSym, k_NumSymQuats, q1, q2, n1, n2, n3);
+  return _calcMisoQuat(Monoclinic::QuatSym, Monoclinic::k_NumSymQuats, q1, q2, n1, n2, n3);
 }
 
 // -----------------------------------------------------------------------------
@@ -148,7 +156,7 @@ float MonoclinicOps::getMisoQuat(QuatF& q1f, QuatF& q2f, float& n1f, float& n2f,
   double n1 = n1f;
   double n2 = n2f;
   double n3 = n3f;
-  float w = static_cast<float>(_calcMisoQuat(MonoclinicQuatSym, k_NumSymQuats, q1, q2, n1, n2, n3));
+  float w = static_cast<float>(_calcMisoQuat(Monoclinic::QuatSym, Monoclinic::k_NumSymQuats, q1, q2, n1, n2, n3));
   n1f = n1;
   n2f = n2;
   n3f = n3;
@@ -216,40 +224,40 @@ double MonoclinicOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, Quat
 
 QuatType MonoclinicOps::getQuatSymOp(int32_t i) const
 {
-  return MonoclinicQuatSym[i];
+  return Monoclinic::QuatSym[i];
 }
 
 void MonoclinicOps::getRodSymOp(int i, double* r) const
 {
-  r[0] = MonoclinicRodSym[i][0];
-  r[1] = MonoclinicRodSym[i][1];
-  r[2] = MonoclinicRodSym[i][2];
+  r[0] = Monoclinic::RodSym[i][0];
+  r[1] = Monoclinic::RodSym[i][1];
+  r[2] = Monoclinic::RodSym[i][2];
 }
 
 void MonoclinicOps::getMatSymOp(int i, double g[3][3]) const
 {
-  g[0][0] = MonoclinicMatSym[i][0][0];
-  g[0][1] = MonoclinicMatSym[i][0][1];
-  g[0][2] = MonoclinicMatSym[i][0][2];
-  g[1][0] = MonoclinicMatSym[i][1][0];
-  g[1][1] = MonoclinicMatSym[i][1][1];
-  g[1][2] = MonoclinicMatSym[i][1][2];
-  g[2][0] = MonoclinicMatSym[i][2][0];
-  g[2][1] = MonoclinicMatSym[i][2][1];
-  g[2][2] = MonoclinicMatSym[i][2][2];
+  g[0][0] = Monoclinic::MatSym[i][0][0];
+  g[0][1] = Monoclinic::MatSym[i][0][1];
+  g[0][2] = Monoclinic::MatSym[i][0][2];
+  g[1][0] = Monoclinic::MatSym[i][1][0];
+  g[1][1] = Monoclinic::MatSym[i][1][1];
+  g[1][2] = Monoclinic::MatSym[i][1][2];
+  g[2][0] = Monoclinic::MatSym[i][2][0];
+  g[2][1] = Monoclinic::MatSym[i][2][1];
+  g[2][2] = Monoclinic::MatSym[i][2][2];
 }
 
 void MonoclinicOps::getMatSymOp(int i, float g[3][3]) const
 {
-  g[0][0] = MonoclinicMatSym[i][0][0];
-  g[0][1] = MonoclinicMatSym[i][0][1];
-  g[0][2] = MonoclinicMatSym[i][0][2];
-  g[1][0] = MonoclinicMatSym[i][1][0];
-  g[1][1] = MonoclinicMatSym[i][1][1];
-  g[1][2] = MonoclinicMatSym[i][1][2];
-  g[2][0] = MonoclinicMatSym[i][2][0];
-  g[2][1] = MonoclinicMatSym[i][2][1];
-  g[2][2] = MonoclinicMatSym[i][2][2];
+  g[0][0] = Monoclinic::MatSym[i][0][0];
+  g[0][1] = Monoclinic::MatSym[i][0][1];
+  g[0][2] = Monoclinic::MatSym[i][0][2];
+  g[1][0] = Monoclinic::MatSym[i][1][0];
+  g[1][1] = Monoclinic::MatSym[i][1][1];
+  g[1][2] = Monoclinic::MatSym[i][1][2];
+  g[2][0] = Monoclinic::MatSym[i][2][0];
+  g[2][1] = Monoclinic::MatSym[i][2][1];
+  g[2][2] = Monoclinic::MatSym[i][2][2];
 }
 
 // -----------------------------------------------------------------------------
@@ -258,7 +266,7 @@ void MonoclinicOps::getMatSymOp(int i, float g[3][3]) const
 OrientationType MonoclinicOps::getODFFZRod(const OrientationType& rod) const
 {
   int numsym = 2;
-  return _calcRodNearestOrigin(MonoclinicRodSym, numsym, rod);
+  return _calcRodNearestOrigin(Monoclinic::RodSym, numsym, rod);
 }
 
 // -----------------------------------------------------------------------------
@@ -269,7 +277,7 @@ OrientationType MonoclinicOps::getMDFFZRod(const OrientationType& inRod) const
   double w = 0.0, n1 = 0.0, n2 = 0.0, n3 = 0.0;
   double FZw = 0.0, FZn1 = 0.0, FZn2 = 0.0, FZn3 = 0.0;
 
-  OrientationType rod = LaueOps::_calcRodNearestOrigin(MonoclinicRodSym, 24, inRod);
+  OrientationType rod = LaueOps::_calcRodNearestOrigin(Monoclinic::RodSym, 24, inRod);
   OrientationType ax = OrientationTransformation::ro2ax<OrientationType, OrientationType>(rod);
   n1 = ax[0];
   n2 = ax[1], n3 = ax[2], w = ax[3];
@@ -284,14 +292,14 @@ OrientationType MonoclinicOps::getMDFFZRod(const OrientationType& inRod) const
 // -----------------------------------------------------------------------------
 QuatType MonoclinicOps::getNearestQuat(const QuatType& q1, const QuatType& q2) const
 {
-  return _calcNearestQuat(MonoclinicQuatSym, k_NumSymQuats, q1, q2);
+  return _calcNearestQuat(Monoclinic::QuatSym, Monoclinic::k_NumSymQuats, q1, q2);
 }
 
 QuatF MonoclinicOps::getNearestQuat(const QuatF& q1f, const QuatF& q2f) const
 {
   QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
   QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
-  QuatType temp = _calcNearestQuat(MonoclinicQuatSym, k_NumSymQuats, q1, q2);
+  QuatType temp = _calcNearestQuat(Monoclinic::QuatSym, Monoclinic::k_NumSymQuats, q1, q2);
   QuatF out(temp.x(), temp.y(), temp.z(), temp.w());
   return out;
 }
@@ -307,15 +315,15 @@ int MonoclinicOps::getMisoBin(const OrientationType& rod) const
 
   OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
-  dim[0] = Detail::MonoclinicDim1InitValue;
-  dim[1] = Detail::MonoclinicDim2InitValue;
-  dim[2] = Detail::MonoclinicDim3InitValue;
-  step[0] = Detail::MonoclinicDim1StepValue;
-  step[1] = Detail::MonoclinicDim2StepValue;
-  step[2] = Detail::MonoclinicDim3StepValue;
-  bins[0] = 72.0f;
-  bins[1] = 36.0f;
-  bins[2] = 72.0f;
+  dim[0] = Monoclinic::OdfDimInitValue[0];
+  dim[1] = Monoclinic::OdfDimInitValue[1];
+  dim[2] = Monoclinic::OdfDimInitValue[2];
+  step[0] = Monoclinic::OdfDimStepValue[0];
+  step[1] = Monoclinic::OdfDimStepValue[1];
+  step[2] = Monoclinic::OdfDimStepValue[2];
+  bins[0] = static_cast<double>(Monoclinic::OdfNumBins[0]);
+  bins[1] = static_cast<double>(Monoclinic::OdfNumBins[1]);
+  bins[2] = static_cast<double>(Monoclinic::OdfNumBins[2]);
 
   return _calcMisoBin(dim, bins, step, ho);
 }
@@ -323,24 +331,25 @@ int MonoclinicOps::getMisoBin(const OrientationType& rod) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationType MonoclinicOps::determineEulerAngles(uint64_t seed, int choose) const
+OrientationType MonoclinicOps::determineEulerAngles(double random[3], int choose) const
 {
   double init[3];
   double step[3];
   int32_t phi[3];
   double h1, h2, h3;
 
-  init[0] = Detail::MonoclinicDim1InitValue;
-  init[1] = Detail::MonoclinicDim2InitValue;
-  init[2] = Detail::MonoclinicDim3InitValue;
-  step[0] = Detail::MonoclinicDim1StepValue;
-  step[1] = Detail::MonoclinicDim2StepValue;
-  step[2] = Detail::MonoclinicDim3StepValue;
-  phi[0] = static_cast<int32_t>(choose % 72);
-  phi[1] = static_cast<int32_t>((choose / 72) % 36);
-  phi[2] = static_cast<int32_t>(choose / (72 * 36));
+  init[0] = Monoclinic::OdfDimInitValue[0];
+  init[1] = Monoclinic::OdfDimInitValue[1];
+  init[2] = Monoclinic::OdfDimInitValue[2];
+  step[0] = Monoclinic::OdfDimStepValue[0];
+  step[1] = Monoclinic::OdfDimStepValue[1];
+  step[2] = Monoclinic::OdfDimStepValue[2];
 
-  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
+  phi[0] = static_cast<int32_t>(choose % Monoclinic::OdfNumBins[0]);
+  phi[1] = static_cast<int32_t>((choose / Monoclinic::OdfNumBins[0]) % Monoclinic::OdfNumBins[1]);
+  phi[2] = static_cast<int32_t>(choose / (Monoclinic::OdfNumBins[0] * Monoclinic::OdfNumBins[1]));
+
+  _calcDetermineHomochoricValues(random, init, step, phi, h1, h2, h3);
 
   OrientationType ho(h1, h2, h3);
   OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
@@ -354,9 +363,9 @@ OrientationType MonoclinicOps::determineEulerAngles(uint64_t seed, int choose) c
 // -----------------------------------------------------------------------------
 OrientationType MonoclinicOps::randomizeEulerAngles(const OrientationType& synea) const
 {
-  size_t symOp = getRandomSymmetryOperatorIndex(k_NumSymQuats);
+  size_t symOp = getRandomSymmetryOperatorIndex(Monoclinic::k_NumSymQuats);
   QuatType quat = OrientationTransformation::eu2qu<OrientationType, QuatType>(synea);
-  QuatType qc = MonoclinicQuatSym[symOp] * quat;
+  QuatType qc = Monoclinic::QuatSym[symOp] * quat;
   return OrientationTransformation::qu2eu<QuatType, OrientationType>(qc);
 }
 
@@ -364,24 +373,24 @@ OrientationType MonoclinicOps::randomizeEulerAngles(const OrientationType& synea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationType MonoclinicOps::determineRodriguesVector(uint64_t seed, int choose) const
+OrientationType MonoclinicOps::determineRodriguesVector(double random[3], int choose) const
 {
   double init[3];
   double step[3];
   int32_t phi[3];
   double h1, h2, h3;
 
-  init[0] = Detail::MonoclinicDim1InitValue;
-  init[1] = Detail::MonoclinicDim2InitValue;
-  init[2] = Detail::MonoclinicDim3InitValue;
-  step[0] = Detail::MonoclinicDim1StepValue;
-  step[1] = Detail::MonoclinicDim2StepValue;
-  step[2] = Detail::MonoclinicDim3StepValue;
-  phi[0] = static_cast<int32_t>(choose % 72);
-  phi[1] = static_cast<int32_t>((choose / 72) % 36);
-  phi[2] = static_cast<int32_t>(choose / (72 * 36));
+  init[0] = Monoclinic::OdfDimInitValue[0];
+  init[1] = Monoclinic::OdfDimInitValue[1];
+  init[2] = Monoclinic::OdfDimInitValue[2];
+  step[0] = Monoclinic::OdfDimStepValue[0];
+  step[1] = Monoclinic::OdfDimStepValue[1];
+  step[2] = Monoclinic::OdfDimStepValue[2];
+  phi[0] = static_cast<int32_t>(choose % Monoclinic::OdfNumBins[0]);
+  phi[1] = static_cast<int32_t>((choose / Monoclinic::OdfNumBins[0]) % Monoclinic::OdfNumBins[1]);
+  phi[2] = static_cast<int32_t>(choose / (Monoclinic::OdfNumBins[0] * Monoclinic::OdfNumBins[1]));
 
-  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(random, init, step, phi, h1, h2, h3);
   OrientationType ho(h1, h2, h3);
   OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
   ro = getMDFFZRod(ro);
@@ -399,15 +408,15 @@ int MonoclinicOps::getOdfBin(const OrientationType& rod) const
 
   OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
-  dim[0] = Detail::MonoclinicDim1InitValue;
-  dim[1] = Detail::MonoclinicDim2InitValue;
-  dim[2] = Detail::MonoclinicDim3InitValue;
-  step[0] = Detail::MonoclinicDim1StepValue;
-  step[1] = Detail::MonoclinicDim2StepValue;
-  step[2] = Detail::MonoclinicDim3StepValue;
-  bins[0] = 72.0f;
-  bins[1] = 36.0f;
-  bins[2] = 72.0f;
+  dim[0] = Monoclinic::OdfDimInitValue[0];
+  dim[1] = Monoclinic::OdfDimInitValue[1];
+  dim[2] = Monoclinic::OdfDimInitValue[2];
+  step[0] = Monoclinic::OdfDimStepValue[0];
+  step[1] = Monoclinic::OdfDimStepValue[1];
+  step[2] = Monoclinic::OdfDimStepValue[2];
+  bins[0] = static_cast<double>(Monoclinic::OdfNumBins[0]);
+  bins[1] = static_cast<double>(Monoclinic::OdfNumBins[1]);
+  bins[2] = static_cast<double>(Monoclinic::OdfNumBins[2]);
 
   return _calcODFBin(dim, bins, step, ho);
 }
@@ -433,22 +442,22 @@ void MonoclinicOps::getSchmidFactorAndSS(double load[3], double plane[3], double
   directionMag *= loadMag;
 
   //loop over symmetry operators finding highest schmid factor
-  for(int i = 0; i < k_NumSymQuats; i++)
+  for(int i = 0; i < Monoclinic::k_NumSymQuats; i++)
   {
     //compute slip system
     double slipPlane[3] = {0};
-    slipPlane[2] = MonoclinicMatSym[i][2][0] * plane[0] + MonoclinicMatSym[i][2][1] * plane[1] + MonoclinicMatSym[i][2][2] * plane[2];
+    slipPlane[2] = Monoclinic::MatSym[i][2][0] * plane[0] + Monoclinic::MatSym[i][2][1] * plane[1] + Monoclinic::MatSym[i][2][2] * plane[2];
 
     //dont consider negative z planes (to avoid duplicates)
     if( slipPlane[2] >= 0)
     {
-      slipPlane[0] = MonoclinicMatSym[i][0][0] * plane[0] + MonoclinicMatSym[i][0][1] * plane[1] + MonoclinicMatSym[i][0][2] * plane[2];
-      slipPlane[1] = MonoclinicMatSym[i][1][0] * plane[0] + MonoclinicMatSym[i][1][1] * plane[1] + MonoclinicMatSym[i][1][2] * plane[2];
+      slipPlane[0] = Monoclinic::MatSym[i][0][0] * plane[0] + Monoclinic::MatSym[i][0][1] * plane[1] + Monoclinic::MatSym[i][0][2] * plane[2];
+      slipPlane[1] = Monoclinic::MatSym[i][1][0] * plane[0] + Monoclinic::MatSym[i][1][1] * plane[1] + Monoclinic::MatSym[i][1][2] * plane[2];
 
       double slipDirection[3] = {0};
-      slipDirection[0] = MonoclinicMatSym[i][0][0] * direction[0] + MonoclinicMatSym[i][0][1] * direction[1] + MonoclinicMatSym[i][0][2] * direction[2];
-      slipDirection[1] = MonoclinicMatSym[i][1][0] * direction[0] + MonoclinicMatSym[i][1][1] * direction[1] + MonoclinicMatSym[i][1][2] * direction[2];
-      slipDirection[2] = MonoclinicMatSym[i][2][0] * direction[0] + MonoclinicMatSym[i][2][1] * direction[1] + MonoclinicMatSym[i][2][2] * direction[2];
+      slipDirection[0] = Monoclinic::MatSym[i][0][0] * direction[0] + Monoclinic::MatSym[i][0][1] * direction[1] + Monoclinic::MatSym[i][0][2] * direction[2];
+      slipDirection[1] = Monoclinic::MatSym[i][1][0] * direction[0] + Monoclinic::MatSym[i][1][1] * direction[1] + Monoclinic::MatSym[i][1][2] * direction[2];
+      slipDirection[2] = Monoclinic::MatSym[i][2][0] * direction[0] + Monoclinic::MatSym[i][2][1] * direction[1] + Monoclinic::MatSym[i][2][2] * direction[2];
 
       double cosPhi = fabs(load[0] * slipPlane[0] + load[1] * slipPlane[1] + load[2] * slipPlane[2]) / planeMag;
       double cosLambda = fabs(load[0] * slipDirection[0] + load[1] * slipDirection[1] + load[2] * slipDirection[2]) / directionMag;
@@ -488,8 +497,7 @@ double MonoclinicOps::getF7(const QuatType& q1, const QuatType& q2, double LD[3]
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-namespace Detail
-{
+
   namespace Monoclinic
   {
     class GenerateSphereCoordsImpl
@@ -558,30 +566,28 @@ namespace Detail
         }
 #endif
     };
-  }
-}
+    } // namespace Monoclinic
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MonoclinicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* xyz001, FloatArrayType* xyz011, FloatArrayType* xyz111) const
-{
-  size_t nOrientations = eulers->getNumberOfTuples();
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void MonoclinicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* xyz001, FloatArrayType* xyz011, FloatArrayType* xyz111) const
+    {
+      size_t nOrientations = eulers->getNumberOfTuples();
 
-
-  // Sanity Check the size of the arrays
-  if (xyz001->getNumberOfTuples() < nOrientations * Detail::Monoclinic::symSize0)
-  {
-    xyz001->resizeTuples(nOrientations * Detail::Monoclinic::symSize0 * 3);
-  }
-  if (xyz011->getNumberOfTuples() < nOrientations * Detail::Monoclinic::symSize1)
-  {
-    xyz011->resizeTuples(nOrientations * Detail::Monoclinic::symSize1 * 3);
-  }
-  if (xyz111->getNumberOfTuples() < nOrientations * Detail::Monoclinic::symSize2)
-  {
-    xyz111->resizeTuples(nOrientations * Detail::Monoclinic::symSize2 * 3);
-  }
+      // Sanity Check the size of the arrays
+      if(xyz001->getNumberOfTuples() < nOrientations * Monoclinic::symSize0)
+      {
+        xyz001->resizeTuples(nOrientations * Monoclinic::symSize0 * 3);
+      }
+      if(xyz011->getNumberOfTuples() < nOrientations * Monoclinic::symSize1)
+      {
+        xyz011->resizeTuples(nOrientations * Monoclinic::symSize1 * 3);
+      }
+      if(xyz111->getNumberOfTuples() < nOrientations * Monoclinic::symSize2)
+      {
+        xyz111->resizeTuples(nOrientations * Monoclinic::symSize2 * 3);
+      }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -591,17 +597,15 @@ void MonoclinicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, Float
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
-                      Detail::Monoclinic::GenerateSphereCoordsImpl(eulers, xyz001, xyz011, xyz111), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations), Monoclinic::GenerateSphereCoordsImpl(eulers, xyz001, xyz011, xyz111), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    Detail::Monoclinic::GenerateSphereCoordsImpl serial(eulers, xyz001, xyz011, xyz111);
+    Monoclinic::GenerateSphereCoordsImpl serial(eulers, xyz001, xyz011, xyz111);
     serial.generate(0, nOrientations);
   }
-
-}
+    }
 
 // -----------------------------------------------------------------------------
 //
@@ -641,7 +645,7 @@ SIMPL::Rgb MonoclinicOps::generateIPFColor(double phi1, double phi, double phi2,
   OrientationType om(9); // Reusable for the loop
   QuatType q1 = OrientationTransformation::eu2qu<OrientationType, QuatType>(eu);
 
-  for(int j = 0; j < k_NumSymQuats; j++)
+  for(int j = 0; j < Monoclinic::k_NumSymQuats; j++)
   {
     QuatType qu = getQuatSymOp(j) * q1;
     OrientationTransformation::qu2om<QuatType, OrientationType>(qu).toGMatrix(g);
@@ -707,9 +711,9 @@ SIMPL::Rgb MonoclinicOps::generateIPFColor(double phi1, double phi, double phi2,
 // -----------------------------------------------------------------------------
 SIMPL::Rgb MonoclinicOps::generateRodriguesColor(double r1, double r2, double r3) const
 {
-  double range1 = 2.0f * MonoclinicDim1InitValue;
-  double range2 = 2.0f * MonoclinicDim2InitValue;
-  double range3 = 2.0f * MonoclinicDim3InitValue;
+  double range1 = 2.0f * Monoclinic::OdfDimInitValue[0];
+  double range2 = 2.0f * Monoclinic::OdfDimInitValue[1];
+  double range3 = 2.0f * Monoclinic::OdfDimInitValue[2];
   double max1 = range1 / 2.0f;
   double max2 = range2 / 2.0f;
   double max3 = range3 / 2.0f;
@@ -746,11 +750,11 @@ QVector<UInt8ArrayType::Pointer> MonoclinicOps::generatePoleFigure(PoleFigureCon
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
   std::vector<size_t> dims(1, 3);
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::Monoclinic::symSize0, dims, label0 + QString("xyzCoords"), true);
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Monoclinic::symSize0, dims, label0 + QString("xyzCoords"), true);
   // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::Monoclinic::symSize1, dims, label1 + QString("xyzCoords"), true);
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Monoclinic::symSize1, dims, label1 + QString("xyzCoords"), true);
   // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::Monoclinic::symSize2, dims, label2 + QString("xyzCoords"), true);
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Monoclinic::symSize2, dims, label2 + QString("xyzCoords"), true);
 
   config.sphereRadius = 1.0f;
 

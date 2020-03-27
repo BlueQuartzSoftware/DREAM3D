@@ -35,6 +35,19 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
+#include "OrientationLib/LaueOps/CubicLowOps.h"
+#include "OrientationLib/LaueOps/CubicOps.h"
+#include "OrientationLib/LaueOps/HexagonalLowOps.h"
+#include "OrientationLib/LaueOps/HexagonalOps.h"
+#include "OrientationLib/LaueOps/MonoclinicOps.h"
+#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
+#include "OrientationLib/LaueOps/TetragonalLowOps.h"
+#include "OrientationLib/LaueOps/TetragonalOps.h"
+#include "OrientationLib/LaueOps/TriclinicOps.h"
+#include "OrientationLib/LaueOps/TrigonalLowOps.h"
+#include "OrientationLib/LaueOps/TrigonalOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
+#include "OrientationLib/Texture/StatsGen.hpp"
 #include "OrientationLib/Texture/Texture.hpp"
 
 #include "SIMPLib/StatsData/BoundaryStatsData.h"
@@ -60,26 +73,43 @@ StatsGeneratorUtilities::~StatsGeneratorUtilities() = default;
 void StatsGeneratorUtilities::GenerateODFBinData(StatsData* statsData, PhaseType::Type phaseType, unsigned int crystalStructure, QVector<float>& e1s, QVector<float>& e2s, QVector<float>& e3s,
                                                  QVector<float>& weights, QVector<float>& sigmas, bool computeODF)
 {
+  using ContainerType = QVector<float>;
 
-  QVector<float> odf;
+  ContainerType odf;
   size_t numEntries = e1s.size();
+  //// ODF/MDF Update Codes
+  if(computeODF)
+  {
+    LaueOps::Pointer ops = LaueOps::NullPointer();
+    switch(crystalStructure)
+    {
+    case Ebsd::CrystalStructure::Triclinic: // 4; Triclinic -1
+      Texture::CalculateODFData<float, TriclinicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    case Ebsd::CrystalStructure::Monoclinic: // 5; Monoclinic 2/m
+      Texture::CalculateODFData<float, MonoclinicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    case Ebsd::CrystalStructure::OrthoRhombic: // 6; Orthorhombic mmm
+      Texture::CalculateODFData<float, OrthoRhombicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    case Ebsd::CrystalStructure::Tetragonal_Low: // 7; Tetragonal-Low 4/m
+      Texture::CalculateODFData<float, TetragonalLowOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    case Ebsd::CrystalStructure::Tetragonal_High: // 8; Tetragonal-High 4/mmm
+      Texture::CalculateODFData<float, TetragonalOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    case Ebsd::CrystalStructure::Trigonal_Low: // 9; Trigonal-Low -3
+      Texture::CalculateODFData<float, TrigonalLowOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    case Ebsd::CrystalStructure::Trigonal_High: // 10; Trigonal-High -3m
+      Texture::CalculateODFData<float, TrigonalOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    case Ebsd::CrystalStructure::Hexagonal_Low: // 2; Hexagonal-Low 6/m
+      Texture::CalculateODFData<float, HexagonalLowOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    case Ebsd::CrystalStructure::Hexagonal_High: // 0; Hexagonal-High 6/mmm
+      Texture::CalculateODFData<float, HexagonalOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    case Ebsd::CrystalStructure::Cubic_Low: // 3; Cubic Cubic-Low m3 (Tetrahedral)
+      Texture::CalculateODFData<float, CubicLowOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    case Ebsd::CrystalStructure::Cubic_High: // 1; Cubic Cubic-High m3m
+      Texture::CalculateODFData<float, CubicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    default:
+      break;
+    }
+  }
 
-  if(Ebsd::CrystalStructure::Cubic_High == crystalStructure)
-  {
-    odf.resize(CubicOps::k_OdfSize);
-    if(computeODF)
-    {
-      Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
-    }
-  }
-  else if(Ebsd::CrystalStructure::Hexagonal_High == crystalStructure)
-  {
-    odf.resize(HexagonalOps::k_OdfSize);
-    if(computeODF)
-    {
-      Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
-    }
-  }
   if(!odf.empty())
   {
     FloatArrayType::Pointer p = FloatArrayType::FromQVector(odf, SIMPL::StringConstants::ODF);
@@ -137,13 +167,14 @@ void StatsGeneratorUtilities::GenerateODFBinData(StatsData* statsData, PhaseType
 void StatsGeneratorUtilities::GenerateAxisODFBinData(StatsData* statsData, PhaseType::Type phaseType, QVector<float>& e1s, QVector<float>& e2s, QVector<float>& e3s, QVector<float>& weights,
                                                      QVector<float>& sigmas, bool computeAxisODF)
 {
-  QVector<float> aodf;
+  using ContainerType = QVector<float>;
+  ContainerType aodf;
   size_t numEntries = e1s.size();
-
-  aodf.resize(OrthoRhombicOps::k_OdfSize);
+  OrthoRhombicOps ops;
+  aodf.resize(ops.getODFSize());
   if(computeAxisODF)
   {
-    Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, aodf.data(), numEntries);
+    Texture::CalculateODFData<float, OrthoRhombicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, aodf, numEntries);
   }
 
   if(!aodf.empty())
@@ -203,58 +234,113 @@ void StatsGeneratorUtilities::GenerateAxisODFBinData(StatsData* statsData, Phase
 QVector<float> StatsGeneratorUtilities::GenerateODFData(unsigned int crystalStructure, QVector<float>& e1s, QVector<float>& e2s, QVector<float>& e3s, QVector<float>& weights, QVector<float>& sigmas,
                                                         bool computeODF)
 {
-  QVector<float> odf;
 
+  using ContainerType = QVector<float>;
+  ContainerType odf;
+  //// ODF/MDF Update Codes
   size_t numEntries = static_cast<size_t>(e1s.size());
 
-  if(Ebsd::CrystalStructure::Cubic_High == crystalStructure)
+  if(computeODF)
   {
+    LaueOps::Pointer ops = LaueOps::NullPointer();
+    switch(crystalStructure)
+    {
+    case Ebsd::CrystalStructure::Triclinic: // 4; Triclinic -1
+      Texture::CalculateODFData<float, TriclinicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+      break;
+    case Ebsd::CrystalStructure::Monoclinic: // 5; Monoclinic 2/m
+      Texture::CalculateODFData<float, MonoclinicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+      break;
+    case Ebsd::CrystalStructure::OrthoRhombic: // 6; Orthorhombic mmm
+      Texture::CalculateODFData<float, OrthoRhombicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+      break;
+    case Ebsd::CrystalStructure::Tetragonal_Low: // 7; Tetragonal-Low 4/m
+      Texture::CalculateODFData<float, TetragonalLowOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+      break;
+    case Ebsd::CrystalStructure::Tetragonal_High: // 8; Tetragonal-High 4/mmm
+      Texture::CalculateODFData<float, TetragonalOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+      break;
+    case Ebsd::CrystalStructure::Trigonal_Low: // 9; Trigonal-Low -3
+      Texture::CalculateODFData<float, TrigonalLowOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+      break;
+    case Ebsd::CrystalStructure::Trigonal_High: // 10; Trigonal-High -3m
+      Texture::CalculateODFData<float, TrigonalOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+      break;
+    case Ebsd::CrystalStructure::Hexagonal_Low: // 2; Hexagonal-Low 6/m
+      Texture::CalculateODFData<float, HexagonalLowOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+      break;
+    case Ebsd::CrystalStructure::Hexagonal_High: // 0; Hexagonal-High 6/mmm
+      Texture::CalculateODFData<float, HexagonalOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+      break;
+    case Ebsd::CrystalStructure::Cubic_Low: // 3; Cubic Cubic-Low m3 (Tetrahedral)
+      Texture::CalculateODFData<float, CubicLowOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+      break;
+    case Ebsd::CrystalStructure::Cubic_High: // 1; Cubic Cubic-High m3m
+      Texture::CalculateODFData<float, CubicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+      break;
+    default:
+      break;
+    }
+  }
 
-    odf.resize(CubicOps::k_OdfSize);
-    if(computeODF)
-    {
-      Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
-    }
-  }
-  else if(Ebsd::CrystalStructure::Hexagonal_High == crystalStructure)
-  {
-    odf.resize(HexagonalOps::k_OdfSize);
-    if(computeODF)
-    {
-      Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
-    }
-  }
   return odf;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorUtilities::GenerateMisorientationBinData(StatsData* statsData, PhaseType::Type phaseType, unsigned int crystalStruct, QVector<float>& odf, QVector<float>& angles,
+void StatsGeneratorUtilities::GenerateMisorientationBinData(StatsData* statsData, PhaseType::Type phaseType, unsigned int crystalStructure, QVector<float>& odf, QVector<float>& angles,
                                                             QVector<float>& axes, QVector<float>& weights, bool computeMDF)
 {
-  QVector<float> x;
-  QVector<float> y;
-  QVector<float> mdf;
+  using ContainerType = QVector<float>;
 
-  if(Ebsd::CrystalStructure::Cubic_High == crystalStruct)
+  ContainerType x;
+  ContainerType y;
+  ContainerType mdf;
+  //// ODF/MDF Update Codes
+  if(computeMDF)
   {
-    mdf.resize(CubicOps::k_MdfSize);
-    if(computeMDF)
+    LaueOps::Pointer ops = LaueOps::NullPointer();
+    switch(crystalStructure)
     {
-      Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
+    case Ebsd::CrystalStructure::Triclinic: // 4; Triclinic -1
+      Texture::CalculateMDFData<float, TriclinicOps, ContainerType>(angles, axes, weights, odf, mdf, angles.size());
+      break;
+    case Ebsd::CrystalStructure::Monoclinic: // 5; Monoclinic 2/m
+      Texture::CalculateMDFData<float, MonoclinicOps, ContainerType>(angles, axes, weights, odf, mdf, angles.size());
+      break;
+    case Ebsd::CrystalStructure::OrthoRhombic: // 6; Orthorhombic mmm
+      Texture::CalculateMDFData<float, OrthoRhombicOps, ContainerType>(angles, axes, weights, odf, mdf, angles.size());
+      break;
+    case Ebsd::CrystalStructure::Tetragonal_Low: // 7; Tetragonal-Low 4/m
+      Texture::CalculateMDFData<float, TetragonalLowOps, ContainerType>(angles, axes, weights, odf, mdf, angles.size());
+      break;
+    case Ebsd::CrystalStructure::Tetragonal_High: // 8; Tetragonal-High 4/mmm
+      Texture::CalculateMDFData<float, TetragonalOps, ContainerType>(angles, axes, weights, odf, mdf, angles.size());
+      break;
+    case Ebsd::CrystalStructure::Trigonal_Low: // 9; Trigonal-Low -3
+      Texture::CalculateMDFData<float, TrigonalLowOps, ContainerType>(angles, axes, weights, odf, mdf, angles.size());
+      break;
+    case Ebsd::CrystalStructure::Trigonal_High: // 10; Trigonal-High -3m
+      Texture::CalculateMDFData<float, TrigonalOps, ContainerType>(angles, axes, weights, odf, mdf, angles.size());
+      break;
+    case Ebsd::CrystalStructure::Hexagonal_Low: // 2; Hexagonal-Low 6/m
+      Texture::CalculateMDFData<float, HexagonalLowOps, ContainerType>(angles, axes, weights, odf, mdf, angles.size());
+      break;
+    case Ebsd::CrystalStructure::Hexagonal_High: // 0; Hexagonal-High 6/mmm
+      Texture::CalculateMDFData<float, HexagonalOps, ContainerType>(angles, axes, weights, odf, mdf, angles.size());
+      break;
+    case Ebsd::CrystalStructure::Cubic_Low: // 3; Cubic Cubic-Low m3 (Tetrahedral)
+      Texture::CalculateMDFData<float, CubicLowOps, ContainerType>(angles, axes, weights, odf, mdf, angles.size());
+      break;
+    case Ebsd::CrystalStructure::Cubic_High: // 1; Cubic Cubic-High m3m
+      Texture::CalculateMDFData<float, CubicOps, ContainerType>(angles, axes, weights, odf, mdf, angles.size());
+      break;
+    default:
+      break;
     }
-    // nElements = 18 * 18 * 18;
   }
-  else if(Ebsd::CrystalStructure::Hexagonal_High == crystalStruct)
-  {
-    mdf.resize(HexagonalOps::k_MdfSize);
-    if(computeMDF)
-    {
-      Texture::CalculateMDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
-    }
-    // nElements = 36 * 36 * 12;
-  }
+
   if(!mdf.empty())
   {
     FloatArrayType::Pointer p = FloatArrayType::CopyFromPointer(mdf.data(), mdf.size(), SIMPL::StringConstants::MisorientationBins);

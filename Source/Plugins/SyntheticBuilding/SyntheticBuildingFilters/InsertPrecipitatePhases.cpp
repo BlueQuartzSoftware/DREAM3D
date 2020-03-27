@@ -35,19 +35,17 @@
  *    United States Prime Contract Navy N00173-07-C-2068
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#include <memory>
-
 #include "InsertPrecipitatePhases.h"
 
+#include <memory>
 #include <fstream>
+#include <random>
+#include <chrono>
 
 #include <QtCore/QDir>
-
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -1650,7 +1648,8 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* prec
       break;
     }
   }
-  OrientationD eulers = OrthoOps->determineEulerAngles(m_Seed, bin);
+  std::array<double, 3> randx3 = {rg.genrand_res53(), rg.genrand_res53(), rg.genrand_res53()};
+  OrientationD eulers = OrthoOps->determineEulerAngles(randx3.data(), bin);
   VectorOfFloatArray omega3 = pp->getFeatureSize_Omegas();
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);

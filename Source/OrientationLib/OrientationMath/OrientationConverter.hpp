@@ -45,11 +45,10 @@
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/OrientationMath/OrientationRepresentation.h"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/OrientationRepresentation.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
@@ -57,7 +56,6 @@
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
-
 
 /**
  * @brief This is the top level superclass for doing the conversions between orientation

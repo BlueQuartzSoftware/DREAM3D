@@ -195,9 +195,9 @@ int StatsGenAxisODFWidget::getOrientationData(StatsData* statsData, PhaseType::T
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
-//  QVector<float> e1Rad = e1s;
-//  QVector<float> e2Rad = e2s;
-//  QVector<float> e3Rad = e3s;
+  //  QVector<float> e1Rad = e1s;
+  //  QVector<float> e2Rad = e2s;
+  //  QVector<float> e3Rad = e3s;
 
   // Convert from Degrees to Radians
   for(QVector<float>::size_type i = 0; i < e1s.size(); i++)
@@ -300,7 +300,6 @@ void StatsGenAxisODFWidget::setupGui()
     m_PFLambertSize->hide();
     m_PFLambertLabel->hide();
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -432,13 +431,13 @@ void StatsGenAxisODFWidget::on_m_CalculateODFBtn_clicked()
 void StatsGenAxisODFWidget::calculateAxisODF()
 {
   int err = 0;
-
-  QwtArray<float> e1s;
-  QwtArray<float> e2s;
-  QwtArray<float> e3s;
-  QwtArray<float> weights;
-  QwtArray<float> sigmas;
-  QwtArray<float> odf;
+  using ContainerType = QwtArray<float>;
+  ContainerType e1s;
+  ContainerType e2s;
+  ContainerType e3s;
+  ContainerType weights;
+  ContainerType sigmas;
+  ContainerType odf;
 
   e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
   e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
@@ -460,14 +459,12 @@ void StatsGenAxisODFWidget::calculateAxisODF()
   int npoints = pfSamplePoints->value();
   std::vector<size_t> dims(1, 3);
   FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers", true);
+  OrthoRhombicOps ops;
 
-  odf.resize(OrthoRhombicOps::k_OdfSize);
-
-  Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
+  Texture::CalculateODFData<float, OrthoRhombicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
 
   err = StatsGen::GenAxisODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
-  OrthoRhombicOps ops;
   PoleFigureConfiguration_t config;
   config.eulers = eulers.get();
   config.imageDim = imageSize;
@@ -475,13 +472,13 @@ void StatsGenAxisODFWidget::calculateAxisODF()
   config.numColors = numColors;
   config.discrete = true;
   config.discreteHeatMap = false;
-    
+
   // Check if the user wants a Discreet or Lambert PoleFigure
   if(m_PFTypeCB->currentIndex() == 1)
   {
     config.discrete = false;
   }
-  
+
   QVector<QString> labels(3);
   labels[0] = QString("C Axis"); // 001
   labels[1] = QString("A Axis"); // 100

@@ -75,10 +75,6 @@ class OrientationLib_EXPORT HexagonalOps : public LaueOps
     HexagonalOps();
     ~HexagonalOps() override;
 
-    static const int k_OdfSize = 15552;
-    static const int k_MdfSize = 15552;
-    static const int k_NumSymQuats = 12;
-
     /**
      * @brief getHasInversion Returns if this Laue class has inversion
      * @return
@@ -109,8 +105,11 @@ class OrientationLib_EXPORT HexagonalOps : public LaueOps
      */
     QString getSymmetryName() const override;
 
-    virtual void getInitializedODFBinDimensions(double dims[3]);
-    virtual void getOdfBinStepSize(double step[3]);
+    /**
+     * @brief Returns the number of bins in each of the 3 dimensions
+     * @return
+     */
+    std::array<size_t, 3> getOdfNumBins() const override;
 
     double getMisoQuat(QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const override;
     float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3) const override;
@@ -130,9 +129,9 @@ class OrientationLib_EXPORT HexagonalOps : public LaueOps
     QuatType getFZQuat(const QuatType& qr) const override;
     int getMisoBin(const OrientationType& rod) const override;
     bool inUnitTriangle(double eta, double chi) const override;
-    OrientationType determineEulerAngles(uint64_t seed, int choose) const override;
+    OrientationType determineEulerAngles(double random[3], int choose) const override;
     OrientationType randomizeEulerAngles(const OrientationType& euler) const override;
-    OrientationType determineRodriguesVector(uint64_t seed, int choose) const override;
+    OrientationType determineRodriguesVector(double random[3], int choose) const override;
     int getOdfBin(const OrientationType& rod) const override;
     void getSchmidFactorAndSS(double load[3], double& schmidfactor, double angleComps[2], int& slipsys) const override;
     void getSchmidFactorAndSS(double load[3], double plane[3], double direction[3], double& schmidfactor, double angleComps[2], int& slipsys) const override;

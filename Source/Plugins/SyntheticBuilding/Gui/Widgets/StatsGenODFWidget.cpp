@@ -68,6 +68,18 @@
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 
 #include "OrientationLib/IO/AngleFileLoader.h"
+#include "OrientationLib/LaueOps/CubicLowOps.h"
+#include "OrientationLib/LaueOps/CubicOps.h"
+#include "OrientationLib/LaueOps/HexagonalLowOps.h"
+#include "OrientationLib/LaueOps/HexagonalOps.h"
+#include "OrientationLib/LaueOps/MonoclinicOps.h"
+#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
+#include "OrientationLib/LaueOps/TetragonalLowOps.h"
+#include "OrientationLib/LaueOps/TetragonalOps.h"
+#include "OrientationLib/LaueOps/TriclinicOps.h"
+#include "OrientationLib/LaueOps/TrigonalLowOps.h"
+#include "OrientationLib/LaueOps/TrigonalOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 #include "OrientationLib/Texture/StatsGen.hpp"
 #include "OrientationLib/Texture/Texture.hpp"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
@@ -264,10 +276,10 @@ void StatsGenODFWidget::setPhaseIndex(int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::updatePFStatus(const QString &msg)
+void StatsGenODFWidget::updatePFStatus(const QString& msg)
 {
-    m_PFStatusLabel->setText(msg);
-    m_PFStatusLabel->setVisible(!msg.isEmpty());
+  m_PFStatusLabel->setText(msg);
+  m_PFStatusLabel->setVisible(!msg.isEmpty());
 }
 
 // -----------------------------------------------------------------------------
@@ -283,11 +295,10 @@ int StatsGenODFWidget::getPhaseIndex()
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::on_m_PFTypeCB_currentIndexChanged(int index)
 {
-  m_PFLambertLabel->setVisible( (index == 1));
-  m_PFLambertSize->setVisible( (index == 1));
+  m_PFLambertLabel->setVisible((index == 1));
+  m_PFLambertSize->setVisible((index == 1));
   updatePFStatus(QString("Click Refresh Button"));
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -309,7 +320,7 @@ void StatsGenODFWidget::on_m_ImageLayoutCB_currentIndexChanged(int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void  StatsGenODFWidget::on_m_PFLambertSize_valueChanged(int i)
+void StatsGenODFWidget::on_m_PFLambertSize_valueChanged(int i)
 {
   updatePFStatus(QString("Click Refresh Button"));
 }
@@ -513,12 +524,14 @@ void StatsGenODFWidget::calculateODF()
   progressDialog->raise();
   progressDialog->activateWindow();
 
-  QwtArray<float> e1s;
-  QwtArray<float> e2s;
-  QwtArray<float> e3s;
-  QwtArray<float> weights;
-  QwtArray<float> sigmas;
-  QwtArray<float> odf;
+  using ContainerType = std::vector<float>;
+  ContainerType e1s;
+  ContainerType e2s;
+  ContainerType e3s;
+  ContainerType weights;
+  ContainerType sigmas;
+  ContainerType odf;
+
   SGODFTableModel* tableModel = nullptr;
 
   int npoints = 0;
@@ -533,14 +546,14 @@ void StatsGenODFWidget::calculateODF()
     npoints = tableModel->rowCount();
   }
 
-  e1s = tableModel->getData(SGODFTableModel::Euler1);
-  e2s = tableModel->getData(SGODFTableModel::Euler2);
-  e3s = tableModel->getData(SGODFTableModel::Euler3);
-  weights = tableModel->getData(SGODFTableModel::Weight);
-  sigmas = tableModel->getData(SGODFTableModel::Sigma);
+  e1s = tableModel->getData(SGODFTableModel::Euler1).toStdVector();
+  e2s = tableModel->getData(SGODFTableModel::Euler2).toStdVector();
+  e3s = tableModel->getData(SGODFTableModel::Euler3).toStdVector();
+  weights = tableModel->getData(SGODFTableModel::Weight).toStdVector();
+  sigmas = tableModel->getData(SGODFTableModel::Sigma).toStdVector();
 
   // Convert from Degrees to Radians
-  for(int i = 0; i < e1s.size(); i++)
+  for(ContainerType::size_type i = 0; i < e1s.size(); i++)
   {
     e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
     e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
@@ -561,69 +574,98 @@ void StatsGenODFWidget::calculateODF()
   config.numColors = numColors;
   config.discrete = true;
   config.discreteHeatMap = false;
-  
+
   // Check if the user wants a Discreet or Lambert PoleFigure
   if(m_PFTypeCB->currentIndex() == 1)
   {
     config.discrete = false;
   }
   QVector<UInt8ArrayType::Pointer> figures;
-  
 
-  if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
+  //// ODF/MDF Update Codes
+  LaueOps::Pointer ops = LaueOps::NullPointer();
+  switch(m_CrystalStructure)
   {
-    // We now need to resize all the arrays here to make sure they are all allocated
-    odf.resize(CubicOps::k_OdfSize);
-    Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
-
-    err = StatsGen::GenCubicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
-
-    CubicOps ops;
-    figures = ops.generatePoleFigure(config);
+  case Ebsd::CrystalStructure::Triclinic: // 4; Triclinic -1
+    Texture::CalculateODFData<float, TriclinicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    err = StatsGen::GenODFPlotData<float, TriclinicOps, ContainerType>(odf, eulers->getPointer(0), npoints);
+    ops = TriclinicOps::New();
+    break;
+  case Ebsd::CrystalStructure::Monoclinic: // 5; Monoclinic 2/m
+    Texture::CalculateODFData<float, MonoclinicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    err = StatsGen::GenODFPlotData<float, MonoclinicOps, ContainerType>(odf, eulers->getPointer(0), npoints);
+    ops = MonoclinicOps::New();
+    break;
+  case Ebsd::CrystalStructure::OrthoRhombic: // 6; Orthorhombic mmm
+    Texture::CalculateODFData<float, OrthoRhombicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    err = StatsGen::GenODFPlotData<float, OrthoRhombicOps, ContainerType>(odf, eulers->getPointer(0), npoints);
+    ops = OrthoRhombicOps::New();
+    break;
+  case Ebsd::CrystalStructure::Tetragonal_Low: // 7; Tetragonal-Low 4/m
+    Texture::CalculateODFData<float, TetragonalLowOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    err = StatsGen::GenODFPlotData<float, TetragonalLowOps, ContainerType>(odf, eulers->getPointer(0), npoints);
+    ops = TetragonalLowOps::New();
+    break;
+  case Ebsd::CrystalStructure::Tetragonal_High: // 8; Tetragonal-High 4/mmm
+    Texture::CalculateODFData<float, TetragonalOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    err = StatsGen::GenODFPlotData<float, TetragonalOps, ContainerType>(odf, eulers->getPointer(0), npoints);
+    ops = TetragonalOps::New();
+    break;
+  case Ebsd::CrystalStructure::Trigonal_Low: // 9; Trigonal-Low -3
+    Texture::CalculateODFData<float, TrigonalLowOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    err = StatsGen::GenODFPlotData<float, TrigonalLowOps, ContainerType>(odf, eulers->getPointer(0), npoints);
+    ops = TrigonalLowOps::New();
+    break;
+  case Ebsd::CrystalStructure::Trigonal_High: // 10; Trigonal-High -3m
+    Texture::CalculateODFData<float, TrigonalOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    err = StatsGen::GenODFPlotData<float, TrigonalOps, ContainerType>(odf, eulers->getPointer(0), npoints);
+    ops = TrigonalOps::New();
+    break;
+  case Ebsd::CrystalStructure::Hexagonal_Low: // 2; Hexagonal-Low 6/m
+    Texture::CalculateODFData<float, HexagonalLowOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    err = StatsGen::GenODFPlotData<float, HexagonalLowOps, ContainerType>(odf, eulers->getPointer(0), npoints);
+    ops = HexagonalLowOps::New();
+    break;
+  case Ebsd::CrystalStructure::Hexagonal_High: // 0; Hexagonal-High 6/mmm
+    Texture::CalculateODFData<float, HexagonalOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    err = StatsGen::GenODFPlotData<float, HexagonalOps, ContainerType>(odf, eulers->getPointer(0), npoints);
+    ops = HexagonalOps::New();
+    break;
+  case Ebsd::CrystalStructure::Cubic_Low: // 3; Cubic Cubic-Low m3 (Tetrahedral)
+    Texture::CalculateODFData<float, CubicLowOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    err = StatsGen::GenODFPlotData<float, CubicLowOps, ContainerType>(odf, eulers->getPointer(0), npoints);
+    ops = CubicLowOps::New();
+    break;
+  case Ebsd::CrystalStructure::Cubic_High: // 1; Cubic Cubic-High m3m
+    Texture::CalculateODFData<float, CubicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
+    err = StatsGen::GenODFPlotData<float, CubicOps, ContainerType>(odf, eulers->getPointer(0), npoints);
+    ops = CubicOps::New();
+    break;
+  default:
+    err = -1;
+    break;
   }
-  else if(Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
+
+  if(err < 0)
   {
-    // We now need to resize all the arrays here to make sure they are all allocated
-    odf.resize(HexagonalOps::k_OdfSize);
-    Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
-
-    err = StatsGen::GenHexODFPlotData(odf.data(), eulers->getPointer(0), npoints);
-
-    HexagonalOps ops;
-    figures = ops.generatePoleFigure(config);
-  }
-  else if(Ebsd::CrystalStructure::OrthoRhombic == m_CrystalStructure)
-  {
-    // We now need to resize all the arrays here to make sure they are all allocated
-    odf.resize(OrthoRhombicOps::k_OdfSize);
-    Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
-
-    err = StatsGen::GenOrthoRhombicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
-
-    OrthoRhombicOps ops;
-    figures = ops.generatePoleFigure(config);
-  }
-  else
-  {
-    err = 1;
-    QString ss("Only Cubic_High, Hexagonal_High or OrthoRhombic are allowed for the Laue group.");
+    QString ss("Error creating the ODF Plots");
     QMessageBox::StandardButton reply;
     reply = QMessageBox::critical(nullptr, QString("ODF Generation Error"), ss, QMessageBox::Ok);
     Q_UNUSED(reply);
   }
-
-  if(err == 1)
+  else
   {
-    delete progressDialog;
-    // TODO: Present Error Message
-    return;
+    if(nullptr != ops.get())
+    {
+      figures = ops->generatePoleFigure(config);
+    }
+
+    QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, m_ImageLayoutCB->currentIndex());
+    m_PoleFigureLabel->setPixmap(QPixmap::fromImage(image));
+    emit dataChanged();
   }
 
-  QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, m_ImageLayoutCB->currentIndex());
-  m_PoleFigureLabel->setPixmap(QPixmap::fromImage(image));
-    
   delete progressDialog;
-  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -860,58 +902,58 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
 #endif
   }
 
-    anglesInDegrees->setEnabled(true);
-    angleRepresentation->setEnabled(true);
-    delimiter->setEnabled(true);
-    progress.setValue(1);
-    progress.setLabelText("[1/3] Reading File ...");
-    AngleFileLoader::Pointer loader = AngleFileLoader::New();
-    loader->setInputFile(angleFilePath->text());
-    loader->setAngleRepresentation(angleRepresentation->currentIndex());
-    loader->setFileAnglesInDegrees(anglesInDegrees->isChecked());
-    loader->setOutputAnglesInDegrees(true);
-    QString delim;
-    int index = delimiter->currentIndex();
-    switch(index)
-    {
-    case 0:
-      delim = " ";
-      break;
-    case 1:
-      delim = "\t";
-      break;
-    case 2:
-      delim = ",";
-      break;
-    case 3:
-      delim = ";";
-      break;
-    default:
-      delim = " ";
-    }
+  anglesInDegrees->setEnabled(true);
+  angleRepresentation->setEnabled(true);
+  delimiter->setEnabled(true);
+  progress.setValue(1);
+  progress.setLabelText("[1/3] Reading File ...");
+  AngleFileLoader::Pointer loader = AngleFileLoader::New();
+  loader->setInputFile(angleFilePath->text());
+  loader->setAngleRepresentation(angleRepresentation->currentIndex());
+  loader->setFileAnglesInDegrees(anglesInDegrees->isChecked());
+  loader->setOutputAnglesInDegrees(true);
+  QString delim;
+  int index = delimiter->currentIndex();
+  switch(index)
+  {
+  case 0:
+    delim = " ";
+    break;
+  case 1:
+    delim = "\t";
+    break;
+  case 2:
+    delim = ",";
+    break;
+  case 3:
+    delim = ";";
+    break;
+  default:
+    delim = " ";
+  }
 
-    loader->setDelimiter(delim);
-    FloatArrayType::Pointer data = loader->loadData();
-    if(loader->getErrorCode() < 0)
-    {
-      QMessageBox::critical(this, "Error Loading Angle data", loader->getErrorMessage(), QMessageBox::Ok);
-      emit bulkLoadEvent(true);
-      return;
-    }
-    count = data->getNumberOfTuples();
-    e1s.resize(count);
-    e2s.resize(count);
-    e3s.resize(count);
-    weights.resize(count);
-    sigmas.resize(count);
-    for(size_t i = 0; i < count; ++i)
-    {
-      e1s[i] = data->getComponent(i, 0);
-      e2s[i] = data->getComponent(i, 1);
-      e3s[i] = data->getComponent(i, 2);
-      weights[i] = data->getComponent(i, 3);
-      sigmas[i] = data->getComponent(i, 4);
-    }
+  loader->setDelimiter(delim);
+  FloatArrayType::Pointer data = loader->loadData();
+  if(loader->getErrorCode() < 0)
+  {
+    QMessageBox::critical(this, "Error Loading Angle data", loader->getErrorMessage(), QMessageBox::Ok);
+    emit bulkLoadEvent(true);
+    return;
+  }
+  count = data->getNumberOfTuples();
+  e1s.resize(count);
+  e2s.resize(count);
+  e3s.resize(count);
+  weights.resize(count);
+  sigmas.resize(count);
+  for(size_t i = 0; i < count; ++i)
+  {
+    e1s[i] = data->getComponent(i, 0);
+    e2s[i] = data->getComponent(i, 1);
+    e3s[i] = data->getComponent(i, 2);
+    weights[i] = data->getComponent(i, 3);
+    sigmas[i] = data->getComponent(i, 4);
+  }
 
   progress.setValue(2);
   progress.setLabelText("[2/3] Rendering Pole Figure ...");

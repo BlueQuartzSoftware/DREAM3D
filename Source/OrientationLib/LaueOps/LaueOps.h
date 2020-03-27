@@ -136,6 +136,12 @@ class OrientationLib_EXPORT LaueOps
     virtual QString getSymmetryName() const = 0;
 
     /**
+     * @brief Returns the number of bins in each of the 3 dimensions
+     * @return
+     */
+    virtual std::array<size_t, 3> getOdfNumBins() const = 0;
+
+    /**
      * @brief getMisoQuat Finds the misorientation
      * @param q1
      * @param q2
@@ -170,13 +176,13 @@ class OrientationLib_EXPORT LaueOps
 
     virtual bool inUnitTriangle(double eta, double chi) const = 0;
 
-    virtual OrientationType determineEulerAngles(uint64_t seed, int choose) const = 0;
+    virtual OrientationType determineEulerAngles(double random[3], int choose) const = 0;
 
     virtual OrientationType randomizeEulerAngles(const OrientationType& euler) const = 0;
 
     virtual size_t getRandomSymmetryOperatorIndex(int numSymOps) const;
 
-    virtual OrientationType determineRodriguesVector(uint64_t seed, int choose) const = 0;
+    virtual OrientationType determineRodriguesVector(double random[3], int choose) const = 0;
 
     virtual int getOdfBin(const OrientationType& rod) const = 0;
 
@@ -254,7 +260,7 @@ class OrientationLib_EXPORT LaueOps
     QuatType _calcQuatNearestOrigin(const QuatType quatsym[24], int numsym, const QuatType& qr) const;
 
     int _calcMisoBin(double dim[3], double bins[3], double step[3], const OrientationType& homochoric) const;
-    void _calcDetermineHomochoricValues(uint64_t seed, double init[3], double step[3], int32_t phi[3], int choose, double& r1, double& r2, double& r3) const;
+    void _calcDetermineHomochoricValues(double random[3], double init[3], double step[3], int32_t phi[3], double& r1, double& r2, double& r3) const;
     int _calcODFBin(double dim[3], double bins[3], double step[3], const OrientationType& homochoric) const;
 
   public:

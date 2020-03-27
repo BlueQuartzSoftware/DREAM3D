@@ -57,40 +57,32 @@
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 #include "OrientationLib/Utilities/ComputeStereographicProjection.h"
 
-namespace Detail
-{
-static const double CubicLowDim1InitValue = std::pow((0.75f * (SIMPLib::Constants::k_PiOver2 - sinf(SIMPLib::Constants::k_PiOver2))), (1.0f / 3.0));
-static const double CubicLowDim2InitValue = std::pow((0.75f * (SIMPLib::Constants::k_PiOver2 - sinf(SIMPLib::Constants::k_PiOver2))), (1.0f / 3.0));
-static const double CubicLowDim3InitValue = std::pow((0.75f * (SIMPLib::Constants::k_PiOver2 - sinf(SIMPLib::Constants::k_PiOver2))), (1.0f / 3.0));
-static const double CubicLowDim1StepValue = CubicLowDim1InitValue / 18.0f;
-static const double CubicLowDim2StepValue = CubicLowDim2InitValue / 18.0f;
-static const double CubicLowDim3StepValue = CubicLowDim3InitValue / 18.0f;
-
-} // namespace Detail
-
 namespace CubicLow
 {
+
+static const std::array<size_t, 3> OdfNumBins = {36, 36, 36}; // Represents a 5Deg bin
+static const std::array<double, 3> OdfDimInitValue = {std::pow((0.75f * (SIMPLib::Constants::k_PiOver2 - sinf(SIMPLib::Constants::k_PiOver2))), (1.0f / 3.0)),
+                                                      std::pow((0.75f * (SIMPLib::Constants::k_PiOver2 - sinf(SIMPLib::Constants::k_PiOver2))), (1.0f / 3.0)),
+                                                      std::pow((0.75f * (SIMPLib::Constants::k_PiOver2 - sinf(SIMPLib::Constants::k_PiOver2))), (1.0f / 3.0))};
+static const std::array<double, 3> OdfDimStepValue = {OdfDimInitValue[0] / static_cast<double>(OdfNumBins[0] / 2), OdfDimInitValue[1] / static_cast<double>(OdfNumBins[1] / 2),
+                                                      OdfDimInitValue[2] / static_cast<double>(OdfNumBins[2] / 2)};
 
 static const int symSize0 = 6;
 static const int symSize1 = 12;
 static const int symSize2 = 8;
+
+static const int k_OdfSize = 46656;
+static const int k_MdfSize = 46656;
+static const int k_NumSymQuats = 12;
+
 static const QuatType QuatSym[12] = {
     QuatType(0.000000000, 0.000000000, 0.000000000, 1.000000000),   QuatType(1.000000000, 0.000000000, 0.000000000, 0.000000000),   QuatType(0.000000000, 1.000000000, 0.000000000, 0.000000000),
     QuatType(0.000000000, 0.000000000, 1.000000000, 0.000000000),   QuatType(0.500000000, 0.500000000, 0.500000000, 0.500000000),   QuatType(-0.500000000, -0.500000000, -0.500000000, 0.500000000),
     QuatType(0.500000000, -0.500000000, 0.500000000, 0.500000000),  QuatType(-0.500000000, 0.500000000, -0.500000000, 0.500000000), QuatType(-0.500000000, 0.500000000, 0.500000000, 0.500000000),
     QuatType(0.500000000, -0.500000000, -0.500000000, 0.500000000), QuatType(-0.500000000, -0.500000000, 0.500000000, 0.500000000), QuatType(0.500000000, 0.500000000, -0.500000000, 0.500000000)};
+
 static const double RodSym[12][3] = {{0.0, 0.0, 0.0},  {10000000000.0, 0.0, 0.0}, {0.0, 10000000000.0, 0.0}, {0.0, 0.0, 10000000000.0}, {1.0, 1.0, 1.0},   {-1.0, -1.0, -1.0},
                                      {1.0, -1.0, 1.0}, {-1.0, 1.0, -1.0},         {-1.0, 1.0, 1.0},          {1.0, -1.0, -1.0},         {-1.0, -1.0, 1.0}, {1.0, 1.0, -1.0}};
-
-} // namespace CubicLow
-static const QuatType CubicLowQuatSym[12] = {
-    QuatType(0.000000000, 0.000000000, 0.000000000, 1.000000000),   QuatType(1.000000000, 0.000000000, 0.000000000, 0.000000000),   QuatType(0.000000000, 1.000000000, 0.000000000, 0.000000000),
-    QuatType(0.000000000, 0.000000000, 1.000000000, 0.000000000),   QuatType(0.500000000, 0.500000000, 0.500000000, 0.500000000),   QuatType(-0.500000000, -0.500000000, -0.500000000, 0.500000000),
-    QuatType(0.500000000, -0.500000000, 0.500000000, 0.500000000),  QuatType(-0.500000000, 0.500000000, -0.500000000, 0.500000000), QuatType(-0.500000000, 0.500000000, 0.500000000, 0.500000000),
-    QuatType(0.500000000, -0.500000000, -0.500000000, 0.500000000), QuatType(-0.500000000, -0.500000000, 0.500000000, 0.500000000), QuatType(0.500000000, 0.500000000, -0.500000000, 0.500000000)};
-
-static const double CubicLowRodSym[12][3] = {{0.0, 0.0, 0.0},  {10000000000.0, 0.0, 0.0}, {0.0, 10000000000.0, 0.0}, {0.0, 0.0, 10000000000.0}, {1.0, 1.0, 1.0},   {-1.0, -1.0, -1.0},
-                                             {1.0, -1.0, 1.0}, {-1.0, 1.0, -1.0},         {-1.0, 1.0, 1.0},          {1.0, -1.0, -1.0},         {-1.0, -1.0, 1.0}, {1.0, 1.0, -1.0}};
 
 // static const double CubicLowSlipDirections[12][3] = {{0.0, 1.0, -1.0},
 //  {1.0, 0.0, -1.0},
@@ -143,8 +135,7 @@ static const double CubicLowMatSym[12][3][3] = {{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0
                                                 {{0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}, {1.0, 0.0, 0.0}},
 
                                                 {{0.0, 0.0, 1.0}, {1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}}};
-
-using namespace Detail;
+} // namespace CubicLow
 
 // -----------------------------------------------------------------------------
 //
@@ -169,7 +160,7 @@ bool CubicLowOps::getHasInversion() const
 // -----------------------------------------------------------------------------
 int CubicLowOps::getODFSize() const
 {
-  return k_OdfSize;
+  return CubicLow::k_OdfSize;
 }
 
 // -----------------------------------------------------------------------------
@@ -177,7 +168,7 @@ int CubicLowOps::getODFSize() const
 // -----------------------------------------------------------------------------
 int CubicLowOps::getMDFSize() const
 {
-  return k_MdfSize;
+  return CubicLow::k_MdfSize;
 }
 
 // -----------------------------------------------------------------------------
@@ -185,7 +176,13 @@ int CubicLowOps::getMDFSize() const
 // -----------------------------------------------------------------------------
 int CubicLowOps::getNumSymOps() const
 {
-  return k_NumSymQuats;
+  return CubicLow::k_NumSymQuats;
+}
+
+// -----------------------------------------------------------------------------
+std::array<size_t, 3> CubicLowOps::getOdfNumBins() const
+{
+  return CubicLow::OdfNumBins;
 }
 
 // -----------------------------------------------------------------------------
@@ -201,7 +198,7 @@ QString CubicLowOps::getSymmetryName() const
 // -----------------------------------------------------------------------------
 double CubicLowOps::getMisoQuat(QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
 {
-  return _calcMisoQuat(CubicLowQuatSym, k_NumSymQuats, q1, q2, n1, n2, n3);
+  return _calcMisoQuat(CubicLow::QuatSym, CubicLow::k_NumSymQuats, q1, q2, n1, n2, n3);
 }
 
 // -----------------------------------------------------------------------------
@@ -212,7 +209,7 @@ float CubicLowOps::getMisoQuat(QuatF& q1f, QuatF& q2f, float& n1f, float& n2f, f
   double n1 = n1f;
   double n2 = n2f;
   double n3 = n3f;
-  float w = static_cast<float>(_calcMisoQuat(CubicLowQuatSym, k_NumSymQuats, q1, q2, n1, n2, n3));
+  float w = static_cast<float>(_calcMisoQuat(CubicLow::QuatSym, CubicLow::k_NumSymQuats, q1, q2, n1, n2, n3));
   n1f = n1;
   n2f = n2;
   n3f = n3;
@@ -286,35 +283,35 @@ QuatType CubicLowOps::getQuatSymOp(int32_t i) const
 
 void CubicLowOps::getRodSymOp(int i, double* r) const
 {
-  r[0] = CubicLowRodSym[i][0];
-  r[1] = CubicLowRodSym[i][1];
-  r[2] = CubicLowRodSym[i][2];
+  r[0] = CubicLow::RodSym[i][0];
+  r[1] = CubicLow::RodSym[i][1];
+  r[2] = CubicLow::RodSym[i][2];
 }
 
 void CubicLowOps::getMatSymOp(int i, double g[3][3]) const
 {
-  g[0][0] = CubicLowMatSym[i][0][0];
-  g[0][1] = CubicLowMatSym[i][0][1];
-  g[0][2] = CubicLowMatSym[i][0][2];
-  g[1][0] = CubicLowMatSym[i][1][0];
-  g[1][1] = CubicLowMatSym[i][1][1];
-  g[1][2] = CubicLowMatSym[i][1][2];
-  g[2][0] = CubicLowMatSym[i][2][0];
-  g[2][1] = CubicLowMatSym[i][2][1];
-  g[2][2] = CubicLowMatSym[i][2][2];
+  g[0][0] = CubicLow::CubicLowMatSym[i][0][0];
+  g[0][1] = CubicLow::CubicLowMatSym[i][0][1];
+  g[0][2] = CubicLow::CubicLowMatSym[i][0][2];
+  g[1][0] = CubicLow::CubicLowMatSym[i][1][0];
+  g[1][1] = CubicLow::CubicLowMatSym[i][1][1];
+  g[1][2] = CubicLow::CubicLowMatSym[i][1][2];
+  g[2][0] = CubicLow::CubicLowMatSym[i][2][0];
+  g[2][1] = CubicLow::CubicLowMatSym[i][2][1];
+  g[2][2] = CubicLow::CubicLowMatSym[i][2][2];
 }
 
 void CubicLowOps::getMatSymOp(int i, float g[3][3]) const
 {
-  g[0][0] = CubicLowMatSym[i][0][0];
-  g[0][1] = CubicLowMatSym[i][0][1];
-  g[0][2] = CubicLowMatSym[i][0][2];
-  g[1][0] = CubicLowMatSym[i][1][0];
-  g[1][1] = CubicLowMatSym[i][1][1];
-  g[1][2] = CubicLowMatSym[i][1][2];
-  g[2][0] = CubicLowMatSym[i][2][0];
-  g[2][1] = CubicLowMatSym[i][2][1];
-  g[2][2] = CubicLowMatSym[i][2][2];
+  g[0][0] = CubicLow::CubicLowMatSym[i][0][0];
+  g[0][1] = CubicLow::CubicLowMatSym[i][0][1];
+  g[0][2] = CubicLow::CubicLowMatSym[i][0][2];
+  g[1][0] = CubicLow::CubicLowMatSym[i][1][0];
+  g[1][1] = CubicLow::CubicLowMatSym[i][1][1];
+  g[1][2] = CubicLow::CubicLowMatSym[i][1][2];
+  g[2][0] = CubicLow::CubicLowMatSym[i][2][0];
+  g[2][1] = CubicLow::CubicLowMatSym[i][2][1];
+  g[2][2] = CubicLow::CubicLowMatSym[i][2][2];
 }
 
 // -----------------------------------------------------------------------------
@@ -323,7 +320,7 @@ void CubicLowOps::getMatSymOp(int i, float g[3][3]) const
 OrientationType CubicLowOps::getODFFZRod(const OrientationType& rod) const
 {
   int numsym = 12;
-  return  _calcRodNearestOrigin(CubicLowRodSym, numsym, rod);
+  return _calcRodNearestOrigin(CubicLow::RodSym, numsym, rod);
 }
 
 // -----------------------------------------------------------------------------
@@ -334,7 +331,7 @@ OrientationType CubicLowOps::getMDFFZRod(const OrientationType& inRod) const
   double w = 0.0, n1 = 0.0, n2 = 0.0, n3 = 0.0;
   double FZn1 = 0.0, FZn2 = 0.0, FZn3 = 0.0, FZw = 0.0;
 
-  OrientationType rod = _calcRodNearestOrigin(CubicLowRodSym, k_NumSymQuats, inRod);
+  OrientationType rod = _calcRodNearestOrigin(CubicLow::RodSym, CubicLow::k_NumSymQuats, inRod);
   OrientationType ax = OrientationTransformation::ro2ax<OrientationType, OrientationType>(rod);
 
   n1 = ax[0];
@@ -388,14 +385,14 @@ OrientationType CubicLowOps::getMDFFZRod(const OrientationType& inRod) const
 
 QuatType CubicLowOps::getNearestQuat(const QuatType& q1, const QuatType& q2) const
 {
-  return _calcNearestQuat(CubicLowQuatSym, k_NumSymQuats, q1, q2);
+  return _calcNearestQuat(CubicLow::QuatSym, CubicLow::k_NumSymQuats, q1, q2);
 }
 
 QuatF CubicLowOps::getNearestQuat(const QuatF& q1f, const QuatF& q2f) const
 {
   QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
   QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
-  QuatType temp = _calcNearestQuat(CubicLowQuatSym, k_NumSymQuats, q1, q2);
+  QuatType temp = _calcNearestQuat(CubicLow::QuatSym, CubicLow::k_NumSymQuats, q1, q2);
   QuatF out(temp.x(), temp.y(), temp.z(), temp.w());
   return out;
 }
@@ -411,15 +408,15 @@ int CubicLowOps::getMisoBin(const OrientationType& rod) const
 
   OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
-  dim[0] = Detail::CubicLowDim1InitValue;
-  dim[1] = Detail::CubicLowDim2InitValue;
-  dim[2] = Detail::CubicLowDim3InitValue;
-  step[0] = Detail::CubicLowDim1StepValue;
-  step[1] = Detail::CubicLowDim2StepValue;
-  step[2] = Detail::CubicLowDim3StepValue;
-  bins[0] = 36.0f;
-  bins[1] = 36.0f;
-  bins[2] = 36.0f;
+  dim[0] = CubicLow::OdfDimInitValue[0];
+  dim[1] = CubicLow::OdfDimInitValue[1];
+  dim[2] = CubicLow::OdfDimInitValue[2];
+  step[0] = CubicLow::OdfDimStepValue[0];
+  step[1] = CubicLow::OdfDimStepValue[1];
+  step[2] = CubicLow::OdfDimStepValue[2];
+  bins[0] = static_cast<double>(CubicLow::OdfNumBins[0]);
+  bins[1] = static_cast<double>(CubicLow::OdfNumBins[1]);
+  bins[2] = static_cast<double>(CubicLow::OdfNumBins[2]);
 
   return _calcMisoBin(dim, bins, step, ho);
 }
@@ -427,24 +424,24 @@ int CubicLowOps::getMisoBin(const OrientationType& rod) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationType CubicLowOps::determineEulerAngles(uint64_t seed, int choose) const
+OrientationType CubicLowOps::determineEulerAngles(double random[3], int choose) const
 {
   double init[3];
   double step[3];
   int32_t phi[3];
   double h1, h2, h3;
 
-  init[0] = Detail::CubicLowDim1InitValue;
-  init[1] = Detail::CubicLowDim2InitValue;
-  init[2] = Detail::CubicLowDim3InitValue;
-  step[0] = Detail::CubicLowDim1StepValue;
-  step[1] = Detail::CubicLowDim2StepValue;
-  step[2] = Detail::CubicLowDim3StepValue;
-  phi[0] = static_cast<int32_t>(choose % 36);
-  phi[1] = static_cast<int32_t>((choose / 36) % 36);
-  phi[2] = static_cast<int32_t>(choose / (36 * 36));
+  init[0] = CubicLow::OdfDimInitValue[0];
+  init[1] = CubicLow::OdfDimInitValue[1];
+  init[2] = CubicLow::OdfDimInitValue[2];
+  step[0] = CubicLow::OdfDimStepValue[0];
+  step[1] = CubicLow::OdfDimStepValue[1];
+  step[2] = CubicLow::OdfDimStepValue[2];
+  phi[0] = static_cast<int32_t>(choose % CubicLow::OdfNumBins[0]);
+  phi[1] = static_cast<int32_t>((choose / CubicLow::OdfNumBins[0]) % CubicLow::OdfNumBins[1]);
+  phi[2] = static_cast<int32_t>(choose / (CubicLow::OdfNumBins[0] * CubicLow::OdfNumBins[1]));
 
-  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(random, init, step, phi, h1, h2, h3);
 
   OrientationType ho(h1, h2, h3);
   OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
@@ -458,33 +455,33 @@ OrientationType CubicLowOps::determineEulerAngles(uint64_t seed, int choose) con
 // -----------------------------------------------------------------------------
 OrientationType CubicLowOps::randomizeEulerAngles(const OrientationType& synea) const
 {
-  size_t symOp = getRandomSymmetryOperatorIndex(k_NumSymQuats);
+  size_t symOp = getRandomSymmetryOperatorIndex(CubicLow::k_NumSymQuats);
   QuatType quat = OrientationTransformation::eu2qu<OrientationType, QuatType>(synea);
-  QuatType qc = CubicLowQuatSym[symOp] * quat;
+  QuatType qc = CubicLow::QuatSym[symOp] * quat;
   return OrientationTransformation::qu2eu<QuatType, OrientationType>(qc);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationType CubicLowOps::determineRodriguesVector(uint64_t seed, int choose) const
+OrientationType CubicLowOps::determineRodriguesVector(double random[3], int choose) const
 {
   double init[3];
   double step[3];
   int32_t phi[3];
   double h1, h2, h3;
 
-  init[0] = Detail::CubicLowDim1InitValue;
-  init[1] = Detail::CubicLowDim2InitValue;
-  init[2] = Detail::CubicLowDim3InitValue;
-  step[0] = Detail::CubicLowDim1StepValue;
-  step[1] = Detail::CubicLowDim2StepValue;
-  step[2] = Detail::CubicLowDim3StepValue;
-  phi[0] = static_cast<int32_t>(choose % 36);
-  phi[1] = static_cast<int32_t>((choose / 36) % 36);
-  phi[2] = static_cast<int32_t>(choose / (36 * 36));
+  init[0] = CubicLow::OdfDimInitValue[0];
+  init[1] = CubicLow::OdfDimInitValue[1];
+  init[2] = CubicLow::OdfDimInitValue[2];
+  step[0] = CubicLow::OdfDimStepValue[0];
+  step[1] = CubicLow::OdfDimStepValue[1];
+  step[2] = CubicLow::OdfDimStepValue[2];
+  phi[0] = static_cast<int32_t>(choose % CubicLow::OdfNumBins[0]);
+  phi[1] = static_cast<int32_t>((choose / CubicLow::OdfNumBins[0]) % CubicLow::OdfNumBins[1]);
+  phi[2] = static_cast<int32_t>(choose / (CubicLow::OdfNumBins[0] * CubicLow::OdfNumBins[1]));
 
-  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(random, init, step, phi, h1, h2, h3);
   OrientationType ho(h1, h2, h3);
   OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
   ro = getMDFFZRod(ro);
@@ -502,15 +499,15 @@ int CubicLowOps::getOdfBin(const OrientationType& rod) const
 
   OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
-  dim[0] = Detail::CubicLowDim1InitValue;
-  dim[1] = Detail::CubicLowDim2InitValue;
-  dim[2] = Detail::CubicLowDim3InitValue;
-  step[0] = Detail::CubicLowDim1StepValue;
-  step[1] = Detail::CubicLowDim2StepValue;
-  step[2] = Detail::CubicLowDim3StepValue;
-  bins[0] = 36.0f;
-  bins[1] = 36.0f;
-  bins[2] = 36.0f;
+  dim[0] = CubicLow::OdfDimInitValue[0];
+  dim[1] = CubicLow::OdfDimInitValue[1];
+  dim[2] = CubicLow::OdfDimInitValue[2];
+  step[0] = CubicLow::OdfDimStepValue[0];
+  step[1] = CubicLow::OdfDimStepValue[1];
+  step[2] = CubicLow::OdfDimStepValue[2];
+  bins[0] = static_cast<double>(CubicLow::OdfNumBins[0]);
+  bins[1] = static_cast<double>(CubicLow::OdfNumBins[1]);
+  bins[2] = static_cast<double>(CubicLow::OdfNumBins[2]);
 
   return _calcODFBin(dim, bins, step, ho);
 }
@@ -538,22 +535,22 @@ void CubicLowOps::getSchmidFactorAndSS(double load[3], double plane[3], double d
   directionMag *= loadMag;
 
   //loop over symmetry operators finding highest schmid factor
-  for(int i = 0; i < k_NumSymQuats; i++)
+  for(int i = 0; i < CubicLow::k_NumSymQuats; i++)
   {
     //compute slip system
     double slipPlane[3] = {0};
-    slipPlane[2] = CubicLowMatSym[i][2][0] * plane[0] + CubicLowMatSym[i][2][1] * plane[1] + CubicLowMatSym[i][2][2] * plane[2];
+    slipPlane[2] = CubicLow::CubicLowMatSym[i][2][0] * plane[0] + CubicLow::CubicLowMatSym[i][2][1] * plane[1] + CubicLow::CubicLowMatSym[i][2][2] * plane[2];
 
     //dont consider negative z planes (to avoid duplicates)
     if( slipPlane[2] >= 0)
     {
-      slipPlane[0] = CubicLowMatSym[i][0][0] * plane[0] + CubicLowMatSym[i][0][1] * plane[1] + CubicLowMatSym[i][0][2] * plane[2];
-      slipPlane[1] = CubicLowMatSym[i][1][0] * plane[0] + CubicLowMatSym[i][1][1] * plane[1] + CubicLowMatSym[i][1][2] * plane[2];
+      slipPlane[0] = CubicLow::CubicLowMatSym[i][0][0] * plane[0] + CubicLow::CubicLowMatSym[i][0][1] * plane[1] + CubicLow::CubicLowMatSym[i][0][2] * plane[2];
+      slipPlane[1] = CubicLow::CubicLowMatSym[i][1][0] * plane[0] + CubicLow::CubicLowMatSym[i][1][1] * plane[1] + CubicLow::CubicLowMatSym[i][1][2] * plane[2];
 
       double slipDirection[3] = {0};
-      slipDirection[0] = CubicLowMatSym[i][0][0] * direction[0] + CubicLowMatSym[i][0][1] * direction[1] + CubicLowMatSym[i][0][2] * direction[2];
-      slipDirection[1] = CubicLowMatSym[i][1][0] * direction[0] + CubicLowMatSym[i][1][1] * direction[1] + CubicLowMatSym[i][1][2] * direction[2];
-      slipDirection[2] = CubicLowMatSym[i][2][0] * direction[0] + CubicLowMatSym[i][2][1] * direction[1] + CubicLowMatSym[i][2][2] * direction[2];
+      slipDirection[0] = CubicLow::CubicLowMatSym[i][0][0] * direction[0] + CubicLow::CubicLowMatSym[i][0][1] * direction[1] + CubicLow::CubicLowMatSym[i][0][2] * direction[2];
+      slipDirection[1] = CubicLow::CubicLowMatSym[i][1][0] * direction[0] + CubicLow::CubicLowMatSym[i][1][1] * direction[1] + CubicLow::CubicLowMatSym[i][1][2] * direction[2];
+      slipDirection[2] = CubicLow::CubicLowMatSym[i][2][0] * direction[0] + CubicLow::CubicLowMatSym[i][2][1] * direction[1] + CubicLow::CubicLowMatSym[i][2][2] * direction[2];
 
       double cosPhi = fabs(load[0] * slipPlane[0] + load[1] * slipPlane[1] + load[2] * slipPlane[2]) / planeMag;
       double cosLambda = fabs(load[0] * slipDirection[0] + load[1] * slipDirection[1] + load[2] * slipDirection[2]) / directionMag;
@@ -934,7 +931,7 @@ SIMPL::Rgb CubicLowOps::generateIPFColor(double phi1, double phi, double phi2, d
   OrientationType om(9); // Reusable for the loop
   QuatType q1 = OrientationTransformation::eu2qu<OrientationType, QuatType>(eu);
 
-  for(int j = 0; j < k_NumSymQuats; j++)
+  for(int j = 0; j < CubicLow::k_NumSymQuats; j++)
   {
     QuatType qu = getQuatSymOp(j) * q1;
     OrientationTransformation::qu2om<QuatType, OrientationType>(qu).toGMatrix(g);
@@ -994,9 +991,9 @@ SIMPL::Rgb CubicLowOps::generateIPFColor(double phi1, double phi, double phi2, d
 // -----------------------------------------------------------------------------
 SIMPL::Rgb CubicLowOps::generateRodriguesColor(double r1, double r2, double r3) const
 {
-  double range1 = 2.0f * CubicLowDim1InitValue;
-  double range2 = 2.0f * CubicLowDim2InitValue;
-  double range3 = 2.0f * CubicLowDim3InitValue;
+  double range1 = 2.0f * CubicLow::OdfDimInitValue[0];
+  double range2 = 2.0f * CubicLow::OdfDimInitValue[1];
+  double range3 = 2.0f * CubicLow::OdfDimInitValue[2];
   double max1 = range1 / 2.0f;
   double max2 = range2 / 2.0f;
   double max3 = range3 / 2.0f;

@@ -1871,7 +1871,8 @@ void PackPrimaryPhases::generateFeature(int32_t phase, Feature_t* feature, uint3
       break;
     }
   }
-  OrientationD eulers = m_OrthoOps->determineEulerAngles(m_Seed, bin);
+  std::array<double, 3> randx3 = {rg.genrand_res53(), rg.genrand_res53(), rg.genrand_res53()};
+  OrientationD eulers = m_OrthoOps->determineEulerAngles(randx3.data(), bin);
   VectorOfFloatArray omega3 = pp->getFeatureSize_Omegas();
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);

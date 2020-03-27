@@ -44,7 +44,7 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/OrientationMath/OrientationRepresentation.h"
+#include "OrientationLib/Core/OrientationRepresentation.h"
 #include "OrientationUtilityCalculator.h"
 
 // -----------------------------------------------------------------------------

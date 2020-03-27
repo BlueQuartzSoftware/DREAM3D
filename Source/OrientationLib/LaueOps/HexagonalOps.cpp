@@ -1,39 +1,40 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <memory>
+#include <array>
 
 #include "HexagonalOps.h"
 
@@ -56,68 +57,68 @@
 #include "OrientationLib/Utilities/ComputeStereographicProjection.h"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
-namespace Detail
-{
-
-static const double HexDim1InitValue = std::pow((0.75f * (((SIMPLib::Constants::k_PiOver2)) - sinf(((SIMPLib::Constants::k_PiOver2))))), (1.0f / 3.0));
-static const double HexDim2InitValue = std::pow((0.75f * (((SIMPLib::Constants::k_PiOver2)) - sinf(((SIMPLib::Constants::k_PiOver2))))), (1.0f / 3.0));
-static const double HexDim3InitValue = std::pow((0.75f * ((SIMPLib::Constants::k_Pi / 6.0) - sinf(SIMPLib::Constants::k_Pi / 6.0))), (1.0f / 3.0));
-static const double HexDim1StepValue = HexDim1InitValue / 18.0f;
-static const double HexDim2StepValue = HexDim2InitValue / 18.0f;
-static const double HexDim3StepValue = HexDim3InitValue / 6.0f;
-
 namespace HexagonalHigh
 {
+static const std::array<size_t, 3> OdfNumBins = {36, 36, 12}; // Represents a 5Deg bin
+
+static const std::array<double, 3> OdfDimInitValue = {std::pow((0.75f * (((SIMPLib::Constants::k_PiOver2)) - sinf(((SIMPLib::Constants::k_PiOver2))))), (1.0f / 3.0)),
+                                                      std::pow((0.75f * (((SIMPLib::Constants::k_PiOver2)) - sinf(((SIMPLib::Constants::k_PiOver2))))), (1.0f / 3.0)),
+                                                      std::pow((0.75f * ((SIMPLib::Constants::k_Pi / 6.0) - sinf(SIMPLib::Constants::k_Pi / 6.0))), (1.0f / 3.0))};
+static const std::array<double, 3> OdfDimStepValue = {OdfDimInitValue[0] / static_cast<double>(OdfNumBins[0] / 2), OdfDimInitValue[1] / static_cast<double>(OdfNumBins[1] / 2),
+                                                      OdfDimInitValue[2] / static_cast<double>(OdfNumBins[2] / 2)};
+
 static const int symSize0 = 2;
 static const int symSize1 = 6;
 static const int symSize2 = 6;
-} // namespace HexagonalHigh
-}
 
-static const QuatType HexQuatSym[12] = {
+static const int k_OdfSize = 15552;
+static const int k_MdfSize = 15552;
+static const int k_NumSymQuats = 12;
+
+static const QuatType QuatSym[12] = {
     QuatType(0.000000000, 0.000000000, 0.000000000, 1.000000000), QuatType(0.000000000, 0.000000000, 0.500000000, 0.866025400), QuatType(0.000000000, 0.000000000, 0.866025400, 0.500000000),
     QuatType(0.000000000, 0.000000000, 1.000000000, 0.000000000), QuatType(0.000000000, 0.000000000, 0.866025400, -0.50000000), QuatType(0.000000000, 0.000000000, 0.500000000, -0.86602540),
     QuatType(1.000000000, 0.000000000, 0.000000000, 0.000000000), QuatType(0.866025400, 0.500000000, 0.000000000, 0.000000000), QuatType(0.500000000, 0.866025400, 0.000000000, 0.000000000),
     QuatType(0.000000000, 1.000000000, 0.000000000, 0.000000000), QuatType(-0.50000000, 0.866025400, 0.000000000, 0.000000000), QuatType(-0.86602540, 0.500000000, 0.000000000, 0.000000000)};
 
-static const double HexRodSym[12][3] = {{0.0, 0.0, 0.0},
-                                        {0.0, 0.0, 0.57735},
-                                        {0.0, 0.0, 1.73205},
-                                        {0.0, 0.0, 1000000000000.0},
-                                        {0.0, 0.0, -1.73205},
-                                        {0.0, 0.0, -0.57735},
-                                        {1000000000000.0, 0.0, 0.0},
-                                        {8660254000000.0, 5000000000000.0, 0.0},
-                                        {5000000000000.0, 8660254000000.0, 0.0},
-                                        {0.0, 1000000000000.0, 0.0},
-                                        {-5000000000000.0, 8660254000000.0, 0.0},
-                                        {-8660254000000.0, 5000000000000.0, 0.0}};
-static const double HexMatSym[12][3][3] = {{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}},
+static const double RodSym[12][3] = {{0.0, 0.0, 0.0},
+                                     {0.0, 0.0, 0.57735},
+                                     {0.0, 0.0, 1.73205},
+                                     {0.0, 0.0, 1000000000000.0},
+                                     {0.0, 0.0, -1.73205},
+                                     {0.0, 0.0, -0.57735},
+                                     {1000000000000.0, 0.0, 0.0},
+                                     {8660254000000.0, 5000000000000.0, 0.0},
+                                     {5000000000000.0, 8660254000000.0, 0.0},
+                                     {0.0, 1000000000000.0, 0.0},
+                                     {-5000000000000.0, 8660254000000.0, 0.0},
+                                     {-8660254000000.0, 5000000000000.0, 0.0}};
+static const double MatSym[12][3][3] = {{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}},
 
-                                           {{-0.5, static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(-SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, 1.0}},
+                                        {{-0.5, static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(-SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, 1.0}},
 
-                                           {{-0.5, static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, 1.0}},
+                                        {{-0.5, static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, 1.0}},
 
-                                           {{0.5, static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.5, 0.0}, {0.0, 0.0, 1.0}},
+                                        {{0.5, static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.5, 0.0}, {0.0, 0.0, 1.0}},
 
-                                           {{-1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}},
+                                        {{-1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}},
 
-                                           {{0.5, static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.5, 0.0}, {0.0, 0.0, 1.0}},
+                                        {{0.5, static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.5, 0.0}, {0.0, 0.0, 1.0}},
 
-                                           {{-0.5, static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.5, 0.0}, {0.0, 0.0, -1.0}},
+                                        {{-0.5, static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.5, 0.0}, {0.0, 0.0, -1.0}},
 
-                                           {{1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, -1.0}},
+                                        {{1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, -1.0}},
 
-                                           {{-0.5, static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.5, 0.0}, {0.0, 0.0, -1.0}},
+                                        {{-0.5, static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.5, 0.0}, {0.0, 0.0, -1.0}},
 
-                                           {{0.5, static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, -1.0}},
+                                        {{0.5, static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, -1.0}},
 
-                                           {{-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, -1.0}},
+                                        {{-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, -1.0}},
 
-                                           {{0.5, static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(-SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, -1.0}}};
+                                        {{0.5, static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(-SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, -1.0}}};
 
 // Use a namespace for some detail that only this class needs
-using namespace Detail;
+} // namespace HexagonalHigh
 
 // -----------------------------------------------------------------------------
 //
@@ -142,7 +143,7 @@ bool HexagonalOps::getHasInversion() const
 // -----------------------------------------------------------------------------
 int HexagonalOps::getODFSize() const
 {
-  return k_OdfSize;
+  return HexagonalHigh::k_OdfSize;
 }
 
 // -----------------------------------------------------------------------------
@@ -150,7 +151,7 @@ int HexagonalOps::getODFSize() const
 // -----------------------------------------------------------------------------
 int HexagonalOps::getMDFSize() const
 {
-  return k_MdfSize;
+  return HexagonalHigh::k_MdfSize;
 }
 
 // -----------------------------------------------------------------------------
@@ -158,7 +159,13 @@ int HexagonalOps::getMDFSize() const
 // -----------------------------------------------------------------------------
 int HexagonalOps::getNumSymOps() const
 {
-  return k_NumSymQuats;
+  return HexagonalHigh::k_NumSymQuats;
+}
+
+// -----------------------------------------------------------------------------
+std::array<size_t, 3> HexagonalOps::getOdfNumBins() const
+{
+  return HexagonalHigh::OdfNumBins;
 }
 
 // -----------------------------------------------------------------------------
@@ -233,7 +240,7 @@ double HexagonalOps::_calcMisoQuat(const QuatType quatsym[12], int numsym, QuatT
 double HexagonalOps::getMisoQuat(QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
 {
 
-  return _calcMisoQuat(HexQuatSym, k_NumSymQuats, q1, q2, n1, n2, n3);
+  return _calcMisoQuat(HexagonalHigh::QuatSym, HexagonalHigh::k_NumSymQuats, q1, q2, n1, n2, n3);
 }
 
 // -----------------------------------------------------------------------------
@@ -244,7 +251,7 @@ float HexagonalOps::getMisoQuat(QuatF& q1f, QuatF& q2f, float& n1f, float& n2f, 
   double n1 = n1f;
   double n2 = n2f;
   double n3 = n3f;
-  float w = static_cast<float>(_calcMisoQuat(HexQuatSym, k_NumSymQuats, q1, q2, n1, n2, n3));
+  float w = static_cast<float>(_calcMisoQuat(HexagonalHigh::QuatSym, HexagonalHigh::k_NumSymQuats, q1, q2, n1, n2, n3));
   n1f = n1;
   n2f = n2;
   n3f = n3;
@@ -253,44 +260,44 @@ float HexagonalOps::getMisoQuat(QuatF& q1f, QuatF& q2f, float& n1f, float& n2f, 
 
 QuatType HexagonalOps::getQuatSymOp(int32_t i) const
 {
-  return HexQuatSym[i];
-  //  q.x = HexQuatSym[i][0];
-  //  q.y = HexQuatSym[i][1];
-  //  q.z = HexQuatSym[i][2];
-  //  q.w = HexQuatSym[i][3];
+  return HexagonalHigh::QuatSym[i];
+  //  q.x = HexagonalHigh::QuatSym[i][0];
+  //  q.y = HexagonalHigh::QuatSym[i][1];
+  //  q.z = HexagonalHigh::QuatSym[i][2];
+  //  q.w = HexagonalHigh::QuatSym[i][3];
 }
 
 void HexagonalOps::getRodSymOp(int i, double* r) const
 {
-  r[0] = HexRodSym[i][0];
-  r[1] = HexRodSym[i][1];
-  r[2] = HexRodSym[i][2];
+  r[0] = HexagonalHigh::RodSym[i][0];
+  r[1] = HexagonalHigh::RodSym[i][1];
+  r[2] = HexagonalHigh::RodSym[i][2];
 }
 
 void HexagonalOps::getMatSymOp(int i, double g[3][3]) const
 {
-  g[0][0] = HexMatSym[i][0][0];
-  g[0][1] = HexMatSym[i][0][1];
-  g[0][2] = HexMatSym[i][0][2];
-  g[1][0] = HexMatSym[i][1][0];
-  g[1][1] = HexMatSym[i][1][1];
-  g[1][2] = HexMatSym[i][1][2];
-  g[2][0] = HexMatSym[i][2][0];
-  g[2][1] = HexMatSym[i][2][1];
-  g[2][2] = HexMatSym[i][2][2];
+  g[0][0] = HexagonalHigh::MatSym[i][0][0];
+  g[0][1] = HexagonalHigh::MatSym[i][0][1];
+  g[0][2] = HexagonalHigh::MatSym[i][0][2];
+  g[1][0] = HexagonalHigh::MatSym[i][1][0];
+  g[1][1] = HexagonalHigh::MatSym[i][1][1];
+  g[1][2] = HexagonalHigh::MatSym[i][1][2];
+  g[2][0] = HexagonalHigh::MatSym[i][2][0];
+  g[2][1] = HexagonalHigh::MatSym[i][2][1];
+  g[2][2] = HexagonalHigh::MatSym[i][2][2];
 }
 
 void HexagonalOps::getMatSymOp(int i, float g[3][3]) const
 {
-  g[0][0] = HexMatSym[i][0][0];
-  g[0][1] = HexMatSym[i][0][1];
-  g[0][2] = HexMatSym[i][0][2];
-  g[1][0] = HexMatSym[i][1][0];
-  g[1][1] = HexMatSym[i][1][1];
-  g[1][2] = HexMatSym[i][1][2];
-  g[2][0] = HexMatSym[i][2][0];
-  g[2][1] = HexMatSym[i][2][1];
-  g[2][2] = HexMatSym[i][2][2];
+  g[0][0] = HexagonalHigh::MatSym[i][0][0];
+  g[0][1] = HexagonalHigh::MatSym[i][0][1];
+  g[0][2] = HexagonalHigh::MatSym[i][0][2];
+  g[1][0] = HexagonalHigh::MatSym[i][1][0];
+  g[1][1] = HexagonalHigh::MatSym[i][1][1];
+  g[1][2] = HexagonalHigh::MatSym[i][1][2];
+  g[2][0] = HexagonalHigh::MatSym[i][2][0];
+  g[2][1] = HexagonalHigh::MatSym[i][2][1];
+  g[2][2] = HexagonalHigh::MatSym[i][2][2];
 }
 // -----------------------------------------------------------------------------
 //
@@ -298,7 +305,7 @@ void HexagonalOps::getMatSymOp(int i, float g[3][3]) const
 OrientationType HexagonalOps::getODFFZRod(const OrientationType& rod) const
 {
   int numsym = 12;
-  return _calcRodNearestOrigin(HexRodSym, numsym, rod);
+  return _calcRodNearestOrigin(HexagonalHigh::RodSym, numsym, rod);
 }
 
 // -----------------------------------------------------------------------------
@@ -310,7 +317,7 @@ OrientationType HexagonalOps::getMDFFZRod(const OrientationType& inRod) const
   double FZn1 = 0.0, FZn2 = 0.0, FZn3 = 0.0, FZw = 0.0;
   double n1n2mag;
 
-  OrientationType rod = _calcRodNearestOrigin(HexRodSym, 12, inRod);
+  OrientationType rod = _calcRodNearestOrigin(HexagonalHigh::RodSym, 12, inRod);
 
   OrientationType ax = OrientationTransformation::ro2ax<OrientationType, OrientationType>(rod);
 
@@ -359,14 +366,14 @@ OrientationType HexagonalOps::getMDFFZRod(const OrientationType& inRod) const
 
 QuatType HexagonalOps::getNearestQuat(const QuatType& q1, const QuatType& q2) const
 {
-  return _calcNearestQuat(HexQuatSym, k_NumSymQuats, q1, q2);
+  return _calcNearestQuat(HexagonalHigh::QuatSym, HexagonalHigh::k_NumSymQuats, q1, q2);
 }
 
 QuatF HexagonalOps::getNearestQuat(const QuatF& q1f, const QuatF& q2f) const
 {
   QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
   QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
-  QuatType temp = _calcNearestQuat(HexQuatSym, k_NumSymQuats, q1, q2);
+  QuatType temp = _calcNearestQuat(HexagonalHigh::QuatSym, HexagonalHigh::k_NumSymQuats, q1, q2);
   QuatF out(temp.x(), temp.y(), temp.z(), temp.w());
   return out;
 }
@@ -376,7 +383,7 @@ QuatF HexagonalOps::getNearestQuat(const QuatF& q1f, const QuatF& q2f) const
 // -----------------------------------------------------------------------------
 QuatType HexagonalOps::getFZQuat(const QuatType& qr) const
 {
-  return _calcQuatNearestOrigin(HexQuatSym, k_NumSymQuats, qr);
+  return _calcQuatNearestOrigin(HexagonalHigh::QuatSym, HexagonalHigh::k_NumSymQuats, qr);
 }
 
 // -----------------------------------------------------------------------------
@@ -390,15 +397,15 @@ int HexagonalOps::getMisoBin(const OrientationType& rod) const
 
   OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
-  dim[0] = HexDim1InitValue;
-  dim[1] = HexDim2InitValue;
-  dim[2] = HexDim3InitValue;
-  step[0] = HexDim1StepValue;
-  step[1] = HexDim2StepValue;
-  step[2] = HexDim3StepValue;
-  bins[0] = 36.0f;
-  bins[1] = 36.0f;
-  bins[2] = 12.0f;
+  dim[0] = HexagonalHigh::OdfDimInitValue[0];
+  dim[1] = HexagonalHigh::OdfDimInitValue[1];
+  dim[2] = HexagonalHigh::OdfDimInitValue[2];
+  step[0] = HexagonalHigh::OdfDimStepValue[0];
+  step[1] = HexagonalHigh::OdfDimStepValue[1];
+  step[2] = HexagonalHigh::OdfDimStepValue[2];
+  bins[0] = static_cast<double>(HexagonalHigh::OdfNumBins[0]);
+  bins[1] = static_cast<double>(HexagonalHigh::OdfNumBins[1]);
+  bins[2] = static_cast<double>(HexagonalHigh::OdfNumBins[2]);
 
   return _calcMisoBin(dim, bins, step, ho);
 }
@@ -406,24 +413,24 @@ int HexagonalOps::getMisoBin(const OrientationType& rod) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationType HexagonalOps::determineEulerAngles(uint64_t seed, int choose) const
+OrientationType HexagonalOps::determineEulerAngles(double random[3], int choose) const
 {
   double init[3];
   double step[3];
   int32_t phi[3];
   double h1, h2, h3;
 
-  init[0] = HexDim1InitValue;
-  init[1] = HexDim2InitValue;
-  init[2] = HexDim3InitValue;
-  step[0] = HexDim1StepValue;
-  step[1] = HexDim2StepValue;
-  step[2] = HexDim3StepValue;
-  phi[0] = static_cast<int32_t>(choose % 36);
-  phi[1] = static_cast<int32_t>((choose / 36) % 36);
-  phi[2] = static_cast<int32_t>(choose / (36 * 36));
+  init[0] = HexagonalHigh::OdfDimInitValue[0];
+  init[1] = HexagonalHigh::OdfDimInitValue[1];
+  init[2] = HexagonalHigh::OdfDimInitValue[2];
+  step[0] = HexagonalHigh::OdfDimStepValue[0];
+  step[1] = HexagonalHigh::OdfDimStepValue[1];
+  step[2] = HexagonalHigh::OdfDimStepValue[2];
+  phi[0] = static_cast<int32_t>(choose % HexagonalHigh::OdfNumBins[0]);
+  phi[1] = static_cast<int32_t>((choose / HexagonalHigh::OdfNumBins[0]) % HexagonalHigh::OdfNumBins[1]);
+  phi[2] = static_cast<int32_t>(choose / (HexagonalHigh::OdfNumBins[0] * HexagonalHigh::OdfNumBins[1]));
 
-  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(random, init, step, phi, h1, h2, h3);
 
   OrientationType ho(h1, h2, h3);
   OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
@@ -437,33 +444,33 @@ OrientationType HexagonalOps::determineEulerAngles(uint64_t seed, int choose) co
 // -----------------------------------------------------------------------------
 OrientationType HexagonalOps::randomizeEulerAngles(const OrientationType& synea) const
 {
-  size_t symOp = getRandomSymmetryOperatorIndex(k_NumSymQuats);
+  size_t symOp = getRandomSymmetryOperatorIndex(HexagonalHigh::k_NumSymQuats);
   QuatType quat = OrientationTransformation::eu2qu<OrientationType, QuatType>(synea);
-  QuatType qc = HexQuatSym[symOp] * quat;
+  QuatType qc = HexagonalHigh::QuatSym[symOp] * quat;
   return OrientationTransformation::qu2eu<QuatType, OrientationType>(qc);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationType HexagonalOps::determineRodriguesVector(uint64_t seed, int choose) const
+OrientationType HexagonalOps::determineRodriguesVector(double random[3], int choose) const
 {
   double init[3];
   double step[3];
   int32_t phi[3];
   double h1, h2, h3;
 
-  init[0] = HexDim1InitValue;
-  init[1] = HexDim2InitValue;
-  init[2] = HexDim3InitValue;
-  step[0] = HexDim1StepValue;
-  step[1] = HexDim2StepValue;
-  step[2] = HexDim3StepValue;
-  phi[0] = static_cast<int32_t>(choose % 36);
-  phi[1] = static_cast<int32_t>((choose / 36) % 36);
-  phi[2] = static_cast<int32_t>(choose / (36 * 36));
+  init[0] = HexagonalHigh::OdfDimInitValue[0];
+  init[1] = HexagonalHigh::OdfDimInitValue[1];
+  init[2] = HexagonalHigh::OdfDimInitValue[2];
+  step[0] = HexagonalHigh::OdfDimStepValue[0];
+  step[1] = HexagonalHigh::OdfDimStepValue[1];
+  step[2] = HexagonalHigh::OdfDimStepValue[2];
+  phi[0] = static_cast<int32_t>(choose % HexagonalHigh::OdfNumBins[0]);
+  phi[1] = static_cast<int32_t>((choose / HexagonalHigh::OdfNumBins[0]) % HexagonalHigh::OdfNumBins[1]);
+  phi[2] = static_cast<int32_t>(choose / (HexagonalHigh::OdfNumBins[0] * HexagonalHigh::OdfNumBins[1]));
 
-  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(random, init, step, phi, h1, h2, h3);
   OrientationType ho(h1, h2, h3);
   OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
   ro = getMDFFZRod(ro);
@@ -481,37 +488,17 @@ int HexagonalOps::getOdfBin(const OrientationType& rod) const
 
   OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
-  dim[0] = HexDim1InitValue;
-  dim[1] = HexDim2InitValue;
-  dim[2] = HexDim3InitValue;
-  step[0] = HexDim1StepValue;
-  step[1] = HexDim2StepValue;
-  step[2] = HexDim3StepValue;
-  bins[0] = 36.0f;
-  bins[1] = 36.0f;
-  bins[2] = 12.0f;
+  dim[0] = HexagonalHigh::OdfDimInitValue[0];
+  dim[1] = HexagonalHigh::OdfDimInitValue[1];
+  dim[2] = HexagonalHigh::OdfDimInitValue[2];
+  step[0] = HexagonalHigh::OdfDimStepValue[0];
+  step[1] = HexagonalHigh::OdfDimStepValue[1];
+  step[2] = HexagonalHigh::OdfDimStepValue[2];
+  bins[0] = static_cast<double>(HexagonalHigh::OdfNumBins[0]);
+  bins[1] = static_cast<double>(HexagonalHigh::OdfNumBins[1]);
+  bins[2] = static_cast<double>(HexagonalHigh::OdfNumBins[2]);
 
   return _calcODFBin(dim, bins, step, ho);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void HexagonalOps::getInitializedODFBinDimensions(double dims[3])
-{
-  dims[0] = HexDim1InitValue;
-  dims[1] = HexDim2InitValue;
-  dims[2] = HexDim3InitValue;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void HexagonalOps::getOdfBinStepSize(double step[3])
-{
-  step[0] = HexDim1StepValue;
-  step[1] = HexDim2StepValue;
-  step[2] = HexDim3StepValue;
 }
 
 void HexagonalOps::getSchmidFactorAndSS(double load[3], double& schmidfactor, double angleComps[2], int& slipsys) const
@@ -841,18 +828,18 @@ void HexagonalOps::getSchmidFactorAndSS(double load[3], double plane[3], double 
   {
     //compute slip system
     double slipPlane[3] = {0};
-    slipPlane[2] = HexMatSym[i][2][0] * plane[0] + HexMatSym[i][2][1] * plane[1] + HexMatSym[i][2][2] * plane[2];
+    slipPlane[2] = HexagonalHigh::MatSym[i][2][0] * plane[0] + HexagonalHigh::MatSym[i][2][1] * plane[1] + HexagonalHigh::MatSym[i][2][2] * plane[2];
 
     //dont consider negative z planes (to avoid duplicates)
     if( slipPlane[2] >= 0)
     {
-      slipPlane[0] = HexMatSym[i][0][0] * plane[0] + HexMatSym[i][0][1] * plane[1] + HexMatSym[i][0][2] * plane[2];
-      slipPlane[1] = HexMatSym[i][1][0] * plane[0] + HexMatSym[i][1][1] * plane[1] + HexMatSym[i][1][2] * plane[2];
+      slipPlane[0] = HexagonalHigh::MatSym[i][0][0] * plane[0] + HexagonalHigh::MatSym[i][0][1] * plane[1] + HexagonalHigh::MatSym[i][0][2] * plane[2];
+      slipPlane[1] = HexagonalHigh::MatSym[i][1][0] * plane[0] + HexagonalHigh::MatSym[i][1][1] * plane[1] + HexagonalHigh::MatSym[i][1][2] * plane[2];
 
       double slipDirection[3] = {0};
-      slipDirection[0] = HexMatSym[i][0][0] * direction[0] + HexMatSym[i][0][1] * direction[1] + HexMatSym[i][0][2] * direction[2];
-      slipDirection[1] = HexMatSym[i][1][0] * direction[0] + HexMatSym[i][1][1] * direction[1] + HexMatSym[i][1][2] * direction[2];
-      slipDirection[2] = HexMatSym[i][2][0] * direction[0] + HexMatSym[i][2][1] * direction[1] + HexMatSym[i][2][2] * direction[2];
+      slipDirection[0] = HexagonalHigh::MatSym[i][0][0] * direction[0] + HexagonalHigh::MatSym[i][0][1] * direction[1] + HexagonalHigh::MatSym[i][0][2] * direction[2];
+      slipDirection[1] = HexagonalHigh::MatSym[i][1][0] * direction[0] + HexagonalHigh::MatSym[i][1][1] * direction[1] + HexagonalHigh::MatSym[i][1][2] * direction[2];
+      slipDirection[2] = HexagonalHigh::MatSym[i][2][0] * direction[0] + HexagonalHigh::MatSym[i][2][1] * direction[1] + HexagonalHigh::MatSym[i][2][2] * direction[2];
 
       double cosPhi = fabs(load[0] * slipPlane[0] + load[1] * slipPlane[1] + load[2] * slipPlane[2]) / planeMag;
       double cosLambda = fabs(load[0] * slipDirection[0] + load[1] * slipDirection[1] + load[2] * slipDirection[2]) / directionMag;
@@ -1241,17 +1228,17 @@ void HexagonalOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatA
 
 
   // Sanity Check the size of the arrays
-  if (xyz0001->getNumberOfTuples() < nOrientations * Detail::HexagonalHigh::symSize0)
+  if(xyz0001->getNumberOfTuples() < nOrientations * HexagonalHigh::symSize0)
   {
-    xyz0001->resizeTuples(nOrientations * Detail::HexagonalHigh::symSize0 * 3);
+    xyz0001->resizeTuples(nOrientations * HexagonalHigh::symSize0 * 3);
   }
-  if (xyz1010->getNumberOfTuples() < nOrientations * Detail::HexagonalHigh::symSize1)
+  if(xyz1010->getNumberOfTuples() < nOrientations * HexagonalHigh::symSize1)
   {
-    xyz1010->resizeTuples(nOrientations * Detail::HexagonalHigh::symSize1 * 3);
+    xyz1010->resizeTuples(nOrientations * HexagonalHigh::symSize1 * 3);
   }
-  if (xyz1120->getNumberOfTuples() < nOrientations * Detail::HexagonalHigh::symSize2)
+  if(xyz1120->getNumberOfTuples() < nOrientations * HexagonalHigh::symSize2)
   {
-    xyz1120->resizeTuples(nOrientations * Detail::HexagonalHigh::symSize2 * 3);
+    xyz1120->resizeTuples(nOrientations * HexagonalHigh::symSize2 * 3);
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -1262,8 +1249,7 @@ void HexagonalOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatA
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
-                      Detail::HexagonalHigh::GenerateSphereCoordsImpl(eulers, xyz0001, xyz1010, xyz1120), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations), Detail::HexagonalHigh::GenerateSphereCoordsImpl(eulers, xyz0001, xyz1010, xyz1120), tbb::auto_partitioner());
   }
   else
 #endif
@@ -1312,7 +1298,7 @@ SIMPL::Rgb HexagonalOps::generateIPFColor(double phi1, double phi, double phi2, 
   OrientationType om(9); // Reusable for the loop
   QuatType q1 = OrientationTransformation::eu2qu<OrientationType, QuatType>(eu);
 
-  for(int j = 0; j < k_NumSymQuats; j++)
+  for(int j = 0; j < HexagonalHigh::k_NumSymQuats; j++)
   {
     QuatType qu = getQuatSymOp(j) * q1;
     OrientationTransformation::qu2om<QuatType, OrientationType>(qu).toGMatrix(g);
@@ -1378,9 +1364,9 @@ SIMPL::Rgb HexagonalOps::generateIPFColor(double phi1, double phi, double phi2, 
 // -----------------------------------------------------------------------------
 SIMPL::Rgb HexagonalOps::generateRodriguesColor(double r1, double r2, double r3) const
 {
-  double range1 = 2.0f * HexDim1InitValue;
-  double range2 = 2.0f * HexDim2InitValue;
-  double range3 = 2.0f * HexDim3InitValue;
+  double range1 = 2.0f * HexagonalHigh::OdfDimInitValue[0];
+  double range2 = 2.0f * HexagonalHigh::OdfDimInitValue[1];
+  double range3 = 2.0f * HexagonalHigh::OdfDimInitValue[2];
   double max1 = range1 / 2.0f;
   double max2 = range2 / 2.0f;
   double max3 = range3 / 2.0f;
@@ -1416,11 +1402,11 @@ QVector<UInt8ArrayType::Pointer> HexagonalOps::generatePoleFigure(PoleFigureConf
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
   std::vector<size_t> dims(1, 3);
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalHigh::symSize0, dims, label0 + QString("xyzCoords"), true);
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * HexagonalHigh::symSize0, dims, label0 + QString("xyzCoords"), true);
   // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalHigh::symSize1, dims, label1 + QString("xyzCoords"), true);
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * HexagonalHigh::symSize1, dims, label1 + QString("xyzCoords"), true);
   // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalHigh::symSize2, dims, label2 + QString("xyzCoords"), true);
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * HexagonalHigh::symSize2, dims, label2 + QString("xyzCoords"), true);
 
   config.sphereRadius = 1.0f;
 

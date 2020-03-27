@@ -285,17 +285,11 @@ int LaueOps::_calcMisoBin(double dim[3], double bins[3], double step[3], const O
   return (static_cast<int>((bins[0] * bins[1] * miso3bin) + (bins[0] * miso2bin) + miso1bin));
 }
 
-void LaueOps::_calcDetermineHomochoricValues(uint64_t seed, double init[3], double step[3], int32_t phi[3], int choose, double& r1, double& r2, double& r3) const
+void LaueOps::_calcDetermineHomochoricValues(double random[3], double init[3], double step[3], int32_t phi[3], double& r1, double& r2, double& r3) const
 {
-  double random;
-
-  SIMPL_RANDOMNG_NEW_SEEDED(seed)
-  random = static_cast<double>(rg.genrand_res53());
-  r1 = (step[0] * phi[0]) + (step[0] * random) - (init[0]);
-  random = static_cast<double>(rg.genrand_res53());
-  r2 = (step[1] * phi[1]) + (step[1] * random) - (init[1]);
-  random = static_cast<double>(rg.genrand_res53());
-  r3 = (step[2] * phi[2]) + (step[2] * random) - (init[2]);
+  r1 = (step[0] * phi[0]) + (step[0] * random[0]) - (init[0]);
+  r2 = (step[1] * phi[1]) + (step[1] * random[1]) - (init[1]);
+  r3 = (step[2] * phi[2]) + (step[2] * random[2]) - (init[2]);
 }
 
 // -----------------------------------------------------------------------------

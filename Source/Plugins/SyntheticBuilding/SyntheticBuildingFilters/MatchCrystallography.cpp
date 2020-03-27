@@ -567,8 +567,12 @@ void MatchCrystallography::determine_boundary_areas()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::assign_eulers(size_t ensem)
 {
-  uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
-  SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
+  std::random_device randomDevice;           // Will be used to obtain a seed for the random number engine
+  std::mt19937_64 generator(randomDevice()); // Standard mersenne_twister_engine seeded with rd()
+  std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+  generator.seed(seed);
+  std::uniform_real_distribution<> distribution(0.0, 1.0);
+  std::array<double, 3> randx3;
 
   int32_t numbins = 0;
   // QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
@@ -585,8 +589,7 @@ void MatchCrystallography::assign_eulers(size_t ensem)
     phase = m_FeaturePhases[i];
     if(phase == ensem)
     {
-      m_Seed++;
-      random = static_cast<float>(rg.genrand_res53());
+      random = static_cast<float>(distribution(generator));
 
       if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[phase])
       {
@@ -608,7 +611,10 @@ void MatchCrystallography::assign_eulers(size_t ensem)
 
       choose = pick_euler(random, numbins);
 
-      OrientationD eulers = m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(m_Seed, choose);
+      randx3[0] = distribution(generator);
+      randx3[1] = distribution(generator);
+      randx3[2] = distribution(generator);
+      OrientationD eulers = m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(randx3.data(), choose);
       eulers = m_OrientationOps[m_CrystalStructures[ensem]]->randomizeEulerAngles(eulers);
       m_FeatureEulerAngles[3 * i] = eulers[0];
       m_FeatureEulerAngles[3 * i + 1] = eulers[1];
@@ -744,8 +750,12 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
-  uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
-  SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
+  std::random_device randomDevice;           // Will be used to obtain a seed for the random number engine
+  std::mt19937_64 generator(randomDevice()); // Standard mersenne_twister_engine seeded with rd()
+  std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+  generator.seed(seed);
+  std::uniform_real_distribution<> distribution(0.0, 1.0);
+  std::array<double, 3> randx3;
 
   int32_t numbins = 0;
   int32_t iterations = 0, badtrycount = 0;
@@ -778,7 +788,6 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
   int32_t lastIteration = 0;
   while(badtrycount < (m_MaxIterations / 10) && iterations < m_MaxIterations)
   {
-    m_Seed++;
     uint64_t currentMillis = QDateTime::currentMSecsSinceEpoch();
     if(currentMillis - millis > 1000)
     {
@@ -808,7 +817,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
     }
     iterations++;
     badtrycount++;
-    random = static_cast<float>(rg.genrand_res53());
+    random = static_cast<float>(distribution(generator));
 
     if(getCancel())
     {
@@ -818,7 +827,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
     if(random < 0.5) // SwapOutOrientation
     {
       counter = 0;
-      selectedfeature1 = int32_t(rg.genrand_res53() * totalFeatures);
+      selectedfeature1 = static_cast<int32_t>(distribution(generator) * totalFeatures);
       if(selectedfeature1 >= totalFeatures)
       {
         selectedfeature1 = selectedfeature1 - totalFeatures;
@@ -851,12 +860,15 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
         rod = OrientationTransformation::eu2ro<OrientationD, OrientationD>(eu);
 
         g1odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(rod);
-        random = static_cast<float>(rg.genrand_res53());
+        random = static_cast<float>(distribution(generator));
         int32_t choose = 0;
 
         choose = pick_euler(random, numbins);
 
-        OrientationD g1ea = m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(m_Seed, choose);
+        randx3[0] = distribution(generator);
+        randx3[1] = distribution(generator);
+        randx3[2] = distribution(generator);
+        OrientationD g1ea = m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(randx3.data(), choose);
         g1ea = m_OrientationOps[m_CrystalStructures[ensem]]->randomizeEulerAngles(g1ea);
 
         q1 = OrientationTransformation::eu2qu<OrientationD, QuatF>(g1ea);
@@ -918,7 +930,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
     else // SwitchOrientation
     {
       counter = 0;
-      selectedfeature1 = int32_t(rg.genrand_res53() * totalFeatures);
+      selectedfeature1 = static_cast<int32_t>(distribution(generator) * totalFeatures);
       if(selectedfeature1 >= totalFeatures)
       {
         selectedfeature1 = selectedfeature1 - totalFeatures;
@@ -943,7 +955,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
       else
       {
         counter = 0;
-        selectedfeature2 = int32_t(rg.genrand_res53() * totalFeatures);
+        selectedfeature2 = static_cast<int32_t>(distribution(generator) * totalFeatures);
         if(selectedfeature2 >= totalFeatures)
         {
           selectedfeature2 = selectedfeature2 - totalFeatures;
