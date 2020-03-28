@@ -105,6 +105,7 @@ void UncertainRegularGridSampleSurfaceMesh::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Points", YPoints, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Points", ZPoints, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
+  parameters.back()->setLegacyPropertyName("Resolution");
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
 

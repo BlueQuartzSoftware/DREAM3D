@@ -701,43 +701,27 @@ int ModifiedLambertProjectionArray::writeXdmfAttribute(QTextStream& out, int64_t
 // -----------------------------------------------------------------------------
 QString ModifiedLambertProjectionArray::getInfoString(SIMPL::InfoStringFormat format) const
 {
-  QString info;
-  QTextStream ss (&info);
   if(format == SIMPL::HtmlFormat)
   {
-    ss << "<html><head></head>\n";
-    ss << "<body>\n";
-    ss << "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
-    ss << "<tbody>\n";
-    ss << "<tr bgcolor=\"#D3D8E0\"><th colspan=2>Attribute Array Info</th></tr>";
-
-    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Name:</th><td>" << getName() << "</td></tr>";
-
-
-    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Type:</th><td>" << getTypeAsString() << "</td></tr>";
-    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Attribute Array Count:</th><td>" << getNumberOfTuples() << "</td></tr>";
-
-    //        QString compDimStr = "(";
-    //        for(int i = 0; i < m_CompDims.size(); i++)
-    //        {
-    //          compDimStr = compDimStr + QString::number(m_CompDims[i]);
-    //          if(i < m_CompDims.size() - 1) {
-    //             compDimStr = compDimStr + QString(", ");
-    //          }
-    //        }
-    //        compDimStr = compDimStr + ")";
-    //        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Component Dimensions:</th><td>" << compDimStr << "</td></tr>";
-    //        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Total Elements:</th><td>" << m_Size << "</td></tr>";
-
-    ss << "</tbody></table>\n";
-    ss << "<br/>";
-    ss << "</body></html>";
+    return getToolTipGenerator().generateHTML();
   }
-  else
-  {
+  return QString();
+}
 
-  }
-  return info;
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ToolTipGenerator ModifiedLambertProjectionArray::getToolTipGenerator() const
+{
+  ToolTipGenerator toolTipGen;
+  QLocale usa(QLocale::English, QLocale::UnitedStates);
+
+  toolTipGen.addTitle("Attribute Array Info");
+  toolTipGen.addValue("Name", getName());
+  toolTipGen.addValue("Type", getTypeAsString());
+  toolTipGen.addValue("Attribute Array Count", usa.toString(static_cast<qlonglong>(getNumberOfTuples())));
+
+  return toolTipGen;
 }
 
 // -----------------------------------------------------------------------------

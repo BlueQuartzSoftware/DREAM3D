@@ -375,6 +375,13 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      */
     QString getInfoString(SIMPL::InfoStringFormat format) const override;
 
+    /**
+     * @brief Returns a ToolTipGenerator for creating HTML tooltip tables
+     * with values populated to match the current DataArray.
+     * @return
+     */
+    ToolTipGenerator getToolTipGenerator() const override;
+
   protected:
     ModifiedLambertProjectionArray();
 

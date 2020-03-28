@@ -1,4 +1,4 @@
-# Repository Layout # 
+# Repository Layout #
 
 The DREAM.3D project is organized into three separate repositories. These repositories are hosted at [GitHub.com/bluequartzsoftware](http://www.github.com/bluequartzsoftware). The repositories are the following:
 
@@ -9,7 +9,8 @@ The DREAM.3D project is organized into three separate repositories. These reposi
 
 As we discuss the various repositories, we are going to start from the very bottom and work our way up to the top.
 
-### CMP ###
+## CMP ##
+
  This repository holds commonly used CMake codes that are shared among the various projects and repositories. This is the lowest level repository.
 
 ---

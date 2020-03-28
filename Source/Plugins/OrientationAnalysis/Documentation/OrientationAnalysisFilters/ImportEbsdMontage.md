@@ -12,6 +12,8 @@ This **Filter** will import a collection of EBSD data files (Edax .ang or Oxford
 
 The user can set the name of the Cell and Ensemble Attribute Matrix that will be created in each DataContainer. The name of each DataContainer is based off the file used to populate the input data for that DataContainer.
 
+A *Montage* object will also be created to hold the related DataContainers
+
 Currently **only** EDAX .ang and Oxford Instruments .ctf files are supported.
 
 ## Parameters ##
@@ -19,7 +21,11 @@ Currently **only** EDAX .ang and Oxford Instruments .ctf files are supported.
 | Name | Type | Description |
 |------|------|------|
 | File List Info | EbsdMontageListInfo_t | List of values that are used to generate all the input EBSD files. |
+| Type of Overlap | Integer | The type of overlap to apply to the montage: 0(None), 1(Pixels), 2(Percent) |
+| Pixel Overlap | Integer x 2 | X and Y Pixel overlap |
+| Percent Overlap | Float x 2 | The X and Y Percent overlap expressed as a value betwee 0.0 and 100.0 |
 | Generate IPF Colors | Boolean | Automatically generate 001 IPF Colors for each _DataContainer_ |
+
 
 
 ## Required Geometry ##
@@ -40,7 +46,8 @@ Not Applicable
 | **Cell Attribute Matrix** | Scan Data | Depends on size of 2D EBSD scan | N/A | Description of object... |
 | **Ensemble Attribute Matrix** | Phase Data | 1 Tuple for each Phase | N/A | Description of object... |
 | **Element Attribute Array** | Depends on OEM EBSD file being read. | int32_t/float | (1)/(3)/etc. | Description of object... |
-| **Ensemble Attribute Array** |Crystal Structure, Phase Name, Lattice Constants | int32_t/float/etc. | (1)/(3)/etc. | Description of object... |
+| **Element Attribute Array** | IPF Colors | 3 x uint8 |  | Only created if "Generate IPF Colors" is TRUE |
+
 
 
 ## Example Pipelines ##

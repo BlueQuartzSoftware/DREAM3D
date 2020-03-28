@@ -34,6 +34,7 @@ These repositories should be cloned into a directory structure that matches the 
     /Users/[USER-NAME]/Workspace/DREAM3D_Plugins/SimulationIO
     /Users/[USER-NAME]/Workspace/DREAM3D_Plugins/UCSBUtilities
 
+
 The "/Users/\[USER-NAME\]/Workspace" prefix can be what ever the developer wants it to be. Anything under that prefix is mandatory. For example if the developer wants to use /opt/DREAM3D-Dev that is entirely possible or C:/Users/you/Desktop/DREAM3D-Dev on Windows. The following shell script can be used to
 efficiently clone all the repositories. This script shouls also work in Windows from 
 a MSysGit Bash terminal.

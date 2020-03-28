@@ -376,7 +376,7 @@ void EbsdMontageImportWidget::updateFileListView()
   QString inputPath = validator->convertToAbsolutePath(m_Ui->inputDir->text());
 
   // Now generate all the file names the user is asking for and populate the table
-  FilePathGenerator::TileRCIncexLayout2D tileLayout2d = FilePathGenerator::GenerateRCIndexMontageFileList(rowStart, rowEnd, colStart, colEnd, hasMissingFiles, k_RowColOrdering, inputPath, m_Ui->filePrefix->text(),
+  FilePathGenerator::TileRCIndexLayout2D tileLayout2d = FilePathGenerator::GenerateRCIndexMontageFileList(rowStart, rowEnd, colStart, colEnd, hasMissingFiles, k_RowColOrdering, inputPath, m_Ui->filePrefix->text(),
                                                                                             m_Ui->fileSuffix->text(), m_Ui->fileExt->text(), m_Ui->totalDigits->value());
 
   m_Ui->fileListView->clear();

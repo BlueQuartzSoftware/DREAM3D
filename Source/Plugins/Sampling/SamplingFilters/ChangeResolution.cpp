@@ -84,6 +84,7 @@ void ChangeResolution::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ChangeResolution));
+  parameters.back()->setLegacyPropertyName("Resolution");
 
   QStringList linkedProps;
   linkedProps << "CellFeatureAttributeMatrixPath"

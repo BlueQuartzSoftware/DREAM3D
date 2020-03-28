@@ -33,7 +33,6 @@
 #pragma once
 
 #include <memory>
-
 #include <map>
 
 #include <QtCore/QString>
@@ -59,12 +58,15 @@ class OrientationAnalysis_EXPORT ImportEbsdMontage : public AbstractFilter
   PYB11_BEGIN_BINDINGS(ImportEbsdMontage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ImportEbsdMontage)
   PYB11_FILTER_NEW_MACRO(ImportEbsdMontage)
+  PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(EbsdMontageListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
   PYB11_PROPERTY(bool GenerateIPFColorMap READ getGenerateIPFColorMap WRITE setGenerateIPFColorMap)
   PYB11_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
+  PYB11_PROPERTY(int32_t DefineScanOverlap READ getDefineScanOverlap WRITE setDefineScanOverlap)
+  PYB11_PROPERTY(FloatVec2Type ScanOverlapPercent READ getScanOverlapPercent WRITE setScanOverlapPercent)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
 
@@ -73,8 +75,16 @@ public:
   using Pointer = std::shared_ptr<Self>;
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
-  using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+  using ConstWeakPointer = std::weak_ptr< const Self>;
+
+  using EnumType = int32_t;
+  enum class OverlapType : EnumType
+  {
+    None = 0,    //!<
+    Pixels = 1,  //!<
+    Percent = 2, //!<
+  };
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -107,8 +117,18 @@ public:
    * @return Value of DataContainerName
    */
   DataArrayPath getDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+
+  /**
+   * @brief Setter property for MontageName
+   */
+  void setMontageName(const QString& value);
+  /**
+   * @brief Getter property for MontageName
+   * @return Value of MontageName
+   */
+  QString getMontageName() const;
+  Q_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
 
   /**
    * @brief Setter property for CellEnsembleAttributeMatrixName
@@ -166,6 +186,39 @@ public:
    */
   QString getCellIPFColorsArrayName() const;
   Q_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
+
+  /**
+   * @brief Setter property for DefineScanOverlap
+   */
+  void setDefineScanOverlap(int32_t value);
+  /**
+   * @brief Getter property for DefineScanOverlap
+   * @return Value of DefineScanOverlap
+   */
+  int32_t getDefineScanOverlap() const;
+  Q_PROPERTY(int32_t DefineScanOverlap READ getDefineScanOverlap WRITE setDefineScanOverlap)
+
+  /**
+   * @brief Setter property for ScanOverlap
+   */
+  void setScanOverlapPercent(const FloatVec2Type& value);
+  /**
+   * @brief Getter property for ScanOverlap
+   * @return Value of ScanOverlap
+   */
+  FloatVec2Type getScanOverlapPercent() const;
+  Q_PROPERTY(FloatVec2Type ScanOverlapPercent READ getScanOverlapPercent WRITE setScanOverlapPercent)
+
+  /**
+   * @brief Setter property for ScanOverlap
+   */
+  void setScanOverlapPixel(const IntVec2Type& value);
+  /**
+   * @brief Getter property for ScanOverlap
+   * @return Value of ScanOverlap
+   */
+  IntVec2Type getScanOverlapPixel() const;
+  Q_PROPERTY(IntVec2Type ScanOverlapPixel READ getScanOverlapPixel WRITE setScanOverlapPixel)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -238,10 +291,15 @@ protected:
   void initialize();
 
 private:
-  DataArrayPath m_DataContainerName = {};
-  QString m_CellEnsembleAttributeMatrixName = {};
-  QString m_CellAttributeMatrixName = {};
+  QString m_MontageName = {"Montage"};
+  DataArrayPath m_DataContainerName = {"EBSD", "", ""};
+  QString m_CellEnsembleAttributeMatrixName = {"Phase Data"};
+  QString m_CellAttributeMatrixName = {"Scan Data"};
+
   MontageFileListInfo m_InputFileListInfo = {};
+  OverlapType m_DefineScanOverlap = OverlapType::None;
+  FloatVec2Type m_ScanOverlapPercent = {0.0f, 0.0f};
+  IntVec2Type m_ScanOverlapPixel = {0, 0};
 
   std::map<QString, AbstractFilter::Pointer> m_FilterCache;
   FloatVec3Type m_ReferenceDir = {0.0f, 0.0f, 1.0f};

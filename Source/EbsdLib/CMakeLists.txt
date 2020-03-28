@@ -228,7 +228,7 @@ if(${EbsdLib_ENABLE_HDF5})
   target_compile_definitions(${PROJECT_NAME} PRIVATE -DEbsdLib_HAVE_HDF5)
 endif()
 
-if(QT5_FOUND)
+if(Qt5_FOUND)
 	set(EBSDLib_LINK_LIBRARIES
 		${EBSDLib_LINK_LIBRARIES}
 		 Qt5::Core

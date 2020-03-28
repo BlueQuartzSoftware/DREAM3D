@@ -168,7 +168,9 @@ void InitializeSyntheticVolume::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions (Voxels)", Dimensions, FilterParameter::Parameter, InitializeSyntheticVolume));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, InitializeSyntheticVolume));
+  parameters.back()->setLegacyPropertyName("Resolution");
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, InitializeSyntheticVolume));
+
   QVector<QString> choices = IGeometry::GetAllLengthUnitStrings();
   parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Units (For Description Only)", LengthUnit, FilterParameter::Parameter, InitializeSyntheticVolume, choices, false));
 

@@ -19,17 +19,10 @@ The following example assumes that the DREAM3D_SDK is located in **/home/[USER-N
     /home/[USER-NAME]/Workspace/SIMPLib
     /home/[USER-NAME]/Workspace/DREAM3D
     /home/[USER-NAME]/Workspace/DREAM3D_Plugins/
-    /home/[USER-NAME]/Workspace/DREAM3D_Plugins/Anisotropy
-    /home/[USER-NAME]/Workspace/DREAM3D_Plugins/DDDAnalysisToolbox
-    /home/[USER-NAME]/Workspace/DREAM3D_Plugins/DREAM3DReview
-    /home/[USER-NAME]/Workspace/DREAM3D_Plugins/HEDMAnalysis
-    /home/[USER-NAME]/Workspace/DREAM3D_Plugins/ImageProcessing
     /home/[USER-NAME]/Workspace/DREAM3D_Plugins/ITKImageProcessing
-    /home/[USER-NAME]/Workspace/DREAM3D_Plugins/MASSIFUtilities
     /home/[USER-NAME]/Workspace/DREAM3D_Plugins/SimulationIO
-    /home/[USER-NAME]/Workspace/DREAM3D_Plugins/TransformationPhase
     /home/[USER-NAME]/Workspace/DREAM3D_Plugins/UCSBUtilities
-    /home/[USER-NAME]/Workspace/DREAM3D_Plugins/ZeissImport
+    /home/[USER-NAME]/Workspace/DREAM3D_Plugins/DREAM3DReview
 
 Invoke CMake with the following command
 
