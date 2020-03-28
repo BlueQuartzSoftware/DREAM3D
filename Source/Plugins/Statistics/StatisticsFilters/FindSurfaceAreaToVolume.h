@@ -50,21 +50,17 @@ class Statistics_EXPORT FindSurfaceAreaToVolume : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindSurfaceAreaToVolume SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindSurfaceAreaToVolume SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindSurfaceAreaToVolume)
   PYB11_FILTER_NEW_MACRO(FindSurfaceAreaToVolume)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NumCellsArrayPath)
-  PYB11_FILTER_PARAMETER(QString, SurfaceAreaVolumeRatioArrayName)
-  PYB11_FILTER_PARAMETER(QString, SphericityArrayName)
-  PYB11_FILTER_PARAMETER(bool, CalculateSphericity)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath NumCellsArrayPath READ getNumCellsArrayPath WRITE setNumCellsArrayPath)
   PYB11_PROPERTY(QString SurfaceAreaVolumeRatioArrayName READ getSurfaceAreaVolumeRatioArrayName WRITE setSurfaceAreaVolumeRatioArrayName)
   PYB11_PROPERTY(QString SphericityArrayName READ getSphericityArrayName WRITE setSphericityArrayName)
   PYB11_PROPERTY(bool CalculateSphericity READ getCalculateSphericity WRITE setCalculateSphericity)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindSurfaceAreaToVolume;

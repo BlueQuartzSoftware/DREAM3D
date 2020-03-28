@@ -49,17 +49,15 @@ class Sampling_EXPORT RegularizeZSpacing : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(RegularizeZSpacing SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(RegularizeZSpacing SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(RegularizeZSpacing)
   PYB11_FILTER_NEW_MACRO(RegularizeZSpacing)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
-  PYB11_FILTER_PARAMETER(QString, InputFile)
-  PYB11_FILTER_PARAMETER(float, NewZRes)
   PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(float NewZRes READ getNewZRes WRITE setNewZRes)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = RegularizeZSpacing;

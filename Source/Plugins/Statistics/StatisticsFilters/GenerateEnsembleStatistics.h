@@ -55,44 +55,10 @@ class Statistics_EXPORT GenerateEnsembleStatistics : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(GenerateEnsembleStatistics SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(GenerateEnsembleStatistics SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(GenerateEnsembleStatistics)
   PYB11_FILTER_NEW_MACRO(GenerateEnsembleStatistics)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixPath)
-  PYB11_FILTER_PARAMETER(QString, PhaseTypesArrayName)
-  PYB11_FILTER_PARAMETER(PhaseType::Types, PhaseTypeArray)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SharedSurfaceAreaListArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NeighborhoodsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, AspectRatiosArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, Omega3sArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, AxisEulerAnglesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceFeaturesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, VolumesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, RDFArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, MaxMinRDFArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
-  PYB11_FILTER_PARAMETER(QString, StatisticsArrayName)
-  PYB11_FILTER_PARAMETER(bool, IncludeRadialDistFunc)
-  PYB11_FILTER_PARAMETER(bool, CalculateMorphologicalStats)
-  PYB11_FILTER_PARAMETER(int, SizeDistributionFitType)
-  PYB11_FILTER_PARAMETER(bool, ComputeAspectRatioDistribution)
-  PYB11_FILTER_PARAMETER(int, AspectRatioDistributionFitType)
-  PYB11_FILTER_PARAMETER(bool, ComputeOmega3Distribution)
-  PYB11_FILTER_PARAMETER(int, Omega3DistributionFitType)
-  PYB11_FILTER_PARAMETER(bool, ComputeNeighborhoodDistribution)
-  PYB11_FILTER_PARAMETER(int, NeighborhoodDistributionFitType)
-  PYB11_FILTER_PARAMETER(bool, CalculateCrystallographicStats)
-  PYB11_FILTER_PARAMETER(bool, CalculateODF)
-  PYB11_FILTER_PARAMETER(bool, CalculateMDF)
-  PYB11_FILTER_PARAMETER(bool, CalculateAxisODF)
-  PYB11_FILTER_PARAMETER(float, SizeCorrelationResolution)
   PYB11_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixPath READ getCellEnsembleAttributeMatrixPath WRITE setCellEnsembleAttributeMatrixPath)
   PYB11_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
   PYB11_PROPERTY(PhaseType::Types PhaseTypeArray READ getPhaseTypeArray WRITE setPhaseTypeArray)
@@ -128,7 +94,8 @@ class Statistics_EXPORT GenerateEnsembleStatistics : public AbstractFilter
   PYB11_PROPERTY(bool CalculateMDF READ getCalculateMDF WRITE setCalculateMDF)
   PYB11_PROPERTY(bool CalculateAxisODF READ getCalculateAxisODF WRITE setCalculateAxisODF)
   PYB11_PROPERTY(float SizeCorrelationResolution READ getSizeCorrelationResolution WRITE setSizeCorrelationResolution)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = GenerateEnsembleStatistics;

@@ -52,23 +52,10 @@ class OrientationAnalysis_EXPORT FindSchmids : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindSchmids SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindSchmids SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindSchmids)
   PYB11_FILTER_NEW_MACRO(FindSchmids)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
-  PYB11_FILTER_PARAMETER(QString, SchmidsArrayName)
-  PYB11_FILTER_PARAMETER(QString, SlipSystemsArrayName)
-  PYB11_FILTER_PARAMETER(QString, PolesArrayName)
-  PYB11_FILTER_PARAMETER(QString, PhisArrayName)
-  PYB11_FILTER_PARAMETER(QString, LambdasArrayName)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, LoadingDirection)
-  PYB11_FILTER_PARAMETER(bool, StoreAngleComponents)
-  PYB11_FILTER_PARAMETER(bool, OverrideSystem)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, SlipPlane)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, SlipDirection)
   PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
   PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
@@ -82,7 +69,8 @@ class OrientationAnalysis_EXPORT FindSchmids : public AbstractFilter
   PYB11_PROPERTY(bool OverrideSystem READ getOverrideSystem WRITE setOverrideSystem)
   PYB11_PROPERTY(FloatVec3Type SlipPlane READ getSlipPlane WRITE setSlipPlane)
   PYB11_PROPERTY(FloatVec3Type SlipDirection READ getSlipDirection WRITE setSlipDirection)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindSchmids;

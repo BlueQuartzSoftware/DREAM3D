@@ -53,18 +53,10 @@ class Processing_EXPORT FindRelativeMotionBetweenSlices : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindRelativeMotionBetweenSlices SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindRelativeMotionBetweenSlices SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindRelativeMotionBetweenSlices)
   PYB11_FILTER_NEW_MACRO(FindRelativeMotionBetweenSlices)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
-  PYB11_FILTER_PARAMETER(unsigned int, Plane)
-  PYB11_FILTER_PARAMETER(int, PSize1)
-  PYB11_FILTER_PARAMETER(int, PSize2)
-  PYB11_FILTER_PARAMETER(int, SSize1)
-  PYB11_FILTER_PARAMETER(int, SSize2)
-  PYB11_FILTER_PARAMETER(int, SliceStep)
-  PYB11_FILTER_PARAMETER(QString, MotionDirectionArrayName)
   PYB11_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
   PYB11_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
   PYB11_PROPERTY(int PSize1 READ getPSize1 WRITE setPSize1)
@@ -73,7 +65,8 @@ class Processing_EXPORT FindRelativeMotionBetweenSlices : public AbstractFilter
   PYB11_PROPERTY(int SSize2 READ getSSize2 WRITE setSSize2)
   PYB11_PROPERTY(int SliceStep READ getSliceStep WRITE setSliceStep)
   PYB11_PROPERTY(QString MotionDirectionArrayName READ getMotionDirectionArrayName WRITE setMotionDirectionArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindRelativeMotionBetweenSlices;

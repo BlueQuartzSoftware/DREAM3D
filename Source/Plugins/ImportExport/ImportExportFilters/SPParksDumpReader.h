@@ -60,17 +60,10 @@ class ImportExport_EXPORT SPParksDumpReader : public FileReader
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(SPParksDumpReader SUPERCLASS FileReader)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(SPParksDumpReader SUPERCLASS FileReader)
   PYB11_SHARED_POINTERS(SPParksDumpReader)
   PYB11_FILTER_NEW_MACRO(SPParksDumpReader)
-  PYB11_FILTER_PARAMETER(DataArrayPath, VolumeDataContainerName)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, InputFile)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
-  PYB11_FILTER_PARAMETER(bool, OneBasedArrays)
-  PYB11_FILTER_PARAMETER(QString, FeatureIdsArrayName)
   PYB11_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
@@ -78,7 +71,8 @@ class ImportExport_EXPORT SPParksDumpReader : public FileReader
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(bool OneBasedArrays READ getOneBasedArrays WRITE setOneBasedArrays)
   PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = SPParksDumpReader;

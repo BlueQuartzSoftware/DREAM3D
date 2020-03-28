@@ -59,21 +59,17 @@ class ImportExport_EXPORT NodesTrianglesToVtk : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(NodesTrianglesToVtk SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(NodesTrianglesToVtk SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(NodesTrianglesToVtk)
   PYB11_FILTER_NEW_MACRO(NodesTrianglesToVtk)
-  PYB11_FILTER_PARAMETER(QString, NodesFile)
-  PYB11_FILTER_PARAMETER(QString, TrianglesFile)
-  PYB11_FILTER_PARAMETER(QString, OutputVtkFile)
-  PYB11_FILTER_PARAMETER(bool, WriteBinaryFile)
-  PYB11_FILTER_PARAMETER(bool, WriteConformalMesh)
   PYB11_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile)
   PYB11_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile)
   PYB11_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)
   PYB11_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
   PYB11_PROPERTY(bool WriteConformalMesh READ getWriteConformalMesh WRITE setWriteConformalMesh)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = NodesTrianglesToVtk;

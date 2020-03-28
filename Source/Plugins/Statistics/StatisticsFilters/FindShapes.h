@@ -50,18 +50,10 @@ class Statistics_EXPORT FindShapes : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindShapes SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindShapes SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindShapes)
   PYB11_FILTER_NEW_MACRO(FindShapes)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
-  PYB11_FILTER_PARAMETER(QString, Omega3sArrayName)
-  PYB11_FILTER_PARAMETER(QString, VolumesArrayName)
-  PYB11_FILTER_PARAMETER(QString, AxisLengthsArrayName)
-  PYB11_FILTER_PARAMETER(QString, AxisEulerAnglesArrayName)
-  PYB11_FILTER_PARAMETER(QString, AspectRatiosArrayName)
   PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
@@ -70,7 +62,8 @@ class Statistics_EXPORT FindShapes : public AbstractFilter
   PYB11_PROPERTY(QString AxisLengthsArrayName READ getAxisLengthsArrayName WRITE setAxisLengthsArrayName)
   PYB11_PROPERTY(QString AxisEulerAnglesArrayName READ getAxisEulerAnglesArrayName WRITE setAxisEulerAnglesArrayName)
   PYB11_PROPERTY(QString AspectRatiosArrayName READ getAspectRatiosArrayName WRITE setAspectRatiosArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindShapes;

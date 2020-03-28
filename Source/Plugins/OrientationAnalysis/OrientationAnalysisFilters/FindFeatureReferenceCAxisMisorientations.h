@@ -52,17 +52,10 @@ class OrientationAnalysis_EXPORT FindFeatureReferenceCAxisMisorientations : publ
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindFeatureReferenceCAxisMisorientations SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindFeatureReferenceCAxisMisorientations SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindFeatureReferenceCAxisMisorientations)
   PYB11_FILTER_NEW_MACRO(FindFeatureReferenceCAxisMisorientations)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, AvgCAxesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
-  PYB11_FILTER_PARAMETER(QString, FeatureAvgCAxisMisorientationsArrayName)
-  PYB11_FILTER_PARAMETER(QString, FeatureStdevCAxisMisorientationsArrayName)
-  PYB11_FILTER_PARAMETER(QString, FeatureReferenceCAxisMisorientationsArrayName)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath AvgCAxesArrayPath READ getAvgCAxesArrayPath WRITE setAvgCAxesArrayPath)
@@ -70,7 +63,8 @@ class OrientationAnalysis_EXPORT FindFeatureReferenceCAxisMisorientations : publ
   PYB11_PROPERTY(QString FeatureAvgCAxisMisorientationsArrayName READ getFeatureAvgCAxisMisorientationsArrayName WRITE setFeatureAvgCAxisMisorientationsArrayName)
   PYB11_PROPERTY(QString FeatureStdevCAxisMisorientationsArrayName READ getFeatureStdevCAxisMisorientationsArrayName WRITE setFeatureStdevCAxisMisorientationsArrayName)
   PYB11_PROPERTY(QString FeatureReferenceCAxisMisorientationsArrayName READ getFeatureReferenceCAxisMisorientationsArrayName WRITE setFeatureReferenceCAxisMisorientationsArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindFeatureReferenceCAxisMisorientations;

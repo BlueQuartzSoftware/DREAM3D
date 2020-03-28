@@ -59,23 +59,10 @@ class OrientationAnalysis_EXPORT FindLocalAverageCAxisMisalignments : public Abs
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindLocalAverageCAxisMisalignments SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindLocalAverageCAxisMisalignments SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindLocalAverageCAxisMisalignments)
   PYB11_FILTER_NEW_MACRO(FindLocalAverageCAxisMisalignments)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NewCellFeatureAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(bool, CalcUnbiasedAvg)
-  PYB11_FILTER_PARAMETER(bool, CalcBiasedAvg)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CAxisMisalignmentListArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellParentIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, AvgCAxisMisalignmentsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureParentIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  PYB11_FILTER_PARAMETER(QString, UnbiasedLocalCAxisMisalignmentsArrayName)
-  PYB11_FILTER_PARAMETER(QString, LocalCAxisMisalignmentsArrayName)
-  PYB11_FILTER_PARAMETER(QString, NumFeaturesPerParentArrayName)
   PYB11_PROPERTY(DataArrayPath NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
   PYB11_PROPERTY(bool CalcUnbiasedAvg READ getCalcUnbiasedAvg WRITE setCalcUnbiasedAvg)
   PYB11_PROPERTY(bool CalcBiasedAvg READ getCalcBiasedAvg WRITE setCalcBiasedAvg)
@@ -89,7 +76,8 @@ class OrientationAnalysis_EXPORT FindLocalAverageCAxisMisalignments : public Abs
   PYB11_PROPERTY(QString UnbiasedLocalCAxisMisalignmentsArrayName READ getUnbiasedLocalCAxisMisalignmentsArrayName WRITE setUnbiasedLocalCAxisMisalignmentsArrayName)
   PYB11_PROPERTY(QString LocalCAxisMisalignmentsArrayName READ getLocalCAxisMisalignmentsArrayName WRITE setLocalCAxisMisalignmentsArrayName)
   PYB11_PROPERTY(QString NumFeaturesPerParentArrayName READ getNumFeaturesPerParentArrayName WRITE setNumFeaturesPerParentArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindLocalAverageCAxisMisalignments;

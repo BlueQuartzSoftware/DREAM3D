@@ -54,22 +54,10 @@ class SurfaceMeshing_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(LaplacianSmoothing SUPERCLASS SurfaceMeshFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(LaplacianSmoothing SUPERCLASS SurfaceMeshFilter)
   PYB11_SHARED_POINTERS(LaplacianSmoothing)
   PYB11_FILTER_NEW_MACRO(LaplacianSmoothing)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
-  PYB11_FILTER_PARAMETER(int, IterationSteps)
-  PYB11_FILTER_PARAMETER(float, Lambda)
-  PYB11_FILTER_PARAMETER(float, SurfacePointLambda)
-  PYB11_FILTER_PARAMETER(float, TripleLineLambda)
-  PYB11_FILTER_PARAMETER(float, QuadPointLambda)
-  PYB11_FILTER_PARAMETER(float, SurfaceTripleLineLambda)
-  PYB11_FILTER_PARAMETER(float, SurfaceQuadPointLambda)
-  PYB11_FILTER_PARAMETER(bool, UseTaubinSmoothing)
-  PYB11_FILTER_PARAMETER(float, MuFactor)
   PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
@@ -82,7 +70,8 @@ class SurfaceMeshing_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
   PYB11_PROPERTY(float SurfaceQuadPointLambda READ getSurfaceQuadPointLambda WRITE setSurfaceQuadPointLambda)
   PYB11_PROPERTY(bool UseTaubinSmoothing READ getUseTaubinSmoothing WRITE setUseTaubinSmoothing)
   PYB11_PROPERTY(float MuFactor READ getMuFactor WRITE setMuFactor)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = LaplacianSmoothing;

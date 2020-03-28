@@ -47,15 +47,14 @@ class OrientationAnalysis_EXPORT Stereographic3D : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(Stereographic3D SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(Stereographic3D SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(Stereographic3D)
   PYB11_FILTER_NEW_MACRO(Stereographic3D)
-  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
-  PYB11_FILTER_PARAMETER(QString, CoordinatesArrayName)
   PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
   PYB11_PROPERTY(QString CoordinatesArrayName READ getCoordinatesArrayName WRITE setCoordinatesArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = Stereographic3D;

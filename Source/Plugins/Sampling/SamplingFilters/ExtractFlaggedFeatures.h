@@ -50,15 +50,14 @@ class Sampling_EXPORT ExtractFlaggedFeatures : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ExtractFlaggedFeatures SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ExtractFlaggedFeatures SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ExtractFlaggedFeatures)
   PYB11_FILTER_NEW_MACRO(ExtractFlaggedFeatures)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FlaggedFeaturesArrayPath)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath FlaggedFeaturesArrayPath READ getFlaggedFeaturesArrayPath WRITE setFlaggedFeaturesArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = ExtractFlaggedFeatures;

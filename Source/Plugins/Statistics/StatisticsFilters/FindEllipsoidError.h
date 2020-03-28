@@ -62,19 +62,10 @@ class Statistics_EXPORT FindEllipsoidError : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindEllipsoidError SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindEllipsoidError SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindEllipsoidError)
   PYB11_FILTER_NEW_MACRO(FindEllipsoidError)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NumCellsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, AxisLengthsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, AxisEulerAnglesArrayPath)
-  PYB11_FILTER_PARAMETER(QString, IdealFeatureIdsArrayName)
-  PYB11_FILTER_PARAMETER(QString, EllipsoidErrorArrayName)
-  PYB11_FILTER_PARAMETER(bool, WriteIdealEllipseFeatureIds)
   PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
@@ -84,7 +75,8 @@ class Statistics_EXPORT FindEllipsoidError : public AbstractFilter
   PYB11_PROPERTY(QString IdealFeatureIdsArrayName READ getIdealFeatureIdsArrayName WRITE setIdealFeatureIdsArrayName)
   PYB11_PROPERTY(QString EllipsoidErrorArrayName READ getEllipsoidErrorArrayName WRITE setEllipsoidErrorArrayName)
   PYB11_PROPERTY(bool WriteIdealEllipseFeatureIds READ getWriteIdealEllipseFeatureIds WRITE setWriteIdealEllipseFeatureIds)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindEllipsoidError;

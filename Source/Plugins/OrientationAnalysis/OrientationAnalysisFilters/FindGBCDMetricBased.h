@@ -64,26 +64,10 @@ class OrientationAnalysis_EXPORT FindGBCDMetricBased : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindGBCDMetricBased SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindGBCDMetricBased SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindGBCDMetricBased)
   PYB11_FILTER_NEW_MACRO(FindGBCDMetricBased)
-  PYB11_FILTER_PARAMETER(int, PhaseOfInterest)
-  PYB11_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
-  PYB11_FILTER_PARAMETER(int, ChosenLimitDists)
-  PYB11_FILTER_PARAMETER(int, NumSamplPts)
-  PYB11_FILTER_PARAMETER(bool, ExcludeTripleLines)
-  PYB11_FILTER_PARAMETER(QString, DistOutputFile)
-  PYB11_FILTER_PARAMETER(QString, ErrOutputFile)
-  PYB11_FILTER_PARAMETER(bool, SaveRelativeErr)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceAreasArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFeatureFaceLabelsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NodeTypesArrayPath)
   PYB11_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
   PYB11_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
   PYB11_PROPERTY(int ChosenLimitDists READ getChosenLimitDists WRITE setChosenLimitDists)
@@ -100,7 +84,8 @@ class OrientationAnalysis_EXPORT FindGBCDMetricBased : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceAreasArrayPath READ getSurfaceMeshFaceAreasArrayPath WRITE setSurfaceMeshFaceAreasArrayPath)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceLabelsArrayPath READ getSurfaceMeshFeatureFaceLabelsArrayPath WRITE setSurfaceMeshFeatureFaceLabelsArrayPath)
   PYB11_PROPERTY(DataArrayPath NodeTypesArrayPath READ getNodeTypesArrayPath WRITE setNodeTypesArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindGBCDMetricBased;

@@ -60,17 +60,15 @@ class OrientationAnalysis_EXPORT FindBasalLoadingFactor : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindBasalLoadingFactor SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindBasalLoadingFactor SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindBasalLoadingFactor)
   PYB11_FILTER_NEW_MACRO(FindBasalLoadingFactor)
-  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, BasalLoadingFactorArrayPath)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, LoadingDirection)
   PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
   PYB11_PROPERTY(DataArrayPath BasalLoadingFactorArrayPath READ getBasalLoadingFactorArrayPath WRITE setBasalLoadingFactorArrayPath)
   PYB11_PROPERTY(FloatVec3Type LoadingDirection READ getLoadingDirection WRITE setLoadingDirection)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindBasalLoadingFactor;

@@ -54,19 +54,16 @@ class EMMPM_EXPORT MultiEmmpmFilter : public EMMPMFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(MultiEmmpmFilter SUPERCLASS EMMPMFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(MultiEmmpmFilter SUPERCLASS EMMPMFilter)
   PYB11_SHARED_POINTERS(MultiEmmpmFilter)
   PYB11_FILTER_NEW_MACRO(MultiEmmpmFilter)
-  PYB11_FILTER_PARAMETER(QVector<DataArrayPath>, InputDataArrayVector)
-  PYB11_FILTER_PARAMETER(QString, OutputAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, OutputArrayPrefix)
-  PYB11_FILTER_PARAMETER(bool, UsePreviousMuSigma)
   PYB11_PROPERTY(QVector<DataArrayPath> InputDataArrayVector READ getInputDataArrayVector WRITE setInputDataArrayVector)
   PYB11_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
   PYB11_PROPERTY(QString OutputArrayPrefix READ getOutputArrayPrefix WRITE setOutputArrayPrefix)
   PYB11_PROPERTY(bool UsePreviousMuSigma READ getUsePreviousMuSigma WRITE setUsePreviousMuSigma)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = MultiEmmpmFilter;

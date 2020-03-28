@@ -61,21 +61,17 @@ class OrientationAnalysis_EXPORT FindOrientationFieldCurl : public AbstractFilte
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindOrientationFieldCurl SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindOrientationFieldCurl SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindOrientationFieldCurl)
   PYB11_FILTER_NEW_MACRO(FindOrientationFieldCurl)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
-  PYB11_FILTER_PARAMETER(QString, DislocationTensorsArrayName)
-  PYB11_FILTER_PARAMETER(IntVec3Type, CurlSize)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
   PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
   PYB11_PROPERTY(QString DislocationTensorsArrayName READ getDislocationTensorsArrayName WRITE setDislocationTensorsArrayName)
   PYB11_PROPERTY(IntVec3Type CurlSize READ getCurlSize WRITE setCurlSize)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindOrientationFieldCurl;

@@ -51,17 +51,15 @@ class SyntheticBuilding_EXPORT EstablishShapeTypes : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(EstablishShapeTypes SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(EstablishShapeTypes SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(EstablishShapeTypes)
   PYB11_FILTER_NEW_MACRO(EstablishShapeTypes)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
-  PYB11_FILTER_PARAMETER(QString, ShapeTypesArrayName)
-  PYB11_FILTER_PARAMETER(ShapeType::Types, ShapeTypeData)
   PYB11_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
   PYB11_PROPERTY(QString ShapeTypesArrayName READ getShapeTypesArrayName WRITE setShapeTypesArrayName)
   PYB11_PROPERTY(ShapeType::Types ShapeTypeData READ getShapeTypeData WRITE setShapeTypeData)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = EstablishShapeTypes;

@@ -52,21 +52,17 @@ class SurfaceMeshing_EXPORT SharedFeatureFaceFilter : public SurfaceMeshFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(SharedFeatureFaceFilter SUPERCLASS SurfaceMeshFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(SharedFeatureFaceFilter SUPERCLASS SurfaceMeshFilter)
   PYB11_SHARED_POINTERS(SharedFeatureFaceFilter)
   PYB11_FILTER_NEW_MACRO(SharedFeatureFaceFilter)
-  PYB11_FILTER_PARAMETER(QString, FaceFeatureAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceIdsArrayName)
-  PYB11_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceLabelsArrayName)
-  PYB11_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceNumTrianglesArrayName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
   PYB11_PROPERTY(QString FaceFeatureAttributeMatrixName READ getFaceFeatureAttributeMatrixName WRITE setFaceFeatureAttributeMatrixName)
   PYB11_PROPERTY(QString SurfaceMeshFeatureFaceIdsArrayName READ getSurfaceMeshFeatureFaceIdsArrayName WRITE setSurfaceMeshFeatureFaceIdsArrayName)
   PYB11_PROPERTY(QString SurfaceMeshFeatureFaceLabelsArrayName READ getSurfaceMeshFeatureFaceLabelsArrayName WRITE setSurfaceMeshFeatureFaceLabelsArrayName)
   PYB11_PROPERTY(QString SurfaceMeshFeatureFaceNumTrianglesArrayName READ getSurfaceMeshFeatureFaceNumTrianglesArrayName WRITE setSurfaceMeshFeatureFaceNumTrianglesArrayName)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = SharedFeatureFaceFilter;

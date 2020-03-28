@@ -20,16 +20,14 @@ class GenerateFeatureIds : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(GenerateFeatureIds SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(GenerateFeatureIds SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(GenerateFeatureIds)
   PYB11_FILTER_NEW_MACRO(GenerateFeatureIds)
   PYB11_SHARED_POINTERS(CreateImageGeomDataContainer)
   PYB11_FILTER_NEW_MACRO(CreateImageGeomDataContainer)
-  PYB11_FILTER_PARAMETER(size_t, XDim)
-  PYB11_FILTER_PARAMETER(size_t, YDim)
-  PYB11_FILTER_PARAMETER(size_t, ZDim)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = GenerateFeatureIds;

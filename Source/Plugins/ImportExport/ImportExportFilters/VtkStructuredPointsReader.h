@@ -54,17 +54,10 @@ class ImportExport_EXPORT VtkStructuredPointsReader : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(VtkStructuredPointsReader SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(VtkStructuredPointsReader SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(VtkStructuredPointsReader)
   PYB11_FILTER_NEW_MACRO(VtkStructuredPointsReader)
-  PYB11_FILTER_PARAMETER(bool, ReadCellData)
-  PYB11_FILTER_PARAMETER(DataArrayPath, VolumeDataContainerName)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(bool, ReadPointData)
-  PYB11_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
-  PYB11_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, InputFile)
   PYB11_PROPERTY(bool ReadCellData READ getReadCellData WRITE setReadCellData)
   PYB11_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -72,7 +65,8 @@ class ImportExport_EXPORT VtkStructuredPointsReader : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
   PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = VtkStructuredPointsReader;

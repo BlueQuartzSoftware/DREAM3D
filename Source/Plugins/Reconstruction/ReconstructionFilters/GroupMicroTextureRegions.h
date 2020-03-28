@@ -52,21 +52,10 @@ class Reconstruction_EXPORT GroupMicroTextureRegions : public GroupFeatures
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(GroupMicroTextureRegions SUPERCLASS GroupFeatures)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(GroupMicroTextureRegions SUPERCLASS GroupFeatures)
   PYB11_SHARED_POINTERS(GroupMicroTextureRegions)
   PYB11_FILTER_NEW_MACRO(GroupMicroTextureRegions)
-  PYB11_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(float, CAxisTolerance)
-  PYB11_FILTER_PARAMETER(bool, UseRunningAverage)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, VolumesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  PYB11_FILTER_PARAMETER(QString, CellParentIdsArrayName)
-  PYB11_FILTER_PARAMETER(QString, FeatureParentIdsArrayName)
-  PYB11_FILTER_PARAMETER(QString, ActiveArrayName)
   PYB11_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
   PYB11_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
   PYB11_PROPERTY(bool UseRunningAverage READ getUseRunningAverage WRITE setUseRunningAverage)
@@ -78,7 +67,8 @@ class Reconstruction_EXPORT GroupMicroTextureRegions : public GroupFeatures
   PYB11_PROPERTY(QString CellParentIdsArrayName READ getCellParentIdsArrayName WRITE setCellParentIdsArrayName)
   PYB11_PROPERTY(QString FeatureParentIdsArrayName READ getFeatureParentIdsArrayName WRITE setFeatureParentIdsArrayName)
   PYB11_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = GroupMicroTextureRegions;

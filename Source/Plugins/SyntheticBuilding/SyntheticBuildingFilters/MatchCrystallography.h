@@ -56,24 +56,10 @@ class SyntheticBuilding_EXPORT MatchCrystallography : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(MatchCrystallography SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(MatchCrystallography SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(MatchCrystallography)
   PYB11_FILTER_NEW_MACRO(MatchCrystallography)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, PhaseTypesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceFeaturesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SharedSurfaceAreaListArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
-  PYB11_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
-  PYB11_FILTER_PARAMETER(QString, VolumesArrayName)
-  PYB11_FILTER_PARAMETER(QString, FeatureEulerAnglesArrayName)
-  PYB11_FILTER_PARAMETER(QString, AvgQuatsArrayName)
-  PYB11_FILTER_PARAMETER(int, MaxIterations)
   PYB11_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
   PYB11_PROPERTY(DataArrayPath PhaseTypesArrayPath READ getPhaseTypesArrayPath WRITE setPhaseTypesArrayPath)
@@ -88,7 +74,8 @@ class SyntheticBuilding_EXPORT MatchCrystallography : public AbstractFilter
   PYB11_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
   PYB11_PROPERTY(QString AvgQuatsArrayName READ getAvgQuatsArrayName WRITE setAvgQuatsArrayName)
   PYB11_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = MatchCrystallography;

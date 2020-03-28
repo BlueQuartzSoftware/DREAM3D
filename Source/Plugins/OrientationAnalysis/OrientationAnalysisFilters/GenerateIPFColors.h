@@ -51,17 +51,10 @@ class OrientationAnalysis_EXPORT GenerateIPFColors : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(GenerateIPFColors SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(GenerateIPFColors SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(GenerateIPFColors)
   PYB11_FILTER_NEW_MACRO(GenerateIPFColors)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, ReferenceDir)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  PYB11_FILTER_PARAMETER(bool, UseGoodVoxels)
-  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
-  PYB11_FILTER_PARAMETER(QString, CellIPFColorsArrayName)
   PYB11_PROPERTY(FloatVec3Type ReferenceDir READ getReferenceDir WRITE setReferenceDir)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
@@ -69,7 +62,8 @@ class OrientationAnalysis_EXPORT GenerateIPFColors : public AbstractFilter
   PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
   PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
   PYB11_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = GenerateIPFColors;

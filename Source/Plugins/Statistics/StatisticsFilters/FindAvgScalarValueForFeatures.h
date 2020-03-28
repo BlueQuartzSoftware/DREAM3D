@@ -53,17 +53,15 @@ class Statistics_EXPORT FindAvgScalarValueForFeatures : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindAvgScalarValueForFeatures SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindAvgScalarValueForFeatures SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindAvgScalarValueForFeatures)
   PYB11_FILTER_NEW_MACRO(FindAvgScalarValueForFeatures)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NewFeatureArrayArrayPath)
   PYB11_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath NewFeatureArrayArrayPath READ getNewFeatureArrayArrayPath WRITE setNewFeatureArrayArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindAvgScalarValueForFeatures;

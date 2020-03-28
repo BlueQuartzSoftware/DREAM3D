@@ -52,23 +52,10 @@ class Sampling_EXPORT CropImageGeometry : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(CropImageGeometry SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(CropImageGeometry SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(CropImageGeometry)
   PYB11_FILTER_NEW_MACRO(CropImageGeometry)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NewDataContainerName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
-  PYB11_FILTER_PARAMETER(int, XMin)
-  PYB11_FILTER_PARAMETER(int, YMin)
-  PYB11_FILTER_PARAMETER(int, ZMin)
-  PYB11_FILTER_PARAMETER(int, XMax)
-  PYB11_FILTER_PARAMETER(int, YMax)
-  PYB11_FILTER_PARAMETER(int, ZMax)
-  PYB11_FILTER_PARAMETER(bool, RenumberFeatures)
-  PYB11_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
-  PYB11_FILTER_PARAMETER(bool, UpdateOrigin)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
   PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
   PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
@@ -82,7 +69,8 @@ class Sampling_EXPORT CropImageGeometry : public AbstractFilter
   PYB11_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
   PYB11_PROPERTY(bool UpdateOrigin READ getUpdateOrigin WRITE setUpdateOrigin)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = CropImageGeometry;

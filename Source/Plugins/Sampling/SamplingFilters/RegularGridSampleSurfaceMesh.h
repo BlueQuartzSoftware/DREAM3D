@@ -54,18 +54,10 @@ class Sampling_EXPORT RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(RegularGridSampleSurfaceMesh SUPERCLASS SampleSurfaceMesh)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(RegularGridSampleSurfaceMesh SUPERCLASS SampleSurfaceMesh)
   PYB11_SHARED_POINTERS(RegularGridSampleSurfaceMesh)
   PYB11_FILTER_NEW_MACRO(RegularGridSampleSurfaceMesh)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(int, XPoints)
-  PYB11_FILTER_PARAMETER(int, YPoints)
-  PYB11_FILTER_PARAMETER(int, ZPoints)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
-  PYB11_FILTER_PARAMETER(QString, FeatureIdsArrayName)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(int XPoints READ getXPoints WRITE setXPoints)
@@ -74,7 +66,8 @@ class Sampling_EXPORT RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
   PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = RegularGridSampleSurfaceMesh;

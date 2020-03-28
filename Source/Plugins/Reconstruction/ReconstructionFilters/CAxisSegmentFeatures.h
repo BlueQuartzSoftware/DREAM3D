@@ -55,19 +55,10 @@ class Reconstruction_EXPORT CAxisSegmentFeatures : public SegmentFeatures
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(CAxisSegmentFeatures SUPERCLASS SegmentFeatures)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(CAxisSegmentFeatures SUPERCLASS SegmentFeatures)
   PYB11_SHARED_POINTERS(CAxisSegmentFeatures)
   PYB11_FILTER_NEW_MACRO(CAxisSegmentFeatures)
-  PYB11_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(float, MisorientationTolerance)
-  PYB11_FILTER_PARAMETER(bool, UseGoodVoxels)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
-  PYB11_FILTER_PARAMETER(QString, FeatureIdsArrayName)
-  PYB11_FILTER_PARAMETER(QString, ActiveArrayName)
   PYB11_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
   PYB11_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
   PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
@@ -77,7 +68,8 @@ class Reconstruction_EXPORT CAxisSegmentFeatures : public SegmentFeatures
   PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
   PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
   PYB11_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = CAxisSegmentFeatures;

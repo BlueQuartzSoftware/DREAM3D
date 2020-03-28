@@ -50,21 +50,10 @@ class SyntheticBuilding_EXPORT StatsGeneratorFilter : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(StatsGeneratorFilter SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(StatsGeneratorFilter SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(StatsGeneratorFilter)
   PYB11_FILTER_NEW_MACRO(StatsGeneratorFilter)
-  PYB11_FILTER_PARAMETER(DataArrayPath, StatsGeneratorDataContainerName)
-  PYB11_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, StatsDataArrayName)
-  PYB11_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
-  PYB11_FILTER_PARAMETER(QString, PhaseTypesArrayName)
-  PYB11_FILTER_PARAMETER(QString, PhaseNamesArrayName)
-  PYB11_FILTER_PARAMETER(StatsDataArray::Pointer, StatsDataArray)
-  PYB11_FILTER_PARAMETER(UInt32ArrayType::Pointer, CrystalStructures)
-  PYB11_FILTER_PARAMETER(UInt32ArrayType::Pointer, PhaseTypes)
-  PYB11_FILTER_PARAMETER(StringDataArray::Pointer, PhaseNames)
-  PYB11_FILTER_PARAMETER(DataArrayPath, Path)
   PYB11_PROPERTY(DataArrayPath StatsGeneratorDataContainerName READ getStatsGeneratorDataContainerName WRITE setStatsGeneratorDataContainerName)
   PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
   PYB11_PROPERTY(QString StatsDataArrayName READ getStatsDataArrayName WRITE setStatsDataArrayName)
@@ -76,7 +65,8 @@ class SyntheticBuilding_EXPORT StatsGeneratorFilter : public AbstractFilter
   PYB11_PROPERTY(UInt32ArrayType::Pointer PhaseTypes READ getPhaseTypes WRITE setPhaseTypes)
   PYB11_PROPERTY(StringDataArray::Pointer PhaseNames READ getPhaseNames WRITE setPhaseNames)
   PYB11_PROPERTY(DataArrayPath Path READ getPath WRITE setPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = StatsGeneratorFilter;

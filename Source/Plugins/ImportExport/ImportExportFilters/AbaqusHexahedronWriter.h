@@ -51,21 +51,17 @@ class ImportExport_EXPORT AbaqusHexahedronWriter : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(AbaqusHexahedronWriter SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(AbaqusHexahedronWriter SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(AbaqusHexahedronWriter)
   PYB11_FILTER_NEW_MACRO(AbaqusHexahedronWriter)
-  PYB11_FILTER_PARAMETER(QString, OutputPath)
-  PYB11_FILTER_PARAMETER(QString, FilePrefix)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(int, HourglassStiffness)
-  PYB11_FILTER_PARAMETER(QString, JobName)
   PYB11_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
   PYB11_PROPERTY(QString FilePrefix READ getFilePrefix WRITE setFilePrefix)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(int HourglassStiffness READ getHourglassStiffness WRITE setHourglassStiffness)
   PYB11_PROPERTY(QString JobName READ getJobName WRITE setJobName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = AbaqusHexahedronWriter;

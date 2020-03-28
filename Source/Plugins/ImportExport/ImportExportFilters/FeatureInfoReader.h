@@ -51,21 +51,10 @@ class ImportExport_EXPORT FeatureInfoReader : public FileReader
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FeatureInfoReader SUPERCLASS FileReader)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FeatureInfoReader SUPERCLASS FileReader)
   PYB11_SHARED_POINTERS(FeatureInfoReader)
   PYB11_FILTER_NEW_MACRO(FeatureInfoReader)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, InputFile)
-  PYB11_FILTER_PARAMETER(bool, CreateCellLevelArrays)
-  PYB11_FILTER_PARAMETER(bool, RenumberFeatures)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(QString, CellPhasesArrayName)
-  PYB11_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
-  PYB11_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
-  PYB11_FILTER_PARAMETER(QString, FeatureEulerAnglesArrayName)
-  PYB11_FILTER_PARAMETER(int, Delimiter)
   PYB11_PROPERTY(DataArrayPath CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
@@ -76,7 +65,8 @@ class ImportExport_EXPORT FeatureInfoReader : public FileReader
   PYB11_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
   PYB11_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
   PYB11_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FeatureInfoReader;

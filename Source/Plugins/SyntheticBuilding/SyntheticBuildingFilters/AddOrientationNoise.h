@@ -50,15 +50,14 @@ class SyntheticBuilding_EXPORT AddOrientationNoise : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(AddOrientationNoise SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(AddOrientationNoise SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(AddOrientationNoise)
   PYB11_FILTER_NEW_MACRO(AddOrientationNoise)
-  PYB11_FILTER_PARAMETER(float, Magnitude)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
   PYB11_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude)
   PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = AddOrientationNoise;

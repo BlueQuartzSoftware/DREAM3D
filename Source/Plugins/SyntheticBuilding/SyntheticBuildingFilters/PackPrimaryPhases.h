@@ -68,29 +68,10 @@ class SyntheticBuilding_EXPORT PackPrimaryPhases : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(PackPrimaryPhases SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(PackPrimaryPhases SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(PackPrimaryPhases)
   PYB11_FILTER_NEW_MACRO(PackPrimaryPhases)
-  PYB11_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrixPath)
-  PYB11_FILTER_PARAMETER(QString, FeatureIdsArrayName)
-  PYB11_FILTER_PARAMETER(QString, CellPhasesArrayName)
-  PYB11_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
-  PYB11_FILTER_PARAMETER(QString, NumFeaturesArrayName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputPhaseNamesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputShapeTypesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
-  PYB11_FILTER_PARAMETER(bool, UseMask)
-  PYB11_FILTER_PARAMETER(int, FeatureGeneration)
-  PYB11_FILTER_PARAMETER(QString, FeatureInputFile)
-  PYB11_FILTER_PARAMETER(QString, CsvOutputFile)
-  PYB11_FILTER_PARAMETER(bool, PeriodicBoundaries)
-  PYB11_FILTER_PARAMETER(bool, WriteGoalAttributes)
-  PYB11_FILTER_PARAMETER(int, SaveGeometricDescriptions)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NewAttributeMatrixPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SelectedAttributeMatrixPath)
   PYB11_PROPERTY(DataArrayPath OutputCellAttributeMatrixPath READ getOutputCellAttributeMatrixPath WRITE setOutputCellAttributeMatrixPath)
   PYB11_PROPERTY(QString OutputCellFeatureAttributeMatrixName READ getOutputCellFeatureAttributeMatrixName WRITE setOutputCellFeatureAttributeMatrixName)
   PYB11_PROPERTY(QString OutputCellEnsembleAttributeMatrixName READ getOutputCellEnsembleAttributeMatrixName WRITE setOutputCellEnsembleAttributeMatrixName)
@@ -112,7 +93,8 @@ class SyntheticBuilding_EXPORT PackPrimaryPhases : public AbstractFilter
   PYB11_PROPERTY(int SaveGeometricDescriptions READ getSaveGeometricDescriptions WRITE setSaveGeometricDescriptions)
   PYB11_PROPERTY(DataArrayPath NewAttributeMatrixPath READ getNewAttributeMatrixPath WRITE setNewAttributeMatrixPath)
   PYB11_PROPERTY(DataArrayPath SelectedAttributeMatrixPath READ getSelectedAttributeMatrixPath WRITE setSelectedAttributeMatrixPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = PackPrimaryPhases;

@@ -51,19 +51,16 @@ class SurfaceMeshing_EXPORT FindTriangleGeomNeighbors : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindTriangleGeomNeighbors SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindTriangleGeomNeighbors SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindTriangleGeomNeighbors)
   PYB11_FILTER_NEW_MACRO(FindTriangleGeomNeighbors)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixPath)
-  PYB11_FILTER_PARAMETER(QString, NeighborListArrayName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FaceLabelsArrayPath)
-  PYB11_FILTER_PARAMETER(QString, NumNeighborsArrayName)
   PYB11_PROPERTY(DataArrayPath FeatureAttributeMatrixPath READ getFeatureAttributeMatrixPath WRITE setFeatureAttributeMatrixPath)
   PYB11_PROPERTY(QString NeighborListArrayName READ getNeighborListArrayName WRITE setNeighborListArrayName)
   PYB11_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
   PYB11_PROPERTY(QString NumNeighborsArrayName READ getNumNeighborsArrayName WRITE setNumNeighborsArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindTriangleGeomNeighbors;

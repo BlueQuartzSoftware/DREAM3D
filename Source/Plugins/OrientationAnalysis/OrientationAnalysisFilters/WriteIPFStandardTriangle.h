@@ -50,7 +50,7 @@ class LaueOps;
 class OrientationAnalysis_EXPORT WriteIPFStandardTriangle : public AbstractFilter
 {
   Q_OBJECT
-  // PYB11_CREATE_BINDINGS(WriteIPFStandardTriangle SUPERCLASS AbstractFilter)
+  // PYB11_BEGIN_BINDINGS(WriteIPFStandardTriangle SUPERCLASS AbstractFilter)
   // PYB11_PROPERTY(int LaueClass READ getLaueClass WRITE setLaueClass)
   // PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   // PYB11_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)

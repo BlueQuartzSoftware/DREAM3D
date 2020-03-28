@@ -52,17 +52,15 @@ class ImportExport_EXPORT LosAlamosFFTWriter : public FileWriter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(LosAlamosFFTWriter SUPERCLASS FileWriter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(LosAlamosFFTWriter SUPERCLASS FileWriter)
   PYB11_SHARED_POINTERS(LosAlamosFFTWriter)
   PYB11_FILTER_NEW_MACRO(LosAlamosFFTWriter)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = LosAlamosFFTWriter;

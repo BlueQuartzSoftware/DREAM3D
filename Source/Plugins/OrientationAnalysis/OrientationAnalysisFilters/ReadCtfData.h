@@ -76,24 +76,18 @@ class OrientationAnalysis_EXPORT ReadCtfData : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ReadCtfData SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ReadCtfData SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ReadCtfData)
   PYB11_FILTER_NEW_MACRO(ReadCtfData)
-  PYB11_FILTER_PARAMETER(bool, DegreesToRadians)
-  PYB11_FILTER_PARAMETER(bool, EdaxHexagonalAlignment)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
-  PYB11_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(bool, FileWasRead)
-  PYB11_FILTER_PARAMETER(QString, InputFile)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(bool DegreesToRadians READ getDegreesToRadians WRITE setDegreesToRadians)
   PYB11_PROPERTY(bool EdaxHexagonalAlignment READ getEdaxHexagonalAlignment WRITE setEdaxHexagonalAlignment)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
   Q_DECLARE_PRIVATE(ReadCtfData)
 

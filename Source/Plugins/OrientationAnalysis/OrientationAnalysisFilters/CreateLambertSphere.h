@@ -51,24 +51,10 @@ class OrientationAnalysis_EXPORT CreateLambertSphere : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(CreateLambertSphere SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(CreateLambertSphere SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(CreateLambertSphere)
   PYB11_FILTER_NEW_MACRO(CreateLambertSphere)
-  PYB11_FILTER_PARAMETER(int, Hemisphere)
-  PYB11_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, QuadDataContainerName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, TriangleDataContainerName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, EdgeDataContainerName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
-  PYB11_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, EdgeAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(bool, CreateVertexGeometry)
-  PYB11_FILTER_PARAMETER(bool, CreateEdgeGeometry)
-  PYB11_FILTER_PARAMETER(bool, CreateTriangleGeometry)
-  PYB11_FILTER_PARAMETER(bool, CreateQuadGeometry)
-  PYB11_FILTER_PARAMETER(bool, UseExistingImage)
   PYB11_PROPERTY(int Hemisphere READ getHemisphere WRITE setHemisphere)
   PYB11_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
   PYB11_PROPERTY(DataArrayPath QuadDataContainerName READ getQuadDataContainerName WRITE setQuadDataContainerName)
@@ -83,7 +69,8 @@ class OrientationAnalysis_EXPORT CreateLambertSphere : public AbstractFilter
   PYB11_PROPERTY(bool CreateEdgeGeometry READ getCreateEdgeGeometry WRITE setCreateEdgeGeometry)
   PYB11_PROPERTY(bool CreateTriangleGeometry READ getCreateTriangleGeometry WRITE setCreateTriangleGeometry)
   PYB11_PROPERTY(bool CreateQuadGeometry READ getCreateQuadGeometry WRITE setCreateQuadGeometry)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = CreateLambertSphere;

@@ -51,15 +51,14 @@ class ImportExport_EXPORT DxWriter : public FileWriter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(DxWriter SUPERCLASS FileWriter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(DxWriter SUPERCLASS FileWriter)
   PYB11_SHARED_POINTERS(DxWriter)
   PYB11_FILTER_NEW_MACRO(DxWriter)
-  PYB11_FILTER_PARAMETER(bool, AddSurfaceLayer)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
   PYB11_PROPERTY(bool AddSurfaceLayer READ getAddSurfaceLayer WRITE setAddSurfaceLayer)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = DxWriter;

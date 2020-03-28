@@ -50,19 +50,16 @@ class ImportExport_EXPORT ReadStlFile : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ReadStlFile SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ReadStlFile SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ReadStlFile)
   PYB11_FILTER_NEW_MACRO(ReadStlFile)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshDataContainerName)
-  PYB11_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, StlFilePath)
-  PYB11_FILTER_PARAMETER(QString, FaceNormalsArrayName)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshDataContainerName READ getSurfaceMeshDataContainerName WRITE setSurfaceMeshDataContainerName)
   PYB11_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
   PYB11_PROPERTY(QString StlFilePath READ getStlFilePath WRITE setStlFilePath)
   PYB11_PROPERTY(QString FaceNormalsArrayName READ getFaceNormalsArrayName WRITE setFaceNormalsArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = ReadStlFile;

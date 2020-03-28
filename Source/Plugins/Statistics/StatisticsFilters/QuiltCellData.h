@@ -61,23 +61,18 @@ class Statistics_EXPORT QuiltCellData : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(QuiltCellData SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(QuiltCellData SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(QuiltCellData)
   PYB11_FILTER_NEW_MACRO(QuiltCellData)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
-  PYB11_FILTER_PARAMETER(IntVec3Type, QuiltStep)
-  PYB11_FILTER_PARAMETER(IntVec3Type, PatchSize)
-  PYB11_FILTER_PARAMETER(DataArrayPath, OutputDataContainerName)
-  PYB11_FILTER_PARAMETER(QString, OutputAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, OutputArrayName)
   PYB11_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
   PYB11_PROPERTY(IntVec3Type QuiltStep READ getQuiltStep WRITE setQuiltStep)
   PYB11_PROPERTY(IntVec3Type PatchSize READ getPatchSize WRITE setPatchSize)
   PYB11_PROPERTY(DataArrayPath OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
   PYB11_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
   PYB11_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = QuiltCellData;

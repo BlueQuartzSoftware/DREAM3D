@@ -65,7 +65,7 @@
 class SurfaceMeshing_EXPORT MovingFiniteElementSmoothing : public SurfaceMeshFilter
 {
     Q_OBJECT
-    // PYB11_CREATE_BINDINGS(MovingFiniteElementSmoothing SUPERCLASS SurfaceMeshFilter)
+    // PYB11_BEGIN_BINDINGS(MovingFiniteElementSmoothing SUPERCLASS SurfaceMeshFilter)
     // PYB11_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
     // PYB11_PROPERTY(bool NodeConstraints READ getNodeConstraints WRITE setNodeConstraints)
     // PYB11_PROPERTY(bool ConstrainSurfaceNodes READ getConstrainSurfaceNodes WRITE setConstrainSurfaceNodes)

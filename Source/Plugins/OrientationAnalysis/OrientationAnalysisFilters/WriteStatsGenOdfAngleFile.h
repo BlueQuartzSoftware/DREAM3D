@@ -60,19 +60,10 @@ class OrientationAnalysis_EXPORT WriteStatsGenOdfAngleFile : public AbstractFilt
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(WriteStatsGenOdfAngleFile SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(WriteStatsGenOdfAngleFile SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(WriteStatsGenOdfAngleFile)
   PYB11_FILTER_NEW_MACRO(WriteStatsGenOdfAngleFile)
-  PYB11_FILTER_PARAMETER(QString, OutputFile)
-  PYB11_FILTER_PARAMETER(float, Weight)
-  PYB11_FILTER_PARAMETER(int, Sigma)
-  PYB11_FILTER_PARAMETER(int, Delimiter)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
-  PYB11_FILTER_PARAMETER(bool, ConvertToDegrees)
-  PYB11_FILTER_PARAMETER(bool, UseGoodVoxels)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   PYB11_PROPERTY(float Weight READ getWeight WRITE setWeight)
   PYB11_PROPERTY(int Sigma READ getSigma WRITE setSigma)
@@ -82,7 +73,8 @@ class OrientationAnalysis_EXPORT WriteStatsGenOdfAngleFile : public AbstractFilt
   PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
   PYB11_PROPERTY(bool ConvertToDegrees READ getConvertToDegrees WRITE setConvertToDegrees)
   PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = WriteStatsGenOdfAngleFile;

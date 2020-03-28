@@ -51,19 +51,10 @@ class Statistics_EXPORT FindNeighbors : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(FindNeighbors SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(FindNeighbors SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(FindNeighbors)
   PYB11_FILTER_NEW_MACRO(FindNeighbors)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
-  PYB11_FILTER_PARAMETER(QString, SharedSurfaceAreaListArrayName)
-  PYB11_FILTER_PARAMETER(QString, NeighborListArrayName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(QString, BoundaryCellsArrayName)
-  PYB11_FILTER_PARAMETER(QString, NumNeighborsArrayName)
-  PYB11_FILTER_PARAMETER(QString, SurfaceFeaturesArrayName)
-  PYB11_FILTER_PARAMETER(bool, StoreBoundaryCells)
-  PYB11_FILTER_PARAMETER(bool, StoreSurfaceFeatures)
   PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
   PYB11_PROPERTY(QString SharedSurfaceAreaListArrayName READ getSharedSurfaceAreaListArrayName WRITE setSharedSurfaceAreaListArrayName)
   PYB11_PROPERTY(QString NeighborListArrayName READ getNeighborListArrayName WRITE setNeighborListArrayName)
@@ -73,7 +64,8 @@ class Statistics_EXPORT FindNeighbors : public AbstractFilter
   PYB11_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
   PYB11_PROPERTY(bool StoreBoundaryCells READ getStoreBoundaryCells WRITE setStoreBoundaryCells)
   PYB11_PROPERTY(bool StoreSurfaceFeatures READ getStoreSurfaceFeatures WRITE setStoreSurfaceFeatures)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FindNeighbors;

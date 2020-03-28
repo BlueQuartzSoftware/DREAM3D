@@ -52,8 +52,8 @@
 class SurfaceMeshing_EXPORT FeatureFaceCurvatureFilter : public SurfaceMeshFilter
 {
   Q_OBJECT
-#ifdef SIMPL_ENABLE_PYTHON
-  // PYB11_CREATE_BINDINGS(FeatureFaceCurvatureFilter SUPERCLASS SurfaceMeshFilter)
+  // Start Python bindings declarations
+  // PYB11_BEGIN_BINDINGS(FeatureFaceCurvatureFilter SUPERCLASS SurfaceMeshFilter)
   // PYB11_PROPERTY(DataArrayPath FaceAttributeMatrixPath READ getFaceAttributeMatrixPath WRITE setFaceAttributeMatrixPath)
   // PYB11_PROPERTY(QString SurfaceMeshPrincipalCurvature1sArrayName READ getSurfaceMeshPrincipalCurvature1sArrayName WRITE setSurfaceMeshPrincipalCurvature1sArrayName)
   // PYB11_PROPERTY(QString SurfaceMeshPrincipalCurvature2sArrayName READ getSurfaceMeshPrincipalCurvature2sArrayName WRITE setSurfaceMeshPrincipalCurvature2sArrayName)
@@ -70,7 +70,8 @@ class SurfaceMeshing_EXPORT FeatureFaceCurvatureFilter : public SurfaceMeshFilte
   // PYB11_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceIdsArrayPath READ getSurfaceMeshFeatureFaceIdsArrayPath WRITE setSurfaceMeshFeatureFaceIdsArrayPath)
   // PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
   // PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = FeatureFaceCurvatureFilter;

@@ -76,36 +76,10 @@ class SyntheticBuilding_EXPORT InsertPrecipitatePhases : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(InsertPrecipitatePhases SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(InsertPrecipitatePhases SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(InsertPrecipitatePhases)
   PYB11_FILTER_NEW_MACRO(InsertPrecipitatePhases)
-  PYB11_FILTER_PARAMETER(QString, CsvOutputFile)
-  PYB11_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
-  PYB11_FILTER_PARAMETER(bool, UseMask)
-  PYB11_FILTER_PARAMETER(int, FeatureGeneration)
-  PYB11_FILTER_PARAMETER(QString, PrecipInputFile)
-  PYB11_FILTER_PARAMETER(bool, PeriodicBoundaries)
-  PYB11_FILTER_PARAMETER(bool, MatchRDF)
-  PYB11_FILTER_PARAMETER(bool, WriteGoalAttributes)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, InputShapeTypesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, BoundaryCellsArrayPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-  PYB11_FILTER_PARAMETER(QString, NumCellsArrayName)
-  PYB11_FILTER_PARAMETER(QString, EquivalentDiametersArrayName)
-  PYB11_FILTER_PARAMETER(QString, VolumesArrayName)
-  PYB11_FILTER_PARAMETER(QString, Omega3sArrayName)
-  PYB11_FILTER_PARAMETER(QString, CentroidsArrayName)
-  PYB11_FILTER_PARAMETER(QString, AxisEulerAnglesArrayName)
-  PYB11_FILTER_PARAMETER(QString, AxisLengthsArrayName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
-  PYB11_FILTER_PARAMETER(int, SaveGeometricDescriptions)
-  PYB11_FILTER_PARAMETER(DataArrayPath, NewAttributeMatrixPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, SelectedAttributeMatrixPath)
   PYB11_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile)
   PYB11_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
   PYB11_PROPERTY(bool UseMask READ getUseMask WRITE setUseMask)
@@ -132,7 +106,8 @@ class SyntheticBuilding_EXPORT InsertPrecipitatePhases : public AbstractFilter
   PYB11_PROPERTY(int SaveGeometricDescriptions READ getSaveGeometricDescriptions WRITE setSaveGeometricDescriptions)
   PYB11_PROPERTY(DataArrayPath NewAttributeMatrixPath READ getNewAttributeMatrixPath WRITE setNewAttributeMatrixPath)
   PYB11_PROPERTY(DataArrayPath SelectedAttributeMatrixPath READ getSelectedAttributeMatrixPath WRITE setSelectedAttributeMatrixPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = InsertPrecipitatePhases;
