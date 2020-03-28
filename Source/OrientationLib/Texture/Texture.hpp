@@ -294,10 +294,7 @@ public:
       randx3[2] = distribution(generator);
       eu = orientationOps.determineEulerAngles(randx3.data(), choose2);
       QuatType q2 = OrientationTransformation::eu2qu<OrientationD, QuatType>(eu);
-      double n1 = 0.0, n2 = 0.0, n3 = 0.0;
-      double w = orientationOps.getMisoQuat(q1, q2, n1, n2, n3);
-
-      OrientationD ax(n1, n2, n3, w);
+      OrientationD ax = orientationOps.calculateMisorientation(q1, q2);
       OrientationD ro = OrientationTransformation::ax2ro<OrientationD, OrientationD>(ax);
 
       ro = orientationOps.getMDFFZRod(ro); // <==== THIS IS NOT IMPELMENTED FOR ALL LAUE CLASSES

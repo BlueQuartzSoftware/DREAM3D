@@ -179,83 +179,72 @@ QString HexagonalOps::getSymmetryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double HexagonalOps::_calcMisoQuat(const QuatType quatsym[12], int numsym, QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
+OrientationD HexagonalOps::calculateMisorientationInternal(const QuatType quatsym[12], int numsym, const QuatType& q1, const QuatType& q2) const
 {
   double wmin = 9999999.0f; //,na,nb,nc;
-  double w = 0.0;
   double n1min = 0.0f;
   double n2min = 0.0f;
   double n3min = 0.0f;
-  QuatType qc;
 
+  OrientationD axisAngle;
+  QuatType qc;
   QuatType qr = q1 * (q2.conjugate());
 
-  for (int i = 0; i < numsym; i++)
+  for(int i = 0; i < numsym; i++)
   {
     qc = quatsym[i] * qr;
 
     if(qc.w() < -1)
     {
-      qc.w() = -1.0;
+      qc.w() = -1;
     }
     else if(qc.w() > 1)
     {
-      qc.w() = 1.0;
+      qc.w() = 1;
     }
 
-    OrientationType ax = OrientationTransformation::qu2ax<QuatType, OrientationType>(qc);
-    n1 = ax[0];
-    n2 = ax[1];
-    n3 = ax[2];
-    w = ax[3];
+    axisAngle = OrientationTransformation::qu2ax<QuatType, OrientationType>(qc);
 
-    if (w > SIMPLib::Constants::k_Pi)
+    if(axisAngle[3] > SIMPLib::Constants::k_Pi)
     {
-      w = SIMPLib::Constants::k_2Pi - w;
+      axisAngle[3] = SIMPLib::Constants::k_2Pi - axisAngle[3];
     }
-    if (w < wmin)
+    if(axisAngle[3] < wmin)
     {
-      wmin = w;
-      n1min = n1;
-      n2min = n2;
-      n3min = n3;
+      wmin = axisAngle[3];
+      n1min = axisAngle[0];
+      n2min = axisAngle[1];
+      n3min = axisAngle[2];
     }
   }
   double denom = sqrt((n1min * n1min + n2min * n2min + n3min * n3min));
-  n1 = n1min / denom;
-  n2 = n2min / denom;
-  n3 = n3min / denom;
-  if(denom == 0)
+  axisAngle[0] = n1min / denom;
+  axisAngle[1] = n2min / denom;
+  axisAngle[2] = n3min / denom;
+  if(denom == 0 || wmin == 0)
   {
-    n1 = 0.0, n2 = 0.0, n3 = 1.0;
+    axisAngle[0] = 0.0;
+    axisAngle[1] = 0.0;
+    axisAngle[2] = 1.0;
   }
-  if(wmin == 0)
-  {
-    n1 = 0.0, n2 = 0.0, n3 = 1.0;
-  }
-  return wmin;
+
+  return axisAngle;
 }
 
 // -----------------------------------------------------------------------------
-double HexagonalOps::getMisoQuat(QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
+OrientationD HexagonalOps::calculateMisorientation(const QuatType& q1, const QuatType& q2) const
 {
-
-  return _calcMisoQuat(HexagonalHigh::QuatSym, HexagonalHigh::k_NumSymQuats, q1, q2, n1, n2, n3);
+  return calculateMisorientationInternal(HexagonalHigh::QuatSym, HexagonalHigh::k_NumSymQuats, q1, q2);
 }
 
 // -----------------------------------------------------------------------------
-float HexagonalOps::getMisoQuat(QuatF& q1f, QuatF& q2f, float& n1f, float& n2f, float& n3f) const
+OrientationF HexagonalOps::calculateMisorientation(const QuatF& q1f, const QuatF& q2f) const
+
 {
-  QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
-  QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
-  double n1 = n1f;
-  double n2 = n2f;
-  double n3 = n3f;
-  float w = static_cast<float>(_calcMisoQuat(HexagonalHigh::QuatSym, HexagonalHigh::k_NumSymQuats, q1, q2, n1, n2, n3));
-  n1f = n1;
-  n2f = n2;
-  n3f = n3;
-  return w;
+  QuatType q1 = q1f;
+  QuatType q2 = q2f;
+  OrientationD axisAngle = calculateMisorientationInternal(HexagonalHigh::QuatSym, HexagonalHigh::k_NumSymQuats, q1, q2);
+  return axisAngle;
 }
 
 QuatType HexagonalOps::getQuatSymOp(int32_t i) const
@@ -1629,7 +1618,6 @@ UInt8ArrayType::Pointer HexagonalOps::generateIPFTriangleLegend(int imageDim) co
 // -----------------------------------------------------------------------------
 SIMPL::Rgb HexagonalOps::generateMisorientationColor(const QuatType& q, const QuatType& refFrame) const
 {
-  double n1, n2, n3, w;
   double xo, xo1, xo2, xo3, x, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11;
   double yo, yo1, yo2, yo3, y, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11;
   double zo, zo1, zo2, zo3, z, z1, z2, z3, z4, z5, z6, z7, z8, z9, z10, z11;
@@ -1639,13 +1627,13 @@ SIMPL::Rgb HexagonalOps::generateMisorientationColor(const QuatType& q, const Qu
   QuatType q2 = refFrame;
 
   //get misorientation
-  w = getMisoQuat(q1, q2, n1, n2, n3);
+  OrientationD axisAngle = calculateMisorientation(q1, q2);
 
   //eq c5.1
-  k = tan(w / 2.0);
-  xo = n1;
-  yo = n2;
-  zo = n3;
+  k = tan(axisAngle[3] / 2.0);
+  xo = axisAngle[0];
+  yo = axisAngle[1];
+  zo = axisAngle[2];
 
   OrientationType rod(xo, yo, zo, k);
   rod = getMDFFZRod(rod);

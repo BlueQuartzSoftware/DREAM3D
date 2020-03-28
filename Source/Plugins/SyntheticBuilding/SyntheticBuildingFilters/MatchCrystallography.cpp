@@ -658,8 +658,6 @@ int32_t MatchCrystallography::pick_euler(float random, int32_t numbins)
 // -----------------------------------------------------------------------------
 void MatchCrystallography::MC_LoopBody1(int32_t feature, size_t ensem, size_t j, float neighsurfarea, uint32_t sym, const QuatF& q1, const QuatF& q2)
 {
-  double w = 0.0f;
-  double n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   double curmiso1 = 0.0f, curmiso2 = 0.0f, curmiso3 = 0.0f;
   size_t curmisobin = 0, newmisobin = 0;
 
@@ -684,9 +682,9 @@ void MatchCrystallography::MC_LoopBody1(int32_t feature, size_t ensem, size_t j,
   curmisobin = m_OrientationOps[sym]->getMisoBin(rod);
   QuatType qq1(q1[0], q1[1], q1[2], q1[3]);
   QuatType qq2(q2[0], q2[1], q2[2], q2[3]);
-  w = m_OrientationOps[sym]->getMisoQuat(qq1, qq2, n1, n2, n3);
+  OrientationD axisAngle = m_OrientationOps[sym]->calculateMisorientation(q1, q2);
 
-  rod = OrientationTransformation::ax2ro<OrientationD, OrientationD>(OrientationD(n1, n2, n3, w));
+  rod = OrientationTransformation::ax2ro<OrientationD, OrientationD>(axisAngle);
   newmisobin = m_OrientationOps[sym]->getMisoBin(rod);
   m_MdfChange = m_MdfChange + (((m_ActualMdf->getValue(curmisobin) - m_SimMdf->getValue(curmisobin)) * (m_ActualMdf->getValue(curmisobin) - m_SimMdf->getValue(curmisobin))) -
                                ((m_ActualMdf->getValue(curmisobin) - (m_SimMdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem]))) *
@@ -701,8 +699,6 @@ void MatchCrystallography::MC_LoopBody1(int32_t feature, size_t ensem, size_t j,
 // -----------------------------------------------------------------------------
 void MatchCrystallography::MC_LoopBody2(int32_t feature, size_t ensem, size_t j, float neighsurfarea, uint32_t sym, QuatF& q1, QuatF& q2)
 {
-  float w = 0.0f;
-  float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   float curmiso1 = 0.0f, curmiso2 = 0.0f, curmiso3 = 0.0f;
   size_t curmisobin = 0, newmisobin = 0;
   float miso1 = 0.0f, miso2 = 0.0f, miso3 = 0.0f;
@@ -726,9 +722,9 @@ void MatchCrystallography::MC_LoopBody2(int32_t feature, size_t ensem, size_t j,
   }
 
   curmisobin = m_OrientationOps[sym]->getMisoBin(rod);
-  w = m_OrientationOps[sym]->getMisoQuat(q1, q2, n1, n2, n3);
+  OrientationD axisAngle = m_OrientationOps[sym]->calculateMisorientation(q1, q2);
 
-  rod = OrientationTransformation::ax2ro<OrientationD, OrientationD>(OrientationD(n1, n2, n3, w));
+  rod = OrientationTransformation::ax2ro<OrientationD, OrientationD>(axisAngle);
   newmisobin = m_OrientationOps[sym]->getMisoBin(rod);
   m_MisorientationLists[feature][3 * j] = miso1;
   m_MisorientationLists[feature][3 * j + 1] = miso2;
@@ -1137,11 +1133,6 @@ void MatchCrystallography::measure_misorientations(size_t ensem)
   NeighborList<float>& neighborsurfacearealist = *(m_SharedSurfaceAreaList.lock());
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
-  float w = 0.0f;
-  float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
-
-  // QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
-
   uint32_t crys1 = 0;
   int32_t mbin = 0;
 
@@ -1173,12 +1164,11 @@ void MatchCrystallography::measure_misorientations(size_t ensem)
         int32_t nname = neighborlist[i][j];
         if(m_FeaturePhases[nname] == ensem)
         {
-          w = 10000.0f;
-
           QuatF q2(m_AvgQuats + nname * 4);
-          w = m_OrientationOps[crys1]->getMisoQuat(q1, q2, n1, n2, n3);
 
-          OrientationD rod = OrientationTransformation::ax2ro<OrientationD, OrientationD>(OrientationD(n1, n2, n3, w));
+          OrientationD axisAngle = m_OrientationOps[crys1]->calculateMisorientation(q1, q2);
+
+          OrientationD rod = OrientationTransformation::ax2ro<OrientationD, OrientationD>(axisAngle);
           m_MisorientationLists[i][3 * j] = rod[0];
           m_MisorientationLists[i][3 * j + 1] = rod[1];
           m_MisorientationLists[i][3 * j + 2] = rod[2];

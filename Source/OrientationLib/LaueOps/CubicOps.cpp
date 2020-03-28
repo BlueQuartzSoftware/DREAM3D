@@ -240,30 +240,25 @@ QString CubicOps::getSymmetryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double CubicOps::getMisoQuat(QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
+OrientationD CubicOps::calculateMisorientation(const QuatType& q1, const QuatType& q2) const
 {
-  return _calcMisoQuat(CubicHigh::QuatSym, CubicHigh::k_NumSymQuats, q1, q2, n1, n2, n3);
+  return calculateMisorientationInternal(CubicHigh::QuatSym, CubicHigh::k_NumSymQuats, q1, q2);
 }
 
 // -----------------------------------------------------------------------------
-float CubicOps::getMisoQuat(QuatF& q1f, QuatF& q2f, float& n1f, float& n2f, float& n3f) const
+OrientationF CubicOps::calculateMisorientation(const QuatF& q1f, const QuatF& q2f) const
+
 {
-  QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
-  QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
-  double n1 = n1f;
-  double n2 = n2f;
-  double n3 = n3f;
-  float w = static_cast<float>(_calcMisoQuat(CubicHigh::QuatSym, CubicHigh::k_NumSymQuats, q1, q2, n1, n2, n3));
-  n1f = n1;
-  n2f = n2;
-  n3f = n3;
-  return w;
+  QuatType q1 = q1f;
+  QuatType q2 = q2f;
+  OrientationD axisAngle = calculateMisorientationInternal(CubicHigh::QuatSym, CubicHigh::k_NumSymQuats, q1, q2);
+  return axisAngle;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double CubicOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
+OrientationD CubicOps::calculateMisorientationInternal(const QuatType quatsym[24], int numsym, const QuatType& q1, const QuatType& q2) const
 {
   double wmin = 9999999.0f; //,na,nb,nc;
   QuatType qco;
@@ -271,7 +266,7 @@ double CubicOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, QuatType&
   int type = 1;
   double sin_wmin_over_2 = 0.0;
 
-  QuatType qc = q1 * q2.conjugate();
+  QuatType qc = q1 * (q2.conjugate());
   qc.elementWiseAbs();
 
   // if qc.x() is smallest
@@ -479,6 +474,10 @@ double CubicOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, QuatType&
     sin_wmin_over_2 = sinf(wmin);
   }
 
+  double n1 = 0.0;
+  double n2 = 0.0;
+  double n3 = 0.0;
+  double w = 0.0;
   if(type == 1)
   {
     n1 = qco.x() / sin_wmin_over_2;
@@ -510,8 +509,9 @@ double CubicOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, QuatType&
     n1 = 0.0, n2 = 0.0, n3 = 1.0;
   }
   wmin = 2.0f * wmin;
-  return wmin;
 
+  OrientationD axisAngle(n1, n2, n3, w);
+  return axisAngle;
 }
 
 QuatType CubicOps::getQuatSymOp(int32_t i) const
@@ -1979,10 +1979,11 @@ SIMPL::Rgb CubicOps::generateMisorientationColor(const QuatType& q, const QuatTy
   QuatType q2 = refFrame;
 
   // get disorientation
-  w = getMisoQuat(q1, q2, n1, n2, n3);
-  n1 = std::fabs(n1);
-  n2 = std::fabs(n2);
-  n3 = std::fabs(n3);
+  OrientationD axisAngle = calculateMisorientation(q, refFrame);
+  n1 = std::fabs(axisAngle[0]);
+  n2 = std::fabs(axisAngle[1]);
+  n3 = std::fabs(axisAngle[2]);
+  w = axisAngle[3];
 
   _TripletSort(n1, n2, n3, z, y, x);
 

@@ -33,7 +33,6 @@
 
 #pragma once
 
-#include <cassert>
 #include <cstring>
 #include <iostream>
 
@@ -106,13 +105,19 @@ public:
     ::memcpy(m_Array, rhs.m_Array, sizeof(T) * m_Size); // Copy the bytes over to the new array
   }
 
-  //  Orientation(const Orientation<T>&& rhs) noexcept // move Constructor
-  //  : m_Size(rhs.m_Size)
-  //  {
-  //    m_OwnsData = std::move(rhs.m_OwnsData);
-  //    m_Size = std::move(rhs.m_Size);
-  //    m_Array = std::move(rhs.m_Array);
-  //  }
+  /**
+   * @brief Converts from an Orientation object that uses a different type
+   */
+  template <typename FromType>
+  Orientation(const Orientation<FromType>& in)
+  {
+    m_Size = in.size();
+    allocate();
+    for(size_t i = 0; i < m_Size; i++)
+    {
+      m_Array[i] = static_cast<T>(in[i]);
+    }
+  }
 
   /**
    * @brief Orientation
@@ -196,8 +201,16 @@ public:
     }
     if(m_OwnsData == false)
     {
-      assert(m_Size == rhs.size());
-      assert(m_Array != nullptr);
+      if(m_Size != rhs.size())
+      {
+        throw std::out_of_range("Orientation m_Size != rhs.size()");
+      }
+
+      if(m_Array == nullptr)
+      {
+        throw std::out_of_range("Orientation m_Array == nullptr");
+      }
+
       ::memcpy(m_Array, rhs.m_Array, sizeof(T) * m_Size); // Copy the bytes over to the new array
     }
     return *this;
@@ -207,7 +220,7 @@ public:
    * the incoming Orientation instance *ONLY* if it owns its pointer. The data from `rhs` will be copied into this instance.
    * @param rhs
    */
-  Orientation& operator=(Orientation&& rhs) noexcept // Move Assignment
+  Orientation& operator=(Orientation&& rhs) // Move Assignment
   {
     // If we own our data deallocate it.
     if(m_OwnsData)
@@ -222,8 +235,15 @@ public:
     }
     else
     {
-      assert(m_Size == rhs.size());
-      assert(m_Array != nullptr);
+      if(m_Size != rhs.size())
+      {
+        throw std::out_of_range("Orientation m_Size != rhs.size()");
+      }
+
+      if(m_Array == nullptr)
+      {
+        throw std::out_of_range("Orientation m_Array == nullptr");
+      }
       ::memcpy(m_Array, rhs.m_Array, sizeof(T) * m_Size); // Copy the bytes over to the new array
     }
     return *this;
@@ -397,25 +417,29 @@ public:
 
   inline reference operator[](size_type index)
   {
-    // assert(index < m_Size);
     return m_Array[index];
   }
 
   inline const T& operator[](size_type index) const
   {
-    // assert(index < m_Size);
     return m_Array[index];
   }
 
   inline reference at(size_type index)
   {
-    assert(index < m_Size);
+    if(index >= m_Size)
+    {
+      throw std::out_of_range("DataArray subscript out of range");
+    }
     return m_Array[index];
   }
 
   inline const T& at(size_type index) const
   {
-    assert(index < m_Size);
+    if(index >= m_Size)
+    {
+      throw std::out_of_range("DataArray subscript out of range");
+    }
     return m_Array[index];
   }
 
@@ -525,7 +549,10 @@ public:
    */
   void toGMatrix(T g[3][3]) const
   {
-    assert(m_Size == 9);
+    if(m_Size != 9)
+    {
+      throw std::out_of_range("Orientation subscript out of range");
+    }
     g[0][0] = m_Array[0];
     g[0][1] = m_Array[1];
     g[0][2] = m_Array[2];
@@ -718,7 +745,7 @@ protected:
           || MUD_FLAP_4 != 0xABABABABABABABABul
           || MUD_FLAP_5 != 0xABABABABABABABABul)
       {
-        Q_ASSERT(false);
+        Q_∂(false);
       }
 #endif
     delete[](m_Array);

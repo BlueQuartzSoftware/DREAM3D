@@ -1154,7 +1154,8 @@ void GenerateEnsembleStatistics::gatherMDFStats()
       phase2 = m_CrystalStructures[m_FeaturePhases[nname]];
       if(phase1 == phase2)
       {
-        w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+        OrientationD axisAngle = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
+        w = axisAngle[3];
       }
       if(phase1 == phase2)
       {

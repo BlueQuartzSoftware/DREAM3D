@@ -96,21 +96,19 @@ QuatType LaueOps::getFZQuat(const QuatType& qr) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double LaueOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, const QuatType& q1, const QuatType& q2, double& n1, double& n2, double& n3) const
+OrientationD LaueOps::calculateMisorientationInternal(const QuatType quatsym[24], int numsym, const QuatType& q1, const QuatType& q2) const
 {
   double wmin = 9999999.0f; //,na,nb,nc;
-  double w = 0.0;
   double n1min = 0.0f;
   double n2min = 0.0f;
   double n3min = 0.0f;
 
+  OrientationD axisAngle;
   QuatType qc;
+  QuatType qr = q1 * (q2.conjugate());
 
-  QuatType q2inv = q2.conjugate();
-  QuatType qr = q1 * q2inv;
   for(int i = 0; i < numsym; i++)
   {
-
     qc = quatsym[i] * qr;
 
     if(qc.w() < -1)
@@ -122,33 +120,32 @@ double LaueOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, const Quat
       qc.w() = 1;
     }
 
-    OrientationTransformation::qu2ax<QuatType, OrientationType>(qc).toAxisAngle(n1, n2, n3, w);
+    axisAngle = OrientationTransformation::qu2ax<QuatType, OrientationType>(qc);
 
-    if(w > SIMPLib::Constants::k_Pi)
+    if(axisAngle[3] > SIMPLib::Constants::k_Pi)
     {
-      w = SIMPLib::Constants::k_2Pi - w;
+      axisAngle[3] = SIMPLib::Constants::k_2Pi - axisAngle[3];
     }
-    if(w < wmin)
+    if(axisAngle[3] < wmin)
     {
-      wmin = w;
-      n1min = n1;
-      n2min = n2;
-      n3min = n3;
+      wmin = axisAngle[3];
+      n1min = axisAngle[0];
+      n2min = axisAngle[1];
+      n3min = axisAngle[2];
     }
   }
   double denom = sqrt((n1min * n1min + n2min * n2min + n3min * n3min));
-  n1 = n1min / denom;
-  n2 = n2min / denom;
-  n3 = n3min / denom;
-  if(denom == 0)
+  axisAngle[0] = n1min / denom;
+  axisAngle[1] = n2min / denom;
+  axisAngle[2] = n3min / denom;
+  if(denom == 0 || wmin == 0)
   {
-    n1 = 0.0, n2 = 0.0, n3 = 1.0;
+    axisAngle[0] = 0.0;
+    axisAngle[1] = 0.0;
+    axisAngle[2] = 1.0;
   }
-  if(wmin == 0)
-  {
-    n1 = 0.0, n2 = 0.0, n3 = 1.0;
-  }
-  return wmin;
+
+  return axisAngle;
 }
 
 // -----------------------------------------------------------------------------

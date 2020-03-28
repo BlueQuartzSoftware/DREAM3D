@@ -101,7 +101,6 @@ public:
     //    QuatF q2 = QuaternionMathF::New();
     //    QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-    float radToDeg = 180.0f / SIMPLib::Constants::k_Pi;
     for(size_t i = start; i < end; i++)
     {
       feature1 = m_Labels[2 * i];
@@ -130,12 +129,12 @@ public:
           QuatType q1(quatPtr[0], quatPtr[1], quatPtr[2], quatPtr[3]);
           quatPtr = m_Quats + feature2 * 4;
           QuatType q2(quatPtr[0], quatPtr[1], quatPtr[2], quatPtr[3]);
-          double w = 0.0f, n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
-          w = m_OrientationOps[m_CrystalStructures[phase1]]->getMisoQuat(q1, q2, n1, n2, n3);
-          w = w * radToDeg;
-          m_Colors[3 * i + 0] = w * n1;
-          m_Colors[3 * i + 1] = w * n2;
-          m_Colors[3 * i + 2] = w * n3;
+          // double w = 0.0f, n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
+          OrientationD axisAngle = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
+
+          m_Colors[3 * i + 0] = axisAngle[0] * (axisAngle[3] * SIMPLib::Constants::k_180OverPi);
+          m_Colors[3 * i + 1] = axisAngle[1] * (axisAngle[3] * SIMPLib::Constants::k_180OverPi);
+          m_Colors[3 * i + 2] = axisAngle[2] * (axisAngle[3] * SIMPLib::Constants::k_180OverPi);
         }
       }
       else

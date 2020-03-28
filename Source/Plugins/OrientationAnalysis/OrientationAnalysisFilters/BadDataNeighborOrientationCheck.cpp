@@ -224,7 +224,6 @@ void BadDataNeighborOrientationCheck::execute()
 
   float w = 10000.0f;
 
-  float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   uint32_t phase1 = 0, phase2 = 0;
 
   QVector<int32_t> neighborCount(totalPoints, 0);
@@ -274,7 +273,8 @@ void BadDataNeighborOrientationCheck::execute()
 
           if(m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0)
           {
-            w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+            OrientationD axisAngle = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
+            w = axisAngle[3];
           }
           if(w < misorientationTolerance)
           {
@@ -341,7 +341,8 @@ void BadDataNeighborOrientationCheck::execute()
 
               if(m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0)
               {
-                w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+                OrientationD axisAngle = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
+                w = axisAngle[3];
               }
               if(w < misorientationTolerance)
               {

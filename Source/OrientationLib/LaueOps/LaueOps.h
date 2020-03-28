@@ -142,16 +142,20 @@ class OrientationLib_EXPORT LaueOps
     virtual std::array<size_t, 3> getOdfNumBins() const = 0;
 
     /**
-     * @brief getMisoQuat Finds the misorientation
-     * @param q1
-     * @param q2
-     * @param n1
-     * @param n2
-     * @param n3
-     * @return
+     * @brief calculateMisorientation Finds the misorientation between 2 quaternions and returns the result as an Axis Angle value
+     * @param q1 Input Quaternion
+     * @param q2 Input Quaternion
+     * @return Axis Angle Representation
      */
-    virtual double getMisoQuat(QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const = 0;
-    virtual float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3) const = 0;
+    virtual OrientationD calculateMisorientation(const QuatType& q1, const QuatType& q2) const = 0;
+
+    /**
+     * @brief calculateMisorientation Finds the misorientation between 2 quaternions and returns the result as an Axis Angle value
+     * @param q1 Input Quaternion
+     * @param q2 Input Quaternion
+     * @return Axis Angle Representation
+     */
+    virtual OrientationF calculateMisorientation(const QuatF& q1, const QuatF& q2) const = 0;
 
     /**
      * @brief getQuatSymOp Copies the symmetry operator at index i into q
@@ -253,10 +257,12 @@ class OrientationLib_EXPORT LaueOps
   protected:
     LaueOps();
 
-    double _calcMisoQuat(const QuatType quatsym[24], int numsym, const QuatType& q1, const QuatType& q2, double& n1, double& n2, double& n3) const;
+    OrientationD calculateMisorientationInternal(const QuatType quatsym[24], int numsym, const QuatType& q1, const QuatType& q2) const;
 
     OrientationType _calcRodNearestOrigin(const double rodsym[24][3], int numsym, const OrientationType& rod) const;
+
     QuatType _calcNearestQuat(const QuatType quatsym[24], int numsym, const QuatType& q1, const QuatType& q2) const;
+
     QuatType _calcQuatNearestOrigin(const QuatType quatsym[24], int numsym, const QuatType& qr) const;
 
     int _calcMisoBin(double dim[3], double bins[3], double step[3], const OrientationType& homochoric) const;

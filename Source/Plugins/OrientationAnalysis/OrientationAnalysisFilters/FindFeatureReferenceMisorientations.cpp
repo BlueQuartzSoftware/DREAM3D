@@ -291,7 +291,7 @@ void FindFeatureReferenceMisorientations::execute()
   FloatArrayType::Pointer quatsPtr = m_QuatsPtr.lock();
   FloatArrayType::Pointer avgQuatsPtr = m_AvgQuatsPtr.lock();
 
-  float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
+  // float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   uint32_t phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   uint32_t phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
@@ -354,7 +354,10 @@ void FindFeatureReferenceMisorientations::execute()
             q2 = QuatF(avgQuatsPtr->getTuplePointer(m_Centers[gnum]));
             phase2 = m_CrystalStructures[m_CellPhases[m_Centers[gnum]]];
           }
-          m_FeatureReferenceMisorientations[point] = SIMPLib::Constants::k_180OverPi * m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+
+          OrientationD axisAngle = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
+
+          m_FeatureReferenceMisorientations[point] = SIMPLib::Constants::k_180OverPi * axisAngle[3]; // convert to degrees
           idx = m_FeatureIds[point] * 2;
           avgMiso[idx + 0]++;
           avgMiso[idx + 1] = avgMiso[idx + 1] + m_FeatureReferenceMisorientations[point];

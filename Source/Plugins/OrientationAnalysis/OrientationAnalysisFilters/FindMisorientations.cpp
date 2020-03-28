@@ -236,8 +236,6 @@ void FindMisorientations::execute()
 
   std::vector<std::vector<float>> misorientationlists;
 
-  float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
-  float w = 0.0f;
   size_t tempMisoList = 0;
 
   uint32_t xtalType1 = 0, xtalType2 = 0;
@@ -254,15 +252,15 @@ void FindMisorientations::execute()
 
     for(size_t j = 0; j < featureNeighborList.size(); j++)
     {
-      w = std::numeric_limits<float>::max();
       nname = featureNeighborList[j];
       QuatF q2(m_AvgQuats + nname * 4);
       xtalType2 = m_CrystalStructures[m_FeaturePhases[nname]];
       tempMisoList = featureNeighborList.size();
       if(xtalType1 == xtalType2 && static_cast<int64_t>(xtalType1) < static_cast<int64_t>(m_OrientationOps.size()))
       {
-        w = m_OrientationOps[xtalType1]->getMisoQuat(q1, q2, n1, n2, n3);
-        misorientationlists[i][j] = w * SIMPLib::Constants::k_180OverPi;
+        OrientationD axisAngle = m_OrientationOps[xtalType1]->calculateMisorientation(q1, q2);
+
+        misorientationlists[i][j] = axisAngle[3] * SIMPLib::Constants::k_180OverPi;
         if(m_FindAvgMisors)
         {
           m_AvgMisorientations[i] += misorientationlists[i][j];

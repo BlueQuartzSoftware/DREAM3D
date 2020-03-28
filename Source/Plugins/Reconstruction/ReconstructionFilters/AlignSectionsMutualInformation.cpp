@@ -437,16 +437,9 @@ void AlignSectionsMutualInformation::form_features_sections()
   int32_t featurecount = 1;
   int64_t neighbor = 0;
 
-  //  QuatF q1 = QuaternionMathF::New();
-  //  QuatF q2 = QuaternionMathF::New();
-  //  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
-
   FloatArrayType::Pointer quats = m_QuatsPtr.lock();
 
   float w = 0.0f;
-  float n1 = 0.0f;
-  float n2 = 0.0f;
-  float n3 = 0.0f;
   int64_t randx = 0;
   int64_t randy = 0;
   bool good = false;
@@ -559,7 +552,8 @@ void AlignSectionsMutualInformation::form_features_sections()
               phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
               if(phase1 == phase2)
               {
-                w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+                OrientationF axisAngle = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
+                w = axisAngle[3];
               }
               if(w < misorientationTolerance)
               {

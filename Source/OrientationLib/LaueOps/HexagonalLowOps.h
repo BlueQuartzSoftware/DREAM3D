@@ -112,8 +112,21 @@ class OrientationLib_EXPORT HexagonalLowOps : public LaueOps
      */
     std::array<size_t, 3> getOdfNumBins() const override;
 
-    double getMisoQuat(QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const override;
-    float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3) const override;
+    /**
+     * @brief calculateMisorientation Finds the misorientation between 2 quaternions and returns the result as an Axis Angle value
+     * @param q1 Input Quaternion
+     * @param q2 Input Quaternion
+     * @return Axis Angle Representation
+     */
+    virtual OrientationD calculateMisorientation(const QuatType& q1, const QuatType& q2) const override;
+
+    /**
+     * @brief calculateMisorientation Finds the misorientation between 2 quaternions and returns the result as an Axis Angle value
+     * @param q1 Input Quaternion
+     * @param q2 Input Quaternion
+     * @return Axis Angle Representation
+     */
+    virtual OrientationF calculateMisorientation(const QuatF& q1, const QuatF& q2) const override;
 
     QuatType getQuatSymOp(int i) const override;
     void getRodSymOp(int i, double* r) const override;
@@ -200,7 +213,15 @@ class OrientationLib_EXPORT HexagonalLowOps : public LaueOps
     UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim) const;
 
   protected:
-    double _calcMisoQuat(const QuatType quatsym[12], int numsym, QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const;
+    /**
+     * @brief calculateMisorientationInternal
+     * @param quatsym
+     * @param numsym
+     * @param q1
+     * @param q2
+     * @return
+     */
+    OrientationD calculateMisorientationInternal(const QuatType quatsym[12], int numsym, const QuatType& q1, const QuatType& q2) const;
 
   public:
     HexagonalLowOps(const HexagonalLowOps&) = delete; // Copy Constructor Not Implemented
