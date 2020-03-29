@@ -231,7 +231,7 @@ class OrientationLib_EXPORT CubicOps : public LaueOps
      * @param q2
      * @return
      */
-    OrientationD calculateMisorientationInternal(const QuatType quatsym[12], int numsym, const QuatType& q1, const QuatType& q2) const;
+    OrientationD calculateMisorientationInternal(const QuatType* quatsym, size_t numsym, const QuatType& q1, const QuatType& q2) const override;
 
     /**
      * @brief area preserving projection of volume preserving transformation (for C. Shuch and S. Patala coloring legend generation)
@@ -248,7 +248,6 @@ class OrientationLib_EXPORT CubicOps : public LaueOps
     CubicOps& operator=(const CubicOps&) = delete; // Copy Assignment Not Implemented
     CubicOps& operator=(CubicOps&&) = delete;      // Move Assignment Not Implemented
 
-  private:
 };
 
 

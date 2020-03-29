@@ -41,9 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 
 /**
  * @brief The FindCAxisLocations class. See [Filter documentation](@ref findcaxislocations) for details.
@@ -198,8 +201,7 @@ private:
   DataArrayPath m_QuatsArrayPath = {};
   QString m_CAxisLocationsArrayName = {};
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
 public:
   FindCAxisLocations(const FindCAxisLocations&) = delete; // Copy Constructor Not Implemented
   FindCAxisLocations(FindCAxisLocations&&) = delete;      // Move Constructor Not Implemented

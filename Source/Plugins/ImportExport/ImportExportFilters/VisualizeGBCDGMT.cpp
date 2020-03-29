@@ -33,16 +33,14 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "VisualizeGBCDGMT.h"
 
-#include <QtCore/QDir>
+#include <memory>
 
+#include <QtCore/QDir>
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -57,6 +55,7 @@
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
 #include "OrientationLib/Core/Quaternion.hpp"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
@@ -75,7 +74,7 @@ VisualizeGBCDGMT::VisualizeGBCDGMT()
   m_MisorientationRotation.k = 0.0f;
   m_MisorientationRotation.l = 0.0f;
 
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::GetAllOrientationOps();
 }
 
 // -----------------------------------------------------------------------------

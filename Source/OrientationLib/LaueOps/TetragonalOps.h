@@ -210,23 +210,12 @@ class OrientationLib_EXPORT TetragonalOps : public LaueOps
     UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim) const;
 
   protected:
-    /**
-     * @brief calculateMisorientationInternal
-     * @param quatsym
-     * @param numsym
-     * @param q1
-     * @param q2
-     * @return
-     */
-    OrientationD calculateMisorientationInternal(const QuatType quatsym[8], int numsym, const QuatType& q1, const QuatType& q2) const;
 
   public:
     TetragonalOps(const TetragonalOps&) = delete;  // Copy Constructor Not Implemented
     TetragonalOps(TetragonalOps&&) = delete;       // Move Constructor Not Implemented
     TetragonalOps& operator=(const TetragonalOps&) = delete; // Copy Assignment Not Implemented
     TetragonalOps& operator=(TetragonalOps&&) = delete;      // Move Assignment Not Implemented
-
-  private:
 
 };
 

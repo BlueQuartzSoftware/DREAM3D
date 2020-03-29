@@ -42,11 +42,13 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
-
 #include "Reconstruction/ReconstructionDLLExport.h"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 
 /**
  * @brief The CAxisSegmentFeatures class. See [Filter documentation](@ref caxissegmentfeatures) for details.
@@ -326,8 +328,7 @@ private:
   QString m_FeatureIdsArrayName = {};
   QString m_ActiveArrayName = {};
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
   std::random_device m_RandomDevice;
   std::mt19937_64 m_Generator;
   std::uniform_int_distribution<int64_t> m_Distribution;

@@ -45,9 +45,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
 #include "ImportExport/ImportExportDLLExport.h"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 
 /**
  * @brief The VisualizeGBCDPoleFigure class. See [Filter documentation](@ref visualizegbcdpolefigure) for details.
@@ -252,8 +255,7 @@ private:
   DataArrayPath m_GBCDArrayPath = {};
   DataArrayPath m_CrystalStructuresArrayPath = {};
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
   /**
    * @brief writeCoords Writes a set of Axis coordinates to that are needed
    * for a Rectilinear Grid based data set to a VTK file

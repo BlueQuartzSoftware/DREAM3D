@@ -69,6 +69,9 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 /**
  * @brief The CalculateFaceMisorientationColorsImpl class implements a threaded algorithm that computes the misorientation
  * colors for the given list of surface mesh labels
@@ -80,8 +83,7 @@ class CalculateFaceMisorientationColorsImpl
   float* m_Quats;
   float* m_Colors;
   unsigned int* m_CrystalStructures;
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
 public:
   CalculateFaceMisorientationColorsImpl(int32_t* labels, int32_t* phases, float* quats, float* colors, unsigned int* crystalStructures)
   : m_Labels(labels)
@@ -90,7 +92,7 @@ public:
   , m_Colors(colors)
   , m_CrystalStructures(crystalStructures)
   {
-    m_OrientationOps = LaueOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::GetAllOrientationOps();
   }
   virtual ~CalculateFaceMisorientationColorsImpl() = default;
 

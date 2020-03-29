@@ -33,25 +33,14 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "NeighborOrientationCorrelation.h"
 
+#include <memory>
 #include <vector>
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/atomic.h>
-#include <tbb/blocked_range.h>
-#include <tbb/parallel_for.h>
-#include <tbb/task_group.h>
-#include <tbb/task_scheduler_init.h>
-#include <tbb/tick_count.h>
-#endif
 
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -62,8 +51,19 @@
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
+#include "OrientationLib/LaueOps/LaueOps.h"
+
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
+
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include <tbb/atomic.h>
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
+#include <tbb/task_group.h>
+#include <tbb/task_scheduler_init.h>
+#include <tbb/tick_count.h>
+#endif
 
 class NeighborOrientationCorrelationTransferDataImpl
 {
@@ -123,7 +123,7 @@ NeighborOrientationCorrelation::NeighborOrientationCorrelation()
 , m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
 , m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
 {
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::GetAllOrientationOps();
 
 }
 

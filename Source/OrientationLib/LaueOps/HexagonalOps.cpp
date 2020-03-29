@@ -177,61 +177,6 @@ QString HexagonalOps::getSymmetryName() const
 }
 
 // -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-OrientationD HexagonalOps::calculateMisorientationInternal(const QuatType quatsym[12], int numsym, const QuatType& q1, const QuatType& q2) const
-{
-  double wmin = 9999999.0f; //,na,nb,nc;
-  double n1min = 0.0f;
-  double n2min = 0.0f;
-  double n3min = 0.0f;
-
-  OrientationD axisAngle;
-  QuatType qc;
-  QuatType qr = q1 * (q2.conjugate());
-
-  for(int i = 0; i < numsym; i++)
-  {
-    qc = quatsym[i] * qr;
-
-    if(qc.w() < -1)
-    {
-      qc.w() = -1;
-    }
-    else if(qc.w() > 1)
-    {
-      qc.w() = 1;
-    }
-
-    axisAngle = OrientationTransformation::qu2ax<QuatType, OrientationType>(qc);
-
-    if(axisAngle[3] > SIMPLib::Constants::k_Pi)
-    {
-      axisAngle[3] = SIMPLib::Constants::k_2Pi - axisAngle[3];
-    }
-    if(axisAngle[3] < wmin)
-    {
-      wmin = axisAngle[3];
-      n1min = axisAngle[0];
-      n2min = axisAngle[1];
-      n3min = axisAngle[2];
-    }
-  }
-  double denom = sqrt((n1min * n1min + n2min * n2min + n3min * n3min));
-  axisAngle[0] = n1min / denom;
-  axisAngle[1] = n2min / denom;
-  axisAngle[2] = n3min / denom;
-  if(denom == 0 || wmin == 0)
-  {
-    axisAngle[0] = 0.0;
-    axisAngle[1] = 0.0;
-    axisAngle[2] = 1.0;
-  }
-
-  return axisAngle;
-}
-
-// -----------------------------------------------------------------------------
 OrientationD HexagonalOps::calculateMisorientation(const QuatType& q1, const QuatType& q2) const
 {
   return calculateMisorientationInternal(HexagonalHigh::QuatSym, HexagonalHigh::k_NumSymQuats, q1, q2);
@@ -239,7 +184,6 @@ OrientationD HexagonalOps::calculateMisorientation(const QuatType& q1, const Qua
 
 // -----------------------------------------------------------------------------
 OrientationF HexagonalOps::calculateMisorientation(const QuatF& q1f, const QuatF& q2f) const
-
 {
   QuatType q1 = q1f;
   QuatType q2 = q2f;

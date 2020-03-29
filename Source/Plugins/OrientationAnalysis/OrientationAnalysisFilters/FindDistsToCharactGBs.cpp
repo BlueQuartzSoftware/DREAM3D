@@ -71,6 +71,9 @@
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
 {
@@ -100,8 +103,7 @@ class TrisProcessor
   int32_t* m_Phases;
   int32_t* m_FaceLabels;
   double* m_FaceNormals;
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
 public:
   TrisProcessor(double* __m_DistToTilt, double* __m_DistToTwist, double* __m_DistToSymmetric, double* __m_DistTo180Tilt, uint32_t* __m_CrystalStructures, float* __m_Eulers, int32_t* __m_Phases,
                 int32_t* __m_FaceLabels, double* __m_FaceNormals)
@@ -115,7 +117,7 @@ public:
   , m_FaceLabels(__m_FaceLabels)
   , m_FaceNormals(__m_FaceNormals)
   {
-    m_OrientationOps = LaueOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::GetAllOrientationOps();
   }
 
   virtual ~TrisProcessor() = default;

@@ -286,7 +286,7 @@ void FindSchmids::execute()
   {
     return;
   }
-  QVector<LaueOps::Pointer> orientationOps = LaueOps::getOrientationOpsQVector();
+  std::vector<LaueOps::Pointer> orientationOps = LaueOps::GetAllOrientationOps();
 
   size_t totalFeatures = m_SchmidsPtr.lock()->getNumberOfTuples();
 

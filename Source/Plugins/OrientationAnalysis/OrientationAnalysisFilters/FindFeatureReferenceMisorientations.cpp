@@ -282,7 +282,7 @@ void FindFeatureReferenceMisorientations::execute()
     return;
   }
 
-  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  std::vector<LaueOps::Pointer> m_OrientationOps = LaueOps::GetAllOrientationOps();
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();

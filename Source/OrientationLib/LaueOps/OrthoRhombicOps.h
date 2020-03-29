@@ -213,23 +213,12 @@ class OrientationLib_EXPORT OrthoRhombicOps : public LaueOps
     UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim) const;
 
   protected:
-    /**
-     * @brief calculateMisorientationInternal
-     * @param quatsym
-     * @param numsym
-     * @param q1
-     * @param q2
-     * @return
-     */
-    OrientationD calculateMisorientationInternal(const QuatType quatsym[4], int numsym, const QuatType& q1, const QuatType& q2) const;
 
   public:
     OrthoRhombicOps(const OrthoRhombicOps&) = delete; // Copy Constructor Not Implemented
     OrthoRhombicOps(OrthoRhombicOps&&) = delete;      // Move Constructor Not Implemented
     OrthoRhombicOps& operator=(const OrthoRhombicOps&) = delete; // Copy Assignment Not Implemented
     OrthoRhombicOps& operator=(OrthoRhombicOps&&) = delete;      // Move Assignment Not Implemented
-
-  private:
 
 };
 

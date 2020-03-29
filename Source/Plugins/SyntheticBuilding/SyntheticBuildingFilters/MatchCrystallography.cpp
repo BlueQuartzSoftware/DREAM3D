@@ -105,7 +105,7 @@ MatchCrystallography::MatchCrystallography()
   m_ActualMdf = FloatArrayType::NullPointer();
   m_SimMdf = FloatArrayType::NullPointer();
 
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::GetAllOrientationOps();
 
 }
 
@@ -232,7 +232,7 @@ void MatchCrystallography::initialize()
   m_SimMdf = FloatArrayType::NullPointer();
   m_MisorientationLists.clear();
 
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::GetAllOrientationOps();
 }
 
 // -----------------------------------------------------------------------------

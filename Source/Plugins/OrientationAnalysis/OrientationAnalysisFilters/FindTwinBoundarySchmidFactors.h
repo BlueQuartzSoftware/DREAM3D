@@ -42,9 +42,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 
 /**
  * @brief The FindTwinBoundarySchmidFactors class. See [Filter documentation](@ref findtwinboundaryschmidfactors) for details.
@@ -317,8 +320,7 @@ private:
   DataArrayPath m_SurfaceMeshTwinBoundaryArrayPath = {};
   QString m_SurfaceMeshTwinBoundarySchmidFactorsArrayName = {};
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
   /**
    * @brief dataCheckVoxel Checks for the appropriate parameter values and availability of arrays
    */

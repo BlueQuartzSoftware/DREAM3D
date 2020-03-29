@@ -321,7 +321,7 @@ bool MergeTwins::determineGrouping(int32_t referenceFeature, int32_t neighborFea
   // float w = 0.0f;
   // float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   bool twin = false;
-  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  std::vector<LaueOps::Pointer> m_OrientationOps = LaueOps::GetAllOrientationOps();
 
   if(m_FeatureParentIds[neighborFeature] == -1 && m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
   {

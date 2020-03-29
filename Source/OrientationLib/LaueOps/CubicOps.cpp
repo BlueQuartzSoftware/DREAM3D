@@ -258,7 +258,7 @@ OrientationF CubicOps::calculateMisorientation(const QuatF& q1f, const QuatF& q2
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationD CubicOps::calculateMisorientationInternal(const QuatType quatsym[24], int numsym, const QuatType& q1, const QuatType& q2) const
+OrientationD CubicOps::calculateMisorientationInternal(const QuatType* quatsym, size_t numsym, const QuatType& q1, const QuatType& q2) const
 {
   double wmin = 9999999.0f; //,na,nb,nc;
   QuatType qco;
@@ -477,7 +477,6 @@ OrientationD CubicOps::calculateMisorientationInternal(const QuatType quatsym[24
   double n1 = 0.0;
   double n2 = 0.0;
   double n3 = 0.0;
-  double w = 0.0;
   if(type == 1)
   {
     n1 = qco.x() / sin_wmin_over_2;
@@ -510,7 +509,7 @@ OrientationD CubicOps::calculateMisorientationInternal(const QuatType quatsym[24
   }
   wmin = 2.0f * wmin;
 
-  OrientationD axisAngle(n1, n2, n3, w);
+  OrientationD axisAngle(n1, n2, n3, wmin);
   return axisAngle;
 }
 

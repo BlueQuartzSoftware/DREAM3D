@@ -42,9 +42,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 
 /**
  * @brief The FindSlipTransmissionMetrics class. See [Filter documentation](@ref findsliptransmissionmetrics) for details.
@@ -285,8 +288,7 @@ private:
   DataArrayPath m_FeaturePhasesArrayPath = {};
   DataArrayPath m_CrystalStructuresArrayPath = {};
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
   NeighborList<float>::WeakPointer m_F1List;
   NeighborList<float>::WeakPointer m_F1sptList;
   NeighborList<float>::WeakPointer m_F7List;

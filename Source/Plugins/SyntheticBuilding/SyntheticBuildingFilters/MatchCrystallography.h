@@ -46,8 +46,12 @@
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
-
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 
 /**
  * @brief The MatchCrystallography class. See [Filter documentation](@ref matchcrystallography) for details.
@@ -485,8 +489,7 @@ private:
 
   std::vector<std::vector<float>> m_MisorientationLists;
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
 public:
   MatchCrystallography(const MatchCrystallography&) = delete; // Copy Constructor Not Implemented
   MatchCrystallography(MatchCrystallography&&) = delete;      // Move Constructor Not Implemented

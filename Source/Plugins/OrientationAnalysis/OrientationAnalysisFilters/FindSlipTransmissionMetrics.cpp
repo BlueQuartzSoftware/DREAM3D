@@ -233,7 +233,7 @@ void FindSlipTransmissionMetrics::execute()
   {
     return;
   }
-  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  std::vector<LaueOps::Pointer> m_OrientationOps = LaueOps::GetAllOrientationOps();
 
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 

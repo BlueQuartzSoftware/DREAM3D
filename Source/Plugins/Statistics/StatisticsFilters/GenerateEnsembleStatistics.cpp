@@ -1018,7 +1018,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
 void GenerateEnsembleStatistics::gatherODFStats()
 {
   StatsDataArray& statsDataArray = *(m_StatsDataArray);
-  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  std::vector<LaueOps::Pointer> m_OrientationOps = LaueOps::GetAllOrientationOps();
   size_t bin = 0;
   size_t numfeatures = m_FeatureEulerAnglesPtr.lock()->getNumberOfTuples();
   size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
@@ -1096,7 +1096,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
 void GenerateEnsembleStatistics::gatherMDFStats()
 {
   StatsDataArray& statsDataArray = *(m_StatsDataArray);
-  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  std::vector<LaueOps::Pointer> m_OrientationOps = LaueOps::GetAllOrientationOps();
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
@@ -1205,7 +1205,7 @@ void GenerateEnsembleStatistics::gatherMDFStats()
 void GenerateEnsembleStatistics::gatherAxisODFStats()
 {
   StatsDataArray& statsDataArray = *(m_StatsDataArray);
-  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  std::vector<LaueOps::Pointer> m_OrientationOps = LaueOps::GetAllOrientationOps();
   int32_t bin = 0;
   QVector<FloatArrayType::Pointer> axisodf;
   QVector<float> totalaxes;

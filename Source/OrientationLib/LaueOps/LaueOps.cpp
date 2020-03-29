@@ -96,56 +96,47 @@ QuatType LaueOps::getFZQuat(const QuatType& qr) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationD LaueOps::calculateMisorientationInternal(const QuatType quatsym[24], int numsym, const QuatType& q1, const QuatType& q2) const
+OrientationD LaueOps::calculateMisorientationInternal(const QuatType* quatsym, size_t numsym, const QuatType& q1, const QuatType& q2) const
 {
-  double wmin = 9999999.0f; //,na,nb,nc;
-  double n1min = 0.0f;
-  double n2min = 0.0f;
-  double n3min = 0.0f;
-
-  OrientationD axisAngle;
+  OrientationD axisAngleMin(0.0, 0.0, 0.0, std::numeric_limits<double>::max());
   QuatType qc;
   QuatType qr = q1 * (q2.conjugate());
 
-  for(int i = 0; i < numsym; i++)
+  for(size_t i = 0; i < numsym; i++)
   {
     qc = quatsym[i] * qr;
 
     if(qc.w() < -1)
     {
-      qc.w() = -1;
+      qc.w() = -1.0;
     }
     else if(qc.w() > 1)
     {
-      qc.w() = 1;
+      qc.w() = 1.0;
     }
 
-    axisAngle = OrientationTransformation::qu2ax<QuatType, OrientationType>(qc);
-
+    OrientationD axisAngle = OrientationTransformation::qu2ax<QuatType, OrientationType>(qc);
     if(axisAngle[3] > SIMPLib::Constants::k_Pi)
     {
       axisAngle[3] = SIMPLib::Constants::k_2Pi - axisAngle[3];
     }
-    if(axisAngle[3] < wmin)
+    if(axisAngle[3] < axisAngleMin[3])
     {
-      wmin = axisAngle[3];
-      n1min = axisAngle[0];
-      n2min = axisAngle[1];
-      n3min = axisAngle[2];
+      axisAngleMin = axisAngle;
     }
   }
-  double denom = sqrt((n1min * n1min + n2min * n2min + n3min * n3min));
-  axisAngle[0] = n1min / denom;
-  axisAngle[1] = n2min / denom;
-  axisAngle[2] = n3min / denom;
-  if(denom == 0 || wmin == 0)
+  double denom = sqrt((axisAngleMin[0] * axisAngleMin[0] + axisAngleMin[1] * axisAngleMin[1] + axisAngleMin[2] * axisAngleMin[2]));
+  axisAngleMin[0] = axisAngleMin[0] / denom;
+  axisAngleMin[1] = axisAngleMin[1] / denom;
+  axisAngleMin[2] = axisAngleMin[2] / denom;
+  if(denom == 0.0 || axisAngleMin[3] == 0.0)
   {
-    axisAngle[0] = 0.0;
-    axisAngle[1] = 0.0;
-    axisAngle[2] = 1.0;
+    axisAngleMin[0] = 0.0;
+    axisAngleMin[1] = 0.0;
+    axisAngleMin[2] = 1.0;
   }
 
-  return axisAngle;
+  return axisAngleMin;
 }
 
 // -----------------------------------------------------------------------------
@@ -332,35 +323,7 @@ int LaueOps::_calcODFBin(double dim[3], double bins[3], double step[3], const Or
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<LaueOps::Pointer> LaueOps::getOrientationOpsQVector()
-{
-  QVector<LaueOps::Pointer> m_OrientationOps;
-  m_OrientationOps.push_back(HexagonalOps::New());
-
-  m_OrientationOps.push_back(CubicOps::New());
-
-  m_OrientationOps.push_back(HexagonalLowOps::New()); // Hex Low
-  m_OrientationOps.push_back(CubicLowOps::New());     // Cubic Low
-  m_OrientationOps.push_back(TriclinicOps::New());    // Triclinic
-  m_OrientationOps.push_back(MonoclinicOps::New());   // Monoclinic
-
-  m_OrientationOps.push_back(OrthoRhombicOps::New()); // OrthoRhombic
-
-  m_OrientationOps.push_back(TetragonalLowOps::New()); // Tetragonal-low
-  m_OrientationOps.push_back(TetragonalOps::New());    // Tetragonal-high
-
-  m_OrientationOps.push_back(TrigonalLowOps::New()); // Trigonal-low
-  m_OrientationOps.push_back(TrigonalOps::New());    // Trigonal-High
-
-  m_OrientationOps.push_back(OrthoRhombicOps::New()); // Axis OrthorhombicOps
-
-  return m_OrientationOps;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::vector<LaueOps::Pointer> LaueOps::getOrientationOpsVector()
+std::vector<LaueOps::Pointer> LaueOps::GetAllOrientationOps()
 {
   std::vector<LaueOps::Pointer> m_OrientationOps;
   m_OrientationOps.push_back(HexagonalOps::New());
@@ -386,7 +349,7 @@ std::vector<LaueOps::Pointer> LaueOps::getOrientationOpsVector()
 }
 
 // -----------------------------------------------------------------------------
-LaueOps::Pointer LaueOps::getOrientationOpsFromSpaceGroupNumber(size_t sgNumber)
+LaueOps::Pointer LaueOps::GetOrientationOpsFromSpaceGroupNumber(size_t sgNumber)
 {
   std::array<size_t, 32> sgpg = {1, 2, 3, 6, 10, 16, 25, 47, 75, 81, 83, 89, 99, 111, 123, 143, 147, 149, 156, 162, 168, 174, 175, 177, 183, 187, 191, 195, 200, 207, 215, 221};
   std::array<size_t, 32> pgLaue = {1, 1, 2, 2, 2, 22, 22, 22, 4, 4, 4, 42, 42, 42, 42, 3, 3, 32, 32, 32, 6, 6, 6, 62, 62, 62, 62, 23, 23, 43, 43, 43};
@@ -438,7 +401,7 @@ std::vector<QString> LaueOps::GetLaueNames()
 {
   std::vector<QString> names;
 
-  std::vector<LaueOps::Pointer> ops = getOrientationOpsVector();
+  std::vector<LaueOps::Pointer> ops = GetAllOrientationOps();
   names.reserve(ops.size());
   for(const auto& op : ops)
   {

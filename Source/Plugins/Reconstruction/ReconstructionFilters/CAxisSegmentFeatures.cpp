@@ -88,7 +88,7 @@ CAxisSegmentFeatures::CAxisSegmentFeatures()
 , m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 , m_ActiveArrayName(SIMPL::FeatureData::Active)
 {
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::GetAllOrientationOps();
 
   m_MisoTolerance = 0.0f;
 

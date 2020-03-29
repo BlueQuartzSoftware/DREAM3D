@@ -88,7 +88,7 @@ public:
 
   void convert(size_t start, size_t end) const
   {
-    QVector<LaueOps::Pointer> ops = LaueOps::getOrientationOpsQVector();
+    std::vector<LaueOps::Pointer> ops = LaueOps::GetAllOrientationOps();
     double refDir[3] = {m_ReferenceDir[0], m_ReferenceDir[1], m_ReferenceDir[2]};
     double dEuler[3] = {0.0, 0.0, 0.0};
     SIMPL::Rgb argb = 0x00000000;

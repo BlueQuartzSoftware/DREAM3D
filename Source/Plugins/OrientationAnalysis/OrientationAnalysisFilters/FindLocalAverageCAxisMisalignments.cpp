@@ -76,7 +76,7 @@ FindLocalAverageCAxisMisalignments::FindLocalAverageCAxisMisalignments()
 , m_UnbiasedLocalCAxisMisalignmentsArrayName(SIMPL::FeatureData::UnbiasedLocalCAxisMisalignments)
 , m_NumFeaturesPerParentArrayName(SIMPL::FeatureData::NumFeaturesPerParent)
 {
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::GetAllOrientationOps();
 
 }
 

@@ -212,15 +212,6 @@ class OrientationLib_EXPORT MonoclinicOps : public LaueOps
     UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim) const;
 
   protected:
-    /**
-     * @brief calculateMisorientationInternal
-     * @param quatsym
-     * @param numsym
-     * @param q1
-     * @param q2
-     * @return
-     */
-    OrientationD calculateMisorientationInternal(const QuatType quatsym[24], int numsym, const QuatType& q1, const QuatType& q2) const;
 
   public:
     MonoclinicOps(const MonoclinicOps&) = delete;  // Copy Constructor Not Implemented
@@ -228,7 +219,6 @@ class OrientationLib_EXPORT MonoclinicOps : public LaueOps
     MonoclinicOps& operator=(const MonoclinicOps&) = delete; // Copy Assignment Not Implemented
     MonoclinicOps& operator=(MonoclinicOps&&) = delete;      // Move Assignment Not Implemented
 
-  private:
 
 };
 

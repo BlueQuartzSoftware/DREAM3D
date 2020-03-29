@@ -41,9 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 
 /**
  * @brief The NeighborOrientationCorrelation class. See [Filter documentation](@ref neighbororientationcorrelation) for details.
@@ -291,8 +294,7 @@ private:
   size_t m_TotalProgress = 0;
   int32_t m_CurrentLevel = 0;
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
 public:
   NeighborOrientationCorrelation(const NeighborOrientationCorrelation&) = delete; // Copy Constructor Not Implemented
   NeighborOrientationCorrelation(NeighborOrientationCorrelation&&) = delete;      // Move Constructor Not Implemented

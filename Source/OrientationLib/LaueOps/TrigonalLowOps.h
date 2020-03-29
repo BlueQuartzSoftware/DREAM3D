@@ -213,23 +213,12 @@ class OrientationLib_EXPORT TrigonalLowOps : public LaueOps
     UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim) const;
 
   protected:
-    /**
-     * @brief calculateMisorientationInternal
-     * @param quatsym
-     * @param numsym
-     * @param q1
-     * @param q2
-     * @return
-     */
-    OrientationD calculateMisorientationInternal(const QuatType quatsym[6], int numsym, const QuatType& q1, const QuatType& q2) const;
 
   public:
     TrigonalLowOps(const TrigonalLowOps&) = delete; // Copy Constructor Not Implemented
     TrigonalLowOps(TrigonalLowOps&&) = delete;      // Move Constructor Not Implemented
     TrigonalLowOps& operator=(const TrigonalLowOps&) = delete; // Copy Assignment Not Implemented
     TrigonalLowOps& operator=(TrigonalLowOps&&) = delete;      // Move Assignment Not Implemented
-
-  private:
 
 };
 

@@ -72,18 +72,8 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 EBSDSegmentFeatures::EBSDSegmentFeatures()
-: m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
-, m_MisorientationTolerance(5.0f)
-, m_RandomizeFeatureIds(true)
-, m_UseGoodVoxels(true)
-, m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
-, m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
-, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
-, m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
-, m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
-, m_ActiveArrayName(SIMPL::FeatureData::Active)
 {
-  m_MisoTolerance = 0.0f;
+  m_OrientationOps = LaueOps::GetAllOrientationOps();
 }
 
 // -----------------------------------------------------------------------------
@@ -351,7 +341,6 @@ int64_t EBSDSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
 bool EBSDSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum)
 {
   bool group = false;
-  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   // Get the phases for each voxel
   int32_t phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];

@@ -10,9 +10,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 
 /**
  * @brief The GenerateFZQuaternions class. See [Filter documentation](@ref generatefzquaternions) for details.
@@ -230,8 +233,7 @@ private:
   DataArrayPath m_GoodVoxelsArrayPath = {};
   DataArrayPath m_FZQuatsArrayPath = {};
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
-  int32_t m_PhaseWarningCount = 0;
+  LaueOpsContainer m_OrientationOps;  int32_t m_PhaseWarningCount = 0;
 
 public:
   GenerateFZQuaternions(const GenerateFZQuaternions&) = delete; // Copy Constructor Not Implemented

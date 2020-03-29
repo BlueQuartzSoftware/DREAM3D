@@ -234,7 +234,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
       static_cast<int64_t>(udims[2]),
   };
 
-  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  std::vector<LaueOps::Pointer> m_OrientationOps = LaueOps::GetAllOrientationOps();
 
   float disorientation = 0.0f;
   float mindisorientation = std::numeric_limits<float>::max();

@@ -41,9 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 
 /**
  * @brief The FindFeatureReferenceCAxisMisorientations class. See [Filter documentation](@ref findfeaturereferencecaxismisorientations) for details.
@@ -278,8 +281,7 @@ private:
   QString m_FeatureStdevCAxisMisorientationsArrayName = {};
   QString m_FeatureReferenceCAxisMisorientationsArrayName = {};
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
 public:
   FindFeatureReferenceCAxisMisorientations(const FindFeatureReferenceCAxisMisorientations&) = delete; // Copy Constructor Not Implemented
   FindFeatureReferenceCAxisMisorientations(FindFeatureReferenceCAxisMisorientations&&) = delete;      // Move Constructor Not Implemented

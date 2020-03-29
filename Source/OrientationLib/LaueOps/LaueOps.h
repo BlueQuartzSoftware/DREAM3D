@@ -35,13 +35,10 @@
 #pragma once
 
 #include <memory>
-
 #include <vector>
 
-
-#include <QtCore/QVector>
 #include <QtCore/QString>
-
+#include <QtCore/QVector>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
@@ -77,27 +74,19 @@ class OrientationLib_EXPORT LaueOps
 
     virtual ~LaueOps();
 
-
     /**
-     * @brief getOrientationOpsVector This method returns a vector of each type of LaueOps placed such that the
+     * @brief GetAllOrientationOps This method returns a vector of each type of LaueOps placed such that the
      * index into the vector is the value of the constant at EBSD::CrystalStructure::***
      * @return Vector of LaueOps subclasses.
      */
-    static QVector<LaueOps::Pointer> getOrientationOpsQVector();
+    static std::vector<LaueOps::Pointer> GetAllOrientationOps();
 
     /**
-     * @brief getOrientationOpsVector This method returns a vector of each type of LaueOps placed such that the
-     * index into the vector is the value of the constant at EBSD::CrystalStructure::***
-     * @return Vector of LaueOps subclasses.
-     */
-    static std::vector<LaueOps::Pointer> getOrientationOpsVector();
-
-    /**
-     * @brief getOrientationOpsFromSpaceGroupNumber
+     * @brief GetOrientationOpsFromSpaceGroupNumber
      * @param sgNumber
      * @return
      */
-    static Pointer getOrientationOpsFromSpaceGroupNumber(size_t sgNumber);
+    static Pointer GetOrientationOpsFromSpaceGroupNumber(size_t sgNumber);
 
     /**
      * @brief GetLaueNames Returns the names of the Laue Classes
@@ -158,24 +147,51 @@ class OrientationLib_EXPORT LaueOps
     virtual OrientationF calculateMisorientation(const QuatF& q1, const QuatF& q2) const = 0;
 
     /**
-     * @brief getQuatSymOp Copies the symmetry operator at index i into q
+     * @brief getQuatSymOp Returns the symmetry operator at index i
      * @param i The index into the Symmetry operators array
-     * @param q [output] The quaternion to store the value into
+     * @return The quaternion symmetry operator
      */
     virtual QuatType getQuatSymOp(int i) const = 0;
+
+    /**
+     * @brief getRodSymOp Returns a Rodrigues vector based on the symmetry operator at index i
+     * @param i Index of the symmetry operator
+     * @param r Pointer to store the Rodrigues vector into.
+     */
     virtual void getRodSymOp(int i, double* r) const = 0;
 
     virtual void getMatSymOp(int i, double g[3][3]) const = 0;
     virtual void getMatSymOp(int i, float g[3][3]) const = 0;
 
+    /**
+     * @brief getODFFZRod
+     * @param rod
+     * @return
+     */
     virtual OrientationType getODFFZRod(const OrientationType& rod) const = 0;
+
+    /**
+     * @brief getMDFFZRod
+     * @param rod
+     * @return
+     */
     virtual OrientationType getMDFFZRod(const OrientationType& rod) const = 0;
 
     virtual QuatType getNearestQuat(const QuatType& q1, const QuatType& q2) const = 0;
     virtual QuatF getNearestQuat(const QuatF& q1f, const QuatF& q2f) const = 0;
 
+    /**
+     * @brief getFZQuat Returns a Quaternioni that lies in the Fundemental Zone (FZ)
+     * @param qr Input Quaternion
+     * @return
+     */
     virtual QuatType getFZQuat(const QuatType& qr) const;
 
+    /**
+     * @brief getMisoBin Returns the misorientation bin that the input Rodregues vector lies in.
+     * @param rod
+     * @return
+     */
     virtual int getMisoBin(const OrientationType& rod) const = 0;
 
     virtual bool inUnitTriangle(double eta, double chi) const = 0;
@@ -257,7 +273,15 @@ class OrientationLib_EXPORT LaueOps
   protected:
     LaueOps();
 
-    OrientationD calculateMisorientationInternal(const QuatType quatsym[24], int numsym, const QuatType& q1, const QuatType& q2) const;
+    /**
+     * @brief calculateMisorientationInternal
+     * @param quatsym The Symmetry Quarternions from the specific Laue class
+     * @param numsym The number of Symmetry Quaternions
+     * @param q1 Input Quaternion 1
+     * @param q2 Input Quaternion 2
+     * @return Returns Axis-Angle <XYZ>W form.
+     */
+    virtual OrientationD calculateMisorientationInternal(const QuatType* quatsym, size_t numsym, const QuatType& q1, const QuatType& q2) const;
 
     OrientationType _calcRodNearestOrigin(const double rodsym[24][3], int numsym, const OrientationType& rod) const;
 
@@ -275,7 +299,6 @@ class OrientationLib_EXPORT LaueOps
     LaueOps& operator=(const LaueOps&) = delete; // Copy Assignment Not Implemented
     LaueOps& operator=(LaueOps&&) = delete;      // Move Assignment Not Implemented
 
-  private:
 };
 
 

@@ -70,6 +70,9 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
 {
@@ -99,8 +102,7 @@ class CalculateGBCDImpl
   BoolArrayType::Pointer m_GbcdHemiCheckArray;
 
   UInt32ArrayType::Pointer m_CrystalStructuresArray;
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
 public:
   CalculateGBCDImpl(size_t i,
                     size_t numMisoReps,
@@ -127,7 +129,7 @@ public:
   , m_GbcdHemiCheckArray(std::move(hemiCheck))
   , m_CrystalStructuresArray(std::move(crystalStructures))
   {
-    m_OrientationOps = LaueOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::GetAllOrientationOps();
   }
   virtual ~CalculateGBCDImpl() = default;
 

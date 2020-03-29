@@ -36,9 +36,9 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include <QtCore/QString>
-#include <vector>
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 #include "SIMPLib/SIMPLib.h"
@@ -49,6 +49,11 @@
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 
 /**
  * @class FindOrientationFieldCurl FindOrientationFieldCurl.h DREAM3DLib/GenericFilters/FindOrientationFieldCurl.h
@@ -253,8 +258,7 @@ private:
   QString m_DislocationTensorsArrayName = {};
   IntVec3Type m_CurlSize = {};
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
 public:
   FindOrientationFieldCurl(const FindOrientationFieldCurl&) = delete;            // Copy Constructor Not Implemented
   FindOrientationFieldCurl(FindOrientationFieldCurl&&) = delete;                 // Move Constructor Not Implemented

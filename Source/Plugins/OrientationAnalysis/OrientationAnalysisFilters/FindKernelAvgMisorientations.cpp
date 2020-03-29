@@ -217,7 +217,7 @@ void FindKernelAvgMisorientations::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  std::vector<LaueOps::Pointer> m_OrientationOps = LaueOps::GetAllOrientationOps();
   FloatArrayType::Pointer quatPtr = m_QuatsPtr.lock();
 
   int32_t numVoxel = 0; // number of voxels in the feature...

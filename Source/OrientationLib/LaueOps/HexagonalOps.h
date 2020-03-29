@@ -212,15 +212,6 @@ class OrientationLib_EXPORT HexagonalOps : public LaueOps
     UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim) const;
 
   protected:
-    /**
-     * @brief calculateMisorientationInternal
-     * @param quatsym
-     * @param numsym
-     * @param q1
-     * @param q2
-     * @return
-     */
-    OrientationD calculateMisorientationInternal(const QuatType quatsym[12], int numsym, const QuatType& q1, const QuatType& q2) const;
 
   public:
     HexagonalOps(const HexagonalOps&) = delete;   // Copy Constructor Not Implemented
@@ -228,7 +219,6 @@ class OrientationLib_EXPORT HexagonalOps : public LaueOps
     HexagonalOps& operator=(const HexagonalOps&) = delete; // Copy Assignment Not Implemented
     HexagonalOps& operator=(HexagonalOps&&) = delete;      // Move Assignment Not Implemented
 
-  private:
 };
 
 
