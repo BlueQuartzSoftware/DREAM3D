@@ -521,11 +521,11 @@ void GeneratePrecipitateStatsData::execute()
   {
     absPresetPtr->initializeODFTableModel(dataMap);
 
-    QVector<float> e1s;
-    QVector<float> e2s;
-    QVector<float> e3s;
-    QVector<float> weights;
-    QVector<float> sigmas;
+    std::vector<float> e1s;
+    std::vector<float> e2s;
+    std::vector<float> e3s;
+    std::vector<float> weights;
+    std::vector<float> sigmas;
 
     std::vector<std::vector<double>> odfData = m_OdfData.getTableData();
     for(size_t i = 0; i < odfData.size(); i++)
@@ -545,11 +545,11 @@ void GeneratePrecipitateStatsData::execute()
   notifyStatusMessage(msg);
   {
     absPresetPtr->initializeMDFTableModel(dataMap);
-    QVector<float> e1s;
-    QVector<float> e2s;
-    QVector<float> e3s;
-    QVector<float> odf_weights;
-    QVector<float> sigmas;
+    std::vector<float> e1s;
+    std::vector<float> e2s;
+    std::vector<float> e3s;
+    std::vector<float> odf_weights;
+    std::vector<float> sigmas;
     std::vector<std::vector<double>> odfData = m_OdfData.getTableData();
     for(size_t i = 0; i < odfData.size(); i++)
     {
@@ -560,11 +560,11 @@ void GeneratePrecipitateStatsData::execute()
       sigmas.push_back(static_cast<float>(odfData[i][4]));
     }
 
-    QVector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalSymmetry, e1s, e2s, e3s, odf_weights, sigmas, true);
+    std::vector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalSymmetry, e1s, e2s, e3s, odf_weights, sigmas, true);
 
-    QVector<float> angles;
-    QVector<float> axes;
-    QVector<float> weights;
+    std::vector<float> angles;
+    std::vector<float> axes;
+    std::vector<float> weights;
     std::vector<std::vector<double>> mdfData = m_MdfData.getTableData();
     for(size_t i = 0; i < mdfData.size(); i++)
     {
@@ -583,11 +583,11 @@ void GeneratePrecipitateStatsData::execute()
   notifyStatusMessage(msg);
   {
     absPresetPtr->initializeAxisODFTableModel(dataMap);
-    QVector<float> e1s;
-    QVector<float> e2s;
-    QVector<float> e3s;
-    QVector<float> weights;
-    QVector<float> sigmas;
+    std::vector<float> e1s;
+    std::vector<float> e2s;
+    std::vector<float> e3s;
+    std::vector<float> weights;
+    std::vector<float> sigmas;
     std::vector<std::vector<double>> axisOdfData = m_AxisOdfData.getTableData();
     for(size_t i = 0; i < axisOdfData.size(); i++)
     {

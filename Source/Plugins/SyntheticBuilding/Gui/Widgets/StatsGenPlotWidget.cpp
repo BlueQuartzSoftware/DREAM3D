@@ -217,8 +217,8 @@ VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
   FloatArrayType::Pointer col1;
   FloatArrayType::Pointer col2;
 
-  QVector<float> v0;
-  QVector<float> v1;
+  std::vector<float> v0;
+  std::vector<float> v1;
   Q_ASSERT(m_PhaseIndex >= 0);
 
   // Create a new Table Model
@@ -227,16 +227,16 @@ VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
   case SIMPL::DistributionType::Beta:
     v0 = m_TableModel->getData(SGBetaTableModel::Alpha);
     v1 = m_TableModel->getData(SGBetaTableModel::Beta);
-    col0 = FloatArrayType::FromQVector(v0, SIMPL::StringConstants::Alpha);
-    col1 = FloatArrayType::FromQVector(v1, SIMPL::StringConstants::Beta);
+    col0 = FloatArrayType::FromStdVector(v0, SIMPL::StringConstants::Alpha);
+    col1 = FloatArrayType::FromStdVector(v1, SIMPL::StringConstants::Beta);
     data.push_back(col0);
     data.push_back(col1);
     break;
   case SIMPL::DistributionType::LogNormal:
     v0 = m_TableModel->getData(SGLogNormalTableModel::Average);
     v1 = m_TableModel->getData(SGLogNormalTableModel::StdDev);
-    col0 = FloatArrayType::FromQVector(v0, SIMPL::StringConstants::Average);
-    col1 = FloatArrayType::FromQVector(v1, SIMPL::StringConstants::StandardDeviation);
+    col0 = FloatArrayType::FromStdVector(v0, SIMPL::StringConstants::Average);
+    col1 = FloatArrayType::FromStdVector(v1, SIMPL::StringConstants::StandardDeviation);
     data.push_back(col0);
     data.push_back(col1);
     break;

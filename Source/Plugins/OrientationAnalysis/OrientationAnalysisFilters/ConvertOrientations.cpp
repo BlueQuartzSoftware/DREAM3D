@@ -89,8 +89,7 @@ void ConvertOrientations::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ConvertOrientations, this, InputType));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ConvertOrientations, this, InputType));
 
-    QVector<QString> inputChoices = OrientationConverter<float>::GetOrientationTypeStrings();
-    parameter->setChoices(inputChoices);
+    parameter->setChoices(OrientationConverter<float>::GetOrientationTypeStrings<QVector<QString>>());
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
@@ -102,8 +101,7 @@ void ConvertOrientations::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ConvertOrientations, this, OutputType));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ConvertOrientations, this, OutputType));
 
-    QVector<QString> inputChoices = OrientationConverter<float>::GetOrientationTypeStrings();
-    parameter->setChoices(inputChoices);
+    parameter->setChoices(OrientationConverter<float>::GetOrientationTypeStrings<QVector<QString>>());
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
@@ -181,12 +179,12 @@ void ConvertOrientations::dataCheck()
     return;
   }
   int numComps = iDataArrayPtr->getNumberOfComponents();
-  QVector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts();
+  std::vector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts<std::vector<int32_t>>();
   if(numComps != componentCounts[getInputType()])
   {
     QString sizeNameMappingString;
     QTextStream strm(&sizeNameMappingString);
-    QVector<QString> names = OrientationConverter<float>::GetOrientationTypeStrings();
+    std::vector<QString> names = OrientationConverter<float>::GetOrientationTypeStrings<std::vector<QString>>();
     for(int i = 0; i < OrientationConverter<float>::GetMaxIndex() + 1; i++)
     {
       strm << "[" << names[i] << "=" << componentCounts[i] << "] ";
@@ -226,7 +224,7 @@ void generateRepresentation(ConvertOrientations* filter, typename DataArray<T>::
 {
   using ArrayType = typename DataArray<T>::Pointer;
   using OCType = OrientationConverter<T>;
-  QVector<typename OCType::Pointer> converters(7);
+  std::vector<typename OCType::Pointer> converters(7);
 
   converters[0] = EulerConverter<T>::New();
   converters[1] = OrientationMatrixConverter<T>::New();
@@ -236,7 +234,7 @@ void generateRepresentation(ConvertOrientations* filter, typename DataArray<T>::
   converters[5] = HomochoricConverter<T>::New();
   converters[6] = CubochoricConverter<T>::New();
 
-  QVector<OrientationRepresentation::Type> ocTypes = OCType::GetOrientationTypes();
+  std::vector<OrientationRepresentation::Type> ocTypes = OCType::GetOrientationTypes();
 
   converters[filter->getInputType()]->setInputData(inputOrientations);
   converters[filter->getInputType()]->convertRepresentationTo(ocTypes[filter->getOutputType()]);
@@ -277,7 +275,7 @@ void ConvertOrientations::execute()
   FloatArrayType::Pointer fArray = std::dynamic_pointer_cast<FloatArrayType>(iDataArrayPtr);
   if(nullptr != fArray.get())
   {
-    QVector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts();
+    std::vector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts<std::vector<int32_t>>();
     std::vector<size_t> outputCDims(1, componentCounts[getOutputType()]);
     FloatArrayType::Pointer outData = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, outputArrayPath, outputCDims);
     generateRepresentation<float>(this, fArray, outData);
@@ -286,7 +284,7 @@ void ConvertOrientations::execute()
   DoubleArrayType::Pointer dArray = std::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
   if(nullptr != dArray.get())
   {
-    QVector<int32_t> componentCounts = OrientationConverter<double>::GetComponentCounts();
+    std::vector<int32_t> componentCounts = OrientationConverter<double>::GetComponentCounts<std::vector<int32_t>>();
     std::vector<size_t> outputCDims(1, componentCounts[getOutputType()]);
     DoubleArrayType::Pointer outData = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>>(this, outputArrayPath, outputCDims);
     generateRepresentation<double>(this, dArray, outData);

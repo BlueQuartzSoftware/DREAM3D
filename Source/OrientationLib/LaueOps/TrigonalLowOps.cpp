@@ -33,9 +33,10 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include "TrigonalLowOps.h"
+
 #include <memory>
 
-#include "TrigonalLowOps.h"
 
 #include <cmath>
 
@@ -703,7 +704,7 @@ SIMPL::Rgb TrigonalLowOps::generateRodriguesColor(double r1, double r2, double r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigureConfiguration_t& config) const
+std::vector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigureConfiguration_t& config) const
 {
   QString label0 = QString("<0001>");
   QString label1 = QString("<-1-120>");
@@ -816,7 +817,7 @@ QVector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigureCo
   UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label1, true);
   UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label2, true);
 
-  QVector<UInt8ArrayType::Pointer> poleFigures(3);
+  std::vector<UInt8ArrayType::Pointer> poleFigures(3);
   if(config.order.size() == 3)
   {
     poleFigures[config.order[0]] = image001;

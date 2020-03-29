@@ -105,7 +105,7 @@ QVector<double> OrientationUtilityCalculator::getValues(OrientationRepresentatio
   converters[5] = HomochoricConverter<double>::New();
   converters[6] = CubochoricConverter<double>::New();
 
-  QVector<OrientationRepresentation::Type> ocTypes = OCType::GetOrientationTypes();
+  std::vector<OrientationRepresentation::Type> ocTypes = OCType::GetOrientationTypes();
 
   std::vector<size_t> cDims(1, m_InputData.size());
   DataArray<double>::Pointer inputDataArray = DataArray<double>::CreateArray(1, cDims, "Input Data", true);

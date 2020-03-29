@@ -205,11 +205,11 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 void StatsGenMDFWidget::updatePlots()
 {
   // Generate the ODF Data from the current values in the ODFTableModel
-  QVector<float> e1s;
-  QVector<float> e2s;
-  QVector<float> e3s;
-  QVector<float> weights;
-  QVector<float> sigmas;
+  std::vector<float> e1s;
+  std::vector<float> e2s;
+  std::vector<float> e3s;
+  std::vector<float> weights;
+  std::vector<float> sigmas;
   if(nullptr == m_ODFTableModel)
   {
     return;
@@ -221,14 +221,14 @@ void StatsGenMDFWidget::updatePlots()
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
-  for(qint32 i = 0; i < e1s.size(); i++)
+  for(size_t i = 0; i < e1s.size(); i++)
   {
     e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
     e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
     e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
   }
 
-  QVector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalStructure, e1s, e2s, e3s, weights, sigmas);
+  std::vector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalStructure, e1s, e2s, e3s, weights, sigmas);
 
   updateMDFPlot(odf);
 
@@ -246,7 +246,7 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odfInput)
+void StatsGenMDFWidget::updateMDFPlot(std::vector<float>& odf)
 {
   int err = 0;
   int size = 100000;
@@ -257,11 +257,11 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odfInput)
   ContainerType axes;
   ContainerType weights;
 
-  ContainerType odf = odfInput.toStdVector(); // Do this copy because using std::vector is 2x faster than QVector
+  // ContainerType odf = odfInput; // Do this copy because using std::vector is 2x faster than QVector
 
-  angles = m_MDFTableModel->getData(SGMDFTableModel::Angle).toStdVector();
-  weights = m_MDFTableModel->getData(SGMDFTableModel::Weight).toStdVector();
-  axes = m_MDFTableModel->getData(SGMDFTableModel::Axis).toStdVector();
+  angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
+  weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
+  axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
 
   // These are the output vectors
   int npoints = 36;
@@ -500,11 +500,11 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, PhaseType::Ty
   int retErr = 0;
 
   // Generate the ODF Data from the current values in the ODFTableModel
-  QVector<float> e1s;
-  QVector<float> e2s;
-  QVector<float> e3s;
-  QVector<float> odf_weights;
-  QVector<float> sigmas;
+  std::vector<float> e1s;
+  std::vector<float> e2s;
+  std::vector<float> e3s;
+  std::vector<float> odf_weights;
+  std::vector<float> sigmas;
 
   e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
   e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
@@ -512,19 +512,19 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, PhaseType::Ty
   odf_weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
-  for(qint32 i = 0; i < e1s.size(); i++)
+  for(size_t i = 0; i < e1s.size(); i++)
   {
     e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
     e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
     e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
   }
 
-  QVector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalStructure, e1s, e2s, e3s, odf_weights, sigmas, !preflight);
+  std::vector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalStructure, e1s, e2s, e3s, odf_weights, sigmas, !preflight);
 
   // Now use the ODF data to generate the MDF data ************************************************
-  QVector<float> angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
-  QVector<float> weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
-  QVector<float> axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
+  std::vector<float> angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
+  std::vector<float> weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
+  std::vector<float> axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
 
   StatsGeneratorUtilities::GenerateMisorientationBinData(statsData, phaseType, m_CrystalStructure, odf, angles, axes, weights, !preflight);
   return retErr;

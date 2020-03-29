@@ -204,7 +204,7 @@ class OrientationLib_EXPORT TrigonalLowOps : public LaueOps
      * @return A QVector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
      * an image object from other libraries and written out to disk.
      */
-    QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t& config) const override;
+    std::vector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t& config) const override;
 
     /**
      * @brief generateStandardTriangle Generates an RGBA array that is a color "Standard" IPF Triangle Legend used for IPF Color Maps.

@@ -37,13 +37,11 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
-#include <QtCore/QVector>
 #include <QtCore/QString>
 
 #include "EbsdLib/EbsdConstants.h"
-
-
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Constants.h"
@@ -64,7 +62,7 @@ class OrientationLib_EXPORT TexturePreset
     using ConstWeakPointer = std::weak_ptr<const Self>;
     static Pointer NullPointer();
 
-    using Container = QVector<Pointer>;
+    using Container = std::vector<Pointer>;
 
     static Pointer New();
 

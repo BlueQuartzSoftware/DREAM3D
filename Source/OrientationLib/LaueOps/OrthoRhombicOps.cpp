@@ -34,9 +34,10 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
+#include "OrthoRhombicOps.h"
+
 #include <memory>
 
-#include "OrthoRhombicOps.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -675,7 +676,7 @@ SIMPL::Rgb OrthoRhombicOps::generateRodriguesColor(double r1, double r2, double 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureConfiguration_t& config) const
+std::vector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureConfiguration_t& config) const
 {
 
   QString label0 = QString("<001>");
@@ -787,7 +788,7 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
   UInt8ArrayType::Pointer image100 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label1, true);
   UInt8ArrayType::Pointer image010 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label2, true);
 
-  QVector<UInt8ArrayType::Pointer> poleFigures(3);
+  std::vector<UInt8ArrayType::Pointer> poleFigures(3);
   if(config.order.size() == 3)
   {
     poleFigures[config.order[0]] = image001;

@@ -70,10 +70,10 @@ StatsGeneratorUtilities::~StatsGeneratorUtilities() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorUtilities::GenerateODFBinData(StatsData* statsData, PhaseType::Type phaseType, unsigned int crystalStructure, QVector<float>& e1s, QVector<float>& e2s, QVector<float>& e3s,
-                                                 QVector<float>& weights, QVector<float>& sigmas, bool computeODF)
+void StatsGeneratorUtilities::GenerateODFBinData(StatsData* statsData, PhaseType::Type phaseType, unsigned int crystalStructure, std::vector<float>& e1s, std::vector<float>& e2s,
+                                                 std::vector<float>& e3s, std::vector<float>& weights, std::vector<float>& sigmas, bool computeODF)
 {
-  using ContainerType = QVector<float>;
+  using ContainerType = std::vector<float>;
 
   ContainerType odf;
   size_t numEntries = e1s.size();
@@ -123,7 +123,7 @@ void StatsGeneratorUtilities::GenerateODFBinData(StatsData* statsData, PhaseType
 
   if(!odf.empty())
   {
-    FloatArrayType::Pointer p = FloatArrayType::FromQVector(odf, SIMPL::StringConstants::ODF);
+    FloatArrayType::Pointer p = FloatArrayType::FromStdVector(odf, SIMPL::StringConstants::ODF);
     if(phaseType == PhaseType::Type::Primary)
     {
       PrimaryStatsData* pp = dynamic_cast<PrimaryStatsData*>(statsData);
@@ -141,11 +141,11 @@ void StatsGeneratorUtilities::GenerateODFBinData(StatsData* statsData, PhaseType
     }
     if(!e1s.empty())
     {
-      FloatArrayType::Pointer euler1 = FloatArrayType::FromQVector(e1s, SIMPL::StringConstants::Euler1);
-      FloatArrayType::Pointer euler2 = FloatArrayType::FromQVector(e2s, SIMPL::StringConstants::Euler2);
-      FloatArrayType::Pointer euler3 = FloatArrayType::FromQVector(e3s, SIMPL::StringConstants::Euler3);
-      FloatArrayType::Pointer sigma = FloatArrayType::FromQVector(sigmas, SIMPL::StringConstants::Sigma);
-      FloatArrayType::Pointer weight = FloatArrayType::FromQVector(weights, SIMPL::StringConstants::Weight);
+      FloatArrayType::Pointer euler1 = FloatArrayType::FromStdVector(e1s, SIMPL::StringConstants::Euler1);
+      FloatArrayType::Pointer euler2 = FloatArrayType::FromStdVector(e2s, SIMPL::StringConstants::Euler2);
+      FloatArrayType::Pointer euler3 = FloatArrayType::FromStdVector(e3s, SIMPL::StringConstants::Euler3);
+      FloatArrayType::Pointer sigma = FloatArrayType::FromStdVector(sigmas, SIMPL::StringConstants::Sigma);
+      FloatArrayType::Pointer weight = FloatArrayType::FromStdVector(weights, SIMPL::StringConstants::Weight);
 
       VectorOfFloatArray odfWeights;
       odfWeights.push_back(euler1);
@@ -175,10 +175,10 @@ void StatsGeneratorUtilities::GenerateODFBinData(StatsData* statsData, PhaseType
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorUtilities::GenerateAxisODFBinData(StatsData* statsData, PhaseType::Type phaseType, QVector<float>& e1s, QVector<float>& e2s, QVector<float>& e3s, QVector<float>& weights,
-                                                     QVector<float>& sigmas, bool computeAxisODF)
+void StatsGeneratorUtilities::GenerateAxisODFBinData(StatsData* statsData, PhaseType::Type phaseType, std::vector<float>& e1s, std::vector<float>& e2s, std::vector<float>& e3s,
+                                                     std::vector<float>& weights, std::vector<float>& sigmas, bool computeAxisODF)
 {
-  using ContainerType = QVector<float>;
+  using ContainerType = std::vector<float>;
   ContainerType aodf;
   size_t numEntries = e1s.size();
   OrthoRhombicOps ops;
@@ -190,7 +190,7 @@ void StatsGeneratorUtilities::GenerateAxisODFBinData(StatsData* statsData, Phase
 
   if(!aodf.empty())
   {
-    FloatArrayType::Pointer aodfData = FloatArrayType::FromQVector(aodf, SIMPL::StringConstants::AxisOrientation);
+    FloatArrayType::Pointer aodfData = FloatArrayType::FromStdVector(aodf, SIMPL::StringConstants::AxisOrientation);
     if(phaseType == PhaseType::Type::Primary)
     {
       PrimaryStatsData* pp = dynamic_cast<PrimaryStatsData*>(statsData);
@@ -208,11 +208,11 @@ void StatsGeneratorUtilities::GenerateAxisODFBinData(StatsData* statsData, Phase
     }
     if(!e1s.empty())
     {
-      FloatArrayType::Pointer euler1 = FloatArrayType::FromQVector(e1s, SIMPL::StringConstants::Euler1);
-      FloatArrayType::Pointer euler2 = FloatArrayType::FromQVector(e2s, SIMPL::StringConstants::Euler2);
-      FloatArrayType::Pointer euler3 = FloatArrayType::FromQVector(e3s, SIMPL::StringConstants::Euler3);
-      FloatArrayType::Pointer sigma = FloatArrayType::FromQVector(sigmas, SIMPL::StringConstants::Sigma);
-      FloatArrayType::Pointer weight = FloatArrayType::FromQVector(weights, SIMPL::StringConstants::Weight);
+      FloatArrayType::Pointer euler1 = FloatArrayType::FromStdVector(e1s, SIMPL::StringConstants::Euler1);
+      FloatArrayType::Pointer euler2 = FloatArrayType::FromStdVector(e2s, SIMPL::StringConstants::Euler2);
+      FloatArrayType::Pointer euler3 = FloatArrayType::FromStdVector(e3s, SIMPL::StringConstants::Euler3);
+      FloatArrayType::Pointer sigma = FloatArrayType::FromStdVector(sigmas, SIMPL::StringConstants::Sigma);
+      FloatArrayType::Pointer weight = FloatArrayType::FromStdVector(weights, SIMPL::StringConstants::Weight);
 
       VectorOfFloatArray aodfWeights;
       aodfWeights.push_back(euler1);
@@ -242,11 +242,11 @@ void StatsGeneratorUtilities::GenerateAxisODFBinData(StatsData* statsData, Phase
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<float> StatsGeneratorUtilities::GenerateODFData(unsigned int crystalStructure, QVector<float>& e1s, QVector<float>& e2s, QVector<float>& e3s, QVector<float>& weights, QVector<float>& sigmas,
-                                                        bool computeODF)
+std::vector<float> StatsGeneratorUtilities::GenerateODFData(unsigned int crystalStructure, std::vector<float>& e1s, std::vector<float>& e2s, std::vector<float>& e3s, std::vector<float>& weights,
+                                                            std::vector<float>& sigmas, bool computeODF)
 {
 
-  using ContainerType = QVector<float>;
+  using ContainerType = std::vector<float>;
   ContainerType odf;
   //// ODF/MDF Update Codes
   size_t numEntries = static_cast<size_t>(e1s.size());
@@ -300,10 +300,10 @@ QVector<float> StatsGeneratorUtilities::GenerateODFData(unsigned int crystalStru
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorUtilities::GenerateMisorientationBinData(StatsData* statsData, PhaseType::Type phaseType, unsigned int crystalStructure, QVector<float>& odf, QVector<float>& angles,
-                                                            QVector<float>& axes, QVector<float>& weights, bool computeMDF)
+void StatsGeneratorUtilities::GenerateMisorientationBinData(StatsData* statsData, PhaseType::Type phaseType, unsigned int crystalStructure, std::vector<float>& odf, std::vector<float>& angles,
+                                                            std::vector<float>& axes, std::vector<float>& weights, bool computeMDF)
 {
-  using ContainerType = QVector<float>;
+  using ContainerType = std::vector<float>;
 
   ContainerType x;
   ContainerType y;

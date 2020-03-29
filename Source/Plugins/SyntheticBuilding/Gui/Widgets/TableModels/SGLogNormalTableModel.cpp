@@ -296,27 +296,27 @@ bool SGLogNormalTableModel::removeRows(int row, int count, const QModelIndex& in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<float> SGLogNormalTableModel::getData(int col)
+std::vector<float> SGLogNormalTableModel::getData(int col) const
 {
 
   switch(col)
   {
   case Average:
-    return m_Average;
+    return std::vector<float>(m_Average.begin(), m_Average.end());
     break;
   case StdDev:
-    return m_StdDev;
+    return std::vector<float>(m_StdDev.begin(), m_StdDev.end());
     break;
   default:
     Q_ASSERT(false);
   }
-  return QVector<float>();
+  return std::vector<float>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float SGLogNormalTableModel::getDataValue(int col, int row)
+float SGLogNormalTableModel::getDataValue(int col, int row) const
 {
   switch(col)
   {
@@ -401,4 +401,48 @@ void SGLogNormalTableModel::setTableData(QVector<float> bins, QVector<QVector<fl
 QAbstractItemDelegate* SGLogNormalTableModel::getItemDelegate()
 {
   return new SGLogNormalItemDelegate;
+}
+
+bool SGLogNormalTableModel::setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role)
+{
+  return false;
+}
+
+const QVector<float>& SGLogNormalTableModel::getBinNumbers() const
+{
+  return m_BinNumbers;
+}
+
+float SGLogNormalTableModel::getBinNumber(qint32 row) const
+{
+  return m_BinNumbers[row];
+}
+
+const QVector<SIMPL::Rgb>& SGLogNormalTableModel::getColors() const
+{
+  return m_Colors;
+}
+
+SIMPL::Rgb SGLogNormalTableModel::getColor(qint32 row) const
+{
+  return m_Colors[row];
+}
+
+const QVector<float>& SGLogNormalTableModel::getAvergaes() const
+{
+  return m_Average;
+}
+const QVector<float>& SGLogNormalTableModel::getStdDevs() const
+{
+  return m_StdDev;
+}
+
+float SGLogNormalTableModel::getAverage(qint32 row) const
+{
+  return m_Average[row];
+}
+
+float SGLogNormalTableModel::getStdDev(qint32 row) const
+{
+  return m_StdDev[row];
 }

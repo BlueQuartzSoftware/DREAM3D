@@ -33,9 +33,10 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include "TetragonalOps.h"
+
 #include <memory>
 
-#include "TetragonalOps.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -699,7 +700,7 @@ SIMPL::Rgb TetragonalOps::generateRodriguesColor(double r1, double r2, double r3
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<UInt8ArrayType::Pointer> TetragonalOps::generatePoleFigure(PoleFigureConfiguration_t& config) const
+std::vector<UInt8ArrayType::Pointer> TetragonalOps::generatePoleFigure(PoleFigureConfiguration_t& config) const
 {
   QString label0 = QString("<001>");
   QString label1 = QString("<100>");
@@ -812,7 +813,7 @@ QVector<UInt8ArrayType::Pointer> TetragonalOps::generatePoleFigure(PoleFigureCon
   UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label1, true);
   UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label2, true);
 
-  QVector<UInt8ArrayType::Pointer> poleFigures(3);
+  std::vector<UInt8ArrayType::Pointer> poleFigures(3);
   if(config.order.size() == 3)
   {
     poleFigures[config.order[0]] = image001;

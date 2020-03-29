@@ -33,9 +33,10 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include "TrigonalOps.h"
+
 #include <memory>
 
-#include "TrigonalOps.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -710,7 +711,7 @@ SIMPL::Rgb TrigonalOps::generateRodriguesColor(double r1, double r2, double r3) 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<UInt8ArrayType::Pointer> TrigonalOps::generatePoleFigure(PoleFigureConfiguration_t& config) const
+std::vector<UInt8ArrayType::Pointer> TrigonalOps::generatePoleFigure(PoleFigureConfiguration_t& config) const
 {
   QString label0 = QString("<0001>");
   QString label1 = QString("<0-110>");
@@ -823,7 +824,7 @@ QVector<UInt8ArrayType::Pointer> TrigonalOps::generatePoleFigure(PoleFigureConfi
   UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label1, true);
   UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label2, true);
 
-  QVector<UInt8ArrayType::Pointer> poleFigures(3);
+  std::vector<UInt8ArrayType::Pointer> poleFigures(3);
   if(config.order.size() == 3)
   {
     poleFigures[config.order[0]] = image001;

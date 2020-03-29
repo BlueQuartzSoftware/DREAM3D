@@ -39,6 +39,7 @@
 
 //-- C++ Includes
 #include <iostream>
+#include <vector>
 
 //-- Qt Includes
 #include <QtCore/QDir>
@@ -207,11 +208,11 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, PhaseType::Type 
 {
   int retErr = 0;
 
-  QVector<float> e1s;
-  QVector<float> e2s;
-  QVector<float> e3s;
-  QVector<float> weights;
-  QVector<float> sigmas;
+  std::vector<float> e1s;
+  std::vector<float> e2s;
+  std::vector<float> e3s;
+  std::vector<float> weights;
+  std::vector<float> sigmas;
 
   SGODFTableModel* tableModel = nullptr;
 
@@ -231,7 +232,7 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, PhaseType::Type 
   sigmas = tableModel->getData(SGODFTableModel::Sigma);
 
   // Convert from Degrees to Radians
-  for(QVector<float>::size_type i = 0; i < e1s.size(); i++)
+  for(std::vector<float>::size_type i = 0; i < e1s.size(); i++)
   {
     e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
     e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
@@ -546,11 +547,11 @@ void StatsGenODFWidget::calculateODF()
     npoints = tableModel->rowCount();
   }
 
-  e1s = tableModel->getData(SGODFTableModel::Euler1).toStdVector();
-  e2s = tableModel->getData(SGODFTableModel::Euler2).toStdVector();
-  e3s = tableModel->getData(SGODFTableModel::Euler3).toStdVector();
-  weights = tableModel->getData(SGODFTableModel::Weight).toStdVector();
-  sigmas = tableModel->getData(SGODFTableModel::Sigma).toStdVector();
+  e1s = tableModel->getData(SGODFTableModel::Euler1);
+  e2s = tableModel->getData(SGODFTableModel::Euler2);
+  e3s = tableModel->getData(SGODFTableModel::Euler3);
+  weights = tableModel->getData(SGODFTableModel::Weight);
+  sigmas = tableModel->getData(SGODFTableModel::Sigma);
 
   // Convert from Degrees to Radians
   for(ContainerType::size_type i = 0; i < e1s.size(); i++)
@@ -580,7 +581,7 @@ void StatsGenODFWidget::calculateODF()
   {
     config.discrete = false;
   }
-  QVector<UInt8ArrayType::Pointer> figures;
+  std::vector<UInt8ArrayType::Pointer> figures;
 
   //// ODF/MDF Update Codes
   LaueOps::Pointer ops = LaueOps::NullPointer();

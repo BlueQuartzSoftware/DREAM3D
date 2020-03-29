@@ -182,11 +182,11 @@ int StatsGenAxisODFWidget::getOrientationData(StatsData* statsData, PhaseType::T
 {
   int retErr = 0;
 
-  QVector<float> e1s;
-  QVector<float> e2s;
-  QVector<float> e3s;
-  QVector<float> weights;
-  QVector<float> sigmas;
+  std::vector<float> e1s;
+  std::vector<float> e2s;
+  std::vector<float> e3s;
+  std::vector<float> weights;
+  std::vector<float> sigmas;
 
   // Initialize xMax and yMax....
   e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
@@ -200,11 +200,11 @@ int StatsGenAxisODFWidget::getOrientationData(StatsData* statsData, PhaseType::T
   //  QVector<float> e3Rad = e3s;
 
   // Convert from Degrees to Radians
-  for(QVector<float>::size_type i = 0; i < e1s.size(); i++)
+  for(std::vector<float>::size_type i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = static_cast<float>(e1s[i] * M_PI / 180.0);
-    e2s[i] = static_cast<float>(e2s[i] * M_PI / 180.0);
-    e3s[i] = static_cast<float>(e3s[i] * M_PI / 180.0);
+    e1s[i] = static_cast<float>(e1s[i] * SIMPLib::Constants::k_PiOver180);
+    e2s[i] = static_cast<float>(e2s[i] * SIMPLib::Constants::k_PiOver180);
+    e3s[i] = static_cast<float>(e3s[i] * SIMPLib::Constants::k_PiOver180);
   }
 
   StatsGeneratorUtilities::GenerateAxisODFBinData(statsData, phaseType, e1s, e2s, e3s, weights, sigmas, !preflight);
@@ -431,7 +431,7 @@ void StatsGenAxisODFWidget::on_m_CalculateODFBtn_clicked()
 void StatsGenAxisODFWidget::calculateAxisODF()
 {
   int err = 0;
-  using ContainerType = QwtArray<float>;
+  using ContainerType = std::vector<float>;
   ContainerType e1s;
   ContainerType e2s;
   ContainerType e3s;
@@ -445,11 +445,11 @@ void StatsGenAxisODFWidget::calculateAxisODF()
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
-  for(int i = 0; i < e1s.size(); i++)
+  for(size_t i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = static_cast<float>(e1s[i] * M_PI / 180.0);
-    e2s[i] = static_cast<float>(e2s[i] * M_PI / 180.0);
-    e3s[i] = static_cast<float>(e3s[i] * M_PI / 180.0);
+    e1s[i] = static_cast<float>(e1s[i] * SIMPLib::Constants::k_PiOver180);
+    e2s[i] = static_cast<float>(e2s[i] * SIMPLib::Constants::k_PiOver180);
+    e3s[i] = static_cast<float>(e3s[i] * SIMPLib::Constants::k_PiOver180);
   }
   size_t numEntries = e1s.size();
 
@@ -491,7 +491,7 @@ void StatsGenAxisODFWidget::calculateAxisODF()
   order[2] = 1; // Show B Second
   config.order = order;
 
-  QVector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
+  std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
   if(err == 1)
   {
     // TODO: Present Error Message

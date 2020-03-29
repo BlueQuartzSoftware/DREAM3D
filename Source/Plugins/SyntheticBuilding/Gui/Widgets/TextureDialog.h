@@ -83,7 +83,7 @@ protected:
 private:
   unsigned int m_CrystalStructure = {};
 
-  QVector<TexturePreset::Pointer> m_Presets;
+  std::vector<TexturePreset::Pointer> m_Presets;
 
 public:
   TextureDialog(const TextureDialog&) = delete;  // Copy Constructor Not Implemented

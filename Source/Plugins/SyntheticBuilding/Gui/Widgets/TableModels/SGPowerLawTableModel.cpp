@@ -324,30 +324,30 @@ bool SGPowerLawTableModel::removeRows(int row, int count, const QModelIndex& ind
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<float> SGPowerLawTableModel::getData(int col)
+std::vector<float> SGPowerLawTableModel::getData(int col) const
 {
 
   switch(col)
   {
   case Alpha:
-    return m_Alpha;
+    return std::vector<float>(m_Alpha.begin(), m_Alpha.end());
     break;
   case K:
-    return m_K;
+    return std::vector<float>(m_K.begin(), m_K.end());
     break;
   case Beta:
-    return m_Beta;
+    return std::vector<float>(m_Beta.begin(), m_Beta.end());
     break;
   default:
     Q_ASSERT(false);
   }
-  return QVector<float>();
+  return std::vector<float>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float SGPowerLawTableModel::getDataValue(int col, int row)
+float SGPowerLawTableModel::getDataValue(int col, int row) const
 {
   switch(col)
   {
@@ -440,4 +440,59 @@ void SGPowerLawTableModel::setTableData(QVector<float> bins, QVector<QVector<flo
 QAbstractItemDelegate* SGPowerLawTableModel::getItemDelegate()
 {
   return new SGPowerLawItemDelegate;
+}
+
+bool SGPowerLawTableModel::setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role)
+{
+  return false;
+}
+
+const QVector<float>& SGPowerLawTableModel::getBinNumbers() const
+{
+  return m_BinNumbers;
+}
+
+float SGPowerLawTableModel::getBinNumber(qint32 row) const
+{
+  return m_BinNumbers[row];
+}
+
+const QVector<SIMPL::Rgb>& SGPowerLawTableModel::getColors() const
+{
+  return m_Colors;
+}
+
+SIMPL::Rgb SGPowerLawTableModel::getColor(qint32 row) const
+{
+  return m_Colors[row];
+}
+
+const QVector<float>& SGPowerLawTableModel::getAlphas() const
+{
+  return m_Alpha;
+}
+
+const QVector<float>& SGPowerLawTableModel::getKs() const
+{
+  return m_K;
+}
+
+const QVector<float>& SGPowerLawTableModel::getBetas() const
+{
+  return m_Beta;
+}
+
+float SGPowerLawTableModel::getAlpha(qint32 row) const
+{
+  return m_Alpha[row];
+}
+
+float SGPowerLawTableModel::getK(qint32 row) const
+{
+  return m_K[row];
+}
+
+float SGPowerLawTableModel::getBeta(qint32 row) const
+{
+  return m_Beta[row];
 }

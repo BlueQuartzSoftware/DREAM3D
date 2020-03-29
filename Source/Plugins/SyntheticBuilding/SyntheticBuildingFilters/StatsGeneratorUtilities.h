@@ -33,7 +33,7 @@
 
 #pragma once
 
-#include <QtCore/QVector>
+#include <vector>
 
 #include "SIMPLib/Common/PhaseType.h"
 
@@ -56,17 +56,17 @@ public:
    * @param weights
    * @param sigmas
    */
-  static void GenerateODFBinData(StatsData* statsData, PhaseType::Type phaseType, unsigned int crystalStructure, QVector<float>& e1s, QVector<float>& e2s, QVector<float>& e3s, QVector<float>& weights,
-                                 QVector<float>& sigmas, bool computeODF = true);
+  static void GenerateODFBinData(StatsData* statsData, PhaseType::Type phaseType, unsigned int crystalStructure, std::vector<float>& e1s, std::vector<float>& e2s, std::vector<float>& e3s,
+                                 std::vector<float>& weights, std::vector<float>& sigmas, bool computeODF = true);
 
-  static void GenerateAxisODFBinData(StatsData* statsData, PhaseType::Type phaseType, QVector<float>& e1s, QVector<float>& e2s, QVector<float>& e3s, QVector<float>& weights, QVector<float>& sigmas,
-                                     bool computeAxisODF = true);
+  static void GenerateAxisODFBinData(StatsData* statsData, PhaseType::Type phaseType, std::vector<float>& e1s, std::vector<float>& e2s, std::vector<float>& e3s, std::vector<float>& weights,
+                                     std::vector<float>& sigmas, bool computeAxisODF = true);
 
-  static QVector<float> GenerateODFData(unsigned int crystalStructure, QVector<float>& e1s, QVector<float>& e2s, QVector<float>& e3s, QVector<float>& weights, QVector<float>& sigmas,
-                                        bool computeODF = true);
+  static std::vector<float> GenerateODFData(unsigned int crystalStructure, std::vector<float>& e1s, std::vector<float>& e2s, std::vector<float>& e3s, std::vector<float>& weights,
+                                            std::vector<float>& sigmas, bool computeODF = true);
 
-  static void GenerateMisorientationBinData(StatsData* statsData, PhaseType::Type phaseType, unsigned int crystalStruct, QVector<float>& odf, QVector<float>& angles, QVector<float>& axes,
-                                            QVector<float>& weights, bool computeMDF = true);
+  static void GenerateMisorientationBinData(StatsData* statsData, PhaseType::Type phaseType, unsigned int crystalStruct, std::vector<float>& odf, std::vector<float>& angles, std::vector<float>& axes,
+                                            std::vector<float>& weights, bool computeMDF = true);
 
 protected:
   StatsGeneratorUtilities();
