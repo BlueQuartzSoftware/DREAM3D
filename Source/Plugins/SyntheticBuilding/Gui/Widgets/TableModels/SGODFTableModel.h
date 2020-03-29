@@ -35,6 +35,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QVariant>
 #include <QtCore/QVector>
@@ -145,7 +147,7 @@ public:
    * @param col
    * @return
    */
-  virtual QVector<float> getData(int col);
+  virtual std::vector<float> getData(int col);
 
   /**
    *

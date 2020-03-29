@@ -42,9 +42,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
 #include "ImportExport/ImportExportDLLExport.h"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 
 /**
  * @brief The VisualizeGBCDGMT class. See [Filter documentation](@ref visualizegbcdgmt) for details.
@@ -249,8 +252,7 @@ private:
   DataArrayPath m_GBCDArrayPath = {};
   DataArrayPath m_CrystalStructuresArrayPath = {};
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
-  QVector<float> gmtValues;
+  LaueOpsContainer m_OrientationOps;  QVector<float> gmtValues;
 
 public:
   VisualizeGBCDGMT(const VisualizeGBCDGMT&) = delete;            // Copy Constructor Not Implemented

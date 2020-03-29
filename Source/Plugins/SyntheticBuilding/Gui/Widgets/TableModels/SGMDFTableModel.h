@@ -65,7 +65,7 @@ public:
    * @param index
    * @return
    */
-  virtual Qt::ItemFlags flags(const QModelIndex& index) const;
+  Qt::ItemFlags flags(const QModelIndex& index) const override;
 
   /**
    *
@@ -73,7 +73,7 @@ public:
    * @param role
    * @return
    */
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+  QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
   /**
    *
@@ -82,21 +82,21 @@ public:
    * @param role
    * @return
    */
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
   /**
    *
    * @param parent
    * @return
    */
-  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+  int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
   /**
    *
    * @param parent
    * @return
    */
-  virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
+  int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 
   /**
    *
@@ -105,7 +105,7 @@ public:
    * @param role
    * @return
    */
-  virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+  bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
 
   /**
    *
@@ -115,7 +115,7 @@ public:
    * @param role
    * @return
    */
-  virtual bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role = Qt::EditRole);
+  bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role = Qt::EditRole) override;
 
   /**
    *
@@ -124,7 +124,7 @@ public:
    * @param parent
    * @return
    */
-  virtual bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex());
+  bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
   /**
    *
@@ -133,20 +133,20 @@ public:
    * @param parent
    * @return
    */
-  virtual bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex());
+  bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
   /**
    *
    * @return
    */
-  virtual QAbstractItemDelegate* getItemDelegate();
+  QAbstractItemDelegate* getItemDelegate();
 
   /**
    *
    * @param col
    * @return
    */
-  virtual QVector<float> getData(int col);
+  std::vector<float> getData(int col);
 
   /**
    *
@@ -158,11 +158,11 @@ public:
 
   int parseHKLRow(int row, float& h, float& k, float& l);
 
-  virtual void setColumnData(int col, QVector<float>& data);
+  void setColumnData(int col, QVector<float>& data);
 
-  virtual void setRowData(int row, float angle, QString axis, float weight);
+  void setRowData(int row, float angle, QString axis, float weight);
 
-  virtual void setInitialValues();
+  void setInitialValues();
 
   void setTableData(QVector<float> angles, QVector<float> axis, QVector<float> weights);
 

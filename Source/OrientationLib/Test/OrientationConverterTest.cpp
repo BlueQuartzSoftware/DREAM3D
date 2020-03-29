@@ -113,10 +113,11 @@ public:
     eulers->setComponent(0, 1, phi);
     eulers->setComponent(0, 2, phi2);
 
+    using StringContainerType = std::vector<QString>;
     using OCType = OrientationConverter<float>;
-    QVector<OrientationRepresentation::Type> ocTypes = OCType::GetOrientationTypes();
-    QVector<QString> tStrings = OCType::GetOrientationTypeStrings();
-    QVector<OCType::Pointer> converters(6);
+    std::vector<OrientationRepresentation::Type> ocTypes = OCType::GetOrientationTypes();
+    StringContainerType tStrings = OCType::GetOrientationTypeStrings<StringContainerType>();
+    std::vector<OCType::Pointer> converters(6);
     converters[0] = EulerConverter<float>::New();
     converters[1] = OrientationMatrixConverter<float>::New();
     converters[2] = QuaternionConverter<float>::New();
@@ -126,7 +127,7 @@ public:
     // converters[6] = CubochoricConverter<float>::New();
 
     OrientationTransformation::ResultType result;
-    QVector<int> strides = OCType::GetComponentCounts();
+    std::vector<int> strides = OCType::GetComponentCounts<std::vector<int>>();
 
     for(int t0 = 0; t0 < 1; t0++)
     {

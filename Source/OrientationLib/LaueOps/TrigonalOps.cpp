@@ -33,9 +33,10 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include "TrigonalOps.h"
+
 #include <memory>
 
-#include "TrigonalOps.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -56,52 +57,53 @@
 #include "OrientationLib/Utilities/ComputeStereographicProjection.h"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
-namespace Detail
-{
-
-static const double TrigDim1InitValue = std::pow((0.75f * (SIMPLib::Constants::k_PiOver2 - sinf(SIMPLib::Constants::k_PiOver2))), (1.0f / 3.0));
-static const double TrigDim2InitValue = std::pow((0.75f * (SIMPLib::Constants::k_PiOver2 - sinf(SIMPLib::Constants::k_PiOver2))), (1.0f / 3.0));
-static const double TrigDim3InitValue = std::pow((0.75f * (SIMPLib::Constants::k_PiOver3 - sinf(SIMPLib::Constants::k_PiOver3))), (1.0f / 3.0));
-static const double TrigDim1StepValue = TrigDim1InitValue / 18.0f;
-static const double TrigDim2StepValue = TrigDim2InitValue / 18.0f;
-static const double TrigDim3StepValue = TrigDim3InitValue / 12.0f;
 namespace TrigonalHigh
 {
+static const std::array<size_t, 3> OdfNumBins = {36, 36, 24}; // Represents a 5Deg bin
+
+static const std::array<double, 3> OdfDimInitValue = {std::pow((0.75f * (SIMPLib::Constants::k_PiOver2 - sinf(SIMPLib::Constants::k_PiOver2))), (1.0f / 3.0)),
+                                                      std::pow((0.75f * (SIMPLib::Constants::k_PiOver2 - sinf(SIMPLib::Constants::k_PiOver2))), (1.0f / 3.0)),
+                                                      std::pow((0.75f * (SIMPLib::Constants::k_PiOver3 - sinf(SIMPLib::Constants::k_PiOver3))), (1.0f / 3.0))};
+static const std::array<double, 3> OdfDimStepValue = {OdfDimInitValue[0] / static_cast<double>(OdfNumBins[0] / 2), OdfDimInitValue[1] / static_cast<double>(OdfNumBins[1] / 2),
+                                                      OdfDimInitValue[2] / static_cast<double>(OdfNumBins[2] / 2)};
+
 static const int symSize0 = 2;
 static const int symSize1 = 2;
 static const int symSize2 = 2;
-} // namespace TrigonalHigh
-}
 
-static const QuatType TrigQuatSym[6] = {QuatType(0.000000000, 0.000000000, 0.000000000, 1.000000000), QuatType(0.000000000, 0.000000000, 0.866025400, 0.500000000),
-                                        QuatType(0.000000000, 0.000000000, 0.866025400, -0.50000000), QuatType(1.000000000, 0.000000000, 0.000000000, 0.000000000),
-                                        QuatType(-0.500000000, 0.86602540, 0.000000000, 0.000000000), QuatType(-0.500000000, -0.866025400, 0.000000000, 0.000000000)};
+static const int k_OdfSize = 31104;
+static const int k_MdfSize = 31104;
+static const int k_NumSymQuats = 6;
 
-static const double TrigRodSym[6][3] = {
+static const QuatType QuatSym[6] = {QuatType(0.000000000, 0.000000000, 0.000000000, 1.000000000), QuatType(0.000000000, 0.000000000, 0.866025400, 0.500000000),
+                                    QuatType(0.000000000, 0.000000000, 0.866025400, -0.50000000), QuatType(1.000000000, 0.000000000, 0.000000000, 0.000000000),
+                                    QuatType(-0.500000000, 0.86602540, 0.000000000, 0.000000000), QuatType(-0.500000000, -0.866025400, 0.000000000, 0.000000000)};
+
+static const double RodSym[6][3] = {
     {0.0, 0.0, 0.0}, {0.0, 0.0, 1.73205}, {0.0, 0.0, -1.73205}, {8660254000000.0, 5000000000000.0, 0.0}, {0.0, 1000000000000.0, 0.0}, {-8660254000000.0, 5000000000000.0, 0.0}};
 
-static const double TrigMatSym[6][3][3] = {{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}},
+static const double MatSym[6][3][3] = {{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}},
 
-                                           {{-0.5, static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(-SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, 1.0}},
+                                       {{-0.5, static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(-SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, 1.0}},
 
-                                           {{-0.5, static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, 1.0}},
+                                       {{-0.5, static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, 1.0}},
 
-                                           {{0.5, static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, -1.0}},
+                                       {{0.5, static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, -1.0}},
 
-                                           {{-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, -1.0}},
+                                       {{-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, -1.0}},
 
-                                           {{0.5, static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(-SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, -1.0}}};
+                                       {{0.5, static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(-SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, -1.0}}};
 
-using namespace Detail;
+} // namespace TrigonalHigh
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 TrigonalOps::TrigonalOps()
 {
-  double junk1 = TrigDim1StepValue * 1.0f;
-  double junk2 = junk1 / TrigDim2StepValue;
-  double junk3 = junk2 / TrigDim3StepValue;
+  double junk1 = TrigonalHigh::OdfDimStepValue[0] * 1.0f;
+  double junk2 = junk1 / TrigonalHigh::OdfDimStepValue[1];
+  double junk3 = junk2 / TrigonalHigh::OdfDimStepValue[2];
   junk1 = junk3 / junk2;
 }
 
@@ -123,7 +125,7 @@ bool TrigonalOps::getHasInversion() const
 // -----------------------------------------------------------------------------
 int TrigonalOps::getODFSize() const
 {
-  return k_OdfSize;
+  return TrigonalHigh::k_OdfSize;
 }
 
 // -----------------------------------------------------------------------------
@@ -131,7 +133,7 @@ int TrigonalOps::getODFSize() const
 // -----------------------------------------------------------------------------
 int TrigonalOps::getMDFSize() const
 {
-  return k_MdfSize;
+  return TrigonalHigh::k_MdfSize;
 }
 
 // -----------------------------------------------------------------------------
@@ -139,7 +141,13 @@ int TrigonalOps::getMDFSize() const
 // -----------------------------------------------------------------------------
 int TrigonalOps::getNumSymOps() const
 {
-  return k_NumSymQuats;
+  return TrigonalHigh::k_NumSymQuats;
+}
+
+// -----------------------------------------------------------------------------
+std::array<size_t, 3> TrigonalOps::getOdfNumBins() const
+{
+  return TrigonalHigh::OdfNumBins;
 }
 
 // -----------------------------------------------------------------------------
@@ -150,122 +158,58 @@ QString TrigonalOps::getSymmetryName() const
   return "Trigonal -3m";;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-double TrigonalOps::_calcMisoQuat(const QuatType quatsym[6], int numsym, QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
+OrientationD TrigonalOps::calculateMisorientation(const QuatType& q1, const QuatType& q2) const
 {
-  double wmin = 9999999.0f; //,na,nb,nc;
-  double w = 0.0;
-  double n1min = 0.0f;
-  double n2min = 0.0f;
-  double n3min = 0.0f;
-  QuatType qc;
-
-  QuatType qr = q1 * (q2.conjugate());
-
-  for (int i = 0; i < numsym; i++)
-  {
-    qc = quatsym[i] * qr;
-
-    if(qc.w() < -1)
-    {
-      qc.w() = -1.0;
-    }
-    else if(qc.w() > 1)
-    {
-      qc.w() = 1.0;
-    }
-
-    OrientationType ax = OrientationTransformation::qu2ax<QuatType, OrientationType>(qc);
-    n1 = ax[0];
-    n2 = ax[1];
-    n3 = ax[2];
-    w = ax[3];
-
-    if (w > SIMPLib::Constants::k_Pi)
-    {
-      w = SIMPLib::Constants::k_2Pi - w;
-    }
-    if (w < wmin)
-    {
-      wmin = w;
-      n1min = n1;
-      n2min = n2;
-      n3min = n3;
-    }
-  }
-  double denom = sqrt((n1min * n1min + n2min * n2min + n3min * n3min));
-  n1 = n1min / denom;
-  n2 = n2min / denom;
-  n3 = n3min / denom;
-  if(denom == 0)
-  {
-    n1 = 0.0, n2 = 0.0, n3 = 1.0;
-  }
-  if(wmin == 0)
-  {
-    n1 = 0.0, n2 = 0.0, n3 = 1.0;
-  }
-  return wmin;
-}
-
-double TrigonalOps::getMisoQuat(QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
-{
-  return _calcMisoQuat(TrigQuatSym, k_NumSymQuats, q1, q2, n1, n2, n3);
+  return calculateMisorientationInternal(TrigonalHigh::QuatSym, TrigonalHigh::k_NumSymQuats, q1, q2);
 }
 
 // -----------------------------------------------------------------------------
-float TrigonalOps::getMisoQuat(QuatF& q1f, QuatF& q2f, float& n1f, float& n2f, float& n3f) const
+OrientationF TrigonalOps::calculateMisorientation(const QuatF& q1f, const QuatF& q2f) const
+
 {
-  QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
-  QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
-  double n1 = n1f;
-  double n2 = n2f;
-  double n3 = n3f;
-  float w = static_cast<float>(_calcMisoQuat(TrigQuatSym, k_NumSymQuats, q1, q2, n1, n2, n3));
-  n1f = n1;
-  n2f = n2;
-  n3f = n3;
-  return w;
+  QuatType q1 = q1f;
+  QuatType q2 = q2f;
+  OrientationD axisAngle = calculateMisorientationInternal(TrigonalHigh::QuatSym, TrigonalHigh::k_NumSymQuats, q1, q2);
+  return axisAngle;
 }
 
+// -----------------------------------------------------------------------------
 QuatType TrigonalOps::getQuatSymOp(int32_t i) const
 {
-  return TrigQuatSym[i];
+  return TrigonalHigh::QuatSym[i];
 }
 
 void TrigonalOps::getRodSymOp(int i, double* r) const
 {
-  r[0] = TrigRodSym[i][0];
-  r[1] = TrigRodSym[i][1];
-  r[2] = TrigRodSym[i][2];
+  r[0] = TrigonalHigh::RodSym[i][0];
+  r[1] = TrigonalHigh::RodSym[i][1];
+  r[2] = TrigonalHigh::RodSym[i][2];
 }
 
 void TrigonalOps::getMatSymOp(int i, double g[3][3]) const
 {
-  g[0][0] = TrigMatSym[i][0][0];
-  g[0][1] = TrigMatSym[i][0][1];
-  g[0][2] = TrigMatSym[i][0][2];
-  g[1][0] = TrigMatSym[i][1][0];
-  g[1][1] = TrigMatSym[i][1][1];
-  g[1][2] = TrigMatSym[i][1][2];
-  g[2][0] = TrigMatSym[i][2][0];
-  g[2][1] = TrigMatSym[i][2][1];
-  g[2][2] = TrigMatSym[i][2][2];
+  g[0][0] = TrigonalHigh::MatSym[i][0][0];
+  g[0][1] = TrigonalHigh::MatSym[i][0][1];
+  g[0][2] = TrigonalHigh::MatSym[i][0][2];
+  g[1][0] = TrigonalHigh::MatSym[i][1][0];
+  g[1][1] = TrigonalHigh::MatSym[i][1][1];
+  g[1][2] = TrigonalHigh::MatSym[i][1][2];
+  g[2][0] = TrigonalHigh::MatSym[i][2][0];
+  g[2][1] = TrigonalHigh::MatSym[i][2][1];
+  g[2][2] = TrigonalHigh::MatSym[i][2][2];
 }
 
 void TrigonalOps::getMatSymOp(int i, float g[3][3]) const
 {
-  g[0][0] = TrigMatSym[i][0][0];
-  g[0][1] = TrigMatSym[i][0][1];
-  g[0][2] = TrigMatSym[i][0][2];
-  g[1][0] = TrigMatSym[i][1][0];
-  g[1][1] = TrigMatSym[i][1][1];
-  g[1][2] = TrigMatSym[i][1][2];
-  g[2][0] = TrigMatSym[i][2][0];
-  g[2][1] = TrigMatSym[i][2][1];
-  g[2][2] = TrigMatSym[i][2][2];
+  g[0][0] = TrigonalHigh::MatSym[i][0][0];
+  g[0][1] = TrigonalHigh::MatSym[i][0][1];
+  g[0][2] = TrigonalHigh::MatSym[i][0][2];
+  g[1][0] = TrigonalHigh::MatSym[i][1][0];
+  g[1][1] = TrigonalHigh::MatSym[i][1][1];
+  g[1][2] = TrigonalHigh::MatSym[i][1][2];
+  g[2][0] = TrigonalHigh::MatSym[i][2][0];
+  g[2][1] = TrigonalHigh::MatSym[i][2][1];
+  g[2][2] = TrigonalHigh::MatSym[i][2][2];
 }
 // -----------------------------------------------------------------------------
 //
@@ -274,7 +218,7 @@ OrientationType TrigonalOps::getODFFZRod(const OrientationType& rod) const
 {
   int numsym = 6;
 
-  return _calcRodNearestOrigin(TrigRodSym, numsym, rod);
+  return _calcRodNearestOrigin(TrigonalHigh::RodSym, numsym, rod);
 }
 
 // -----------------------------------------------------------------------------
@@ -286,7 +230,7 @@ OrientationType TrigonalOps::getMDFFZRod(const OrientationType& inRod) const
   double FZn1 = 0.0, FZn2 = 0.0, FZn3 = 0.0, FZw = 0.0;
   double n1n2mag = 0.0f;
 
-  OrientationType rod = _calcRodNearestOrigin(TrigRodSym, 12, inRod);
+  OrientationType rod = _calcRodNearestOrigin(TrigonalHigh::RodSym, 12, inRod);
 
   OrientationType ax = OrientationTransformation::ro2ax<OrientationType, OrientationType>(rod);
 
@@ -337,13 +281,13 @@ OrientationType TrigonalOps::getMDFFZRod(const OrientationType& inRod) const
 // -----------------------------------------------------------------------------
 QuatType TrigonalOps::getNearestQuat(const QuatType& q1, const QuatType& q2) const
 {
-  return _calcNearestQuat(TrigQuatSym, k_NumSymQuats, q1, q2);
+  return _calcNearestQuat(TrigonalHigh::QuatSym, TrigonalHigh::k_NumSymQuats, q1, q2);
 }
 QuatF TrigonalOps::getNearestQuat(const QuatF& q1f, const QuatF& q2f) const
 {
   QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
   QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
-  QuatType temp = _calcNearestQuat(TrigQuatSym, k_NumSymQuats, q1, q2);
+  QuatType temp = _calcNearestQuat(TrigonalHigh::QuatSym, TrigonalHigh::k_NumSymQuats, q1, q2);
   QuatF out(temp.x(), temp.y(), temp.z(), temp.w());
   return out;
 }
@@ -359,15 +303,15 @@ int TrigonalOps::getMisoBin(const OrientationType& rod) const
 
   OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
-  dim[0] = TrigDim1InitValue;
-  dim[1] = TrigDim2InitValue;
-  dim[2] = TrigDim3InitValue;
-  step[0] = TrigDim1StepValue;
-  step[1] = TrigDim2StepValue;
-  step[2] = TrigDim3StepValue;
-  bins[0] = 36.0f;
-  bins[1] = 36.0f;
-  bins[2] = 24.0f;
+  dim[0] = TrigonalHigh::OdfDimInitValue[0];
+  dim[1] = TrigonalHigh::OdfDimInitValue[1];
+  dim[2] = TrigonalHigh::OdfDimInitValue[2];
+  step[0] = TrigonalHigh::OdfDimStepValue[0];
+  step[1] = TrigonalHigh::OdfDimStepValue[1];
+  step[2] = TrigonalHigh::OdfDimStepValue[2];
+  bins[0] = static_cast<double>(TrigonalHigh::OdfNumBins[0]);
+  bins[1] = static_cast<double>(TrigonalHigh::OdfNumBins[1]);
+  bins[2] = static_cast<double>(TrigonalHigh::OdfNumBins[2]);
 
   return _calcMisoBin(dim, bins, step, ho);
 }
@@ -376,24 +320,24 @@ int TrigonalOps::getMisoBin(const OrientationType& rod) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationType TrigonalOps::determineEulerAngles(uint64_t seed, int choose) const
+OrientationType TrigonalOps::determineEulerAngles(double random[3], int choose) const
 {
   double init[3];
   double step[3];
   int32_t phi[3];
   double h1, h2, h3;
 
-  init[0] = TrigDim1InitValue;
-  init[1] = TrigDim2InitValue;
-  init[2] = TrigDim3InitValue;
-  step[0] = TrigDim1StepValue;
-  step[1] = TrigDim2StepValue;
-  step[2] = TrigDim3StepValue;
-  phi[0] = static_cast<int32_t>(choose % 36);
-  phi[1] = static_cast<int32_t>((choose / 36) % 36);
-  phi[2] = static_cast<int32_t>(choose / (36 * 36));
+  init[0] = TrigonalHigh::OdfDimInitValue[0];
+  init[1] = TrigonalHigh::OdfDimInitValue[1];
+  init[2] = TrigonalHigh::OdfDimInitValue[2];
+  step[0] = TrigonalHigh::OdfDimStepValue[0];
+  step[1] = TrigonalHigh::OdfDimStepValue[1];
+  step[2] = TrigonalHigh::OdfDimStepValue[2];
+  phi[0] = static_cast<int32_t>(choose % TrigonalHigh::OdfNumBins[0]);
+  phi[1] = static_cast<int32_t>((choose / TrigonalHigh::OdfNumBins[0]) % TrigonalHigh::OdfNumBins[1]);
+  phi[2] = static_cast<int32_t>(choose / (TrigonalHigh::OdfNumBins[0] * TrigonalHigh::OdfNumBins[1]));
 
-  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(random, init, step, phi, h1, h2, h3);
 
   OrientationType ho(h1, h2, h3);
   OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
@@ -407,33 +351,33 @@ OrientationType TrigonalOps::determineEulerAngles(uint64_t seed, int choose) con
 // -----------------------------------------------------------------------------
 OrientationType TrigonalOps::randomizeEulerAngles(const OrientationType& synea) const
 {
-  size_t symOp = getRandomSymmetryOperatorIndex(k_NumSymQuats);
+  size_t symOp = getRandomSymmetryOperatorIndex(TrigonalHigh::k_NumSymQuats);
   QuatType quat = OrientationTransformation::eu2qu<OrientationType, QuatType>(synea);
-  QuatType qc = TrigQuatSym[symOp] * quat;
+  QuatType qc = TrigonalHigh::QuatSym[symOp] * quat;
   return OrientationTransformation::qu2eu<QuatType, OrientationType>(qc);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationType TrigonalOps::determineRodriguesVector(uint64_t seed, int choose) const
+OrientationType TrigonalOps::determineRodriguesVector(double random[3], int choose) const
 {
   double init[3];
   double step[3];
   int32_t phi[3];
   double h1, h2, h3;
 
-  init[0] = TrigDim1InitValue;
-  init[1] = TrigDim2InitValue;
-  init[2] = TrigDim3InitValue;
-  step[0] = TrigDim1StepValue;
-  step[1] = TrigDim2StepValue;
-  step[2] = TrigDim3StepValue;
-  phi[0] = static_cast<int32_t>(choose % 36);
-  phi[1] = static_cast<int32_t>((choose / 36) % 36);
-  phi[2] = static_cast<int32_t>(choose / (36 * 36));
+  init[0] = TrigonalHigh::OdfDimInitValue[0];
+  init[1] = TrigonalHigh::OdfDimInitValue[1];
+  init[2] = TrigonalHigh::OdfDimInitValue[2];
+  step[0] = TrigonalHigh::OdfDimStepValue[0];
+  step[1] = TrigonalHigh::OdfDimStepValue[1];
+  step[2] = TrigonalHigh::OdfDimStepValue[2];
+  phi[0] = static_cast<int32_t>(choose % TrigonalHigh::OdfNumBins[0]);
+  phi[1] = static_cast<int32_t>((choose / TrigonalHigh::OdfNumBins[0]) % TrigonalHigh::OdfNumBins[1]);
+  phi[2] = static_cast<int32_t>(choose / (TrigonalHigh::OdfNumBins[0] * TrigonalHigh::OdfNumBins[1]));
 
-  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(random, init, step, phi, h1, h2, h3);
   OrientationType ho(h1, h2, h3);
   OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
   ro = getMDFFZRod(ro);
@@ -448,15 +392,15 @@ int TrigonalOps::getOdfBin(const OrientationType& rod) const
 
   OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
-  dim[0] = TrigDim1InitValue;
-  dim[1] = TrigDim2InitValue;
-  dim[2] = TrigDim3InitValue;
-  step[0] = TrigDim1StepValue;
-  step[1] = TrigDim2StepValue;
-  step[2] = TrigDim3StepValue;
-  bins[0] = 36.0f;
-  bins[1] = 36.0f;
-  bins[2] = 24.0f;
+  dim[0] = TrigonalHigh::OdfDimInitValue[0];
+  dim[1] = TrigonalHigh::OdfDimInitValue[1];
+  dim[2] = TrigonalHigh::OdfDimInitValue[2];
+  step[0] = TrigonalHigh::OdfDimStepValue[0];
+  step[1] = TrigonalHigh::OdfDimStepValue[1];
+  step[2] = TrigonalHigh::OdfDimStepValue[2];
+  bins[0] = static_cast<double>(TrigonalHigh::OdfNumBins[0]);
+  bins[1] = static_cast<double>(TrigonalHigh::OdfNumBins[1]);
+  bins[2] = static_cast<double>(TrigonalHigh::OdfNumBins[2]);
 
   return _calcODFBin(dim, bins, step, ho);
 }
@@ -482,22 +426,22 @@ void TrigonalOps::getSchmidFactorAndSS(double load[3], double plane[3], double d
   directionMag *= loadMag;
 
   //loop over symmetry operators finding highest schmid factor
-  for(int i = 0; i < k_NumSymQuats; i++)
+  for(int i = 0; i < TrigonalHigh::k_NumSymQuats; i++)
   {
     //compute slip system
     double slipPlane[3] = {0};
-    slipPlane[2] = TrigMatSym[i][2][0] * plane[0] + TrigMatSym[i][2][1] * plane[1] + TrigMatSym[i][2][2] * plane[2];
+    slipPlane[2] = TrigonalHigh::MatSym[i][2][0] * plane[0] + TrigonalHigh::MatSym[i][2][1] * plane[1] + TrigonalHigh::MatSym[i][2][2] * plane[2];
 
     //dont consider negative z planes (to avoid duplicates)
     if( slipPlane[2] >= 0)
     {
-      slipPlane[0] = TrigMatSym[i][0][0] * plane[0] + TrigMatSym[i][0][1] * plane[1] + TrigMatSym[i][0][2] * plane[2];
-      slipPlane[1] = TrigMatSym[i][1][0] * plane[0] + TrigMatSym[i][1][1] * plane[1] + TrigMatSym[i][1][2] * plane[2];
+      slipPlane[0] = TrigonalHigh::MatSym[i][0][0] * plane[0] + TrigonalHigh::MatSym[i][0][1] * plane[1] + TrigonalHigh::MatSym[i][0][2] * plane[2];
+      slipPlane[1] = TrigonalHigh::MatSym[i][1][0] * plane[0] + TrigonalHigh::MatSym[i][1][1] * plane[1] + TrigonalHigh::MatSym[i][1][2] * plane[2];
 
       double slipDirection[3] = {0};
-      slipDirection[0] = TrigMatSym[i][0][0] * direction[0] + TrigMatSym[i][0][1] * direction[1] + TrigMatSym[i][0][2] * direction[2];
-      slipDirection[1] = TrigMatSym[i][1][0] * direction[0] + TrigMatSym[i][1][1] * direction[1] + TrigMatSym[i][1][2] * direction[2];
-      slipDirection[2] = TrigMatSym[i][2][0] * direction[0] + TrigMatSym[i][2][1] * direction[1] + TrigMatSym[i][2][2] * direction[2];
+      slipDirection[0] = TrigonalHigh::MatSym[i][0][0] * direction[0] + TrigonalHigh::MatSym[i][0][1] * direction[1] + TrigonalHigh::MatSym[i][0][2] * direction[2];
+      slipDirection[1] = TrigonalHigh::MatSym[i][1][0] * direction[0] + TrigonalHigh::MatSym[i][1][1] * direction[1] + TrigonalHigh::MatSym[i][1][2] * direction[2];
+      slipDirection[2] = TrigonalHigh::MatSym[i][2][0] * direction[0] + TrigonalHigh::MatSym[i][2][1] * direction[1] + TrigonalHigh::MatSym[i][2][2] * direction[2];
 
       double cosPhi = fabs(load[0] * slipPlane[0] + load[1] * slipPlane[1] + load[2] * slipPlane[2]) / planeMag;
       double cosLambda = fabs(load[0] * slipDirection[0] + load[1] * slipDirection[1] + load[2] * slipDirection[2]) / directionMag;
@@ -536,8 +480,7 @@ double TrigonalOps::getF7(const QuatType& q1, const QuatType& q2, double LD[3], 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-namespace Detail
-{
+
   namespace TrigonalHigh
   {
     class GenerateSphereCoordsImpl
@@ -607,7 +550,7 @@ namespace Detail
 #endif
     };
   }
-}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -616,17 +559,17 @@ void TrigonalOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatAr
   size_t nOrientations = eulers->getNumberOfTuples();
 
   // Sanity Check the size of the arrays
-  if (xyz001->getNumberOfTuples() < nOrientations * Detail::TrigonalHigh::symSize0)
+  if(xyz001->getNumberOfTuples() < nOrientations * TrigonalHigh::symSize0)
   {
-    xyz001->resizeTuples(nOrientations * Detail::TrigonalHigh::symSize0 * 3);
+    xyz001->resizeTuples(nOrientations * TrigonalHigh::symSize0 * 3);
   }
-  if (xyz011->getNumberOfTuples() < nOrientations * Detail::TrigonalHigh::symSize1)
+  if(xyz011->getNumberOfTuples() < nOrientations * TrigonalHigh::symSize1)
   {
-    xyz011->resizeTuples(nOrientations * Detail::TrigonalHigh::symSize1 * 3);
+    xyz011->resizeTuples(nOrientations * TrigonalHigh::symSize1 * 3);
   }
-  if (xyz111->getNumberOfTuples() < nOrientations * Detail::TrigonalHigh::symSize2)
+  if(xyz111->getNumberOfTuples() < nOrientations * TrigonalHigh::symSize2)
   {
-    xyz111->resizeTuples(nOrientations * Detail::TrigonalHigh::symSize2 * 3);
+    xyz111->resizeTuples(nOrientations * TrigonalHigh::symSize2 * 3);
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -637,13 +580,12 @@ void TrigonalOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatAr
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
-                      Detail::TrigonalHigh::GenerateSphereCoordsImpl(eulers, xyz001, xyz011, xyz111), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations), TrigonalHigh::GenerateSphereCoordsImpl(eulers, xyz001, xyz011, xyz111), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    Detail::TrigonalHigh::GenerateSphereCoordsImpl serial(eulers, xyz001, xyz011, xyz111);
+    TrigonalHigh::GenerateSphereCoordsImpl serial(eulers, xyz001, xyz011, xyz111);
     serial.generate(0, nOrientations);
   }
 
@@ -687,7 +629,7 @@ SIMPL::Rgb TrigonalOps::generateIPFColor(double phi1, double phi, double phi2, d
   OrientationType om(9); // Reusable for the loop
   QuatType q1 = OrientationTransformation::eu2qu<OrientationType, QuatType>(eu);
 
-  for(int j = 0; j < k_NumSymQuats; j++)
+  for(int j = 0; j < TrigonalHigh::k_NumSymQuats; j++)
   {
     QuatType qu = getQuatSymOp(j) * q1;
     OrientationTransformation::qu2om<QuatType, OrientationType>(qu).toGMatrix(g);
@@ -753,9 +695,9 @@ SIMPL::Rgb TrigonalOps::generateIPFColor(double phi1, double phi, double phi2, d
 // -----------------------------------------------------------------------------
 SIMPL::Rgb TrigonalOps::generateRodriguesColor(double r1, double r2, double r3) const
 {
-  double range1 = 2.0f * TrigDim1InitValue;
-  double range2 = 2.0f * TrigDim2InitValue;
-  double range3 = 2.0f * TrigDim3InitValue;
+  double range1 = 2.0f * TrigonalHigh::OdfDimInitValue[0];
+  double range2 = 2.0f * TrigonalHigh::OdfDimInitValue[1];
+  double range3 = 2.0f * TrigonalHigh::OdfDimInitValue[2];
   double max1 = range1 / 2.0f;
   double max2 = range2 / 2.0f;
   double max3 = range3 / 2.0f;
@@ -769,7 +711,7 @@ SIMPL::Rgb TrigonalOps::generateRodriguesColor(double r1, double r2, double r3) 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<UInt8ArrayType::Pointer> TrigonalOps::generatePoleFigure(PoleFigureConfiguration_t& config) const
+std::vector<UInt8ArrayType::Pointer> TrigonalOps::generatePoleFigure(PoleFigureConfiguration_t& config) const
 {
   QString label0 = QString("<0001>");
   QString label1 = QString("<0-110>");
@@ -786,11 +728,11 @@ QVector<UInt8ArrayType::Pointer> TrigonalOps::generatePoleFigure(PoleFigureConfi
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
   std::vector<size_t> dims(1, 3);
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::TrigonalHigh::symSize0, dims, label0 + QString("xyzCoords"), true);
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * TrigonalHigh::symSize0, dims, label0 + QString("xyzCoords"), true);
   // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::TrigonalHigh::symSize1, dims, label1 + QString("xyzCoords"), true);
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * TrigonalHigh::symSize1, dims, label1 + QString("xyzCoords"), true);
   // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::TrigonalHigh::symSize2, dims, label2 + QString("xyzCoords"), true);
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * TrigonalHigh::symSize2, dims, label2 + QString("xyzCoords"), true);
 
   config.sphereRadius = 1.0f;
 
@@ -882,7 +824,7 @@ QVector<UInt8ArrayType::Pointer> TrigonalOps::generatePoleFigure(PoleFigureConfi
   UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label1, true);
   UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label2, true);
 
-  QVector<UInt8ArrayType::Pointer> poleFigures(3);
+  std::vector<UInt8ArrayType::Pointer> poleFigures(3);
   if(config.order.size() == 3)
   {
     poleFigures[config.order[0]] = image001;

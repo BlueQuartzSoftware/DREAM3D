@@ -41,10 +41,15 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
 #include "Reconstruction/ReconstructionDLLExport.h"
+
+#include "OrientationLib/Core/Quaternion.hpp"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 
 /**
  * @brief The MergeColonies class. See [Filter documentation](@ref mergecolonies) for details.
@@ -404,8 +409,7 @@ private:
   bool m_RandomizeParentIds = {};
   bool m_IdentifyGlobAlpha = {};
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
   float m_AxisToleranceRad;
 
   /**

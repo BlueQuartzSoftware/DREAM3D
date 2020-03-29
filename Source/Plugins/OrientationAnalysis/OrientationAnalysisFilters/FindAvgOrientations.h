@@ -41,9 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 
 /**
  * @brief The FindAvgOrientations class. See [Filter documentation](@ref findavgorientations) for details.
@@ -262,8 +265,7 @@ private:
   DataArrayPath m_AvgQuatsArrayPath = {};
   DataArrayPath m_AvgEulerAnglesArrayPath = {};
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
 public:
   FindAvgOrientations(const FindAvgOrientations&) = delete; // Copy Constructor Not Implemented
   FindAvgOrientations(FindAvgOrientations&&) = delete;      // Move Constructor Not Implemented

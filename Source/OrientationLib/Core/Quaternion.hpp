@@ -36,6 +36,17 @@ public:
     quat[3] = 1.0;
   }
 
+  template <typename FromType>
+  Quaternion(const Quaternion<FromType>& in)
+  : Orientation<T>(4)
+  {
+    T* quat = this->data();
+    quat[0] = static_cast<T>(in[0]);
+    quat[1] = static_cast<T>(in[1]);
+    quat[2] = static_cast<T>(in[2]);
+    quat[3] = static_cast<T>(in[3]);
+  }
+
   Quaternion(size_type size)
   : Orientation<T>(4)
   {

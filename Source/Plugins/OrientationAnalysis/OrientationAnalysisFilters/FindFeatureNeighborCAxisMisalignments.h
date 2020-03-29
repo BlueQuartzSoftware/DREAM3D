@@ -42,9 +42,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 
 /**
  * @brief The FindFeatureNeighborCAxisMisalignments class. See [Filter documentation](@ref findfeatureneighborcaxismisalignments) for details.
@@ -273,8 +276,7 @@ private:
   DataArrayPath m_CrystalStructuresArrayPath = {};
   QString m_AvgCAxisMisalignmentsArrayName = {};
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
   NeighborList<int32_t>::WeakPointer m_NeighborList;
   NeighborList<float>::WeakPointer m_CAxisMisalignmentList;
 

@@ -1,41 +1,42 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+#include "CubicOps.h"
 
 #include <memory>
 
-#include "CubicOps.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -56,128 +57,130 @@
 
 #include "OrientationLib/Utilities/ComputeStereographicProjection.h"
 
-namespace Detail
-{
-
-static const double CubicDim1InitValue = std::pow((0.75f * (SIMPLib::Constants::k_PiOver4 - sinf(SIMPLib::Constants::k_PiOver4))), (1.0f / 3.0));
-static const double CubicDim2InitValue = std::pow((0.75f * (SIMPLib::Constants::k_PiOver4 - sinf(SIMPLib::Constants::k_PiOver4))), (1.0f / 3.0));
-static const double CubicDim3InitValue = std::pow((0.75f * (SIMPLib::Constants::k_PiOver4 - sinf(SIMPLib::Constants::k_PiOver4))), (1.0f / 3.0));
-static const double CubicDim1StepValue = CubicDim1InitValue / 9.0f;
-static const double CubicDim2StepValue = CubicDim2InitValue / 9.0f;
-static const double CubicDim3StepValue = CubicDim3InitValue / 9.0f;
 namespace CubicHigh
 {
+
+static const std::array<size_t, 3> OdfNumBins = {18, 18, 18}; // Represents a 5Deg bin
+static const std::array<double, 3> OdfDimInitValue = {std::pow((0.75f * (SIMPLib::Constants::k_PiOver4 - sinf(SIMPLib::Constants::k_PiOver4))), (1.0f / 3.0)),
+                                                      std::pow((0.75f * (SIMPLib::Constants::k_PiOver4 - sinf(SIMPLib::Constants::k_PiOver4))), (1.0f / 3.0)),
+                                                      std::pow((0.75f * (SIMPLib::Constants::k_PiOver4 - sinf(SIMPLib::Constants::k_PiOver4))), (1.0f / 3.0))};
+
+static const std::array<double, 3> OdfDimStepValue = {OdfDimInitValue[0] / static_cast<double>(OdfNumBins[0] / 2), OdfDimInitValue[1] / static_cast<double>(OdfNumBins[1] / 2),
+                                                      OdfDimInitValue[2] / static_cast<double>(OdfNumBins[2] / 2)};
+
 static const int symSize0 = 6;
 static const int symSize1 = 12;
 static const int symSize2 = 8;
+
+static const int k_OdfSize = 5832;
+static const int k_MdfSize = 5832;
+static const int k_NumSymQuats = 24;
+
+static const QuatType QuatSym[24] = {QuatType(0.000000000, 0.000000000, 0.000000000, 1.000000000),
+                                     QuatType(1.000000000, 0.000000000, 0.000000000, 0.000000000),
+                                     QuatType(0.000000000, 1.000000000, 0.000000000, 0.000000000),
+                                     QuatType(0.000000000, 0.000000000, 1.000000000, 0.000000000),
+                                     QuatType(SIMPLib::Constants::k_1OverRoot2, 0.000000000, 0.000000000, SIMPLib::Constants::k_1OverRoot2),
+                                     QuatType(0.000000000, SIMPLib::Constants::k_1OverRoot2, 0.000000000, SIMPLib::Constants::k_1OverRoot2),
+                                     QuatType(0.000000000, 0.000000000, SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2),
+                                     QuatType(-SIMPLib::Constants::k_1OverRoot2, 0.000000000, 0.000000000, SIMPLib::Constants::k_1OverRoot2),
+                                     QuatType(0.000000000, -SIMPLib::Constants::k_1OverRoot2, 0.000000000, SIMPLib::Constants::k_1OverRoot2),
+                                     QuatType(0.000000000, 0.000000000, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2),
+                                     QuatType(SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000, 0.000000000),
+                                     QuatType(-SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000, 0.000000000),
+                                     QuatType(0.000000000, SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000),
+                                     QuatType(0.000000000, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000),
+                                     QuatType(SIMPLib::Constants::k_1OverRoot2, 0.000000000, SIMPLib::Constants::k_1OverRoot2, 0.000000000),
+                                     QuatType(-SIMPLib::Constants::k_1OverRoot2, 0.000000000, SIMPLib::Constants::k_1OverRoot2, 0.000000000),
+                                     QuatType(0.500000000, 0.500000000, 0.500000000, 0.500000000),
+                                     QuatType(-0.500000000, -0.500000000, -0.500000000, 0.500000000),
+                                     QuatType(0.500000000, -0.500000000, 0.500000000, 0.500000000),
+                                     QuatType(-0.500000000, 0.500000000, -0.500000000, 0.500000000),
+                                     QuatType(-0.500000000, 0.500000000, 0.500000000, 0.500000000),
+                                     QuatType(0.500000000, -0.500000000, -0.500000000, 0.500000000),
+                                     QuatType(-0.500000000, -0.500000000, 0.500000000, 0.500000000),
+                                     QuatType(0.500000000, 0.500000000, -0.500000000, 0.500000000)};
+
+static const double RodSym[24][3] = {{0.0, 0.0, 0.0},
+                                     {10000000000.0, 0.0, 0.0},
+                                     {0.0, 10000000000.0, 0.0},
+                                     {0.0, 0.0, 10000000000.0},
+                                     {1.0, 0.0, 0.0},
+                                     {0.0, 1.0, 0.0},
+                                     {0.0, 0.0, 1.0},
+                                     {-1.0, 0.0, 0.0},
+                                     {0.0, -1.0, 0.0},
+                                     {0.0, 0.0, -1.0},
+                                     {10000000000.0, 10000000000.0, 0.0},
+                                     {-10000000000.0, 10000000000.0, 0.0},
+                                     {0.0, 10000000000.0, 10000000000.0},
+                                     {0.0, -10000000000.0, 10000000000.0},
+                                     {10000000000.0, 0.0, 10000000000.0},
+                                     {-10000000000.0, 0.0, 10000000000.0},
+                                     {1.0, 1.0, 1.0},
+                                     {-1.0, -1.0, -1.0},
+                                     {1.0, -1.0, 1.0},
+                                     {-1.0, 1.0, -1.0},
+                                     {-1.0, 1.0, 1.0},
+                                     {1.0, -1.0, -1.0},
+                                     {-1.0, -1.0, 1.0},
+                                     {1.0, 1.0, -1.0}};
+
+static const double SlipDirections[12][3] = {{0.0, 1.0, -1.0}, {1.0, 0.0, -1.0}, {1.0, -1.0, 0.0}, {1.0, -1.0, 0.0}, {1.0, 0.0, 1.0}, {0.0, 1.0, 1.0},
+                                             {1.0, 1.0, 0.0},  {0.0, 1.0, 1.0},  {1.0, 0.0, -1.0}, {1.0, 1.0, 0.0},  {1.0, 0.0, 1.0}, {0.0, 1.0, -1.0}};
+
+static const double SlipPlanes[12][3] = {{1.0, 1.0, 1.0},  {1.0, 1.0, 1.0},  {1.0, 1.0, 1.0},  {1.0, 1.0, -1.0}, {1.0, 1.0, -1.0}, {1.0, 1.0, -1.0},
+                                         {1.0, -1.0, 1.0}, {1.0, -1.0, 1.0}, {1.0, -1.0, 1.0}, {-1.0, 1.0, 1.0}, {-1.0, 1.0, 1.0}, {-1.0, 1.0, 1.0}};
+
+static const double MatSym[24][3][3] = {{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}},
+
+                                        {{1.0, 0.0, 0.0}, {0.0, 0.0, -1.0}, {0.0, 1.0, 0.0}},
+
+                                        {{1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, -1.0}},
+
+                                        {{1.0, 0.0, 0.0}, {0.0, 0.0, 1.0}, {0.0, -1.0, 0.0}},
+
+                                        {{0.0, 0.0, -1.0}, {0.0, 1.0, 0.0}, {1.0, 0.0, 0.0}},
+
+                                        {{0.0, 0.0, 1.0}, {0.0, 1.0, 0.0}, {-1.0, 0.0, 0.0}},
+
+                                        {{-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, -1.0}},
+
+                                        {{-1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}},
+
+                                        {{0.0, 1.0, 0.0}, {-1.0, 0.0, 0.0}, {0.0, 0.0, 1.0}},
+
+                                        {{0.0, -1.0, 0.0}, {1.0, 0.0, 0.0}, {0.0, 0.0, 1.0}},
+
+                                        {{0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}, {-1.0, 0.0, 0.0}},
+
+                                        {{0.0, 0.0, 1.0}, {-1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}},
+
+                                        {{0.0, -1.0, 0.0}, {0.0, 0.0, -1.0}, {1.0, 0.0, 0.0}},
+
+                                        {{0.0, 0.0, -1.0}, {1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}},
+
+                                        {{0.0, 1.0, 0.0}, {0.0, 0.0, -1.0}, {-1.0, 0.0, 0.0}},
+
+                                        {{0.0, 0.0, -1.0}, {-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}},
+
+                                        {{0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}, {1.0, 0.0, 0.0}},
+
+                                        {{0.0, 0.0, 1.0}, {1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}},
+
+                                        {{0.0, 1.0, 0.0}, {1.0, 0.0, 0.0}, {0.0, 0.0, -1.0}},
+
+                                        {{-1.0, 0.0, 0.0}, {0.0, 0.0, 1.0}, {0.0, 1.0, 0.0}},
+
+                                        {{0.0, 0.0, 1.0}, {0.0, -1.0, 0.0}, {1.0, 0.0, 0.0}},
+
+                                        {{-1.0, 0.0, 0.0}, {0.0, 0.0, -1.0}, {0.0, -1.0, 0.0}},
+
+                                        {{0.0, 0.0, -1.0}, {0.0, -1.0, 0.0}, {-1.0, 0.0, 0.0}},
+
+                                        {{0.0, -1.0, 0.0}, {-1.0, 0.0, 0.0}, {0.0, 0.0, -1.0}}};
+
 } // namespace CubicHigh
-}
-
-static const QuatType CubicQuatSym[24] = {QuatType(0.000000000, 0.000000000, 0.000000000, 1.000000000),
-                                          QuatType(1.000000000, 0.000000000, 0.000000000, 0.000000000),
-                                          QuatType(0.000000000, 1.000000000, 0.000000000, 0.000000000),
-                                          QuatType(0.000000000, 0.000000000, 1.000000000, 0.000000000),
-                                          QuatType(SIMPLib::Constants::k_1OverRoot2, 0.000000000, 0.000000000, SIMPLib::Constants::k_1OverRoot2),
-                                          QuatType(0.000000000, SIMPLib::Constants::k_1OverRoot2, 0.000000000, SIMPLib::Constants::k_1OverRoot2),
-                                          QuatType(0.000000000, 0.000000000, SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2),
-                                          QuatType(-SIMPLib::Constants::k_1OverRoot2, 0.000000000, 0.000000000, SIMPLib::Constants::k_1OverRoot2),
-                                          QuatType(0.000000000, -SIMPLib::Constants::k_1OverRoot2, 0.000000000, SIMPLib::Constants::k_1OverRoot2),
-                                          QuatType(0.000000000, 0.000000000, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2),
-                                          QuatType(SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000, 0.000000000),
-                                          QuatType(-SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000, 0.000000000),
-                                          QuatType(0.000000000, SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000),
-                                          QuatType(0.000000000, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000),
-                                          QuatType(SIMPLib::Constants::k_1OverRoot2, 0.000000000, SIMPLib::Constants::k_1OverRoot2, 0.000000000),
-                                          QuatType(-SIMPLib::Constants::k_1OverRoot2, 0.000000000, SIMPLib::Constants::k_1OverRoot2, 0.000000000),
-                                          QuatType(0.500000000, 0.500000000, 0.500000000, 0.500000000),
-                                          QuatType(-0.500000000, -0.500000000, -0.500000000, 0.500000000),
-                                          QuatType(0.500000000, -0.500000000, 0.500000000, 0.500000000),
-                                          QuatType(-0.500000000, 0.500000000, -0.500000000, 0.500000000),
-                                          QuatType(-0.500000000, 0.500000000, 0.500000000, 0.500000000),
-                                          QuatType(0.500000000, -0.500000000, -0.500000000, 0.500000000),
-                                          QuatType(-0.500000000, -0.500000000, 0.500000000, 0.500000000),
-                                          QuatType(0.500000000, 0.500000000, -0.500000000, 0.500000000)};
-
-static const double CubicRodSym[24][3] = {{0.0, 0.0, 0.0},
-                                          {10000000000.0, 0.0, 0.0},
-                                          {0.0, 10000000000.0, 0.0},
-                                          {0.0, 0.0, 10000000000.0},
-                                          {1.0, 0.0, 0.0},
-                                          {0.0, 1.0, 0.0},
-                                          {0.0, 0.0, 1.0},
-                                          {-1.0, 0.0, 0.0},
-                                          {0.0, -1.0, 0.0},
-                                          {0.0, 0.0, -1.0},
-                                          {10000000000.0, 10000000000.0, 0.0},
-                                          {-10000000000.0, 10000000000.0, 0.0},
-                                          {0.0, 10000000000.0, 10000000000.0},
-                                          {0.0, -10000000000.0, 10000000000.0},
-                                          {10000000000.0, 0.0, 10000000000.0},
-                                          {-10000000000.0, 0.0, 10000000000.0},
-                                          {1.0, 1.0, 1.0},
-                                          {-1.0, -1.0, -1.0},
-                                          {1.0, -1.0, 1.0},
-                                          {-1.0, 1.0, -1.0},
-                                          {-1.0, 1.0, 1.0},
-                                          {1.0, -1.0, -1.0},
-                                          {-1.0, -1.0, 1.0},
-                                          {1.0, 1.0, -1.0}};
-
-static const double CubicSlipDirections[12][3] = {{0.0, 1.0, -1.0}, {1.0, 0.0, -1.0}, {1.0, -1.0, 0.0}, {1.0, -1.0, 0.0}, {1.0, 0.0, 1.0}, {0.0, 1.0, 1.0},
-                                                  {1.0, 1.0, 0.0},  {0.0, 1.0, 1.0},  {1.0, 0.0, -1.0}, {1.0, 1.0, 0.0},  {1.0, 0.0, 1.0}, {0.0, 1.0, -1.0}};
-
-static const double CubicSlipPlanes[12][3] = {{1.0, 1.0, 1.0},  {1.0, 1.0, 1.0},  {1.0, 1.0, 1.0},  {1.0, 1.0, -1.0}, {1.0, 1.0, -1.0}, {1.0, 1.0, -1.0},
-                                              {1.0, -1.0, 1.0}, {1.0, -1.0, 1.0}, {1.0, -1.0, 1.0}, {-1.0, 1.0, 1.0}, {-1.0, 1.0, 1.0}, {-1.0, 1.0, 1.0}};
-
-static const double CubicMatSym[24][3][3] = {{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}},
-
-                                             {{1.0, 0.0, 0.0}, {0.0, 0.0, -1.0}, {0.0, 1.0, 0.0}},
-
-                                             {{1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, -1.0}},
-
-                                             {{1.0, 0.0, 0.0}, {0.0, 0.0, 1.0}, {0.0, -1.0, 0.0}},
-
-                                             {{0.0, 0.0, -1.0}, {0.0, 1.0, 0.0}, {1.0, 0.0, 0.0}},
-
-                                             {{0.0, 0.0, 1.0}, {0.0, 1.0, 0.0}, {-1.0, 0.0, 0.0}},
-
-                                             {{-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, -1.0}},
-
-                                             {{-1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}},
-
-                                             {{0.0, 1.0, 0.0}, {-1.0, 0.0, 0.0}, {0.0, 0.0, 1.0}},
-
-                                             {{0.0, -1.0, 0.0}, {1.0, 0.0, 0.0}, {0.0, 0.0, 1.0}},
-
-                                             {{0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}, {-1.0, 0.0, 0.0}},
-
-                                             {{0.0, 0.0, 1.0}, {-1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}},
-
-                                             {{0.0, -1.0, 0.0}, {0.0, 0.0, -1.0}, {1.0, 0.0, 0.0}},
-
-                                             {{0.0, 0.0, -1.0}, {1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}},
-
-                                             {{0.0, 1.0, 0.0}, {0.0, 0.0, -1.0}, {-1.0, 0.0, 0.0}},
-
-                                             {{0.0, 0.0, -1.0}, {-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}},
-
-                                             {{0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}, {1.0, 0.0, 0.0}},
-
-                                             {{0.0, 0.0, 1.0}, {1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}},
-
-                                             {{0.0, 1.0, 0.0}, {1.0, 0.0, 0.0}, {0.0, 0.0, -1.0}},
-
-                                             {{-1.0, 0.0, 0.0}, {0.0, 0.0, 1.0}, {0.0, 1.0, 0.0}},
-
-                                             {{0.0, 0.0, 1.0}, {0.0, -1.0, 0.0}, {1.0, 0.0, 0.0}},
-
-                                             {{-1.0, 0.0, 0.0}, {0.0, 0.0, -1.0}, {0.0, -1.0, 0.0}},
-
-                                             {{0.0, 0.0, -1.0}, {0.0, -1.0, 0.0}, {-1.0, 0.0, 0.0}},
-
-                                             {{0.0, -1.0, 0.0}, {-1.0, 0.0, 0.0}, {0.0, 0.0, -1.0}}};
-
-using namespace Detail;
 
 // -----------------------------------------------------------------------------
 //
@@ -202,7 +205,7 @@ bool CubicOps::getHasInversion() const
 // -----------------------------------------------------------------------------
 int CubicOps::getODFSize() const
 {
-  return k_OdfSize;
+  return CubicHigh::k_OdfSize;
 }
 
 // -----------------------------------------------------------------------------
@@ -210,7 +213,7 @@ int CubicOps::getODFSize() const
 // -----------------------------------------------------------------------------
 int CubicOps::getMDFSize() const
 {
-  return k_MdfSize;
+  return CubicHigh::k_MdfSize;
 }
 
 // -----------------------------------------------------------------------------
@@ -218,7 +221,13 @@ int CubicOps::getMDFSize() const
 // -----------------------------------------------------------------------------
 int CubicOps::getNumSymOps() const
 {
-  return k_NumSymQuats;
+  return CubicHigh::k_NumSymQuats;
+}
+
+// -----------------------------------------------------------------------------
+std::array<size_t, 3> CubicOps::getOdfNumBins() const
+{
+  return CubicHigh::OdfNumBins;
 }
 
 // -----------------------------------------------------------------------------
@@ -232,30 +241,25 @@ QString CubicOps::getSymmetryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double CubicOps::getMisoQuat(QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
+OrientationD CubicOps::calculateMisorientation(const QuatType& q1, const QuatType& q2) const
 {
-  return _calcMisoQuat(CubicQuatSym, k_NumSymQuats, q1, q2, n1, n2, n3);
+  return calculateMisorientationInternal(CubicHigh::QuatSym, CubicHigh::k_NumSymQuats, q1, q2);
 }
 
 // -----------------------------------------------------------------------------
-float CubicOps::getMisoQuat(QuatF& q1f, QuatF& q2f, float& n1f, float& n2f, float& n3f) const
+OrientationF CubicOps::calculateMisorientation(const QuatF& q1f, const QuatF& q2f) const
+
 {
-  QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
-  QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
-  double n1 = n1f;
-  double n2 = n2f;
-  double n3 = n3f;
-  float w = static_cast<float>(_calcMisoQuat(CubicQuatSym, k_NumSymQuats, q1, q2, n1, n2, n3));
-  n1f = n1;
-  n2f = n2;
-  n3f = n3;
-  return w;
+  QuatType q1 = q1f;
+  QuatType q2 = q2f;
+  OrientationD axisAngle = calculateMisorientationInternal(CubicHigh::QuatSym, CubicHigh::k_NumSymQuats, q1, q2);
+  return axisAngle;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double CubicOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
+OrientationD CubicOps::calculateMisorientationInternal(const QuatType* quatsym, size_t numsym, const QuatType& q1, const QuatType& q2) const
 {
   double wmin = 9999999.0f; //,na,nb,nc;
   QuatType qco;
@@ -263,7 +267,7 @@ double CubicOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, QuatType&
   int type = 1;
   double sin_wmin_over_2 = 0.0;
 
-  QuatType qc = q1 * q2.conjugate();
+  QuatType qc = q1 * (q2.conjugate());
   qc.elementWiseAbs();
 
   // if qc.x() is smallest
@@ -471,6 +475,9 @@ double CubicOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, QuatType&
     sin_wmin_over_2 = sinf(wmin);
   }
 
+  double n1 = 0.0;
+  double n2 = 0.0;
+  double n3 = 0.0;
   if(type == 1)
   {
     n1 = qco.x() / sin_wmin_over_2;
@@ -502,46 +509,47 @@ double CubicOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, QuatType&
     n1 = 0.0, n2 = 0.0, n3 = 1.0;
   }
   wmin = 2.0f * wmin;
-  return wmin;
 
+  OrientationD axisAngle(n1, n2, n3, wmin);
+  return axisAngle;
 }
 
 QuatType CubicOps::getQuatSymOp(int32_t i) const
 {
-  return CubicQuatSym[i];
+  return CubicHigh::QuatSym[i];
 }
 
 void CubicOps::getRodSymOp(int i, double* r) const
 {
-  r[0] = CubicRodSym[i][0];
-  r[1] = CubicRodSym[i][1];
-  r[2] = CubicRodSym[i][2];
+  r[0] = CubicHigh::RodSym[i][0];
+  r[1] = CubicHigh::RodSym[i][1];
+  r[2] = CubicHigh::RodSym[i][2];
 }
 
 void CubicOps::getMatSymOp(int i, double g[3][3]) const
 {
-  g[0][0] = CubicMatSym[i][0][0];
-  g[0][1] = CubicMatSym[i][0][1];
-  g[0][2] = CubicMatSym[i][0][2];
-  g[1][0] = CubicMatSym[i][1][0];
-  g[1][1] = CubicMatSym[i][1][1];
-  g[1][2] = CubicMatSym[i][1][2];
-  g[2][0] = CubicMatSym[i][2][0];
-  g[2][1] = CubicMatSym[i][2][1];
-  g[2][2] = CubicMatSym[i][2][2];
+  g[0][0] = CubicHigh::MatSym[i][0][0];
+  g[0][1] = CubicHigh::MatSym[i][0][1];
+  g[0][2] = CubicHigh::MatSym[i][0][2];
+  g[1][0] = CubicHigh::MatSym[i][1][0];
+  g[1][1] = CubicHigh::MatSym[i][1][1];
+  g[1][2] = CubicHigh::MatSym[i][1][2];
+  g[2][0] = CubicHigh::MatSym[i][2][0];
+  g[2][1] = CubicHigh::MatSym[i][2][1];
+  g[2][2] = CubicHigh::MatSym[i][2][2];
 }
 
 void CubicOps::getMatSymOp(int i, float g[3][3]) const
 {
-  g[0][0] = CubicMatSym[i][0][0];
-  g[0][1] = CubicMatSym[i][0][1];
-  g[0][2] = CubicMatSym[i][0][2];
-  g[1][0] = CubicMatSym[i][1][0];
-  g[1][1] = CubicMatSym[i][1][1];
-  g[1][2] = CubicMatSym[i][1][2];
-  g[2][0] = CubicMatSym[i][2][0];
-  g[2][1] = CubicMatSym[i][2][1];
-  g[2][2] = CubicMatSym[i][2][2];
+  g[0][0] = CubicHigh::MatSym[i][0][0];
+  g[0][1] = CubicHigh::MatSym[i][0][1];
+  g[0][2] = CubicHigh::MatSym[i][0][2];
+  g[1][0] = CubicHigh::MatSym[i][1][0];
+  g[1][1] = CubicHigh::MatSym[i][1][1];
+  g[1][2] = CubicHigh::MatSym[i][1][2];
+  g[2][0] = CubicHigh::MatSym[i][2][0];
+  g[2][1] = CubicHigh::MatSym[i][2][1];
+  g[2][2] = CubicHigh::MatSym[i][2][2];
 }
 
 // -----------------------------------------------------------------------------
@@ -549,7 +557,7 @@ void CubicOps::getMatSymOp(int i, float g[3][3]) const
 // -----------------------------------------------------------------------------
 OrientationType CubicOps::getODFFZRod(const OrientationType& rod) const
 {
-  return _calcRodNearestOrigin(CubicRodSym, k_NumSymQuats, rod);
+  return _calcRodNearestOrigin(CubicHigh::RodSym, CubicHigh::k_NumSymQuats, rod);
 }
 
 // -----------------------------------------------------------------------------
@@ -560,7 +568,7 @@ OrientationType CubicOps::getMDFFZRod(const OrientationType& inRod) const
   double w, n1, n2, n3;
   double FZw, FZn1, FZn2, FZn3;
 
-  OrientationType rod = _calcRodNearestOrigin(CubicRodSym, 12, inRod);
+  OrientationType rod = _calcRodNearestOrigin(CubicHigh::RodSym, 12, inRod);
   OrientationType ax = OrientationTransformation::ro2ax<OrientationType, OrientationType>(rod);
 
   n1 = ax[0];
@@ -614,21 +622,21 @@ OrientationType CubicOps::getMDFFZRod(const OrientationType& inRod) const
 
 QuatType CubicOps::getNearestQuat(const QuatType& q1, const QuatType& q2) const
 {
-  return _calcNearestQuat(CubicQuatSym, k_NumSymQuats, q1, q2);
+  return _calcNearestQuat(CubicHigh::QuatSym, CubicHigh::k_NumSymQuats, q1, q2);
 }
 
 QuatF CubicOps::getNearestQuat(const QuatF& q1f, const QuatF& q2f) const
 {
   QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
   QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
-  QuatType temp = _calcNearestQuat(CubicQuatSym, k_NumSymQuats, q1, q2);
+  QuatType temp = _calcNearestQuat(CubicHigh::QuatSym, CubicHigh::k_NumSymQuats, q1, q2);
   QuatF out(temp.x(), temp.y(), temp.z(), temp.w());
   return out;
 }
 
 QuatType CubicOps::getFZQuat(const QuatType& qr) const
 {
-  return _calcQuatNearestOrigin(CubicQuatSym, k_NumSymQuats, qr);
+  return _calcQuatNearestOrigin(CubicHigh::QuatSym, CubicHigh::k_NumSymQuats, qr);
 }
 
 // -----------------------------------------------------------------------------
@@ -642,15 +650,15 @@ int CubicOps::getMisoBin(const OrientationType& rod) const
 
   OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
-  dim[0] = Detail::CubicDim1InitValue;
-  dim[1] = Detail::CubicDim2InitValue;
-  dim[2] = Detail::CubicDim3InitValue;
-  step[0] = Detail::CubicDim1StepValue;
-  step[1] = Detail::CubicDim2StepValue;
-  step[2] = Detail::CubicDim3StepValue;
-  bins[0] = 18.0f;
-  bins[1] = 18.0f;
-  bins[2] = 18.0f;
+  dim[0] = CubicHigh::OdfDimInitValue[0];
+  dim[1] = CubicHigh::OdfDimInitValue[1];
+  dim[2] = CubicHigh::OdfDimInitValue[2];
+  step[0] = CubicHigh::OdfDimStepValue[0];
+  step[1] = CubicHigh::OdfDimStepValue[1];
+  step[2] = CubicHigh::OdfDimStepValue[2];
+  bins[0] = static_cast<double>(CubicHigh::OdfNumBins[0]);
+  bins[1] = static_cast<double>(CubicHigh::OdfNumBins[1]);
+  bins[2] = static_cast<double>(CubicHigh::OdfNumBins[2]);
 
   return _calcMisoBin(dim, bins, step, ho);
 }
@@ -658,24 +666,24 @@ int CubicOps::getMisoBin(const OrientationType& rod) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationType CubicOps::determineEulerAngles(uint64_t seed, int choose) const
+OrientationType CubicOps::determineEulerAngles(double random[3], int choose) const
 {
   double init[3];
   double step[3];
   int32_t phi[3];
   double h1, h2, h3;
 
-  init[0] = Detail::CubicDim1InitValue;
-  init[1] = Detail::CubicDim2InitValue;
-  init[2] = Detail::CubicDim3InitValue;
-  step[0] = Detail::CubicDim1StepValue;
-  step[1] = Detail::CubicDim2StepValue;
-  step[2] = Detail::CubicDim3StepValue;
-  phi[0] = static_cast<int32_t>(choose % 18);
-  phi[1] = static_cast<int32_t>((choose / 18) % 18);
-  phi[2] = static_cast<int32_t>(choose / (18 * 18));
+  init[0] = CubicHigh::OdfDimInitValue[0];
+  init[1] = CubicHigh::OdfDimInitValue[1];
+  init[2] = CubicHigh::OdfDimInitValue[2];
+  step[0] = CubicHigh::OdfDimStepValue[0];
+  step[1] = CubicHigh::OdfDimStepValue[1];
+  step[2] = CubicHigh::OdfDimStepValue[2];
+  phi[0] = static_cast<int32_t>(choose % CubicHigh::OdfNumBins[0]);
+  phi[1] = static_cast<int32_t>((choose / CubicHigh::OdfNumBins[0]) % CubicHigh::OdfNumBins[1]);
+  phi[2] = static_cast<int32_t>(choose / (CubicHigh::OdfNumBins[0] * CubicHigh::OdfNumBins[1]));
 
-  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(random, init, step, phi, h1, h2, h3);
 
   OrientationType ho(h1, h2, h3);
   OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
@@ -689,33 +697,33 @@ OrientationType CubicOps::determineEulerAngles(uint64_t seed, int choose) const
 // -----------------------------------------------------------------------------
 OrientationType CubicOps::randomizeEulerAngles(const OrientationType& synea) const
 {
-  size_t symOp = getRandomSymmetryOperatorIndex(k_NumSymQuats);
+  size_t symOp = getRandomSymmetryOperatorIndex(CubicHigh::k_NumSymQuats);
   QuatType quat = OrientationTransformation::eu2qu<OrientationType, QuatType>(synea);
-  QuatType qc = CubicQuatSym[symOp] * quat;
+  QuatType qc = CubicHigh::QuatSym[symOp] * quat;
   return OrientationTransformation::qu2eu<QuatType, OrientationType>(qc);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationType CubicOps::determineRodriguesVector(uint64_t seed, int choose) const
+OrientationType CubicOps::determineRodriguesVector(double random[3], int choose) const
 {
   double init[3];
   double step[3];
   int32_t phi[3];
   double h1, h2, h3;
 
-  init[0] = Detail::CubicDim1InitValue;
-  init[1] = Detail::CubicDim2InitValue;
-  init[2] = Detail::CubicDim3InitValue;
-  step[0] = Detail::CubicDim1StepValue;
-  step[1] = Detail::CubicDim2StepValue;
-  step[2] = Detail::CubicDim3StepValue;
-  phi[0] = static_cast<int32_t>(choose % 18);
-  phi[1] = static_cast<int32_t>((choose / 18) % 18);
-  phi[2] = static_cast<int32_t>(choose / (18 * 18));
+  init[0] = CubicHigh::OdfDimInitValue[0];
+  init[1] = CubicHigh::OdfDimInitValue[1];
+  init[2] = CubicHigh::OdfDimInitValue[2];
+  step[0] = CubicHigh::OdfDimStepValue[0];
+  step[1] = CubicHigh::OdfDimStepValue[1];
+  step[2] = CubicHigh::OdfDimStepValue[2];
+  phi[0] = static_cast<int32_t>(choose % CubicHigh::OdfNumBins[0]);
+  phi[1] = static_cast<int32_t>((choose / CubicHigh::OdfNumBins[0]) % CubicHigh::OdfNumBins[1]);
+  phi[2] = static_cast<int32_t>(choose / (CubicHigh::OdfNumBins[0] * CubicHigh::OdfNumBins[1]));
 
-  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(random, init, step, phi, h1, h2, h3);
   OrientationType ho(h1, h2, h3);
   OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
   ro = getMDFFZRod(ro);
@@ -733,15 +741,15 @@ int CubicOps::getOdfBin(const OrientationType& rod) const
 
   OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
-  dim[0] = Detail::CubicDim1InitValue;
-  dim[1] = Detail::CubicDim2InitValue;
-  dim[2] = Detail::CubicDim3InitValue;
-  step[0] = Detail::CubicDim1StepValue;
-  step[1] = Detail::CubicDim2StepValue;
-  step[2] = Detail::CubicDim3StepValue;
-  bins[0] = 18.0f;
-  bins[1] = 18.0f;
-  bins[2] = 18.0f;
+  dim[0] = CubicHigh::OdfDimInitValue[0];
+  dim[1] = CubicHigh::OdfDimInitValue[1];
+  dim[2] = CubicHigh::OdfDimInitValue[2];
+  step[0] = CubicHigh::OdfDimStepValue[0];
+  step[1] = CubicHigh::OdfDimStepValue[1];
+  step[2] = CubicHigh::OdfDimStepValue[2];
+  bins[0] = static_cast<double>(CubicHigh::OdfNumBins[0]);
+  bins[1] = static_cast<double>(CubicHigh::OdfNumBins[1]);
+  bins[2] = static_cast<double>(CubicHigh::OdfNumBins[2]);
 
   return _calcODFBin(dim, bins, step, ho);
 }
@@ -890,22 +898,22 @@ void CubicOps::getSchmidFactorAndSS(double load[3], double plane[3], double dire
   directionMag *= loadMag;
 
   //loop over symmetry operators finding highest schmid factor
-  for(int i = 0; i < k_NumSymQuats; i++)
+  for(int i = 0; i < CubicHigh::k_NumSymQuats; i++)
   {
     //compute slip system
     double slipPlane[3] = {0};
-    slipPlane[2] = CubicMatSym[i][2][0] * plane[0] + CubicMatSym[i][2][1] * plane[1] + CubicMatSym[i][2][2] * plane[2];
+    slipPlane[2] = CubicHigh::MatSym[i][2][0] * plane[0] + CubicHigh::MatSym[i][2][1] * plane[1] + CubicHigh::MatSym[i][2][2] * plane[2];
 
     //dont consider negative z planes (to avoid duplicates)
     if( slipPlane[2] >= 0)
     {
-      slipPlane[0] = CubicMatSym[i][0][0] * plane[0] + CubicMatSym[i][0][1] * plane[1] + CubicMatSym[i][0][2] * plane[2];
-      slipPlane[1] = CubicMatSym[i][1][0] * plane[0] + CubicMatSym[i][1][1] * plane[1] + CubicMatSym[i][1][2] * plane[2];
+      slipPlane[0] = CubicHigh::MatSym[i][0][0] * plane[0] + CubicHigh::MatSym[i][0][1] * plane[1] + CubicHigh::MatSym[i][0][2] * plane[2];
+      slipPlane[1] = CubicHigh::MatSym[i][1][0] * plane[0] + CubicHigh::MatSym[i][1][1] * plane[1] + CubicHigh::MatSym[i][1][2] * plane[2];
 
       double slipDirection[3] = {0};
-      slipDirection[0] = CubicMatSym[i][0][0] * direction[0] + CubicMatSym[i][0][1] * direction[1] + CubicMatSym[i][0][2] * direction[2];
-      slipDirection[1] = CubicMatSym[i][1][0] * direction[0] + CubicMatSym[i][1][1] * direction[1] + CubicMatSym[i][1][2] * direction[2];
-      slipDirection[2] = CubicMatSym[i][2][0] * direction[0] + CubicMatSym[i][2][1] * direction[1] + CubicMatSym[i][2][2] * direction[2];
+      slipDirection[0] = CubicHigh::MatSym[i][0][0] * direction[0] + CubicHigh::MatSym[i][0][1] * direction[1] + CubicHigh::MatSym[i][0][2] * direction[2];
+      slipDirection[1] = CubicHigh::MatSym[i][1][0] * direction[0] + CubicHigh::MatSym[i][1][1] * direction[1] + CubicHigh::MatSym[i][1][2] * direction[2];
+      slipDirection[2] = CubicHigh::MatSym[i][2][0] * direction[0] + CubicHigh::MatSym[i][2][1] * direction[1] + CubicHigh::MatSym[i][2][2] * direction[2];
 
       double cosPhi = std::fabs(load[0] * slipPlane[0] + load[1] * slipPlane[1] + load[2] * slipPlane[2]) / planeMag;
       double cosLambda = std::fabs(load[0] * slipDirection[0] + load[1] * slipDirection[1] + load[2] * slipDirection[2]) / directionMag;
@@ -941,12 +949,12 @@ double CubicOps::getmPrime(const QuatType& q1, const QuatType& q2, double LD[3])
   MatrixMath::Transpose3x3(g2, g2);
   for(int i = 0; i < 12; i++)
   {
-    slipDirection[0] = CubicSlipDirections[i][0];
-    slipDirection[1] = CubicSlipDirections[i][1];
-    slipDirection[2] = CubicSlipDirections[i][2];
-    slipPlane[0] = CubicSlipPlanes[i][0];
-    slipPlane[1] = CubicSlipPlanes[i][1];
-    slipPlane[2] = CubicSlipPlanes[i][2];
+    slipDirection[0] = CubicHigh::SlipDirections[i][0];
+    slipDirection[1] = CubicHigh::SlipDirections[i][1];
+    slipDirection[2] = CubicHigh::SlipDirections[i][2];
+    slipPlane[0] = CubicHigh::SlipPlanes[i][0];
+    slipPlane[1] = CubicHigh::SlipPlanes[i][1];
+    slipPlane[2] = CubicHigh::SlipPlanes[i][2];
     MatrixMath::Multiply3x3with3x1(g1, slipDirection, hkl1);
     MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
     MatrixMath::Normalize3x1(hkl1);
@@ -960,12 +968,12 @@ double CubicOps::getmPrime(const QuatType& q1, const QuatType& q2, double LD[3])
       ss1 = i;
     }
   }
-  slipDirection[0] = CubicSlipDirections[ss1][0];
-  slipDirection[1] = CubicSlipDirections[ss1][1];
-  slipDirection[2] = CubicSlipDirections[ss1][2];
-  slipPlane[0] = CubicSlipPlanes[ss1][0];
-  slipPlane[1] = CubicSlipPlanes[ss1][1];
-  slipPlane[2] = CubicSlipPlanes[ss1][2];
+  slipDirection[0] = CubicHigh::SlipDirections[ss1][0];
+  slipDirection[1] = CubicHigh::SlipDirections[ss1][1];
+  slipDirection[2] = CubicHigh::SlipDirections[ss1][2];
+  slipPlane[0] = CubicHigh::SlipPlanes[ss1][0];
+  slipPlane[1] = CubicHigh::SlipPlanes[ss1][1];
+  slipPlane[2] = CubicHigh::SlipPlanes[ss1][2];
   MatrixMath::Multiply3x3with3x1(g1, slipDirection, hkl1);
   MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
   MatrixMath::Normalize3x1(hkl1);
@@ -974,12 +982,12 @@ double CubicOps::getmPrime(const QuatType& q1, const QuatType& q2, double LD[3])
   maxSchmidFactor = 0;
   for(int j = 0; j < 12; j++)
   {
-    slipDirection[0] = CubicSlipDirections[j][0];
-    slipDirection[1] = CubicSlipDirections[j][1];
-    slipDirection[2] = CubicSlipDirections[j][2];
-    slipPlane[0] = CubicSlipPlanes[j][0];
-    slipPlane[1] = CubicSlipPlanes[j][1];
-    slipPlane[2] = CubicSlipPlanes[j][2];
+    slipDirection[0] = CubicHigh::SlipDirections[j][0];
+    slipDirection[1] = CubicHigh::SlipDirections[j][1];
+    slipDirection[2] = CubicHigh::SlipDirections[j][2];
+    slipPlane[0] = CubicHigh::SlipPlanes[j][0];
+    slipPlane[1] = CubicHigh::SlipPlanes[j][1];
+    slipPlane[2] = CubicHigh::SlipPlanes[j][2];
     MatrixMath::Multiply3x3with3x1(g2, slipDirection, hkl2);
     MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
     MatrixMath::Normalize3x1(hkl2);
@@ -993,12 +1001,12 @@ double CubicOps::getmPrime(const QuatType& q1, const QuatType& q2, double LD[3])
       ss2 = j;
     }
   }
-  slipDirection[0] = CubicSlipDirections[ss2][0];
-  slipDirection[1] = CubicSlipDirections[ss2][1];
-  slipDirection[2] = CubicSlipDirections[ss2][2];
-  slipPlane[0] = CubicSlipPlanes[ss2][0];
-  slipPlane[1] = CubicSlipPlanes[ss2][1];
-  slipPlane[2] = CubicSlipPlanes[ss2][2];
+  slipDirection[0] = CubicHigh::SlipDirections[ss2][0];
+  slipDirection[1] = CubicHigh::SlipDirections[ss2][1];
+  slipDirection[2] = CubicHigh::SlipDirections[ss2][2];
+  slipPlane[0] = CubicHigh::SlipPlanes[ss2][0];
+  slipPlane[1] = CubicHigh::SlipPlanes[ss2][1];
+  slipPlane[2] = CubicHigh::SlipPlanes[ss2][2];
   MatrixMath::Multiply3x3with3x1(g2, slipDirection, hkl2);
   MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
   MatrixMath::Normalize3x1(hkl2);
@@ -1035,12 +1043,12 @@ double CubicOps::getF1(const QuatType& q1, const QuatType& q2, double LD[3], boo
   }
   for(int i = 0; i < 12; i++)
   {
-    slipDirection[0] = CubicSlipDirections[i][0];
-    slipDirection[1] = CubicSlipDirections[i][1];
-    slipDirection[2] = CubicSlipDirections[i][2];
-    slipPlane[0] = CubicSlipPlanes[i][0];
-    slipPlane[1] = CubicSlipPlanes[i][1];
-    slipPlane[2] = CubicSlipPlanes[i][2];
+    slipDirection[0] = CubicHigh::SlipDirections[i][0];
+    slipDirection[1] = CubicHigh::SlipDirections[i][1];
+    slipDirection[2] = CubicHigh::SlipDirections[i][2];
+    slipPlane[0] = CubicHigh::SlipPlanes[i][0];
+    slipPlane[1] = CubicHigh::SlipPlanes[i][1];
+    slipPlane[2] = CubicHigh::SlipPlanes[i][2];
     MatrixMath::Multiply3x3with3x1(g1, slipDirection, hkl1);
     MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
     MatrixMath::Normalize3x1(hkl1);
@@ -1057,12 +1065,12 @@ double CubicOps::getF1(const QuatType& q1, const QuatType& q2, double LD[3], boo
       }
       for(int j = 0; j < 12; j++)
       {
-        slipDirection[0] = CubicSlipDirections[j][0];
-        slipDirection[1] = CubicSlipDirections[j][1];
-        slipDirection[2] = CubicSlipDirections[j][2];
-        slipPlane[0] = CubicSlipPlanes[j][0];
-        slipPlane[1] = CubicSlipPlanes[j][1];
-        slipPlane[2] = CubicSlipPlanes[j][2];
+        slipDirection[0] = CubicHigh::SlipDirections[j][0];
+        slipDirection[1] = CubicHigh::SlipDirections[j][1];
+        slipDirection[2] = CubicHigh::SlipDirections[j][2];
+        slipPlane[0] = CubicHigh::SlipPlanes[j][0];
+        slipPlane[1] = CubicHigh::SlipPlanes[j][1];
+        slipPlane[2] = CubicHigh::SlipPlanes[j][2];
         MatrixMath::Multiply3x3with3x1(g2, slipDirection, hkl2);
         MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
         MatrixMath::Normalize3x1(hkl2);
@@ -1117,12 +1125,12 @@ double CubicOps::getF1spt(const QuatType& q1, const QuatType& q2, double LD[3], 
   }
   for(int i = 0; i < 12; i++)
   {
-    slipDirection[0] = CubicSlipDirections[i][0];
-    slipDirection[1] = CubicSlipDirections[i][1];
-    slipDirection[2] = CubicSlipDirections[i][2];
-    slipPlane[0] = CubicSlipPlanes[i][0];
-    slipPlane[1] = CubicSlipPlanes[i][1];
-    slipPlane[2] = CubicSlipPlanes[i][2];
+    slipDirection[0] = CubicHigh::SlipDirections[i][0];
+    slipDirection[1] = CubicHigh::SlipDirections[i][1];
+    slipDirection[2] = CubicHigh::SlipDirections[i][2];
+    slipPlane[0] = CubicHigh::SlipPlanes[i][0];
+    slipPlane[1] = CubicHigh::SlipPlanes[i][1];
+    slipPlane[2] = CubicHigh::SlipPlanes[i][2];
     MatrixMath::Multiply3x3with3x1(g1, slipDirection, hkl1);
     MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
     MatrixMath::Normalize3x1(hkl1);
@@ -1140,12 +1148,12 @@ double CubicOps::getF1spt(const QuatType& q1, const QuatType& q2, double LD[3], 
       }
       for(int j = 0; j < 12; j++)
       {
-        slipDirection[0] = CubicSlipDirections[j][0];
-        slipDirection[1] = CubicSlipDirections[j][1];
-        slipDirection[2] = CubicSlipDirections[j][2];
-        slipPlane[0] = CubicSlipPlanes[j][0];
-        slipPlane[1] = CubicSlipPlanes[j][1];
-        slipPlane[2] = CubicSlipPlanes[j][2];
+        slipDirection[0] = CubicHigh::SlipDirections[j][0];
+        slipDirection[1] = CubicHigh::SlipDirections[j][1];
+        slipDirection[2] = CubicHigh::SlipDirections[j][2];
+        slipPlane[0] = CubicHigh::SlipPlanes[j][0];
+        slipPlane[1] = CubicHigh::SlipPlanes[j][1];
+        slipPlane[2] = CubicHigh::SlipPlanes[j][2];
         MatrixMath::Multiply3x3with3x1(g2, slipDirection, hkl2);
         MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
         MatrixMath::Normalize3x1(hkl2);
@@ -1200,12 +1208,12 @@ double CubicOps::getF7(const QuatType& q1, const QuatType& q2, double LD[3], boo
 
   for(int i = 0; i < 12; i++)
   {
-    slipDirection[0] = CubicSlipDirections[i][0];
-    slipDirection[1] = CubicSlipDirections[i][1];
-    slipDirection[2] = CubicSlipDirections[i][2];
-    slipPlane[0] = CubicSlipPlanes[i][0];
-    slipPlane[1] = CubicSlipPlanes[i][1];
-    slipPlane[2] = CubicSlipPlanes[i][2];
+    slipDirection[0] = CubicHigh::SlipDirections[i][0];
+    slipDirection[1] = CubicHigh::SlipDirections[i][1];
+    slipDirection[2] = CubicHigh::SlipDirections[i][2];
+    slipPlane[0] = CubicHigh::SlipPlanes[i][0];
+    slipPlane[1] = CubicHigh::SlipPlanes[i][1];
+    slipPlane[2] = CubicHigh::SlipPlanes[i][2];
     MatrixMath::Multiply3x3with3x1(g1, slipDirection, hkl1);
     MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
     MatrixMath::Normalize3x1(hkl1);
@@ -1222,12 +1230,12 @@ double CubicOps::getF7(const QuatType& q1, const QuatType& q2, double LD[3], boo
       }
       for(int j = 0; j < 12; j++)
       {
-        slipDirection[0] = CubicSlipDirections[j][0];
-        slipDirection[1] = CubicSlipDirections[j][1];
-        slipDirection[2] = CubicSlipDirections[j][2];
-        slipPlane[0] = CubicSlipPlanes[j][0];
-        slipPlane[1] = CubicSlipPlanes[j][1];
-        slipPlane[2] = CubicSlipPlanes[j][2];
+        slipDirection[0] = CubicHigh::SlipDirections[j][0];
+        slipDirection[1] = CubicHigh::SlipDirections[j][1];
+        slipDirection[2] = CubicHigh::SlipDirections[j][2];
+        slipPlane[0] = CubicHigh::SlipPlanes[j][0];
+        slipPlane[1] = CubicHigh::SlipPlanes[j][1];
+        slipPlane[2] = CubicHigh::SlipPlanes[j][2];
         MatrixMath::Multiply3x3with3x1(g2, slipDirection, hkl2);
         MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
         MatrixMath::Normalize3x1(hkl2);
@@ -1258,128 +1266,126 @@ double CubicOps::getF7(const QuatType& q1, const QuatType& q2, double LD[3], boo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-namespace Detail
+namespace CubicHigh
 {
-  namespace CubicHigh
+class GenerateSphereCoordsImpl
+{
+  FloatArrayType* m_Eulers;
+  FloatArrayType* m_xyz001;
+  FloatArrayType* m_xyz011;
+  FloatArrayType* m_xyz111;
+
+public:
+  GenerateSphereCoordsImpl(FloatArrayType* eulers, FloatArrayType* xyz001, FloatArrayType* xyz011, FloatArrayType* xyz111)
+  : m_Eulers(eulers)
+  , m_xyz001(xyz001)
+  , m_xyz011(xyz011)
+  , m_xyz111(xyz111)
   {
-    class GenerateSphereCoordsImpl
+  }
+  virtual ~GenerateSphereCoordsImpl() = default;
+
+  void generate(size_t start, size_t end) const
+  {
+    double g[3][3];
+    double gTranpose[3][3];
+    double direction[3] = {0.0, 0.0, 0.0};
+
+    for(size_t i = start; i < end; ++i)
     {
-        FloatArrayType* m_Eulers;
-        FloatArrayType* m_xyz001;
-        FloatArrayType* m_xyz011;
-        FloatArrayType* m_xyz111;
+      OrientationType eu(m_Eulers->getValue(i * 3), m_Eulers->getValue(i * 3 + 1), m_Eulers->getValue(i * 3 + 2));
+      OrientationTransformation::eu2om<OrientationType, OrientationType>(eu).toGMatrix(g);
 
-      public:
-        GenerateSphereCoordsImpl(FloatArrayType* eulers, FloatArrayType* xyz001, FloatArrayType* xyz011, FloatArrayType* xyz111) :
-          m_Eulers(eulers),
-          m_xyz001(xyz001),
-          m_xyz011(xyz011),
-          m_xyz111(xyz111)
-        {}
-        virtual ~GenerateSphereCoordsImpl() = default;
+      MatrixMath::Transpose3x3(g, gTranpose);
 
-        void generate(size_t start, size_t end) const
-        {
-          double g[3][3];
-          double gTranpose[3][3];
-          double direction[3] = {0.0, 0.0, 0.0};
+      // -----------------------------------------------------------------------------
+      // 001 Family
+      direction[0] = 1.0;
+      direction[1] = 0.0;
+      direction[2] = 0.0;
+      MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i * 18));
+      MatrixMath::Copy3x1(m_xyz001->getPointer(i * 18), m_xyz001->getPointer(i * 18 + 3));
+      MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 18 + 3), -1.0f);
+      direction[0] = 0.0;
+      direction[1] = 1.0;
+      direction[2] = 0.0;
+      MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i * 18 + 6));
+      MatrixMath::Copy3x1(m_xyz001->getPointer(i * 18 + 6), m_xyz001->getPointer(i * 18 + 9));
+      MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 18 + 9), -1.0f);
+      direction[0] = 0.0;
+      direction[1] = 0.0;
+      direction[2] = 1.0;
+      MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i * 18 + 12));
+      MatrixMath::Copy3x1(m_xyz001->getPointer(i * 18 + 12), m_xyz001->getPointer(i * 18 + 15));
+      MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 18 + 15), -1.0f);
 
-          for(size_t i = start; i < end; ++i)
-          {
-            OrientationType eu(m_Eulers->getValue(i * 3), m_Eulers->getValue(i * 3 + 1), m_Eulers->getValue(i * 3 + 2));
-            OrientationTransformation::eu2om<OrientationType, OrientationType>(eu).toGMatrix(g);
+      // -----------------------------------------------------------------------------
+      // 011 Family
+      direction[0] = SIMPLib::Constants::k_1OverRoot2;
+      direction[1] = SIMPLib::Constants::k_1OverRoot2;
+      direction[2] = 0.0;
+      MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36));
+      MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36), m_xyz011->getPointer(i * 36 + 3));
+      MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 3), -1.0f);
+      direction[0] = SIMPLib::Constants::k_1OverRoot2;
+      direction[1] = 0.0;
+      direction[2] = SIMPLib::Constants::k_1OverRoot2;
+      MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 6));
+      MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 6), m_xyz011->getPointer(i * 36 + 9));
+      MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 9), -1.0f);
+      direction[0] = 0.0;
+      direction[1] = SIMPLib::Constants::k_1OverRoot2;
+      direction[2] = SIMPLib::Constants::k_1OverRoot2;
+      MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 12));
+      MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 12), m_xyz011->getPointer(i * 36 + 15));
+      MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 15), -1.0f);
+      direction[0] = -SIMPLib::Constants::k_1OverRoot2;
+      direction[1] = SIMPLib::Constants::k_1OverRoot2;
+      direction[2] = 0.0;
+      MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 18));
+      MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 18), m_xyz011->getPointer(i * 36 + 21));
+      MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 21), -1.0f);
+      direction[0] = -SIMPLib::Constants::k_1OverRoot2;
+      direction[1] = 0.0;
+      direction[2] = SIMPLib::Constants::k_1OverRoot2;
+      MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 24));
+      MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 24), m_xyz011->getPointer(i * 36 + 27));
+      MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 27), -1.0f);
+      direction[0] = 0.0;
+      direction[1] = -SIMPLib::Constants::k_1OverRoot2;
+      direction[2] = SIMPLib::Constants::k_1OverRoot2;
+      MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 30));
+      MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 30), m_xyz011->getPointer(i * 36 + 33));
+      MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 33), -1.0f);
 
-            MatrixMath::Transpose3x3(g, gTranpose);
-
-            // -----------------------------------------------------------------------------
-            // 001 Family
-            direction[0] = 1.0;
-            direction[1] = 0.0;
-            direction[2] = 0.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i * 18));
-            MatrixMath::Copy3x1(m_xyz001->getPointer(i * 18), m_xyz001->getPointer(i * 18 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 18 + 3), -1.0f);
-            direction[0] = 0.0;
-            direction[1] = 1.0;
-            direction[2] = 0.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i * 18 + 6));
-            MatrixMath::Copy3x1(m_xyz001->getPointer(i * 18 + 6), m_xyz001->getPointer(i * 18 + 9));
-            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 18 + 9), -1.0f);
-            direction[0] = 0.0;
-            direction[1] = 0.0;
-            direction[2] = 1.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i * 18 + 12));
-            MatrixMath::Copy3x1(m_xyz001->getPointer(i * 18 + 12), m_xyz001->getPointer(i * 18 + 15));
-            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 18 + 15), -1.0f);
-
-            // -----------------------------------------------------------------------------
-            // 011 Family
-            direction[0] = SIMPLib::Constants::k_1OverRoot2;
-            direction[1] = SIMPLib::Constants::k_1OverRoot2;
-            direction[2] = 0.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36));
-            MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36), m_xyz011->getPointer(i * 36 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 3), -1.0f);
-            direction[0] = SIMPLib::Constants::k_1OverRoot2;
-            direction[1] = 0.0;
-            direction[2] = SIMPLib::Constants::k_1OverRoot2;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 6));
-            MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 6), m_xyz011->getPointer(i * 36 + 9));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 9), -1.0f);
-            direction[0] = 0.0;
-            direction[1] = SIMPLib::Constants::k_1OverRoot2;
-            direction[2] = SIMPLib::Constants::k_1OverRoot2;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 12));
-            MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 12), m_xyz011->getPointer(i * 36 + 15));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 15), -1.0f);
-            direction[0] = -SIMPLib::Constants::k_1OverRoot2;
-            direction[1] = SIMPLib::Constants::k_1OverRoot2;
-            direction[2] = 0.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 18));
-            MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 18), m_xyz011->getPointer(i * 36 + 21));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 21), -1.0f);
-            direction[0] = -SIMPLib::Constants::k_1OverRoot2;
-            direction[1] = 0.0;
-            direction[2] = SIMPLib::Constants::k_1OverRoot2;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 24));
-            MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 24), m_xyz011->getPointer(i * 36 + 27));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 27), -1.0f);
-            direction[0] = 0.0;
-            direction[1] = -SIMPLib::Constants::k_1OverRoot2;
-            direction[2] = SIMPLib::Constants::k_1OverRoot2;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 30));
-            MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 30), m_xyz011->getPointer(i * 36 + 33));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 33), -1.0f);
-
-            // -----------------------------------------------------------------------------
-            // 111 Family
-            direction[0] = SIMPLib::Constants::k_1OverRoot3;
-            direction[1] = SIMPLib::Constants::k_1OverRoot3;
-            direction[2] = SIMPLib::Constants::k_1OverRoot3;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24));
-            MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24), m_xyz111->getPointer(i * 24 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 3), -1.0f);
-            direction[0] = -SIMPLib::Constants::k_1OverRoot3;
-            direction[1] = SIMPLib::Constants::k_1OverRoot3;
-            direction[2] = SIMPLib::Constants::k_1OverRoot3;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 6));
-            MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 6), m_xyz111->getPointer(i * 24 + 9));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 9), -1.0f);
-            direction[0] = SIMPLib::Constants::k_1OverRoot3;
-            direction[1] = -SIMPLib::Constants::k_1OverRoot3;
-            direction[2] = SIMPLib::Constants::k_1OverRoot3;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 12));
-            MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 12), m_xyz111->getPointer(i * 24 + 15));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 15), -1.0f);
-            direction[0] = SIMPLib::Constants::k_1OverRoot3;
-            direction[1] = SIMPLib::Constants::k_1OverRoot3;
-            direction[2] = -SIMPLib::Constants::k_1OverRoot3;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 18));
-            MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 18), m_xyz111->getPointer(i * 24 + 21));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 21), -1.0f);
-          }
-
-        }
+      // -----------------------------------------------------------------------------
+      // 111 Family
+      direction[0] = SIMPLib::Constants::k_1OverRoot3;
+      direction[1] = SIMPLib::Constants::k_1OverRoot3;
+      direction[2] = SIMPLib::Constants::k_1OverRoot3;
+      MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24));
+      MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24), m_xyz111->getPointer(i * 24 + 3));
+      MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 3), -1.0f);
+      direction[0] = -SIMPLib::Constants::k_1OverRoot3;
+      direction[1] = SIMPLib::Constants::k_1OverRoot3;
+      direction[2] = SIMPLib::Constants::k_1OverRoot3;
+      MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 6));
+      MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 6), m_xyz111->getPointer(i * 24 + 9));
+      MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 9), -1.0f);
+      direction[0] = SIMPLib::Constants::k_1OverRoot3;
+      direction[1] = -SIMPLib::Constants::k_1OverRoot3;
+      direction[2] = SIMPLib::Constants::k_1OverRoot3;
+      MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 12));
+      MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 12), m_xyz111->getPointer(i * 24 + 15));
+      MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 15), -1.0f);
+      direction[0] = SIMPLib::Constants::k_1OverRoot3;
+      direction[1] = SIMPLib::Constants::k_1OverRoot3;
+      direction[2] = -SIMPLib::Constants::k_1OverRoot3;
+      MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 18));
+      MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 18), m_xyz111->getPointer(i * 24 + 21));
+      MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 21), -1.0f);
+    }
+  }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
         void operator()(const tbb::blocked_range<size_t>& r) const
@@ -1387,9 +1393,8 @@ namespace Detail
           generate(r.begin(), r.end());
         }
 #endif
-    };
-  }
-}
+};
+} // namespace CubicHigh
 
 // -----------------------------------------------------------------------------
 //
@@ -1399,17 +1404,17 @@ void CubicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArray
   size_t nOrientations = eulers->getNumberOfTuples();
 
   // Sanity Check the size of the arrays
-  if (xyz001->getNumberOfTuples() < nOrientations * Detail::CubicHigh::symSize0)
+  if(xyz001->getNumberOfTuples() < nOrientations * CubicHigh::symSize0)
   {
-    xyz001->resizeTuples(nOrientations * Detail::CubicHigh::symSize0 * 3);
+    xyz001->resizeTuples(nOrientations * CubicHigh::symSize0 * 3);
   }
-  if (xyz011->getNumberOfTuples() < nOrientations * Detail::CubicHigh::symSize1)
+  if(xyz011->getNumberOfTuples() < nOrientations * CubicHigh::symSize1)
   {
-    xyz011->resizeTuples(nOrientations * Detail::CubicHigh::symSize1 * 3);
+    xyz011->resizeTuples(nOrientations * CubicHigh::symSize1 * 3);
   }
-  if (xyz111->getNumberOfTuples() < nOrientations * Detail::CubicHigh::symSize2)
+  if(xyz111->getNumberOfTuples() < nOrientations * CubicHigh::symSize2)
   {
-    xyz111->resizeTuples(nOrientations * Detail::CubicHigh::symSize2 * 3);
+    xyz111->resizeTuples(nOrientations * CubicHigh::symSize2 * 3);
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -1420,13 +1425,12 @@ void CubicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArray
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
-                      Detail::CubicHigh::GenerateSphereCoordsImpl(eulers, xyz001, xyz011, xyz111), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations), CubicHigh::GenerateSphereCoordsImpl(eulers, xyz001, xyz011, xyz111), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    Detail::CubicHigh::GenerateSphereCoordsImpl serial(eulers, xyz001, xyz011, xyz111);
+    CubicHigh::GenerateSphereCoordsImpl serial(eulers, xyz001, xyz011, xyz111);
     serial.generate(0, nOrientations);
   }
 
@@ -1618,7 +1622,7 @@ SIMPL::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, doub
   OrientationType om(9); // Reusable for the loop
   QuatType q1 = OrientationTransformation::eu2qu<OrientationType, QuatType>(eu);
 
-  for(int j = 0; j < k_NumSymQuats; j++)
+  for(int j = 0; j < CubicHigh::k_NumSymQuats; j++)
   {
     QuatType qu = getQuatSymOp(j) * q1;
     OrientationTransformation::qu2om<QuatType, OrientationType>(qu).toGMatrix(g);
@@ -1692,9 +1696,9 @@ SIMPL::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, doub
 // -----------------------------------------------------------------------------
 SIMPL::Rgb CubicOps::generateRodriguesColor(double r1, double r2, double r3) const
 {
-  double range1 = 2.0f * CubicDim1InitValue;
-  double range2 = 2.0f * CubicDim2InitValue;
-  double range3 = 2.0f * CubicDim3InitValue;
+  double range1 = 2.0f * CubicHigh::OdfDimInitValue[0];
+  double range2 = 2.0f * CubicHigh::OdfDimInitValue[1];
+  double range3 = 2.0f * CubicHigh::OdfDimInitValue[2];
   double max1 = range1 / 2.0f;
   double max2 = range2 / 2.0f;
   double max3 = range3 / 2.0f;
@@ -1708,7 +1712,7 @@ SIMPL::Rgb CubicOps::generateRodriguesColor(double r1, double r2, double r3) con
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfiguration_t& config) const
+std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfiguration_t& config) const
 {
   QString label0 = QString("<001>");
   QString label1 = QString("<011>");
@@ -1725,11 +1729,11 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
   std::vector<size_t> dims(1, 3);
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize0, dims, label0 + QString("xyzCoords"), true);
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * CubicHigh::symSize0, dims, label0 + QString("xyzCoords"), true);
   // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize1, dims, label1 + QString("xyzCoords"), true);
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * CubicHigh::symSize1, dims, label1 + QString("xyzCoords"), true);
   // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize2, dims, label2 + QString("xyzCoords"), true);
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * CubicHigh::symSize2, dims, label2 + QString("xyzCoords"), true);
 
   config.sphereRadius = 1.0f;
 
@@ -1820,7 +1824,7 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
   UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(static_cast<size_t>(config.imageDim * config.imageDim), dims, label1, true);
   UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(static_cast<size_t>(config.imageDim * config.imageDim), dims, label2, true);
 
-  QVector<UInt8ArrayType::Pointer> poleFigures(3);
+  std::vector<UInt8ArrayType::Pointer> poleFigures(3);
   if(config.order.size() == 3)
   {
     poleFigures[static_cast<int>(config.order[0])] = image001;
@@ -1975,10 +1979,11 @@ SIMPL::Rgb CubicOps::generateMisorientationColor(const QuatType& q, const QuatTy
   QuatType q2 = refFrame;
 
   // get disorientation
-  w = getMisoQuat(q1, q2, n1, n2, n3);
-  n1 = std::fabs(n1);
-  n2 = std::fabs(n2);
-  n3 = std::fabs(n3);
+  OrientationD axisAngle = calculateMisorientation(q, refFrame);
+  n1 = std::fabs(axisAngle[0]);
+  n2 = std::fabs(axisAngle[1]);
+  n3 = std::fabs(axisAngle[2]);
+  w = axisAngle[3];
 
   _TripletSort(n1, n2, n3, z, y, x);
 

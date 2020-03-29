@@ -43,16 +43,14 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "FindGBPDMetricBased.h"
 
-#include <QtCore/QDir>
+#include <memory>
 
+#include <QtCore/QDir>
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -68,7 +66,6 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
-
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
@@ -79,6 +76,9 @@
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
+
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
 
 namespace GBPDMetricBased
 {
@@ -136,7 +136,7 @@ class TrisSelector
   QVector<TriAreaAndNormals>* selectedTris;
 #endif
   int32_t m_PhaseOfInterest;
-  QVector<LaueOps::Pointer> m_OrientationOps;
+  LaueOpsContainer m_OrientationOps;
   uint32_t cryst;
   int32_t nsym;
   float* m_Eulers = nullptr;
@@ -165,7 +165,7 @@ public:
   , m_FaceNormals(__m_FaceNormals)
   , m_FaceAreas(__m_FaceAreas)
   {
-    m_OrientationOps = LaueOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::GetAllOrientationOps();
     cryst = __m_CrystalStructures[__m_PhaseOfInterest];
     nsym = m_OrientationOps[cryst]->getNumSymOps();
   }
@@ -262,8 +262,7 @@ class ProbeDistrib
   double totalFaceArea;
   int numDistinctGBs;
   double ballVolume;
-  QVector<LaueOps::Pointer> m_OrientationOps;
-  uint32_t cryst;
+  LaueOpsContainer m_OrientationOps;  uint32_t cryst;
   int32_t nsym;
 
 public:
@@ -286,7 +285,7 @@ public:
   , ballVolume(__ballVolume)
   , cryst(__cryst)
   {
-    m_OrientationOps = LaueOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::GetAllOrientationOps();
     nsym = m_OrientationOps[__cryst]->getNumSymOps();
   }
 
@@ -761,7 +760,7 @@ void FindGBPDMetricBased::execute()
   }
 
   // ------------------- before computing the distribution, we must find normalization factors -----
-  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  std::vector<LaueOps::Pointer> m_OrientationOps = LaueOps::GetAllOrientationOps();
   int32_t cryst = m_CrystalStructures[m_PhaseOfInterest];
   int32_t nsym = m_OrientationOps[cryst]->getNumSymOps();
   double ballVolume = double(nsym) * 2.0 * (1.0 - cos(m_LimitDist));

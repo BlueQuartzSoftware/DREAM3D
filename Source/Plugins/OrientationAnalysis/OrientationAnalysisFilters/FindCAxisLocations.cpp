@@ -144,7 +144,7 @@ void FindCAxisLocations::execute()
     return;
   }
 
-  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  std::vector<LaueOps::Pointer> m_OrientationOps = LaueOps::GetAllOrientationOps();
 
   FloatArrayType::Pointer quatsPtr = m_QuatsPtr.lock();
 

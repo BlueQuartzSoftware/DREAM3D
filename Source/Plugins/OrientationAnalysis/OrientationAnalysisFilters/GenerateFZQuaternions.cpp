@@ -65,7 +65,7 @@ public:
    */
   void convert(size_t start, size_t end) const
   {
-    QVector<LaueOps::Pointer> ops = LaueOps::getOrientationOpsQVector();
+    std::vector<LaueOps::Pointer> ops = LaueOps::GetAllOrientationOps();
     int32_t phase = 0;
     bool calcIPF = false;
     size_t index = 0;
@@ -133,7 +133,7 @@ GenerateFZQuaternions::GenerateFZQuaternions()
 , m_GoodVoxelsArrayPath("", "", "")
 {
   initialize();
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::GetAllOrientationOps();
 }
 
 // -----------------------------------------------------------------------------

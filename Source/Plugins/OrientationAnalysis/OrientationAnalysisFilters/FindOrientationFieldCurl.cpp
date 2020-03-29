@@ -74,7 +74,7 @@ public:
   , m_Neighbors(neighbors)
   , m_FaceIds(faceIds)
   {
-    m_OrientationOps = LaueOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::GetAllOrientationOps();
   }
   virtual ~FindMisorientationVectorsImpl() = default;
 
@@ -114,8 +114,7 @@ private:
   float* m_MisoVecs = nullptr;
   int64_t* m_Neighbors = nullptr;
   int64_t* m_FaceIds = nullptr;
-  QVector<LaueOps::Pointer> m_OrientationOps;
-};
+  LaueOpsContainer m_OrientationOps;};
 
 // -----------------------------------------------------------------------------
 //
@@ -126,7 +125,7 @@ FindOrientationFieldCurl::FindOrientationFieldCurl()
 , m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
 , m_DislocationTensorsArrayName(SIMPL::CellData::DislocationTensors)
 {
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::GetAllOrientationOps();
 
   m_CurlSize[0] = 1;
   m_CurlSize[1] = 1;

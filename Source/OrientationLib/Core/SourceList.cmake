@@ -6,7 +6,7 @@ set(OrientationLib_Core_HDRS
   ${OrientationLib_SOURCE_DIR}/Core/OrientationTransformation.hpp
   ${OrientationLib_SOURCE_DIR}/Core/Quaternion.hpp
   ${OrientationLib_SOURCE_DIR}/Core/OrientationMath.h
-
+  ${OrientationLib_SOURCE_DIR}/Core/OrientationRepresentation.h
   )
 
 set(OrientationLib_Core_SRCS

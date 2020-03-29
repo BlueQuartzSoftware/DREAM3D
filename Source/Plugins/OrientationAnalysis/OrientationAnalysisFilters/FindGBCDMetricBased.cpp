@@ -42,17 +42,14 @@
  *    United States Prime Contract Navy N00173-07-C-2068
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "FindGBCDMetricBased.h"
 
 #include <memory>
 
-#include "FindGBCDMetricBased.h"
-
 #include <QtCore/QDir>
-
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AxisAngleFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -79,6 +76,9 @@
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
+
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
 
 const float FindGBCDMetricBased::k_ResolutionChoices[FindGBCDMetricBased::k_NumberResolutionChoices][2] = {{3.0f, 7.0f}, {5.0f, 5.0f}, {5.0f, 7.0f}, {5.0f, 8.0f},
                                                                                                            {6.0f, 7.0f}, {7.0f, 7.0f}, {8.0f, 8.0f}}; // { for misorient., for planes }
@@ -140,7 +140,7 @@ class TrisSelector
   int32_t m_PhaseOfInterest;
   float (&gFixedT)[3][3];
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
+  LaueOpsContainer m_OrientationOps;
   uint32_t cryst;
   int32_t nsym;
 
@@ -174,7 +174,7 @@ public:
   , m_FaceNormals(__m_FaceNormals)
   , m_FaceAreas(__m_FaceAreas)
   {
-    m_OrientationOps = LaueOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::GetAllOrientationOps();
     cryst = __m_CrystalStructures[__m_PhaseOfInterest];
     nsym = m_OrientationOps[cryst]->getNumSymOps();
   }
@@ -812,7 +812,7 @@ void FindGBCDMetricBased::execute()
   // ------------------- before computing the distribution, we must find normalization factors -----
   double ballVolume = FindGBCDMetricBased::k_BallVolumesM3M[getChosenLimitDists()];
   {
-    QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
+    std::vector<LaueOps::Pointer> m_OrientationOps = LaueOps::GetAllOrientationOps();
     int32_t cryst = m_CrystalStructures[m_PhaseOfInterest];
     int32_t nsym = m_OrientationOps[cryst]->getNumSymOps();
 

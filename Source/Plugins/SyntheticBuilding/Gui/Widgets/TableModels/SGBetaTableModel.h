@@ -63,74 +63,155 @@ public:
   };
 
   SGBetaTableModel(QObject* parent = nullptr);
-  virtual ~SGBetaTableModel();
 
-  Qt::ItemFlags flags(const QModelIndex& index) const;
-  QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-  int rowCount(const QModelIndex& parent = QModelIndex()) const;
-  int columnCount(const QModelIndex& parent = QModelIndex()) const;
+  ~SGBetaTableModel();
 
-  bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
   /**
-   *
+   * @brief flags
+   * @param index
+   * @return
+   */
+  Qt::ItemFlags flags(const QModelIndex& index) const override;
+
+  /**
+   * @brief data
+   * @param index
+   * @param role
+   * @return
+   */
+  QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+
+  /**
+   * @brief headerData
+   * @param section
+   * @param orientation
+   * @param role
+   * @return
+   */
+  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+
+  /**
+   * @brief rowCount
+   * @param parent
+   * @return
+   */
+  int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+
+  /**
+   * @brief columnCount
+   * @param parent
+   * @return
+   */
+  int columnCount(const QModelIndex& parent = QModelIndex()) const override;
+
+  /**
+   * @brief setData
+   * @param index
+   * @param value
+   * @param role
+   * @return
+   */
+  bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
+
+  /**
+   * @brief setHeaderData
    * @param col
    * @param orientation
    * @param data
    * @param role
    * @return
    */
-  bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role = Qt::EditRole)
-  {
-    return false;
-  }
+  bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role = Qt::EditRole) override;
 
-  bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex());
-  bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex());
+  /**
+   * @brief insertRows
+   * @param row
+   * @param count
+   * @param parent
+   * @return
+   */
+  bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
-  QAbstractItemDelegate* getItemDelegate();
+  /**
+   * @brief removeRows
+   * @param row
+   * @param count
+   * @param parent
+   * @return
+   */
+  bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
+  /**
+   * @brief getItemDelegate
+   * @return
+   */
+  QAbstractItemDelegate* getItemDelegate() override;
+
+  /**
+   * @brief setTableData
+   * @param bins
+   * @param data
+   * @param colors
+   */
   void setTableData(QVector<float> bins, QVector<QVector<float>> data, QVector<SIMPL::Rgb> colors) override;
 
-  QVector<float>& getBinNumbers()
-  {
-    return m_BinNumbers;
-  }
-  float getBinNumber(qint32 row)
-  {
-    return m_BinNumbers[row];
-  }
+  /**
+   * @brief getBinNumbers
+   * @return
+   */
+  const QVector<float>& getBinNumbers() const override;
 
-  QVector<SIMPL::Rgb>& getColors()
-  {
-    return m_Colors;
-  }
-  SIMPL::Rgb getColor(qint32 row)
-  {
-    return m_Colors[row];
-  }
+  /**
+   * @brief getBinNumber
+   * @param row
+   * @return
+   */
+  float getBinNumber(qint32 row) const override;
 
-  virtual QVector<float> getData(int col);
-  virtual float getDataValue(int col, int row);
-  void setColumnData(int col, QVector<float>& data);
+  /**
+   * @brief getColors
+   * @return
+   */
+  const QVector<SIMPL::Rgb>& getColors() const override;
 
-  QVector<float>& getAlphas()
-  {
-    return m_Alpha;
-  }
-  QVector<float>& getBetas()
-  {
-    return m_Beta;
-  }
+  /**
+   * @brief getColor
+   * @param row
+   * @return
+   */
+  SIMPL::Rgb getColor(qint32 row) const override;
 
-  float getAlpha(qint32 row)
-  {
-    return m_Alpha[row];
-  }
-  float getBeta(qint32 row)
-  {
-    return m_Beta[row];
-  }
+  /**
+   * @brief getData
+   * @param col
+   * @return
+   */
+  std::vector<float> getData(int col) const override;
+
+  /**
+   * @brief getDataValue
+   * @param col
+   * @param row
+   * @return
+   */
+  float getDataValue(int col, int row) const override;
+
+  /**
+   * @brief setColumnData
+   * @param col
+   * @param data
+   */
+  void setColumnData(int col, QVector<float>& data) override;
+
+  //------------------------------- Class Specific Data Accessors
+
+  const QVector<float>& getAlphas() const;
+
+  const QVector<float>& getBetas() const;
+
+  float getAlpha(qint32 row) const;
+
+  float getBeta(qint32 row) const;
 
 private:
   int m_ColumnCount;

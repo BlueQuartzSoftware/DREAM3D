@@ -38,7 +38,6 @@
 
 #include <memory>
 
-#include "OrientationLib/LaueOps/LaueOps.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
@@ -47,6 +46,11 @@
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 
 /**
  * @class FindLocalAverageCAxisMisalignments FindLocalAverageCAxisMisalignments.h Plugins/Statistics/StatisticsFilters/FindLocalAverageCAxisMisalignments.h
@@ -371,8 +375,7 @@ private:
   QString m_LocalCAxisMisalignmentsArrayName = {};
   QString m_NumFeaturesPerParentArrayName = {};
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
   NeighborList<int>::WeakPointer m_NeighborList;
   NeighborList<float>::WeakPointer m_CAxisMisalignmentList;
 

@@ -217,14 +217,14 @@ void FindKernelAvgMisorientations::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  std::vector<LaueOps::Pointer> m_OrientationOps = LaueOps::GetAllOrientationOps();
   FloatArrayType::Pointer quatPtr = m_QuatsPtr.lock();
 
   int32_t numVoxel = 0; // number of voxels in the feature...
   bool good = false;
 
-  float w = 0.0f, totalmisorientation = 0.0f;
-  float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
+  float totalmisorientation = 0.0f;
+
   uint32_t phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   uint32_t phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
@@ -287,13 +287,11 @@ void FindKernelAvgMisorientations::execute()
                 }
                 if(good && m_FeatureIds[point] == m_FeatureIds[neighbor])
                 {
-                  w = std::numeric_limits<float>::max();
-
                   QuatF q2(quatPtr->getTuplePointer(neighbor));
                   phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-                  w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
-                  w = w * (180.0f / SIMPLib::Constants::k_Pi);
-                  totalmisorientation = totalmisorientation + w;
+                  OrientationF axisAngle = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
+
+                  totalmisorientation = totalmisorientation + (axisAngle[3] * SIMPLib::Constants::k_180OverPi);
                   numVoxel++;
                 }
               }

@@ -47,6 +47,7 @@
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 #include "OrientationLib/Texture/Texture.hpp"
+#include "OrientationLib/LaueOps/CubicOps.h"
 
 #include "TestPrintFunctions.h"
 
@@ -60,12 +61,8 @@
 class ODFTest
 {
 public:
-  ODFTest()
-  {
-  }
-  virtual ~ODFTest()
-  {
-  }
+  ODFTest() = default;
+  ~ODFTest() = default;
 
   // -----------------------------------------------------------------------------
   //
@@ -77,9 +74,9 @@ public:
   }
 
   void CubicODFTest()
-  {
-    // Resize the ODF vector properly for Cubic
-    std::vector<float> odf(CubicOps::k_OdfSize);
+  { // Resize the ODF vector properly for Cubic
+    CubicOps ops;
+    std::vector<float> odf(ops.getODFSize());
     std::vector<float> e1s(2);
     std::vector<float> e2s(2);
     std::vector<float> e3s(2);
@@ -92,7 +89,7 @@ public:
     // Calculate the ODF Data
 
     size_t numEntries = e1s.size();
-    Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()), &(weights.front()), &(sigmas.front()), true, &(odf.front()), numEntries);
+    Texture::CalculateODFData<float, CubicOps, std::vector<float>>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
 
     size_t npoints = 1000;
     std::vector<float> x001(npoints * 3);
@@ -126,8 +123,6 @@ public:
     Print_Coord<float>(coordsRotated);
 
   }
-
-
 
 
   void operator()()

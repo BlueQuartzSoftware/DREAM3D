@@ -297,27 +297,27 @@ bool SGBetaTableModel::removeRows(int row, int count, const QModelIndex& index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<float> SGBetaTableModel::getData(int col)
+std::vector<float> SGBetaTableModel::getData(int col) const
 {
 
   switch(col)
   {
   case Alpha:
-    return m_Alpha;
+    return std::vector<float>(m_Alpha.begin(), m_Alpha.end());
     break;
   case Beta:
-    return m_Beta;
+    return std::vector<float>(m_Beta.begin(), m_Beta.end());
     break;
   default:
     Q_ASSERT(false);
   }
-  return QVector<float>();
+  return std::vector<float>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float SGBetaTableModel::getDataValue(int col, int row)
+float SGBetaTableModel::getDataValue(int col, int row) const
 {
   switch(col)
   {
@@ -402,4 +402,47 @@ void SGBetaTableModel::setTableData(QVector<float> bins, QVector<QVector<float>>
     QModelIndex botRight = createIndex(offset, ColumnCount);
     emit dataChanged(topLeft, botRight);
   }
+}
+
+const QVector<float>& SGBetaTableModel::getBinNumbers() const
+{
+  return m_BinNumbers;
+}
+
+float SGBetaTableModel::getBinNumber(qint32 row) const
+{
+  return m_BinNumbers[row];
+}
+
+const QVector<SIMPL::Rgb>& SGBetaTableModel::getColors() const
+{
+  return m_Colors;
+}
+
+SIMPL::Rgb SGBetaTableModel::getColor(qint32 row) const
+{
+  return m_Colors[row];
+}
+
+bool SGBetaTableModel::setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role)
+{
+  return false;
+}
+
+const QVector<float>& SGBetaTableModel::getAlphas() const
+{
+  return m_Alpha;
+}
+const QVector<float>& SGBetaTableModel::getBetas() const
+{
+  return m_Beta;
+}
+
+float SGBetaTableModel::getAlpha(qint32 row) const
+{
+  return m_Alpha[row];
+}
+float SGBetaTableModel::getBeta(qint32 row) const
+{
+  return m_Beta[row];
 }

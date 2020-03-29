@@ -41,9 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 
 /**
  * @brief The BadDataNeighborOrientationCheck class. See [Filter documentation](@ref baddataneighbororientationcheck) for details.
@@ -258,8 +261,7 @@ private:
   DataArrayPath m_CrystalStructuresArrayPath = {};
   DataArrayPath m_QuatsArrayPath = {};
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
 public:
   BadDataNeighborOrientationCheck(const BadDataNeighborOrientationCheck&) = delete; // Copy Constructor Not Implemented
   BadDataNeighborOrientationCheck(BadDataNeighborOrientationCheck&&) = delete;      // Move Constructor Not Implemented

@@ -33,14 +33,13 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "BadDataNeighborOrientationCheck.h"
+
+#include <memory>
 
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -49,6 +48,8 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -64,7 +65,7 @@ BadDataNeighborOrientationCheck::BadDataNeighborOrientationCheck()
 , m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
 , m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
 {
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::GetAllOrientationOps();
 }
 
 // -----------------------------------------------------------------------------
@@ -224,7 +225,6 @@ void BadDataNeighborOrientationCheck::execute()
 
   float w = 10000.0f;
 
-  float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   uint32_t phase1 = 0, phase2 = 0;
 
   QVector<int32_t> neighborCount(totalPoints, 0);
@@ -274,7 +274,8 @@ void BadDataNeighborOrientationCheck::execute()
 
           if(m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0)
           {
-            w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+            OrientationD axisAngle = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
+            w = axisAngle[3];
           }
           if(w < misorientationTolerance)
           {
@@ -341,7 +342,8 @@ void BadDataNeighborOrientationCheck::execute()
 
               if(m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0)
               {
-                w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+                OrientationD axisAngle = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
+                w = axisAngle[3];
               }
               if(w < misorientationTolerance)
               {

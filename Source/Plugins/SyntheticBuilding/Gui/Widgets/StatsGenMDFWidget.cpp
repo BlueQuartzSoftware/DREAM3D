@@ -71,10 +71,18 @@
 
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 
+#include "OrientationLib/LaueOps/CubicLowOps.h"
 #include "OrientationLib/LaueOps/CubicOps.h"
+#include "OrientationLib/LaueOps/HexagonalLowOps.h"
 #include "OrientationLib/LaueOps/HexagonalOps.h"
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "OrientationLib/LaueOps/MonoclinicOps.h"
 #include "OrientationLib/LaueOps/OrthoRhombicOps.h"
+#include "OrientationLib/LaueOps/TetragonalLowOps.h"
+#include "OrientationLib/LaueOps/TetragonalOps.h"
+#include "OrientationLib/LaueOps/TriclinicOps.h"
+#include "OrientationLib/LaueOps/TrigonalLowOps.h"
+#include "OrientationLib/LaueOps/TrigonalOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 #include "OrientationLib/Texture/StatsGen.hpp"
 #include "OrientationLib/Texture/Texture.hpp"
 
@@ -128,7 +136,6 @@ void StatsGenMDFWidget::setupGui()
   QAbstractItemDelegate* aid = m_MDFTableModel->getItemDelegate();
   m_MDFTableView->setItemDelegate(aid);
   m_PlotCurve = new QwtPlotCurve;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -198,11 +205,11 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 void StatsGenMDFWidget::updatePlots()
 {
   // Generate the ODF Data from the current values in the ODFTableModel
-  QVector<float> e1s;
-  QVector<float> e2s;
-  QVector<float> e3s;
-  QVector<float> weights;
-  QVector<float> sigmas;
+  std::vector<float> e1s;
+  std::vector<float> e2s;
+  std::vector<float> e3s;
+  std::vector<float> weights;
+  std::vector<float> sigmas;
   if(nullptr == m_ODFTableModel)
   {
     return;
@@ -214,14 +221,14 @@ void StatsGenMDFWidget::updatePlots()
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
-  for(qint32 i = 0; i < e1s.size(); i++)
+  for(size_t i = 0; i < e1s.size(); i++)
   {
     e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
     e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
     e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
   }
 
-  QVector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalStructure, e1s, e2s, e3s, weights, sigmas);
+  std::vector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalStructure, e1s, e2s, e3s, weights, sigmas);
 
   updateMDFPlot(odf);
 
@@ -239,70 +246,92 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odf)
+void StatsGenMDFWidget::updateMDFPlot(std::vector<float>& odf)
 {
   int err = 0;
   int size = 100000;
 
   // These are the input vectors
-  QVector<float> angles;
-  QVector<float> axes;
-  QVector<float> weights;
+  using ContainerType = std::vector<float>;
+  ContainerType angles;
+  ContainerType axes;
+  ContainerType weights;
+
+  // ContainerType odf = odfInput; // Do this copy because using std::vector is 2x faster than QVector
 
   angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
   weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
   axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
 
   // These are the output vectors
-  QVector<float> x;
-  QVector<float> y;
-  if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
+  int npoints = 36;
+  ContainerType x(npoints);
+  ContainerType y(npoints);
+  ContainerType mdf;
+
+  //// ODF/MDF Update Codes
+  switch(m_CrystalStructure)
   {
-    // Allocate a new vector to hold the mdf data
-    QVector<float> mdf(CubicOps::k_MdfSize);
-    // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
-    Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), static_cast<size_t>(angles.size()));
-    // Now generate the actual XY point data that gets plotted.
-    int npoints = 13;
-    x.resize(npoints);
-    y.resize(npoints);
-    err = StatsGen::GenCubicMDFPlotData(mdf.data(), x.data(), y.data(), npoints, size);
-    if(err < 0)
-    {
-      return;
-    }
+  case Ebsd::CrystalStructure::Triclinic: // 4; Triclinic -1
+    Texture::CalculateMDFData<float, TriclinicOps, ContainerType>(angles, axes, weights, odf, mdf, static_cast<size_t>(angles.size()));
+    err = StatsGen::GenMDFPlotData<float, TriclinicOps, ContainerType>(mdf, x, y, size);
+    break;
+  case Ebsd::CrystalStructure::Monoclinic: // 5; Monoclinic 2/m
+    Texture::CalculateMDFData<float, MonoclinicOps, ContainerType>(angles, axes, weights, odf, mdf, static_cast<size_t>(angles.size()));
+    err = StatsGen::GenMDFPlotData<float, MonoclinicOps, ContainerType>(mdf, x, y, size);
+    break;
+  case Ebsd::CrystalStructure::OrthoRhombic: // 6; Orthorhombic mmm
+    Texture::CalculateMDFData<float, OrthoRhombicOps, ContainerType>(angles, axes, weights, odf, mdf, static_cast<size_t>(angles.size()));
+    err = StatsGen::GenMDFPlotData<float, OrthoRhombicOps, ContainerType>(mdf, x, y, size);
+    break;
+  case Ebsd::CrystalStructure::Tetragonal_Low: // 7; Tetragonal-Low 4/m
+    Texture::CalculateMDFData<float, TetragonalLowOps, ContainerType>(angles, axes, weights, odf, mdf, static_cast<size_t>(angles.size()));
+    err = StatsGen::GenMDFPlotData<float, TetragonalLowOps, ContainerType>(mdf, x, y, size);
+    break;
+  case Ebsd::CrystalStructure::Tetragonal_High: // 8; Tetragonal-High 4/mmm
+    Texture::CalculateMDFData<float, TetragonalOps, ContainerType>(angles, axes, weights, odf, mdf, static_cast<size_t>(angles.size()));
+    err = StatsGen::GenMDFPlotData<float, TetragonalOps, ContainerType>(mdf, x, y, size);
+    break;
+  case Ebsd::CrystalStructure::Trigonal_Low: // 9; Trigonal-Low -3
+    Texture::CalculateMDFData<float, TrigonalLowOps, ContainerType>(angles, axes, weights, odf, mdf, static_cast<size_t>(angles.size()));
+    err = StatsGen::GenMDFPlotData<float, TrigonalLowOps, ContainerType>(mdf, x, y, size);
+    break;
+  case Ebsd::CrystalStructure::Trigonal_High: // 10; Trigonal-High -3m
+    Texture::CalculateMDFData<float, TrigonalOps, ContainerType>(angles, axes, weights, odf, mdf, static_cast<size_t>(angles.size()));
+    err = StatsGen::GenMDFPlotData<float, TrigonalOps, ContainerType>(mdf, x, y, size);
+    break;
+  case Ebsd::CrystalStructure::Hexagonal_Low: // 2; Hexagonal-Low 6/m
+    Texture::CalculateMDFData<float, HexagonalLowOps, ContainerType>(angles, axes, weights, odf, mdf, static_cast<size_t>(angles.size()));
+    err = StatsGen::GenMDFPlotData<float, HexagonalLowOps, ContainerType>(mdf, x, y, size);
+    break;
+  case Ebsd::CrystalStructure::Hexagonal_High: // 0; Hexagonal-High 6/mmm
+    Texture::CalculateMDFData<float, HexagonalOps, ContainerType>(angles, axes, weights, odf, mdf, static_cast<size_t>(angles.size()));
+    err = StatsGen::GenMDFPlotData<float, HexagonalOps, ContainerType>(mdf, x, y, size);
+    break;
+  case Ebsd::CrystalStructure::Cubic_Low: // 3; Cubic Cubic-Low m3 (Tetrahedral)
+    Texture::CalculateMDFData<float, CubicLowOps, ContainerType>(angles, axes, weights, odf, mdf, static_cast<size_t>(angles.size()));
+    err = StatsGen::GenMDFPlotData<float, CubicLowOps, ContainerType>(mdf, x, y, size);
+    break;
+  case Ebsd::CrystalStructure::Cubic_High: // 1; Cubic Cubic-High m3m
+    Texture::CalculateMDFData<float, CubicOps, ContainerType>(angles, axes, weights, odf, mdf, static_cast<size_t>(angles.size()));
+    err = StatsGen::GenMDFPlotData<float, CubicOps, ContainerType>(mdf, x, y, size);
+    break;
+  default:
+    err = -1;
+    break;
   }
-  else if(Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
+
+  if(err < 0)
   {
-    // Allocate a new vector to hold the mdf data
-    QVector<float> mdf(HexagonalOps::k_MdfSize);
-    // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
-    Texture::CalculateMDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), static_cast<size_t>(angles.size()));
-    // Now generate the actual XY point data that gets plotted.
-    int npoints = 20;
-    x.resize(npoints);
-    y.resize(npoints);
-    err = StatsGen::GenHexMDFPlotData(mdf.data(), x.data(), y.data(), npoints, size);
-    if(err < 0)
-    {
-      return;
-    }
-  }
-  else
-  {
-    err = 1;
-    QString ss("Only Cubic_High or Hexagonal_High are allowed for the Laue group.");
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::critical(nullptr, QString("MDF Generation Error"), ss, QMessageBox::Ok);
-    Q_UNUSED(reply);
+    return;
   }
 
   QwtArray<double> xD(static_cast<int>(x.size()));
   QwtArray<double> yD(static_cast<int>(x.size()));
-  for(qint32 i = 0; i < x.size(); ++i)
+  for(ContainerType::size_type i = 0; i < x.size(); ++i)
   {
-    xD[i] = static_cast<double>(x.at(i));
-    yD[i] = static_cast<double>(y.at(i));
+    xD[i] = static_cast<double>(x[i]);
+    yD[i] = static_cast<double>(y[i]);
   }
 
   // This will actually plot the XY data in the Qwt plot widget
@@ -374,37 +403,37 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
     return;
   }
 
-    QFileInfo fi(file);
-    m_OpenDialogLastFilePath = fi.filePath();
+  QFileInfo fi(file);
+  m_OpenDialogLastFilePath = fi.filePath();
 
-    size_t numMisorients = 0;
-    QString filename = file;
-    std::ifstream inFile;
-    inFile.open(filename.toLatin1().data());
+  size_t numMisorients = 0;
+  QString filename = file;
+  std::ifstream inFile;
+  inFile.open(filename.toLatin1().data());
 
-    inFile >> numMisorients;
+  inFile >> numMisorients;
 
-    float angle, weight;
-    std::string n1, n2, n3;
-    for(size_t i = 0; i < numMisorients; i++)
+  float angle, weight;
+  std::string n1, n2, n3;
+  for(size_t i = 0; i < numMisorients; i++)
+  {
+    inFile >> angle >> n1 >> n2 >> n3 >> weight;
+
+    QString axis = QString("<" + QString::fromStdString(n1) + "," + QString::fromStdString(n2) + "," + QString::fromStdString(n3) + ">");
+
+    if(!m_MDFTableModel->insertRow(m_MDFTableModel->rowCount()))
     {
-      inFile >> angle >> n1 >> n2 >> n3 >> weight;
-
-      QString axis = QString("<" + QString::fromStdString(n1) + "," + QString::fromStdString(n2) + "," + QString::fromStdString(n3) + ">");
-
-      if(!m_MDFTableModel->insertRow(m_MDFTableModel->rowCount()))
-      {
-        return;
-      }
-      int row = m_MDFTableModel->rowCount() - 1;
-      m_MDFTableModel->setRowData(row, angle, axis, weight);
-
-      m_MDFTableView->resizeColumnsToContents();
-      m_MDFTableView->scrollToBottom();
-      m_MDFTableView->setFocus();
-      QModelIndex index = m_MDFTableModel->index(m_MDFTableModel->rowCount() - 1, 0);
-      m_MDFTableView->setCurrentIndex(index);
+      return;
     }
+    int row = m_MDFTableModel->rowCount() - 1;
+    m_MDFTableModel->setRowData(row, angle, axis, weight);
+
+    m_MDFTableView->resizeColumnsToContents();
+    m_MDFTableView->scrollToBottom();
+    m_MDFTableView->setFocus();
+    QModelIndex index = m_MDFTableModel->index(m_MDFTableModel->rowCount() - 1, 0);
+    m_MDFTableView->setCurrentIndex(index);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -471,11 +500,11 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, PhaseType::Ty
   int retErr = 0;
 
   // Generate the ODF Data from the current values in the ODFTableModel
-  QVector<float> e1s;
-  QVector<float> e2s;
-  QVector<float> e3s;
-  QVector<float> odf_weights;
-  QVector<float> sigmas;
+  std::vector<float> e1s;
+  std::vector<float> e2s;
+  std::vector<float> e3s;
+  std::vector<float> odf_weights;
+  std::vector<float> sigmas;
 
   e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
   e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
@@ -483,19 +512,19 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, PhaseType::Ty
   odf_weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
-  for(qint32 i = 0; i < e1s.size(); i++)
+  for(size_t i = 0; i < e1s.size(); i++)
   {
     e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
     e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
     e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
   }
 
-  QVector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalStructure, e1s, e2s, e3s, odf_weights, sigmas, !preflight);
+  std::vector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalStructure, e1s, e2s, e3s, odf_weights, sigmas, !preflight);
 
   // Now use the ODF data to generate the MDF data ************************************************
-  QVector<float> angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
-  QVector<float> weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
-  QVector<float> axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
+  std::vector<float> angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
+  std::vector<float> weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
+  std::vector<float> axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
 
   StatsGeneratorUtilities::GenerateMisorientationBinData(statsData, phaseType, m_CrystalStructure, odf, angles, axes, weights, !preflight);
   return retErr;

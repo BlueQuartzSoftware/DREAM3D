@@ -39,6 +39,9 @@
 #define WIN32_LEAN_AND_MEAN // Exclude rarely-used stuff from Windows headers
 #endif
 
+#include <random>
+#include <chrono>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
@@ -235,6 +238,58 @@ public:
    * @param eulers Euler angles to be generated. This memory must already be preallocated.
    * @param npoints The number of points for the Scatter Plot which is at least the number of elements used in the allocation of the various output arrays.
    */
+  template <typename T, class LaueOpsType, class ContainerType>
+  static int GenODFPlotData(const ContainerType& odf, T* eulers, size_t npoints)
+  {
+    std::random_device randomDevice;           // Will be used to obtain a seed for the random number engine
+    std::mt19937_64 generator(randomDevice()); // Standard mersenne_twister_engine seeded with rd()
+    std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+    generator.seed(seed);
+    std::uniform_real_distribution<> distribution(0.0, 1.0);
+    std::array<double, 3> randx3;
+
+    int err = 0;
+    int choose = 0;
+    T totaldensity;
+    T random, density;
+
+    LaueOpsType ops;
+    T td1;
+    for(size_t i = 0; i < npoints; i++)
+    {
+      random = distribution(generator);
+      choose = 0;
+      totaldensity = 0;
+      for(int j = 0; j < ops.getODFSize(); j++)
+      {
+        density = odf[j];
+        td1 = totaldensity;
+        totaldensity = totaldensity + density;
+        if(random < totaldensity && random >= td1)
+        {
+          choose = static_cast<int>(j);
+          break;
+        }
+      }
+      randx3[0] = distribution(generator);
+      randx3[1] = distribution(generator);
+      randx3[2] = distribution(generator);
+      OrientationD eu = ops.determineEulerAngles(randx3.data(), choose);
+      eulers[3 * i + 0] = eu[0];
+      eulers[3 * i + 1] = eu[1];
+      eulers[3 * i + 2] = eu[2];
+    }
+    return err;
+  }
+#if 0
+
+  /**
+   * @brief  This method will generate ODF data for 3 scatter plots which are the
+   * <001>, <011> and <111> directions.
+   * @param odf Pointer to ODF bin data which has been sized to CubicOps::k_OdfSize
+   * @param eulers Euler angles to be generated. This memory must already be preallocated.
+   * @param npoints The number of points for the Scatter Plot which is at least the number of elements used in the allocation of the various output arrays.
+   */
   template <typename T> static int GenCubicODFPlotData(const T* odf, T* eulers, size_t npoints)
   {
     uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
@@ -365,6 +420,7 @@ public:
     }
     return err;
   }
+#endif
 
   /**
    * @brief  This method will generate ODF data for a OrthoRhombic material and
@@ -388,8 +444,14 @@ public:
    */
   template <typename T> static int GenAxisODFPlotData(T* odf, T* eulers, int npoints)
   {
-    uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
-    SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
+
+    std::random_device randomDevice;           // Will be used to obtain a seed for the random number engine
+    std::mt19937_64 generator(randomDevice()); // Standard mersenne_twister_engine seeded with rd()
+    std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+    generator.seed(seed);
+    std::uniform_real_distribution<> distribution(0.0, 1.0);
+    std::array<double, 3> randx3;
+
     int err = 0;
     int choose;
     float totaldensity;
@@ -399,11 +461,10 @@ public:
     float td1;
     for(int i = 0; i < npoints; i++)
     {
-      m_Seed++;
-      random = rg.genrand_res53();
+      random = distribution(generator);
       choose = 0;
       totaldensity = 0;
-      for(int j = 0; j < OrthoRhombicOps::k_OdfSize; j++)
+      for(int j = 0; j < ops.getODFSize(); j++)
       {
         density = odf[j];
         td1 = totaldensity;
@@ -414,7 +475,10 @@ public:
           break;
         }
       }
-      OrientationD eu = ops.determineEulerAngles(m_Seed, choose);
+      randx3[0] = distribution(generator);
+      randx3[1] = distribution(generator);
+      randx3[2] = distribution(generator);
+      OrientationD eu = ops.determineEulerAngles(randx3.data(), choose);
       eulers[3 * i + 0] = eu[0];
       eulers[3 * i + 1] = eu[1];
       eulers[3 * i + 2] = eu[2];
@@ -422,6 +486,82 @@ public:
     return err;
   }
 
+  /**
+   * @brief  This method will generate MDF data for a Cubic material and
+   * generate 1 XY scatter plots.
+   * @param mdf [input] This is the input MDF data which is already computed and of lenght CubicOps::k_MdfSize
+   * @param x [output] X Values of the Scatter plot. This memory must already be preallocated.
+   * @param y [outout] Y Values of the Scatter plot. This memory must already be preallocated.
+   * @param npoints The number of XY points for the Scatter Plot
+   * @param size The number of samples of the MDF to take
+   */
+  template <typename T, class LaueOpsType, class ContainerType>
+  static int GenMDFPlotData(ContainerType& mdf, ContainerType& xval, ContainerType& yval, int size)
+  {
+    float radtodeg = 180.0f / static_cast<float>(M_PI);
+
+    std::random_device randomDevice;           // Will be used to obtain a seed for the random number engine
+    std::mt19937_64 generator(randomDevice()); // Standard mersenne_twister_engine seeded with rd()
+    std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+    generator.seed(seed);
+    std::uniform_real_distribution<> distribution(0.0, 1.0);
+
+    int err = 0;
+    float density = 0.0f;
+    float totaldensity = 0.0f;
+    int choose = 0;
+    float random = 0.0f;
+
+    LaueOpsType ops;
+    std::array<double, 3> randx3;
+
+    for(int i = 0; i < yval.size(); i++)
+    {
+      yval[i] = 0.0f;
+    }
+
+    float td1 = 0.0f;
+    for(int i = 0; i < size; i++)
+    {
+      random = distribution(generator);
+
+      choose = 0;
+      totaldensity = 0;
+      for(int j = 0; j < ops.getMDFSize(); j++)
+      {
+        density = mdf[j];
+        td1 = totaldensity;
+        totaldensity = totaldensity + density;
+        if(random < totaldensity && random >= td1)
+        {
+          choose = static_cast<int>(j);
+          break;
+        }
+      }
+
+      randx3[0] = distribution(generator);
+      randx3[1] = distribution(generator);
+      randx3[2] = distribution(generator);
+      OrientationD rod = ops.determineRodriguesVector(randx3.data(), choose);
+      OrientationD ax = OrientationTransformation::ro2ax<OrientationD, OrientationD>(rod);
+
+      float w = ax[3] * radtodeg;
+      size_t index = static_cast<size_t>(w / 5.0f);
+      if(index >= yval.size())
+      {
+        yval.resize(index + 1);
+        xval.resize(index + 1);
+      }
+      yval[index]++;
+    }
+    for(int i = 0; i < yval.size(); i++)
+    {
+      xval[i] = i * 5.0 + 2.5;
+      yval[i] = yval[i] / static_cast<float>(size);
+    }
+    return err;
+  }
+#if 0
   /**
    * @brief  This method will generate MDF data for a Cubic material and
    * generate 1 XY scatter plots.
@@ -443,7 +583,6 @@ public:
     float totaldensity;
     int choose = 0;
     float random;
-    float w;
 
     CubicOps ops;
 
@@ -459,7 +598,7 @@ public:
       random = rg.genrand_res53();
       choose = 0;
       totaldensity = 0;
-      for(int j = 0; j < CubicOps::k_MdfSize; j++)
+      for(int j = 0; j < ops.getMDFSize(); j++)
       {
         density = mdf[j];
         td1 = totaldensity;
@@ -473,8 +612,13 @@ public:
       OrientationD rod = ops.determineRodriguesVector(m_Seed, choose);
       OrientationD ax = OrientationTransformation::ro2ax<OrientationD, OrientationD>(rod);
 
-      w = ax[3] * radtodeg;
-      yval[int(w / 5.0)]++;
+      float w = ax[3] * radtodeg;
+      size_t index = static_cast<size_t>(w / 5.0f);
+      if(index >= npoints)
+      {
+        exit(0);
+      }
+      yval[index]++;
     }
     for(int i = 0; i < npoints; i++)
     {
@@ -544,6 +688,7 @@ public:
     }
     return err;
   }
+#endif
 
 protected:
   StatsGen() = default;

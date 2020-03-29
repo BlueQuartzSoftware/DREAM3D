@@ -42,9 +42,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 
 /**
  * @brief The FindBoundaryStrengths class. See [Filter documentation](@ref findboundarystrengths) for details.
@@ -305,8 +308,7 @@ private:
   QString m_SurfaceMeshF7sArrayName = {};
   QString m_SurfaceMeshmPrimesArrayName = {};
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
   /**
    * @brief dataCheckVoxel Checks for the appropriate parameter values and availability of arrays
    */

@@ -292,30 +292,30 @@ bool SGODFTableModel::removeRows(int row, int count, const QModelIndex& index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<float> SGODFTableModel::getData(int col)
+std::vector<float> SGODFTableModel::getData(int col)
 {
+
+  QVector<float> data;
 
   switch(col)
   {
   case Euler1:
-    return m_Euler1s;
+    data = m_Euler1s;
     break;
   case Euler2:
-    return m_Euler2s;
+    data = m_Euler2s;
     break;
   case Euler3:
-    return m_Euler3s;
+    data = m_Euler3s;
     break;
   case Weight:
-    return m_Weights;
+    data = m_Weights;
     break;
   case Sigma:
-    return m_Sigmas;
+    data = m_Sigmas;
     break;
-  default:
-    Q_ASSERT(false);
   }
-  return QVector<float>();
+  return std::vector<float>(data.begin(), data.end());
 }
 
 // -----------------------------------------------------------------------------

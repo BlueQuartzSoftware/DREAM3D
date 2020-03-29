@@ -73,6 +73,9 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+
 /**
  * @brief The CalculateFaceSchuhMisorientationColorsImpl class
  */
@@ -83,8 +86,7 @@ class CalculateFaceSchuhMisorientationColorsImpl
   float* m_Quats;
   uint8_t* m_Colors;
   unsigned int* m_CrystalStructures;
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
 public:
   CalculateFaceSchuhMisorientationColorsImpl(int32_t* labels, int32_t* phases, float* quats, uint8_t* colors, unsigned int* crystalStructures)
   : m_Labels(labels)
@@ -93,7 +95,7 @@ public:
   , m_Colors(colors)
   , m_CrystalStructures(crystalStructures)
   {
-    m_OrientationOps = LaueOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::GetAllOrientationOps();
   }
   virtual ~CalculateFaceSchuhMisorientationColorsImpl() = default;
 
@@ -104,7 +106,7 @@ public:
    */
   void generate(size_t start, size_t end) const
   {
-    QVector<LaueOps::Pointer> ops = LaueOps::getOrientationOpsQVector();
+    std::vector<LaueOps::Pointer> ops = LaueOps::GetAllOrientationOps();
     SIMPL::Rgb argb = 0x00000000;
 
     int grain1, grain2, phase1, phase2;

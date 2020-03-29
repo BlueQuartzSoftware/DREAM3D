@@ -170,41 +170,40 @@ public:
    *
    * @param binNumbers
    */
-  // virtual void setBinNumbers(QVector<float> binNumbers) = 0;
   virtual void setTableData(QVector<float> bins, QVector<QVector<float>> data, QVector<SIMPL::Rgb> colors) = 0;
 
   /**
    *
    * @return
    */
-  virtual QVector<float>& getBinNumbers() = 0;
+  virtual const QVector<float>& getBinNumbers() const = 0;
 
   /**
    *
    * @param row
    * @return
    */
-  virtual float getBinNumber(qint32 row) = 0;
+  virtual float getBinNumber(qint32 row) const = 0;
 
   /**
    *
    * @return
    */
-  virtual QVector<SIMPL::Rgb>& getColors() = 0;
+  virtual const QVector<SIMPL::Rgb>& getColors() const = 0;
 
   /**
    *
    * @param row
    * @return
    */
-  virtual SIMPL::Rgb getColor(qint32 row) = 0;
+  virtual SIMPL::Rgb getColor(qint32 row) const = 0;
 
   /**
    *
    * @param col
    * @return
    */
-  virtual QVector<float> getData(int col) = 0;
+  virtual std::vector<float> getData(int col) const = 0;
 
   /**
    *
@@ -212,8 +211,13 @@ public:
    * @param row
    * @return
    */
-  virtual float getDataValue(int col, int row) = 0;
+  virtual float getDataValue(int col, int row) const = 0;
 
+  /**
+   * @brief setColumnData
+   * @param col
+   * @param data
+   */
   virtual void setColumnData(int col, QVector<float>& data) = 0;
 
 public:

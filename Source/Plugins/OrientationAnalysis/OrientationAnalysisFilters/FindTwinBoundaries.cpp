@@ -88,8 +88,7 @@ class CalculateTwinBoundaryImpl
   float* m_TwinBoundaryIncoherence = nullptr;
   uint32_t* m_CrystalStructures = nullptr;
   bool m_FindCoherence;
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
+  LaueOpsContainer m_OrientationOps;
 public:
   CalculateTwinBoundaryImpl(float angtol, float axistol, int32_t* Labels, double* Normals, float* Quats, int32_t* Phases, unsigned int* CrystalStructures, bool* TwinBoundary,
                             float* TwinBoundaryIncoherence, bool FindCoherence)
@@ -104,7 +103,7 @@ public:
   , m_CrystalStructures(CrystalStructures)
   , m_FindCoherence(FindCoherence)
   {
-    m_OrientationOps = LaueOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::GetAllOrientationOps();
   }
 
   virtual ~CalculateTwinBoundaryImpl() = default;

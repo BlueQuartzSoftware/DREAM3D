@@ -33,16 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "WritePoleFigure.h"
 
-#include <QtCore/QDir>
+#include <memory>
+#include <csetjmp>
+#include <vector>
 
+#include <QtCore/QDir>
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
@@ -76,7 +76,6 @@
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 #include "hpdf.h"
-#include <csetjmp>
 
 jmp_buf env;
 
@@ -329,7 +328,8 @@ void WritePoleFigure::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename Ops> QVector<UInt8ArrayType::Pointer> makePoleFigures(PoleFigureConfiguration_t& config)
+template <typename Ops>
+std::vector<UInt8ArrayType::Pointer> makePoleFigures(PoleFigureConfiguration_t& config)
 {
   Ops ops;
   return ops.generatePoleFigure(config);
@@ -724,7 +724,7 @@ void WritePoleFigure::execute()
       continue;
     } // Skip because we have no Pole Figure data
 
-    QVector<UInt8ArrayType::Pointer> figures;
+    std::vector<UInt8ArrayType::Pointer> figures;
 
     PoleFigureConfiguration_t config;
     config.eulers = subEulers.get();

@@ -36,16 +36,19 @@
 #pragma once
 
 #include <memory>
-
 #include <random>
+#include <vector>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
-
 #include "Reconstruction/ReconstructionDLLExport.h"
+
+class LaueOps;
+using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
+using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
 
 /**
  * @brief The EBSDSegmentFeatures class. See [Filter documentation](@ref ebsdsegmentfeatures) for details.
@@ -314,23 +317,24 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
 
-  QString m_CellFeatureAttributeMatrixName = {};
-  float m_MisorientationTolerance = {};
-  bool m_RandomizeFeatureIds = {};
-  bool m_UseGoodVoxels = {};
-  DataArrayPath m_GoodVoxelsArrayPath = {};
-  DataArrayPath m_CellPhasesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  DataArrayPath m_QuatsArrayPath = {};
-  QString m_FeatureIdsArrayName = {};
-  QString m_ActiveArrayName = {};
-
+  QString m_CellFeatureAttributeMatrixName = {SIMPL::Defaults::CellFeatureAttributeMatrixName};
+  float m_MisorientationTolerance = {5.0f};
+  bool m_RandomizeFeatureIds = {true};
+  bool m_UseGoodVoxels = {true};
+  DataArrayPath m_GoodVoxelsArrayPath = DataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask);
+  DataArrayPath m_CellPhasesArrayPath = DataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases);
+  DataArrayPath m_CrystalStructuresArrayPath = DataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures);
+  DataArrayPath m_QuatsArrayPath = DataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats);
+  QString m_FeatureIdsArrayName = {SIMPL::CellData::FeatureIds};
+  QString m_ActiveArrayName = {SIMPL::FeatureData::Active};
 
   std::random_device m_RandomDevice;
   std::mt19937_64 m_Generator;
   std::uniform_int_distribution<int64_t> m_Distribution;
 
-  float m_MisoTolerance;
+  float m_MisoTolerance = 0.0f;
+
+  LaueOpsContainer m_OrientationOps;
 
   /**
    * @brief randomizeGrainIds Randomizes Feature Ids

@@ -318,10 +318,10 @@ int32_t MergeTwins::getSeed(int32_t newFid)
 // -----------------------------------------------------------------------------
 bool MergeTwins::determineGrouping(int32_t referenceFeature, int32_t neighborFeature, int32_t newFid)
 {
-  float w = 0.0f;
-  float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
+  // float w = 0.0f;
+  // float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   bool twin = false;
-  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  std::vector<LaueOps::Pointer> m_OrientationOps = LaueOps::GetAllOrientationOps();
 
   if(m_FeatureParentIds[neighborFeature] == -1 && m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
   {
@@ -333,10 +333,11 @@ bool MergeTwins::determineGrouping(int32_t referenceFeature, int32_t neighborFea
     uint32_t phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
     if(phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Cubic_High))
     {
-      w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+      OrientationD axisAngle = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
+      double w = axisAngle[3];
       w = w * (180.0f / SIMPLib::Constants::k_Pi);
-      float axisdiff111 = acosf(fabsf(n1) * 0.57735f + fabsf(n2) * 0.57735f + fabsf(n3) * 0.57735f);
-      float angdiff60 = fabsf(w - 60.0f);
+      double axisdiff111 = acosf(fabs(axisAngle[0]) * 0.57735f + fabs(axisAngle[1]) * 0.57735f + fabs(axisAngle[2]) * 0.57735f);
+      double angdiff60 = fabs(w - 60.0f);
       if(axisdiff111 < m_AxisToleranceRad && angdiff60 < m_AngleTolerance)
       {
         twin = true;

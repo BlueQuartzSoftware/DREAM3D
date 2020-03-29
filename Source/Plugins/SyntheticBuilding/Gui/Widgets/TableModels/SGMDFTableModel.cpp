@@ -299,15 +299,16 @@ bool SGMDFTableModel::removeRows(int row, int count, const QModelIndex& index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<float> SGMDFTableModel::getData(int col)
+std::vector<float> SGMDFTableModel::getData(int col)
 {
+  std::vector<float> data;
   if(col == Angle)
   {
-    return m_Angles;
+    return std::vector<float>(m_Angles.begin(), m_Angles.end());
   }
   if(col == Weight)
   {
-    return m_Weights;
+    return std::vector<float>(m_Weights.begin(), m_Weights.end());
   }
   if(col == Axis)
   {
@@ -327,9 +328,9 @@ QVector<float> SGMDFTableModel::getData(int col)
         values.push_back(l);
       }
     }
-    return values;
+    return std::vector<float>(values.begin(), values.end());
   }
-  return QVector<float>();
+  return data;
 }
 
 // -----------------------------------------------------------------------------

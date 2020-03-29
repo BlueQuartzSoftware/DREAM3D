@@ -76,10 +76,6 @@ class OrientationLib_EXPORT TrigonalOps : public LaueOps
     TrigonalOps();
     ~TrigonalOps() override;
 
-    static const int k_OdfSize = 31104;
-    static const int k_MdfSize = 31104;
-    static const int k_NumSymQuats = 6;
-
 
     /**
      * @brief getHasInversion Returns if this Laue class has inversion
@@ -111,8 +107,27 @@ class OrientationLib_EXPORT TrigonalOps : public LaueOps
      */
     QString getSymmetryName() const override;
 
-    double getMisoQuat(QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const override;
-    float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3) const override;
+    /**
+     * @brief Returns the number of bins in each of the 3 dimensions
+     * @return
+     */
+    std::array<size_t, 3> getOdfNumBins() const override;
+
+    /**
+     * @brief calculateMisorientation Finds the misorientation between 2 quaternions and returns the result as an Axis Angle value
+     * @param q1 Input Quaternion
+     * @param q2 Input Quaternion
+     * @return Axis Angle Representation
+     */
+    virtual OrientationD calculateMisorientation(const QuatType& q1, const QuatType& q2) const override;
+
+    /**
+     * @brief calculateMisorientation Finds the misorientation between 2 quaternions and returns the result as an Axis Angle value
+     * @param q1 Input Quaternion
+     * @param q2 Input Quaternion
+     * @return Axis Angle Representation
+     */
+    virtual OrientationF calculateMisorientation(const QuatF& q1, const QuatF& q2) const override;
 
     QuatType getQuatSymOp(int i) const override;
     void getRodSymOp(int i, double* r) const override;
@@ -128,9 +143,9 @@ class OrientationLib_EXPORT TrigonalOps : public LaueOps
 
     int getMisoBin(const OrientationType& rod) const override;
     bool inUnitTriangle(double eta, double chi) const override;
-    OrientationType determineEulerAngles(uint64_t seed, int choose) const override;
+    OrientationType determineEulerAngles(double random[3], int choose) const override;
     OrientationType randomizeEulerAngles(const OrientationType& euler) const override;
-    OrientationType determineRodriguesVector(uint64_t seed, int choose) const override;
+    OrientationType determineRodriguesVector(double random[3], int choose) const override;
     int getOdfBin(const OrientationType& rod) const override;
     void getSchmidFactorAndSS(double load[3], double& schmidfactor, double angleComps[2], int& slipsys) const override;
     void getSchmidFactorAndSS(double load[3], double plane[3], double direction[3], double& schmidfactor, double angleComps[2], int& slipsys) const override;
@@ -189,7 +204,7 @@ class OrientationLib_EXPORT TrigonalOps : public LaueOps
      * @return A QVector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
      * an image object from other libraries and written out to disk.
      */
-    QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t& config) const override;
+    std::vector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t& config) const override;
 
     /**
      * @brief generateStandardTriangle Generates an RGBA array that is a color "Standard" IPF Triangle Legend used for IPF Color Maps.
@@ -198,15 +213,12 @@ class OrientationLib_EXPORT TrigonalOps : public LaueOps
     UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim) const;
 
   protected:
-    double _calcMisoQuat(const QuatType quatsym[6], int numsym, QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const;
 
   public:
     TrigonalOps(const TrigonalOps&) = delete;    // Copy Constructor Not Implemented
     TrigonalOps(TrigonalOps&&) = delete;         // Move Constructor Not Implemented
     TrigonalOps& operator=(const TrigonalOps&) = delete; // Copy Assignment Not Implemented
     TrigonalOps& operator=(TrigonalOps&&) = delete;      // Move Assignment Not Implemented
-
-  private:
 
 };
 

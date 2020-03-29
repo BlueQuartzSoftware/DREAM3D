@@ -36,8 +36,8 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 
-#include <QtCore/QVector>
 #include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
@@ -45,11 +45,10 @@
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/OrientationMath/OrientationRepresentation.h"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/OrientationRepresentation.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
@@ -57,7 +56,6 @@
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
-
 
 /**
  * @brief This is the top level superclass for doing the conversions between orientation
@@ -193,9 +191,10 @@ class OrientationConverter
      * @brief GetOrientationTypeStrings
      * @return
      */
-    static QVector<QString> GetOrientationTypeStrings()
+    template <typename ContainerType>
+    static ContainerType GetOrientationTypeStrings()
     {
-      QVector<QString> otypes(7);
+      ContainerType otypes(7);
       otypes[0] = "Euler";
       otypes[1] = "Orientation Matrix";
       otypes[2] = "Quaternion";
@@ -210,9 +209,10 @@ class OrientationConverter
      * @brief GetComponentCounts
      * @return
      */
-    static QVector<int> GetComponentCounts()
+    template <typename ContainerType>
+    static ContainerType GetComponentCounts()
     {
-      QVector<int> counts(7);
+      ContainerType counts(7);
       counts[0] = 3; // Euler
       counts[1] = 9; // Orientation Matrix
       counts[2] = 4; // Quaternion
@@ -227,9 +227,9 @@ class OrientationConverter
      * @brief GetOrientationTypes
      * @return
      */
-    static QVector<OrientationRepresentation::Type> GetOrientationTypes()
+    static std::vector<OrientationRepresentation::Type> GetOrientationTypes()
     {
-      QVector<OrientationRepresentation::Type> ocTypes(7);
+      std::vector<OrientationRepresentation::Type> ocTypes(7);
       ocTypes[0] = OrientationRepresentation::Type::Euler;
       ocTypes[1] = OrientationRepresentation::Type::OrientationMatrix;
       ocTypes[2] = OrientationRepresentation::Type::Quaternion;
