@@ -33,16 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "FindFeatureNeighborCAxisMisalignments.h"
 
-#include <cmath>
 
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -51,15 +47,17 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/Core/Quaternion.hpp"
+#include "EbsdLib/Core/Orientation.hpp"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/Core/Quaternion.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 using QuatF = Quaternion<float>;
 
@@ -281,7 +279,7 @@ void FindFeatureNeighborCAxisMisalignments::execute()
       nname = neighborlist[i][j];
       phase2 = m_CrystalStructures[m_FeaturePhases[nname]];
       hexneighborlistsize = neighborlist[i].size();
-      if(phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High))
+      if(phase1 == phase2 && (phase1 == EbsdLib::CrystalStructure::Hexagonal_High))
       {
         QuatF q2(avgQuatsPtr->getTuplePointer(nname));
         OrientationTransformation::qu2om<QuatF, OrientF>(q2).toGMatrix(g2);

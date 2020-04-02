@@ -99,7 +99,6 @@ public:
    * @return Value of Loop
    */
   bool getLoop() const;
-
   Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
 
   /**
@@ -111,7 +110,6 @@ public:
    * @return Value of CoordinationNumber
    */
   int getCoordinationNumber() const;
-
   Q_PROPERTY(int CoordinationNumber READ getCoordinationNumber WRITE setCoordinationNumber)
 
   /**
@@ -123,7 +121,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -135,7 +132,6 @@ public:
    * @return Value of IgnoredDataArrayPaths
    */
   QVector<DataArrayPath> getIgnoredDataArrayPaths() const;
-
   Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
 
   /**

@@ -32,8 +32,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include <memory>
-
 #include "AlignSectionsMutualInformation.h"
 
 #include <fstream>
@@ -50,8 +48,9 @@
 #include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"

@@ -98,7 +98,6 @@ public:
    * @return Value of CellAttributeMatrixPath
    */
   DataArrayPath getCellAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
   /**
@@ -110,7 +109,6 @@ public:
    * @return Value of InputFile
    */
   QString getInputFile() const;
-
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**
@@ -122,7 +120,6 @@ public:
    * @return Value of NewZRes
    */
   float getNewZRes() const;
-
   Q_PROPERTY(float NewZRes READ getNewZRes WRITE setNewZRes)
 
   /**

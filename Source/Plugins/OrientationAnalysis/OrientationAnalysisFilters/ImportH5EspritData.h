@@ -34,7 +34,7 @@
 
 #include <memory>
 
-#include "EbsdLib/BrukerNano/EspritPhase.h"
+#include "EbsdLib/IO/BrukerNano/EspritPhase.h"
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
@@ -93,7 +93,6 @@ public:
    * @return Value of FileCacheData
    */
   Esprit_Private_Data getFileCacheData() const;
-
   Q_PROPERTY(Esprit_Private_Data FileCacheData READ getFileCacheData WRITE setFileCacheData)
 
   /**
@@ -105,7 +104,6 @@ public:
    * @return Value of CombineEulerAngles
    */
   bool getCombineEulerAngles() const;
-
   Q_PROPERTY(bool CombineEulerAngles READ getCombineEulerAngles WRITE setCombineEulerAngles)
 
   /**
@@ -117,7 +115,6 @@ public:
    * @return Value of DegreesToRadians
    */
   bool getDegreesToRadians() const;
-
   Q_PROPERTY(bool DegreesToRadians READ getDegreesToRadians WRITE setDegreesToRadians)
 
 
@@ -191,7 +188,7 @@ protected:
    * @brief readManfacturer
    * @return
    */
-  Ebsd::OEM readManufacturer() const override;
+  EbsdLib::OEM readManufacturer() const override;
 
   /**
    * @brief dataCheckEdax

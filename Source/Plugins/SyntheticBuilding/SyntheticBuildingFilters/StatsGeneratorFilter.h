@@ -107,7 +107,6 @@ public:
    * @return Value of StatsGeneratorDataContainerName
    */
   DataArrayPath getStatsGeneratorDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath StatsGeneratorDataContainerName READ getStatsGeneratorDataContainerName WRITE setStatsGeneratorDataContainerName)
 
   /**
@@ -119,7 +118,6 @@ public:
    * @return Value of CellEnsembleAttributeMatrixName
    */
   QString getCellEnsembleAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
   /**
@@ -131,7 +129,6 @@ public:
    * @return Value of StatsDataArrayName
    */
   QString getStatsDataArrayName() const;
-
   Q_PROPERTY(QString StatsDataArrayName READ getStatsDataArrayName WRITE setStatsDataArrayName)
 
   /**
@@ -143,7 +140,6 @@ public:
    * @return Value of CrystalStructuresArrayName
    */
   QString getCrystalStructuresArrayName() const;
-
   Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
 
   /**
@@ -155,7 +151,6 @@ public:
    * @return Value of PhaseTypesArrayName
    */
   QString getPhaseTypesArrayName() const;
-
   Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
 
   /**
@@ -167,7 +162,6 @@ public:
    * @return Value of PhaseNamesArrayName
    */
   QString getPhaseNamesArrayName() const;
-
   Q_PROPERTY(QString PhaseNamesArrayName READ getPhaseNamesArrayName WRITE setPhaseNamesArrayName)
 
   /**
@@ -179,7 +173,6 @@ public:
    * @return Value of StatsDataArray
    */
   StatsDataArray::Pointer getStatsDataArray() const;
-
   Q_PROPERTY(StatsDataArray::Pointer StatsDataArray READ getStatsDataArray WRITE setStatsDataArray)
 
   /**
@@ -191,7 +184,6 @@ public:
    * @return Value of CrystalStructures
    */
   UInt32ArrayType::Pointer getCrystalStructures() const;
-
   Q_PROPERTY(UInt32ArrayType::Pointer CrystalStructures READ getCrystalStructures WRITE setCrystalStructures)
 
   /**
@@ -203,7 +195,6 @@ public:
    * @return Value of PhaseTypes
    */
   UInt32ArrayType::Pointer getPhaseTypes() const;
-
   Q_PROPERTY(UInt32ArrayType::Pointer PhaseTypes READ getPhaseTypes WRITE setPhaseTypes)
 
   /**
@@ -215,7 +206,6 @@ public:
    * @return Value of PhaseNames
    */
   StringDataArray::Pointer getPhaseNames() const;
-
   Q_PROPERTY(StringDataArray::Pointer PhaseNames READ getPhaseNames WRITE setPhaseNames)
 
   /**
@@ -227,7 +217,6 @@ public:
    * @return Value of Path
    */
   DataArrayPath getPath() const;
-
   Q_PROPERTY(DataArrayPath Path READ getPath WRITE setPath)
 
   /**

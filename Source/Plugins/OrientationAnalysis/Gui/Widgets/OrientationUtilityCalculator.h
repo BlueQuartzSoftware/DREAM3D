@@ -37,7 +37,7 @@
 
 #include <QtWidgets/QWidget>
 
-#include "OrientationLib/Core/OrientationRepresentation.h"
+#include "EbsdLib/Core/OrientationRepresentation.h"
 
 class OrientationUtilityCalculator;
 

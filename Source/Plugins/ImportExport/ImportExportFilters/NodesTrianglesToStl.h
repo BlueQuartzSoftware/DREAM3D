@@ -108,7 +108,6 @@ public:
    * @return Value of NodesFile
    */
   QString getNodesFile() const;
-
   Q_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile)
 
   /**
@@ -120,7 +119,6 @@ public:
    * @return Value of TrianglesFile
    */
   QString getTrianglesFile() const;
-
   Q_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile)
 
   /**
@@ -132,7 +130,6 @@ public:
    * @return Value of OutputStlDirectory
    */
   QString getOutputStlDirectory() const;
-
   Q_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)
 
   /**
@@ -144,7 +141,6 @@ public:
    * @return Value of OutputStlPrefix
    */
   QString getOutputStlPrefix() const;
-
   Q_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix)
 
   /**

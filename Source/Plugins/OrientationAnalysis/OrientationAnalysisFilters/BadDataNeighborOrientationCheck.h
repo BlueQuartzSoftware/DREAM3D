@@ -107,7 +107,6 @@ public:
    * @return Value of MisorientationTolerance
    */
   float getMisorientationTolerance() const;
-
   Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
 
   /**
@@ -119,7 +118,6 @@ public:
    * @return Value of NumberOfNeighbors
    */
   int getNumberOfNeighbors() const;
-
   Q_PROPERTY(int NumberOfNeighbors READ getNumberOfNeighbors WRITE setNumberOfNeighbors)
 
   /**
@@ -131,7 +129,6 @@ public:
    * @return Value of GoodVoxelsArrayPath
    */
   DataArrayPath getGoodVoxelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
   /**
@@ -143,7 +140,6 @@ public:
    * @return Value of CellPhasesArrayPath
    */
   DataArrayPath getCellPhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
   /**
@@ -155,7 +151,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -167,7 +162,6 @@ public:
    * @return Value of QuatsArrayPath
    */
   DataArrayPath getQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
   /**

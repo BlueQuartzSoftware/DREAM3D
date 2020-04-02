@@ -56,11 +56,12 @@
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Math/MatrixMath.h"
 
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/Core/Quaternion.hpp"
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Core/Orientation.hpp"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/Core/Quaternion.hpp"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"

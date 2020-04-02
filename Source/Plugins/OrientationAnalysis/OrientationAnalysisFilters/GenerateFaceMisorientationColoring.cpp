@@ -32,21 +32,11 @@
  *    United States Prime Contract Navy N00173-07-C-2068
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#include <memory>
-
 #include "GenerateFaceMisorientationColoring.h"
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/blocked_range.h>
-#include <tbb/parallel_for.h>
-#include <tbb/partitioner.h>
-#endif
 
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -54,20 +44,26 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
-#include "OrientationLib/LaueOps/CubicLowOps.h"
-#include "OrientationLib/LaueOps/CubicOps.h"
-#include "OrientationLib/LaueOps/HexagonalOps.h"
-#include "OrientationLib/LaueOps/LaueOps.h"
-#include "OrientationLib/LaueOps/MonoclinicOps.h"
-#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
-#include "OrientationLib/LaueOps/TetragonalOps.h"
-#include "OrientationLib/LaueOps/TrigonalOps.h"
-
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/LaueOps/CubicLowOps.h"
+#include "EbsdLib/LaueOps/CubicOps.h"
+#include "EbsdLib/LaueOps/HexagonalOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/MonoclinicOps.h"
+#include "EbsdLib/LaueOps/OrthoRhombicOps.h"
+#include "EbsdLib/LaueOps/TetragonalOps.h"
+#include "EbsdLib/LaueOps/TrigonalOps.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
+
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
+#include <tbb/partitioner.h>
+#endif
 
 using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
 using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
@@ -125,7 +121,7 @@ public:
       }
       if(phase1 > 0 && phase1 == phase2)
       {
-        if((m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Hexagonal_High) || (m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Cubic_High))
+        if((m_CrystalStructures[phase1] == EbsdLib::CrystalStructure::Hexagonal_High) || (m_CrystalStructures[phase1] == EbsdLib::CrystalStructure::Cubic_High))
         {
           float* quatPtr = m_Quats + feature1 * 4;
           QuatType q1(quatPtr[0], quatPtr[1], quatPtr[2], quatPtr[3]);

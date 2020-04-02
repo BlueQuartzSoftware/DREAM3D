@@ -37,14 +37,15 @@
 
 #include <QtCore/QString>
 
-#include "EbsdLib/TSL/AngPhase.h"
+#include "EbsdLib/IO/TSL/AngPhase.h"
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/SIMPLArray.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/FilterParameters/MontageFileListInfo.h"
 
 #include "OrientationAnalysis/FilterParameters/EbsdMontageImportFilterParameter.h"
-
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
 /**
@@ -139,7 +140,6 @@ public:
    * @return Value of CellEnsembleAttributeMatrixName
    */
   QString getCellEnsembleAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
   /**
@@ -151,7 +151,6 @@ public:
    * @return Value of CellAttributeMatrixName
    */
   QString getCellAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
   /**

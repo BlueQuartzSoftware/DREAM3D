@@ -35,7 +35,6 @@
 
 #include "FindMisorientations.h"
 
-#include <memory>
 #include <cmath>
 
 #include <QtCore/QTextStream>
@@ -48,9 +47,10 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-#include "OrientationLib/Core/Quaternion.hpp"
+#include "EbsdLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Core/Quaternion.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"

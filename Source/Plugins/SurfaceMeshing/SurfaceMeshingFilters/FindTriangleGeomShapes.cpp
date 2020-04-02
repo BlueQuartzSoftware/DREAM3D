@@ -53,8 +53,8 @@
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/Core/Orientation.hpp"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"

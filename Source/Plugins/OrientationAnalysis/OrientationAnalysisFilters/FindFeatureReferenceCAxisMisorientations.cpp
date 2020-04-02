@@ -33,14 +33,11 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "FindFeatureReferenceCAxisMisorientations.h"
 
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
@@ -50,10 +47,12 @@
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
 
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/Core/Quaternion.hpp"
+#include "EbsdLib/Core/Orientation.hpp"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/Core/Quaternion.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"

@@ -46,8 +46,8 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
 
-#include "EbsdLib/HKL/CtfReader.h"
-#include "EbsdLib/TSL/AngReader.h"
+#include "EbsdLib/IO/HKL/CtfReader.h"
+#include "EbsdLib/IO/TSL/AngReader.h"
 
 #include "OrientationAnalysis/FilterParameters/ConvertHexGridToSquareGridFilterParameter.h"
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
@@ -214,30 +214,30 @@ QString ConvertHexGridToSquareGrid::modifyAngHeaderLine(QString& buf)
     line = buf;
     return line;
   }
-  if(buf.contains(Ebsd::Ang::HexGrid))
+  if(buf.contains(EbsdLib::Ang::HexGrid))
   {
-    line = buf.replace(Ebsd::Ang::HexGrid, Ebsd::Ang::SquareGrid);
+    line = buf.replace(EbsdLib::Ang::HexGrid, EbsdLib::Ang::SquareGrid);
     // line = "# " + word + ": SqrGrid";
   }
-  else if(buf.contains(Ebsd::Ang::XStep))
+  else if(buf.contains(EbsdLib::Ang::XStep))
   {
-    line = "# " + Ebsd::Ang::XStep + ": " + QString::number((double)m_XResolution);
+    line = "# " + EbsdLib::Ang::XStep + ": " + QString::number((double)m_XResolution);
   }
-  else if(buf.contains(Ebsd::Ang::YStep))
+  else if(buf.contains(EbsdLib::Ang::YStep))
   {
-    line = "# " + Ebsd::Ang::YStep + ": " + QString::number((double)m_YResolution);
+    line = "# " + EbsdLib::Ang::YStep + ": " + QString::number((double)m_YResolution);
   }
-  else if(buf.contains(Ebsd::Ang::NColsOdd))
+  else if(buf.contains(EbsdLib::Ang::NColsOdd))
   {
-    line = "# " + Ebsd::Ang::NColsOdd + ": " + QString::number(m_NumCols);
+    line = "# " + EbsdLib::Ang::NColsOdd + ": " + QString::number(m_NumCols);
   }
-  else if(buf.contains(Ebsd::Ang::NColsEven))
+  else if(buf.contains(EbsdLib::Ang::NColsEven))
   {
-    line = "# " + Ebsd::Ang::NColsEven + ": " + QString::number(m_NumCols);
+    line = "# " + EbsdLib::Ang::NColsEven + ": " + QString::number(m_NumCols);
   }
-  else if(buf.contains(Ebsd::Ang::NRows))
+  else if(buf.contains(EbsdLib::Ang::NRows))
   {
-    line = "# " + Ebsd::Ang::NRows + ": " + QString::number(m_NumRows);
+    line = "# " + EbsdLib::Ang::NRows + ": " + QString::number(m_NumRows);
   }
   else
   {
@@ -316,7 +316,7 @@ void ConvertHexGridToSquareGrid::execute()
     QString ext = fi.suffix();
     QString base = fi.baseName();
     QDir path(getOutputPath());
-    if(ext.compare(Ebsd::Ang::FileExt) == 0)
+    if(ext.compare(EbsdLib::Ang::FileExt) == 0)
     {
       AngReader reader;
       reader.setFileName(ebsdFName);
@@ -327,7 +327,7 @@ void ConvertHexGridToSquareGrid::execute()
         setErrorCondition(reader.getErrorCode(), reader.getErrorMessage());
         return;
       }
-      if(reader.getGrid().startsWith(Ebsd::Ang::SquareGrid))
+      if(reader.getGrid().startsWith(EbsdLib::Ang::SquareGrid))
       {
         QString ss = QObject::tr("Ang file is already a square grid: %1").arg(ebsdFName);
         setErrorCondition(-55000, ss);
@@ -449,7 +449,7 @@ void ConvertHexGridToSquareGrid::execute()
           }
         }
     }
-    else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
+    else if(ext.compare(EbsdLib::Ctf::FileExt) == 0)
     {
       QString ss = QObject::tr("Ctf files are not on a hexagonal grid and do not need to be converted");
       setErrorCondition(-1, ss);

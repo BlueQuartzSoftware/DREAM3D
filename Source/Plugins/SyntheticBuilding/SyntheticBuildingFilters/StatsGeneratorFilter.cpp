@@ -65,7 +65,7 @@
 #include "SyntheticBuilding/SyntheticBuildingFilters/StatsGeneratorUtilities.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 enum createdPathID : RenameDataPath::DataID_t
 {
@@ -218,7 +218,7 @@ void StatsGeneratorFilter::readArray(const QJsonObject& jsonRoot, size_t numTupl
   int phaseCount = statsObject["Phase Count"].toInt();
 
   m_CrystalStructures = UInt32ArrayType::CreateArray(numTuples, SIMPL::EnsembleData::CrystalStructures, true);
-  m_CrystalStructures->initializeWithValue(Ebsd::CrystalStructure::UnknownCrystalStructure);
+  m_CrystalStructures->initializeWithValue(EbsdLib::CrystalStructure::UnknownCrystalStructure);
 
   m_PhaseTypes = UInt32ArrayType::CreateArray(numTuples, SIMPL::EnsembleData::PhaseTypes, true);
   m_PhaseTypes->initializeWithValue(static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown));

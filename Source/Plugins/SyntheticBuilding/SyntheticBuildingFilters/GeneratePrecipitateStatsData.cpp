@@ -2,8 +2,6 @@
  * Your License or Copyright can go here
  */
 
-#include <memory>
-
 #include "GeneratePrecipitateStatsData.h"
 
 #include <QtCore/QTextStream>
@@ -31,10 +29,10 @@
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
-#include "EbsdLib/EbsdConstants.h"
-
-#include "OrientationLib/Texture/StatsGen.hpp"
+#include "EbsdLib/Core/EbsdLibConstants.h"
+#include "EbsdLib/Texture/StatsGen.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
@@ -280,7 +278,7 @@ void GeneratePrecipitateStatsData::dataCheck()
 
     std::vector<size_t> cDims(1, 1);
     UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures, true);
-    crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
+    crystalStructures->setValue(0, EbsdLib::CrystalStructure::UnknownCrystalStructure);
     cellEnsembleAttrMat->insertOrAssign(crystalStructures);
     m_CrystalStructures = crystalStructures.get();
 
@@ -331,7 +329,7 @@ void GeneratePrecipitateStatsData::dataCheck()
     if(nullptr == crystalStructures.get())
     {
       crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures, true);
-      crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
+      crystalStructures->setValue(0, EbsdLib::CrystalStructure::UnknownCrystalStructure);
       cellEnsembleAttrMat->insertOrAssign(crystalStructures);
     }
     m_CrystalStructures = crystalStructures.get();

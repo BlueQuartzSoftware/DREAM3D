@@ -102,7 +102,6 @@ public:
    * @return Value of OutputStlDirectory
    */
   QString getOutputStlDirectory() const;
-
   Q_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)
 
   /**
@@ -114,7 +113,6 @@ public:
    * @return Value of OutputStlPrefix
    */
   QString getOutputStlPrefix() const;
-
   Q_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix)
 
   /**
@@ -126,7 +124,6 @@ public:
    * @return Value of GroupByPhase
    */
   bool getGroupByPhase() const;
-
   Q_PROPERTY(bool GroupByPhase READ getGroupByPhase WRITE setGroupByPhase)
 
   /**
@@ -138,7 +135,6 @@ public:
    * @return Value of SurfaceMeshFaceLabelsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
   /**
@@ -150,7 +146,6 @@ public:
    * @return Value of SurfaceMeshFacePhasesArrayPath
    */
   DataArrayPath getSurfaceMeshFacePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFacePhasesArrayPath READ getSurfaceMeshFacePhasesArrayPath WRITE setSurfaceMeshFacePhasesArrayPath)
 
   /**

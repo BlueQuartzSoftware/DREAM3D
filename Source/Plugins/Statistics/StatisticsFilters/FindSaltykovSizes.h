@@ -106,7 +106,6 @@ public:
    * @return Value of EquivalentDiametersArrayPath
    */
   DataArrayPath getEquivalentDiametersArrayPath() const;
-
   Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
 
   /**
@@ -118,7 +117,6 @@ public:
    * @return Value of SaltykovEquivalentDiametersArrayPath
    */
   DataArrayPath getSaltykovEquivalentDiametersArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SaltykovEquivalentDiametersArrayPath READ getSaltykovEquivalentDiametersArrayPath WRITE setSaltykovEquivalentDiametersArrayPath)
 
   /**

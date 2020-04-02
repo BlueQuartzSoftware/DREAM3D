@@ -49,7 +49,7 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"

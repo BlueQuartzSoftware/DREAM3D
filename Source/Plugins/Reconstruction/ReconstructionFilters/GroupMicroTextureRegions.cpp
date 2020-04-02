@@ -56,11 +56,11 @@
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/Core/Quaternion.hpp"
+#include "EbsdLib/Core/Orientation.hpp"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/Core/Quaternion.hpp"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -444,7 +444,7 @@ bool GroupMicroTextureRegions::determineGrouping(int32_t referenceFeature, int32
       MatrixMath::Normalize3x1(c1);
     }
     phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
-    if(phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High))
+    if(phase1 == phase2 && (phase1 == EbsdLib::CrystalStructure::Hexagonal_High))
     {
       QuatF q2(m_AvgQuats + neighborFeature * 4);
       OrientationTransformation::qu2om<QuatF, Orientation<float>>(q2).toGMatrix(g2);

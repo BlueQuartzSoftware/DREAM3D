@@ -110,7 +110,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -122,7 +121,6 @@ public:
    * @return Value of CellPhasesArrayPath
    */
   DataArrayPath getCellPhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
   /**
@@ -134,7 +132,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -146,7 +143,6 @@ public:
    * @return Value of QuatsArrayPath
    */
   DataArrayPath getQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
   /**
@@ -158,7 +154,6 @@ public:
    * @return Value of AvgQuatsArrayPath
    */
   DataArrayPath getAvgQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
   /**
@@ -170,7 +165,6 @@ public:
    * @return Value of GBEuclideanDistancesArrayPath
    */
   DataArrayPath getGBEuclideanDistancesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath GBEuclideanDistancesArrayPath READ getGBEuclideanDistancesArrayPath WRITE setGBEuclideanDistancesArrayPath)
 
   /**
@@ -182,7 +176,6 @@ public:
    * @return Value of FeatureAvgMisorientationsArrayName
    */
   QString getFeatureAvgMisorientationsArrayName() const;
-
   Q_PROPERTY(QString FeatureAvgMisorientationsArrayName READ getFeatureAvgMisorientationsArrayName WRITE setFeatureAvgMisorientationsArrayName)
 
   /**
@@ -194,7 +187,6 @@ public:
    * @return Value of FeatureReferenceMisorientationsArrayName
    */
   QString getFeatureReferenceMisorientationsArrayName() const;
-
   Q_PROPERTY(QString FeatureReferenceMisorientationsArrayName READ getFeatureReferenceMisorientationsArrayName WRITE setFeatureReferenceMisorientationsArrayName)
 
   /**
@@ -206,7 +198,6 @@ public:
    * @return Value of ReferenceOrientation
    */
   int getReferenceOrientation() const;
-
   Q_PROPERTY(int ReferenceOrientation READ getReferenceOrientation WRITE setReferenceOrientation)
 
   /**

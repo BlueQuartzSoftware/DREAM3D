@@ -98,7 +98,6 @@ public:
    * @return Value of Magnitude
    */
   float getMagnitude() const;
-
   Q_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude)
 
   /**
@@ -110,7 +109,6 @@ public:
    * @return Value of CellEulerAnglesArrayPath
    */
   DataArrayPath getCellEulerAnglesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
   /**

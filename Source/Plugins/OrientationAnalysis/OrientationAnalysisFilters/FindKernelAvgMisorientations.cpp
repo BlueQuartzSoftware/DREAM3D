@@ -33,14 +33,11 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "FindKernelAvgMisorientations.h"
 
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
@@ -50,15 +47,16 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/Core/Quaternion.hpp"
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Core/Orientation.hpp"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/Core/Quaternion.hpp"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -225,8 +223,8 @@ void FindKernelAvgMisorientations::execute()
 
   float totalmisorientation = 0.0f;
 
-  uint32_t phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  uint32_t phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
+  uint32_t phase1 = EbsdLib::CrystalStructure::UnknownCrystalStructure;
+  uint32_t phase2 = EbsdLib::CrystalStructure::UnknownCrystalStructure;
   SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t xPoints = static_cast<int64_t>(udims[0]);

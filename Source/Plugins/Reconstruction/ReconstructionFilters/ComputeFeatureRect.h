@@ -67,7 +67,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -79,7 +78,6 @@ public:
    * @return Value of FeatureRectArrayPath
    */
   DataArrayPath getFeatureRectArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureRectArrayPath READ getFeatureRectArrayPath WRITE setFeatureRectArrayPath)
 
   /**

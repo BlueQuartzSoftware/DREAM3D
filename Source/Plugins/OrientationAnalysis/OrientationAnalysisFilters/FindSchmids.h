@@ -111,7 +111,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -123,7 +122,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -135,7 +133,6 @@ public:
    * @return Value of AvgQuatsArrayPath
    */
   DataArrayPath getAvgQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
   /**
@@ -147,7 +144,6 @@ public:
    * @return Value of SchmidsArrayName
    */
   QString getSchmidsArrayName() const;
-
   Q_PROPERTY(QString SchmidsArrayName READ getSchmidsArrayName WRITE setSchmidsArrayName)
 
   /**
@@ -159,7 +155,6 @@ public:
    * @return Value of SlipSystemsArrayName
    */
   QString getSlipSystemsArrayName() const;
-
   Q_PROPERTY(QString SlipSystemsArrayName READ getSlipSystemsArrayName WRITE setSlipSystemsArrayName)
 
   /**
@@ -171,7 +166,6 @@ public:
    * @return Value of PolesArrayName
    */
   QString getPolesArrayName() const;
-
   Q_PROPERTY(QString PolesArrayName READ getPolesArrayName WRITE setPolesArrayName)
 
   /**
@@ -183,7 +177,6 @@ public:
    * @return Value of PhisArrayName
    */
   QString getPhisArrayName() const;
-
   Q_PROPERTY(QString PhisArrayName READ getPhisArrayName WRITE setPhisArrayName)
 
   /**
@@ -195,7 +188,6 @@ public:
    * @return Value of LambdasArrayName
    */
   QString getLambdasArrayName() const;
-
   Q_PROPERTY(QString LambdasArrayName READ getLambdasArrayName WRITE setLambdasArrayName)
 
   /**
@@ -207,7 +199,6 @@ public:
    * @return Value of LoadingDirection
    */
   FloatVec3Type getLoadingDirection() const;
-
   Q_PROPERTY(FloatVec3Type LoadingDirection READ getLoadingDirection WRITE setLoadingDirection)
 
   /**
@@ -219,7 +210,6 @@ public:
    * @return Value of StoreAngleComponents
    */
   bool getStoreAngleComponents() const;
-
   Q_PROPERTY(bool StoreAngleComponents READ getStoreAngleComponents WRITE setStoreAngleComponents)
 
   /**
@@ -231,7 +221,6 @@ public:
    * @return Value of OverrideSystem
    */
   bool getOverrideSystem() const;
-
   Q_PROPERTY(bool OverrideSystem READ getOverrideSystem WRITE setOverrideSystem)
 
   /**
@@ -243,7 +232,6 @@ public:
    * @return Value of SlipPlane
    */
   FloatVec3Type getSlipPlane() const;
-
   Q_PROPERTY(FloatVec3Type SlipPlane READ getSlipPlane WRITE setSlipPlane)
 
   /**
@@ -255,7 +243,6 @@ public:
    * @return Value of SlipDirection
    */
   FloatVec3Type getSlipDirection() const;
-
   Q_PROPERTY(FloatVec3Type SlipDirection READ getSlipDirection WRITE setSlipDirection)
 
   /**

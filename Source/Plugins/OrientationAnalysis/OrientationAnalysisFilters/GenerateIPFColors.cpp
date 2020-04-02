@@ -33,14 +33,11 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "GenerateIPFColors.h"
 
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/Common/SIMPLRange.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -52,13 +49,14 @@
 #include "SIMPLib/Utilities/ColorTable.h"
 #include "SIMPLib/Utilities/ParallelDataAlgorithm.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/Math/MatrixMath.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 enum createdPathID : RenameDataPath::DataID_t
 {
@@ -118,7 +116,7 @@ public:
         m_Filter->incrementPhaseWarningCount();
       }
 
-      if(phase < m_NumPhases && calcIPF && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd)
+      if(phase < m_NumPhases && calcIPF && m_CrystalStructures[phase] < EbsdLib::CrystalStructure::LaueGroupEnd)
       {
         argb = ops[m_CrystalStructures[phase]]->generateIPFColor(dEuler, refDir, false);
         m_CellIPFColors[index] = static_cast<uint8_t>(RgbColor::dRed(argb));

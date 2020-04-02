@@ -82,7 +82,7 @@
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/AbstractMicrostructurePreset.h"
 
-#include "OrientationLib/Texture/StatsGen.hpp"
+#include "EbsdLib/Texture/StatsGen.hpp"
 
 #define SG_ERROR_CHECK(name)                                                                                                                                                                           \
   qDebug() << "Error writing HDF5 data to " << name << "\n";                                                                                                                                           \

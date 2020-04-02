@@ -97,7 +97,6 @@ public:
    * @return Value of ReferenceCellAttributeMatrixPath
    */
   DataArrayPath getReferenceCellAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath ReferenceCellAttributeMatrixPath READ getReferenceCellAttributeMatrixPath WRITE setReferenceCellAttributeMatrixPath)
 
   /**
@@ -109,7 +108,6 @@ public:
    * @return Value of SamplingCellAttributeMatrixPath
    */
   DataArrayPath getSamplingCellAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath SamplingCellAttributeMatrixPath READ getSamplingCellAttributeMatrixPath WRITE setSamplingCellAttributeMatrixPath)
 
   /**

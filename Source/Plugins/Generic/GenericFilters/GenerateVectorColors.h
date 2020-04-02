@@ -100,7 +100,6 @@ public:
    * @return Value of VectorsArrayPath
    */
   DataArrayPath getVectorsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath VectorsArrayPath READ getVectorsArrayPath WRITE setVectorsArrayPath)
 
   /**
@@ -112,7 +111,6 @@ public:
    * @return Value of GoodVoxelsArrayPath
    */
   DataArrayPath getGoodVoxelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
   /**
@@ -124,7 +122,6 @@ public:
    * @return Value of CellVectorColorsArrayName
    */
   QString getCellVectorColorsArrayName() const;
-
   Q_PROPERTY(QString CellVectorColorsArrayName READ getCellVectorColorsArrayName WRITE setCellVectorColorsArrayName)
 
   /**
@@ -136,7 +133,6 @@ public:
    * @return Value of UseGoodVoxels
    */
   bool getUseGoodVoxels() const;
-
   Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
   /**

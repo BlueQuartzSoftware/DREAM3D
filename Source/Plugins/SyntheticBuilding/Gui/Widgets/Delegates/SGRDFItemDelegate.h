@@ -43,7 +43,7 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QStyledItemDelegate>
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "SyntheticBuilding/Gui/Widgets/TableModels/SGRDFTableModel.h"
 

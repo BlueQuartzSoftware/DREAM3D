@@ -100,7 +100,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -112,7 +111,6 @@ public:
    * @return Value of GoodVoxelsArrayPath
    */
   DataArrayPath getGoodVoxelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
   /**
@@ -124,7 +122,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -136,7 +133,6 @@ public:
    * @return Value of CellEnsembleAttributeMatrixName
    */
   QString getCellEnsembleAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
   /**

@@ -44,7 +44,7 @@
 
 #include "SVWidgetsLib/Widgets/SVControlWidgets.h"
 
-#include "OrientationLib/Texture/TexturePreset.h"
+#include "EbsdLib/Texture/TexturePreset.h"
 
 /**
  * @class TextureDialog TextureDialog.h StatsGenerator/TextureDialog.h

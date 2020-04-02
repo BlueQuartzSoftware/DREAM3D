@@ -53,7 +53,7 @@
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/Utilities/LambertUtilities.h"
+#include "EbsdLib/Utilities/LambertUtilities.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"

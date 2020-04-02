@@ -33,8 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "PackPrimaryPhases.h"
 
 #include <fstream>
@@ -42,13 +40,10 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-
 #include <QtCore/QTextStream>
-
 #include <QtCore/QDebug>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -65,6 +60,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/Utilities/TimeUtilities.h"
@@ -75,10 +72,10 @@
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/Core/Quaternion.hpp"
-#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
+#include "EbsdLib/Core/Orientation.hpp"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/Core/Quaternion.hpp"
+#include "EbsdLib/LaueOps/OrthoRhombicOps.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range3d.h>

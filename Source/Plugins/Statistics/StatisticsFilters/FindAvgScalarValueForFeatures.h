@@ -102,7 +102,6 @@ public:
    * @return Value of SelectedCellArrayPath
    */
   DataArrayPath getSelectedCellArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
   /**
@@ -119,7 +118,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -131,7 +129,6 @@ public:
    * @return Value of NewFeatureArrayArrayPath
    */
   DataArrayPath getNewFeatureArrayArrayPath() const;
-
   Q_PROPERTY(DataArrayPath NewFeatureArrayArrayPath READ getNewFeatureArrayArrayPath WRITE setNewFeatureArrayArrayPath)
 
   /**

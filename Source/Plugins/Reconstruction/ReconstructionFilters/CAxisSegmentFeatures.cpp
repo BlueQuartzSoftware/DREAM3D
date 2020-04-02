@@ -58,8 +58,8 @@
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"

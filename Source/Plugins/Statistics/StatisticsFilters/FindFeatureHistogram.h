@@ -116,7 +116,6 @@ public:
    * @return Value of SelectedFeatureArrayPath
    */
   DataArrayPath getSelectedFeatureArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
 
   /**
@@ -128,7 +127,6 @@ public:
    * @return Value of NumberOfBins
    */
   int getNumberOfBins() const;
-
   Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
 
   /**
@@ -140,7 +138,6 @@ public:
    * @return Value of RemoveBiasedFeatures
    */
   bool getRemoveBiasedFeatures() const;
-
   Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
 
   /**
@@ -157,7 +154,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -169,7 +165,6 @@ public:
    * @return Value of BiasedFeaturesArrayPath
    */
   DataArrayPath getBiasedFeaturesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
 
   /**
@@ -181,7 +176,6 @@ public:
    * @return Value of NewEnsembleArrayArrayPath
    */
   DataArrayPath getNewEnsembleArrayArrayPath() const;
-
   Q_PROPERTY(DataArrayPath NewEnsembleArrayArrayPath READ getNewEnsembleArrayArrayPath WRITE setNewEnsembleArrayArrayPath)
 
   /**

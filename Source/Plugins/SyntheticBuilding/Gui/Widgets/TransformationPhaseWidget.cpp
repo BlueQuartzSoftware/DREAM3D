@@ -43,7 +43,7 @@
 #include <QtWidgets/QProgressDialog>
 
 // Needed for AxisAngle_t and Crystal Symmetry constants
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include <QtCore/QDebug>
 
@@ -55,7 +55,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/StatsData.h"
 
-#include "OrientationLib/Texture/StatsGen.hpp"
+#include "EbsdLib/Texture/StatsGen.hpp"
 
 #include "SyntheticBuilding/Gui/Widgets/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.h"
 #include "SyntheticBuilding/Gui/Widgets/Presets/Dialogs/RolledPresetDialog.h"
@@ -83,7 +83,7 @@ TransformationPhaseWidget::TransformationPhaseWidget(QWidget* parent)
 {
   setTabTitle("Transformation");
   setPhaseType(PhaseType::Type::Primary);
-  setCrystalStructure(Ebsd::CrystalStructure::Cubic_High);
+  setCrystalStructure(EbsdLib::CrystalStructure::Cubic_High);
   setupUi(this);
   setupGui();
 }

@@ -55,7 +55,7 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -164,8 +164,7 @@ void CreateEnsembleInfo::dataCheck()
   std::vector<size_t> cDims(1, 1);
   DataArrayPath tempPath;
   tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName());
-  m_CrystalStructuresPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims, "", DataArrayID31);
+  m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>>(this, tempPath, EbsdLib::CrystalStructure::UnknownCrystalStructure, cDims, "", DataArrayID31);
   if(nullptr != m_CrystalStructuresPtr.lock())                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
@@ -217,7 +216,7 @@ void CreateEnsembleInfo::execute()
   {
     // Crystal Structure
     uint32_t crystalStructure = static_cast<uint32_t>(crystalStructures[i]);
-    if(crystalStructure == Ebsd::CrystalStructure::UnknownCrystalStructure)
+    if(crystalStructure == EbsdLib::CrystalStructure::UnknownCrystalStructure)
     {
       QString ss = QObject::tr("Incorrect crystal structure name '%1'").arg(crystalStructure);
       setErrorCondition(-10006, ss);

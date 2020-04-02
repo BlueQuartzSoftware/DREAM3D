@@ -40,7 +40,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QFileInfo>
 
-#include "EbsdLib/HKL/CtfFields.h"
+#include "EbsdLib/IO/HKL/CtfFields.h"
 
 #include <QtCore/QTextStream>
 
@@ -110,7 +110,7 @@ ReadCtfData::ReadCtfData()
 , m_MaterialNameArrayName(SIMPL::EnsembleData::MaterialName)
 , m_InputFile("")
 , m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
-, m_Manufacturer(Ebsd::OEM::Unknown)
+, m_Manufacturer(EbsdLib::OEM::Unknown)
 , d_ptr(new ReadCtfDataPrivate(this))
 {
 }
@@ -246,7 +246,7 @@ void ReadCtfData::dataCheck()
     setErrorCondition(-388, ss);
   }
 
-  if(m_InputFile.isEmpty() && m_Manufacturer == Ebsd::OEM::Unknown)
+  if(m_InputFile.isEmpty() && m_Manufacturer == EbsdLib::OEM::Unknown)
   {
     QString ss = QObject::tr("The input file must be set");
     setErrorCondition(-1, ss);
@@ -258,7 +258,7 @@ void ReadCtfData::dataCheck()
 
     QString ext = fi.suffix().toLower();
     QVector<QString> names;
-    if(ext == Ebsd::Ctf::FileExt)
+    if(ext == EbsdLib::Ctf::FileExt)
     {
       std::shared_ptr<CtfReader> reader(new CtfReader());
       readDataFile(reader.get(), m.get(), tDims, CTF_HEADER_ONLY);
@@ -270,11 +270,11 @@ void ReadCtfData::dataCheck()
       std::vector<size_t> cDims(1, 1);
       for(const auto& name : names)
       {
-        if(reader->getPointerType(name) == Ebsd::Int32)
+        if(reader->getPointerType(name) == EbsdLib::NumericTypes::Type::Int32)
         {
           cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>>(this, name, 0, cDims);
         }
-        else if(reader->getPointerType(name) == Ebsd::Float)
+        else if(reader->getPointerType(name) == EbsdLib::NumericTypes::Type::Float)
         {
           cellAttrMat->createAndAddAttributeArray<DataArray<float>>(this, name, 0, cDims);
         }
@@ -288,7 +288,7 @@ void ReadCtfData::dataCheck()
     }
 
     std::vector<size_t> cDims(1, 3);
-    tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::CtfFile::EulerAngles);
+    tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), EbsdLib::CtfFile::EulerAngles);
     m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(
         this, tempPath, 0, cDims);             /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_CellEulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -297,7 +297,7 @@ void ReadCtfData::dataCheck()
     } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     cDims[0] = 1;
-    tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::CtfFile::Phases);
+    tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), EbsdLib::CtfFile::Phases);
     m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>>(
         this, tempPath, 0, cDims);        /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_CellPhasesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -305,16 +305,15 @@ void ReadCtfData::dataCheck()
       m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-    tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::CtfFile::CrystalStructures);
-    m_CrystalStructuresPtr =
-        getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims);
+    tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), EbsdLib::CtfFile::CrystalStructures);
+    m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>>(this, tempPath, EbsdLib::CrystalStructure::UnknownCrystalStructure, cDims);
     if(nullptr != m_CrystalStructuresPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     cDims[0] = 6;
-    tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::CtfFile::LatticeConstants);
+    tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), EbsdLib::CtfFile::LatticeConstants);
     m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(
         this, tempPath, 0.0, cDims);            /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_LatticeConstantsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -322,7 +321,7 @@ void ReadCtfData::dataCheck()
       m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-    StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), Ebsd::CtfFile::MaterialName, true);
+    StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), EbsdLib::CtfFile::MaterialName, true);
     cellEnsembleAttrMat->insertOrAssign(materialNames);
   }
 }
@@ -444,14 +443,14 @@ int32_t ReadCtfData::loadMaterialInfo(CtfReader* reader)
     return getErrorCode();
   }
 
-  DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, Ebsd::CtfFile::CrystalStructures, true);
+  DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, EbsdLib::CtfFile::CrystalStructures, true);
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, getMaterialNameArrayName());
   std::vector<size_t> cDims(1, 6);
-  FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, Ebsd::CtfFile::LatticeConstants, true);
+  FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, EbsdLib::CtfFile::LatticeConstants, true);
 
   // Initialize the zero'th element to unknowns. The other elements will
   // be filled in based on values from the data file
-  crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
+  crystalStructures->setValue(0, EbsdLib::CrystalStructure::UnknownCrystalStructure);
   materialNames->setValue(0, "Invalid Phase");
   latticeConstants->setComponent(0, 0, 0.0f);
   latticeConstants->setComponent(0, 1, 0.0f);
@@ -544,7 +543,7 @@ void ReadCtfData::copyRawEbsdData(CtfReader* reader, std::vector<size_t>& tDims,
      * even if there is only a single phase. The next if statement converts all zeros to ones
      * if there is a single phase in the OIM data.
      */
-    phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(Ebsd::Ctf::Phase));
+    phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(EbsdLib::Ctf::Phase));
     for(size_t i = 0; i < totalPoints; i++)
     {
       if(phasePtr[i] < 1)
@@ -558,9 +557,9 @@ void ReadCtfData::copyRawEbsdData(CtfReader* reader, std::vector<size_t>& tDims,
   }
   {
     //  radianconversion = M_PI / 180.0;
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ctf::Euler1));
-    f2 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ctf::Euler2));
-    f3 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ctf::Euler3));
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ctf::Euler1));
+    f2 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ctf::Euler2));
+    f3 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ctf::Euler3));
     std::vector<size_t> dims(1, 3);
     fArray = FloatArrayType::CreateArray(totalPoints, dims, SIMPL::CellData::EulerAngles, true);
     float* cellEulerAngles = fArray->getPointer(0);
@@ -571,7 +570,7 @@ void ReadCtfData::copyRawEbsdData(CtfReader* reader, std::vector<size_t>& tDims,
       cellEulerAngles[3 * i] = f1[i];
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
-      if(m_CrystalStructures[cellPhases[i]] == Ebsd::CrystalStructure::Hexagonal_High && m_EdaxHexagonalAlignment)
+      if(m_CrystalStructures[cellPhases[i]] == EbsdLib::CrystalStructure::Hexagonal_High && m_EdaxHexagonalAlignment)
       {
         cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] + (30.0); // See the documentation for this correction factor
       }
@@ -587,50 +586,50 @@ void ReadCtfData::copyRawEbsdData(CtfReader* reader, std::vector<size_t>& tDims,
   }
 
   {
-    phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(Ebsd::Ctf::Bands));
-    iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::Bands, true);
+    phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(EbsdLib::Ctf::Bands));
+    iArray = Int32ArrayType::CreateArray(totalPoints, EbsdLib::Ctf::Bands, true);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     ebsdAttrMat->insertOrAssign(iArray);
   }
 
   {
-    phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(Ebsd::Ctf::Error));
-    iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::Error, true);
+    phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(EbsdLib::Ctf::Error));
+    iArray = Int32ArrayType::CreateArray(totalPoints, EbsdLib::Ctf::Error, true);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     ebsdAttrMat->insertOrAssign(iArray);
   }
 
   {
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ctf::MAD));
-    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ctf::MAD, true);
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ctf::MAD));
+    fArray = FloatArrayType::CreateArray(totalPoints, EbsdLib::Ctf::MAD, true);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
-    phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(Ebsd::Ctf::BC));
-    iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::BC, true);
+    phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(EbsdLib::Ctf::BC));
+    iArray = Int32ArrayType::CreateArray(totalPoints, EbsdLib::Ctf::BC, true);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     ebsdAttrMat->insertOrAssign(iArray);
   }
 
   {
-    phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(Ebsd::Ctf::BS));
-    iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::BS, true);
+    phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(EbsdLib::Ctf::BS));
+    iArray = Int32ArrayType::CreateArray(totalPoints, EbsdLib::Ctf::BS, true);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     ebsdAttrMat->insertOrAssign(iArray);
   }
 
   {
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ctf::X));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::X, true);
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ctf::X));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, EbsdLib::Ctf::X, true);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ctf::Y));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::Y, true);
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ctf::Y));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, EbsdLib::Ctf::Y, true);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
@@ -899,13 +898,13 @@ uint32_t ReadCtfData::getRefFrameZDir() const
 }
 
 // -----------------------------------------------------------------------------
-void ReadCtfData::setManufacturer(const Ebsd::OEM& value)
+void ReadCtfData::setManufacturer(const EbsdLib::OEM& value)
 {
   m_Manufacturer = value;
 }
 
 // -----------------------------------------------------------------------------
-Ebsd::OEM ReadCtfData::getManufacturer() const
+EbsdLib::OEM ReadCtfData::getManufacturer() const
 {
   return m_Manufacturer;
 }

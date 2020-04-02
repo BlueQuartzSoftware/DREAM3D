@@ -107,7 +107,6 @@ public:
    * @return Value of SelectedArrayPath
    */
   DataArrayPath getSelectedArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
   /**
@@ -119,7 +118,6 @@ public:
    * @return Value of Plane
    */
   unsigned int getPlane() const;
-
   Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
 
   /**
@@ -131,7 +129,6 @@ public:
    * @return Value of PSize1
    */
   int getPSize1() const;
-
   Q_PROPERTY(int PSize1 READ getPSize1 WRITE setPSize1)
 
   /**
@@ -143,7 +140,6 @@ public:
    * @return Value of PSize2
    */
   int getPSize2() const;
-
   Q_PROPERTY(int PSize2 READ getPSize2 WRITE setPSize2)
 
   /**
@@ -155,7 +151,6 @@ public:
    * @return Value of SSize1
    */
   int getSSize1() const;
-
   Q_PROPERTY(int SSize1 READ getSSize1 WRITE setSSize1)
 
   /**
@@ -167,7 +162,6 @@ public:
    * @return Value of SSize2
    */
   int getSSize2() const;
-
   Q_PROPERTY(int SSize2 READ getSSize2 WRITE setSSize2)
 
   /**
@@ -179,7 +173,6 @@ public:
    * @return Value of SliceStep
    */
   int getSliceStep() const;
-
   Q_PROPERTY(int SliceStep READ getSliceStep WRITE setSliceStep)
 
   /**
@@ -191,7 +184,6 @@ public:
    * @return Value of MotionDirectionArrayName
    */
   QString getMotionDirectionArrayName() const;
-
   Q_PROPERTY(QString MotionDirectionArrayName READ getMotionDirectionArrayName WRITE setMotionDirectionArrayName)
 
   /**

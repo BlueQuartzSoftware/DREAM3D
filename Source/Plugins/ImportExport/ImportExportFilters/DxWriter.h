@@ -99,7 +99,6 @@ public:
    * @return Value of AddSurfaceLayer
    */
   bool getAddSurfaceLayer() const;
-
   Q_PROPERTY(bool AddSurfaceLayer READ getAddSurfaceLayer WRITE setAddSurfaceLayer)
 
   /**
@@ -111,7 +110,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**

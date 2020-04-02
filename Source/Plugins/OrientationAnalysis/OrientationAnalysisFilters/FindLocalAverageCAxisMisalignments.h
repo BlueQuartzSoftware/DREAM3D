@@ -122,7 +122,6 @@ public:
    * @return Value of NewCellFeatureAttributeMatrixName
    */
   DataArrayPath getNewCellFeatureAttributeMatrixName() const;
-
   Q_PROPERTY(DataArrayPath NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
   /**
@@ -134,7 +133,6 @@ public:
    * @return Value of CalcUnbiasedAvg
    */
   bool getCalcUnbiasedAvg() const;
-
   Q_PROPERTY(bool CalcUnbiasedAvg READ getCalcUnbiasedAvg WRITE setCalcUnbiasedAvg)
 
   /**
@@ -146,7 +144,6 @@ public:
    * @return Value of CalcBiasedAvg
    */
   bool getCalcBiasedAvg() const;
-
   Q_PROPERTY(bool CalcBiasedAvg READ getCalcBiasedAvg WRITE setCalcBiasedAvg)
 
   /**
@@ -158,7 +155,6 @@ public:
    * @return Value of NeighborListArrayPath
    */
   DataArrayPath getNeighborListArrayPath() const;
-
   Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
 
   /**
@@ -170,7 +166,6 @@ public:
    * @return Value of CAxisMisalignmentListArrayPath
    */
   DataArrayPath getCAxisMisalignmentListArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CAxisMisalignmentListArrayPath READ getCAxisMisalignmentListArrayPath WRITE setCAxisMisalignmentListArrayPath)
 
   /**
@@ -182,7 +177,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -194,7 +188,6 @@ public:
    * @return Value of CellParentIdsArrayPath
    */
   DataArrayPath getCellParentIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellParentIdsArrayPath READ getCellParentIdsArrayPath WRITE setCellParentIdsArrayPath)
 
   /**
@@ -206,7 +199,6 @@ public:
    * @return Value of AvgCAxisMisalignmentsArrayPath
    */
   DataArrayPath getAvgCAxisMisalignmentsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AvgCAxisMisalignmentsArrayPath READ getAvgCAxisMisalignmentsArrayPath WRITE setAvgCAxisMisalignmentsArrayPath)
 
   /**
@@ -218,7 +210,6 @@ public:
    * @return Value of FeatureParentIdsArrayPath
    */
   DataArrayPath getFeatureParentIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureParentIdsArrayPath READ getFeatureParentIdsArrayPath WRITE setFeatureParentIdsArrayPath)
 
   /**
@@ -230,7 +221,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -242,7 +232,6 @@ public:
    * @return Value of UnbiasedLocalCAxisMisalignmentsArrayName
    */
   QString getUnbiasedLocalCAxisMisalignmentsArrayName() const;
-
   Q_PROPERTY(QString UnbiasedLocalCAxisMisalignmentsArrayName READ getUnbiasedLocalCAxisMisalignmentsArrayName WRITE setUnbiasedLocalCAxisMisalignmentsArrayName)
 
   /**
@@ -254,7 +243,6 @@ public:
    * @return Value of LocalCAxisMisalignmentsArrayName
    */
   QString getLocalCAxisMisalignmentsArrayName() const;
-
   Q_PROPERTY(QString LocalCAxisMisalignmentsArrayName READ getLocalCAxisMisalignmentsArrayName WRITE setLocalCAxisMisalignmentsArrayName)
 
   /**
@@ -266,7 +254,6 @@ public:
    * @return Value of NumFeaturesPerParentArrayName
    */
   QString getNumFeaturesPerParentArrayName() const;
-
   Q_PROPERTY(QString NumFeaturesPerParentArrayName READ getNumFeaturesPerParentArrayName WRITE setNumFeaturesPerParentArrayName)
 
   /**

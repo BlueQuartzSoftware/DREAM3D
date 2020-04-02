@@ -42,7 +42,7 @@
 #include <QtWidgets/QLineEdit>
 
 // Needed for AxisAngle_t and Crystal Symmetry constants
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include <QtCore/QDebug>
 
@@ -55,7 +55,7 @@
 
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 
-#include "OrientationLib/Texture/StatsGen.hpp"
+#include "EbsdLib/Texture/StatsGen.hpp"
 
 #include "SyntheticBuilding/Gui/Widgets/StatsGenCurveTracker.h"
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
@@ -77,7 +77,7 @@
 StatsGenFeatureSizeWidget::StatsGenFeatureSizeWidget(QWidget* parent)
 : QWidget(parent)
 , m_PhaseIndex(-1)
-, m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
+, m_CrystalStructure(EbsdLib::CrystalStructure::Cubic_High)
 {
   setupUi(this);
   setupGui();

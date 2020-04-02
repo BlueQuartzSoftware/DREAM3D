@@ -28,7 +28,7 @@ SIMPL_GenerateUnitTestFile(PLUGIN_NAME ${PLUGIN_NAME}
                            TEST_DATA_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test/Data
                            SOURCES ${TEST_NAMES}
                            EXTRA_SOURCES ${${PLUGIN_NAME}Test_SOURCE_DIR}/GenerateFeatureIds.h
-                           LINK_LIBRARIES Qt5::Core H5Support SIMPLib
+                           LINK_LIBRARIES Qt5::Core SIMPLib
                            INCLUDE_DIRS ${${PLUGIN_NAME}_PARENT_SOURCE_DIR}
                                         ${${PLUGIN_NAME}Test_SOURCE_DIR}
                                         ${${PLUGIN_NAME}Test_BINARY_DIR}

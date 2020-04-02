@@ -247,7 +247,6 @@ public:
    * @return Value of HexGridStack
    */
   int getHexGridStack() const;
-
   Q_PROPERTY(int HexGridStack READ getHexGridStack WRITE setHexGridStack)
 
   /**

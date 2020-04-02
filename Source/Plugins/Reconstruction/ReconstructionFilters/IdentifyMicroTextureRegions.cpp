@@ -32,27 +32,13 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#include <memory>
-
 #include "IdentifyMicroTextureRegions.h"
 
 #include <chrono>
 
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/atomic.h>
-#include <tbb/blocked_range.h>
-#include <tbb/parallel_for.h>
-#include <tbb/task_group.h>
-#include <tbb/task_scheduler_init.h>
-#include <tbb/tick_count.h>
-#endif
-
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -62,16 +48,25 @@
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 // included so we can call under the hood to segment the patches found in this filter
 #include "Reconstruction/ReconstructionFilters/VectorSegmentFeatures.h"
-
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
+
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include <tbb/atomic.h>
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
+#include <tbb/task_group.h>
+#include <tbb/task_scheduler_init.h>
+#include <tbb/tick_count.h>
+#endif
 
 enum createdPathID : RenameDataPath::DataID_t
 {
@@ -149,7 +144,7 @@ public:
               {
                 if((xc + i) >= 0 && (xc + i) < m_VolDims[0])
                 {
-                  if(m_CrystalStructures[m_CellPhases[(zStride + yStride + xc + i)]] == Ebsd::CrystalStructure::Hexagonal_High)
+                  if(m_CrystalStructures[m_CellPhases[(zStride + yStride + xc + i)]] == EbsdLib::CrystalStructure::Hexagonal_High)
                   {
                     cAxisLocs[3 * count + 0] = m_CAxisLocations[3 * (zStride + yStride + xc + i) + 0];
                     cAxisLocs[3 * count + 1] = m_CAxisLocations[3 * (zStride + yStride + xc + i) + 1];

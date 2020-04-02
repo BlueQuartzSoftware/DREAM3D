@@ -44,7 +44,7 @@
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
 #include "Reconstruction/ReconstructionDLLExport.h"
 
-#include "OrientationLib/Core/Quaternion.hpp"
+#include "EbsdLib/Core/Quaternion.hpp"
 
 class LaueOps;
 using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
@@ -117,7 +117,6 @@ public:
    * @return Value of NewCellFeatureAttributeMatrixName
    */
   QString getNewCellFeatureAttributeMatrixName() const;
-
   Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
   /**
@@ -129,7 +128,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -141,7 +139,6 @@ public:
    * @return Value of CellPhasesArrayPath
    */
   DataArrayPath getCellPhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
   /**
@@ -153,7 +150,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -165,7 +161,6 @@ public:
    * @return Value of AvgQuatsArrayPath
    */
   DataArrayPath getAvgQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
   /**
@@ -177,7 +172,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -189,7 +183,6 @@ public:
    * @return Value of CellParentIdsArrayName
    */
   QString getCellParentIdsArrayName() const;
-
   Q_PROPERTY(QString CellParentIdsArrayName READ getCellParentIdsArrayName WRITE setCellParentIdsArrayName)
 
   /**
@@ -201,7 +194,6 @@ public:
    * @return Value of GlobAlphaArrayName
    */
   QString getGlobAlphaArrayName() const;
-
   Q_PROPERTY(QString GlobAlphaArrayName READ getGlobAlphaArrayName WRITE setGlobAlphaArrayName)
 
   /**
@@ -213,7 +205,6 @@ public:
    * @return Value of FeatureParentIdsArrayName
    */
   QString getFeatureParentIdsArrayName() const;
-
   Q_PROPERTY(QString FeatureParentIdsArrayName READ getFeatureParentIdsArrayName WRITE setFeatureParentIdsArrayName)
 
   /**
@@ -225,7 +216,6 @@ public:
    * @return Value of ActiveArrayName
    */
   QString getActiveArrayName() const;
-
   Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
   /**
@@ -237,7 +227,6 @@ public:
    * @return Value of AxisTolerance
    */
   float getAxisTolerance() const;
-
   Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)
 
   /**
@@ -249,7 +238,6 @@ public:
    * @return Value of AngleTolerance
    */
   float getAngleTolerance() const;
-
   Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
 
   /**
@@ -271,7 +259,6 @@ public:
    * @return Value of IdentifyGlobAlpha
    */
   bool getIdentifyGlobAlpha() const;
-
   Q_PROPERTY(bool IdentifyGlobAlpha READ getIdentifyGlobAlpha WRITE setIdentifyGlobAlpha)
 
   /**

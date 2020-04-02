@@ -32,18 +32,17 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #pragma once
 
 
 #include <QtCore/QString>
 
-#include "EbsdLib/EbsdTransform.h"
-#include "EbsdLib/EbsdConstants.h"
+#include "SIMPLib/FilterParameters/AxisAngleInput.h"
+
+#include "EbsdLib/Core/EbsdTransform.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "SVWidgetsLib/QtSupport/QtSPluginFrame.h"
-
 #include "SVWidgetsLib/SVWidgetsLib.h"
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 

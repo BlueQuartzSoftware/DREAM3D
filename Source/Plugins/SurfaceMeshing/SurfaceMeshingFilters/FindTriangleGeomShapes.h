@@ -104,7 +104,6 @@ public:
    * @return Value of FeatureAttributeMatrixName
    */
   DataArrayPath getFeatureAttributeMatrixName() const;
-
   Q_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
 
   // N x 6 Array
@@ -138,7 +137,6 @@ public:
    * @return Value of FaceLabelsArrayPath
    */
   DataArrayPath getFaceLabelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
 
   /**
@@ -150,7 +148,6 @@ public:
    * @return Value of CentroidsArrayPath
    */
   DataArrayPath getCentroidsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
   /**
@@ -162,7 +159,6 @@ public:
    * @return Value of VolumesArrayPath
    */
   DataArrayPath getVolumesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath VolumesArrayPath READ getVolumesArrayPath WRITE setVolumesArrayPath)
 
   /**
@@ -174,7 +170,6 @@ public:
    * @return Value of Omega3sArrayName
    */
   QString getOmega3sArrayName() const;
-
   Q_PROPERTY(QString Omega3sArrayName READ getOmega3sArrayName WRITE setOmega3sArrayName)
 
   /**
@@ -186,7 +181,6 @@ public:
    * @return Value of AxisLengthsArrayName
    */
   QString getAxisLengthsArrayName() const;
-
   Q_PROPERTY(QString AxisLengthsArrayName READ getAxisLengthsArrayName WRITE setAxisLengthsArrayName)
 
   /**
@@ -198,7 +192,6 @@ public:
    * @return Value of AxisEulerAnglesArrayName
    */
   QString getAxisEulerAnglesArrayName() const;
-
   Q_PROPERTY(QString AxisEulerAnglesArrayName READ getAxisEulerAnglesArrayName WRITE setAxisEulerAnglesArrayName)
 
   /**
@@ -210,7 +203,6 @@ public:
    * @return Value of AspectRatiosArrayName
    */
   QString getAspectRatiosArrayName() const;
-
   Q_PROPERTY(QString AspectRatiosArrayName READ getAspectRatiosArrayName WRITE setAspectRatiosArrayName)
 
   /**

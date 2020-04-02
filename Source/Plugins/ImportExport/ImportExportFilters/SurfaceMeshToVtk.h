@@ -111,7 +111,6 @@ public:
    * @return Value of OutputVtkFile
    */
   QString getOutputVtkFile() const;
-
   Q_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)
 
   /**
@@ -123,7 +122,6 @@ public:
    * @return Value of WriteBinaryFile
    */
   bool getWriteBinaryFile() const;
-
   Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
 
   /**
@@ -135,7 +133,6 @@ public:
    * @return Value of WriteConformalMesh
    */
   bool getWriteConformalMesh() const;
-
   Q_PROPERTY(bool WriteConformalMesh READ getWriteConformalMesh WRITE setWriteConformalMesh)
 
   /**
@@ -147,7 +144,6 @@ public:
    * @return Value of SurfaceMeshFaceLabelsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
   /**
@@ -159,7 +155,6 @@ public:
    * @return Value of SurfaceMeshNodeTypeArrayPath
    */
   DataArrayPath getSurfaceMeshNodeTypeArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
 
   /**
@@ -171,7 +166,6 @@ public:
    * @return Value of SelectedFaceArrays
    */
   QVector<DataArrayPath> getSelectedFaceArrays() const;
-
   Q_PROPERTY(QVector<DataArrayPath> SelectedFaceArrays READ getSelectedFaceArrays WRITE setSelectedFaceArrays)
 
   /**
@@ -183,7 +177,6 @@ public:
    * @return Value of SelectedVertexArrays
    */
   QVector<DataArrayPath> getSelectedVertexArrays() const;
-
   Q_PROPERTY(QVector<DataArrayPath> SelectedVertexArrays READ getSelectedVertexArrays WRITE setSelectedVertexArrays)
 
   /**

@@ -100,7 +100,6 @@ public:
    * @return Value of StoreAsNewPhase
    */
   bool getStoreAsNewPhase() const;
-
   Q_PROPERTY(bool StoreAsNewPhase READ getStoreAsNewPhase WRITE setStoreAsNewPhase)
 
   /**
@@ -112,7 +111,6 @@ public:
    * @return Value of MinAllowedDefectSize
    */
   int getMinAllowedDefectSize() const;
-
   Q_PROPERTY(int MinAllowedDefectSize READ getMinAllowedDefectSize WRITE setMinAllowedDefectSize)
 
   /**
@@ -124,7 +122,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -136,7 +133,6 @@ public:
    * @return Value of CellPhasesArrayPath
    */
   DataArrayPath getCellPhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
   /**
@@ -148,7 +144,6 @@ public:
    * @return Value of IgnoredDataArrayPaths
    */
   QVector<DataArrayPath> getIgnoredDataArrayPaths() const;
-
   Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
 
   /**

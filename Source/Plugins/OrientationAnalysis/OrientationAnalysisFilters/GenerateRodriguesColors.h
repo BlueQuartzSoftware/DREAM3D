@@ -109,7 +109,6 @@ public:
    * @return Value of CellPhasesArrayPath
    */
   DataArrayPath getCellPhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
   /**
@@ -121,7 +120,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -133,7 +131,6 @@ public:
    * @return Value of CellEulerAnglesArrayPath
    */
   DataArrayPath getCellEulerAnglesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
   /**
@@ -145,7 +142,6 @@ public:
    * @return Value of GoodVoxelsArrayPath
    */
   DataArrayPath getGoodVoxelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
   /**
@@ -157,7 +153,6 @@ public:
    * @return Value of CellRodriguesColorsArrayName
    */
   QString getCellRodriguesColorsArrayName() const;
-
   Q_PROPERTY(QString CellRodriguesColorsArrayName READ getCellRodriguesColorsArrayName WRITE setCellRodriguesColorsArrayName)
 
   /**
@@ -169,7 +164,6 @@ public:
    * @return Value of UseGoodVoxels
    */
   bool getUseGoodVoxels() const;
-
   Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
   /**

@@ -37,12 +37,6 @@
 
 #include <memory>
 
-#include "OrientationLib/LaueOps/CubicOps.h"
-#include "OrientationLib/LaueOps/HexagonalOps.h"
-#include "OrientationLib/LaueOps/LaueOps.h"
-#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
-
-
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
@@ -177,7 +171,6 @@ public:
    * @return Value of CsvOutputFile
    */
   QString getCsvOutputFile() const;
-
   Q_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile)
 
   /**
@@ -189,7 +182,6 @@ public:
    * @return Value of MaskArrayPath
    */
   DataArrayPath getMaskArrayPath() const;
-
   Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
 
   /**
@@ -201,7 +193,6 @@ public:
    * @return Value of UseMask
    */
   bool getUseMask() const;
-
   Q_PROPERTY(bool UseMask READ getUseMask WRITE setUseMask)
 
   /**
@@ -213,7 +204,6 @@ public:
    * @return Value of FeatureGeneration
    */
   int getFeatureGeneration() const;
-
   Q_PROPERTY(int FeatureGeneration READ getFeatureGeneration WRITE setFeatureGeneration)
 
   /**
@@ -225,7 +215,6 @@ public:
    * @return Value of PrecipInputFile
    */
   QString getPrecipInputFile() const;
-
   Q_PROPERTY(QString PrecipInputFile READ getPrecipInputFile WRITE setPrecipInputFile)
 
   /**
@@ -237,7 +226,6 @@ public:
    * @return Value of PeriodicBoundaries
    */
   bool getPeriodicBoundaries() const;
-
   Q_PROPERTY(bool PeriodicBoundaries READ getPeriodicBoundaries WRITE setPeriodicBoundaries)
 
   /**
@@ -249,7 +237,6 @@ public:
    * @return Value of MatchRDF
    */
   bool getMatchRDF() const;
-
   Q_PROPERTY(bool MatchRDF READ getMatchRDF WRITE setMatchRDF)
 
   /**
@@ -261,7 +248,6 @@ public:
    * @return Value of WriteGoalAttributes
    */
   bool getWriteGoalAttributes() const;
-
   Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
 
   /**
@@ -273,7 +259,6 @@ public:
    * @return Value of InputStatsArrayPath
    */
   DataArrayPath getInputStatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
 
   /**
@@ -285,7 +270,6 @@ public:
    * @return Value of InputPhaseTypesArrayPath
    */
   DataArrayPath getInputPhaseTypesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
 
   /**
@@ -297,7 +281,6 @@ public:
    * @return Value of InputShapeTypesArrayPath
    */
   DataArrayPath getInputShapeTypesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath InputShapeTypesArrayPath READ getInputShapeTypesArrayPath WRITE setInputShapeTypesArrayPath)
 
   /**
@@ -309,7 +292,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -321,7 +303,6 @@ public:
    * @return Value of CellPhasesArrayPath
    */
   DataArrayPath getCellPhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
   /**
@@ -333,7 +314,6 @@ public:
    * @return Value of BoundaryCellsArrayPath
    */
   DataArrayPath getBoundaryCellsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath BoundaryCellsArrayPath READ getBoundaryCellsArrayPath WRITE setBoundaryCellsArrayPath)
 
   /**
@@ -345,7 +325,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -357,7 +336,6 @@ public:
    * @return Value of NumCellsArrayName
    */
   QString getNumCellsArrayName() const;
-
   Q_PROPERTY(QString NumCellsArrayName READ getNumCellsArrayName WRITE setNumCellsArrayName)
 
   /**
@@ -369,7 +347,6 @@ public:
    * @return Value of EquivalentDiametersArrayName
    */
   QString getEquivalentDiametersArrayName() const;
-
   Q_PROPERTY(QString EquivalentDiametersArrayName READ getEquivalentDiametersArrayName WRITE setEquivalentDiametersArrayName)
 
   /**
@@ -381,7 +358,6 @@ public:
    * @return Value of VolumesArrayName
    */
   QString getVolumesArrayName() const;
-
   Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
 
   /**
@@ -393,7 +369,6 @@ public:
    * @return Value of Omega3sArrayName
    */
   QString getOmega3sArrayName() const;
-
   Q_PROPERTY(QString Omega3sArrayName READ getOmega3sArrayName WRITE setOmega3sArrayName)
 
   /**
@@ -405,7 +380,6 @@ public:
    * @return Value of CentroidsArrayName
    */
   QString getCentroidsArrayName() const;
-
   Q_PROPERTY(QString CentroidsArrayName READ getCentroidsArrayName WRITE setCentroidsArrayName)
 
   /**
@@ -417,7 +391,6 @@ public:
    * @return Value of AxisEulerAnglesArrayName
    */
   QString getAxisEulerAnglesArrayName() const;
-
   Q_PROPERTY(QString AxisEulerAnglesArrayName READ getAxisEulerAnglesArrayName WRITE setAxisEulerAnglesArrayName)
 
   /**
@@ -429,7 +402,6 @@ public:
    * @return Value of AxisLengthsArrayName
    */
   QString getAxisLengthsArrayName() const;
-
   Q_PROPERTY(QString AxisLengthsArrayName READ getAxisLengthsArrayName WRITE setAxisLengthsArrayName)
 
   /**
@@ -441,7 +413,6 @@ public:
    * @return Value of NumFeaturesArrayPath
    */
   DataArrayPath getNumFeaturesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
 
   /**
@@ -453,7 +424,6 @@ public:
    * @return Value of SaveGeometricDescriptions
    */
   int getSaveGeometricDescriptions() const;
-
   Q_PROPERTY(int SaveGeometricDescriptions READ getSaveGeometricDescriptions WRITE setSaveGeometricDescriptions)
 
   /**
@@ -465,7 +435,6 @@ public:
    * @return Value of NewAttributeMatrixPath
    */
   DataArrayPath getNewAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath NewAttributeMatrixPath READ getNewAttributeMatrixPath WRITE setNewAttributeMatrixPath)
 
   /**
@@ -477,7 +446,6 @@ public:
    * @return Value of SelectedAttributeMatrixPath
    */
   DataArrayPath getSelectedAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath SelectedAttributeMatrixPath READ getSelectedAttributeMatrixPath WRITE setSelectedAttributeMatrixPath)
 
   /**

@@ -50,8 +50,9 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"

@@ -39,7 +39,7 @@
 
 #include <QtCore/QString>
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "SVWidgetsLib/QtSupport/QtSPluginFrame.h"
 

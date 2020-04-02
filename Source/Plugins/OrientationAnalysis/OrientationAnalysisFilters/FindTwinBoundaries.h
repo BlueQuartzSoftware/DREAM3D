@@ -111,7 +111,6 @@ public:
    * @return Value of AxisTolerance
    */
   float getAxisTolerance() const;
-
   Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)
 
   /**
@@ -123,7 +122,6 @@ public:
    * @return Value of AngleTolerance
    */
   float getAngleTolerance() const;
-
   Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
 
   /**
@@ -135,7 +133,6 @@ public:
    * @return Value of FindCoherence
    */
   bool getFindCoherence() const;
-
   Q_PROPERTY(bool FindCoherence READ getFindCoherence WRITE setFindCoherence)
 
   /**
@@ -147,7 +144,6 @@ public:
    * @return Value of AvgQuatsArrayPath
    */
   DataArrayPath getAvgQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
   /**
@@ -159,7 +155,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -171,7 +166,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -183,7 +177,6 @@ public:
    * @return Value of SurfaceMeshFaceLabelsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
   /**
@@ -195,7 +188,6 @@ public:
    * @return Value of SurfaceMeshFaceNormalsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceNormalsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
   /**
@@ -207,7 +199,6 @@ public:
    * @return Value of SurfaceMeshTwinBoundaryArrayName
    */
   QString getSurfaceMeshTwinBoundaryArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshTwinBoundaryArrayName READ getSurfaceMeshTwinBoundaryArrayName WRITE setSurfaceMeshTwinBoundaryArrayName)
 
   /**
@@ -219,7 +210,6 @@ public:
    * @return Value of SurfaceMeshTwinBoundaryIncoherenceArrayName
    */
   QString getSurfaceMeshTwinBoundaryIncoherenceArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshTwinBoundaryIncoherenceArrayName READ getSurfaceMeshTwinBoundaryIncoherenceArrayName WRITE setSurfaceMeshTwinBoundaryIncoherenceArrayName)
 
   /**

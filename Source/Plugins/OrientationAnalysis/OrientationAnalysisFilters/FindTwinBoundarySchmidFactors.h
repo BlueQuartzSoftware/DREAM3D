@@ -112,7 +112,6 @@ public:
    * @return Value of WriteFile
    */
   bool getWriteFile() const;
-
   Q_PROPERTY(bool WriteFile READ getWriteFile WRITE setWriteFile)
 
   /**
@@ -124,7 +123,6 @@ public:
    * @return Value of TwinBoundarySchmidFactorsFile
    */
   QString getTwinBoundarySchmidFactorsFile() const;
-
   Q_PROPERTY(QString TwinBoundarySchmidFactorsFile READ getTwinBoundarySchmidFactorsFile WRITE setTwinBoundarySchmidFactorsFile)
 
   /**
@@ -136,7 +134,6 @@ public:
    * @return Value of LoadingDir
    */
   FloatVec3Type getLoadingDir() const;
-
   Q_PROPERTY(FloatVec3Type LoadingDir READ getLoadingDir WRITE setLoadingDir)
 
   /**
@@ -148,7 +145,6 @@ public:
    * @return Value of AvgQuatsArrayPath
    */
   DataArrayPath getAvgQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
   /**
@@ -160,7 +156,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -172,7 +167,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -184,7 +178,6 @@ public:
    * @return Value of SurfaceMeshFaceLabelsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
   /**
@@ -196,7 +189,6 @@ public:
    * @return Value of SurfaceMeshFaceNormalsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceNormalsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
   /**
@@ -208,7 +200,6 @@ public:
    * @return Value of SurfaceMeshTwinBoundaryArrayPath
    */
   DataArrayPath getSurfaceMeshTwinBoundaryArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshTwinBoundaryArrayPath READ getSurfaceMeshTwinBoundaryArrayPath WRITE setSurfaceMeshTwinBoundaryArrayPath)
 
   /**
@@ -220,7 +211,6 @@ public:
    * @return Value of SurfaceMeshTwinBoundarySchmidFactorsArrayName
    */
   QString getSurfaceMeshTwinBoundarySchmidFactorsArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshTwinBoundarySchmidFactorsArrayName READ getSurfaceMeshTwinBoundarySchmidFactorsArrayName WRITE setSurfaceMeshTwinBoundarySchmidFactorsArrayName)
 
   /**

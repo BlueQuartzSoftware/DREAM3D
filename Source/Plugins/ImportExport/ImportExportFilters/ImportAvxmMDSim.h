@@ -65,7 +65,6 @@ public:
    * @return Value of InputFileListInfo
    */
   StackFileListInfo getInputFileListInfo() const;
-
   Q_PROPERTY(StackFileListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
   /**
@@ -77,7 +76,6 @@ public:
    * @return Value of SeparatorChoice
    */
   int getSeparatorChoice() const;
-
   Q_PROPERTY(int SeparatorChoice READ getSeparatorChoice WRITE setSeparatorChoice)
 
   /**

@@ -42,7 +42,7 @@
 #include <QtWidgets/QProgressDialog>
 
 // Needed for AxisAngle_t and Crystal Symmetry constants
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
@@ -54,7 +54,7 @@
 #include "SIMPLib/StatsData/StatsData.h"
 #include "SIMPLib/Utilities/ColorUtilities.h"
 
-#include "OrientationLib/Texture/StatsGen.hpp"
+#include "EbsdLib/Texture/StatsGen.hpp"
 
 #include "SyntheticBuilding/Gui/Widgets/StatsGenMDFWidget.h"
 #include "SyntheticBuilding/Gui/Widgets/StatsGenRDFWidget.h"

@@ -110,7 +110,7 @@ void StatsGeneratorWidget::setupGui()
     PrimaryPhaseWidget* ppw = new PrimaryPhaseWidget;
     ppw->setPhaseIndex(1);
     ppw->setPhaseType(PhaseType::Type::Primary);
-    ppw->setCrystalStructure(Ebsd::CrystalStructure::Cubic_High);
+    ppw->setCrystalStructure(EbsdLib::CrystalStructure::Cubic_High);
     ppw->setPhaseName("Primary (1)");
     ppw->setPhaseFraction(1.0);
     ppw->setTotalPhaseFraction(1.0);
@@ -653,7 +653,7 @@ DataContainerArray::Pointer StatsGeneratorWidget::generateDataContainerArray()
 
   std::vector<size_t> cDims(1, 1);
   UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures, true);
-  crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
+  crystalStructures->setValue(0, EbsdLib::CrystalStructure::UnknownCrystalStructure);
   cellEnsembleAttrMat->insertOrAssign(crystalStructures);
 
   UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::PhaseTypes, true);

@@ -33,8 +33,11 @@
 
 #include <QtGui/QPainter>
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-#include "OrientationLib/LaueOps/TetragonalLowOps.h"
+#include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+
+#include "EbsdLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/TetragonalLowOps.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -53,7 +56,8 @@ QImage TetragonalLowIPFLegendPainter::createLegend(int pixelWidth, int pixelHeig
 {
   TetragonalLowOps ops;
   int imageSize = std::max(pixelWidth, pixelHeight);
-  UInt8ArrayType::Pointer rgbaImage = ops.generateIPFTriangleLegend(imageSize);
+
+  UInt8ArrayType::Pointer rgbaImage = ops.generateIPFTriangleLegend(imageSize)->moveToDataArrayType<UInt8ArrayType>();
   QRgb* rgba = reinterpret_cast<QRgb*>(rgbaImage->getPointer(0));
 
   QImage image(pixelWidth, pixelHeight, QImage::Format_ARGB32_Premultiplied);

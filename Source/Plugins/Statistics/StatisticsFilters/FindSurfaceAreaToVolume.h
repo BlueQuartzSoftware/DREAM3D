@@ -101,7 +101,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -113,7 +112,6 @@ public:
    * @return Value of NumCellsArrayPath
    */
   DataArrayPath getNumCellsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath NumCellsArrayPath READ getNumCellsArrayPath WRITE setNumCellsArrayPath)
 
   /**
@@ -125,7 +123,6 @@ public:
    * @return Value of SurfaceAreaVolumeRatioArrayName
    */
   QString getSurfaceAreaVolumeRatioArrayName() const;
-
   Q_PROPERTY(QString SurfaceAreaVolumeRatioArrayName READ getSurfaceAreaVolumeRatioArrayName WRITE setSurfaceAreaVolumeRatioArrayName)
 
   /**
@@ -137,7 +134,6 @@ public:
    * @return Value of SphericityArrayName
    */
   QString getSphericityArrayName() const;
-
   Q_PROPERTY(QString SphericityArrayName READ getSphericityArrayName WRITE setSphericityArrayName)
 
   /**
@@ -149,7 +145,6 @@ public:
    * @return Value of CalculateSphericity
    */
   bool getCalculateSphericity() const;
-
   Q_PROPERTY(bool CalculateSphericity READ getCalculateSphericity WRITE setCalculateSphericity)
 
   /**

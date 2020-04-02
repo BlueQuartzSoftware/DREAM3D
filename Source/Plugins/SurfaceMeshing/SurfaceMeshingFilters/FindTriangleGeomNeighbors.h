@@ -101,7 +101,6 @@ public:
    * @return Value of FeatureAttributeMatrixPath
    */
   DataArrayPath getFeatureAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureAttributeMatrixPath READ getFeatureAttributeMatrixPath WRITE setFeatureAttributeMatrixPath)
 
   /**
@@ -113,7 +112,6 @@ public:
    * @return Value of NeighborListArrayName
    */
   QString getNeighborListArrayName() const;
-
   Q_PROPERTY(QString NeighborListArrayName READ getNeighborListArrayName WRITE setNeighborListArrayName)
 
   /**
@@ -125,7 +123,6 @@ public:
    * @return Value of FaceLabelsArrayPath
    */
   DataArrayPath getFaceLabelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
 
   /**
@@ -137,7 +134,6 @@ public:
    * @return Value of NumNeighborsArrayName
    */
   QString getNumNeighborsArrayName() const;
-
   Q_PROPERTY(QString NumNeighborsArrayName READ getNumNeighborsArrayName WRITE setNumNeighborsArrayName)
 
   /**

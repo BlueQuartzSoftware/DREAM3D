@@ -41,8 +41,7 @@
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
-#include "Plugins/Reconstruction/ReconstructionConstants.h"
-
+#include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionDLLExport.h"
 
 /**
@@ -103,7 +102,6 @@ public:
    * @return Value of ContiguousNeighborListArrayPath
    */
   DataArrayPath getContiguousNeighborListArrayPath() const;
-
   Q_PROPERTY(DataArrayPath ContiguousNeighborListArrayPath READ getContiguousNeighborListArrayPath WRITE setContiguousNeighborListArrayPath)
 
   /**
@@ -115,7 +113,6 @@ public:
    * @return Value of NonContiguousNeighborListArrayPath
    */
   DataArrayPath getNonContiguousNeighborListArrayPath() const;
-
   Q_PROPERTY(DataArrayPath NonContiguousNeighborListArrayPath READ getNonContiguousNeighborListArrayPath WRITE setNonContiguousNeighborListArrayPath)
 
   /**
@@ -127,7 +124,6 @@ public:
    * @return Value of UseNonContiguousNeighbors
    */
   bool getUseNonContiguousNeighbors() const;
-
   Q_PROPERTY(float UseNonContiguousNeighbors READ getUseNonContiguousNeighbors WRITE setUseNonContiguousNeighbors)
 
   /**
@@ -139,7 +135,6 @@ public:
    * @return Value of PatchGrouping
    */
   bool getPatchGrouping() const;
-
   Q_PROPERTY(float PatchGrouping READ getPatchGrouping WRITE setPatchGrouping)
 
   /**

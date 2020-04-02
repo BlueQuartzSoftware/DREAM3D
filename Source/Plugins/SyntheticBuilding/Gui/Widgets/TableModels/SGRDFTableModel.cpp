@@ -43,6 +43,8 @@
 
 #include "SyntheticBuilding/Gui/Widgets/Delegates/SGRDFItemDelegate.h"
 
+#include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

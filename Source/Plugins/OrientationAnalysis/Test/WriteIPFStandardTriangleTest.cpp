@@ -17,7 +17,7 @@
 
 #include "OrientationAnalysisTestFileLocations.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 class WriteIPFStandardTriangleTest
 {

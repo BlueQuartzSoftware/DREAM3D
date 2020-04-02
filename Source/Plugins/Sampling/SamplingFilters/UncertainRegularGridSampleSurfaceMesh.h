@@ -109,7 +109,6 @@ public:
    * @return Value of DataContainerName
    */
   DataArrayPath getDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   /**
@@ -121,7 +120,6 @@ public:
    * @return Value of CellAttributeMatrixName
    */
   QString getCellAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
   /**
@@ -133,7 +131,6 @@ public:
    * @return Value of XPoints
    */
   int getXPoints() const;
-
   Q_PROPERTY(int XPoints READ getXPoints WRITE setXPoints)
 
   /**
@@ -145,7 +142,6 @@ public:
    * @return Value of YPoints
    */
   int getYPoints() const;
-
   Q_PROPERTY(int YPoints READ getYPoints WRITE setYPoints)
 
   /**
@@ -157,7 +153,6 @@ public:
    * @return Value of ZPoints
    */
   int getZPoints() const;
-
   Q_PROPERTY(int ZPoints READ getZPoints WRITE setZPoints)
 
   /**
@@ -169,7 +164,6 @@ public:
    * @return Value of Spacing
    */
   FloatVec3Type getSpacing() const;
-
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
   /**
@@ -181,7 +175,6 @@ public:
    * @return Value of Origin
    */
   FloatVec3Type getOrigin() const;
-
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
   /**
@@ -193,7 +186,6 @@ public:
    * @return Value of Uncertainty
    */
   FloatVec3Type getUncertainty() const;
-
   Q_PROPERTY(FloatVec3Type Uncertainty READ getUncertainty WRITE setUncertainty)
 
   /**
@@ -205,7 +197,6 @@ public:
    * @return Value of FeatureIdsArrayName
    */
   QString getFeatureIdsArrayName() const;
-
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
   /**

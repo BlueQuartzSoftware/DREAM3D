@@ -227,7 +227,6 @@ target_link_libraries(${plug_target_name}
                     Qt5::Gui
                     SIMPLib
                     EbsdLib
-                    OrientationLib
                     libharu::hpdf
 )
 

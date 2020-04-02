@@ -115,7 +115,6 @@ public:
    * @return Value of OutputFile
    */
   QString getOutputFile() const;
-
   Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
   /**
@@ -127,7 +126,6 @@ public:
    * @return Value of Weight
    */
   float getWeight() const;
-
   Q_PROPERTY(float Weight READ getWeight WRITE setWeight)
 
   /**
@@ -139,7 +137,6 @@ public:
    * @return Value of Sigma
    */
   int getSigma() const;
-
   Q_PROPERTY(int Sigma READ getSigma WRITE setSigma)
 
   /**
@@ -151,7 +148,6 @@ public:
    * @return Value of Delimiter
    */
   int getDelimiter() const;
-
   Q_PROPERTY(int Delimiter READ getDelimiter WRITE setDelimiter)
 
   /**
@@ -163,7 +159,6 @@ public:
    * @return Value of CellPhasesArrayPath
    */
   DataArrayPath getCellPhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
   /**
@@ -175,7 +170,6 @@ public:
    * @return Value of CellEulerAnglesArrayPath
    */
   DataArrayPath getCellEulerAnglesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
   /**
@@ -187,7 +181,6 @@ public:
    * @return Value of GoodVoxelsArrayPath
    */
   DataArrayPath getGoodVoxelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
   /**
@@ -199,7 +192,6 @@ public:
    * @return Value of ConvertToDegrees
    */
   bool getConvertToDegrees() const;
-
   Q_PROPERTY(bool ConvertToDegrees READ getConvertToDegrees WRITE setConvertToDegrees)
 
   /**
@@ -211,7 +203,6 @@ public:
    * @return Value of UseGoodVoxels
    */
   bool getUseGoodVoxels() const;
-
   Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
   /**

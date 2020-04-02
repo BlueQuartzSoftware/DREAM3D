@@ -106,7 +106,6 @@ public:
    * @return Value of CellFeatureAttributeMatrixPath
    */
   DataArrayPath getCellFeatureAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
 
   /**
@@ -118,7 +117,6 @@ public:
    * @return Value of SharedSurfaceAreaListArrayName
    */
   QString getSharedSurfaceAreaListArrayName() const;
-
   Q_PROPERTY(QString SharedSurfaceAreaListArrayName READ getSharedSurfaceAreaListArrayName WRITE setSharedSurfaceAreaListArrayName)
 
   /**
@@ -130,7 +128,6 @@ public:
    * @return Value of NeighborListArrayName
    */
   QString getNeighborListArrayName() const;
-
   Q_PROPERTY(QString NeighborListArrayName READ getNeighborListArrayName WRITE setNeighborListArrayName)
 
   /**
@@ -142,7 +139,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -154,7 +150,6 @@ public:
    * @return Value of BoundaryCellsArrayName
    */
   QString getBoundaryCellsArrayName() const;
-
   Q_PROPERTY(QString BoundaryCellsArrayName READ getBoundaryCellsArrayName WRITE setBoundaryCellsArrayName)
 
   /**
@@ -166,7 +161,6 @@ public:
    * @return Value of NumNeighborsArrayName
    */
   QString getNumNeighborsArrayName() const;
-
   Q_PROPERTY(QString NumNeighborsArrayName READ getNumNeighborsArrayName WRITE setNumNeighborsArrayName)
 
   /**
@@ -178,7 +172,6 @@ public:
    * @return Value of SurfaceFeaturesArrayName
    */
   QString getSurfaceFeaturesArrayName() const;
-
   Q_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
 
   /**
@@ -190,7 +183,6 @@ public:
    * @return Value of StoreBoundaryCells
    */
   bool getStoreBoundaryCells() const;
-
   Q_PROPERTY(bool StoreBoundaryCells READ getStoreBoundaryCells WRITE setStoreBoundaryCells)
 
   /**
@@ -202,7 +194,6 @@ public:
    * @return Value of StoreSurfaceFeatures
    */
   bool getStoreSurfaceFeatures() const;
-
   Q_PROPERTY(bool StoreSurfaceFeatures READ getStoreSurfaceFeatures WRITE setStoreSurfaceFeatures)
 
   /**

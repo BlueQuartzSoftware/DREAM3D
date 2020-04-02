@@ -100,7 +100,6 @@ public:
    * @return Value of SurfaceDataContainerName
    */
   DataArrayPath getSurfaceDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
   /**
@@ -112,7 +111,6 @@ public:
    * @return Value of GenerateVertexTriangleLists
    */
   bool getGenerateVertexTriangleLists() const;
-
   Q_PROPERTY(bool GenerateVertexTriangleLists READ getGenerateVertexTriangleLists WRITE setGenerateVertexTriangleLists)
 
   /**
@@ -124,7 +122,6 @@ public:
    * @return Value of GenerateTriangleNeighbors
    */
   bool getGenerateTriangleNeighbors() const;
-
   Q_PROPERTY(bool GenerateTriangleNeighbors READ getGenerateTriangleNeighbors WRITE setGenerateTriangleNeighbors)
 
   /**

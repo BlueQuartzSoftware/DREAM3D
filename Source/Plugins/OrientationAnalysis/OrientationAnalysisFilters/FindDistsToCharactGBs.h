@@ -115,7 +115,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -127,7 +126,6 @@ public:
    * @return Value of FeatureEulerAnglesArrayPath
    */
   DataArrayPath getFeatureEulerAnglesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
 
   /**
@@ -139,7 +137,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -151,7 +148,6 @@ public:
    * @return Value of SurfaceMeshFaceLabelsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
   /**
@@ -163,7 +159,6 @@ public:
    * @return Value of SurfaceMeshFaceNormalsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceNormalsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
   /**
@@ -175,7 +170,6 @@ public:
    * @return Value of DistToTiltArrayPath
    */
   DataArrayPath getDistToTiltArrayPath() const;
-
   Q_PROPERTY(DataArrayPath DistToTiltArrayPath READ getDistToTiltArrayPath WRITE setDistToTiltArrayPath)
 
   /**
@@ -187,7 +181,6 @@ public:
    * @return Value of DistToTwistArrayPath
    */
   DataArrayPath getDistToTwistArrayPath() const;
-
   Q_PROPERTY(DataArrayPath DistToTwistArrayPath READ getDistToTwistArrayPath WRITE setDistToTwistArrayPath)
 
   /**
@@ -199,7 +192,6 @@ public:
    * @return Value of DistToSymmetricArrayPath
    */
   DataArrayPath getDistToSymmetricArrayPath() const;
-
   Q_PROPERTY(DataArrayPath DistToSymmetricArrayPath READ getDistToSymmetricArrayPath WRITE setDistToSymmetricArrayPath)
 
   /**
@@ -211,7 +203,6 @@ public:
    * @return Value of DistTo180TiltArrayPath
    */
   DataArrayPath getDistTo180TiltArrayPath() const;
-
   Q_PROPERTY(DataArrayPath DistTo180TiltArrayPath READ getDistTo180TiltArrayPath WRITE setDistTo180TiltArrayPath)
 
   /**

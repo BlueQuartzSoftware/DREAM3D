@@ -118,7 +118,6 @@ public:
    * @return Value of NumberOfBins
    */
   int getNumberOfBins() const;
-
   Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
 
   /**
@@ -130,7 +129,6 @@ public:
    * @return Value of PhaseNumber
    */
   int getPhaseNumber() const;
-
   Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
   /**
@@ -142,7 +140,6 @@ public:
    * @return Value of CellEnsembleAttributeMatrixName
    */
   DataArrayPath getCellEnsembleAttributeMatrixName() const;
-
   Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
   /**
@@ -154,7 +151,6 @@ public:
    * @return Value of RemoveBiasedFeatures
    */
   bool getRemoveBiasedFeatures() const;
-
   Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
 
   /**
@@ -166,7 +162,6 @@ public:
    * @return Value of BiasedFeaturesArrayPath
    */
   DataArrayPath getBiasedFeaturesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
 
   /**
@@ -178,7 +173,6 @@ public:
    * @return Value of EquivalentDiametersArrayPath
    */
   DataArrayPath getEquivalentDiametersArrayPath() const;
-
   Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
 
   /**
@@ -190,7 +184,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -202,7 +195,6 @@ public:
    * @return Value of CentroidsArrayPath
    */
   DataArrayPath getCentroidsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
   /**
@@ -214,7 +206,6 @@ public:
    * @return Value of ClusteringListArrayName
    */
   QString getClusteringListArrayName() const;
-
   Q_PROPERTY(QString ClusteringListArrayName READ getClusteringListArrayName WRITE setClusteringListArrayName)
 
   /**
@@ -226,7 +217,6 @@ public:
    * @return Value of NewEnsembleArrayArrayName
    */
   QString getNewEnsembleArrayArrayName() const;
-
   Q_PROPERTY(QString NewEnsembleArrayArrayName READ getNewEnsembleArrayArrayName WRITE setNewEnsembleArrayArrayName)
 
   /**
@@ -238,7 +228,6 @@ public:
    * @return Value of MaxMinArrayName
    */
   QString getMaxMinArrayName() const;
-
   Q_PROPERTY(QString MaxMinArrayName READ getMaxMinArrayName WRITE setMaxMinArrayName)
 
   /**

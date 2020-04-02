@@ -101,7 +101,6 @@ public:
    * @return Value of ReferenceSlice
    */
   int getReferenceSlice() const;
-
   Q_PROPERTY(int ReferenceSlice READ getReferenceSlice WRITE setReferenceSlice)
 
   /**
@@ -113,7 +112,6 @@ public:
    * @return Value of UseReferenceSlice
    */
   bool getUseReferenceSlice() const;
-
   Q_PROPERTY(bool UseReferenceSlice READ getUseReferenceSlice WRITE setUseReferenceSlice)
 
   /**
@@ -125,7 +123,6 @@ public:
    * @return Value of GoodVoxelsArrayPath
    */
   DataArrayPath getGoodVoxelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
   /**

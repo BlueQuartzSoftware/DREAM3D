@@ -106,7 +106,6 @@ public:
    * @return Value of SelectedArrayPath
    */
   DataArrayPath getSelectedArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
   /**
@@ -118,7 +117,6 @@ public:
    * @return Value of Plane
    */
   unsigned int getPlane() const;
-
   Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
 
   /**
@@ -130,7 +128,6 @@ public:
    * @return Value of ProjectedImageMinArrayName
    */
   QString getProjectedImageMinArrayName() const;
-
   Q_PROPERTY(QString ProjectedImageMinArrayName READ getProjectedImageMinArrayName WRITE setProjectedImageMinArrayName)
 
   /**
@@ -142,7 +139,6 @@ public:
    * @return Value of ProjectedImageMaxArrayName
    */
   QString getProjectedImageMaxArrayName() const;
-
   Q_PROPERTY(QString ProjectedImageMaxArrayName READ getProjectedImageMaxArrayName WRITE setProjectedImageMaxArrayName)
 
   /**
@@ -154,7 +150,6 @@ public:
    * @return Value of ProjectedImageAvgArrayName
    */
   QString getProjectedImageAvgArrayName() const;
-
   Q_PROPERTY(QString ProjectedImageAvgArrayName READ getProjectedImageAvgArrayName WRITE setProjectedImageAvgArrayName)
 
   /**
@@ -166,7 +161,6 @@ public:
    * @return Value of ProjectedImageStdArrayName
    */
   QString getProjectedImageStdArrayName() const;
-
   Q_PROPERTY(QString ProjectedImageStdArrayName READ getProjectedImageStdArrayName WRITE setProjectedImageStdArrayName)
 
   /**
@@ -178,7 +172,6 @@ public:
    * @return Value of ProjectedImageVarArrayName
    */
   QString getProjectedImageVarArrayName() const;
-
   Q_PROPERTY(QString ProjectedImageVarArrayName READ getProjectedImageVarArrayName WRITE setProjectedImageVarArrayName)
 
   /**

@@ -43,7 +43,7 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QStyledItemDelegate>
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "SyntheticBuilding/Gui/Widgets/TableModels/SGODFTableModel.h"
 
@@ -81,11 +81,11 @@ public:
     QLineEdit* editor;
     QDoubleValidator* validator;
     unsigned int sigma_top = 1;
-    if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
+    if(EbsdLib::CrystalStructure::Cubic_High == m_CrystalStructure)
     {
       sigma_top = 18;
     }
-    else if(Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
+    else if(EbsdLib::CrystalStructure::Hexagonal_High == m_CrystalStructure)
     {
       sigma_top = 36;
     }

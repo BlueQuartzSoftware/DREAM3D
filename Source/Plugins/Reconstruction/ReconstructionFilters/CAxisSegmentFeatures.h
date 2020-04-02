@@ -112,7 +112,6 @@ public:
    * @return Value of CellFeatureAttributeMatrixName
    */
   QString getCellFeatureAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
   /**
@@ -124,7 +123,6 @@ public:
    * @return Value of MisorientationTolerance
    */
   float getMisorientationTolerance() const;
-
   Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
 
   /**
@@ -146,7 +144,6 @@ public:
    * @return Value of UseGoodVoxels
    */
   bool getUseGoodVoxels() const;
-
   Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
   /**
@@ -158,7 +155,6 @@ public:
    * @return Value of CellPhasesArrayPath
    */
   DataArrayPath getCellPhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
   /**
@@ -170,7 +166,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -182,7 +177,6 @@ public:
    * @return Value of QuatsArrayPath
    */
   DataArrayPath getQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
   /**
@@ -194,7 +188,6 @@ public:
    * @return Value of GoodVoxelsArrayPath
    */
   DataArrayPath getGoodVoxelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
   /**
@@ -206,7 +199,6 @@ public:
    * @return Value of FeatureIdsArrayName
    */
   QString getFeatureIdsArrayName() const;
-
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
   /**
@@ -218,7 +210,6 @@ public:
    * @return Value of ActiveArrayName
    */
   QString getActiveArrayName() const;
-
   Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
   /**

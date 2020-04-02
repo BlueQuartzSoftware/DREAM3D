@@ -100,7 +100,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -112,7 +111,6 @@ public:
    * @return Value of BoundaryCellsArrayName
    */
   QString getBoundaryCellsArrayName() const;
-
   Q_PROPERTY(QString BoundaryCellsArrayName READ getBoundaryCellsArrayName WRITE setBoundaryCellsArrayName)
 
   /**
@@ -124,7 +122,6 @@ public:
    * @return Value of IgnoreFeatureZero
    */
   bool getIgnoreFeatureZero() const;
-
   Q_PROPERTY(bool IgnoreFeatureZero READ getIgnoreFeatureZero WRITE setIgnoreFeatureZero)
 
   /**
@@ -136,7 +133,6 @@ public:
    * @return Value of IncludeVolumeBoundary
    */
   bool getIncludeVolumeBoundary() const;
-
   Q_PROPERTY(bool IncludeVolumeBoundary READ getIncludeVolumeBoundary WRITE setIncludeVolumeBoundary)
 
   /**

@@ -102,7 +102,6 @@ public:
    * @return Value of OutputPath
    */
   QString getOutputPath() const;
-
   Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
 
   /**
@@ -114,7 +113,6 @@ public:
    * @return Value of FilePrefix
    */
   QString getFilePrefix() const;
-
   Q_PROPERTY(QString FilePrefix READ getFilePrefix WRITE setFilePrefix)
 
   /**
@@ -126,7 +124,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -138,7 +135,6 @@ public:
    * @return Value of HourglassStiffness
    */
   int getHourglassStiffness() const;
-
   Q_PROPERTY(int HourglassStiffness READ getHourglassStiffness WRITE setHourglassStiffness)
 
   /**
@@ -150,7 +146,6 @@ public:
    * @return Value of JobName
    */
   QString getJobName() const;
-
   Q_PROPERTY(QString JobName READ getJobName WRITE setJobName)
 
   /**

@@ -98,7 +98,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -110,7 +109,6 @@ public:
    * @return Value of FlaggedFeaturesArrayPath
    */
   DataArrayPath getFlaggedFeaturesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FlaggedFeaturesArrayPath READ getFlaggedFeaturesArrayPath WRITE setFlaggedFeaturesArrayPath)
 
   /**

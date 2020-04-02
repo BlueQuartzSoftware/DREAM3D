@@ -111,7 +111,6 @@ public:
    * @return Value of Hemisphere
    */
   int getHemisphere() const;
-
   Q_PROPERTY(int Hemisphere READ getHemisphere WRITE setHemisphere)
 
   /**
@@ -123,7 +122,6 @@ public:
    * @return Value of ImageDataArrayPath
    */
   DataArrayPath getImageDataArrayPath() const;
-
   Q_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
 
   /**
@@ -135,7 +133,6 @@ public:
    * @return Value of QuadDataContainerName
    */
   DataArrayPath getQuadDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath QuadDataContainerName READ getQuadDataContainerName WRITE setQuadDataContainerName)
 
   /**
@@ -147,7 +144,6 @@ public:
    * @return Value of TriangleDataContainerName
    */
   DataArrayPath getTriangleDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath TriangleDataContainerName READ getTriangleDataContainerName WRITE setTriangleDataContainerName)
 
   /**
@@ -159,7 +155,6 @@ public:
    * @return Value of EdgeDataContainerName
    */
   DataArrayPath getEdgeDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath EdgeDataContainerName READ getEdgeDataContainerName WRITE setEdgeDataContainerName)
 
   /**
@@ -171,7 +166,6 @@ public:
    * @return Value of VertexDataContainerName
    */
   DataArrayPath getVertexDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
   /**
@@ -183,7 +177,6 @@ public:
    * @return Value of VertexAttributeMatrixName
    */
   QString getVertexAttributeMatrixName() const;
-
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
   /**
@@ -195,7 +188,6 @@ public:
    * @return Value of EdgeAttributeMatrixName
    */
   QString getEdgeAttributeMatrixName() const;
-
   Q_PROPERTY(QString EdgeAttributeMatrixName READ getEdgeAttributeMatrixName WRITE setEdgeAttributeMatrixName)
 
   /**
@@ -207,7 +199,6 @@ public:
    * @return Value of FaceAttributeMatrixName
    */
   QString getFaceAttributeMatrixName() const;
-
   Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
   //  SIMPL_FILTER_PARAMETER(QString, ImageFaceDataArrayName)
@@ -222,7 +213,6 @@ public:
    * @return Value of CreateVertexGeometry
    */
   bool getCreateVertexGeometry() const;
-
   Q_PROPERTY(bool CreateVertexGeometry READ getCreateVertexGeometry WRITE setCreateVertexGeometry)
 
   /**
@@ -234,7 +224,6 @@ public:
    * @return Value of CreateEdgeGeometry
    */
   bool getCreateEdgeGeometry() const;
-
   Q_PROPERTY(bool CreateEdgeGeometry READ getCreateEdgeGeometry WRITE setCreateEdgeGeometry)
 
   /**
@@ -246,7 +235,6 @@ public:
    * @return Value of CreateTriangleGeometry
    */
   bool getCreateTriangleGeometry() const;
-
   Q_PROPERTY(bool CreateTriangleGeometry READ getCreateTriangleGeometry WRITE setCreateTriangleGeometry)
 
   /**
@@ -258,7 +246,6 @@ public:
    * @return Value of CreateQuadGeometry
    */
   bool getCreateQuadGeometry() const;
-
   Q_PROPERTY(bool CreateQuadGeometry READ getCreateQuadGeometry WRITE setCreateQuadGeometry)
 
   /**
@@ -270,7 +257,6 @@ public:
    * @return Value of UseExistingImage
    */
   bool getUseExistingImage() const;
-
   Q_PROPERTY(bool UseExistingImage READ getUseExistingImage WRITE setUseExistingImage)
   
   /**

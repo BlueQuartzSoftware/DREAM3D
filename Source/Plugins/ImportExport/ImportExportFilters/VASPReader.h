@@ -110,7 +110,6 @@ public:
    * @return Value of VertexDataContainerName
    */
   DataArrayPath getVertexDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
   /**
@@ -122,7 +121,6 @@ public:
    * @return Value of VertexAttributeMatrixName
    */
   QString getVertexAttributeMatrixName() const;
-
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
   /**
@@ -134,7 +132,6 @@ public:
    * @return Value of InputFile
    */
   QString getInputFile() const;
-
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**
@@ -146,7 +143,6 @@ public:
    * @return Value of AtomVelocitiesArrayName
    */
   QString getAtomVelocitiesArrayName() const;
-
   Q_PROPERTY(QString AtomVelocitiesArrayName READ getAtomVelocitiesArrayName WRITE setAtomVelocitiesArrayName)
 
   /**
@@ -158,7 +154,6 @@ public:
    * @return Value of AtomTypesArrayName
    */
   QString getAtomTypesArrayName() const;
-
   Q_PROPERTY(QString AtomTypesArrayName READ getAtomTypesArrayName WRITE setAtomTypesArrayName)
 
   /**

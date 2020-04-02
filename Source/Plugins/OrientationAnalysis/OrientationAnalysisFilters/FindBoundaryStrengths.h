@@ -111,7 +111,6 @@ public:
    * @return Value of Loading
    */
   FloatVec3Type getLoading() const;
-
   Q_PROPERTY(FloatVec3Type Loading READ getLoading WRITE setLoading)
 
   /**
@@ -123,7 +122,6 @@ public:
    * @return Value of SurfaceMeshFaceLabelsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
   /**
@@ -135,7 +133,6 @@ public:
    * @return Value of AvgQuatsArrayPath
    */
   DataArrayPath getAvgQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
   /**
@@ -147,7 +144,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -159,7 +155,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -171,7 +166,6 @@ public:
    * @return Value of SurfaceMeshF1sArrayName
    */
   QString getSurfaceMeshF1sArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshF1sArrayName READ getSurfaceMeshF1sArrayName WRITE setSurfaceMeshF1sArrayName)
 
   /**
@@ -183,7 +177,6 @@ public:
    * @return Value of SurfaceMeshF1sptsArrayName
    */
   QString getSurfaceMeshF1sptsArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshF1sptsArrayName READ getSurfaceMeshF1sptsArrayName WRITE setSurfaceMeshF1sptsArrayName)
 
   /**
@@ -195,7 +188,6 @@ public:
    * @return Value of SurfaceMeshF7sArrayName
    */
   QString getSurfaceMeshF7sArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshF7sArrayName READ getSurfaceMeshF7sArrayName WRITE setSurfaceMeshF7sArrayName)
 
   /**
@@ -207,7 +199,6 @@ public:
    * @return Value of SurfaceMeshmPrimesArrayName
    */
   QString getSurfaceMeshmPrimesArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshmPrimesArrayName READ getSurfaceMeshmPrimesArrayName WRITE setSurfaceMeshmPrimesArrayName)
 
   /**

@@ -35,6 +35,7 @@
 #include <QtGui/QPainter>
 
 #include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 // -----------------------------------------------------------------------------
 //

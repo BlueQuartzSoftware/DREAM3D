@@ -33,14 +33,11 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "ConvertOrientations.h"
 
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
@@ -48,10 +45,11 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 
+#include "EbsdLib/LaueOps/LaueOps.h"
+#include "EbsdLib/OrientationMath/OrientationConverter.hpp"
+
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
-#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
-
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -89,7 +87,7 @@ void ConvertOrientations::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ConvertOrientations, this, InputType));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ConvertOrientations, this, InputType));
 
-    parameter->setChoices(OrientationConverter<float>::GetOrientationTypeStrings<QVector<QString>>());
+    parameter->setChoices(OrientationConverter<FloatArrayType, float>::GetOrientationTypeStrings<QVector<QString>>());
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
@@ -101,7 +99,7 @@ void ConvertOrientations::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ConvertOrientations, this, OutputType));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ConvertOrientations, this, OutputType));
 
-    parameter->setChoices(OrientationConverter<float>::GetOrientationTypeStrings<QVector<QString>>());
+    parameter->setChoices(OrientationConverter<FloatArrayType, float>::GetOrientationTypeStrings<QVector<QString>>());
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
@@ -152,15 +150,18 @@ void ConvertOrientations::dataCheck()
     setErrorCondition(-1000, ss);
   }
 
-  if(getInputType() < OrientationConverter<float>::GetMinIndex() || getInputType() > OrientationConverter<float>::GetMaxIndex())
+  int32_t minIndex = OrientationConverter<FloatArrayType, float>::GetMinIndex();
+  int32_t maxIndex = OrientationConverter<FloatArrayType, float>::GetMaxIndex();
+
+  if(getInputType() < minIndex || getInputType() > maxIndex)
   {
-    QString ss = QObject::tr("There was an error with the selection of the input orientation type. The valid values range from 0 to %1").arg(OrientationConverter<float>::GetMaxIndex());
+    QString ss = QObject::tr("There was an error with the selection of the input orientation type. The valid values range from 0 to %1").arg(maxIndex);
     setErrorCondition(-1001, ss);
   }
 
-  if(getOutputType() < OrientationConverter<float>::GetMinIndex() || getOutputType() > OrientationConverter<float>::GetMaxIndex())
+  if(getOutputType() < minIndex || getOutputType() > maxIndex)
   {
-    QString ss = QObject::tr("There was an error with the selection of the output orientation type. The valid values range from 0 to %1").arg(OrientationConverter<float>::GetMaxIndex());
+    QString ss = QObject::tr("There was an error with the selection of the output orientation type. The valid values range from 0 to %1").arg(maxIndex);
     setErrorCondition(-1002, ss);
   }
 
@@ -179,13 +180,13 @@ void ConvertOrientations::dataCheck()
     return;
   }
   int numComps = iDataArrayPtr->getNumberOfComponents();
-  std::vector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts<std::vector<int32_t>>();
+  std::vector<int32_t> componentCounts = OrientationConverter<FloatArrayType, float>::GetComponentCounts<std::vector<int32_t>>();
   if(numComps != componentCounts[getInputType()])
   {
     QString sizeNameMappingString;
     QTextStream strm(&sizeNameMappingString);
-    std::vector<QString> names = OrientationConverter<float>::GetOrientationTypeStrings<std::vector<QString>>();
-    for(int i = 0; i < OrientationConverter<float>::GetMaxIndex() + 1; i++)
+    std::vector<QString> names = OrientationConverter<FloatArrayType, float>::GetOrientationTypeStrings<std::vector<QString>>();
+    for(int i = 0; i < OrientationConverter<FloatArrayType, float>::GetMaxIndex() + 1; i++)
     {
       strm << "[" << names[i] << "=" << componentCounts[i] << "] ";
     }
@@ -222,24 +223,25 @@ void ConvertOrientations::dataCheck()
 template <typename T>
 void generateRepresentation(ConvertOrientations* filter, typename DataArray<T>::Pointer inputOrientations, typename DataArray<T>::Pointer outputOrientations)
 {
-  using ArrayType = typename DataArray<T>::Pointer;
-  using OCType = OrientationConverter<T>;
+  using ArrayType = DataArray<T>;
+  using ArrayPointerType = typename ArrayType::Pointer;
+  using OCType = OrientationConverter<ArrayType, T>;
   std::vector<typename OCType::Pointer> converters(7);
 
-  converters[0] = EulerConverter<T>::New();
-  converters[1] = OrientationMatrixConverter<T>::New();
-  converters[2] = QuaternionConverter<T>::New();
-  converters[3] = AxisAngleConverter<T>::New();
-  converters[4] = RodriguesConverter<T>::New();
-  converters[5] = HomochoricConverter<T>::New();
-  converters[6] = CubochoricConverter<T>::New();
+  converters[0] = EulerConverter<ArrayType, T>::New();
+  converters[1] = OrientationMatrixConverter<ArrayType, T>::New();
+  converters[2] = QuaternionConverter<ArrayType, T>::New();
+  converters[3] = AxisAngleConverter<ArrayType, T>::New();
+  converters[4] = RodriguesConverter<ArrayType, T>::New();
+  converters[5] = HomochoricConverter<ArrayType, T>::New();
+  converters[6] = CubochoricConverter<ArrayType, T>::New();
 
   std::vector<OrientationRepresentation::Type> ocTypes = OCType::GetOrientationTypes();
 
   converters[filter->getInputType()]->setInputData(inputOrientations);
   converters[filter->getInputType()]->convertRepresentationTo(ocTypes[filter->getOutputType()]);
 
-  ArrayType output = converters[filter->getInputType()]->getOutputData();
+  ArrayPointerType output = converters[filter->getInputType()]->getOutputData();
   if(nullptr == output.get())
   {
     QString ss = QObject::tr("There was an error converting the input data using convertor %1").arg(converters[filter->getInputType()]->getNameOfClass());
@@ -275,18 +277,18 @@ void ConvertOrientations::execute()
   FloatArrayType::Pointer fArray = std::dynamic_pointer_cast<FloatArrayType>(iDataArrayPtr);
   if(nullptr != fArray.get())
   {
-    std::vector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts<std::vector<int32_t>>();
+    std::vector<int32_t> componentCounts = OrientationConverter<FloatArrayType, float>::GetComponentCounts<std::vector<int32_t>>();
     std::vector<size_t> outputCDims(1, componentCounts[getOutputType()]);
-    FloatArrayType::Pointer outData = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, outputArrayPath, outputCDims);
+    FloatArrayType::Pointer outData = getDataContainerArray()->getPrereqArrayFromPath<FloatArrayType>(this, outputArrayPath, outputCDims);
     generateRepresentation<float>(this, fArray, outData);
   }
 
   DoubleArrayType::Pointer dArray = std::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
   if(nullptr != dArray.get())
   {
-    std::vector<int32_t> componentCounts = OrientationConverter<double>::GetComponentCounts<std::vector<int32_t>>();
+    std::vector<int32_t> componentCounts = OrientationConverter<DoubleArrayType, double>::GetComponentCounts<std::vector<int32_t>>();
     std::vector<size_t> outputCDims(1, componentCounts[getOutputType()]);
-    DoubleArrayType::Pointer outData = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>>(this, outputArrayPath, outputCDims);
+    DoubleArrayType::Pointer outData = getDataContainerArray()->getPrereqArrayFromPath<DoubleArrayType>(this, outputArrayPath, outputCDims);
     generateRepresentation<double>(this, dArray, outData);
   }
 

@@ -70,7 +70,6 @@ public:
    * @return Value of QuaternionDataArrayPath
    */
   DataArrayPath getQuaternionDataArrayPath() const;
-
   Q_PROPERTY(DataArrayPath QuaternionDataArrayPath READ getQuaternionDataArrayPath WRITE setQuaternionDataArrayPath)
 
   /**
@@ -82,7 +81,6 @@ public:
    * @return Value of OutputDataArrayPath
    */
   DataArrayPath getOutputDataArrayPath() const;
-
   Q_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
 
   /**
@@ -94,7 +92,6 @@ public:
    * @return Value of DeleteOriginalData
    */
   bool getDeleteOriginalData() const;
-
   Q_PROPERTY(bool DeleteOriginalData READ getDeleteOriginalData WRITE setDeleteOriginalData)
 
   /**
@@ -106,7 +103,6 @@ public:
    * @return Value of ConversionType
    */
   int32_t getConversionType() const;
-
   Q_PROPERTY(int32_t ConversionType READ getConversionType WRITE setConversionType)
 
   static const int32_t k_ToScalarVector = 0;

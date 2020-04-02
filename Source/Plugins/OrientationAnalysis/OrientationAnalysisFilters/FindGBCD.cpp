@@ -32,18 +32,15 @@
  *    United States Prime Contract Navy N00173-07-C-2068
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "FindGBCD.h"
 
+#include <utility>
 #include <memory>
 
-#include "FindGBCD.h"
-#include <utility>
-
 #include <QtCore/QDateTime>
-
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
@@ -54,6 +51,16 @@
 #include "SIMPLib/Utilities/TimeUtilities.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
+
+#include "EbsdLib/Core/Orientation.hpp"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/Core/Quaternion.hpp"
+#include "EbsdLib/LaueOps/LaueOps.h"
+
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
@@ -61,14 +68,6 @@
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
-
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/Core/Quaternion.hpp"
-#include "OrientationLib/LaueOps/LaueOps.h"
-
-#include "OrientationAnalysis/OrientationAnalysisConstants.h"
-#include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
 using LaueOpsContainer = std::vector<LaueOpsShPtrType>;

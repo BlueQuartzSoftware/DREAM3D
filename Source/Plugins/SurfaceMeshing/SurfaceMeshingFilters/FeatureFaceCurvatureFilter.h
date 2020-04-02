@@ -40,8 +40,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "Plugins/SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-
+#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
@@ -115,7 +114,6 @@ public:
    * @return Value of FaceAttributeMatrixPath
    */
   DataArrayPath getFaceAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath FaceAttributeMatrixPath READ getFaceAttributeMatrixPath WRITE setFaceAttributeMatrixPath)
 
   /**
@@ -127,7 +125,6 @@ public:
    * @return Value of SurfaceMeshPrincipalCurvature1sArrayName
    */
   QString getSurfaceMeshPrincipalCurvature1sArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshPrincipalCurvature1sArrayName READ getSurfaceMeshPrincipalCurvature1sArrayName WRITE setSurfaceMeshPrincipalCurvature1sArrayName)
 
   /**
@@ -139,7 +136,6 @@ public:
    * @return Value of SurfaceMeshPrincipalCurvature2sArrayName
    */
   QString getSurfaceMeshPrincipalCurvature2sArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshPrincipalCurvature2sArrayName READ getSurfaceMeshPrincipalCurvature2sArrayName WRITE setSurfaceMeshPrincipalCurvature2sArrayName)
 
   /**
@@ -151,7 +147,6 @@ public:
    * @return Value of SurfaceMeshPrincipalDirection1sArrayName
    */
   QString getSurfaceMeshPrincipalDirection1sArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshPrincipalDirection1sArrayName READ getSurfaceMeshPrincipalDirection1sArrayName WRITE setSurfaceMeshPrincipalDirection1sArrayName)
 
   /**
@@ -163,7 +158,6 @@ public:
    * @return Value of SurfaceMeshPrincipalDirection2sArrayName
    */
   QString getSurfaceMeshPrincipalDirection2sArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshPrincipalDirection2sArrayName READ getSurfaceMeshPrincipalDirection2sArrayName WRITE setSurfaceMeshPrincipalDirection2sArrayName)
 
   /**
@@ -175,7 +169,6 @@ public:
    * @return Value of SurfaceMeshGaussianCurvaturesArrayName
    */
   QString getSurfaceMeshGaussianCurvaturesArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshGaussianCurvaturesArrayName READ getSurfaceMeshGaussianCurvaturesArrayName WRITE setSurfaceMeshGaussianCurvaturesArrayName)
 
   /**
@@ -187,7 +180,6 @@ public:
    * @return Value of SurfaceMeshMeanCurvaturesArrayName
    */
   QString getSurfaceMeshMeanCurvaturesArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshMeanCurvaturesArrayName READ getSurfaceMeshMeanCurvaturesArrayName WRITE setSurfaceMeshMeanCurvaturesArrayName)
 
   /**
@@ -199,7 +191,6 @@ public:
    * @return Value of NRing
    */
   int getNRing() const;
-
   Q_PROPERTY(int NRing READ getNRing WRITE setNRing)
 
   /**
@@ -211,7 +202,6 @@ public:
    * @return Value of ComputePrincipalDirectionVectors
    */
   bool getComputePrincipalDirectionVectors() const;
-
   Q_PROPERTY(bool ComputePrincipalDirectionVectors READ getComputePrincipalDirectionVectors WRITE setComputePrincipalDirectionVectors)
 
   /**
@@ -223,7 +213,6 @@ public:
    * @return Value of ComputeMeanCurvature
    */
   bool getComputeMeanCurvature() const;
-
   Q_PROPERTY(bool ComputeMeanCurvature READ getComputeMeanCurvature WRITE setComputeMeanCurvature)
 
   /**
@@ -235,7 +224,6 @@ public:
    * @return Value of ComputeGaussianCurvature
    */
   bool getComputeGaussianCurvature() const;
-
   Q_PROPERTY(bool ComputeGaussianCurvature READ getComputeGaussianCurvature WRITE setComputeGaussianCurvature)
 
   /**
@@ -247,7 +235,6 @@ public:
    * @return Value of UseNormalsForCurveFitting
    */
   bool getUseNormalsForCurveFitting() const;
-
   Q_PROPERTY(bool UseNormalsForCurveFitting READ getUseNormalsForCurveFitting WRITE setUseNormalsForCurveFitting)
 
   /**
@@ -264,7 +251,6 @@ public:
    * @return Value of SurfaceMeshFaceLabelsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
   /**
@@ -276,7 +262,6 @@ public:
    * @return Value of SurfaceMeshFeatureFaceIdsArrayPath
    */
   DataArrayPath getSurfaceMeshFeatureFaceIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceIdsArrayPath READ getSurfaceMeshFeatureFaceIdsArrayPath WRITE setSurfaceMeshFeatureFaceIdsArrayPath)
 
   /**
@@ -288,7 +273,6 @@ public:
    * @return Value of SurfaceMeshFaceNormalsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceNormalsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
   /**
@@ -300,7 +284,6 @@ public:
    * @return Value of SurfaceMeshTriangleCentroidsArrayPath
    */
   DataArrayPath getSurfaceMeshTriangleCentroidsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)
 
   /**

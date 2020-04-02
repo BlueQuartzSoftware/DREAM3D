@@ -33,8 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "AddOrientationNoise.h"
 
 #include <QtCore/QTextStream>
@@ -47,12 +45,13 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/Core/Quaternion.hpp"
+#include "EbsdLib/Core/Orientation.hpp"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/Core/Quaternion.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"

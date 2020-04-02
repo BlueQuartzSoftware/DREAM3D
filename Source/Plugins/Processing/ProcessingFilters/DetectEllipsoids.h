@@ -127,7 +127,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -139,7 +138,6 @@ public:
    * @return Value of DetectedEllipsoidsFeatureIdsArrayPath
    */
   DataArrayPath getDetectedEllipsoidsFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath DetectedEllipsoidsFeatureIdsArrayPath READ getDetectedEllipsoidsFeatureIdsArrayPath WRITE setDetectedEllipsoidsFeatureIdsArrayPath)
 
   /**
@@ -151,7 +149,6 @@ public:
    * @return Value of FeatureAttributeMatrixPath
    */
   DataArrayPath getFeatureAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureAttributeMatrixPath READ getFeatureAttributeMatrixPath WRITE setFeatureAttributeMatrixPath)
 
   /**
@@ -163,7 +160,6 @@ public:
    * @return Value of EllipseFeatureAttributeMatrixPath
    */
   DataArrayPath getEllipseFeatureAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath EllipseFeatureAttributeMatrixPath READ getEllipseFeatureAttributeMatrixPath WRITE setEllipseFeatureAttributeMatrixPath)
 
   /**
@@ -175,7 +171,6 @@ public:
    * @return Value of CenterCoordinatesArrayName
    */
   QString getCenterCoordinatesArrayName() const;
-
   Q_PROPERTY(QString CenterCoordinatesArrayName READ getCenterCoordinatesArrayName WRITE setCenterCoordinatesArrayName)
 
   /**
@@ -187,7 +182,6 @@ public:
    * @return Value of MajorAxisLengthArrayName
    */
   QString getMajorAxisLengthArrayName() const;
-
   Q_PROPERTY(QString MajorAxisLengthArrayName READ getMajorAxisLengthArrayName WRITE setMajorAxisLengthArrayName)
 
   /**
@@ -199,7 +193,6 @@ public:
    * @return Value of MinorAxisLengthArrayName
    */
   QString getMinorAxisLengthArrayName() const;
-
   Q_PROPERTY(QString MinorAxisLengthArrayName READ getMinorAxisLengthArrayName WRITE setMinorAxisLengthArrayName)
 
   /**
@@ -211,7 +204,6 @@ public:
    * @return Value of RotationalAnglesArrayName
    */
   QString getRotationalAnglesArrayName() const;
-
   Q_PROPERTY(QString RotationalAnglesArrayName READ getRotationalAnglesArrayName WRITE setRotationalAnglesArrayName)
 
   /**
@@ -223,7 +215,6 @@ public:
    * @return Value of MinFiberAxisLength
    */
   int getMinFiberAxisLength() const;
-
   Q_PROPERTY(int MinFiberAxisLength READ getMinFiberAxisLength WRITE setMinFiberAxisLength)
 
   /**
@@ -235,7 +226,6 @@ public:
    * @return Value of MaxFiberAxisLength
    */
   int getMaxFiberAxisLength() const;
-
   Q_PROPERTY(int MaxFiberAxisLength READ getMaxFiberAxisLength WRITE setMaxFiberAxisLength)
 
   /**
@@ -247,7 +237,6 @@ public:
    * @return Value of HoughTransformThreshold
    */
   float getHoughTransformThreshold() const;
-
   Q_PROPERTY(float HoughTransformThreshold READ getHoughTransformThreshold WRITE setHoughTransformThreshold)
 
   /**
@@ -259,7 +248,6 @@ public:
    * @return Value of MinAspectRatio
    */
   float getMinAspectRatio() const;
-
   Q_PROPERTY(float MinAspectRatio READ getMinAspectRatio WRITE setMinAspectRatio)
 
   /**
@@ -271,7 +259,6 @@ public:
    * @return Value of ImageScaleBarLength
    */
   int getImageScaleBarLength() const;
-
   Q_PROPERTY(int ImageScaleBarLength READ getImageScaleBarLength WRITE setImageScaleBarLength)
 
   void incrementEllipseCount();

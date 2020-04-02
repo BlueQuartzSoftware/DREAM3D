@@ -39,22 +39,22 @@
 
 #include <QtCore/QString>
 
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AxisAngleInput.h"
+
+#include "EbsdLib/Core/EbsdLibConstants.h"
+
+#include "SVWidgetsLib/Widgets/SVControlWidgets.h"
+
 class QGraphicsPixmapItem;
 class DataArrayPath;
-
-#include "ui_QEbsdReferenceFrameDialog.h"
-
-#include "SIMPLib/FilterParameters/AxisAngleInput.h"
 class DataContainerArray;
-
 class IDataArray;
 using IDataArrayShPtrType = std::shared_ptr<IDataArray>;
 
 using DataContainerArrayShPtrType = std::shared_ptr<DataContainerArray>;
 
-#include "SVWidgetsLib/Widgets/SVControlWidgets.h"
-
-#include "EbsdLib/EbsdConstants.h"
+#include "ui_QEbsdReferenceFrameDialog.h"
 
 /**
  * @class QEbsdReferenceFrameDialog QEbsdReferenceFrameDialog.h EbsdImport/UI/QEbsdReferenceFrameDialog.h
@@ -82,7 +82,7 @@ public:
   void updateGraphicsView();
   void updateDisplay();
 
-  Ebsd::EbsdToSampleCoordinateMapping getSelectedOrigin();
+  EbsdLib::EbsdToSampleCoordinateMapping getSelectedOrigin();
   bool getTSLchecked();
   bool getHKLchecked();
   bool getHEDMchecked();

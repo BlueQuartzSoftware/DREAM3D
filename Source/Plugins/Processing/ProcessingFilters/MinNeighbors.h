@@ -105,7 +105,6 @@ public:
    * @return Value of MinNumNeighbors
    */
   int getMinNumNeighbors() const;
-
   Q_PROPERTY(int MinNumNeighbors READ getMinNumNeighbors WRITE setMinNumNeighbors)
 
   /**
@@ -117,7 +116,6 @@ public:
    * @return Value of ApplyToSinglePhase
    */
   bool getApplyToSinglePhase() const;
-
   Q_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
 
   /**
@@ -129,7 +127,6 @@ public:
    * @return Value of PhaseNumber
    */
   int getPhaseNumber() const;
-
   Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
   /**
@@ -141,7 +138,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -153,7 +149,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -165,7 +160,6 @@ public:
    * @return Value of NumNeighborsArrayPath
    */
   DataArrayPath getNumNeighborsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath NumNeighborsArrayPath READ getNumNeighborsArrayPath WRITE setNumNeighborsArrayPath)
 
   /**
@@ -177,7 +171,6 @@ public:
    * @return Value of IgnoredDataArrayPaths
    */
   QVector<DataArrayPath> getIgnoredDataArrayPaths() const;
-
   Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
 
   /**

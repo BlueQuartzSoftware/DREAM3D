@@ -33,18 +33,14 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "AlignSectionsMisorientation.h"
 
 #include <fstream>
 
 #include <QtCore/QDateTime>
-
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -53,9 +49,10 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
-#include "OrientationLib/Core/Quaternion.hpp"
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Core/Quaternion.hpp"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -283,7 +280,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
 
     misorientsPtr->initializeWithValue(false); // Initialize everything to false
 
-    float misorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pif / 180.0f;
+    float misorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_PiOver180;
 
     while(newxshift != oldxshift || newyshift != oldyshift)
     {

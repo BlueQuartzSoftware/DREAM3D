@@ -136,7 +136,6 @@ public:
    * @return Value of CellEnsembleAttributeMatrixPath
    */
   DataArrayPath getCellEnsembleAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixPath READ getCellEnsembleAttributeMatrixPath WRITE setCellEnsembleAttributeMatrixPath)
 
   /**
@@ -148,7 +147,6 @@ public:
    * @return Value of PhaseTypesArrayName
    */
   QString getPhaseTypesArrayName() const;
-
   Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
 
   /**
@@ -160,7 +158,6 @@ public:
    * @return Value of PhaseTypeArray
    */
   PhaseType::Types getPhaseTypeArray() const;
-
   Q_PROPERTY(PhaseType::Types PhaseTypeArray READ getPhaseTypeArray WRITE setPhaseTypeArray)
 
   /**
@@ -172,7 +169,6 @@ public:
    * @return Value of PhaseTypeData
    */
   PhaseType::Types getPhaseTypeData() const;
-
   Q_PROPERTY(PhaseType::Types PhaseTypeData READ getPhaseTypeData WRITE setPhaseTypeData)
 
   int getPhaseCount();
@@ -187,7 +183,6 @@ public:
    * @return Value of NeighborListArrayPath
    */
   DataArrayPath getNeighborListArrayPath() const;
-
   Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
 
   /**
@@ -199,7 +194,6 @@ public:
    * @return Value of SharedSurfaceAreaListArrayPath
    */
   DataArrayPath getSharedSurfaceAreaListArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SharedSurfaceAreaListArrayPath READ getSharedSurfaceAreaListArrayPath WRITE setSharedSurfaceAreaListArrayPath)
 
   /**
@@ -211,7 +205,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -223,7 +216,6 @@ public:
    * @return Value of BiasedFeaturesArrayPath
    */
   DataArrayPath getBiasedFeaturesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
 
   /**
@@ -235,7 +227,6 @@ public:
    * @return Value of EquivalentDiametersArrayPath
    */
   DataArrayPath getEquivalentDiametersArrayPath() const;
-
   Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
 
   /**
@@ -247,7 +238,6 @@ public:
    * @return Value of NeighborhoodsArrayPath
    */
   DataArrayPath getNeighborhoodsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath NeighborhoodsArrayPath READ getNeighborhoodsArrayPath WRITE setNeighborhoodsArrayPath)
 
   /**
@@ -259,7 +249,6 @@ public:
    * @return Value of AspectRatiosArrayPath
    */
   DataArrayPath getAspectRatiosArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AspectRatiosArrayPath READ getAspectRatiosArrayPath WRITE setAspectRatiosArrayPath)
 
   /**
@@ -271,7 +260,6 @@ public:
    * @return Value of Omega3sArrayPath
    */
   DataArrayPath getOmega3sArrayPath() const;
-
   Q_PROPERTY(DataArrayPath Omega3sArrayPath READ getOmega3sArrayPath WRITE setOmega3sArrayPath)
 
   /**
@@ -283,7 +271,6 @@ public:
    * @return Value of AxisEulerAnglesArrayPath
    */
   DataArrayPath getAxisEulerAnglesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AxisEulerAnglesArrayPath READ getAxisEulerAnglesArrayPath WRITE setAxisEulerAnglesArrayPath)
 
   /**
@@ -295,7 +282,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -307,7 +293,6 @@ public:
    * @return Value of SurfaceFeaturesArrayPath
    */
   DataArrayPath getSurfaceFeaturesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
 
   /**
@@ -319,7 +304,6 @@ public:
    * @return Value of VolumesArrayPath
    */
   DataArrayPath getVolumesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath VolumesArrayPath READ getVolumesArrayPath WRITE setVolumesArrayPath)
 
   // These filter parameters are tied to RDF data, but the filter that can calculate them (FindFeatureClustering)
@@ -333,7 +317,6 @@ public:
    * @return Value of RDFArrayPath
    */
   DataArrayPath getRDFArrayPath() const;
-
   Q_PROPERTY(DataArrayPath RDFArrayPath READ getRDFArrayPath WRITE setRDFArrayPath)
 
   /**
@@ -345,7 +328,6 @@ public:
    * @return Value of MaxMinRDFArrayPath
    */
   DataArrayPath getMaxMinRDFArrayPath() const;
-
   Q_PROPERTY(DataArrayPath MaxMinRDFArrayPath READ getMaxMinRDFArrayPath WRITE setMaxMinRDFArrayPath)
 
   /**
@@ -357,7 +339,6 @@ public:
    * @return Value of FeatureEulerAnglesArrayPath
    */
   DataArrayPath getFeatureEulerAnglesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
 
   /**
@@ -369,7 +350,6 @@ public:
    * @return Value of AvgQuatsArrayPath
    */
   DataArrayPath getAvgQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
   /**
@@ -381,7 +361,6 @@ public:
    * @return Value of StatisticsArrayName
    */
   QString getStatisticsArrayName() const;
-
   Q_PROPERTY(QString StatisticsArrayName READ getStatisticsArrayName WRITE setStatisticsArrayName)
 
   /**
@@ -393,7 +372,6 @@ public:
    * @return Value of IncludeRadialDistFunc
    */
   bool getIncludeRadialDistFunc() const;
-
   Q_PROPERTY(bool IncludeRadialDistFunc READ getIncludeRadialDistFunc WRITE setIncludeRadialDistFunc)
 
   /**
@@ -405,7 +383,6 @@ public:
    * @return Value of CalculateMorphologicalStats
    */
   bool getCalculateMorphologicalStats() const;
-
   Q_PROPERTY(bool CalculateMorphologicalStats READ getCalculateMorphologicalStats WRITE setCalculateMorphologicalStats)
 
   /**
@@ -429,7 +406,6 @@ public:
    * @return Value of SizeDistributionFitType
    */
   int getSizeDistributionFitType() const;
-
   Q_PROPERTY(int SizeDistributionFitType READ getSizeDistributionFitType WRITE setSizeDistributionFitType)
 
   /**
@@ -453,7 +429,6 @@ public:
    * @return Value of AspectRatioDistributionFitType
    */
   int getAspectRatioDistributionFitType() const;
-
   Q_PROPERTY(int AspectRatioDistributionFitType READ getAspectRatioDistributionFitType WRITE setAspectRatioDistributionFitType)
 
   /**
@@ -477,7 +452,6 @@ public:
    * @return Value of Omega3DistributionFitType
    */
   int getOmega3DistributionFitType() const;
-
   Q_PROPERTY(int Omega3DistributionFitType READ getOmega3DistributionFitType WRITE setOmega3DistributionFitType)
 
   /**
@@ -501,7 +475,6 @@ public:
    * @return Value of NeighborhoodDistributionFitType
    */
   int getNeighborhoodDistributionFitType() const;
-
   Q_PROPERTY(int NeighborhoodDistributionFitType READ getNeighborhoodDistributionFitType WRITE setNeighborhoodDistributionFitType)
 
   /**
@@ -513,7 +486,6 @@ public:
    * @return Value of CalculateCrystallographicStats
    */
   bool getCalculateCrystallographicStats() const;
-
   Q_PROPERTY(bool CalculateCrystallographicStats READ getCalculateCrystallographicStats WRITE setCalculateCrystallographicStats)
 
   /**
@@ -561,7 +533,6 @@ public:
    * @return Value of SizeCorrelationResolution
    */
   float getSizeCorrelationResolution() const;
-
   Q_PROPERTY(float SizeCorrelationResolution READ getSizeCorrelationResolution WRITE setSizeCorrelationResolution)
 
   /**

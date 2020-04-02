@@ -104,7 +104,6 @@ public:
    * @return Value of NewDataContainerName
    */
   DataArrayPath getNewDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
 
   /**
@@ -116,7 +115,6 @@ public:
    * @return Value of CellAttributeMatrixPath
    */
   DataArrayPath getCellAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
   /**
@@ -128,7 +126,6 @@ public:
    * @return Value of CellFeatureAttributeMatrixPath
    */
   DataArrayPath getCellFeatureAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
 
   /**
@@ -140,7 +137,6 @@ public:
    * @return Value of Spacing
    */
   FloatVec3Type getSpacing() const;
-
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
   /**
@@ -152,7 +148,6 @@ public:
    * @return Value of RenumberFeatures
    */
   bool getRenumberFeatures() const;
-
   Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
 
   /**
@@ -164,7 +159,6 @@ public:
    * @return Value of SaveAsNewDataContainer
    */
   bool getSaveAsNewDataContainer() const;
-
   Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
 
   /**
@@ -176,7 +170,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**

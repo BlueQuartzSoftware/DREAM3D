@@ -104,7 +104,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -116,7 +115,6 @@ public:
    * @return Value of CellPhasesArrayPath
    */
   DataArrayPath getCellPhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
   /**
@@ -128,7 +126,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -140,7 +137,6 @@ public:
    * @return Value of QuatsArrayPath
    */
   DataArrayPath getQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
   /**
@@ -152,7 +148,6 @@ public:
    * @return Value of KernelAverageMisorientationsArrayName
    */
   QString getKernelAverageMisorientationsArrayName() const;
-
   Q_PROPERTY(QString KernelAverageMisorientationsArrayName READ getKernelAverageMisorientationsArrayName WRITE setKernelAverageMisorientationsArrayName)
 
   /**
@@ -164,7 +159,6 @@ public:
    * @return Value of KernelSize
    */
   IntVec3Type getKernelSize() const;
-
   Q_PROPERTY(IntVec3Type KernelSize READ getKernelSize WRITE setKernelSize)
 
   /**

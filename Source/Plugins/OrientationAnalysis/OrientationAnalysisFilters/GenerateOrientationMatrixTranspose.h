@@ -58,7 +58,6 @@ public:
    * @return Value of OrientationMatrixDataArrayPath
    */
   DataArrayPath getOrientationMatrixDataArrayPath() const;
-
   Q_PROPERTY(DataArrayPath OrientationMatrixDataArrayPath READ getOrientationMatrixDataArrayPath WRITE setOrientationMatrixDataArrayPath)
 
   /**
@@ -70,7 +69,6 @@ public:
    * @return Value of OutputDataArrayPath
    */
   DataArrayPath getOutputDataArrayPath() const;
-
   Q_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
 
   /**
@@ -82,7 +80,6 @@ public:
    * @return Value of DeleteOriginalData
    */
   bool getDeleteOriginalData() const;
-
   Q_PROPERTY(bool DeleteOriginalData READ getDeleteOriginalData WRITE setDeleteOriginalData)
 
   /**

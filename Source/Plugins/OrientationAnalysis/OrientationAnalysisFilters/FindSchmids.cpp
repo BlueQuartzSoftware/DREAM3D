@@ -33,14 +33,11 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "FindSchmids.h"
 
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -49,16 +46,17 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/Math/MatrixMath.h"
 
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/Core/Quaternion.hpp"
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
+#include "EbsdLib/Core/Orientation.hpp"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/Core/Quaternion.hpp"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-#include "EbsdLib/EbsdConstants.h"
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -328,7 +326,7 @@ void FindSchmids::execute()
     MatrixMath::Multiply3x3with3x1(g, sampleLoading, crystalLoading);
 
     uint32_t xtal = m_CrystalStructures[m_FeaturePhases[i]];
-    if(xtal < Ebsd::CrystalStructure::LaueGroupEnd)
+    if(xtal < EbsdLib::CrystalStructure::LaueGroupEnd)
     {
       if(!m_OverrideSystem)
       {

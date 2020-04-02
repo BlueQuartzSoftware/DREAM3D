@@ -103,7 +103,6 @@ public:
    * @return Value of FeatureAttributeMatrixName
    */
   DataArrayPath getFeatureAttributeMatrixName() const;
-
   Q_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
 
   /**
@@ -115,7 +114,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -127,7 +125,6 @@ public:
    * @return Value of VolumesArrayName
    */
   QString getVolumesArrayName() const;
-
   Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
 
   /**
@@ -139,7 +136,6 @@ public:
    * @return Value of EquivalentDiametersArrayName
    */
   QString getEquivalentDiametersArrayName() const;
-
   Q_PROPERTY(QString EquivalentDiametersArrayName READ getEquivalentDiametersArrayName WRITE setEquivalentDiametersArrayName)
 
   /**
@@ -151,7 +147,6 @@ public:
    * @return Value of NumElementsArrayName
    */
   QString getNumElementsArrayName() const;
-
   Q_PROPERTY(QString NumElementsArrayName READ getNumElementsArrayName WRITE setNumElementsArrayName)
 
   /**
@@ -163,7 +158,6 @@ public:
    * @return Value of SaveElementSizes
    */
   bool getSaveElementSizes() const;
-
   Q_PROPERTY(bool SaveElementSizes READ getSaveElementSizes WRITE setSaveElementSizes)
 
   /**

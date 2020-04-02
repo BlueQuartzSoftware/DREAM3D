@@ -99,7 +99,6 @@ public:
    * @return Value of InputFile
    */
   QString getInputFile() const;
-
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**
@@ -111,7 +110,6 @@ public:
    * @return Value of DREAM3DAlignmentFile
    */
   bool getDREAM3DAlignmentFile() const;
-
   Q_PROPERTY(bool DREAM3DAlignmentFile READ getDREAM3DAlignmentFile WRITE setDREAM3DAlignmentFile)
 
   /**

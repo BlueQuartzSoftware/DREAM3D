@@ -353,21 +353,29 @@ install(FILES ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt
         DESTINATION "${INSTALL_DESTINATION}"
         COMPONENT Applications)
 
+#------------------------------------------------------------------------------
+# If the developer has set another EbsdLib directory then use that, otherwise look
+# for the EbsdLib directory at the same level as the DREAM3D directory
+if("${EbsdLibProj_SOURCE_DIR}" STREQUAL "")
+  if(EXISTS "${DREAM3DProj_SOURCE_DIR}/ExternalProjects/EbsdLib")
+    set(EbsdLibProj_SOURCE_DIR "${DREAM3DProj_SOURCE_DIR}/ExternalProjects/EbsdLib")
+  elseif(EXISTS "${DREAM3D_PARENT}/EbsdLib")
+    set(EbsdLibProj_SOURCE_DIR "${DREAM3D_PARENT}/EbsdLib")
+  else()
+    message(FATAL_ERROR "EbsdLibProj_SOURCE_DIR was not set. Where is the EbsdLib project directory. Please set the EbsdLibProj_SOURCE_DIR variable to the EbsdLib directory.")
+  endif()
+  message(STATUS "EbsdLibProj_SOURCE_DIR: ${EbsdLibProj_SOURCE_DIR}")
+endif()
 
+set(EbsdLib_ENABLE_HDF5 ON)
+set(EbsdLib_USE_PARALLEL_ALGORITHMS ${SIMPL_USE_MULTITHREADED_ALGOS})
 
-# Include some directories for the compiler
+add_subdirectory( ${EbsdLibProj_SOURCE_DIR} ${PROJECT_BINARY_DIR}/EbsdLib)
 
-# -----------------------------------------------------------------------
-# -- Build the EbsdLib Library
-#add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/libharu ${PROJECT_BINARY_DIR}/libharu)
-
-# -----------------------------------------------------------------------
-# -- Build the EbsdLib Library
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/EbsdLib ${PROJECT_BINARY_DIR}/EbsdLib)
 
 # -----------------------------------------------------------------------
 # -- Build the OrientationLib Library
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/OrientationLib ${PROJECT_BINARY_DIR}/OrientationLib)
+#add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/OrientationLib ${PROJECT_BINARY_DIR}/OrientationLib)
 
 # -----------------------------------------------------------------------
 # This needs to be set here as we are going to look for files in this directory

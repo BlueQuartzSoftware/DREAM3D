@@ -107,7 +107,6 @@ public:
    * @return Value of ReadCellData
    */
   bool getReadCellData() const;
-
   Q_PROPERTY(bool ReadCellData READ getReadCellData WRITE setReadCellData)
 
   /**
@@ -119,7 +118,6 @@ public:
    * @return Value of VolumeDataContainerName
    */
   DataArrayPath getVolumeDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
   /**
@@ -131,7 +129,6 @@ public:
    * @return Value of CellAttributeMatrixName
    */
   QString getCellAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
   /**
@@ -143,7 +140,6 @@ public:
    * @return Value of ReadPointData
    */
   bool getReadPointData() const;
-
   Q_PROPERTY(bool ReadPointData READ getReadPointData WRITE setReadPointData)
 
   /**
@@ -155,7 +151,6 @@ public:
    * @return Value of VertexDataContainerName
    */
   DataArrayPath getVertexDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
   /**
@@ -167,7 +162,6 @@ public:
    * @return Value of VertexAttributeMatrixName
    */
   QString getVertexAttributeMatrixName() const;
-
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
   /**
@@ -179,7 +173,6 @@ public:
    * @return Value of InputFile
    */
   QString getInputFile() const;
-
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**

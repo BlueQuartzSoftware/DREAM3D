@@ -101,7 +101,6 @@ public:
    * @return Value of MinConfidence
    */
   float getMinConfidence() const;
-
   Q_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
 
   /**
@@ -113,7 +112,6 @@ public:
    * @return Value of Loop
    */
   bool getLoop() const;
-
   Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
 
   /**
@@ -125,7 +123,6 @@ public:
    * @return Value of ConfidenceIndexArrayPath
    */
   DataArrayPath getConfidenceIndexArrayPath() const;
-
   Q_PROPERTY(DataArrayPath ConfidenceIndexArrayPath READ getConfidenceIndexArrayPath WRITE setConfidenceIndexArrayPath)
 
   /**
@@ -137,7 +134,6 @@ public:
    * @return Value of SelectedComparison
    */
   int getSelectedComparison() const;
-
   Q_PROPERTY(int SelectedComparison READ getSelectedComparison WRITE setSelectedComparison)
 
   /**
@@ -149,7 +145,6 @@ public:
    * @return Value of IgnoredDataArrayPaths
    */
   QVector<DataArrayPath> getIgnoredDataArrayPaths() const;
-
   Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
 
   /**

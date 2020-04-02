@@ -45,7 +45,7 @@
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
-#include "EbsdLib/H5EbsdVolumeReader.h"
+#include "EbsdLib/IO/H5EbsdVolumeReader.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -113,7 +113,6 @@ public:
    * @return Value of DataContainerName
    */
   DataArrayPath getDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   /**
@@ -125,7 +124,6 @@ public:
    * @return Value of CellEnsembleAttributeMatrixName
    */
   QString getCellEnsembleAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
   /**
@@ -137,7 +135,6 @@ public:
    * @return Value of CellAttributeMatrixName
    */
   QString getCellAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
   /**
@@ -169,7 +166,6 @@ public:
    * @return Value of InputFile
    */
   QString getInputFile() const;
-
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**
@@ -181,7 +177,6 @@ public:
    * @return Value of ZStartIndex
    */
   int getZStartIndex() const;
-
   Q_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex)
 
   /**
@@ -193,7 +188,6 @@ public:
    * @return Value of ZEndIndex
    */
   int getZEndIndex() const;
-
   Q_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex)
 
   /**
@@ -205,7 +199,6 @@ public:
    * @return Value of UseTransformations
    */
   bool getUseTransformations() const;
-
   Q_PROPERTY(bool UseTransformations READ getUseTransformations WRITE setUseTransformations)
 
   /**
@@ -217,7 +210,6 @@ public:
    * @return Value of SelectedArrayNames
    */
   QSet<QString> getSelectedArrayNames() const;
-
   Q_PROPERTY(QSet<QString> SelectedArrayNames READ getSelectedArrayNames WRITE setSelectedArrayNames)
 
   /**
@@ -229,7 +221,6 @@ public:
    * @return Value of DataArrayNames
    */
   QSet<QString> getDataArrayNames() const;
-
   Q_PROPERTY(QSet<QString> DataArrayNames READ getDataArrayNames WRITE setDataArrayNames)
 
   /**
@@ -241,7 +232,6 @@ public:
    * @return Value of AngleRepresentation
    */
   int getAngleRepresentation() const;
-
   Q_PROPERTY(int AngleRepresentation READ getAngleRepresentation WRITE setAngleRepresentation)
 
   //-------------------------------------------------------
@@ -260,12 +250,12 @@ public:
   /**
    * @brief Setter property for Manufacturer
    */
-  void setManufacturer(const Ebsd::OEM& value);
+  void setManufacturer(const EbsdLib::OEM& value);
   /**
    * @brief Getter property for Manufacturer
    * @return Value of Manufacturer
    */
-  Ebsd::OEM getManufacturer() const;
+  EbsdLib::OEM getManufacturer() const;
 
   /**
    * @brief Setter property for SampleTransformation
@@ -486,7 +476,7 @@ protected:
 
     // Initialize the zero'th element to unknowns. The other elements will
     // be filled in based on values from the data file
-    crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
+    crystalStructures->setValue(0, EbsdLib::CrystalStructure::UnknownCrystalStructure);
     materialNames->setValue(0, "Invalid Phase");
     latticeConstants->setComponent(0, 0, 0.0f);
     latticeConstants->setComponent(0, 1, 0.0f);
@@ -544,7 +534,7 @@ private:
   QSet<QString> m_DataArrayNames = {};
   int m_AngleRepresentation = {};
   uint32_t m_RefFrameZDir = {};
-  Ebsd::OEM m_Manufacturer = {};
+  EbsdLib::OEM m_Manufacturer = {};
   AxisAngleInput_t m_SampleTransformation = {};
   AxisAngleInput_t m_EulerTransformation = {};
   QString m_CrystalStructuresArrayName = {};

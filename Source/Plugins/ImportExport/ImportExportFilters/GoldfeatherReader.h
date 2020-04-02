@@ -115,7 +115,6 @@ public:
    * @return Value of SurfaceDataContainerName
    */
   DataArrayPath getSurfaceDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
   /**
    * @brief Setter property for VertexAttributeMatrixName
@@ -126,7 +125,6 @@ public:
    * @return Value of VertexAttributeMatrixName
    */
   QString getVertexAttributeMatrixName() const;
-
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
   /**
    * @brief Setter property for FaceAttributeMatrixName
@@ -137,7 +135,6 @@ public:
    * @return Value of FaceAttributeMatrixName
    */
   QString getFaceAttributeMatrixName() const;
-
   Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
   /**
@@ -149,7 +146,6 @@ public:
    * @return Value of SurfaceMeshPrincipalCurvature1sArrayName
    */
   QString getSurfaceMeshPrincipalCurvature1sArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshPrincipalCurvature1sArrayName READ getSurfaceMeshPrincipalCurvature1sArrayName WRITE setSurfaceMeshPrincipalCurvature1sArrayName)
   /**
    * @brief Setter property for SurfaceMeshPrincipalCurvature2sArrayName
@@ -160,7 +156,6 @@ public:
    * @return Value of SurfaceMeshPrincipalCurvature2sArrayName
    */
   QString getSurfaceMeshPrincipalCurvature2sArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshPrincipalCurvature2sArrayName READ getSurfaceMeshPrincipalCurvature2sArrayName WRITE setSurfaceMeshPrincipalCurvature2sArrayName)
   /**
    * @brief Setter property for SurfaceMeshPrincipalDirection1sArrayName
@@ -171,7 +166,6 @@ public:
    * @return Value of SurfaceMeshPrincipalDirection1sArrayName
    */
   QString getSurfaceMeshPrincipalDirection1sArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshPrincipalDirection1sArrayName READ getSurfaceMeshPrincipalDirection1sArrayName WRITE setSurfaceMeshPrincipalDirection1sArrayName)
   /**
    * @brief Setter property for SurfaceMeshPrincipalDirection2sArrayName
@@ -182,7 +176,6 @@ public:
    * @return Value of SurfaceMeshPrincipalDirection2sArrayName
    */
   QString getSurfaceMeshPrincipalDirection2sArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshPrincipalDirection2sArrayName READ getSurfaceMeshPrincipalDirection2sArrayName WRITE setSurfaceMeshPrincipalDirection2sArrayName)
   /**
    * @brief Setter property for SurfaceMeshNodeNormalsArrayName
@@ -193,7 +186,6 @@ public:
    * @return Value of SurfaceMeshNodeNormalsArrayName
    */
   QString getSurfaceMeshNodeNormalsArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshNodeNormalsArrayName READ getSurfaceMeshNodeNormalsArrayName WRITE setSurfaceMeshNodeNormalsArrayName)
   /**
    * @brief Setter property for SurfaceMeshFaceLabelsArrayName
@@ -204,7 +196,6 @@ public:
    * @return Value of SurfaceMeshFaceLabelsArrayName
    */
   QString getSurfaceMeshFaceLabelsArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshFaceLabelsArrayName READ getSurfaceMeshFaceLabelsArrayName WRITE setSurfaceMeshFaceLabelsArrayName)
   /**
    * @brief Setter property for SurfaceMeshFaceNormalsArrayName
@@ -215,7 +206,6 @@ public:
    * @return Value of SurfaceMeshFaceNormalsArrayName
    */
   QString getSurfaceMeshFaceNormalsArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshFaceNormalsArrayName READ getSurfaceMeshFaceNormalsArrayName WRITE setSurfaceMeshFaceNormalsArrayName)
 
   /**
@@ -227,7 +217,6 @@ public:
    * @return Value of InputFile
    */
   QString getInputFile() const;
-
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**

@@ -98,7 +98,6 @@ public:
    * @return Value of InputAttributeMatrix
    */
   DataArrayPath getInputAttributeMatrix() const;
-
   Q_PROPERTY(DataArrayPath InputAttributeMatrix READ getInputAttributeMatrix WRITE setInputAttributeMatrix)
 
   /**
@@ -110,7 +109,6 @@ public:
    * @return Value of DestinationAttributeMatrix
    */
   DataArrayPath getDestinationAttributeMatrix() const;
-
   Q_PROPERTY(DataArrayPath DestinationAttributeMatrix READ getDestinationAttributeMatrix WRITE setDestinationAttributeMatrix)
 
   /**
@@ -122,7 +120,6 @@ public:
    * @return Value of CheckResolution
    */
   bool getCheckResolution() const;
-
   Q_PROPERTY(bool CheckResolution READ getCheckResolution WRITE setCheckResolution)
 
   /**

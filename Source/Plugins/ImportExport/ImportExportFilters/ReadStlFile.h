@@ -100,7 +100,6 @@ public:
    * @return Value of SurfaceMeshDataContainerName
    */
   DataArrayPath getSurfaceMeshDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshDataContainerName READ getSurfaceMeshDataContainerName WRITE setSurfaceMeshDataContainerName)
 
   /**
@@ -112,7 +111,6 @@ public:
    * @return Value of FaceAttributeMatrixName
    */
   QString getFaceAttributeMatrixName() const;
-
   Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
   /**
@@ -124,7 +122,6 @@ public:
    * @return Value of StlFilePath
    */
   QString getStlFilePath() const;
-
   Q_PROPERTY(QString StlFilePath READ getStlFilePath WRITE setStlFilePath)
 
   /**
@@ -136,7 +133,6 @@ public:
    * @return Value of FaceNormalsArrayName
    */
   QString getFaceNormalsArrayName() const;
-
   Q_PROPERTY(QString FaceNormalsArrayName READ getFaceNormalsArrayName WRITE setFaceNormalsArrayName)
 
   /**

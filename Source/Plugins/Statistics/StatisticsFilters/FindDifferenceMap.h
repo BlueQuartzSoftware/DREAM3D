@@ -70,7 +70,6 @@ public:
    * @return Value of FirstInputArrayPath
    */
   DataArrayPath getFirstInputArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FirstInputArrayPath READ getFirstInputArrayPath WRITE setFirstInputArrayPath)
 
   /**
@@ -82,7 +81,6 @@ public:
    * @return Value of SecondInputArrayPath
    */
   DataArrayPath getSecondInputArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SecondInputArrayPath READ getSecondInputArrayPath WRITE setSecondInputArrayPath)
 
   /**
@@ -94,7 +92,6 @@ public:
    * @return Value of DifferenceMapArrayPath
    */
   DataArrayPath getDifferenceMapArrayPath() const;
-
   Q_PROPERTY(DataArrayPath DifferenceMapArrayPath READ getDifferenceMapArrayPath WRITE setDifferenceMapArrayPath)
 
   /**

@@ -106,7 +106,6 @@ public:
    * @return Value of FaceFeatureAttributeMatrixName
    */
   QString getFaceFeatureAttributeMatrixName() const;
-
   Q_PROPERTY(QString FaceFeatureAttributeMatrixName READ getFaceFeatureAttributeMatrixName WRITE setFaceFeatureAttributeMatrixName)
 
   /**
@@ -118,7 +117,6 @@ public:
    * @return Value of SurfaceMeshFeatureFaceIdsArrayName
    */
   QString getSurfaceMeshFeatureFaceIdsArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshFeatureFaceIdsArrayName READ getSurfaceMeshFeatureFaceIdsArrayName WRITE setSurfaceMeshFeatureFaceIdsArrayName)
 
   /**
@@ -130,7 +128,6 @@ public:
    * @return Value of SurfaceMeshFeatureFaceLabelsArrayName
    */
   QString getSurfaceMeshFeatureFaceLabelsArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshFeatureFaceLabelsArrayName READ getSurfaceMeshFeatureFaceLabelsArrayName WRITE setSurfaceMeshFeatureFaceLabelsArrayName)
 
   /**
@@ -142,7 +139,6 @@ public:
    * @return Value of SurfaceMeshFeatureFaceNumTrianglesArrayName
    */
   QString getSurfaceMeshFeatureFaceNumTrianglesArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshFeatureFaceNumTrianglesArrayName READ getSurfaceMeshFeatureFaceNumTrianglesArrayName WRITE setSurfaceMeshFeatureFaceNumTrianglesArrayName)
 
   /**
@@ -154,7 +150,6 @@ public:
    * @return Value of SurfaceMeshFaceLabelsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
   /**
