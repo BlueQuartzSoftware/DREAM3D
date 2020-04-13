@@ -48,8 +48,8 @@
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMessageBox>
 
-#include "EbsdLib/HKL/CtfConstants.h"
-#include "EbsdLib/TSL/AngConstants.h"
+#include "EbsdLib/IO/HKL/CtfConstants.h"
+#include "EbsdLib/IO/TSL/AngConstants.h"
 
 #include "SIMPLib/CoreFilters/GenerateColorTable.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
@@ -207,25 +207,25 @@ void QEbsdReferenceFrameDialog::setNoTrans(bool checked)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::EbsdToSampleCoordinateMapping QEbsdReferenceFrameDialog::getSelectedOrigin()
+EbsdLib::EbsdToSampleCoordinateMapping QEbsdReferenceFrameDialog::getSelectedOrigin()
 {
   if(m_TSLdefaultBtn->isChecked())
   {
-    return Ebsd::TSLdefault;
+    return EbsdLib::TSLdefault;
   }
   if(m_HKLdefaultBtn->isChecked())
   {
-    return Ebsd::HKLdefault;
+    return EbsdLib::HKLdefault;
   }
   if(m_HEDMdefaultBtn->isChecked())
   {
-    return Ebsd::HEDMdefault;
+    return EbsdLib::HEDMdefault;
   }
   if(m_NoTransBtn->isChecked())
   {
-    return Ebsd::UnknownCoordinateMapping;
+    return EbsdLib::UnknownCoordinateMapping;
   }
-  return Ebsd::UnknownCoordinateMapping;
+  return EbsdLib::UnknownCoordinateMapping;
 }
 
 // -----------------------------------------------------------------------------
@@ -279,7 +279,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
 
   QFileInfo fi(m_EbsdFileName);
 
-  if(fi.suffix().compare(Ebsd::Ang::FileExtLower) == 0)
+  if(fi.suffix().compare(EbsdLib::Ang::FileExtLower) == 0)
   {
     ReadAngData::Pointer reader = ReadAngData::New();
     reader->setInputFile(m_EbsdFileName);
@@ -304,11 +304,11 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     dcName = reader->getDataContainerName().getDataContainerName();
     cellAttrMatName = reader->getCellAttributeMatrixName();
     cellEnsembleName = reader->getCellEnsembleAttributeMatrixName();
-    cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::AngFile::Phases);
-    cellEulerAnglesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::AngFile::EulerAngles);
-    crystalStructuresArrayPath = DataArrayPath(dcName, cellEnsembleName, Ebsd::AngFile::CrystalStructures);
+    cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, EbsdLib::AngFile::Phases);
+    cellEulerAnglesArrayPath = DataArrayPath(dcName, cellAttrMatName, EbsdLib::AngFile::EulerAngles);
+    crystalStructuresArrayPath = DataArrayPath(dcName, cellEnsembleName, EbsdLib::AngFile::CrystalStructures);
   }
-  else if(fi.suffix().compare(Ebsd::Ctf::FileExt) == 0)
+  else if(fi.suffix().compare(EbsdLib::Ctf::FileExt) == 0)
   {
     ReadCtfData::Pointer reader = ReadCtfData::New();
     reader->setInputFile(m_EbsdFileName);
@@ -335,9 +335,9 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     dcName = reader->getDataContainerName().getDataContainerName();
     cellAttrMatName = reader->getCellAttributeMatrixName();
     cellEnsembleName = reader->getCellEnsembleAttributeMatrixName();
-    cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::CtfFile::Phases);
-    cellEulerAnglesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::CtfFile::EulerAngles);
-    crystalStructuresArrayPath = DataArrayPath(dcName, cellEnsembleName, Ebsd::CtfFile::CrystalStructures);
+    cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, EbsdLib::CtfFile::Phases);
+    cellEulerAnglesArrayPath = DataArrayPath(dcName, cellAttrMatName, EbsdLib::CtfFile::EulerAngles);
+    crystalStructuresArrayPath = DataArrayPath(dcName, cellEnsembleName, EbsdLib::CtfFile::CrystalStructures);
   }
 
   QString outputArrayName;
@@ -350,11 +350,11 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     DataArrayPath arrayPath = DataArrayPath(dcName, cellAttrMatName, "");
     if(m_EbsdFileName.endsWith(".ang", Qt::CaseInsensitive))
     {
-      arrayPath.setDataArrayName(Ebsd::Ang::ConfidenceIndex);
+      arrayPath.setDataArrayName(EbsdLib::Ang::ConfidenceIndex);
     }
     else if(m_EbsdFileName.endsWith(".ctf", Qt::CaseInsensitive))
     {
-      arrayPath.setDataArrayName(Ebsd::Ctf::Bands);
+      arrayPath.setDataArrayName(EbsdLib::Ctf::Bands);
     }
     else
     {
@@ -430,11 +430,11 @@ int QEbsdReferenceFrameDialog::createIpfColors(DataContainerArray::Pointer dca, 
        << "fallback DREAM.3D has selected to display the ";
     if(m_EbsdFileName.endsWith(".ang", Qt::CaseInsensitive))
     {
-      ss << Ebsd::Ang::ConfidenceIndex;
+      ss << EbsdLib::Ang::ConfidenceIndex;
     }
     else if(m_EbsdFileName.endsWith(".ctf", Qt::CaseInsensitive))
     {
-      ss << Ebsd::Ctf::Bands;
+      ss << EbsdLib::Ctf::Bands;
     }
     else
     {

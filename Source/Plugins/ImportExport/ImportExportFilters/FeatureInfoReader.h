@@ -107,7 +107,6 @@ public:
    * @return Value of CellAttributeMatrixName
    */
   DataArrayPath getCellAttributeMatrixName() const;
-
   Q_PROPERTY(DataArrayPath CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
   /**
@@ -119,7 +118,6 @@ public:
    * @return Value of CellFeatureAttributeMatrixName
    */
   QString getCellFeatureAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
   /* Input Parameters */
@@ -132,7 +130,6 @@ public:
    * @return Value of InputFile
    */
   QString getInputFile() const;
-
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**
@@ -144,7 +141,6 @@ public:
    * @return Value of CreateCellLevelArrays
    */
   bool getCreateCellLevelArrays() const;
-
   Q_PROPERTY(bool CreateCellLevelArrays READ getCreateCellLevelArrays WRITE setCreateCellLevelArrays)
 
   /**
@@ -156,7 +152,6 @@ public:
    * @return Value of RenumberFeatures
    */
   bool getRenumberFeatures() const;
-
   Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
 
   /**
@@ -168,7 +163,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -180,7 +174,6 @@ public:
    * @return Value of CellPhasesArrayName
    */
   QString getCellPhasesArrayName() const;
-
   Q_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
 
   /**
@@ -192,7 +185,6 @@ public:
    * @return Value of CellEulerAnglesArrayName
    */
   QString getCellEulerAnglesArrayName() const;
-
   Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
 
   /**
@@ -204,7 +196,6 @@ public:
    * @return Value of FeaturePhasesArrayName
    */
   QString getFeaturePhasesArrayName() const;
-
   Q_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
 
   /**
@@ -216,7 +207,6 @@ public:
    * @return Value of FeatureEulerAnglesArrayName
    */
   QString getFeatureEulerAnglesArrayName() const;
-
   Q_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
 
   /**
@@ -228,7 +218,6 @@ public:
    * @return Value of Delimiter
    */
   int getDelimiter() const;
-
   Q_PROPERTY(int Delimiter READ getDelimiter WRITE setDelimiter)
 
   /**

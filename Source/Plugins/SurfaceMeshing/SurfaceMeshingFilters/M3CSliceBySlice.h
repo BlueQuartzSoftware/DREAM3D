@@ -120,7 +120,6 @@ public:
    * @return Value of SurfaceDataContainerName
    */
   DataArrayPath getSurfaceDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
   /**
    * @brief Setter property for VertexAttributeMatrixName
@@ -131,7 +130,6 @@ public:
    * @return Value of VertexAttributeMatrixName
    */
   QString getVertexAttributeMatrixName() const;
-
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
   /**
    * @brief Setter property for FaceAttributeMatrixName
@@ -142,7 +140,6 @@ public:
    * @return Value of FaceAttributeMatrixName
    */
   QString getFaceAttributeMatrixName() const;
-
   Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
   /**
@@ -154,7 +151,6 @@ public:
    * @return Value of FaceLabelsArrayName
    */
   QString getFaceLabelsArrayName() const;
-
   Q_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
   /**
    * @brief Setter property for SurfaceMeshNodeTypesArrayName
@@ -165,7 +161,6 @@ public:
    * @return Value of SurfaceMeshNodeTypesArrayName
    */
   QString getSurfaceMeshNodeTypesArrayName() const;
-
   Q_PROPERTY(QString SurfaceMeshNodeTypesArrayName READ getSurfaceMeshNodeTypesArrayName WRITE setSurfaceMeshNodeTypesArrayName)
 
   /**
@@ -177,7 +172,6 @@ public:
    * @return Value of DeleteTempFiles
    */
   bool getDeleteTempFiles() const;
-
   Q_PROPERTY(bool DeleteTempFiles READ getDeleteTempFiles WRITE setDeleteTempFiles)
 
   void preflight() override;
@@ -191,7 +185,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   QString getCompiledLibraryName() const override;

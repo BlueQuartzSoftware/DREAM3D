@@ -98,7 +98,6 @@ public:
    * @return Value of CellPhasesArrayPath
    */
   DataArrayPath getCellPhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
   /**
@@ -110,7 +109,6 @@ public:
    * @return Value of VolFractionsArrayPath
    */
   DataArrayPath getVolFractionsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath VolFractionsArrayPath READ getVolFractionsArrayPath WRITE setVolFractionsArrayPath)
 
   /**

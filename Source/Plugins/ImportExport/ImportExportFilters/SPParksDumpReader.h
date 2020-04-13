@@ -39,10 +39,7 @@
 
 #include <QtCore/QFile>
 
-// Needed for AxisAngle_t
-#include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/HKL/DataParser.hpp"
-
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/CoreFilters/FileReader.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -50,6 +47,8 @@
 
 // Forward Declare classes.
 class ImageGeom;
+class GenericDataParser;
+using GenericDataParserShPtr = std::shared_ptr<GenericDataParser>;
 
 #include "ImportExport/ImportExportDLLExport.h"
 
@@ -113,7 +112,6 @@ public:
    * @return Value of VolumeDataContainerName
    */
   DataArrayPath getVolumeDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
   /**
@@ -125,7 +123,6 @@ public:
    * @return Value of CellAttributeMatrixName
    */
   QString getCellAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
   /**
@@ -137,7 +134,6 @@ public:
    * @return Value of InputFile
    */
   QString getInputFile() const;
-
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**
@@ -149,7 +145,6 @@ public:
    * @return Value of Origin
    */
   FloatVec3Type getOrigin() const;
-
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
   /**
@@ -161,7 +156,6 @@ public:
    * @return Value of Spacing
    */
   FloatVec3Type getSpacing() const;
-
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
   /**
@@ -173,7 +167,6 @@ public:
    * @return Value of OneBasedArrays
    */
   bool getOneBasedArrays() const;
-
   Q_PROPERTY(bool OneBasedArrays READ getOneBasedArrays WRITE setOneBasedArrays)
 
   /**
@@ -185,7 +178,6 @@ public:
    * @return Value of FeatureIdsArrayName
    */
   QString getFeatureIdsArrayName() const;
-
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
   /**
@@ -281,7 +273,7 @@ protected:
    * @param featureName Name of incoming data
    * @return Enumeration type
    */
-  Ebsd::NumType getPointerType(const QString& featureName);
+  SIMPL::NumericTypes::Type getPointerType(const QString& featureName);
 
   /**
    * @brief getTypeSize Returns the size in bytes of the incoming data
@@ -311,7 +303,7 @@ private:
   QString m_FeatureIdsArrayName = {};
 
   QFile m_InStream;
-  QMap<QString, DataParser::Pointer> m_NamePointerMap;
+  QMap<QString, GenericDataParserShPtr> m_NamePointerMap;
   ImageGeom* m_CachedGeometry = nullptr;
 
 public:

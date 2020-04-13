@@ -49,24 +49,24 @@
 #include "SIMPLib/Utilities/ColorTable.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/LaueOps/CubicLowOps.h"
-#include "OrientationLib/LaueOps/CubicOps.h"
-#include "OrientationLib/LaueOps/HexagonalLowOps.h"
-#include "OrientationLib/LaueOps/HexagonalOps.h"
-#include "OrientationLib/LaueOps/MonoclinicOps.h"
-#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
-#include "OrientationLib/LaueOps/TetragonalLowOps.h"
-#include "OrientationLib/LaueOps/TetragonalOps.h"
-#include "OrientationLib/LaueOps/TriclinicOps.h"
-#include "OrientationLib/LaueOps/TrigonalLowOps.h"
-#include "OrientationLib/LaueOps/TrigonalOps.h"
+#include "EbsdLib/Core/Orientation.hpp"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/LaueOps/CubicLowOps.h"
+#include "EbsdLib/LaueOps/CubicOps.h"
+#include "EbsdLib/LaueOps/HexagonalLowOps.h"
+#include "EbsdLib/LaueOps/HexagonalOps.h"
+#include "EbsdLib/LaueOps/MonoclinicOps.h"
+#include "EbsdLib/LaueOps/OrthoRhombicOps.h"
+#include "EbsdLib/LaueOps/TetragonalLowOps.h"
+#include "EbsdLib/LaueOps/TetragonalOps.h"
+#include "EbsdLib/LaueOps/TriclinicOps.h"
+#include "EbsdLib/LaueOps/TrigonalLowOps.h"
+#include "EbsdLib/LaueOps/TrigonalOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -247,7 +247,7 @@ void GenerateRodriguesColors::execute()
     m_CellRodriguesColors[index + 2] = 0;
 
     // Make sure we are using a valid Euler Angles with valid crystal symmetry
-    if((missingGoodVoxels || m_GoodVoxels[i]) && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd)
+    if((missingGoodVoxels || m_GoodVoxels[i]) && m_CrystalStructures[phase] < EbsdLib::CrystalStructure::LaueGroupEnd)
     {
       OrientationF rod = OrientationTransformation::eu2ro<OrientationF, OrientationF>(OrientationF(m_CellEulerAngles + index, 3));
 

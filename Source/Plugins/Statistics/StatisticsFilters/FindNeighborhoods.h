@@ -103,7 +103,6 @@ public:
    * @return Value of NeighborhoodListArrayName
    */
   QString getNeighborhoodListArrayName() const;
-
   Q_PROPERTY(QString NeighborhoodListArrayName READ getNeighborhoodListArrayName WRITE setNeighborhoodListArrayName)
 
   /**
@@ -115,7 +114,6 @@ public:
    * @return Value of MultiplesOfAverage
    */
   float getMultiplesOfAverage() const;
-
   Q_PROPERTY(float MultiplesOfAverage READ getMultiplesOfAverage WRITE setMultiplesOfAverage)
 
   /**
@@ -127,7 +125,6 @@ public:
    * @return Value of EquivalentDiametersArrayPath
    */
   DataArrayPath getEquivalentDiametersArrayPath() const;
-
   Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
 
   /**
@@ -139,7 +136,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -151,7 +147,6 @@ public:
    * @return Value of CentroidsArrayPath
    */
   DataArrayPath getCentroidsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
   /**
@@ -163,7 +158,6 @@ public:
    * @return Value of NeighborhoodsArrayName
    */
   QString getNeighborhoodsArrayName() const;
-
   Q_PROPERTY(QString NeighborhoodsArrayName READ getNeighborhoodsArrayName WRITE setNeighborhoodsArrayName)
 
   void updateNeighborHood(size_t sourceIndex, size_t targetIndex);

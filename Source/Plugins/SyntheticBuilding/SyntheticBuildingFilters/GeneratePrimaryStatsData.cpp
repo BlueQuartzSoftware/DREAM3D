@@ -1,9 +1,6 @@
 /*
  * Your License or Copyright can go here
  */
-
-#include <memory>
-
 #include "GeneratePrimaryStatsData.h"
 
 #include <QtCore/QTextStream>
@@ -28,10 +25,12 @@
 #include "SIMPLib/Utilities/ColorUtilities.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
-#include "EbsdLib/EbsdConstants.h"
-
-#include "OrientationLib/Texture/StatsGen.hpp"
+#include "EbsdLib/Texture/StatsGen.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/AbstractMicrostructurePreset.h"
@@ -266,7 +265,7 @@ void GeneratePrimaryStatsData::dataCheck()
 
     std::vector<size_t> cDims(1, 1);
     UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures, true);
-    crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
+    crystalStructures->setValue(0, EbsdLib::CrystalStructure::UnknownCrystalStructure);
     cellEnsembleAttrMat->insertOrAssign(crystalStructures);
     m_CrystalStructures = crystalStructures.get();
 
@@ -318,7 +317,7 @@ void GeneratePrimaryStatsData::dataCheck()
     if(nullptr == crystalStructures.get())
     {
       crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures, true);
-      crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
+      crystalStructures->setValue(0, EbsdLib::CrystalStructure::UnknownCrystalStructure);
       cellEnsembleAttrMat->insertOrAssign(crystalStructures);
     }
     m_CrystalStructures = crystalStructures.get();

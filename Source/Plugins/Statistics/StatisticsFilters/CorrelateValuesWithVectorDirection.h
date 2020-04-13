@@ -40,7 +40,7 @@
 #include <QtCore/QString>
 #include <vector>
 
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
@@ -112,7 +112,6 @@ public:
    * @return Value of CorrelatedDataArrayPath
    */
   DataArrayPath getCorrelatedDataArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CorrelatedDataArrayPath READ getCorrelatedDataArrayPath WRITE setCorrelatedDataArrayPath)
   /**
    * @brief Setter property for VectorDataArrayPath
@@ -123,7 +122,6 @@ public:
    * @return Value of VectorDataArrayPath
    */
   DataArrayPath getVectorDataArrayPath() const;
-
   Q_PROPERTY(DataArrayPath VectorDataArrayPath READ getVectorDataArrayPath WRITE setVectorDataArrayPath)
 
   /**

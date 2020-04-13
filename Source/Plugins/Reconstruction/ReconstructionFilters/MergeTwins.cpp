@@ -32,9 +32,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#include <memory>
-
 #include "MergeTwins.h"
 
 #include <chrono>
@@ -43,7 +40,6 @@
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -53,11 +49,13 @@
 #include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
 
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/Core/Quaternion.hpp"
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Core/Orientation.hpp"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/Core/Quaternion.hpp"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -331,11 +329,11 @@ bool MergeTwins::determineGrouping(int32_t referenceFeature, int32_t neighborFea
 
     QuatF q2(m_AvgQuats + neighborFeature * 4);
     uint32_t phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
-    if(phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Cubic_High))
+    if(phase1 == phase2 && (phase1 == EbsdLib::CrystalStructure::Cubic_High))
     {
       OrientationD axisAngle = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
       double w = axisAngle[3];
-      w = w * (180.0f / SIMPLib::Constants::k_Pi);
+      w = w * (SIMPLib::Constants::k_180OverPi);
       double axisdiff111 = acosf(fabs(axisAngle[0]) * 0.57735f + fabs(axisAngle[1]) * 0.57735f + fabs(axisAngle[2]) * 0.57735f);
       double angdiff60 = fabs(w - 60.0f);
       if(axisdiff111 < m_AxisToleranceRad && angdiff60 < m_AngleTolerance)
@@ -372,7 +370,7 @@ void MergeTwins::execute()
     return;
   }
 
-  m_AxisToleranceRad = m_AxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_AxisToleranceRad = m_AxisTolerance * SIMPLib::Constants::k_PiOver180;
 
   m_FeatureParentIds[0] = 0; // set feature 0 to be parent 0
 

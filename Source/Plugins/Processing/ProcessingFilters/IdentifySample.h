@@ -101,7 +101,6 @@ public:
    * @return Value of FillHoles
    */
   bool getFillHoles() const;
-
   Q_PROPERTY(bool FillHoles READ getFillHoles WRITE setFillHoles)
 
   /**
@@ -113,7 +112,6 @@ public:
    * @return Value of GoodVoxelsArrayPath
    */
   DataArrayPath getGoodVoxelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
   /**

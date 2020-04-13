@@ -38,7 +38,7 @@
 // Needed for AxisAngle_t
 #include <memory>
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"

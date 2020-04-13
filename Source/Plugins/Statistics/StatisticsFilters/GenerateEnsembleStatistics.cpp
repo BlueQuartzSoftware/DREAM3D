@@ -33,16 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "GenerateEnsembleStatistics.h"
 
 #include <QtCore/QTextStream>
-
 #include <QtCore/QDebug>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/Common/PhaseType.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
@@ -60,11 +56,14 @@
 #include "SIMPLib/StatsData/TransformationStatsData.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
 
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/Core/Quaternion.hpp"
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Core/Orientation.hpp"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/Core/Quaternion.hpp"
+#include "EbsdLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "Statistics/DistributionAnalysisOps/BetaOps.h"
 #include "Statistics/DistributionAnalysisOps/LogNormalOps.h"
@@ -72,7 +71,6 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
-#include "EbsdLib/EbsdConstants.h"
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -1032,7 +1030,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
   for(size_t i = 1; i < numensembles; i++)
   {
     totalvol[i] = 0;
-    if(m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal_High)
+    if(m_CrystalStructures[i] == EbsdLib::CrystalStructure::Hexagonal_High)
     {
       dims = 36 * 36 * 12;
       eulerodf[i] = FloatArrayType::CreateArray(dims, SIMPL::StringConstants::ODF, true);
@@ -1041,7 +1039,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
         eulerodf[i]->setValue(j, 0.0);
       }
     }
-    else if(m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic_High)
+    else if(m_CrystalStructures[i] == EbsdLib::CrystalStructure::Cubic_High)
     {
       dims = 18 * 18 * 18;
       eulerodf[i] = FloatArrayType::CreateArray(dims, SIMPL::StringConstants::ODF, true);
@@ -1122,12 +1120,12 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   for(size_t i = 1; i < numensembles; ++i)
   {
     totalSurfaceArea[i] = 0;
-    if(Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[i])
+    if(EbsdLib::CrystalStructure::Hexagonal_High == m_CrystalStructures[i])
     {
       numbins = 36 * 36 * 12;
       misobin[i] = FloatArrayType::CreateArray(numbins, SIMPL::StringConstants::MisorientationBins, true);
     }
-    else if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[i])
+    else if(EbsdLib::CrystalStructure::Cubic_High == m_CrystalStructures[i])
     {
       numbins = 18 * 18 * 18;
       misobin[i] = FloatArrayType::CreateArray(numbins, SIMPL::StringConstants::MisorientationBins, true);
@@ -1237,8 +1235,8 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
       Orientation<float> eu(m_AxisEulerAngles + 3 * i, 3); // Wrap the pointer
       Orientation<double> rod = OrientationTransformation::eu2ro<Orientation<float>, Orientation<double>>(eu);
 
-      m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getODFFZRod(rod);
-      bin = m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getOdfBin(rod);
+      m_OrientationOps[EbsdLib::CrystalStructure::OrthoRhombic]->getODFFZRod(rod);
+      bin = m_OrientationOps[EbsdLib::CrystalStructure::OrthoRhombic]->getOdfBin(rod);
       axisodf[m_FeaturePhases[i]]->setValue(bin, (axisodf[m_FeaturePhases[i]]->getValue(bin) + static_cast<float>((1.0 / totalaxes[m_FeaturePhases[i]]))));
     }
   }

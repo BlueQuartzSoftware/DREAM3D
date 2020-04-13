@@ -107,7 +107,6 @@ public:
    * @return Value of OutputFile
    */
   QString getOutputFile() const;
-
   Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
   /**
@@ -119,7 +118,6 @@ public:
    * @return Value of PhaseOfInterest
    */
   int getPhaseOfInterest() const;
-
   Q_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
 
   /**
@@ -131,7 +129,6 @@ public:
    * @return Value of MisorientationRotation
    */
   AxisAngleInput_t getMisorientationRotation() const;
-
   Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
 
   /**
@@ -143,7 +140,6 @@ public:
    * @return Value of GBCDArrayPath
    */
   DataArrayPath getGBCDArrayPath() const;
-
   Q_PROPERTY(DataArrayPath GBCDArrayPath READ getGBCDArrayPath WRITE setGBCDArrayPath)
 
   /**
@@ -155,7 +151,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**

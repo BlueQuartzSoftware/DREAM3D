@@ -108,7 +108,6 @@ public:
    * @return Value of DataContainerName
    */
   DataArrayPath getDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   /**
@@ -120,7 +119,6 @@ public:
    * @return Value of CellAttributeMatrixName
    */
   QString getCellAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
   /**
@@ -132,7 +130,6 @@ public:
    * @return Value of EnsembleAttributeMatrixName
    */
   QString getEnsembleAttributeMatrixName() const;
-
   Q_PROPERTY(QString EnsembleAttributeMatrixName READ getEnsembleAttributeMatrixName WRITE setEnsembleAttributeMatrixName)
 
   /**
@@ -144,7 +141,6 @@ public:
    * @return Value of LengthUnit
    */
   int32_t getLengthUnit() const;
-
   Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
 
   /**
@@ -156,7 +152,6 @@ public:
    * @return Value of Dimensions
    */
   IntVec3Type getDimensions() const;
-
   Q_PROPERTY(IntVec3Type Dimensions READ getDimensions WRITE setDimensions)
 
   /**
@@ -168,7 +163,6 @@ public:
    * @return Value of Spacing
    */
   FloatVec3Type getSpacing() const;
-
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
   /**
@@ -180,7 +174,6 @@ public:
    * @return Value of Origin
    */
   FloatVec3Type getOrigin() const;
-
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
   // These are for estimating the number of features that will be generated farther down the line.
@@ -194,7 +187,6 @@ public:
    * @return Value of InputStatsArrayPath
    */
   DataArrayPath getInputStatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
 
   /**
@@ -206,7 +198,6 @@ public:
    * @return Value of InputPhaseTypesArrayPath
    */
   DataArrayPath getInputPhaseTypesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
 
   /**
@@ -218,7 +209,6 @@ public:
    * @return Value of InputPhaseNamesArrayPath
    */
   DataArrayPath getInputPhaseNamesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath InputPhaseNamesArrayPath READ getInputPhaseNamesArrayPath WRITE setInputPhaseNamesArrayPath)
 
   /**
@@ -230,7 +220,6 @@ public:
    * @return Value of EstimateNumberOfFeatures
    */
   bool getEstimateNumberOfFeatures() const;
-
   Q_PROPERTY(bool EstimateNumberOfFeatures READ getEstimateNumberOfFeatures WRITE setEstimateNumberOfFeatures)
 
   QString getEstimatedPrimaryFeatures();

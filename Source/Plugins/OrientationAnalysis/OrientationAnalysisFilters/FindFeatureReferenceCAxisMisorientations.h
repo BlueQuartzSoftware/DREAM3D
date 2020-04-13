@@ -108,7 +108,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -120,7 +119,6 @@ public:
    * @return Value of CellPhasesArrayPath
    */
   DataArrayPath getCellPhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
   /**
@@ -132,7 +130,6 @@ public:
    * @return Value of AvgCAxesArrayPath
    */
   DataArrayPath getAvgCAxesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AvgCAxesArrayPath READ getAvgCAxesArrayPath WRITE setAvgCAxesArrayPath)
 
   /**
@@ -144,7 +141,6 @@ public:
    * @return Value of QuatsArrayPath
    */
   DataArrayPath getQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
   /**
@@ -156,7 +152,6 @@ public:
    * @return Value of FeatureAvgCAxisMisorientationsArrayName
    */
   QString getFeatureAvgCAxisMisorientationsArrayName() const;
-
   Q_PROPERTY(QString FeatureAvgCAxisMisorientationsArrayName READ getFeatureAvgCAxisMisorientationsArrayName WRITE setFeatureAvgCAxisMisorientationsArrayName)
 
   /**
@@ -168,7 +163,6 @@ public:
    * @return Value of FeatureStdevCAxisMisorientationsArrayName
    */
   QString getFeatureStdevCAxisMisorientationsArrayName() const;
-
   Q_PROPERTY(QString FeatureStdevCAxisMisorientationsArrayName READ getFeatureStdevCAxisMisorientationsArrayName WRITE setFeatureStdevCAxisMisorientationsArrayName)
 
   /**
@@ -180,7 +174,6 @@ public:
    * @return Value of FeatureReferenceCAxisMisorientationsArrayName
    */
   QString getFeatureReferenceCAxisMisorientationsArrayName() const;
-
   Q_PROPERTY(QString FeatureReferenceCAxisMisorientationsArrayName READ getFeatureReferenceCAxisMisorientationsArrayName WRITE setFeatureReferenceCAxisMisorientationsArrayName)
 
   /**

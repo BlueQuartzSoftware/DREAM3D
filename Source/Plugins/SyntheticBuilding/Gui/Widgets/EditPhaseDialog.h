@@ -38,7 +38,7 @@
 #include "ui_EditPhaseDialog.h"
 #include <QtGui/QDoubleValidator>
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/PhaseType.h"

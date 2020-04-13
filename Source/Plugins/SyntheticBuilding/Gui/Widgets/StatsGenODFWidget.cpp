@@ -62,28 +62,28 @@
 #include <qwt_scale_draw.h>
 #include <qwt_symbol.h>
 
-#include "EbsdLib/HKL/CtfReader.h"
-#include "EbsdLib/TSL/AngReader.h"
+#include "EbsdLib/IO/HKL/CtfReader.h"
+#include "EbsdLib/IO/TSL/AngReader.h"
 
 #include "SVWidgetsLib/Widgets/ProgressDialog.h"
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 
-#include "OrientationLib/IO/AngleFileLoader.h"
-#include "OrientationLib/LaueOps/CubicLowOps.h"
-#include "OrientationLib/LaueOps/CubicOps.h"
-#include "OrientationLib/LaueOps/HexagonalLowOps.h"
-#include "OrientationLib/LaueOps/HexagonalOps.h"
-#include "OrientationLib/LaueOps/MonoclinicOps.h"
-#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
-#include "OrientationLib/LaueOps/TetragonalLowOps.h"
-#include "OrientationLib/LaueOps/TetragonalOps.h"
-#include "OrientationLib/LaueOps/TriclinicOps.h"
-#include "OrientationLib/LaueOps/TrigonalLowOps.h"
-#include "OrientationLib/LaueOps/TrigonalOps.h"
-#include "OrientationLib/LaueOps/LaueOps.h"
-#include "OrientationLib/Texture/StatsGen.hpp"
-#include "OrientationLib/Texture/Texture.hpp"
-#include "OrientationLib/Utilities/PoleFigureUtilities.h"
+#include "EbsdLib/IO/AngleFileLoader.h"
+#include "EbsdLib/LaueOps/CubicLowOps.h"
+#include "EbsdLib/LaueOps/CubicOps.h"
+#include "EbsdLib/LaueOps/HexagonalLowOps.h"
+#include "EbsdLib/LaueOps/HexagonalOps.h"
+#include "EbsdLib/LaueOps/MonoclinicOps.h"
+#include "EbsdLib/LaueOps/OrthoRhombicOps.h"
+#include "EbsdLib/LaueOps/TetragonalLowOps.h"
+#include "EbsdLib/LaueOps/TetragonalOps.h"
+#include "EbsdLib/LaueOps/TriclinicOps.h"
+#include "EbsdLib/LaueOps/TrigonalLowOps.h"
+#include "EbsdLib/LaueOps/TrigonalOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Texture/StatsGen.hpp"
+#include "EbsdLib/Texture/Texture.hpp"
+#include "EbsdLib/Utilities/PoleFigureUtilities.h"
 
 #include "SyntheticBuilding/Gui/Utilities/PoleFigureImageUtilities.h"
 #include "SyntheticBuilding/Gui/Widgets/StatsGenMDFWidget.h"
@@ -102,7 +102,7 @@ StatsGenODFWidget::StatsGenODFWidget(QWidget* parent)
 , m_EnableAxisDecorations(false)
 , m_Initializing(true)
 , m_PhaseIndex(-1)
-, m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
+, m_CrystalStructure(EbsdLib::CrystalStructure::Cubic_High)
 {
   m_OpenDialogLastFilePath = QDir::homePath();
   this->setupUi(this);
@@ -567,7 +567,7 @@ void StatsGenODFWidget::calculateODF()
   int numColors = 16;
 
   std::vector<size_t> dims(1, 3);
-  FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers", true);
+  EbsdLib::FloatArrayType::Pointer eulers = EbsdLib::FloatArrayType::CreateArray(npoints, dims, "Eulers", true);
   PoleFigureConfiguration_t config;
   config.eulers = eulers.get();
   config.imageDim = imageSize;
@@ -581,63 +581,63 @@ void StatsGenODFWidget::calculateODF()
   {
     config.discrete = false;
   }
-  std::vector<UInt8ArrayType::Pointer> figures;
+  std::vector<EbsdLib::UInt8ArrayType::Pointer> figures;
 
   //// ODF/MDF Update Codes
   LaueOps::Pointer ops = LaueOps::NullPointer();
   switch(m_CrystalStructure)
   {
-  case Ebsd::CrystalStructure::Triclinic: // 4; Triclinic -1
+  case EbsdLib::CrystalStructure::Triclinic: // 4; Triclinic -1
     Texture::CalculateODFData<float, TriclinicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
     err = StatsGen::GenODFPlotData<float, TriclinicOps, ContainerType>(odf, eulers->getPointer(0), npoints);
     ops = TriclinicOps::New();
     break;
-  case Ebsd::CrystalStructure::Monoclinic: // 5; Monoclinic 2/m
+  case EbsdLib::CrystalStructure::Monoclinic: // 5; Monoclinic 2/m
     Texture::CalculateODFData<float, MonoclinicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
     err = StatsGen::GenODFPlotData<float, MonoclinicOps, ContainerType>(odf, eulers->getPointer(0), npoints);
     ops = MonoclinicOps::New();
     break;
-  case Ebsd::CrystalStructure::OrthoRhombic: // 6; Orthorhombic mmm
+  case EbsdLib::CrystalStructure::OrthoRhombic: // 6; Orthorhombic mmm
     Texture::CalculateODFData<float, OrthoRhombicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
     err = StatsGen::GenODFPlotData<float, OrthoRhombicOps, ContainerType>(odf, eulers->getPointer(0), npoints);
     ops = OrthoRhombicOps::New();
     break;
-  case Ebsd::CrystalStructure::Tetragonal_Low: // 7; Tetragonal-Low 4/m
+  case EbsdLib::CrystalStructure::Tetragonal_Low: // 7; Tetragonal-Low 4/m
     Texture::CalculateODFData<float, TetragonalLowOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
     err = StatsGen::GenODFPlotData<float, TetragonalLowOps, ContainerType>(odf, eulers->getPointer(0), npoints);
     ops = TetragonalLowOps::New();
     break;
-  case Ebsd::CrystalStructure::Tetragonal_High: // 8; Tetragonal-High 4/mmm
+  case EbsdLib::CrystalStructure::Tetragonal_High: // 8; Tetragonal-High 4/mmm
     Texture::CalculateODFData<float, TetragonalOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
     err = StatsGen::GenODFPlotData<float, TetragonalOps, ContainerType>(odf, eulers->getPointer(0), npoints);
     ops = TetragonalOps::New();
     break;
-  case Ebsd::CrystalStructure::Trigonal_Low: // 9; Trigonal-Low -3
+  case EbsdLib::CrystalStructure::Trigonal_Low: // 9; Trigonal-Low -3
     Texture::CalculateODFData<float, TrigonalLowOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
     err = StatsGen::GenODFPlotData<float, TrigonalLowOps, ContainerType>(odf, eulers->getPointer(0), npoints);
     ops = TrigonalLowOps::New();
     break;
-  case Ebsd::CrystalStructure::Trigonal_High: // 10; Trigonal-High -3m
+  case EbsdLib::CrystalStructure::Trigonal_High: // 10; Trigonal-High -3m
     Texture::CalculateODFData<float, TrigonalOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
     err = StatsGen::GenODFPlotData<float, TrigonalOps, ContainerType>(odf, eulers->getPointer(0), npoints);
     ops = TrigonalOps::New();
     break;
-  case Ebsd::CrystalStructure::Hexagonal_Low: // 2; Hexagonal-Low 6/m
+  case EbsdLib::CrystalStructure::Hexagonal_Low: // 2; Hexagonal-Low 6/m
     Texture::CalculateODFData<float, HexagonalLowOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
     err = StatsGen::GenODFPlotData<float, HexagonalLowOps, ContainerType>(odf, eulers->getPointer(0), npoints);
     ops = HexagonalLowOps::New();
     break;
-  case Ebsd::CrystalStructure::Hexagonal_High: // 0; Hexagonal-High 6/mmm
+  case EbsdLib::CrystalStructure::Hexagonal_High: // 0; Hexagonal-High 6/mmm
     Texture::CalculateODFData<float, HexagonalOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
     err = StatsGen::GenODFPlotData<float, HexagonalOps, ContainerType>(odf, eulers->getPointer(0), npoints);
     ops = HexagonalOps::New();
     break;
-  case Ebsd::CrystalStructure::Cubic_Low: // 3; Cubic Cubic-Low m3 (Tetrahedral)
+  case EbsdLib::CrystalStructure::Cubic_Low: // 3; Cubic Cubic-Low m3 (Tetrahedral)
     Texture::CalculateODFData<float, CubicLowOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
     err = StatsGen::GenODFPlotData<float, CubicLowOps, ContainerType>(odf, eulers->getPointer(0), npoints);
     ops = CubicLowOps::New();
     break;
-  case Ebsd::CrystalStructure::Cubic_High: // 1; Cubic Cubic-High m3m
+  case EbsdLib::CrystalStructure::Cubic_High: // 1; Cubic Cubic-High m3m
     Texture::CalculateODFData<float, CubicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
     err = StatsGen::GenODFPlotData<float, CubicOps, ContainerType>(odf, eulers->getPointer(0), npoints);
     ops = CubicOps::New();
@@ -661,7 +661,13 @@ void StatsGenODFWidget::calculateODF()
       figures = ops->generatePoleFigure(config);
     }
 
-    QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, m_ImageLayoutCB->currentIndex());
+    std::vector<UInt8ArrayType::Pointer> convertedFigures;
+    for(const auto& figure : figures)
+    {
+      convertedFigures.emplace_back(figure->moveToDataArrayType<UInt8ArrayType>());
+    }
+
+    QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(convertedFigures[0].get(), convertedFigures[1].get(), convertedFigures[2].get(), config, m_ImageLayoutCB->currentIndex());
     m_PoleFigureLabel->setPixmap(QPixmap::fromImage(image));
     emit dataChanged();
   }
@@ -774,7 +780,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   progress.setMinimumDuration(2000);
   progress.show();
 
-  if(fi.suffix().compare(Ebsd::Ang::FileExt) == 0)
+  if(fi.suffix().compare(EbsdLib::Ang::FileExt) == 0)
   {
     QMessageBox::critical(this, "ANG File Loading NOT Supported",
                           "Please use the 'Write StatsGenerator ODF Angle File' filter from DREAM.3D to generate a file. See that filter's help for the proper format.", QMessageBox::Ok);
@@ -840,7 +846,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     }
 #endif
   }
-  if(fi.suffix().compare(Ebsd::Ctf::FileExt) == 0)
+  if(fi.suffix().compare(EbsdLib::Ctf::FileExt) == 0)
   {
     QMessageBox::critical(this, "CTF File Loading not Supported",
                           "Please use the 'Write StatsGenerator ODF Angle File' filter from DREAM.3D to generate a file. See that filter's help for the proper format.", QMessageBox::Ok);
@@ -934,7 +940,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   }
 
   loader->setDelimiter(delim);
-  FloatArrayType::Pointer data = loader->loadData();
+  EbsdLib::FloatArrayType::Pointer data = loader->loadData();
   if(loader->getErrorCode() < 0)
   {
     QMessageBox::critical(this, "Error Loading Angle data", loader->getErrorMessage(), QMessageBox::Ok);

@@ -112,7 +112,6 @@ public:
    * @return Value of SurfaceDataContainerName
    */
   DataArrayPath getSurfaceDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
   /**
@@ -124,7 +123,6 @@ public:
    * @return Value of SurfaceMeshNodeTypeArrayPath
    */
   DataArrayPath getSurfaceMeshNodeTypeArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
 
   /**
@@ -136,7 +134,6 @@ public:
    * @return Value of SurfaceMeshFaceLabelsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
   /**
@@ -148,7 +145,6 @@ public:
    * @return Value of IterationSteps
    */
   int getIterationSteps() const;
-
   Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
 
   /**
@@ -160,7 +156,6 @@ public:
    * @return Value of Lambda
    */
   float getLambda() const;
-
   Q_PROPERTY(float Lambda READ getLambda WRITE setLambda)
 
   /**
@@ -172,7 +167,6 @@ public:
    * @return Value of SurfacePointLambda
    */
   float getSurfacePointLambda() const;
-
   Q_PROPERTY(float SurfacePointLambda READ getSurfacePointLambda WRITE setSurfacePointLambda)
 
   /**
@@ -184,7 +178,6 @@ public:
    * @return Value of TripleLineLambda
    */
   float getTripleLineLambda() const;
-
   Q_PROPERTY(float TripleLineLambda READ getTripleLineLambda WRITE setTripleLineLambda)
 
   /**
@@ -196,7 +189,6 @@ public:
    * @return Value of QuadPointLambda
    */
   float getQuadPointLambda() const;
-
   Q_PROPERTY(float QuadPointLambda READ getQuadPointLambda WRITE setQuadPointLambda)
 
   /**
@@ -208,7 +200,6 @@ public:
    * @return Value of SurfaceTripleLineLambda
    */
   float getSurfaceTripleLineLambda() const;
-
   Q_PROPERTY(float SurfaceTripleLineLambda READ getSurfaceTripleLineLambda WRITE setSurfaceTripleLineLambda)
 
   /**
@@ -220,7 +211,6 @@ public:
    * @return Value of SurfaceQuadPointLambda
    */
   float getSurfaceQuadPointLambda() const;
-
   Q_PROPERTY(float SurfaceQuadPointLambda READ getSurfaceQuadPointLambda WRITE setSurfaceQuadPointLambda)
 
   /**
@@ -232,7 +222,6 @@ public:
    * @return Value of UseTaubinSmoothing
    */
   bool getUseTaubinSmoothing() const;
-
   Q_PROPERTY(bool UseTaubinSmoothing READ getUseTaubinSmoothing WRITE setUseTaubinSmoothing)
 
   /**
@@ -244,7 +233,6 @@ public:
    * @return Value of MuFactor
    */
   float getMuFactor() const;
-
   Q_PROPERTY(float MuFactor READ getMuFactor WRITE setMuFactor)
 
   /* This class is designed to be subclassed so that thoes subclasses can add

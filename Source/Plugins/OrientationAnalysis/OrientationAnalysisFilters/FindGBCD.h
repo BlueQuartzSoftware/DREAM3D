@@ -106,7 +106,6 @@ public:
    * @return Value of FaceEnsembleAttributeMatrixName
    */
   QString getFaceEnsembleAttributeMatrixName() const;
-
   Q_PROPERTY(QString FaceEnsembleAttributeMatrixName READ getFaceEnsembleAttributeMatrixName WRITE setFaceEnsembleAttributeMatrixName)
 
   /**
@@ -118,7 +117,6 @@ public:
    * @return Value of GBCDRes
    */
   float getGBCDRes() const;
-
   Q_PROPERTY(float GBCDRes READ getGBCDRes WRITE setGBCDRes)
 
   /**
@@ -130,7 +128,6 @@ public:
    * @return Value of SurfaceMeshFaceLabelsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
   /**
@@ -142,7 +139,6 @@ public:
    * @return Value of SurfaceMeshFaceNormalsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceNormalsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
   /**
@@ -154,7 +150,6 @@ public:
    * @return Value of SurfaceMeshFaceAreasArrayPath
    */
   DataArrayPath getSurfaceMeshFaceAreasArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceAreasArrayPath READ getSurfaceMeshFaceAreasArrayPath WRITE setSurfaceMeshFaceAreasArrayPath)
 
   /**
@@ -166,7 +161,6 @@ public:
    * @return Value of FeatureEulerAnglesArrayPath
    */
   DataArrayPath getFeatureEulerAnglesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
 
   /**
@@ -178,7 +172,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -190,7 +183,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -202,7 +194,6 @@ public:
    * @return Value of GBCDArrayName
    */
   QString getGBCDArrayName() const;
-
   Q_PROPERTY(QString GBCDArrayName READ getGBCDArrayName WRITE setGBCDArrayName)
 
   /**

@@ -99,7 +99,6 @@ public:
    * @return Value of FillRemovedFeatures
    */
   bool getFillRemovedFeatures() const;
-
   Q_PROPERTY(bool FillRemovedFeatures READ getFillRemovedFeatures WRITE setFillRemovedFeatures)
 
   /**
@@ -111,7 +110,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -123,7 +121,6 @@ public:
    * @return Value of FlaggedFeaturesArrayPath
    */
   DataArrayPath getFlaggedFeaturesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FlaggedFeaturesArrayPath READ getFlaggedFeaturesArrayPath WRITE setFlaggedFeaturesArrayPath)
 
   /**
@@ -135,7 +132,6 @@ public:
    * @return Value of IgnoredDataArrayPaths
    */
   QVector<DataArrayPath> getIgnoredDataArrayPaths() const;
-
   Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
 
   /**

@@ -43,7 +43,7 @@
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Common/SIMPLArray.hpp"
 
-#include "EbsdLib/HKL/CtfReader.h"
+#include "EbsdLib/IO/HKL/CtfReader.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -130,7 +130,6 @@ public:
    * @return Value of DegreesToRadians
    */
   bool getDegreesToRadians() const;
-
   Q_PROPERTY(bool DegreesToRadians READ getDegreesToRadians WRITE setDegreesToRadians)
 
   /**
@@ -142,7 +141,6 @@ public:
    * @return Value of EdaxHexagonalAlignment
    */
   bool getEdaxHexagonalAlignment() const;
-
   Q_PROPERTY(bool EdaxHexagonalAlignment READ getEdaxHexagonalAlignment WRITE setEdaxHexagonalAlignment)
 
   /**
@@ -154,7 +152,6 @@ public:
    * @return Value of DataContainerName
    */
   DataArrayPath getDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   /**
@@ -166,7 +163,6 @@ public:
    * @return Value of CellEnsembleAttributeMatrixName
    */
   QString getCellEnsembleAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
   /**
@@ -178,7 +174,6 @@ public:
    * @return Value of CellAttributeMatrixName
    */
   QString getCellAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
   /**
@@ -190,7 +185,6 @@ public:
    * @return Value of FileWasRead
    */
   bool getFileWasRead() const;
-
   Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
   /**
@@ -222,7 +216,6 @@ public:
    * @return Value of InputFile
    */
   QString getInputFile() const;
-
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**
@@ -299,12 +292,12 @@ public:
   /**
    * @brief Setter property for Manufacturer
    */
-  void setManufacturer(const Ebsd::OEM& value);
+  void setManufacturer(const EbsdLib::OEM& value);
   /**
    * @brief Getter property for Manufacturer
    * @return Value of Manufacturer
    */
-  Ebsd::OEM getManufacturer() const;
+  EbsdLib::OEM getManufacturer() const;
 
   /**
    * @brief Setter property for InputFile_Cache
@@ -335,7 +328,6 @@ public:
    * @return Value of Data
    */
   Ctf_Private_Data getData() const;
-
   Q_PROPERTY(Ctf_Private_Data Data READ getData WRITE setData)
 
 public slots:
@@ -403,7 +395,7 @@ private:
   QString m_MaterialNameArrayName = {};
   QString m_InputFile = {};
   uint32_t m_RefFrameZDir = {};
-  Ebsd::OEM m_Manufacturer = {};
+  EbsdLib::OEM m_Manufacturer = {};
 
   QScopedPointer<ReadCtfDataPrivate> const d_ptr;
 

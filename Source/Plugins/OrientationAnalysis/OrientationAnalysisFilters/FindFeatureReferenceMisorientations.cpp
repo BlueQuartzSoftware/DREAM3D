@@ -40,7 +40,7 @@
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
+#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
@@ -53,12 +53,12 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/Core/Quaternion.hpp"
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Core/Orientation.hpp"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/Core/Quaternion.hpp"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -292,8 +292,8 @@ void FindFeatureReferenceMisorientations::execute()
   FloatArrayType::Pointer avgQuatsPtr = m_AvgQuatsPtr.lock();
 
   // float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
-  uint32_t phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  uint32_t phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
+  uint32_t phase1 = EbsdLib::CrystalStructure::UnknownCrystalStructure;
+  uint32_t phase2 = EbsdLib::CrystalStructure::UnknownCrystalStructure;
   SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   uint32_t maxUInt32 = std::numeric_limits<uint32_t>::max();

@@ -53,8 +53,8 @@
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
-#include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/TSL/AngConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
+#include "EbsdLib/IO/TSL/AngConstants.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -243,34 +243,34 @@ uint32_t mapCrystalSymmetryToTslSymmetry(uint32_t symmetry)
 {
   switch(symmetry)
   {
-  case Ebsd::CrystalStructure::Cubic_High:
-    return Ebsd::Ang::PhaseSymmetry::Cubic;
-  case Ebsd::CrystalStructure::Cubic_Low:
-    return Ebsd::Ang::PhaseSymmetry::Tetrahedral;
-  case Ebsd::CrystalStructure::Tetragonal_High:
-    return Ebsd::Ang::PhaseSymmetry::DiTetragonal;
-  case Ebsd::CrystalStructure::Tetragonal_Low:
-    return Ebsd::Ang::PhaseSymmetry::Tetragonal;
-  case Ebsd::CrystalStructure::OrthoRhombic:
-    return Ebsd::Ang::PhaseSymmetry::Orthorhombic;
-  case Ebsd::CrystalStructure::Monoclinic:
-    return Ebsd::Ang::PhaseSymmetry::Monoclinic_c;
-    return Ebsd::Ang::PhaseSymmetry::Monoclinic_b;
-    return Ebsd::Ang::PhaseSymmetry::Monoclinic_a;
-  case Ebsd::CrystalStructure::Triclinic:
-    return Ebsd::Ang::PhaseSymmetry::Triclinic;
-  case Ebsd::CrystalStructure::Hexagonal_High:
-    return Ebsd::Ang::PhaseSymmetry::DiHexagonal;
-  case Ebsd::CrystalStructure::Hexagonal_Low:
-    return Ebsd::Ang::PhaseSymmetry::Hexagonal;
-  case Ebsd::CrystalStructure::Trigonal_High:
-    return Ebsd::Ang::PhaseSymmetry::DiTrigonal;
-  case Ebsd::CrystalStructure::Trigonal_Low:
-    return Ebsd::Ang::PhaseSymmetry::Trigonal;
+  case EbsdLib::CrystalStructure::Cubic_High:
+    return EbsdLib::Ang::PhaseSymmetry::Cubic;
+  case EbsdLib::CrystalStructure::Cubic_Low:
+    return EbsdLib::Ang::PhaseSymmetry::Tetrahedral;
+  case EbsdLib::CrystalStructure::Tetragonal_High:
+    return EbsdLib::Ang::PhaseSymmetry::DiTetragonal;
+  case EbsdLib::CrystalStructure::Tetragonal_Low:
+    return EbsdLib::Ang::PhaseSymmetry::Tetragonal;
+  case EbsdLib::CrystalStructure::OrthoRhombic:
+    return EbsdLib::Ang::PhaseSymmetry::Orthorhombic;
+  case EbsdLib::CrystalStructure::Monoclinic:
+    return EbsdLib::Ang::PhaseSymmetry::Monoclinic_c;
+    return EbsdLib::Ang::PhaseSymmetry::Monoclinic_b;
+    return EbsdLib::Ang::PhaseSymmetry::Monoclinic_a;
+  case EbsdLib::CrystalStructure::Triclinic:
+    return EbsdLib::Ang::PhaseSymmetry::Triclinic;
+  case EbsdLib::CrystalStructure::Hexagonal_High:
+    return EbsdLib::Ang::PhaseSymmetry::DiHexagonal;
+  case EbsdLib::CrystalStructure::Hexagonal_Low:
+    return EbsdLib::Ang::PhaseSymmetry::Hexagonal;
+  case EbsdLib::CrystalStructure::Trigonal_High:
+    return EbsdLib::Ang::PhaseSymmetry::DiTrigonal;
+  case EbsdLib::CrystalStructure::Trigonal_Low:
+    return EbsdLib::Ang::PhaseSymmetry::Trigonal;
   default:
-    return Ebsd::CrystalStructure::UnknownCrystalStructure;
+    return EbsdLib::CrystalStructure::UnknownCrystalStructure;
   }
-  return Ebsd::CrystalStructure::UnknownCrystalStructure;
+  return EbsdLib::CrystalStructure::UnknownCrystalStructure;
 }
 // -----------------------------------------------------------------------------
 //
@@ -406,22 +406,22 @@ int32_t INLWriter::writeFile()
         symmetry = m_CrystalStructures[phaseId];
         if(phaseId > 0)
         {
-          if(symmetry == Ebsd::CrystalStructure::Cubic_High)
+          if(symmetry == EbsdLib::CrystalStructure::Cubic_High)
           {
-            symmetry = Ebsd::Ang::PhaseSymmetry::Cubic;
+            symmetry = EbsdLib::Ang::PhaseSymmetry::Cubic;
           }
-          else if(symmetry == Ebsd::CrystalStructure::Hexagonal_High)
+          else if(symmetry == EbsdLib::CrystalStructure::Hexagonal_High)
           {
-            symmetry = Ebsd::Ang::PhaseSymmetry::DiHexagonal;
+            symmetry = EbsdLib::Ang::PhaseSymmetry::DiHexagonal;
           }
           else
           {
-            symmetry = Ebsd::Ang::PhaseSymmetry::UnknownSymmetry;
+            symmetry = EbsdLib::Ang::PhaseSymmetry::UnknownSymmetry;
           }
         }
         else
         {
-          symmetry = Ebsd::Ang::PhaseSymmetry::UnknownSymmetry;
+          symmetry = EbsdLib::Ang::PhaseSymmetry::UnknownSymmetry;
         }
 
         fprintf(f, "%f %f %f %f %f %f %d %d %d\r\n", phi1, phi, phi2, xPos, yPos, zPos, featureId, phaseId, symmetry);

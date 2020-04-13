@@ -72,7 +72,6 @@ public:
   EbsdMontageImportWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
 
   ~EbsdMontageImportWidget() override;
-
   Q_PROPERTY(QPixmap Icon READ getIcon WRITE setIcon)
   void setIcon(const QPixmap& path);
   QPixmap getIcon();

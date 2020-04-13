@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "WritePoleFigure.h"
 
@@ -58,19 +58,19 @@
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/LaueOps/CubicLowOps.h"
-#include "OrientationLib/LaueOps/CubicOps.h"
-#include "OrientationLib/LaueOps/HexagonalLowOps.h"
-#include "OrientationLib/LaueOps/HexagonalOps.h"
-#include "OrientationLib/LaueOps/MonoclinicOps.h"
-#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
-#include "OrientationLib/LaueOps/TetragonalLowOps.h"
-#include "OrientationLib/LaueOps/TetragonalOps.h"
-#include "OrientationLib/LaueOps/TriclinicOps.h"
-#include "OrientationLib/LaueOps/TrigonalLowOps.h"
-#include "OrientationLib/LaueOps/TrigonalOps.h"
+#include "EbsdLib/LaueOps/CubicLowOps.h"
+#include "EbsdLib/LaueOps/CubicOps.h"
+#include "EbsdLib/LaueOps/HexagonalLowOps.h"
+#include "EbsdLib/LaueOps/HexagonalOps.h"
+#include "EbsdLib/LaueOps/MonoclinicOps.h"
+#include "EbsdLib/LaueOps/OrthoRhombicOps.h"
+#include "EbsdLib/LaueOps/TetragonalLowOps.h"
+#include "EbsdLib/LaueOps/TetragonalOps.h"
+#include "EbsdLib/LaueOps/TriclinicOps.h"
+#include "EbsdLib/LaueOps/TrigonalLowOps.h"
+#include "EbsdLib/LaueOps/TrigonalOps.h"
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -79,15 +79,11 @@
 
 jmp_buf env;
 
-void error_handler  (HPDF_STATUS   error_no,
-                HPDF_STATUS   detail_no,
-                void* /* user_data */)
+void error_handler(HPDF_STATUS error_no, HPDF_STATUS detail_no, void* /* user_data */)
 {
-    printf ("ERROR: error_no=%04X, detail_no=%u\n", static_cast<HPDF_UINT>(error_no),
-                static_cast<HPDF_UINT>(detail_no) );
-    longjmp(env, 1);
+  printf("ERROR: error_no=%04X, detail_no=%u\n", static_cast<HPDF_UINT>(error_no), static_cast<HPDF_UINT>(detail_no));
+  longjmp(env, 1);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -158,10 +154,10 @@ void WritePoleFigure::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(WritePoleFigure, this, ImageFormat));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(WritePoleFigure, this, ImageFormat));
 
-    QVector<QString> choices;    
-//    choices.push_back("tif");
-//    choices.push_back("bmp");
-//    choices.push_back("png");
+    QVector<QString> choices;
+    //    choices.push_back("tif");
+    //    choices.push_back("bmp");
+    //    choices.push_back("png");
     choices.push_back("pdf");
     parameter->setChoices(choices);
     parameter->setCategory(FilterParameter::Parameter);
@@ -192,18 +188,15 @@ void WritePoleFigure::setupFilterParameters()
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Type::Any, IGeometry::Type::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Type::Any, IGeometry::Type::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Euler Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Any, IGeometry::Type::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Any, IGeometry::Type::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Any, IGeometry::Type::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Any, IGeometry::Type::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
@@ -269,9 +262,8 @@ void WritePoleFigure::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   std::vector<size_t> cDims(1, 3);
-  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getCellEulerAnglesArrayPath(),
-                                                                                                           cDims); 
-  if(nullptr != m_CellEulerAnglesPtr.lock())                                                                       
+  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getCellEulerAnglesArrayPath(), cDims);
+  if(nullptr != m_CellEulerAnglesPtr.lock())
   {
     m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
   }
@@ -281,9 +273,8 @@ void WritePoleFigure::dataCheck()
   }
 
   cDims[0] = 1;
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getCellPhasesArrayPath(),
-                                                                                                        cDims); 
-  if(nullptr != m_CellPhasesPtr.lock())                                                                         
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getCellPhasesArrayPath(), cDims);
+  if(nullptr != m_CellPhasesPtr.lock())
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   }
@@ -292,23 +283,21 @@ void WritePoleFigure::dataCheck()
     dataArrayPaths.push_back(getCellPhasesArrayPath());
   }
 
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>>(this, getCrystalStructuresArrayPath(),
-                                                                                                                cDims); 
-  if(nullptr != m_CrystalStructuresPtr.lock()) 
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>>(this, getCrystalStructuresArrayPath(), cDims);
+  if(nullptr != m_CrystalStructuresPtr.lock())
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   }
-  
+
   cDims[0] = 1;
   m_MaterialNames = getDataContainerArray()->getPrereqArrayFromPath<StringDataArray>(this, getMaterialNameArrayPath(), cDims);
-  
+
   if(getUseGoodVoxels())
   {
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
     cDims[0] = 1;
-    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>>(this, getGoodVoxelsArrayPath(),
-                                                                                                       cDims); 
-    if(nullptr != m_GoodVoxelsPtr.lock())                                                                      
+    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>>(this, getGoodVoxelsArrayPath(), cDims);
+    if(nullptr != m_GoodVoxelsPtr.lock())
     {
       m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
     }
@@ -329,7 +318,7 @@ void WritePoleFigure::dataCheck()
 //
 // -----------------------------------------------------------------------------
 template <typename Ops>
-std::vector<UInt8ArrayType::Pointer> makePoleFigures(PoleFigureConfiguration_t& config)
+std::vector<EbsdLib::UInt8ArrayType::Pointer> makePoleFigures(PoleFigureConfiguration_t& config)
 {
   Ops ops;
   return ops.generatePoleFigure(config);
@@ -338,26 +327,26 @@ std::vector<UInt8ArrayType::Pointer> makePoleFigures(PoleFigureConfiguration_t& 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString WritePoleFigure::generateImagePath(const QString &label)
+QString WritePoleFigure::generateImagePath(const QString& label)
 {
   QString path = m_OutputPath + "/" + m_ImagePrefix + label;
-//  if(m_ImageFormat == TifImageType)
-//  {
-//    path.append(".tif");
-//  }
-//  else if(m_ImageFormat == BmpImageType)
-//  {
-//    path.append(".bmp");
-//  }
-//  else if(m_ImageFormat == PngImageType)
-//  {
-//    path.append(".png");
-//  }
-//  else if(m_ImageFormat == JpgImageType)
-//  {
-//    path.append(".jpg");
-//  }
-//  else if(m_ImageFormat == PdfImageType)
+  //  if(m_ImageFormat == TifImageType)
+  //  {
+  //    path.append(".tif");
+  //  }
+  //  else if(m_ImageFormat == BmpImageType)
+  //  {
+  //    path.append(".bmp");
+  //  }
+  //  else if(m_ImageFormat == PngImageType)
+  //  {
+  //    path.append(".png");
+  //  }
+  //  else if(m_ImageFormat == JpgImageType)
+  //  {
+  //    path.append(".jpg");
+  //  }
+  //  else if(m_ImageFormat == PdfImageType)
   {
     path.append(".pdf");
   }
@@ -390,13 +379,12 @@ void WritePoleFigure::writeImage(QImage image, QString label)
 }
 #endif
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-UInt8ArrayType::Pointer flipAndMirrorPoleFigure(UInt8ArrayType* src, const PoleFigureConfiguration_t config)
+EbsdLib::UInt8ArrayType::Pointer flipAndMirrorPoleFigure(EbsdLib::UInt8ArrayType* src, const PoleFigureConfiguration_t config)
 {
-  UInt8ArrayType::Pointer converted = UInt8ArrayType::CreateArray(static_cast<size_t>(config.imageDim * config.imageDim), std::vector<size_t>(1, 3), src->getName(), true);
+  EbsdLib::UInt8ArrayType::Pointer converted = EbsdLib::UInt8ArrayType::CreateArray(static_cast<size_t>(config.imageDim * config.imageDim), std::vector<size_t>(1, 3), src->getName(), true);
   // We need to flip the image "vertically", which means the bottom row becomes
   // the top row and convert from BGRA to RGB ordering (This is a Little Endian code)
   // If this is ever compiled on a BIG ENDIAN machine the colors will be off.
@@ -407,10 +395,10 @@ UInt8ArrayType::Pointer flipAndMirrorPoleFigure(UInt8ArrayType* src, const PoleF
     {
       size_t indexSrc = static_cast<size_t>(y * config.imageDim + x);
       size_t indexDest = static_cast<size_t>(destY * config.imageDim + x);
-      
+
       uint8_t* argb = src->getTuplePointer(indexSrc);
       uint8_t* dest = converted->getTuplePointer(indexDest);
-      
+
       dest[0] = argb[2];
       dest[1] = argb[1];
       dest[2] = argb[0];
@@ -419,20 +407,13 @@ UInt8ArrayType::Pointer flipAndMirrorPoleFigure(UInt8ArrayType* src, const PoleF
   return converted;
 }
 
-#define FLIP_Y(y,height)\
-(height)-(y)
+#define FLIP_Y(y, height) (height) - (y)
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void drawScalarBar(HPDF_Page page, const PoleFigureConfiguration_t &config, 
-                          const std::pair<HPDF_REAL, HPDF_REAL> &position,
-                          float margins,
-                          float fontPtSize,
-                          HPDF_Font font,
-                          int32_t phaseNum,
-                          const QString& laueGroupName,
-                          const QString& materialName)
+void drawScalarBar(HPDF_Page page, const PoleFigureConfiguration_t& config, const std::pair<HPDF_REAL, HPDF_REAL>& position, float margins, float fontPtSize, HPDF_Font font, int32_t phaseNum,
+                   const QString& laueGroupName, const QString& materialName)
 {
 
   int numColors = config.numColors;
@@ -453,136 +434,121 @@ void drawScalarBar(HPDF_Page page, const PoleFigureConfiguration_t &config,
   // Now start from the bottom and draw colored lines up the scale bar
   // A Slight Indentation for the scalar bar
   float scaleBarRelativeWidth = 0.10f;
-  
+
   int imageHeight = config.imageDim;
   int imageWidth = config.imageDim;
   float colorHeight = (static_cast<float>(imageHeight)) / static_cast<float>(numColors);
-  
+
   using RectF = std::pair<float, float>;
 
-  RectF rect = std::make_pair(imageWidth * scaleBarRelativeWidth, colorHeight*1.00000f);  
-  
-  
+  RectF rect = std::make_pair(imageWidth * scaleBarRelativeWidth, colorHeight * 1.00000f);
+
   // Draw the Max Value
   QString maxStr = QString::number(config.maxScale, 'f', 3);
-  HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
-  HPDF_Page_SetGrayStroke (page, 0.00f);
-  HPDF_Page_BeginText (page);
-  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
-  HPDF_Page_MoveTextPos (page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + (numColors-2)*rect.second);
-  HPDF_Page_ShowText (page, maxStr.toLatin1());
-  HPDF_Page_EndText (page);
+  HPDF_Page_SetRGBStroke(page, 0.0f, 0.0f, 0.0f);
+  HPDF_Page_SetGrayStroke(page, 0.00f);
+  HPDF_Page_BeginText(page);
+  HPDF_Page_SetFontAndSize(page, font, fontPtSize);
+  HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + (numColors - 2) * rect.second);
+  HPDF_Page_ShowText(page, maxStr.toLatin1());
+  HPDF_Page_EndText(page);
   // Draw the Min value
   QString minStr = QString::number(config.minScale, 'f', 3);
-  HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
-  HPDF_Page_SetGrayStroke (page, 0.00f);
-  HPDF_Page_BeginText (page);
-  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
-  HPDF_Page_MoveTextPos (page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize);
-  HPDF_Page_ShowText (page, minStr.toLatin1());
-  HPDF_Page_EndText (page);
-  
-  
-  
-  QString label;  
-  
+  HPDF_Page_SetRGBStroke(page, 0.0f, 0.0f, 0.0f);
+  HPDF_Page_SetGrayStroke(page, 0.00f);
+  HPDF_Page_BeginText(page);
+  HPDF_Page_SetFontAndSize(page, font, fontPtSize);
+  HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize);
+  HPDF_Page_ShowText(page, minStr.toLatin1());
+  HPDF_Page_EndText(page);
+
+  QString label;
+
   // Draw the Number of Samples
   label = QString("Phase Num: ") + QString::number(phaseNum);
-  HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
-  HPDF_Page_SetGrayStroke (page, 0.00f);
-  HPDF_Page_BeginText (page);
-  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
+  HPDF_Page_SetRGBStroke(page, 0.0f, 0.0f, 0.0f);
+  HPDF_Page_SetGrayStroke(page, 0.00f);
+  HPDF_Page_BeginText(page);
+  HPDF_Page_SetFontAndSize(page, font, fontPtSize);
   HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second * numColors / 1.5f);
-  HPDF_Page_ShowText (page, label.toLatin1());
-  HPDF_Page_EndText (page);
+  HPDF_Page_ShowText(page, label.toLatin1());
+  HPDF_Page_EndText(page);
 
   label = QString("Phase Name: ") + materialName;
-  HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
-  HPDF_Page_SetGrayStroke (page, 0.00f);
-  HPDF_Page_BeginText (page);
-  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
+  HPDF_Page_SetRGBStroke(page, 0.0f, 0.0f, 0.0f);
+  HPDF_Page_SetGrayStroke(page, 0.00f);
+  HPDF_Page_BeginText(page);
+  HPDF_Page_SetFontAndSize(page, font, fontPtSize);
   HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second * numColors / 1.5f - (fontPtSize * 1.10f));
-  HPDF_Page_ShowText (page, label.toLatin1());
-  HPDF_Page_EndText (page);
+  HPDF_Page_ShowText(page, label.toLatin1());
+  HPDF_Page_EndText(page);
 
   label = QString("Laue Group: ") + laueGroupName;
-  HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
-  HPDF_Page_SetGrayStroke (page, 0.00f);
-  HPDF_Page_BeginText (page);
-  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
+  HPDF_Page_SetRGBStroke(page, 0.0f, 0.0f, 0.0f);
+  HPDF_Page_SetGrayStroke(page, 0.00f);
+  HPDF_Page_BeginText(page);
+  HPDF_Page_SetFontAndSize(page, font, fontPtSize);
   HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second * numColors / 1.5f - (fontPtSize * 2.20f));
-  HPDF_Page_ShowText (page, label.toLatin1());
-  HPDF_Page_EndText (page);
-  
+  HPDF_Page_ShowText(page, label.toLatin1());
+  HPDF_Page_EndText(page);
+
   label = QString("Upper & Lower");
-  HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
-  HPDF_Page_SetGrayStroke (page, 0.00f);
-  HPDF_Page_BeginText (page);
-  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
+  HPDF_Page_SetRGBStroke(page, 0.0f, 0.0f, 0.0f);
+  HPDF_Page_SetGrayStroke(page, 0.00f);
+  HPDF_Page_BeginText(page);
+  HPDF_Page_SetFontAndSize(page, font, fontPtSize);
   HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second * numColors / 1.5f - (fontPtSize * 3.30f));
-  HPDF_Page_ShowText (page, label.toLatin1());
-  HPDF_Page_EndText (page);
-  
+  HPDF_Page_ShowText(page, label.toLatin1());
+  HPDF_Page_EndText(page);
+
   label = QString("Samples: ") + QString::number(config.eulers->getNumberOfTuples());
-  HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
-  HPDF_Page_SetGrayStroke (page, 0.00f);
-  HPDF_Page_BeginText (page);
-  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
+  HPDF_Page_SetRGBStroke(page, 0.0f, 0.0f, 0.0f);
+  HPDF_Page_SetGrayStroke(page, 0.00f);
+  HPDF_Page_BeginText(page);
+  HPDF_Page_SetFontAndSize(page, font, fontPtSize);
   HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second * numColors / 1.5f - (fontPtSize * 4.40f));
-  HPDF_Page_ShowText (page, label.toLatin1());
-  HPDF_Page_EndText (page);  
-  
+  HPDF_Page_ShowText(page, label.toLatin1());
+  HPDF_Page_EndText(page);
+
   label = QString("Lambert Sq. Dim: ") + QString::number(config.lambertDim);
-  HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
-  HPDF_Page_SetGrayStroke (page, 0.00f);
-  HPDF_Page_BeginText (page);
-  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
+  HPDF_Page_SetRGBStroke(page, 0.0f, 0.0f, 0.0f);
+  HPDF_Page_SetGrayStroke(page, 0.00f);
+  HPDF_Page_BeginText(page);
+  HPDF_Page_SetFontAndSize(page, font, fontPtSize);
   HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second * numColors / 1.5f - (fontPtSize * 5.50f));
-  HPDF_Page_ShowText (page, label.toLatin1());
-  HPDF_Page_EndText (page);  
-  
-  HPDF_Page_SetGrayStroke (page, 0.30f);
+  HPDF_Page_ShowText(page, label.toLatin1());
+  HPDF_Page_EndText(page);
+
+  HPDF_Page_SetGrayStroke(page, 0.30f);
   for(int i = 0; i < numColors; i++)
   {
     SIMPL::Rgb c = colorTable[i];
     HPDF_REAL r, g, b;
     std::tie(r, g, b) = RgbColor::fRgb(c);
-    
+
     HPDF_REAL x = position.first + margins;
     HPDF_REAL y = position.second + margins + fontPtSize + (i * colorHeight);
-    
-    
+
     HPDF_Page_SetRGBFill(page, r, g, b);
     HPDF_Page_Rectangle(page, x, y, rect.first, rect.second);
     HPDF_Page_Fill(page);
-    
+
     HPDF_Page_SetRGBStroke(page, r, g, b);
     HPDF_Page_Rectangle(page, x, y, rect.first, rect.second);
     HPDF_Page_Stroke(page);
-    
   }
-  
-  HPDF_Page_SetGrayStroke (page, 0.0f);
-  HPDF_Page_MoveTo   (page, position.first + margins, position.second + margins + fontPtSize);
-  HPDF_Page_Rectangle(page, position.first + margins, position.second + margins + fontPtSize, 
-                      rect.first, numColors * rect.second);
-  HPDF_Page_Stroke(page);
-  
-  
-}
 
+  HPDF_Page_SetGrayStroke(page, 0.0f);
+  HPDF_Page_MoveTo(page, position.first + margins, position.second + margins + fontPtSize);
+  HPDF_Page_Rectangle(page, position.first + margins, position.second + margins + fontPtSize, rect.first, numColors * rect.second);
+  HPDF_Page_Stroke(page);
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void drawDiscreteInfoArea(HPDF_Page page, const PoleFigureConfiguration_t &config, 
-                          const std::pair<HPDF_REAL, HPDF_REAL> &position,
-                          float margins,
-                          float fontPtSize,
-                          HPDF_Font font,
-                          int32_t phaseNum,
-                          const QString& laueGroupName,
-                          const QString& materialName)
+void drawDiscreteInfoArea(HPDF_Page page, const PoleFigureConfiguration_t& config, const std::pair<HPDF_REAL, HPDF_REAL>& position, float margins, float fontPtSize, HPDF_Font font, int32_t phaseNum,
+                          const QString& laueGroupName, const QString& materialName)
 {
 
   int numColors = config.numColors;
@@ -590,66 +556,63 @@ void drawDiscreteInfoArea(HPDF_Page page, const PoleFigureConfiguration_t &confi
   // Now start from the bottom and draw colored lines up the scale bar
   // A Slight Indentation for the scalar bar
   float scaleBarRelativeWidth = 0.01f;
-  
+
   int imageHeight = config.imageDim;
   int imageWidth = config.imageDim;
   float colorHeight = (static_cast<float>(imageHeight)) / static_cast<float>(numColors);
-  
+
   using RectF = std::pair<float, float>;
 
-  RectF rect = std::make_pair(imageWidth * scaleBarRelativeWidth, colorHeight*1.00000f);  
+  RectF rect = std::make_pair(imageWidth * scaleBarRelativeWidth, colorHeight * 1.00000f);
 
-  QString label;  
-  
+  QString label;
+
   // Draw the Number of Samples
   label = QString("Phase Num: ") + QString::number(phaseNum);
-  HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
-  HPDF_Page_SetGrayStroke (page, 0.00f);
-  HPDF_Page_BeginText (page);
-  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
-  HPDF_Page_MoveTextPos (page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second*numColors);
-  HPDF_Page_ShowText (page, label.toLatin1());
-  HPDF_Page_EndText (page);
+  HPDF_Page_SetRGBStroke(page, 0.0f, 0.0f, 0.0f);
+  HPDF_Page_SetGrayStroke(page, 0.00f);
+  HPDF_Page_BeginText(page);
+  HPDF_Page_SetFontAndSize(page, font, fontPtSize);
+  HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second * numColors);
+  HPDF_Page_ShowText(page, label.toLatin1());
+  HPDF_Page_EndText(page);
 
   label = QString("Phase Name: ") + materialName;
-  HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
-  HPDF_Page_SetGrayStroke (page, 0.00f);
-  HPDF_Page_BeginText (page);
-  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
-  HPDF_Page_MoveTextPos (page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second*numColors - (fontPtSize*1.10f) );
-  HPDF_Page_ShowText (page, label.toLatin1());
-  HPDF_Page_EndText (page);
+  HPDF_Page_SetRGBStroke(page, 0.0f, 0.0f, 0.0f);
+  HPDF_Page_SetGrayStroke(page, 0.00f);
+  HPDF_Page_BeginText(page);
+  HPDF_Page_SetFontAndSize(page, font, fontPtSize);
+  HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second * numColors - (fontPtSize * 1.10f));
+  HPDF_Page_ShowText(page, label.toLatin1());
+  HPDF_Page_EndText(page);
 
   label = QString("Laue Group: ") + laueGroupName;
-  HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
-  HPDF_Page_SetGrayStroke (page, 0.00f);
-  HPDF_Page_BeginText (page);
-  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
-  HPDF_Page_MoveTextPos (page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second*numColors- (fontPtSize*2.20f) );
-  HPDF_Page_ShowText (page, label.toLatin1());
-  HPDF_Page_EndText (page);
-  
-  label = QString("Upper & Lower");
-  HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
-  HPDF_Page_SetGrayStroke (page, 0.00f);
-  HPDF_Page_BeginText (page);
-  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
-  HPDF_Page_MoveTextPos (page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second*numColors - (fontPtSize*3.30f) );
-  HPDF_Page_ShowText (page, label.toLatin1());
-  HPDF_Page_EndText (page);
-  
-  label = QString("Samples: ") + QString::number(config.eulers->getNumberOfTuples());
-  HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
-  HPDF_Page_SetGrayStroke (page, 0.00f);
-  HPDF_Page_BeginText (page);
-  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
-  HPDF_Page_MoveTextPos (page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second*numColors - (fontPtSize*4.40f) );
-  HPDF_Page_ShowText (page, label.toLatin1());
-  HPDF_Page_EndText (page);  
-  
-  
-}
+  HPDF_Page_SetRGBStroke(page, 0.0f, 0.0f, 0.0f);
+  HPDF_Page_SetGrayStroke(page, 0.00f);
+  HPDF_Page_BeginText(page);
+  HPDF_Page_SetFontAndSize(page, font, fontPtSize);
+  HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second * numColors - (fontPtSize * 2.20f));
+  HPDF_Page_ShowText(page, label.toLatin1());
+  HPDF_Page_EndText(page);
 
+  label = QString("Upper & Lower");
+  HPDF_Page_SetRGBStroke(page, 0.0f, 0.0f, 0.0f);
+  HPDF_Page_SetGrayStroke(page, 0.00f);
+  HPDF_Page_BeginText(page);
+  HPDF_Page_SetFontAndSize(page, font, fontPtSize);
+  HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second * numColors - (fontPtSize * 3.30f));
+  HPDF_Page_ShowText(page, label.toLatin1());
+  HPDF_Page_EndText(page);
+
+  label = QString("Samples: ") + QString::number(config.eulers->getNumberOfTuples());
+  HPDF_Page_SetRGBStroke(page, 0.0f, 0.0f, 0.0f);
+  HPDF_Page_SetGrayStroke(page, 0.00f);
+  HPDF_Page_BeginText(page);
+  HPDF_Page_SetFontAndSize(page, font, fontPtSize);
+  HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second * numColors - (fontPtSize * 4.40f));
+  HPDF_Page_ShowText(page, label.toLatin1());
+  HPDF_Page_EndText(page);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -700,7 +663,7 @@ void WritePoleFigure::execute()
       }
     }
     std::vector<size_t> eulerCompDim(1, 3);
-    FloatArrayType::Pointer subEulers = FloatArrayType::CreateArray(count, eulerCompDim, "Eulers_Per_Phase", true);
+    EbsdLib::FloatArrayType::Pointer subEulers = EbsdLib::FloatArrayType::CreateArray(count, eulerCompDim, "Eulers_Per_Phase", true);
     subEulers->initializeWithValue(std::numeric_limits<float>::signaling_NaN());
     float* eu = subEulers->getPointer(0);
 
@@ -724,7 +687,7 @@ void WritePoleFigure::execute()
       continue;
     } // Skip because we have no Pole Figure data
 
-    std::vector<UInt8ArrayType::Pointer> figures;
+    std::vector<EbsdLib::UInt8ArrayType::Pointer> figures;
 
     PoleFigureConfiguration_t config;
     config.eulers = subEulers.get();
@@ -750,41 +713,41 @@ void WritePoleFigure::execute()
 
     switch(m_CrystalStructures[phase])
     {
-    case Ebsd::CrystalStructure::Cubic_High:
+    case EbsdLib::CrystalStructure::Cubic_High:
       figures = makePoleFigures<CubicOps>(config);
       break;
-    case Ebsd::CrystalStructure::Cubic_Low:
+    case EbsdLib::CrystalStructure::Cubic_Low:
       figures = makePoleFigures<CubicLowOps>(config);
       break;
-    case Ebsd::CrystalStructure::Hexagonal_High:
+    case EbsdLib::CrystalStructure::Hexagonal_High:
       figures = makePoleFigures<HexagonalOps>(config);
       break;
-    case Ebsd::CrystalStructure::Hexagonal_Low:
+    case EbsdLib::CrystalStructure::Hexagonal_Low:
       figures = makePoleFigures<HexagonalLowOps>(config);
       break;
-    case Ebsd::CrystalStructure::Trigonal_High:
+    case EbsdLib::CrystalStructure::Trigonal_High:
       figures = makePoleFigures<TrigonalOps>(config);
       //   setWarningCondition(-1010, "Trigonal High Symmetry is not supported for Pole figures. This phase will be omitted from results");
       break;
-    case Ebsd::CrystalStructure::Trigonal_Low:
+    case EbsdLib::CrystalStructure::Trigonal_Low:
       figures = makePoleFigures<TrigonalLowOps>(config);
       //  setWarningCondition(-1010, "Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results");
       break;
-    case Ebsd::CrystalStructure::Tetragonal_High:
+    case EbsdLib::CrystalStructure::Tetragonal_High:
       figures = makePoleFigures<TetragonalOps>(config);
       //  setWarningCondition(-1010, "Tetragonal High Symmetry is not supported for Pole figures. This phase will be omitted from results");
       break;
-    case Ebsd::CrystalStructure::Tetragonal_Low:
+    case EbsdLib::CrystalStructure::Tetragonal_Low:
       figures = makePoleFigures<TetragonalLowOps>(config);
       // setWarningCondition(-1010, "Tetragonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results");
       break;
-    case Ebsd::CrystalStructure::OrthoRhombic:
+    case EbsdLib::CrystalStructure::OrthoRhombic:
       figures = makePoleFigures<OrthoRhombicOps>(config);
       break;
-    case Ebsd::CrystalStructure::Monoclinic:
+    case EbsdLib::CrystalStructure::Monoclinic:
       figures = makePoleFigures<MonoclinicOps>(config);
       break;
-    case Ebsd::CrystalStructure::Triclinic:
+    case EbsdLib::CrystalStructure::Triclinic:
       figures = makePoleFigures<TriclinicOps>(config);
       break;
     default:
@@ -792,20 +755,20 @@ void WritePoleFigure::execute()
     }
 
     if(figures.size() == 3)
-    {      
+    {
       QString filename = generateImagePath(label);
 
-      HPDF_Doc  pdf = HPDF_New (error_handler, nullptr);
-      
-      HPDF_SetCompressionMode (pdf, HPDF_COMP_ALL);
-      
+      HPDF_Doc pdf = HPDF_New(error_handler, nullptr);
+
+      HPDF_SetCompressionMode(pdf, HPDF_COMP_ALL);
+
       /* create default-font */
-      HPDF_Font font = HPDF_GetFont (pdf, "Helvetica", nullptr);
-      
-      HPDF_BYTE buf[1] = { 'X' };
-      
+      HPDF_Font font = HPDF_GetFont(pdf, "Helvetica", nullptr);
+
+      HPDF_BYTE buf[1] = {'X'};
+
       HPDF_TextWidth textWidth = HPDF_Font_TextWidth(font, buf, 1);
-      
+
       HPDF_REAL pageWidth = 0.0f;
       HPDF_REAL pageHeight = 0.0f;
 
@@ -815,12 +778,11 @@ void WritePoleFigure::execute()
       HPDF_REAL margins = imageHeight / 32.0f;
 
       HPDF_REAL xCharWidth = textWidth.width * fontPtSize / 1000;
-      
+
       // Each Pole Figure gets it's own Square mini canvas to draw into.
       HPDF_REAL subCanvasWidth = margins + imageWidth + xCharWidth + margins;
-      HPDF_REAL subCanvasHeight = margins + fontPtSize + imageHeight + fontPtSize*2 + margins*2;
+      HPDF_REAL subCanvasHeight = margins + fontPtSize + imageHeight + fontPtSize * 2 + margins * 2;
 
-      
       QVector<std::pair<HPDF_REAL, HPDF_REAL>> imagePositions(4);
       if(m_ImageLayout == SIMPL::Layout::Horizontal)
       {
@@ -849,89 +811,83 @@ void WritePoleFigure::execute()
         imagePositions[2] = std::make_pair(0.0f, 0.0f);                      // Lower Left
         imagePositions[3] = std::make_pair(subCanvasWidth, 0.0f);            // Lower Right
       }
-      
+
       pageHeight = pageHeight + margins + fontPtSize;
 
       /* add a new page object. */
-      HPDF_Page page = HPDF_AddPage (pdf);
-      HPDF_Page_SetWidth (page, pageWidth);
-      HPDF_Page_SetHeight (page, pageHeight);
-      
+      HPDF_Page page = HPDF_AddPage(pdf);
+      HPDF_Page_SetWidth(page, pageWidth);
+      HPDF_Page_SetHeight(page, pageHeight);
+
       QVector<HPDF_Image> pdfImages(figures.size());
       HPDF_ColorSpace colorSpace = HPDF_CS_DEVICE_RGB;
-      for (int a = 0; a < figures.size(); a++)
+      for(int a = 0; a < figures.size(); a++)
       {
         figures[a] = flipAndMirrorPoleFigure(figures[a].get(), config);
-        HPDF_Image image = HPDF_LoadRawImageFromMem(pdf,
-                                                    figures[a]->getPointer(0),
-                                                    static_cast<HPDF_UINT>(config.imageDim),
-                                                    static_cast<HPDF_UINT>(config.imageDim),
-                                                    colorSpace,
-                                                    8);
-        pdfImages[a] = image;                                            
+        HPDF_Image image = HPDF_LoadRawImageFromMem(pdf, figures[a]->getPointer(0), static_cast<HPDF_UINT>(config.imageDim), static_cast<HPDF_UINT>(config.imageDim), colorSpace, 8);
+        pdfImages[a] = image;
       }
-      
-      
+
       // Create the Scalar Bar image
-      //QImage scalarBar = PoleFigureImageUtilities::GenerateScalarBar(img0.width(), imageHeight, config); 
-      
+      // QImage scalarBar = PoleFigureImageUtilities::GenerateScalarBar(img0.width(), imageHeight, config);
+
       for(int i = 0; i < 3; i++)
       {
-          HPDF_REAL x = 0.0f;
-          HPDF_REAL y = 0.0f;
+        HPDF_REAL x = 0.0f;
+        HPDF_REAL y = 0.0f;
 
-          std::tie(x, y) = imagePositions[i];
+        std::tie(x, y) = imagePositions[i];
 
-          /* Draw image to the canvas. (normal-mode with actual size.)*/
-          HPDF_Page_DrawImage (page, pdfImages[i], x + margins, y+ margins+fontPtSize, imageWidth, imageHeight);
+        /* Draw image to the canvas. (normal-mode with actual size.)*/
+        HPDF_Page_DrawImage(page, pdfImages[i], x + margins, y + margins + fontPtSize, imageWidth, imageHeight);
 
-          QString text = figures[i]->getName();
-          std::vector<uint8_t> buffer;
-          QString modText;
-          int k = 0;
-          while(k < text.length())
+        QString text = figures[i]->getName();
+        std::vector<uint8_t> buffer;
+        QString modText;
+        int k = 0;
+        while(k < text.length())
+        {
+          if(text.at(k) == '-')
           {
-              if(text.at(k) == '-')
-              {
-                HPDF_TextWidth tw = HPDF_Font_TextWidth(font, buffer.data(), static_cast<HPDF_UINT>(buffer.size()));
-                int32_t scaledOffset = static_cast<int32_t>(tw.width * fontPtSize / 1000);
+            HPDF_TextWidth tw = HPDF_Font_TextWidth(font, buffer.data(), static_cast<HPDF_UINT>(buffer.size()));
+            int32_t scaledOffset = static_cast<int32_t>(tw.width * fontPtSize / 1000);
 
-                buffer.push_back(static_cast<uint8_t>(text.at(k + 1).toLatin1()));
-                tw = HPDF_Font_TextWidth(font, buffer.data(), static_cast<HPDF_UINT>(buffer.size()));
-                int32_t scaledOffset2 = static_cast<int32_t>(tw.width * fontPtSize / 1000);
-                buffer.pop_back();
+            buffer.push_back(static_cast<uint8_t>(text.at(k + 1).toLatin1()));
+            tw = HPDF_Font_TextWidth(font, buffer.data(), static_cast<HPDF_UINT>(buffer.size()));
+            int32_t scaledOffset2 = static_cast<int32_t>(tw.width * fontPtSize / 1000);
+            buffer.pop_back();
 
-                int32_t diff = (scaledOffset2 - scaledOffset);
+            int32_t diff = (scaledOffset2 - scaledOffset);
 
-                buf[0] = '-';
-                tw = HPDF_Font_TextWidth(font, buf, 1);
-                int32_t charWidth = static_cast<int32_t>(tw.width * fontPtSize / 1000.0f);
-                scaledOffset = scaledOffset + (diff - charWidth) / 2;
-                // Draw the bar at the correct location...
-                std::string underScore("-");
-                HPDF_Page_BeginText(page);
-                HPDF_Page_SetFontAndSize(page, font, fontPtSize);
-                HPDF_Page_MoveTextPos(page, x + margins + scaledOffset, y + margins + fontPtSize + imageHeight + fontPtSize * 1.60f + margins);
-                HPDF_Page_ShowText(page, underScore.c_str());
-                HPDF_Page_EndText(page);
+            buf[0] = '-';
+            tw = HPDF_Font_TextWidth(font, buf, 1);
+            int32_t charWidth = static_cast<int32_t>(tw.width * fontPtSize / 1000.0f);
+            scaledOffset = scaledOffset + (diff - charWidth) / 2;
+            // Draw the bar at the correct location...
+            std::string underScore("-");
+            HPDF_Page_BeginText(page);
+            HPDF_Page_SetFontAndSize(page, font, fontPtSize);
+            HPDF_Page_MoveTextPos(page, x + margins + scaledOffset, y + margins + fontPtSize + imageHeight + fontPtSize * 1.60f + margins);
+            HPDF_Page_ShowText(page, underScore.c_str());
+            HPDF_Page_EndText(page);
 
-                k++;
-              }
-              // Keep building up the string to finally print.
-              if(text.at(k) != '-')
-              {
-                  modText = modText + text.at(k);
-                  buffer.push_back(static_cast<uint8_t>(text.at(k).toLatin1()));
-              }
-              k++;
+            k++;
           }
+          // Keep building up the string to finally print.
+          if(text.at(k) != '-')
+          {
+            modText = modText + text.at(k);
+            buffer.push_back(static_cast<uint8_t>(text.at(k).toLatin1()));
+          }
+          k++;
+        }
 
-        HPDF_Page_BeginText (page);
-        HPDF_Page_SetFontAndSize (page, font, fontPtSize);
+        HPDF_Page_BeginText(page);
+        HPDF_Page_SetFontAndSize(page, font, fontPtSize);
 
-        HPDF_Page_MoveTextPos (page, x + margins, y+margins+fontPtSize+imageHeight+fontPtSize+ margins);
-        HPDF_Page_ShowText (page, modText.toLatin1());
-        HPDF_Page_EndText (page);
+        HPDF_Page_MoveTextPos(page, x + margins, y + margins + fontPtSize + imageHeight + fontPtSize + margins);
+        HPDF_Page_ShowText(page, modText.toLatin1());
+        HPDF_Page_EndText(page);
 
         HPDF_REAL lineWidth = imageWidth / 512.0f;
         if(lineWidth < 1.0f)
@@ -939,46 +895,46 @@ void WritePoleFigure::execute()
           lineWidth = 1.0f;
         }
 
-        HPDF_Page_SetLineWidth (page, lineWidth);
-        HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
-        HPDF_Page_SetGrayStroke (page, 0.30f);
+        HPDF_Page_SetLineWidth(page, lineWidth);
+        HPDF_Page_SetRGBStroke(page, 0.0f, 0.0f, 0.0f);
+        HPDF_Page_SetGrayStroke(page, 0.30f);
 
         // Draw
-        HPDF_Page_Circle (page, x + margins + imageWidth/2.0f, y+ margins + fontPtSize + imageWidth/2.0f, imageWidth/2.0f);
+        HPDF_Page_Circle(page, x + margins + imageWidth / 2.0f, y + margins + fontPtSize + imageWidth / 2.0f, imageWidth / 2.0f);
         // Draw the Horizontal Axis
-        HPDF_Page_MoveTo (page, x + margins, y+ margins + fontPtSize + imageWidth/2.0f);
-        HPDF_Page_LineTo (page, x + margins + imageWidth, y+ margins + fontPtSize + imageWidth/2.0f);
+        HPDF_Page_MoveTo(page, x + margins, y + margins + fontPtSize + imageWidth / 2.0f);
+        HPDF_Page_LineTo(page, x + margins + imageWidth, y + margins + fontPtSize + imageWidth / 2.0f);
         // Draw the Vertical Axis
-        HPDF_Page_MoveTo (page, x + margins + imageWidth/2.0f, y + margins + fontPtSize);
-        HPDF_Page_LineTo (page, x + margins + imageWidth/2.0f, y + margins + fontPtSize + imageHeight);    
-        HPDF_Page_Stroke (page);
-        
+        HPDF_Page_MoveTo(page, x + margins + imageWidth / 2.0f, y + margins + fontPtSize);
+        HPDF_Page_LineTo(page, x + margins + imageWidth / 2.0f, y + margins + fontPtSize + imageHeight);
+        HPDF_Page_Stroke(page);
+
         // Label the X Axis
-        HPDF_Page_BeginText (page);
-        HPDF_Page_SetFontAndSize (page, font, fontPtSize);
-        HPDF_Page_MoveTextPos (page, x + margins + imageWidth, y+margins+fontPtSize+imageHeight/2.0f - fontPtSize*.33f);
-        HPDF_Page_ShowText (page, " X");
-        HPDF_Page_EndText (page);
-        
+        HPDF_Page_BeginText(page);
+        HPDF_Page_SetFontAndSize(page, font, fontPtSize);
+        HPDF_Page_MoveTextPos(page, x + margins + imageWidth, y + margins + fontPtSize + imageHeight / 2.0f - fontPtSize * .33f);
+        HPDF_Page_ShowText(page, " X");
+        HPDF_Page_EndText(page);
+
         // Label the Y Axis
-        HPDF_Page_BeginText (page);
-        HPDF_Page_SetFontAndSize (page, font, fontPtSize);
-        HPDF_Page_MoveTextPos (page, x + margins + imageWidth/2.0f - xCharWidth/2.0f, y+margins + fontPtSize + imageHeight + fontPtSize*0.10f);
-        HPDF_Page_ShowText (page, "Y");
-        HPDF_Page_EndText (page);
+        HPDF_Page_BeginText(page);
+        HPDF_Page_SetFontAndSize(page, font, fontPtSize);
+        HPDF_Page_MoveTextPos(page, x + margins + imageWidth / 2.0f - xCharWidth / 2.0f, y + margins + fontPtSize + imageHeight + fontPtSize * 0.10f);
+        HPDF_Page_ShowText(page, "Y");
+        HPDF_Page_EndText(page);
       }
-      
+
       std::vector<QString> laueNames = LaueOps::GetLaueNames();
       uint32_t laueIndex = m_CrystalStructures[phase];
       // Draw the title onto the canvas
       QString materialName = m_MaterialNames->getValue(phase);
       QString fullTitle = QString("%1").arg(getTitle());
-      HPDF_Page_BeginText (page);
-      HPDF_Page_SetFontAndSize (page, font, imageHeight / 12.0f);
-      HPDF_Page_MoveTextPos (page, margins, pageHeight - margins/2.0f - fontPtSize);
-      HPDF_Page_ShowText (page, fullTitle.toLatin1());
-      HPDF_Page_EndText (page);  
-      
+      HPDF_Page_BeginText(page);
+      HPDF_Page_SetFontAndSize(page, font, imageHeight / 12.0f);
+      HPDF_Page_MoveTextPos(page, margins, pageHeight - margins / 2.0f - fontPtSize);
+      HPDF_Page_ShowText(page, fullTitle.toLatin1());
+      HPDF_Page_EndText(page);
+
       // Now draw the Color Scalar Bar if needed.
       if(config.discrete)
       {
@@ -988,18 +944,15 @@ void WritePoleFigure::execute()
       {
         drawScalarBar(page, config, imagePositions[3], margins, imageHeight / 20.0f, font, static_cast<int32_t>(phase), laueNames[laueIndex], materialName);
       }
-      
+
       /* save the document to a file */
-      HPDF_SaveToFile (pdf, filename.toLatin1());
-      
+      HPDF_SaveToFile(pdf, filename.toLatin1());
+
       /* clean up */
-      HPDF_Free (pdf);
+      HPDF_Free(pdf);
     }
   }
-  
-
 }
-
 
 // -----------------------------------------------------------------------------
 //

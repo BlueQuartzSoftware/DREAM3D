@@ -109,7 +109,6 @@ public:
    * @return Value of AvgQuatsArrayPath
    */
   DataArrayPath getAvgQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
   /**
@@ -121,7 +120,6 @@ public:
    * @return Value of BasalLoadingFactorArrayPath
    */
   DataArrayPath getBasalLoadingFactorArrayPath() const;
-
   Q_PROPERTY(DataArrayPath BasalLoadingFactorArrayPath READ getBasalLoadingFactorArrayPath WRITE setBasalLoadingFactorArrayPath)
 
   /**
@@ -133,7 +131,6 @@ public:
    * @return Value of LoadingDirection
    */
   FloatVec3Type getLoadingDirection() const;
-
   Q_PROPERTY(FloatVec3Type LoadingDirection READ getLoadingDirection WRITE setLoadingDirection)
 
   /**

@@ -45,16 +45,16 @@
 #include <QtWidgets/QAbstractItemDelegate>
 #include <QtWidgets/QFileDialog>
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/StatsData/StatsData.h"
 
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 
-#include "OrientationLib/Texture/StatsGen.hpp"
-#include "OrientationLib/Texture/Texture.hpp"
-#include "OrientationLib/Utilities/PoleFigureUtilities.h"
+#include "EbsdLib/Texture/StatsGen.hpp"
+#include "EbsdLib/Texture/Texture.hpp"
+#include "EbsdLib/Utilities/PoleFigureUtilities.h"
 
 #include "SyntheticBuilding/Gui/Utilities/PoleFigureImageUtilities.h"
 #include "SyntheticBuilding/Gui/Widgets/StatsGenMDFWidget.h"
@@ -84,7 +84,7 @@ StatsGenAxisODFWidget::StatsGenAxisODFWidget(QWidget* parent)
 , m_EnableAxisDecorations(false)
 , m_Initializing(true)
 , m_PhaseIndex(-1)
-, m_CrystalStructure(Ebsd::CrystalStructure::OrthoRhombic)
+, m_CrystalStructure(EbsdLib::CrystalStructure::OrthoRhombic)
 , m_ODFTableModel(nullptr)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
@@ -458,7 +458,7 @@ void StatsGenAxisODFWidget::calculateAxisODF()
   int numColors = 16;
   int npoints = pfSamplePoints->value();
   std::vector<size_t> dims(1, 3);
-  FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers", true);
+  EbsdLib::FloatArrayType::Pointer eulers = EbsdLib::FloatArrayType::CreateArray(npoints, dims, "Eulers", true);
   OrthoRhombicOps ops;
 
   Texture::CalculateODFData<float, OrthoRhombicOps, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
@@ -491,14 +491,20 @@ void StatsGenAxisODFWidget::calculateAxisODF()
   order[2] = 1; // Show B Second
   config.order = order;
 
-  std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
+  std::vector<EbsdLib::UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
   if(err == 1)
   {
     // TODO: Present Error Message
     return;
   }
 
-  QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, m_ImageLayoutCB->currentIndex());
+  std::vector<UInt8ArrayType::Pointer> convertedFigures;
+  for(const auto& figure : figures)
+  {
+    convertedFigures.emplace_back(figure->moveToDataArrayType<UInt8ArrayType>());
+  }
+
+  QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(convertedFigures[0].get(), convertedFigures[1].get(), convertedFigures[2].get(), config, m_ImageLayoutCB->currentIndex());
   m_PoleFigureLabel->setPixmap(QPixmap::fromImage(image));
 
   emit dataChanged();

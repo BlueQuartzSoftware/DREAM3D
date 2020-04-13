@@ -106,7 +106,6 @@ public:
    * @return Value of VertexDataContainerName
    */
   DataArrayPath getVertexDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
   /**
@@ -118,7 +117,6 @@ public:
    * @return Value of VertexAttributeMatrixName
    */
   QString getVertexAttributeMatrixName() const;
-
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
   /**
@@ -130,7 +128,6 @@ public:
    * @return Value of LatticeConstants
    */
   FloatVec3Type getLatticeConstants() const;
-
   Q_PROPERTY(FloatVec3Type LatticeConstants READ getLatticeConstants WRITE setLatticeConstants)
 
   /**
@@ -142,7 +139,6 @@ public:
    * @return Value of Basis
    */
   int getBasis() const;
-
   Q_PROPERTY(int Basis READ getBasis WRITE setBasis)
 
   /**
@@ -154,7 +150,6 @@ public:
    * @return Value of SurfaceMeshFaceLabelsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
   /**
@@ -166,7 +161,6 @@ public:
    * @return Value of AvgQuatsArrayPath
    */
   DataArrayPath getAvgQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
   /**
@@ -178,7 +172,6 @@ public:
    * @return Value of AtomFeatureLabelsArrayName
    */
   QString getAtomFeatureLabelsArrayName() const;
-
   Q_PROPERTY(QString AtomFeatureLabelsArrayName READ getAtomFeatureLabelsArrayName WRITE setAtomFeatureLabelsArrayName)
 
   /**

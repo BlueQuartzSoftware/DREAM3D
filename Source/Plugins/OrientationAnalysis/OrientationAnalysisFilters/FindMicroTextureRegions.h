@@ -108,7 +108,6 @@ public:
    * @return Value of CellFeatureAttributeMatrixName
    */
   DataArrayPath getCellFeatureAttributeMatrixName() const;
-
   Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
   /**
@@ -120,7 +119,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -132,7 +130,6 @@ public:
    * @return Value of MicroTextureRegionNumCellsArrayName
    */
   QString getMicroTextureRegionNumCellsArrayName() const;
-
   Q_PROPERTY(QString MicroTextureRegionNumCellsArrayName READ getMicroTextureRegionNumCellsArrayName WRITE setMicroTextureRegionNumCellsArrayName)
 
   /**
@@ -144,7 +141,6 @@ public:
    * @return Value of MicroTextureRegionFractionOccupiedArrayName
    */
   QString getMicroTextureRegionFractionOccupiedArrayName() const;
-
   Q_PROPERTY(QString MicroTextureRegionFractionOccupiedArrayName READ getMicroTextureRegionFractionOccupiedArrayName WRITE setMicroTextureRegionFractionOccupiedArrayName)
 
   /**

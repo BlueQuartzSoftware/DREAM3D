@@ -106,7 +106,6 @@ public:
    * @return Value of InputDataArrayVector
    */
   QVector<DataArrayPath> getInputDataArrayVector() const;
-
   Q_PROPERTY(QVector<DataArrayPath> InputDataArrayVector READ getInputDataArrayVector WRITE setInputDataArrayVector)
 
   /**
@@ -118,7 +117,6 @@ public:
    * @return Value of OutputAttributeMatrixName
    */
   QString getOutputAttributeMatrixName() const;
-
   Q_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
 
   /**
@@ -130,7 +128,6 @@ public:
    * @return Value of OutputArrayPrefix
    */
   QString getOutputArrayPrefix() const;
-
   Q_PROPERTY(QString OutputArrayPrefix READ getOutputArrayPrefix WRITE setOutputArrayPrefix)
 
   /**
@@ -142,7 +139,6 @@ public:
    * @return Value of UsePreviousMuSigma
    */
   bool getUsePreviousMuSigma() const;
-
   Q_PROPERTY(bool UsePreviousMuSigma READ getUsePreviousMuSigma WRITE setUsePreviousMuSigma)
 
   /**

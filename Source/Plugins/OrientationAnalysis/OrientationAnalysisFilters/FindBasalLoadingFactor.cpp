@@ -50,7 +50,7 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 
-#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"

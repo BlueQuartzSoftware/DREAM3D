@@ -24,12 +24,12 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -92,7 +92,7 @@ public:
       m_FZQuats[index + 2] = 0.0f;
       m_FZQuats[index + 3] = 0.0f;
 
-      if(phase < m_NumPhases && calcIPF && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd)
+      if(phase < m_NumPhases && calcIPF && m_CrystalStructures[phase] < EbsdLib::CrystalStructure::LaueGroupEnd)
       {
         QuatType q = QuatType(m_Quats[index], m_Quats[index + 1], m_Quats[index + 2], m_Quats[index + 3]);
         int32_t xtal = static_cast<int32_t>(m_CrystalStructures[phase]);

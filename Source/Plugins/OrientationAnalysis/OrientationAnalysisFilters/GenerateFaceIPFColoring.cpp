@@ -56,19 +56,19 @@
 #include "SIMPLib/Utilities/ColorTable.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 
-#include "OrientationLib/LaueOps/CubicLowOps.h"
-#include "OrientationLib/LaueOps/CubicOps.h"
-#include "OrientationLib/LaueOps/HexagonalLowOps.h"
-#include "OrientationLib/LaueOps/HexagonalOps.h"
-#include "OrientationLib/LaueOps/MonoclinicOps.h"
-#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
-#include "OrientationLib/LaueOps/TetragonalLowOps.h"
-#include "OrientationLib/LaueOps/TetragonalOps.h"
-#include "OrientationLib/LaueOps/TriclinicOps.h"
-#include "OrientationLib/LaueOps/TrigonalLowOps.h"
-#include "OrientationLib/LaueOps/TrigonalOps.h"
+#include "EbsdLib/LaueOps/CubicLowOps.h"
+#include "EbsdLib/LaueOps/CubicOps.h"
+#include "EbsdLib/LaueOps/HexagonalLowOps.h"
+#include "EbsdLib/LaueOps/HexagonalOps.h"
+#include "EbsdLib/LaueOps/MonoclinicOps.h"
+#include "EbsdLib/LaueOps/OrthoRhombicOps.h"
+#include "EbsdLib/LaueOps/TetragonalLowOps.h"
+#include "EbsdLib/LaueOps/TetragonalOps.h"
+#include "EbsdLib/LaueOps/TriclinicOps.h"
+#include "EbsdLib/LaueOps/TrigonalLowOps.h"
+#include "EbsdLib/LaueOps/TrigonalOps.h"
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -144,7 +144,7 @@ public:
       if(phase1 > 0)
       {
         // Make sure we are using a valid Euler Angles with valid crystal symmetry
-        if(m_CrystalStructures[phase1] < Ebsd::CrystalStructure::LaueGroupEnd)
+        if(m_CrystalStructures[phase1] < EbsdLib::CrystalStructure::LaueGroupEnd)
         {
           dEuler[0] = m_Eulers[3 * feature1 + 0];
           dEuler[1] = m_Eulers[3 * feature1 + 1];
@@ -170,7 +170,7 @@ public:
       if(phase2 > 0)
       {
         // Make sure we are using a valid Euler Angles with valid crystal symmetry
-        if(m_CrystalStructures[phase1] < Ebsd::CrystalStructure::LaueGroupEnd)
+        if(m_CrystalStructures[phase1] < EbsdLib::CrystalStructure::LaueGroupEnd)
         {
           dEuler[0] = m_Eulers[3 * feature2 + 0];
           dEuler[1] = m_Eulers[3 * feature2 + 1];

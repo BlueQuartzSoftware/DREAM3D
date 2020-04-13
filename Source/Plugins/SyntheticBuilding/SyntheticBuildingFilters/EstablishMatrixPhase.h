@@ -107,7 +107,6 @@ public:
    * @return Value of OutputCellAttributeMatrixPath
    */
   DataArrayPath getOutputCellAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath OutputCellAttributeMatrixPath READ getOutputCellAttributeMatrixPath WRITE setOutputCellAttributeMatrixPath)
 
   /**
@@ -119,7 +118,6 @@ public:
    * @return Value of OutputCellFeatureAttributeMatrixName
    */
   QString getOutputCellFeatureAttributeMatrixName() const;
-
   Q_PROPERTY(QString OutputCellFeatureAttributeMatrixName READ getOutputCellFeatureAttributeMatrixName WRITE setOutputCellFeatureAttributeMatrixName)
 
   /**
@@ -131,7 +129,6 @@ public:
    * @return Value of OutputCellEnsembleAttributeMatrixName
    */
   QString getOutputCellEnsembleAttributeMatrixName() const;
-
   Q_PROPERTY(QString OutputCellEnsembleAttributeMatrixName READ getOutputCellEnsembleAttributeMatrixName WRITE setOutputCellEnsembleAttributeMatrixName)
 
   /**
@@ -143,7 +140,6 @@ public:
    * @return Value of FeatureIdsArrayName
    */
   QString getFeatureIdsArrayName() const;
-
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
   /**
@@ -155,7 +151,6 @@ public:
    * @return Value of CellPhasesArrayName
    */
   QString getCellPhasesArrayName() const;
-
   Q_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
 
   /**
@@ -167,7 +162,6 @@ public:
    * @return Value of FeaturePhasesArrayName
    */
   QString getFeaturePhasesArrayName() const;
-
   Q_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
 
   /**
@@ -179,7 +173,6 @@ public:
    * @return Value of NumFeaturesArrayName
    */
   QString getNumFeaturesArrayName() const;
-
   Q_PROPERTY(QString NumFeaturesArrayName READ getNumFeaturesArrayName WRITE setNumFeaturesArrayName)
 
   /**
@@ -191,7 +184,6 @@ public:
    * @return Value of MaskArrayPath
    */
   DataArrayPath getMaskArrayPath() const;
-
   Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
 
   /**
@@ -203,7 +195,6 @@ public:
    * @return Value of UseMask
    */
   bool getUseMask() const;
-
   Q_PROPERTY(bool UseMask READ getUseMask WRITE setUseMask)
 
   /**
@@ -215,7 +206,6 @@ public:
    * @return Value of InputStatsArrayPath
    */
   DataArrayPath getInputStatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
 
   /**
@@ -227,7 +217,6 @@ public:
    * @return Value of InputPhaseTypesArrayPath
    */
   DataArrayPath getInputPhaseTypesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
 
   /**
@@ -239,7 +228,6 @@ public:
    * @return Value of InputPhaseNamesArrayPath
    */
   DataArrayPath getInputPhaseNamesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath InputPhaseNamesArrayPath READ getInputPhaseNamesArrayPath WRITE setInputPhaseNamesArrayPath)
 
   /**

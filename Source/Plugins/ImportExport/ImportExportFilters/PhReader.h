@@ -109,7 +109,6 @@ public:
    * @return Value of VolumeDataContainerName
    */
   DataArrayPath getVolumeDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
   /**
@@ -121,7 +120,6 @@ public:
    * @return Value of CellAttributeMatrixName
    */
   QString getCellAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
   /**
@@ -133,7 +131,6 @@ public:
    * @return Value of InputFile
    */
   QString getInputFile() const;
-
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**
@@ -145,7 +142,6 @@ public:
    * @return Value of Origin
    */
   FloatVec3Type getOrigin() const;
-
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
   /**
@@ -157,7 +153,6 @@ public:
    * @return Value of Spacing
    */
   FloatVec3Type getSpacing() const;
-
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
   /**
@@ -169,7 +164,6 @@ public:
    * @return Value of FileWasRead
    */
   bool getFileWasRead() const;
-
   Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
   /**
@@ -181,7 +175,6 @@ public:
    * @return Value of FeatureIdsArrayName
    */
   QString getFeatureIdsArrayName() const;
-
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
   /**

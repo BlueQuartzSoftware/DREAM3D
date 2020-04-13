@@ -107,7 +107,6 @@ public:
    * @return Value of SelectedDataArrayPaths
    */
   QVector<DataArrayPath> getSelectedDataArrayPaths() const;
-
   Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
 
   /**
@@ -119,7 +118,6 @@ public:
    * @return Value of SurfaceDataContainerName
    */
   DataArrayPath getSurfaceDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
   /**
@@ -131,7 +129,6 @@ public:
    * @return Value of TripleLineDataContainerName
    */
   DataArrayPath getTripleLineDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath TripleLineDataContainerName READ getTripleLineDataContainerName WRITE setTripleLineDataContainerName)
 
   /**
@@ -143,7 +140,6 @@ public:
    * @return Value of VertexAttributeMatrixName
    */
   QString getVertexAttributeMatrixName() const;
-
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
   /**
@@ -155,7 +151,6 @@ public:
    * @return Value of FaceAttributeMatrixName
    */
   QString getFaceAttributeMatrixName() const;
-
   Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
   /**
@@ -167,7 +162,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -179,7 +173,6 @@ public:
    * @return Value of FaceLabelsArrayName
    */
   QString getFaceLabelsArrayName() const;
-
   Q_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
 
   /**
@@ -191,7 +184,6 @@ public:
    * @return Value of NodeTypesArrayName
    */
   QString getNodeTypesArrayName() const;
-
   Q_PROPERTY(QString NodeTypesArrayName READ getNodeTypesArrayName WRITE setNodeTypesArrayName)
 
   /**
@@ -203,7 +195,6 @@ public:
    * @return Value of FeatureAttributeMatrixName
    */
   QString getFeatureAttributeMatrixName() const;
-
   Q_PROPERTY(QString FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
 
   /**

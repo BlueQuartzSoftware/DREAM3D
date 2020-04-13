@@ -101,7 +101,6 @@ public:
    * @return Value of OutputFile
    */
   QString getOutputFile() const;
-
   Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
   /**
@@ -113,7 +112,6 @@ public:
    * @return Value of SurfaceMeshFaceLabelsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
   /**
@@ -125,7 +123,6 @@ public:
    * @return Value of SurfaceMeshFaceNormalsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceNormalsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
   /**
@@ -137,7 +134,6 @@ public:
    * @return Value of SurfaceMeshFaceAreasArrayPath
    */
   DataArrayPath getSurfaceMeshFaceAreasArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceAreasArrayPath READ getSurfaceMeshFaceAreasArrayPath WRITE setSurfaceMeshFaceAreasArrayPath)
 
   /**
@@ -149,7 +145,6 @@ public:
    * @return Value of FeatureEulerAnglesArrayPath
    */
   DataArrayPath getFeatureEulerAnglesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
 
   /**

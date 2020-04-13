@@ -33,8 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "RotateEulerRefFrame.h"
 
 #include <QtCore/QTextStream>
@@ -45,8 +43,10 @@
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
-#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"

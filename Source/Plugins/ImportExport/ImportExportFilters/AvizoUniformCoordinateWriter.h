@@ -111,7 +111,6 @@ public:
    * @return Value of OutputFile
    */
   QString getOutputFile() const;
-
   Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
   /**
@@ -123,7 +122,6 @@ public:
    * @return Value of WriteBinaryFile
    */
   bool getWriteBinaryFile() const;
-
   Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
 
   /**
@@ -135,7 +133,6 @@ public:
    * @return Value of Units
    */
   QString getUnits() const;
-
   Q_PROPERTY(QString Units READ getUnits WRITE setUnits)
 
   /**
@@ -162,7 +159,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**

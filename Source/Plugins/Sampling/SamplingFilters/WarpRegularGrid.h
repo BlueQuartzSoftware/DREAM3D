@@ -108,7 +108,6 @@ public:
    * @return Value of NewDataContainerName
    */
   DataArrayPath getNewDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
 
   /**
@@ -120,7 +119,6 @@ public:
    * @return Value of CellAttributeMatrixPath
    */
   DataArrayPath getCellAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
   /**
@@ -132,7 +130,6 @@ public:
    * @return Value of PolyOrder
    */
   int getPolyOrder() const;
-
   Q_PROPERTY(int PolyOrder READ getPolyOrder WRITE setPolyOrder)
 
   /**
@@ -144,7 +141,6 @@ public:
    * @return Value of SecondOrderACoeff
    */
   Float2ndOrderPoly_t getSecondOrderACoeff() const;
-
   Q_PROPERTY(Float2ndOrderPoly_t SecondOrderACoeff READ getSecondOrderACoeff WRITE setSecondOrderACoeff)
 
   /**
@@ -156,7 +152,6 @@ public:
    * @return Value of SecondOrderBCoeff
    */
   Float2ndOrderPoly_t getSecondOrderBCoeff() const;
-
   Q_PROPERTY(Float2ndOrderPoly_t SecondOrderBCoeff READ getSecondOrderBCoeff WRITE setSecondOrderBCoeff)
 
   /**
@@ -168,7 +163,6 @@ public:
    * @return Value of ThirdOrderACoeff
    */
   Float3rdOrderPoly_t getThirdOrderACoeff() const;
-
   Q_PROPERTY(Float3rdOrderPoly_t ThirdOrderACoeff READ getThirdOrderACoeff WRITE setThirdOrderACoeff)
 
   /**
@@ -180,7 +174,6 @@ public:
    * @return Value of ThirdOrderBCoeff
    */
   Float3rdOrderPoly_t getThirdOrderBCoeff() const;
-
   Q_PROPERTY(Float3rdOrderPoly_t ThirdOrderBCoeff READ getThirdOrderBCoeff WRITE setThirdOrderBCoeff)
 
   /**
@@ -192,7 +185,6 @@ public:
    * @return Value of FourthOrderACoeff
    */
   Float4thOrderPoly_t getFourthOrderACoeff() const;
-
   Q_PROPERTY(Float4thOrderPoly_t FourthOrderACoeff READ getFourthOrderACoeff WRITE setFourthOrderACoeff)
 
   /**
@@ -204,7 +196,6 @@ public:
    * @return Value of FourthOrderBCoeff
    */
   Float4thOrderPoly_t getFourthOrderBCoeff() const;
-
   Q_PROPERTY(Float4thOrderPoly_t FourthOrderBCoeff READ getFourthOrderBCoeff WRITE setFourthOrderBCoeff)
 
   /**
@@ -216,7 +207,6 @@ public:
    * @return Value of SaveAsNewDataContainer
    */
   bool getSaveAsNewDataContainer() const;
-
   Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
 
   /**

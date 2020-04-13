@@ -72,7 +72,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -84,7 +83,6 @@ public:
    * @return Value of FeatureRectArrayPath
    */
   DataArrayPath getFeatureRectArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureRectArrayPath READ getFeatureRectArrayPath WRITE setFeatureRectArrayPath)
 
   /**
@@ -96,7 +94,6 @@ public:
    * @return Value of NormalizeMomentInvariants
    */
   bool getNormalizeMomentInvariants() const;
-
   Q_PROPERTY(bool NormalizeMomentInvariants READ getNormalizeMomentInvariants WRITE setNormalizeMomentInvariants)
 
   /**
@@ -108,7 +105,6 @@ public:
    * @return Value of Omega1ArrayPath
    */
   DataArrayPath getOmega1ArrayPath() const;
-
   Q_PROPERTY(DataArrayPath Omega1ArrayPath READ getOmega1ArrayPath WRITE setOmega1ArrayPath)
 
   /**
@@ -120,7 +116,6 @@ public:
    * @return Value of Omega2ArrayPath
    */
   DataArrayPath getOmega2ArrayPath() const;
-
   Q_PROPERTY(DataArrayPath Omega2ArrayPath READ getOmega2ArrayPath WRITE setOmega2ArrayPath)
 
   /**
@@ -132,7 +127,6 @@ public:
    * @return Value of SaveCentralMoments
    */
   bool getSaveCentralMoments() const;
-
   Q_PROPERTY(bool SaveCentralMoments READ getSaveCentralMoments WRITE setSaveCentralMoments)
 
   /**
@@ -144,7 +138,6 @@ public:
    * @return Value of CentralMomentsArrayPath
    */
   DataArrayPath getCentralMomentsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CentralMomentsArrayPath READ getCentralMomentsArrayPath WRITE setCentralMomentsArrayPath)
 
   /**

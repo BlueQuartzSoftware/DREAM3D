@@ -42,7 +42,7 @@
 #include <QtWidgets/QMessageBox>
 
 // Needed for AxisAngle_t and Crystal Symmetry constants
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
@@ -66,7 +66,7 @@ BoundaryPhaseWidget::BoundaryPhaseWidget(QWidget* parent)
 {
   setTabTitle("Boundary");
   setPhaseType(PhaseType::Type::Primary);
-  setCrystalStructure(Ebsd::CrystalStructure::Cubic_High);
+  setCrystalStructure(EbsdLib::CrystalStructure::Cubic_High);
   setupUi(this);
   setupGui();
 }

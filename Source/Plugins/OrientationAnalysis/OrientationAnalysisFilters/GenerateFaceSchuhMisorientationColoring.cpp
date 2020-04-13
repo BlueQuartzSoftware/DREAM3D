@@ -56,19 +56,19 @@
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/LaueOps/CubicLowOps.h"
-#include "OrientationLib/LaueOps/CubicOps.h"
-#include "OrientationLib/LaueOps/HexagonalLowOps.h"
-#include "OrientationLib/LaueOps/HexagonalOps.h"
-#include "OrientationLib/LaueOps/MonoclinicOps.h"
-#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
-#include "OrientationLib/LaueOps/TetragonalLowOps.h"
-#include "OrientationLib/LaueOps/TetragonalOps.h"
-#include "OrientationLib/LaueOps/TriclinicOps.h"
-#include "OrientationLib/LaueOps/TrigonalLowOps.h"
-#include "OrientationLib/LaueOps/TrigonalOps.h"
+#include "EbsdLib/LaueOps/CubicLowOps.h"
+#include "EbsdLib/LaueOps/CubicOps.h"
+#include "EbsdLib/LaueOps/HexagonalLowOps.h"
+#include "EbsdLib/LaueOps/HexagonalOps.h"
+#include "EbsdLib/LaueOps/MonoclinicOps.h"
+#include "EbsdLib/LaueOps/OrthoRhombicOps.h"
+#include "EbsdLib/LaueOps/TetragonalLowOps.h"
+#include "EbsdLib/LaueOps/TetragonalOps.h"
+#include "EbsdLib/LaueOps/TriclinicOps.h"
+#include "EbsdLib/LaueOps/TrigonalLowOps.h"
+#include "EbsdLib/LaueOps/TrigonalOps.h"
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -142,7 +142,7 @@ public:
       {
         if(phase1 == phase2)
         {
-          if(m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Cubic_High)
+          if(m_CrystalStructures[phase1] == EbsdLib::CrystalStructure::Cubic_High)
           {
             float* quatPtr = m_Quats + i * grain1;
             QuatType q1(quatPtr[0], quatPtr[1], quatPtr[2], quatPtr[3]);

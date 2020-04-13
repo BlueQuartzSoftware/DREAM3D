@@ -99,7 +99,6 @@ public:
    * @return Value of SurfaceMeshTriangleCentroidsArrayPath
    */
   DataArrayPath getSurfaceMeshTriangleCentroidsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)
 
   /**

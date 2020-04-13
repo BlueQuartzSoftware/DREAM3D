@@ -56,7 +56,7 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -131,7 +131,7 @@ void EnsembleInfoReader::updateEnsembleInstancePointers()
   if(nullptr != m_CrystalStructuresPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
-    m_CrystalStructuresPtr.lock()->initializeWithValue(Ebsd::CrystalStructure::UnknownCrystalStructure);
+    m_CrystalStructuresPtr.lock()->initializeWithValue(EbsdLib::CrystalStructure::UnknownCrystalStructure);
 
   }                                           /* Now assign the raw pointer to data from the DataArray<T> object */
   if(nullptr != m_PhaseTypesPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -213,8 +213,7 @@ void EnsembleInfoReader::dataCheck()
 
   std::vector<size_t> cDims(1, 1);
   tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName());
-  m_CrystalStructuresPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims, "", DataArrayID31);
+  m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>>(this, tempPath, EbsdLib::CrystalStructure::UnknownCrystalStructure, cDims, "", DataArrayID31);
   if(nullptr != m_CrystalStructuresPtr.lock())                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
@@ -304,7 +303,7 @@ int32_t EnsembleInfoReader::readFile()
     ensembleLookup(values); // Lookup number for the crystal number string and the phase type string read from the file
 
     // Check to see if the Crystal Structure string was valid
-    if(m_crystruct == Ebsd::CrystalStructure::UnknownCrystalStructure) // The crystal structure name read from the file was not found in the lookup table
+    if(m_crystruct == EbsdLib::CrystalStructure::UnknownCrystalStructure) // The crystal structure name read from the file was not found in the lookup table
     {
       QString ss = QObject::tr("Incorrect crystal structure name '%1'").arg(xtalString);
       setErrorCondition(-10006, ss);
@@ -351,51 +350,51 @@ void EnsembleInfoReader::ensembleLookup(QStringList list)
   // assign the corresponding number to the crystal structure string read from the input file
   if(QString::compare(list.at(0), "Hexagonal_High", Qt::CaseInsensitive) == 0)
   {
-    m_crystruct = Ebsd::CrystalStructure::Hexagonal_High;
+    m_crystruct = EbsdLib::CrystalStructure::Hexagonal_High;
   }
   else if(QString::compare(list.at(0), "Cubic_High", Qt::CaseInsensitive) == 0)
   {
-    m_crystruct = Ebsd::CrystalStructure::Cubic_High;
+    m_crystruct = EbsdLib::CrystalStructure::Cubic_High;
   }
   else if(QString::compare(list.at(0), "Hexagonal_Low", Qt::CaseInsensitive) == 0)
   {
-    m_crystruct = Ebsd::CrystalStructure::Hexagonal_Low;
+    m_crystruct = EbsdLib::CrystalStructure::Hexagonal_Low;
   }
   else if(QString::compare(list.at(0), "Cubic_Low", Qt::CaseInsensitive) == 0)
   {
-    m_crystruct = Ebsd::CrystalStructure::Cubic_Low;
+    m_crystruct = EbsdLib::CrystalStructure::Cubic_Low;
   }
   else if(QString::compare(list.at(0), "Triclinic", Qt::CaseInsensitive) == 0)
   {
-    m_crystruct = Ebsd::CrystalStructure::Triclinic;
+    m_crystruct = EbsdLib::CrystalStructure::Triclinic;
   }
   else if(QString::compare(list.at(0), "Monoclinic", Qt::CaseInsensitive) == 0)
   {
-    m_crystruct = Ebsd::CrystalStructure::Monoclinic;
+    m_crystruct = EbsdLib::CrystalStructure::Monoclinic;
   }
   else if(QString::compare(list.at(0), "OrthoRhombic", Qt::CaseInsensitive) == 0)
   {
-    m_crystruct = Ebsd::CrystalStructure::OrthoRhombic;
+    m_crystruct = EbsdLib::CrystalStructure::OrthoRhombic;
   }
   else if(QString::compare(list.at(0), "Tetragonal_Low", Qt::CaseInsensitive) == 0)
   {
-    m_crystruct = Ebsd::CrystalStructure::Tetragonal_Low;
+    m_crystruct = EbsdLib::CrystalStructure::Tetragonal_Low;
   }
   else if(QString::compare(list.at(0), "Tetragonal_High", Qt::CaseInsensitive) == 0)
   {
-    m_crystruct = Ebsd::CrystalStructure::Tetragonal_High;
+    m_crystruct = EbsdLib::CrystalStructure::Tetragonal_High;
   }
   else if(QString::compare(list.at(0), "Trigonal_Low", Qt::CaseInsensitive) == 0)
   {
-    m_crystruct = Ebsd::CrystalStructure::Trigonal_Low;
+    m_crystruct = EbsdLib::CrystalStructure::Trigonal_Low;
   }
   else if(QString::compare(list.at(0), "Trigonal_High", Qt::CaseInsensitive) == 0)
   {
-    m_crystruct = Ebsd::CrystalStructure::Trigonal_High;
+    m_crystruct = EbsdLib::CrystalStructure::Trigonal_High;
   }
   else
   {
-    m_crystruct = Ebsd::CrystalStructure::UnknownCrystalStructure; // no match for crystal structure name read from file
+    m_crystruct = EbsdLib::CrystalStructure::UnknownCrystalStructure; // no match for crystal structure name read from file
   }
 
   // assign the corresponding number to the phase type string read from the input file

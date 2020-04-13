@@ -34,7 +34,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "OrientationUtilityCalculator.h"
 
-
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "AxisAngleWidget.h"
 #include "CubochoricWidget.h"
@@ -44,7 +44,7 @@
 #include "QuatWidget.h"
 #include "RodriguesWidget.h"
 
-#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
+#include "EbsdLib/OrientationMath/OrientationConverter.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -94,16 +94,16 @@ bool OrientationUtilityCalculator::getHasErrors()
 // -----------------------------------------------------------------------------
 QVector<double> OrientationUtilityCalculator::getValues(OrientationRepresentation::Type outputType)
 {
-  typedef OrientationConverter<double> OCType;
+  typedef OrientationConverter<DoubleArrayType, double> OCType;
   QVector<OCType::Pointer> converters(7);
 
-  converters[0] = EulerConverter<double>::New();
-  converters[1] = OrientationMatrixConverter<double>::New();
-  converters[2] = QuaternionConverter<double>::New();
-  converters[3] = AxisAngleConverter<double>::New();
-  converters[4] = RodriguesConverter<double>::New();
-  converters[5] = HomochoricConverter<double>::New();
-  converters[6] = CubochoricConverter<double>::New();
+  converters[0] = EulerConverter<DoubleArrayType, double>::New();
+  converters[1] = OrientationMatrixConverter<DoubleArrayType, double>::New();
+  converters[2] = QuaternionConverter<DoubleArrayType, double>::New();
+  converters[3] = AxisAngleConverter<DoubleArrayType, double>::New();
+  converters[4] = RodriguesConverter<DoubleArrayType, double>::New();
+  converters[5] = HomochoricConverter<DoubleArrayType, double>::New();
+  converters[6] = CubochoricConverter<DoubleArrayType, double>::New();
 
   std::vector<OrientationRepresentation::Type> ocTypes = OCType::GetOrientationTypes();
 

@@ -105,7 +105,6 @@ public:
    * @return Value of DataContainerName
    */
   DataArrayPath getDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   /**
@@ -117,7 +116,6 @@ public:
    * @return Value of CellEnsembleAttributeMatrixName
    */
   QString getCellEnsembleAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
   /**
@@ -129,7 +127,6 @@ public:
    * @return Value of Ensemble
    */
   EnsembleInfo getEnsemble() const;
-
   Q_PROPERTY(EnsembleInfo Ensemble READ getEnsemble WRITE setEnsemble)
 
   /**
@@ -141,7 +138,6 @@ public:
    * @return Value of CrystalStructuresArrayName
    */
   QString getCrystalStructuresArrayName() const;
-
   Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
 
   /**
@@ -153,7 +149,6 @@ public:
    * @return Value of PhaseTypesArrayName
    */
   QString getPhaseTypesArrayName() const;
-
   Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
 
   /**
@@ -165,7 +160,6 @@ public:
    * @return Value of PhaseNamesArrayName
    */
   QString getPhaseNamesArrayName() const;
-
   Q_PROPERTY(QString PhaseNamesArrayName READ getPhaseNamesArrayName WRITE setPhaseNamesArrayName)
 
   /**

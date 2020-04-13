@@ -115,7 +115,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -127,7 +126,6 @@ public:
    * @return Value of GBDistancesArrayName
    */
   QString getGBDistancesArrayName() const;
-
   Q_PROPERTY(QString GBDistancesArrayName READ getGBDistancesArrayName WRITE setGBDistancesArrayName)
 
   /**
@@ -139,7 +137,6 @@ public:
    * @return Value of TJDistancesArrayName
    */
   QString getTJDistancesArrayName() const;
-
   Q_PROPERTY(QString TJDistancesArrayName READ getTJDistancesArrayName WRITE setTJDistancesArrayName)
 
   /**
@@ -151,7 +148,6 @@ public:
    * @return Value of QPDistancesArrayName
    */
   QString getQPDistancesArrayName() const;
-
   Q_PROPERTY(QString QPDistancesArrayName READ getQPDistancesArrayName WRITE setQPDistancesArrayName)
 
   /**
@@ -163,7 +159,6 @@ public:
    * @return Value of NearestNeighborsArrayName
    */
   QString getNearestNeighborsArrayName() const;
-
   Q_PROPERTY(QString NearestNeighborsArrayName READ getNearestNeighborsArrayName WRITE setNearestNeighborsArrayName)
 
   /**
@@ -175,7 +170,6 @@ public:
    * @return Value of DoBoundaries
    */
   bool getDoBoundaries() const;
-
   Q_PROPERTY(bool DoBoundaries READ getDoBoundaries WRITE setDoBoundaries)
 
   /**
@@ -187,7 +181,6 @@ public:
    * @return Value of DoTripleLines
    */
   bool getDoTripleLines() const;
-
   Q_PROPERTY(bool DoTripleLines READ getDoTripleLines WRITE setDoTripleLines)
 
   /**
@@ -199,7 +192,6 @@ public:
    * @return Value of DoQuadPoints
    */
   bool getDoQuadPoints() const;
-
   Q_PROPERTY(bool DoQuadPoints READ getDoQuadPoints WRITE setDoQuadPoints)
 
   /**
@@ -211,7 +203,6 @@ public:
    * @return Value of SaveNearestNeighbors
    */
   bool getSaveNearestNeighbors() const;
-
   Q_PROPERTY(bool SaveNearestNeighbors READ getSaveNearestNeighbors WRITE setSaveNearestNeighbors)
 
   /**
@@ -223,7 +214,6 @@ public:
    * @return Value of CalcManhattanDist
    */
   bool getCalcManhattanDist() const;
-
   Q_PROPERTY(bool CalcManhattanDist READ getCalcManhattanDist WRITE setCalcManhattanDist)
 
   /**

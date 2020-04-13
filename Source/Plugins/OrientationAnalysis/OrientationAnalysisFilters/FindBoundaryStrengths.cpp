@@ -35,7 +35,6 @@
 
 #include "FindBoundaryStrengths.h"
 
-#include <memory>
 
 #include <QtCore/QTextStream>
 
@@ -49,8 +48,9 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/Math/MatrixMath.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"

@@ -35,15 +35,7 @@
 
 #include "FindTwinBoundarySchmidFactors.h"
 
-#include <memory>
 #include <fstream>
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/blocked_range.h>
-#include <tbb/parallel_for.h>
-#include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
-#endif
 
 #include <QtCore/QTextStream>
 
@@ -61,12 +53,21 @@
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-#include "OrientationLib/Core/Quaternion.hpp"
+#include "EbsdLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Core/Quaternion.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
+
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
 
 /**
  * @brief The CalculateTwinBoundarySchmidFactorsImpl class implements a threaded algorithm that computes the

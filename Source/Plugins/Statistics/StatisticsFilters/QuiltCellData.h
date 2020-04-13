@@ -114,7 +114,6 @@ public:
    * @return Value of SelectedCellArrayPath
    */
   DataArrayPath getSelectedCellArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
   /**
@@ -126,7 +125,6 @@ public:
    * @return Value of QuiltStep
    */
   IntVec3Type getQuiltStep() const;
-
   Q_PROPERTY(IntVec3Type QuiltStep READ getQuiltStep WRITE setQuiltStep)
   /**
    * @brief Setter property for PatchSize
@@ -137,7 +135,6 @@ public:
    * @return Value of PatchSize
    */
   IntVec3Type getPatchSize() const;
-
   Q_PROPERTY(IntVec3Type PatchSize READ getPatchSize WRITE setPatchSize)
 
   // The user selects a new DataContainerName
@@ -150,7 +147,6 @@ public:
    * @return Value of OutputDataContainerName
    */
   DataArrayPath getOutputDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
   // Name the new AttributeMatrix that will get created
   /**
@@ -162,7 +158,6 @@ public:
    * @return Value of OutputAttributeMatrixName
    */
   QString getOutputAttributeMatrixName() const;
-
   Q_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
   // Give the created data array a name
   /**
@@ -174,7 +169,6 @@ public:
    * @return Value of OutputArrayName
    */
   QString getOutputArrayName() const;
-
   Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
 
   /**

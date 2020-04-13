@@ -37,7 +37,6 @@
 
 #include <memory>
 
-#include "OrientationLib/LaueOps/LaueOps.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
@@ -47,6 +46,8 @@
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
+#include "EbsdLib/Core/Quaternion.hpp"
 
 class LaueOps;
 using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
@@ -121,7 +122,6 @@ public:
    * @return Value of InputStatsArrayPath
    */
   DataArrayPath getInputStatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
 
   /**
@@ -133,7 +133,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -145,7 +144,6 @@ public:
    * @return Value of PhaseTypesArrayPath
    */
   DataArrayPath getPhaseTypesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath PhaseTypesArrayPath READ getPhaseTypesArrayPath WRITE setPhaseTypesArrayPath)
 
   // Input data from the Synthetic Data Container (or something equivalent)
@@ -158,7 +156,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -170,7 +167,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -182,7 +178,6 @@ public:
    * @return Value of SurfaceFeaturesArrayPath
    */
   DataArrayPath getSurfaceFeaturesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
 
   /**
@@ -194,7 +189,6 @@ public:
    * @return Value of NeighborListArrayPath
    */
   DataArrayPath getNeighborListArrayPath() const;
-
   Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
 
   /**
@@ -206,7 +200,6 @@ public:
    * @return Value of SharedSurfaceAreaListArrayPath
    */
   DataArrayPath getSharedSurfaceAreaListArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SharedSurfaceAreaListArrayPath READ getSharedSurfaceAreaListArrayPath WRITE setSharedSurfaceAreaListArrayPath)
 
   /**
@@ -218,7 +211,6 @@ public:
    * @return Value of NumFeaturesArrayPath
    */
   DataArrayPath getNumFeaturesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
 
   // Created Data Arrays
@@ -231,7 +223,6 @@ public:
    * @return Value of CellEulerAnglesArrayName
    */
   QString getCellEulerAnglesArrayName() const;
-
   Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
 
   /**
@@ -243,7 +234,6 @@ public:
    * @return Value of VolumesArrayName
    */
   QString getVolumesArrayName() const;
-
   Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
 
   /**
@@ -255,7 +245,6 @@ public:
    * @return Value of FeatureEulerAnglesArrayName
    */
   QString getFeatureEulerAnglesArrayName() const;
-
   Q_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
 
   /**
@@ -267,7 +256,6 @@ public:
    * @return Value of AvgQuatsArrayName
    */
   QString getAvgQuatsArrayName() const;
-
   Q_PROPERTY(QString AvgQuatsArrayName READ getAvgQuatsArrayName WRITE setAvgQuatsArrayName)
 
   /**
@@ -279,7 +267,6 @@ public:
    * @return Value of MaxIterations
    */
   int getMaxIterations() const;
-
   Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations)
 
   /**

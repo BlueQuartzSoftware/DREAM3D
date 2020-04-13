@@ -93,7 +93,6 @@ public:
    * @return Value of LaueClass
    */
   int getLaueClass() const;
-
   Q_PROPERTY(int LaueClass READ getLaueClass WRITE setLaueClass)
 
   /**
@@ -105,7 +104,6 @@ public:
    * @return Value of OutputFile
    */
   QString getOutputFile() const;
-
   Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
   /**
@@ -117,7 +115,6 @@ public:
    * @return Value of ImageSize
    */
   int getImageSize() const;
-
   Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
 
   enum ImageFormatType

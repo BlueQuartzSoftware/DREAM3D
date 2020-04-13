@@ -120,7 +120,6 @@ public:
    * @return Value of SelectedFeatureArrayPath
    */
   DataArrayPath getSelectedFeatureArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
   /**
    * @brief Setter property for CorrelatedFeatureArrayPath
@@ -131,7 +130,6 @@ public:
    * @return Value of CorrelatedFeatureArrayPath
    */
   DataArrayPath getCorrelatedFeatureArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CorrelatedFeatureArrayPath READ getCorrelatedFeatureArrayPath WRITE setCorrelatedFeatureArrayPath)
 
   /**
@@ -143,7 +141,6 @@ public:
    * @return Value of DistributionType
    */
   unsigned int getDistributionType() const;
-
   Q_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType)
   /**
    * @brief Setter property for NumberOfCorrelatedBins
@@ -154,7 +151,6 @@ public:
    * @return Value of NumberOfCorrelatedBins
    */
   int getNumberOfCorrelatedBins() const;
-
   Q_PROPERTY(int NumberOfCorrelatedBins READ getNumberOfCorrelatedBins WRITE setNumberOfCorrelatedBins)
   /**
    * @brief Setter property for RemoveBiasedFeatures
@@ -165,7 +161,6 @@ public:
    * @return Value of RemoveBiasedFeatures
    */
   bool getRemoveBiasedFeatures() const;
-
   Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
 
   /**
@@ -182,7 +177,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -194,7 +188,6 @@ public:
    * @return Value of BiasedFeaturesArrayPath
    */
   DataArrayPath getBiasedFeaturesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
 
   /**
@@ -206,7 +199,6 @@ public:
    * @return Value of NewEnsembleArrayArrayPath
    */
   DataArrayPath getNewEnsembleArrayArrayPath() const;
-
   Q_PROPERTY(DataArrayPath NewEnsembleArrayArrayPath READ getNewEnsembleArrayArrayPath WRITE setNewEnsembleArrayArrayPath)
 
   /**

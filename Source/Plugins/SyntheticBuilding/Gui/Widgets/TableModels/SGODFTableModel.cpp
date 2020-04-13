@@ -34,6 +34,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "SGODFTableModel.h"
+
 #include <iostream>
 
 #include "SyntheticBuilding/Gui/Widgets/Delegates/SGODFItemDelegate.h"
@@ -42,13 +43,15 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QStyleOptionComboBox>
 
+#include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 SGODFTableModel::SGODFTableModel(QObject* parent)
 : QAbstractTableModel(parent)
 , m_RowCount(0)
-, m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
+, m_CrystalStructure(EbsdLib::CrystalStructure::Cubic_High)
 {
   m_ColumnCount = ColumnCount;
 }

@@ -99,7 +99,6 @@ public:
    * @return Value of SurfaceMeshTriangleAreasArrayPath
    */
   DataArrayPath getSurfaceMeshTriangleAreasArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshTriangleAreasArrayPath READ getSurfaceMeshTriangleAreasArrayPath WRITE setSurfaceMeshTriangleAreasArrayPath)
 
   /**

@@ -34,8 +34,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "VisualizeGBCDPoleFigure.h"
 
-#include <memory>
-
 #include <QtCore/QDir>
 #include <QtCore/QTextStream>
 
@@ -48,10 +46,12 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"

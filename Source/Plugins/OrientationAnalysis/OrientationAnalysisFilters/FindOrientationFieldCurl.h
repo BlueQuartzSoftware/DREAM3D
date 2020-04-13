@@ -40,7 +40,7 @@
 
 #include <QtCore/QString>
 
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
@@ -117,7 +117,6 @@ public:
    * @return Value of CellPhasesArrayPath
    */
   DataArrayPath getCellPhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
   /**
@@ -129,7 +128,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -141,7 +139,6 @@ public:
    * @return Value of QuatsArrayPath
    */
   DataArrayPath getQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
   /**
@@ -153,7 +150,6 @@ public:
    * @return Value of DislocationTensorsArrayName
    */
   QString getDislocationTensorsArrayName() const;
-
   Q_PROPERTY(QString DislocationTensorsArrayName READ getDislocationTensorsArrayName WRITE setDislocationTensorsArrayName)
 
   /**
@@ -165,7 +161,6 @@ public:
    * @return Value of CurlSize
    */
   IntVec3Type getCurlSize() const;
-
   Q_PROPERTY(IntVec3Type CurlSize READ getCurlSize WRITE setCurlSize)
 
   /**

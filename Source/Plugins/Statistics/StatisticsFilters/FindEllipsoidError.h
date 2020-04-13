@@ -116,7 +116,6 @@ public:
    * @return Value of CellFeatureAttributeMatrixName
    */
   DataArrayPath getCellFeatureAttributeMatrixName() const;
-
   Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
   /**
@@ -128,7 +127,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -140,7 +138,6 @@ public:
    * @return Value of CentroidsArrayPath
    */
   DataArrayPath getCentroidsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
   /**
@@ -152,7 +149,6 @@ public:
    * @return Value of NumCellsArrayPath
    */
   DataArrayPath getNumCellsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath NumCellsArrayPath READ getNumCellsArrayPath WRITE setNumCellsArrayPath)
 
   /**
@@ -164,7 +160,6 @@ public:
    * @return Value of AxisLengthsArrayPath
    */
   DataArrayPath getAxisLengthsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AxisLengthsArrayPath READ getAxisLengthsArrayPath WRITE setAxisLengthsArrayPath)
 
   /**
@@ -176,7 +171,6 @@ public:
    * @return Value of AxisEulerAnglesArrayPath
    */
   DataArrayPath getAxisEulerAnglesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AxisEulerAnglesArrayPath READ getAxisEulerAnglesArrayPath WRITE setAxisEulerAnglesArrayPath)
 
   /**
@@ -188,7 +182,6 @@ public:
    * @return Value of IdealFeatureIdsArrayName
    */
   QString getIdealFeatureIdsArrayName() const;
-
   Q_PROPERTY(QString IdealFeatureIdsArrayName READ getIdealFeatureIdsArrayName WRITE setIdealFeatureIdsArrayName)
 
   /**
@@ -200,7 +193,6 @@ public:
    * @return Value of EllipsoidErrorArrayName
    */
   QString getEllipsoidErrorArrayName() const;
-
   Q_PROPERTY(QString EllipsoidErrorArrayName READ getEllipsoidErrorArrayName WRITE setEllipsoidErrorArrayName)
 
   /**
@@ -212,7 +204,6 @@ public:
    * @return Value of WriteIdealEllipseFeatureIds
    */
   bool getWriteIdealEllipseFeatureIds() const;
-
   Q_PROPERTY(bool WriteIdealEllipseFeatureIds READ getWriteIdealEllipseFeatureIds WRITE setWriteIdealEllipseFeatureIds)
 
   /**

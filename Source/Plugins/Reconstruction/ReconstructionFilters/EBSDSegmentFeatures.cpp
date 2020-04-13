@@ -33,8 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "EBSDSegmentFeatures.h"
 
 #include <chrono>
@@ -42,7 +40,6 @@
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -53,8 +50,9 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -402,7 +400,7 @@ void EBSDSegmentFeatures::execute()
   updateFeatureInstancePointers();
 
   // Convert user defined tolerance to radians.
-  m_MisoTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_MisoTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_PiOver180;
 
   // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
   const int64_t rangeMin = 0;

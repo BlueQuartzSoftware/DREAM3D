@@ -109,7 +109,6 @@ public:
    * @return Value of NewCellFeatureAttributeMatrixName
    */
   QString getNewCellFeatureAttributeMatrixName() const;
-
   Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
   /**
@@ -121,7 +120,6 @@ public:
    * @return Value of CAxisTolerance
    */
   float getCAxisTolerance() const;
-
   Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
 
   /**
@@ -133,7 +131,6 @@ public:
    * @return Value of UseRunningAverage
    */
   bool getUseRunningAverage() const;
-
   Q_PROPERTY(float UseRunningAverage READ getUseRunningAverage WRITE setUseRunningAverage)
 
   /**
@@ -155,7 +152,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -167,7 +163,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -179,7 +174,6 @@ public:
    * @return Value of VolumesArrayPath
    */
   DataArrayPath getVolumesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath VolumesArrayPath READ getVolumesArrayPath WRITE setVolumesArrayPath)
 
   /**
@@ -191,7 +185,6 @@ public:
    * @return Value of AvgQuatsArrayPath
    */
   DataArrayPath getAvgQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
   /**
@@ -203,7 +196,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -215,7 +207,6 @@ public:
    * @return Value of CellParentIdsArrayName
    */
   QString getCellParentIdsArrayName() const;
-
   Q_PROPERTY(QString CellParentIdsArrayName READ getCellParentIdsArrayName WRITE setCellParentIdsArrayName)
 
   /**
@@ -227,7 +218,6 @@ public:
    * @return Value of FeatureParentIdsArrayName
    */
   QString getFeatureParentIdsArrayName() const;
-
   Q_PROPERTY(QString FeatureParentIdsArrayName READ getFeatureParentIdsArrayName WRITE setFeatureParentIdsArrayName)
 
   /**
@@ -239,7 +229,6 @@ public:
    * @return Value of ActiveArrayName
    */
   QString getActiveArrayName() const;
-
   Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
   /**

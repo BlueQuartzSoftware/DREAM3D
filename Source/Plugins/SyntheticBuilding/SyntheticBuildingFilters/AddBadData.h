@@ -101,7 +101,6 @@ public:
    * @return Value of GBEuclideanDistancesArrayPath
    */
   DataArrayPath getGBEuclideanDistancesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath GBEuclideanDistancesArrayPath READ getGBEuclideanDistancesArrayPath WRITE setGBEuclideanDistancesArrayPath)
 
   /**
@@ -113,7 +112,6 @@ public:
    * @return Value of PoissonNoise
    */
   bool getPoissonNoise() const;
-
   Q_PROPERTY(bool PoissonNoise READ getPoissonNoise WRITE setPoissonNoise)
 
   /**
@@ -125,7 +123,6 @@ public:
    * @return Value of PoissonVolFraction
    */
   float getPoissonVolFraction() const;
-
   Q_PROPERTY(float PoissonVolFraction READ getPoissonVolFraction WRITE setPoissonVolFraction)
 
   /**
@@ -137,7 +134,6 @@ public:
    * @return Value of BoundaryNoise
    */
   bool getBoundaryNoise() const;
-
   Q_PROPERTY(bool BoundaryNoise READ getBoundaryNoise WRITE setBoundaryNoise)
 
   /**
@@ -149,7 +145,6 @@ public:
    * @return Value of BoundaryVolFraction
    */
   float getBoundaryVolFraction() const;
-
   Q_PROPERTY(float BoundaryVolFraction READ getBoundaryVolFraction WRITE setBoundaryVolFraction)
 
   /**

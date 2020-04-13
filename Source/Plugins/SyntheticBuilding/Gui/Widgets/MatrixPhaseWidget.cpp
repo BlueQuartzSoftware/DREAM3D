@@ -42,7 +42,7 @@
 #include <QtWidgets/QMessageBox>
 
 // Needed for AxisAngle_t and Crystal Symmetry constants
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"

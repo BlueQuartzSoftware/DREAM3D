@@ -49,7 +49,7 @@
 #include "SIMPLib/Utilities/TestObserver.h"
 #include "UnitTestSupport.hpp"
 
-#include "OrientationLib/IO/AngleFileLoader.h"
+#include "EbsdLib/IO/AngleFileLoader.h"
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/WriteStatsGenOdfAngleFile.h"
 
@@ -198,7 +198,7 @@ public:
     reader->setFileAnglesInDegrees(true);
     reader->setOutputAnglesInDegrees(true);
 
-    DataArray<float>::Pointer angles = reader->loadData();
+    EbsdLib::FloatArrayType::Pointer angles = reader->loadData();
     if(reader->getErrorCode() < 0)
     {
       qDebug() << reader->getErrorMessage();

@@ -33,11 +33,10 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "MatchCrystallography.h"
 
 #include <cmath>
+
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
@@ -55,16 +54,17 @@
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/LaueOps/CubicOps.h"
-#include "OrientationLib/LaueOps/HexagonalOps.h"
-#include "OrientationLib/LaueOps/LaueOps.h"
-#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
-#include "OrientationLib/Texture/Texture.hpp"
+#include "EbsdLib/Core/EbsdLibConstants.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/CubicOps.h"
+#include "EbsdLib/LaueOps/HexagonalOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/OrthoRhombicOps.h"
+#include "EbsdLib/Texture/Texture.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
-#include "EbsdLib/EbsdConstants.h"
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -591,11 +591,11 @@ void MatchCrystallography::assign_eulers(size_t ensem)
     {
       random = static_cast<float>(distribution(generator));
 
-      if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[phase])
+      if(EbsdLib::CrystalStructure::Cubic_High == m_CrystalStructures[phase])
       {
         numbins = cOps.getODFSize();
       };
-      if(Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[phase])
+      if(EbsdLib::CrystalStructure::Hexagonal_High == m_CrystalStructures[phase])
       {
         numbins = hOps.getODFSize();
       }
@@ -770,11 +770,11 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
   int32_t selectedfeature1 = 0, selectedfeature2 = 0;
   iterations = 0;
   badtrycount = 0;
-  if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[ensem])
+  if(EbsdLib::CrystalStructure::Cubic_High == m_CrystalStructures[ensem])
   {
     numbins = 18 * 18 * 18;
   }
-  if(Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[ensem])
+  if(EbsdLib::CrystalStructure::Hexagonal_High == m_CrystalStructures[ensem])
   {
     numbins = 36 * 36 * 12;
   }

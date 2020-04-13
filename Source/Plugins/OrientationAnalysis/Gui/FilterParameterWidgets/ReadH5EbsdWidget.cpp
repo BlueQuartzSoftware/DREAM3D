@@ -41,13 +41,13 @@
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMessageBox>
 
-#include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/H5EbsdVolumeInfo.h"
-#include "EbsdLib/H5EbsdVolumeReader.h"
-#include "EbsdLib/HKL/CtfFields.h"
-#include "EbsdLib/HKL/H5CtfVolumeReader.h"
-#include "EbsdLib/TSL/AngFields.h"
-#include "EbsdLib/TSL/H5AngVolumeReader.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
+#include "EbsdLib/IO/H5EbsdVolumeInfo.h"
+#include "EbsdLib/IO/H5EbsdVolumeReader.h"
+#include "EbsdLib/IO/HKL/CtfFields.h"
+#include "EbsdLib/IO/HKL/H5CtfVolumeReader.h"
+#include "EbsdLib/IO/TSL/AngFields.h"
+#include "EbsdLib/IO/TSL/H5AngVolumeReader.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Utilities/SIMPLDataPathValidator.h"
@@ -195,7 +195,7 @@ void ReadH5EbsdWidget::setupGui()
 
   m_UseTransformations->setChecked(m_Filter->getUseTransformations());
   m_AngleRepresentationCB->setCurrentIndex(m_Filter->getAngleRepresentation());
-  m_RefFrameZDir->setText(Ebsd::StackingOrder::Utils::getStringForEnum(m_Filter->getRefFrameZDir()));
+  m_RefFrameZDir->setText(EbsdLib::StackingOrder::Utils::getStringForEnum(m_Filter->getRefFrameZDir()));
   updateFileInfoWidgets();
   QSet<QString> selectedArrays = m_Filter->getSelectedArrayNames();
   updateModelFromFilter(selectedArrays, true);
@@ -654,7 +654,7 @@ void ReadH5EbsdWidget::updateFileInfoWidgets()
       // Cache the Manufacturer from the File
       m_EbsdManufacturer->setText(h5Reader->getManufacturer());
 
-      m_RefFrameZDir->setText(Ebsd::StackingOrder::Utils::getStringForEnum(h5Reader->getStackingOrder()));
+      m_RefFrameZDir->setText(EbsdLib::StackingOrder::Utils::getStringForEnum(h5Reader->getStackingOrder()));
 
       if(h5Reader->getFileVersion() == 4 && !m_Version4Warning)
       {

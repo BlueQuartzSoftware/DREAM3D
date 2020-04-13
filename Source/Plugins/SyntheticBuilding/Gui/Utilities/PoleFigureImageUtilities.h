@@ -44,9 +44,9 @@
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/SIMPLib.h"
 
-#include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/Utilities/PoleFigureData.h"
-#include "OrientationLib/Utilities/PoleFigureUtilities.h"
+#include "EbsdLib/EbsdLib.h"
+#include "EbsdLib/Utilities/PoleFigureData.h"
+#include "EbsdLib/Utilities/PoleFigureUtilities.h"
 
 /**
  * @class PoleFigureImageUtilities

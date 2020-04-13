@@ -102,7 +102,6 @@ public:
    * @return Value of Direction
    */
   unsigned int getDirection() const;
-
   Q_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
 
   /**
@@ -114,7 +113,6 @@ public:
    * @return Value of NumIterations
    */
   int getNumIterations() const;
-
   Q_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
 
   /**
@@ -126,7 +124,6 @@ public:
    * @return Value of XDirOn
    */
   bool getXDirOn() const;
-
   Q_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)
 
   /**
@@ -138,7 +135,6 @@ public:
    * @return Value of YDirOn
    */
   bool getYDirOn() const;
-
   Q_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn)
 
   /**
@@ -150,7 +146,6 @@ public:
    * @return Value of ZDirOn
    */
   bool getZDirOn() const;
-
   Q_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
 
   /**
@@ -162,7 +157,6 @@ public:
    * @return Value of MaskArrayPath
    */
   DataArrayPath getMaskArrayPath() const;
-
   Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
 
   /**

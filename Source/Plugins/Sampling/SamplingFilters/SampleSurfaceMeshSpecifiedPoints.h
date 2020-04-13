@@ -101,7 +101,6 @@ public:
    * @return Value of InputFilePath
    */
   QString getInputFilePath() const;
-
   Q_PROPERTY(QString InputFilePath READ getInputFilePath WRITE setInputFilePath)
 
   /**
@@ -113,7 +112,6 @@ public:
    * @return Value of OutputFilePath
    */
   QString getOutputFilePath() const;
-
   Q_PROPERTY(QString OutputFilePath READ getOutputFilePath WRITE setOutputFilePath)
 
   /**

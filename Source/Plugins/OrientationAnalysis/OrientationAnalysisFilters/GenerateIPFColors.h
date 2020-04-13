@@ -104,7 +104,6 @@ public:
    * @return Value of ReferenceDir
    */
   FloatVec3Type getReferenceDir() const;
-
   Q_PROPERTY(FloatVec3Type ReferenceDir READ getReferenceDir WRITE setReferenceDir)
 
   /**
@@ -116,7 +115,6 @@ public:
    * @return Value of CellPhasesArrayPath
    */
   DataArrayPath getCellPhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
   /**
@@ -128,7 +126,6 @@ public:
    * @return Value of CellEulerAnglesArrayPath
    */
   DataArrayPath getCellEulerAnglesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
   /**
@@ -140,7 +137,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -152,7 +148,6 @@ public:
    * @return Value of UseGoodVoxels
    */
   bool getUseGoodVoxels() const;
-
   Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
   /**
@@ -164,7 +159,6 @@ public:
    * @return Value of GoodVoxelsArrayPath
    */
   DataArrayPath getGoodVoxelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
   /**
@@ -176,7 +170,6 @@ public:
    * @return Value of CellIPFColorsArrayName
    */
   QString getCellIPFColorsArrayName() const;
-
   Q_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
 
   /**

@@ -109,7 +109,6 @@ public:
    * @return Value of NeighborListArrayPath
    */
   DataArrayPath getNeighborListArrayPath() const;
-
   Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
 
   /**
@@ -121,7 +120,6 @@ public:
    * @return Value of MisorientationListArrayName
    */
   QString getMisorientationListArrayName() const;
-
   Q_PROPERTY(QString MisorientationListArrayName READ getMisorientationListArrayName WRITE setMisorientationListArrayName)
 
   /**
@@ -133,7 +131,6 @@ public:
    * @return Value of AvgQuatsArrayPath
    */
   DataArrayPath getAvgQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
   /**
@@ -145,7 +142,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -157,7 +153,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -169,7 +164,6 @@ public:
    * @return Value of AvgMisorientationsArrayName
    */
   QString getAvgMisorientationsArrayName() const;
-
   Q_PROPERTY(QString AvgMisorientationsArrayName READ getAvgMisorientationsArrayName WRITE setAvgMisorientationsArrayName)
 
   /**
@@ -181,7 +175,6 @@ public:
    * @return Value of FindAvgMisors
    */
   bool getFindAvgMisors() const;
-
   Q_PROPERTY(bool FindAvgMisors READ getFindAvgMisors WRITE setFindAvgMisors)
 
   /**

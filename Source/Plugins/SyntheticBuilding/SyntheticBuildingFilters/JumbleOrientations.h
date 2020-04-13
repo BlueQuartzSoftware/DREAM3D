@@ -101,7 +101,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -113,7 +112,6 @@ public:
    * @return Value of CellEulerAnglesArrayName
    */
   QString getCellEulerAnglesArrayName() const;
-
   Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
 
   /**
@@ -125,7 +123,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -137,7 +134,6 @@ public:
    * @return Value of FeatureEulerAnglesArrayPath
    */
   DataArrayPath getFeatureEulerAnglesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
 
   /**
@@ -149,7 +145,6 @@ public:
    * @return Value of AvgQuatsArrayName
    */
   QString getAvgQuatsArrayName() const;
-
   Q_PROPERTY(QString AvgQuatsArrayName READ getAvgQuatsArrayName WRITE setAvgQuatsArrayName)
 
   /**

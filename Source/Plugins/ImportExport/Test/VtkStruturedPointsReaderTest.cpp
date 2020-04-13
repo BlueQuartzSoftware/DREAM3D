@@ -132,7 +132,7 @@ public:
         data[i] = static_cast<T>(i);
 
         char* ptr = (char*)(dPtr + i);
-        if(BIGENDIAN == 0)
+        if(BIGENDIAN == 0) // Binary VTK files are written in BIG ENDIAN format.
         {
           if(sizeof(T) == 4)
           {

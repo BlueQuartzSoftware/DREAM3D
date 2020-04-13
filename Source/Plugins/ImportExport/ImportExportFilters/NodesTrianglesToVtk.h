@@ -110,7 +110,6 @@ public:
    * @return Value of NodesFile
    */
   QString getNodesFile() const;
-
   Q_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile)
 
   /**
@@ -122,7 +121,6 @@ public:
    * @return Value of TrianglesFile
    */
   QString getTrianglesFile() const;
-
   Q_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile)
 
   /**
@@ -134,7 +132,6 @@ public:
    * @return Value of OutputVtkFile
    */
   QString getOutputVtkFile() const;
-
   Q_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)
 
   /**
@@ -146,7 +143,6 @@ public:
    * @return Value of WriteBinaryFile
    */
   bool getWriteBinaryFile() const;
-
   Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
 
   /**
@@ -158,7 +154,6 @@ public:
    * @return Value of WriteConformalMesh
    */
   bool getWriteConformalMesh() const;
-
   Q_PROPERTY(bool WriteConformalMesh READ getWriteConformalMesh WRITE setWriteConformalMesh)
 
   /**

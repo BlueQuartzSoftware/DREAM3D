@@ -43,9 +43,9 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/TSL/AngConstants.h"
-#include "EbsdLib/TSL/AngPhase.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
+#include "EbsdLib/IO/TSL/AngConstants.h"
+#include "EbsdLib/IO/TSL/AngPhase.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
@@ -122,7 +122,6 @@ public:
    * @return Value of InputFile
    */
   QString getInputFile() const;
-
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**
@@ -134,7 +133,6 @@ public:
    * @return Value of SelectedScanNames
    */
   QStringList getSelectedScanNames() const;
-
   Q_PROPERTY(QStringList SelectedScanNames READ getSelectedScanNames WRITE setSelectedScanNames)
 
   /**
@@ -146,7 +144,6 @@ public:
    * @return Value of NumberOfScans
    */
   int getNumberOfScans() const;
-
   Q_PROPERTY(int NumberOfScans READ getNumberOfScans WRITE setNumberOfScans)
 
   /**
@@ -158,7 +155,6 @@ public:
    * @return Value of ZSpacing
    */
   double getZSpacing() const;
-
   Q_PROPERTY(double ZSpacing READ getZSpacing WRITE setZSpacing)
 
   /**
@@ -170,7 +166,6 @@ public:
    * @return Value of Origin
    */
   FloatVec3Type getOrigin() const;
-
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
   /**
@@ -182,7 +177,6 @@ public:
    * @return Value of DataContainerName
    */
   DataArrayPath getDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   /**
@@ -194,7 +188,6 @@ public:
    * @return Value of CellEnsembleAttributeMatrixName
    */
   QString getCellEnsembleAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
   /**
@@ -206,7 +199,6 @@ public:
    * @return Value of CellAttributeMatrixName
    */
   QString getCellAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
   /**
@@ -218,7 +210,6 @@ public:
    * @return Value of ReadPatternData
    */
   bool getReadPatternData() const;
-
   Q_PROPERTY(bool ReadPatternData READ getReadPatternData WRITE setReadPatternData)
 
   /**
@@ -230,7 +221,6 @@ public:
    * @return Value of FileWasRead
    */
   bool getFileWasRead() const;
-
   Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
   /**
@@ -327,12 +317,12 @@ public:
   /**
    * @brief Setter property for Manufacturer
    */
-  void setManufacturer(const Ebsd::OEM& value);
+  void setManufacturer(const EbsdLib::OEM& value);
   /**
    * @brief Getter property for Manufacturer
    * @return Value of Manufacturer
    */
-  Ebsd::OEM getManufacturer() const;
+  EbsdLib::OEM getManufacturer() const;
 
   using IDataArrayMap = QMap<QString, IDataArrayShPtrType>;
 
@@ -375,7 +365,6 @@ public:
    * @return Value of Data
    */
   Ang_Private_Data getData() const;
-
   Q_PROPERTY(Ang_Private_Data Data READ getData WRITE setData)
 
   /**
@@ -387,7 +376,6 @@ public:
    * @return Value of FileScanNames
    */
   QStringList getFileScanNames() const;
-
   Q_PROPERTY(QStringList FileScanNames READ getFileScanNames WRITE setFileScanNames)
 
   /**
@@ -399,7 +387,6 @@ public:
    * @return Value of PatternDims
    */
   QVector<int> getPatternDims() const;
-
   Q_PROPERTY(QVector<int> PatternDims READ getPatternDims WRITE setPatternDims)
 
 
@@ -451,7 +438,7 @@ protected:
    * @brief readManufacturer
    * @return
    */
-  virtual Ebsd::OEM readManufacturer() const;
+  virtual EbsdLib::OEM readManufacturer() const;
 
   /**
    * @brief dataCheckEdax
@@ -483,7 +470,7 @@ private:
   QString m_PhaseNameArrayName = {};
   QString m_MaterialNameArrayName = {};
   uint32_t m_RefFrameZDir = {};
-  Ebsd::OEM m_Manufacturer = {};
+  EbsdLib::OEM m_Manufacturer = {};
   IDataArrayMap m_EbsdArrayMap = {};
 
   QScopedPointer<ImportH5OimDataPrivate> const d_ptr;

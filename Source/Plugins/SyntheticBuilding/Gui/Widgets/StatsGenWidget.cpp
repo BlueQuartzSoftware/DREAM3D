@@ -36,7 +36,7 @@
 #include "StatsGenWidget.h"
 
 // Needed for AxisAngle_t and Crystal Symmetry constants
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -44,7 +44,7 @@
 StatsGenWidget::StatsGenWidget(QWidget* parent)
 : QWidget(parent)
 , m_PhaseType(PhaseType::Type::Primary)
-, m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
+, m_CrystalStructure(EbsdLib::CrystalStructure::Cubic_High)
 , m_PhaseIndex(0)
 , m_PhaseFraction(1.0)
 , m_TotalPhaseFraction(1.0)

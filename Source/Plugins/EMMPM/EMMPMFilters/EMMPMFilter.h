@@ -119,7 +119,6 @@ public:
    * @return Value of InputDataArrayPath
    */
   DataArrayPath getInputDataArrayPath() const;
-
   Q_PROPERTY(DataArrayPath InputDataArrayPath READ getInputDataArrayPath WRITE setInputDataArrayPath)
 
   /**
@@ -131,7 +130,6 @@ public:
    * @return Value of UseOneBasedValues
    */
   bool getUseOneBasedValues() const;
-
   Q_PROPERTY(bool UseOneBasedValues READ getUseOneBasedValues WRITE setUseOneBasedValues)
 
   /**
@@ -143,7 +141,6 @@ public:
    * @return Value of NumClasses
    */
   int getNumClasses() const;
-
   Q_PROPERTY(int NumClasses READ getNumClasses WRITE setNumClasses)
 
   /**
@@ -155,7 +152,6 @@ public:
    * @return Value of ExchangeEnergy
    */
   float getExchangeEnergy() const;
-
   Q_PROPERTY(float ExchangeEnergy READ getExchangeEnergy WRITE setExchangeEnergy)
 
   /**
@@ -167,7 +163,6 @@ public:
    * @return Value of HistogramLoops
    */
   int getHistogramLoops() const;
-
   Q_PROPERTY(int HistogramLoops READ getHistogramLoops WRITE setHistogramLoops)
 
   /**
@@ -179,7 +174,6 @@ public:
    * @return Value of SegmentationLoops
    */
   int getSegmentationLoops() const;
-
   Q_PROPERTY(int SegmentationLoops READ getSegmentationLoops WRITE setSegmentationLoops)
 
   /**
@@ -191,7 +185,6 @@ public:
    * @return Value of EMMPMTableData
    */
   DynamicTableData getEMMPMTableData() const;
-
   Q_PROPERTY(DynamicTableData EMMPMTableData READ getEMMPMTableData WRITE setEMMPMTableData)
 
   /**
@@ -203,7 +196,6 @@ public:
    * @return Value of UseSimulatedAnnealing
    */
   bool getUseSimulatedAnnealing() const;
-
   Q_PROPERTY(bool UseSimulatedAnnealing READ getUseSimulatedAnnealing WRITE setUseSimulatedAnnealing)
 
   /**
@@ -215,7 +207,6 @@ public:
    * @return Value of UseGradientPenalty
    */
   bool getUseGradientPenalty() const;
-
   Q_PROPERTY(bool UseGradientPenalty READ getUseGradientPenalty WRITE setUseGradientPenalty)
 
   /**
@@ -227,7 +218,6 @@ public:
    * @return Value of GradientBetaE
    */
   double getGradientBetaE() const;
-
   Q_PROPERTY(double GradientBetaE READ getGradientBetaE WRITE setGradientBetaE)
 
   /**
@@ -239,7 +229,6 @@ public:
    * @return Value of UseCurvaturePenalty
    */
   bool getUseCurvaturePenalty() const;
-
   Q_PROPERTY(bool UseCurvaturePenalty READ getUseCurvaturePenalty WRITE setUseCurvaturePenalty)
 
   /**
@@ -251,7 +240,6 @@ public:
    * @return Value of CurvatureBetaC
    */
   double getCurvatureBetaC() const;
-
   Q_PROPERTY(double CurvatureBetaC READ getCurvatureBetaC WRITE setCurvatureBetaC)
 
   /**
@@ -263,7 +251,6 @@ public:
    * @return Value of CurvatureRMax
    */
   double getCurvatureRMax() const;
-
   Q_PROPERTY(double CurvatureRMax READ getCurvatureRMax WRITE setCurvatureRMax)
 
   /**
@@ -275,7 +262,6 @@ public:
    * @return Value of CurvatureEMLoopDelay
    */
   int getCurvatureEMLoopDelay() const;
-
   Q_PROPERTY(int CurvatureEMLoopDelay READ getCurvatureEMLoopDelay WRITE setCurvatureEMLoopDelay)
 
   /**
@@ -287,7 +273,6 @@ public:
    * @return Value of OutputDataArrayPath
    */
   DataArrayPath getOutputDataArrayPath() const;
-
   Q_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
 
   /**

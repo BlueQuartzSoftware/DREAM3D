@@ -42,7 +42,7 @@
 #include <QtWidgets/QProgressDialog>
 
 // Needed for AxisAngle_t and Crystal Symmetry constants
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include <QtCore/QDebug>
 
@@ -57,7 +57,7 @@
 #include "SIMPLib/StatsData/StatsData.h"
 #include "SIMPLib/Utilities/ColorUtilities.h"
 
-#include "OrientationLib/Texture/StatsGen.hpp"
+#include "EbsdLib/Texture/StatsGen.hpp"
 
 #include "SyntheticBuilding/Gui/Widgets/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.h"
 #include "SyntheticBuilding/Gui/Widgets/Presets/Dialogs/RolledPresetDialog.h"
@@ -496,11 +496,11 @@ QString PrimaryPhaseWidget::getComboString()
 {
   QString s = QString::number(getPhaseIndex());
   s.append(" - ");
-  if(Ebsd::CrystalStructure::Cubic_High == getCrystalStructure())
+  if(EbsdLib::CrystalStructure::Cubic_High == getCrystalStructure())
   {
     s.append("Cubic");
   }
-  else if(Ebsd::CrystalStructure::Hexagonal_High == getCrystalStructure())
+  else if(EbsdLib::CrystalStructure::Hexagonal_High == getCrystalStructure())
   {
     s.append("Hexagonal");
   }

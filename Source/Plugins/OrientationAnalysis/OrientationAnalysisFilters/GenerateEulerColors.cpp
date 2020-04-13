@@ -54,7 +54,7 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -215,19 +215,19 @@ void GenerateEulerColors::execute()
     phase = m_CellPhases[i];
     index = i * 3;
 
-    if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic_High) // m3m Symmetry Cubic
+    if(m_CrystalStructures[phase] == EbsdLib::CrystalStructure::Cubic_High) // m3m Symmetry Cubic
     {
       m_CellEulerColors[index] = static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi * 255.0f);
       m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index + 1] / halfPi * 255.0f);
       m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index + 2] / halfPi * 255.0f);
     }
-    else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal_High)
+    else if(m_CrystalStructures[phase] == EbsdLib::CrystalStructure::Hexagonal_High)
     {
       m_CellEulerColors[index] = static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi * 255.0f);
       m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index + 1] / halfPi * 255.0f);
       m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index + 2] / thirdPi * 255.0f);
     }
-    else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Trigonal_High)
+    else if(m_CrystalStructures[phase] == EbsdLib::CrystalStructure::Trigonal_High)
     {
       m_CellEulerColors[index] = static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi * 255.0f);
       m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index + 1] / halfPi * 255.0f);

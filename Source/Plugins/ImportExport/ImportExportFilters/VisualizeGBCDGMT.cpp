@@ -35,8 +35,6 @@
 
 #include "VisualizeGBCDGMT.h"
 
-#include <memory>
-
 #include <QtCore/QDir>
 #include <QtCore/QTextStream>
 
@@ -50,12 +48,14 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/Core/Quaternion.hpp"
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Core/Orientation.hpp"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
+#include "EbsdLib/Core/Quaternion.hpp"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"

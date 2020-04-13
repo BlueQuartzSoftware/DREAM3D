@@ -103,7 +103,6 @@ public:
    * @return Value of QuatsArrayPath
    */
   DataArrayPath getQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
   /**
@@ -115,7 +114,6 @@ public:
    * @return Value of CAxisLocationsArrayName
    */
   QString getCAxisLocationsArrayName() const;
-
   Q_PROPERTY(QString CAxisLocationsArrayName READ getCAxisLocationsArrayName WRITE setCAxisLocationsArrayName)
 
   /**

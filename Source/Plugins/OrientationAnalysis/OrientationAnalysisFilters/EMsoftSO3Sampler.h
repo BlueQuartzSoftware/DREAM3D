@@ -37,8 +37,8 @@
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
-#include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/Core/Orientation.hpp"
+#include "EbsdLib/EbsdLib.h"
+#include "EbsdLib/Core/Orientation.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -110,7 +110,6 @@ public:
    * @return Value of sampleModeSelector
    */
   int getsampleModeSelector() const;
-
   Q_PROPERTY(int sampleModeSelector READ getsampleModeSelector WRITE setsampleModeSelector)
 
   /**
@@ -122,7 +121,6 @@ public:
    * @return Value of PointGroup
    */
   int getPointGroup() const;
-
   Q_PROPERTY(int PointGroup READ getPointGroup WRITE setPointGroup)
 
   /**
@@ -134,7 +132,6 @@ public:
    * @return Value of Numsp
    */
   int getNumsp() const;
-
   Q_PROPERTY(int Numsp READ getNumsp WRITE setNumsp)
 
   /**
@@ -146,7 +143,6 @@ public:
    * @return Value of MisOr
    */
   double getMisOr() const;
-
   Q_PROPERTY(int MisOr READ getMisOr WRITE setMisOr)
 
   /**
@@ -158,7 +154,6 @@ public:
    * @return Value of RefOr
    */
   FloatVec3Type getRefOr() const;
-
   Q_PROPERTY(FloatVec3Type RefOr READ getRefOr WRITE setRefOr)
 
   /**
@@ -170,7 +165,6 @@ public:
    * @return Value of MisOrFull
    */
   double getMisOrFull() const;
-
   Q_PROPERTY(int MisOrFull READ getMisOrFull WRITE setMisOrFull)
 
   /**
@@ -182,7 +176,6 @@ public:
    * @return Value of RefOrFull
    */
   FloatVec3Type getRefOrFull() const;
-
   Q_PROPERTY(FloatVec3Type RefOrFull READ getRefOrFull WRITE setRefOrFull)
 
   /**
@@ -194,7 +187,6 @@ public:
    * @return Value of OffsetGrid
    */
   bool getOffsetGrid() const;
-
   Q_PROPERTY(bool OffsetGrid READ getOffsetGrid WRITE setOffsetGrid)
 
   /**
@@ -206,7 +198,6 @@ public:
    * @return Value of EulerAnglesArrayName
    */
   QString getEulerAnglesArrayName() const;
-
   Q_PROPERTY(QString EulerAnglesArrayName READ getEulerAnglesArrayName WRITE setEulerAnglesArrayName)
 
   /**
@@ -218,7 +209,6 @@ public:
    * @return Value of DataContainerName
    */
   DataArrayPath getDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   /**
@@ -230,7 +220,6 @@ public:
    * @return Value of EMsoftAttributeMatrixName
    */
   QString getEMsoftAttributeMatrixName() const;
-
   Q_PROPERTY(QString EMsoftAttributeMatrixName READ getEMsoftAttributeMatrixName WRITE setEMsoftAttributeMatrixName)
 
   /**

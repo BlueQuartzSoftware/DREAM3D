@@ -101,7 +101,6 @@ public:
    * @return Value of CalcByPhase
    */
   bool getCalcByPhase() const;
-
   Q_PROPERTY(bool CalcByPhase READ getCalcByPhase WRITE setCalcByPhase)
 
   /**
@@ -113,7 +112,6 @@ public:
    * @return Value of CentroidsArrayPath
    */
   DataArrayPath getCentroidsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
   /**
@@ -125,7 +123,6 @@ public:
    * @return Value of PhasesArrayPath
    */
   DataArrayPath getPhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath PhasesArrayPath READ getPhasesArrayPath WRITE setPhasesArrayPath)
 
   /**
@@ -137,7 +134,6 @@ public:
    * @return Value of SurfaceFeaturesArrayPath
    */
   DataArrayPath getSurfaceFeaturesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
 
   /**
@@ -149,7 +145,6 @@ public:
    * @return Value of BiasedFeaturesArrayName
    */
   QString getBiasedFeaturesArrayName() const;
-
   Q_PROPERTY(QString BiasedFeaturesArrayName READ getBiasedFeaturesArrayName WRITE setBiasedFeaturesArrayName)
 
   /**

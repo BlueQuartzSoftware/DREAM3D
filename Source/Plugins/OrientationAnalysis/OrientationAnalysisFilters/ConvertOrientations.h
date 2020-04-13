@@ -41,7 +41,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -102,7 +101,6 @@ public:
    * @return Value of InputType
    */
   int getInputType() const;
-
   Q_PROPERTY(int InputType READ getInputType WRITE setInputType)
 
   /**
@@ -114,7 +112,6 @@ public:
    * @return Value of OutputType
    */
   int getOutputType() const;
-
   Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
 
   /**
@@ -126,7 +123,6 @@ public:
    * @return Value of InputOrientationArrayPath
    */
   DataArrayPath getInputOrientationArrayPath() const;
-
   Q_PROPERTY(DataArrayPath InputOrientationArrayPath READ getInputOrientationArrayPath WRITE setInputOrientationArrayPath)
 
   /**
@@ -138,7 +134,6 @@ public:
    * @return Value of OutputOrientationArrayName
    */
   QString getOutputOrientationArrayName() const;
-
   Q_PROPERTY(QString OutputOrientationArrayName READ getOutputOrientationArrayName WRITE setOutputOrientationArrayName)
 
   /**

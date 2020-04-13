@@ -98,7 +98,6 @@ public:
    * @return Value of ConversionType
    */
   int getConversionType() const;
-
   Q_PROPERTY(int ConversionType READ getConversionType WRITE setConversionType)
 
   /**
@@ -110,7 +109,6 @@ public:
    * @return Value of CellEulerAnglesArrayPath
    */
   DataArrayPath getCellEulerAnglesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
   /**

@@ -119,7 +119,6 @@ public:
    * @return Value of CellFeatureAttributeMatrixName
    */
   QString getCellFeatureAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
   /**
@@ -131,7 +130,6 @@ public:
    * @return Value of SineParamsArrayPath
    */
   DataArrayPath getSineParamsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SineParamsArrayPath READ getSineParamsArrayPath WRITE setSineParamsArrayPath)
 
   /**
@@ -153,7 +151,6 @@ public:
    * @return Value of UseGoodVoxels
    */
   bool getUseGoodVoxels() const;
-
   Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
   /**
@@ -165,7 +162,6 @@ public:
    * @return Value of GoodVoxelsArrayPath
    */
   DataArrayPath getGoodVoxelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
   /**
@@ -177,7 +173,6 @@ public:
    * @return Value of FeatureIdsArrayName
    */
   QString getFeatureIdsArrayName() const;
-
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
   /**
@@ -189,7 +184,6 @@ public:
    * @return Value of ActiveArrayName
    */
   QString getActiveArrayName() const;
-
   Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
   /**

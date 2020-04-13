@@ -100,7 +100,6 @@ public:
    * @return Value of RotationAxis
    */
   FloatVec3Type getRotationAxis() const;
-
   Q_PROPERTY(FloatVec3Type RotationAxis READ getRotationAxis WRITE setRotationAxis)
 
   /**
@@ -112,7 +111,6 @@ public:
    * @return Value of RotationAngle
    */
   float getRotationAngle() const;
-
   Q_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
 
   /**
@@ -124,7 +122,6 @@ public:
    * @return Value of CellEulerAnglesArrayPath
    */
   DataArrayPath getCellEulerAnglesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
   /**

@@ -111,7 +111,6 @@ public:
    * @return Value of NewDataContainerName
    */
   DataArrayPath getNewDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
 
   /**
@@ -123,7 +122,6 @@ public:
    * @return Value of CellAttributeMatrixPath
    */
   DataArrayPath getCellAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
   /**
@@ -135,7 +133,6 @@ public:
    * @return Value of CellFeatureAttributeMatrixPath
    */
   DataArrayPath getCellFeatureAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
 
   IntVec3Type getCurrentVolumeDataContainerDimensions();
@@ -153,7 +150,6 @@ public:
    * @return Value of XMin
    */
   int getXMin() const;
-
   Q_PROPERTY(int XMin READ getXMin WRITE setXMin)
 
   /**
@@ -165,7 +161,6 @@ public:
    * @return Value of YMin
    */
   int getYMin() const;
-
   Q_PROPERTY(int YMin READ getYMin WRITE setYMin)
 
   /**
@@ -177,7 +172,6 @@ public:
    * @return Value of ZMin
    */
   int getZMin() const;
-
   Q_PROPERTY(int ZMin READ getZMin WRITE setZMin)
 
   /**
@@ -189,7 +183,6 @@ public:
    * @return Value of XMax
    */
   int getXMax() const;
-
   Q_PROPERTY(int XMax READ getXMax WRITE setXMax)
 
   /**
@@ -201,7 +194,6 @@ public:
    * @return Value of YMax
    */
   int getYMax() const;
-
   Q_PROPERTY(int YMax READ getYMax WRITE setYMax)
 
   /**
@@ -213,7 +205,6 @@ public:
    * @return Value of ZMax
    */
   int getZMax() const;
-
   Q_PROPERTY(int ZMax READ getZMax WRITE setZMax)
 
   /**
@@ -225,7 +216,6 @@ public:
    * @return Value of RenumberFeatures
    */
   bool getRenumberFeatures() const;
-
   Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
 
   /**
@@ -237,7 +227,6 @@ public:
    * @return Value of SaveAsNewDataContainer
    */
   bool getSaveAsNewDataContainer() const;
-
   Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
 
   /**
@@ -249,7 +238,6 @@ public:
    * @return Value of UpdateOrigin
    */
   bool getUpdateOrigin() const;
-
   Q_PROPERTY(bool UpdateOrigin READ getUpdateOrigin WRITE setUpdateOrigin)
 
   /**
@@ -261,15 +249,14 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   QString getOldBoxDimensions();
   Q_PROPERTY(QString OldBoxDimensions READ getOldBoxDimensions)
-  
+
   QString getNewBoxDimensions();
   Q_PROPERTY(QString NewBoxDimensions READ getNewBoxDimensions)
-  
+
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */

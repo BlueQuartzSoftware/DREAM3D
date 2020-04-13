@@ -113,7 +113,6 @@ public:
    * @return Value of OutputFile
    */
   QString getOutputFile() const;
-
   Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
   /**
@@ -125,7 +124,6 @@ public:
    * @return Value of WriteBinaryFile
    */
   bool getWriteBinaryFile() const;
-
   Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
 
   /**
@@ -137,7 +135,6 @@ public:
    * @return Value of SelectedDataArrayPaths
    */
   QVector<DataArrayPath> getSelectedDataArrayPaths() const;
-
   Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
 
   /**

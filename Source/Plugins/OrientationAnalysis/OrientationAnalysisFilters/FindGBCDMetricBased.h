@@ -48,7 +48,7 @@
 // Needed for AxisAngle_t
 #include <memory>
 
-#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
@@ -126,7 +126,6 @@ public:
    * @return Value of PhaseOfInterest
    */
   int getPhaseOfInterest() const;
-
   Q_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
 
   /**
@@ -138,7 +137,6 @@ public:
    * @return Value of MisorientationRotation
    */
   AxisAngleInput_t getMisorientationRotation() const;
-
   Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
 
   /**
@@ -150,7 +148,6 @@ public:
    * @return Value of ChosenLimitDists
    */
   int getChosenLimitDists() const;
-
   Q_PROPERTY(int ChosenLimitDists READ getChosenLimitDists WRITE setChosenLimitDists)
 
   /**
@@ -162,7 +159,6 @@ public:
    * @return Value of NumSamplPts
    */
   int getNumSamplPts() const;
-
   Q_PROPERTY(int NumSamplPts READ getNumSamplPts WRITE setNumSamplPts)
 
   /**
@@ -174,7 +170,6 @@ public:
    * @return Value of ExcludeTripleLines
    */
   bool getExcludeTripleLines() const;
-
   Q_PROPERTY(bool ExcludeTripleLines READ getExcludeTripleLines WRITE setExcludeTripleLines)
 
   /**
@@ -186,7 +181,6 @@ public:
    * @return Value of DistOutputFile
    */
   QString getDistOutputFile() const;
-
   Q_PROPERTY(QString DistOutputFile READ getDistOutputFile WRITE setDistOutputFile)
 
   /**
@@ -198,7 +192,6 @@ public:
    * @return Value of ErrOutputFile
    */
   QString getErrOutputFile() const;
-
   Q_PROPERTY(QString ErrOutputFile READ getErrOutputFile WRITE setErrOutputFile)
 
   /**
@@ -210,7 +203,6 @@ public:
    * @return Value of SaveRelativeErr
    */
   bool getSaveRelativeErr() const;
-
   Q_PROPERTY(bool SaveRelativeErr READ getSaveRelativeErr WRITE setSaveRelativeErr)
 
   /**
@@ -222,7 +214,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -234,7 +225,6 @@ public:
    * @return Value of FeatureEulerAnglesArrayPath
    */
   DataArrayPath getFeatureEulerAnglesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
 
   /**
@@ -246,7 +236,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -258,7 +247,6 @@ public:
    * @return Value of SurfaceMeshFaceLabelsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
   /**
@@ -270,7 +258,6 @@ public:
    * @return Value of SurfaceMeshFaceNormalsArrayPath
    */
   DataArrayPath getSurfaceMeshFaceNormalsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
   /**
@@ -282,7 +269,6 @@ public:
    * @return Value of SurfaceMeshFaceAreasArrayPath
    */
   DataArrayPath getSurfaceMeshFaceAreasArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceAreasArrayPath READ getSurfaceMeshFaceAreasArrayPath WRITE setSurfaceMeshFaceAreasArrayPath)
 
   /**
@@ -294,7 +280,6 @@ public:
    * @return Value of SurfaceMeshFeatureFaceLabelsArrayPath
    */
   DataArrayPath getSurfaceMeshFeatureFaceLabelsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceLabelsArrayPath READ getSurfaceMeshFeatureFaceLabelsArrayPath WRITE setSurfaceMeshFeatureFaceLabelsArrayPath)
 
   /**
@@ -306,7 +291,6 @@ public:
    * @return Value of NodeTypesArrayPath
    */
   DataArrayPath getNodeTypesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath NodeTypesArrayPath READ getNodeTypesArrayPath WRITE setNodeTypesArrayPath)
 
   /**

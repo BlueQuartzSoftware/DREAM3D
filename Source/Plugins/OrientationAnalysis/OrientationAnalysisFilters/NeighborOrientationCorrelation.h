@@ -108,7 +108,6 @@ public:
    * @return Value of MisorientationTolerance
    */
   float getMisorientationTolerance() const;
-
   Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
 
   /**
@@ -120,7 +119,6 @@ public:
    * @return Value of MinConfidence
    */
   float getMinConfidence() const;
-
   Q_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
 
   /**
@@ -132,7 +130,6 @@ public:
    * @return Value of Level
    */
   int getLevel() const;
-
   Q_PROPERTY(int Level READ getLevel WRITE setLevel)
 
   /**
@@ -144,7 +141,6 @@ public:
    * @return Value of ConfidenceIndexArrayPath
    */
   DataArrayPath getConfidenceIndexArrayPath() const;
-
   Q_PROPERTY(DataArrayPath ConfidenceIndexArrayPath READ getConfidenceIndexArrayPath WRITE setConfidenceIndexArrayPath)
 
   /**
@@ -156,7 +152,6 @@ public:
    * @return Value of CellPhasesArrayPath
    */
   DataArrayPath getCellPhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
   /**
@@ -168,7 +163,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -180,7 +174,6 @@ public:
    * @return Value of QuatsArrayPath
    */
   DataArrayPath getQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
   /**
@@ -192,7 +185,6 @@ public:
    * @return Value of IgnoredDataArrayPaths
    */
   QVector<DataArrayPath> getIgnoredDataArrayPaths() const;
-
   Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
 
   void updateProgress(size_t p);

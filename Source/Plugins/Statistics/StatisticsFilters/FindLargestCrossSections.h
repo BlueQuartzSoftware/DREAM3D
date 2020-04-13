@@ -99,7 +99,6 @@ public:
    * @return Value of Plane
    */
   unsigned int getPlane() const;
-
   Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
 
   /**
@@ -111,7 +110,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -123,7 +121,6 @@ public:
    * @return Value of LargestCrossSectionsArrayPath
    */
   DataArrayPath getLargestCrossSectionsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath LargestCrossSectionsArrayPath READ getLargestCrossSectionsArrayPath WRITE setLargestCrossSectionsArrayPath)
 
   /**

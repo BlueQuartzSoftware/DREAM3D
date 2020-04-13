@@ -56,7 +56,7 @@ class Reconstruction_EXPORT AlignSections : public AbstractFilter
   PYB11_FILTER_NEW_MACRO(AlignSections)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-  PYB11_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE WriteAlignmentShifts)
+  PYB11_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE setWriteAlignmentShifts)
   PYB11_PROPERTY(QString AlignmentShiftFileName READ getAlignmentShiftFileName WRITE setAlignmentShiftFileName)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
@@ -100,7 +100,6 @@ public:
    * @return Value of DataContainerName
    */
   DataArrayPath getDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   /**
@@ -122,7 +121,6 @@ public:
    * @return Value of WriteAlignmentShifts
    */
   bool getWriteAlignmentShifts() const;
-
   Q_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE setWriteAlignmentShifts)
 
   /**
@@ -134,7 +132,6 @@ public:
    * @return Value of AlignmentShiftFileName
    */
   QString getAlignmentShiftFileName() const;
-
   Q_PROPERTY(QString AlignmentShiftFileName READ getAlignmentShiftFileName WRITE setAlignmentShiftFileName)
 
   /**
@@ -146,7 +143,6 @@ public:
    * @return Value of IgnoredDataArrayPaths
    */
   QVector<DataArrayPath> getIgnoredDataArrayPaths() const;
-
   Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
 
   void updateProgress(size_t p);

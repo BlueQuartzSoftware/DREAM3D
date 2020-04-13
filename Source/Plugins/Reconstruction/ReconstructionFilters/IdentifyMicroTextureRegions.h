@@ -107,7 +107,6 @@ public:
    * @return Value of NewCellFeatureAttributeMatrixName
    */
   QString getNewCellFeatureAttributeMatrixName() const;
-
   Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
   /**
@@ -119,7 +118,6 @@ public:
    * @return Value of CAxisTolerance
    */
   float getCAxisTolerance() const;
-
   Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
 
   /**
@@ -131,7 +129,6 @@ public:
    * @return Value of MinMTRSize
    */
   float getMinMTRSize() const;
-
   Q_PROPERTY(float MinMTRSize READ getMinMTRSize WRITE setMinMTRSize)
 
   /**
@@ -143,7 +140,6 @@ public:
    * @return Value of MinVolFrac
    */
   float getMinVolFrac() const;
-
   Q_PROPERTY(float MinVolFrac READ getMinVolFrac WRITE setMinVolFrac)
 
   /**
@@ -165,7 +161,6 @@ public:
    * @return Value of CAxisLocationsArrayPath
    */
   DataArrayPath getCAxisLocationsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CAxisLocationsArrayPath READ getCAxisLocationsArrayPath WRITE setCAxisLocationsArrayPath)
 
   /**
@@ -177,7 +172,6 @@ public:
    * @return Value of CellPhasesArrayPath
    */
   DataArrayPath getCellPhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
   /**
@@ -189,7 +183,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -201,7 +194,6 @@ public:
    * @return Value of MTRIdsArrayName
    */
   QString getMTRIdsArrayName() const;
-
   Q_PROPERTY(QString MTRIdsArrayName READ getMTRIdsArrayName WRITE setMTRIdsArrayName)
 
   /**
@@ -213,7 +205,6 @@ public:
    * @return Value of ActiveArrayName
    */
   QString getActiveArrayName() const;
-
   Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
   /**

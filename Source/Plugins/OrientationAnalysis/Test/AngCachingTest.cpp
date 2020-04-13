@@ -32,13 +32,10 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QThread>
-
 #include <QtCore/QTextStream>
-
 #include <QtCore/QDebug>
 
 #include "SIMPLib/DataArrays/DataArray.hpp"
-
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -50,8 +47,7 @@
 
 #include "UnitTestSupport.hpp"
 
-#include "Plugins/OrientationAnalysis/OrientationAnalysisFilters/ReadAngData.h"
-
+#include "OrientationAnalysis/OrientationAnalysisFilters/ReadAngData.h"
 #include "OrientationAnalysisTestFileLocations.h"
 
 const QString File1(UnitTest::AngCachingTest::TestInputFile1);

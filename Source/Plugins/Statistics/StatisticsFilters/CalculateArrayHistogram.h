@@ -109,7 +109,6 @@ public:
    * @return Value of SelectedArrayPath
    */
   DataArrayPath getSelectedArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
   /**
@@ -121,7 +120,6 @@ public:
    * @return Value of NumberOfBins
    */
   int getNumberOfBins() const;
-
   Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
 
   /**
@@ -133,7 +131,6 @@ public:
    * @return Value of MinRange
    */
   double getMinRange() const;
-
   Q_PROPERTY(double MinRange READ getMinRange WRITE setMinRange)
 
   /**
@@ -145,7 +142,6 @@ public:
    * @return Value of MaxRange
    */
   double getMaxRange() const;
-
   Q_PROPERTY(double MaxRange READ getMaxRange WRITE setMaxRange)
 
   /**
@@ -157,7 +153,6 @@ public:
    * @return Value of UserDefinedRange
    */
   bool getUserDefinedRange() const;
-
   Q_PROPERTY(bool UserDefinedRange READ getUserDefinedRange WRITE setUserDefinedRange)
 
   /**
@@ -169,7 +164,6 @@ public:
    * @return Value of Normalize
    */
   bool getNormalize() const;
-
   Q_PROPERTY(bool Normalize READ getNormalize WRITE setNormalize)
 
   /**
@@ -181,7 +175,6 @@ public:
    * @return Value of NewAttributeMatrixName
    */
   QString getNewAttributeMatrixName() const;
-
   Q_PROPERTY(QString NewAttributeMatrixName READ getNewAttributeMatrixName WRITE setNewAttributeMatrixName)
 
   /**
@@ -193,7 +186,6 @@ public:
    * @return Value of NewDataArrayName
    */
   QString getNewDataArrayName() const;
-
   Q_PROPERTY(QString NewDataArrayName READ getNewDataArrayName WRITE setNewDataArrayName)
 
   /**
@@ -205,7 +197,6 @@ public:
    * @return Value of NewDataContainer
    */
   bool getNewDataContainer() const;
-
   Q_PROPERTY(bool NewDataContainer READ getNewDataContainer WRITE setNewDataContainer)
 
   /**
@@ -217,7 +208,6 @@ public:
    * @return Value of NewDataContainerName
    */
   DataArrayPath getNewDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
 
   /**

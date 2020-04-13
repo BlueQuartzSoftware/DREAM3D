@@ -60,7 +60,7 @@
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/Core/Quaternion.hpp"
+#include "EbsdLib/Core/Quaternion.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -320,8 +320,8 @@ void FindOrientationFieldCurl::execute()
 
   //  float w, totalmisorientation;
   //  float n1, n2, n3;
-  //  unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  //  unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
+  //  unsigned int phase1 = EbsdLib::CrystalStructure::UnknownCrystalStructure;
+  //  unsigned int phase2 = EbsdLib::CrystalStructure::UnknownCrystalStructure;
   SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t xPoints = static_cast<int64_t>(udims[0]);

@@ -107,7 +107,6 @@ public:
    * @return Value of VertexDataContainerName
    */
   DataArrayPath getVertexDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
   /**
@@ -119,7 +118,6 @@ public:
    * @return Value of LammpsFile
    */
   QString getLammpsFile() const;
-
   Q_PROPERTY(QString LammpsFile READ getLammpsFile WRITE setLammpsFile)
 
   /**

@@ -93,7 +93,6 @@ public:
    * @return Value of PhaseName
    */
   QString getPhaseName() const;
-
   Q_PROPERTY(QString PhaseName READ getPhaseName WRITE setPhaseName)
 
   /**
@@ -105,7 +104,6 @@ public:
    * @return Value of PhaseIndex
    */
   int getPhaseIndex() const;
-
   Q_PROPERTY(int PhaseIndex READ getPhaseIndex WRITE setPhaseIndex)
 
   /**
@@ -117,7 +115,6 @@ public:
    * @return Value of CrystalSymmetry
    */
   int getCrystalSymmetry() const;
-
   Q_PROPERTY(int CrystalSymmetry READ getCrystalSymmetry WRITE setCrystalSymmetry)
 
   /**
@@ -129,7 +126,6 @@ public:
    * @return Value of MicroPresetModel
    */
   int getMicroPresetModel() const;
-
   Q_PROPERTY(int MicroPresetModel READ getMicroPresetModel WRITE setMicroPresetModel)
 
   /**
@@ -141,7 +137,6 @@ public:
    * @return Value of PhaseFraction
    */
   double getPhaseFraction() const;
-
   Q_PROPERTY(double PhaseFraction READ getPhaseFraction WRITE setPhaseFraction)
 
   /**
@@ -153,7 +148,6 @@ public:
    * @return Value of Mu
    */
   double getMu() const;
-
   Q_PROPERTY(double Mu READ getMu WRITE setMu)
 
   /**
@@ -165,7 +159,6 @@ public:
    * @return Value of Sigma
    */
   double getSigma() const;
-
   Q_PROPERTY(double Sigma READ getSigma WRITE setSigma)
 
   /**
@@ -177,7 +170,6 @@ public:
    * @return Value of MinCutOff
    */
   double getMinCutOff() const;
-
   Q_PROPERTY(double MinCutOff READ getMinCutOff WRITE setMinCutOff)
 
   /**
@@ -189,7 +181,6 @@ public:
    * @return Value of MaxCutOff
    */
   double getMaxCutOff() const;
-
   Q_PROPERTY(double MaxCutOff READ getMaxCutOff WRITE setMaxCutOff)
 
   /**
@@ -201,7 +192,6 @@ public:
    * @return Value of BinStepSize
    */
   double getBinStepSize() const;
-
   Q_PROPERTY(double BinStepSize READ getBinStepSize WRITE setBinStepSize)
 
   /**
@@ -213,7 +203,6 @@ public:
    * @return Value of CreateEnsembleAttributeMatrix
    */
   bool getCreateEnsembleAttributeMatrix() const;
-
   Q_PROPERTY(bool CreateEnsembleAttributeMatrix READ getCreateEnsembleAttributeMatrix WRITE setCreateEnsembleAttributeMatrix)
 
   /**
@@ -225,7 +214,6 @@ public:
    * @return Value of DataContainerName
    */
   DataArrayPath getDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   /**
@@ -237,7 +225,6 @@ public:
    * @return Value of CellEnsembleAttributeMatrixName
    */
   QString getCellEnsembleAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
   /**
@@ -249,7 +236,6 @@ public:
    * @return Value of AppendToExistingAttributeMatrix
    */
   bool getAppendToExistingAttributeMatrix() const;
-
   Q_PROPERTY(bool AppendToExistingAttributeMatrix READ getAppendToExistingAttributeMatrix WRITE setAppendToExistingAttributeMatrix)
 
   /**
@@ -261,7 +247,6 @@ public:
    * @return Value of SelectedEnsembleAttributeMatrix
    */
   DataArrayPath getSelectedEnsembleAttributeMatrix() const;
-
   Q_PROPERTY(DataArrayPath SelectedEnsembleAttributeMatrix READ getSelectedEnsembleAttributeMatrix WRITE setSelectedEnsembleAttributeMatrix)
 
   QString getNumberOfBins();
@@ -279,7 +264,6 @@ public:
    * @return Value of OdfData
    */
   DynamicTableData getOdfData() const;
-
   Q_PROPERTY(DynamicTableData OdfData READ getOdfData WRITE setOdfData)
 
   /**
@@ -291,7 +275,6 @@ public:
    * @return Value of MdfData
    */
   DynamicTableData getMdfData() const;
-
   Q_PROPERTY(DynamicTableData MdfData READ getMdfData WRITE setMdfData)
 
   /**
@@ -303,7 +286,6 @@ public:
    * @return Value of AxisOdfData
    */
   DynamicTableData getAxisOdfData() const;
-
   Q_PROPERTY(DynamicTableData AxisOdfData READ getAxisOdfData WRITE setAxisOdfData)
 
   /**
@@ -315,7 +297,6 @@ public:
    * @return Value of RdfMinMaxDistance
    */
   FloatVec2Type getRdfMinMaxDistance() const;
-
   Q_PROPERTY(FloatVec2Type RdfMinMaxDistance READ getRdfMinMaxDistance WRITE setRdfMinMaxDistance)
 
   /**
@@ -327,7 +308,6 @@ public:
    * @return Value of RdfNumBins
    */
   int getRdfNumBins() const;
-
   Q_PROPERTY(int RdfNumBins READ getRdfNumBins WRITE setRdfNumBins)
 
   /**
@@ -339,7 +319,6 @@ public:
    * @return Value of RdfBoxSize
    */
   FloatVec3Type getRdfBoxSize() const;
-
   Q_PROPERTY(FloatVec3Type RdfBoxSize READ getRdfBoxSize WRITE setRdfBoxSize)
 
   /**

@@ -102,7 +102,6 @@ public:
    * @return Value of MinAllowedFeatureSize
    */
   int getMinAllowedFeatureSize() const;
-
   Q_PROPERTY(int MinAllowedFeatureSize READ getMinAllowedFeatureSize WRITE setMinAllowedFeatureSize)
 
   /**
@@ -114,7 +113,6 @@ public:
    * @return Value of ApplyToSinglePhase
    */
   bool getApplyToSinglePhase() const;
-
   Q_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
 
   /**
@@ -126,7 +124,6 @@ public:
    * @return Value of PhaseNumber
    */
   int getPhaseNumber() const;
-
   Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
   /**
@@ -138,7 +135,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -150,7 +146,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -162,7 +157,6 @@ public:
    * @return Value of NumCellsArrayPath
    */
   DataArrayPath getNumCellsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath NumCellsArrayPath READ getNumCellsArrayPath WRITE setNumCellsArrayPath)
 
   /**
@@ -174,7 +168,6 @@ public:
    * @return Value of IgnoredDataArrayPaths
    */
   QVector<DataArrayPath> getIgnoredDataArrayPaths() const;
-
   Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
 
   /**

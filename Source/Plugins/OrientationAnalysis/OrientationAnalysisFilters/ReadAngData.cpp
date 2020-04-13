@@ -53,7 +53,7 @@
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
-#include "EbsdLib/TSL/AngFields.h"
+#include "EbsdLib/IO/TSL/AngFields.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -103,7 +103,7 @@ ReadAngData::ReadAngData()
 , m_MaterialNameArrayName(SIMPL::EnsembleData::MaterialName)
 , m_InputFile("")
 , m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
-, m_Manufacturer(Ebsd::OEM::Unknown)
+, m_Manufacturer(EbsdLib::OEM::Unknown)
 , d_ptr(new ReadAngDataPrivate(this))
 {
 }
@@ -207,7 +207,7 @@ void ReadAngData::dataCheck()
 
   QFileInfo fi(m_InputFile);
 
-  if(m_InputFile.isEmpty() && m_Manufacturer == Ebsd::OEM::Unknown)
+  if(m_InputFile.isEmpty() && m_Manufacturer == EbsdLib::OEM::Unknown)
   {
     QString ss = QObject::tr("The input file must be set for property %1").arg("InputFile");
     setErrorCondition(-1, ss);
@@ -215,7 +215,7 @@ void ReadAngData::dataCheck()
   }
 
   QString ext = fi.suffix().toLower();
-  if(ext != Ebsd::Ang::FileExtLower)
+  if(ext != EbsdLib::Ang::FileExtLower)
   {
     QString ss = QObject::tr("The file extension '%1' was not recognized. The reader only recognizes the .ang file extension").arg(ext);
     setErrorCondition(-997, ss);
@@ -270,18 +270,18 @@ void ReadAngData::dataCheck()
 
   for(const QString& name : names)
   {
-    if(reader->getPointerType(name) == Ebsd::Int32)
+    if(reader->getPointerType(name) == EbsdLib::NumericTypes::Type::Int32)
     {
       cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>>(this, name, 0, tDims);
     }
-    else if(reader->getPointerType(name) == Ebsd::Float)
+    else if(reader->getPointerType(name) == EbsdLib::NumericTypes::Type::Float)
     {
       cellAttrMat->createAndAddAttributeArray<DataArray<float>>(this, name, 0, tDims);
     }
   }
 
   std::vector<size_t> cDims(1, 3);
-  tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::AngFile::EulerAngles);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), EbsdLib::AngFile::EulerAngles);
   m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims, "");
   if(nullptr != m_CellEulerAnglesPtr.lock())
   {
@@ -289,22 +289,22 @@ void ReadAngData::dataCheck()
   }
 
   cDims[0] = 1;
-  tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::AngFile::Phases);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), EbsdLib::AngFile::Phases);
   m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>>(this, tempPath, 0, cDims, "");
   if(nullptr != m_CellPhasesPtr.lock())
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   }
 
-  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::AngFile::CrystalStructures);
-  m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), EbsdLib::AngFile::CrystalStructures);
+  m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>>(this, tempPath, EbsdLib::CrystalStructure::UnknownCrystalStructure, cDims);
   if(nullptr != m_CrystalStructuresPtr.lock())
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   }
 
   cDims[0] = 6;
-  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::AngFile::LatticeConstants);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), EbsdLib::AngFile::LatticeConstants);
   m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0.0, cDims);
   if(nullptr != m_LatticeConstantsPtr.lock())
   {
@@ -359,13 +359,13 @@ void ReadAngData::readDataFile(AngReader* reader, DataContainer* m, std::vector<
 
         m_FileWasRead = true;
 
-      if(reader->getGrid().compare(Ebsd::Ang::HexGrid) == 0)
-      {
-        setErrorCondition(-1000, "DREAM.3D does not directly read HEX grid .ang files. Please use the 'Convert Hexagonal "
-                                  "Grid Data to Square Grid Data (TSL - .ang)' filter first to batch convert the Hex grid files.");
-        m_FileWasRead = false;
-        return;
-      }
+        if(reader->getGrid().compare(EbsdLib::Ang::HexGrid) == 0)
+        {
+          setErrorCondition(-1000, "DREAM.3D does not directly read HEX grid .ang files. Please use the 'Convert Hexagonal "
+                                   "Grid Data to Square Grid Data (TSL - .ang)' filter first to batch convert the Hex grid files.");
+          m_FileWasRead = false;
+          return;
+        }
     }
     else
     {
@@ -382,7 +382,7 @@ void ReadAngData::readDataFile(AngReader* reader, DataContainer* m, std::vector<
     tDims[2] = zDim; // We are reading a single slice
 
       Ang_Private_Data data;
-      data.dims = SizeVec3Type(tDims[0], tDims[1], tDims[2]);
+      data.dims = {tDims[0], tDims[1], tDims[2]};
       data.resolution[0] = (reader->getXStep());
       data.resolution[1] = (reader->getYStep());
       data.resolution[2] = (zStep);
@@ -452,14 +452,14 @@ int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
     return getErrorCode();
   }
 
-  DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, Ebsd::AngFile::CrystalStructures, true);
-  StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, Ebsd::AngFile::MaterialName);
+  DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, EbsdLib::AngFile::CrystalStructures, true);
+  StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, EbsdLib::AngFile::MaterialName);
   std::vector<size_t> cDims(1, 6);
-  FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, Ebsd::AngFile::LatticeConstants, true);
+  FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, EbsdLib::AngFile::LatticeConstants, true);
 
   // Initialize the zero'th element to unknowns. The other elements will
   // be filled in based on values from the data file
-  crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
+  crystalStructures->setValue(0, EbsdLib::CrystalStructure::UnknownCrystalStructure);
   materialNames->setValue(0, "Invalid Phase");
   latticeConstants->setComponent(0, 0, 0.0f);
   latticeConstants->setComponent(0, 1, 0.0f);
@@ -544,7 +544,7 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, std::vector<size_t>& tDims,
 
   // Adjust the values of the 'phase' data to correct for invalid values
   {
-    phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(Ebsd::Ang::PhaseData));
+    phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(EbsdLib::Ang::PhaseData));
     for(size_t i = 0; i < totalPoints; i++)
     {
       if(phasePtr[i] < 1)
@@ -559,9 +559,9 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, std::vector<size_t>& tDims,
 
   // Condense the Euler Angles from 3 separate arrays into a single 1x3 array
   {
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi1));
-    f2 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi));
-    f3 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi2));
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ang::Phi1));
+    f2 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ang::Phi));
+    f3 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ang::Phi2));
     cDims[0] = 3;
     fArray = FloatArrayType::CreateArray(tDims, cDims, SIMPL::CellData::EulerAngles, true);
     float* cellEulerAngles = fArray->getPointer(0);
@@ -577,43 +577,43 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, std::vector<size_t>& tDims,
 
   cDims[0] = 1;
   {
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ImageQuality));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ImageQuality, true);
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ang::ImageQuality));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, EbsdLib::Ang::ImageQuality, true);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ConfidenceIndex));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ConfidenceIndex, true);
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ang::ConfidenceIndex));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, EbsdLib::Ang::ConfidenceIndex, true);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::SEMSignal));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::SEMSignal, true);
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ang::SEMSignal));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, EbsdLib::Ang::SEMSignal, true);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Fit));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::Fit, true);
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ang::Fit));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, EbsdLib::Ang::Fit, true);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::XPosition));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::XPosition, true);
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ang::XPosition));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, EbsdLib::Ang::XPosition, true);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::YPosition));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::YPosition, true);
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ang::YPosition));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, EbsdLib::Ang::YPosition, true);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
@@ -847,13 +847,13 @@ uint32_t ReadAngData::getRefFrameZDir() const
 }
 
 // -----------------------------------------------------------------------------
-void ReadAngData::setManufacturer(const Ebsd::OEM& value)
+void ReadAngData::setManufacturer(const EbsdLib::OEM& value)
 {
   m_Manufacturer = value;
 }
 
 // -----------------------------------------------------------------------------
-Ebsd::OEM ReadAngData::getManufacturer() const
+EbsdLib::OEM ReadAngData::getManufacturer() const
 {
   return m_Manufacturer;
 }

@@ -110,7 +110,6 @@ public:
    * @return Value of NeighborListArrayPath
    */
   DataArrayPath getNeighborListArrayPath() const;
-
   Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
 
   /**
@@ -122,7 +121,6 @@ public:
    * @return Value of F1ListArrayName
    */
   QString getF1ListArrayName() const;
-
   Q_PROPERTY(QString F1ListArrayName READ getF1ListArrayName WRITE setF1ListArrayName)
 
   /**
@@ -134,7 +132,6 @@ public:
    * @return Value of F1sptListArrayName
    */
   QString getF1sptListArrayName() const;
-
   Q_PROPERTY(QString F1sptListArrayName READ getF1sptListArrayName WRITE setF1sptListArrayName)
 
   /**
@@ -146,7 +143,6 @@ public:
    * @return Value of F7ListArrayName
    */
   QString getF7ListArrayName() const;
-
   Q_PROPERTY(QString F7ListArrayName READ getF7ListArrayName WRITE setF7ListArrayName)
 
   /**
@@ -158,7 +154,6 @@ public:
    * @return Value of mPrimeListArrayName
    */
   QString getmPrimeListArrayName() const;
-
   Q_PROPERTY(QString mPrimeListArrayName READ getmPrimeListArrayName WRITE setmPrimeListArrayName)
 
   /**
@@ -170,7 +165,6 @@ public:
    * @return Value of AvgQuatsArrayPath
    */
   DataArrayPath getAvgQuatsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
   /**
@@ -182,7 +176,6 @@ public:
    * @return Value of FeaturePhasesArrayPath
    */
   DataArrayPath getFeaturePhasesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
   /**
@@ -194,7 +187,6 @@ public:
    * @return Value of CrystalStructuresArrayPath
    */
   DataArrayPath getCrystalStructuresArrayPath() const;
-
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**

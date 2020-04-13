@@ -37,7 +37,7 @@
 
 #include "FindLocalAverageCAxisMisalignments.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"

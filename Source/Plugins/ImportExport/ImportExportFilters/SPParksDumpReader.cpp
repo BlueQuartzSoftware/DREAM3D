@@ -33,16 +33,12 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "SPParksDumpReader.h"
 
 #include <QtCore/QFileInfo>
-
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -55,6 +51,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Utilities/GenericDataParser.hpp"
 
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
@@ -454,7 +451,7 @@ int32_t SPParksDumpReader::readFile()
   QByteArray buf = m_InStream.readLine(); // ITEM: ATOMS id type x y z
   buf = buf.trimmed();
   QList<QByteArray> tokens = buf.split(' '); // Tokenize the array with a tab
-  Ebsd::NumType pType = Ebsd::UnknownNumType;
+  SIMPL::NumericTypes::Type pType = SIMPL::NumericTypes::Type::UnknownNumType;
 
   int64_t xCol = 0;
   int64_t yCol = 0;
@@ -488,18 +485,18 @@ int32_t SPParksDumpReader::readFile()
       continue;
     }
 
-    if(Ebsd::Int32 == pType)
+    if(SIMPL::NumericTypes::Type::Int32 == pType)
     {
-      Int32Parser::Pointer dparser = Int32Parser::New(nullptr, totalPoints, name, i - 2);
+      Int32DataParser::Pointer dparser = Int32DataParser::New(nullptr, totalPoints, name, i - 2);
       if((didAllocate = dparser->allocateArray(totalPoints)))
       {
         ::memset(dparser->getVoidPointer(), 0xAB, sizeof(int32_t) * totalPoints);
         m_NamePointerMap.insert(name, dparser);
       }
     }
-    else if(Ebsd::Float == pType)
+    else if(SIMPL::NumericTypes::Type::Float == pType)
     {
-      FloatParser::Pointer dparser = FloatParser::New(nullptr, totalPoints, name, i - 2);
+      FloatDataParser::Pointer dparser = FloatDataParser::New(nullptr, totalPoints, name, i - 2);
       if((didAllocate = dparser->allocateArray(totalPoints)))
       {
         ::memset(dparser->getVoidPointer(), 0xAB, sizeof(float) * totalPoints);
@@ -544,13 +541,13 @@ int32_t SPParksDumpReader::readFile()
     return getErrorCode();
   }
 
-  DataParser::Pointer parser = m_NamePointerMap["type"];
+  GenericDataParser::Pointer parser = m_NamePointerMap["type"];
   if(nullptr != parser.get())
   {
     std::vector<size_t> cDims(1, 1);
     // Create a new DataArray that wraps the already allocated memory
     Int32ArrayType::Pointer typePtr = Int32ArrayType::WrapPointer(static_cast<int*>(parser->getVoidPointer()), totalPoints, cDims, getFeatureIdsArrayName(), true);
-    // Release the DataParser from having to delete the memory
+    // Release the GenericDataParser from having to delete the memory
     parser->setManageMemory(false);
 
     AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
@@ -611,15 +608,15 @@ void SPParksDumpReader::parseDataLine(QByteArray& line, std::vector<size_t> dims
     return;
   }
 
-  QMapIterator<QString, DataParser::Pointer> iter(m_NamePointerMap);
+  QMapIterator<QString, GenericDataParser::Pointer> iter(m_NamePointerMap);
   while(iter.hasNext())
   {
     iter.next();
-    DataParser::Pointer dparser = iter.value();
+    GenericDataParser::Pointer dparser = iter.value();
     // Make sure we dont' parse the x, y, z or id columns since they are pretty much useless data. At some point
     // if the SPParks users actually wanted to read in the matching XYZ lattice site for the data then actually
     // parsing and storing the data _may_ be of interest to them
-    if(dparser->getColumnName().compare("x") == 0 || dparser->getColumnName().compare("y") == 0 || dparser->getColumnName().compare("z") == 0 || dparser->getColumnName().compare("id") == 0)
+    if(dparser->getColumnName() == "x" || dparser->getColumnName() == "y" || dparser->getColumnName() == "z" || dparser->getColumnName() == "id")
     {
       continue;
     }
@@ -644,50 +641,50 @@ void SPParksDumpReader::parseDataLine(QByteArray& line, std::vector<size_t> dims
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType SPParksDumpReader::getPointerType(const QString& featureName)
+SIMPL::NumericTypes::Type SPParksDumpReader::getPointerType(const QString& featureName)
 {
   // text fields = id or site or x or y or z or
   //                  energy or propensity or iN or dN
 
   if(featureName.compare("id") == 0)
   {
-    return Ebsd::Int32;
+    return SIMPL::NumericTypes::Type::Int32;
   }
   if(featureName.compare("type") == 0)
   {
-    return Ebsd::Int32;
+    return SIMPL::NumericTypes::Type::Int32;
   }
   if(featureName.compare("x") == 0)
   {
-    return Ebsd::Int32;
+    return SIMPL::NumericTypes::Type::Int32;
   }
   if(featureName.compare("y") == 0)
   {
-    return Ebsd::Int32;
+    return SIMPL::NumericTypes::Type::Int32;
   }
   if(featureName.compare("z") == 0)
   {
-    return Ebsd::Int32;
+    return SIMPL::NumericTypes::Type::Int32;
   }
   if(featureName.compare("energy") == 0)
   {
-    return Ebsd::Float;
+    return SIMPL::NumericTypes::Type::Float;
   }
   if(featureName.compare("propensity") == 0)
   {
-    return Ebsd::Float;
+    return SIMPL::NumericTypes::Type::Float;
   }
   if(featureName.startsWith("i"))
   {
-    return Ebsd::Int32;
+    return SIMPL::NumericTypes::Type::Int32;
   } // Generic Integer site Value
   if(featureName.startsWith("d"))
   {
-    return Ebsd::Float;
+    return SIMPL::NumericTypes::Type::Float;
   } // Generic floating point site value
 
   // std::cout << "THIS IS NOT GOOD. Featurename: " << featureName << " was not found in the list" << std::endl;
-  return Ebsd::UnknownNumType;
+  return SIMPL::NumericTypes::Type::UnknownNumType;
 }
 
 // -----------------------------------------------------------------------------

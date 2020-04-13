@@ -100,7 +100,6 @@ public:
    * @return Value of InputPhaseTypesArrayPath
    */
   DataArrayPath getInputPhaseTypesArrayPath() const;
-
   Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
 
   /**
@@ -112,7 +111,6 @@ public:
    * @return Value of ShapeTypesArrayName
    */
   QString getShapeTypesArrayName() const;
-
   Q_PROPERTY(QString ShapeTypesArrayName READ getShapeTypesArrayName WRITE setShapeTypesArrayName)
 
   /**
@@ -124,7 +122,6 @@ public:
    * @return Value of ShapeTypeData
    */
   ShapeType::Types getShapeTypeData() const;
-
   Q_PROPERTY(ShapeType::Types ShapeTypeData READ getShapeTypeData WRITE setShapeTypeData)
 
   int getPhaseCount();

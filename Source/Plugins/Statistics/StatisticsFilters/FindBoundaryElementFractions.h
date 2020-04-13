@@ -99,7 +99,6 @@ public:
    * @return Value of FeatureIdsArrayPath
    */
   DataArrayPath getFeatureIdsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -111,7 +110,6 @@ public:
    * @return Value of BoundaryCellsArrayPath
    */
   DataArrayPath getBoundaryCellsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath BoundaryCellsArrayPath READ getBoundaryCellsArrayPath WRITE setBoundaryCellsArrayPath)
 
   /**
@@ -123,7 +121,6 @@ public:
    * @return Value of BoundaryCellFractionsArrayPath
    */
   DataArrayPath getBoundaryCellFractionsArrayPath() const;
-
   Q_PROPERTY(DataArrayPath BoundaryCellFractionsArrayPath READ getBoundaryCellFractionsArrayPath WRITE setBoundaryCellFractionsArrayPath)
 
   /**

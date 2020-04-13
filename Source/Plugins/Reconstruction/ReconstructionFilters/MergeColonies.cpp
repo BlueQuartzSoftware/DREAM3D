@@ -35,7 +35,6 @@
 
 #include "MergeColonies.h"
 
-#include <memory>
 #include <chrono>
 #include <cmath>
 #include <random>
@@ -52,15 +51,17 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
 
-#include "EbsdLib/EbsdConstants.h"
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -408,7 +409,7 @@ bool MergeColonies::determineGrouping(int32_t referenceFeature, int32_t neighbor
 
     uint32_t phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
     uint32_t phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
-    if(phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High))
+    if(phase1 == phase2 && (phase1 == EbsdLib::CrystalStructure::Hexagonal_High))
     {
       OrientationD ax = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
 
@@ -416,7 +417,7 @@ bool MergeColonies::determineGrouping(int32_t referenceFeature, int32_t neighbor
       rod = m_OrientationOps[phase1]->getMDFFZRod(rod);
       ax = OrientationTransformation::ro2ax<OrientationD, OrientationD>(rod);
 
-      w = ax[3] * (180.0f / SIMPLib::Constants::k_Pi);
+      w = ax[3] * (SIMPLib::Constants::k_180OverPi);
       float angdiff1 = std::fabs(w - 10.53f);
       float axisdiff1 = std::acos(/*std::fabs(n1) * 0.0000f + std::fabs(n2) * 0.0000f +*/ std::fabs(ax[2]) /* * 1.0000f */);
       if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisToleranceRad)
@@ -453,7 +454,7 @@ bool MergeColonies::determineGrouping(int32_t referenceFeature, int32_t neighbor
         return true;
       }
     }
-    else if(Ebsd::CrystalStructure::Cubic_High == phase2 && Ebsd::CrystalStructure::Hexagonal_High == phase1)
+    else if(EbsdLib::CrystalStructure::Cubic_High == phase2 && EbsdLib::CrystalStructure::Hexagonal_High == phase1)
     {
       colony = check_for_burgers(q2, q1);
       if(colony)
@@ -462,7 +463,7 @@ bool MergeColonies::determineGrouping(int32_t referenceFeature, int32_t neighbor
         return true;
       }
     }
-    else if(Ebsd::CrystalStructure::Cubic_High == phase1 && Ebsd::CrystalStructure::Hexagonal_High == phase2)
+    else if(EbsdLib::CrystalStructure::Cubic_High == phase1 && EbsdLib::CrystalStructure::Hexagonal_High == phase2)
     {
       colony = check_for_burgers(q1, q2);
       if(colony)
@@ -582,7 +583,7 @@ void MergeColonies::identify_globAlpha()
   //{
   //  int pnum = m_CellParentIds[i];
   //  totalSize[pnum]++;
-  //  if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[m_CellPhases[i]] )
+  //  if(EbsdLib::CrystalStructure::Cubic_High == m_CrystalStructures[m_CellPhases[i]] )
   //  { betaSize[pnum]++; }
   //}
   // for (int64_t i = 0; i < totalPoints; i++)
