@@ -42,8 +42,6 @@
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Geometry/IGeometry.h"
 
-#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
 
 /**

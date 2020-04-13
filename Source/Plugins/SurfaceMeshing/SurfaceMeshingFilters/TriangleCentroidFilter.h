@@ -41,19 +41,17 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
 
 /**
  * @brief The TriangleCentroidFilter class. See [Filter documentation](@ref changeresolution) for details.
  */
-class SurfaceMeshing_EXPORT TriangleCentroidFilter : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT TriangleCentroidFilter : public AbstractFilter
 {
   Q_OBJECT
 
   // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(TriangleCentroidFilter SUPERCLASS SurfaceMeshFilter)
+  PYB11_BEGIN_BINDINGS(TriangleCentroidFilter SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(TriangleCentroidFilter)
   PYB11_FILTER_NEW_MACRO(TriangleCentroidFilter)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)

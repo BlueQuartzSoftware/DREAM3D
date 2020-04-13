@@ -116,7 +116,6 @@ ReverseTriangleWinding::~ReverseTriangleWinding() = default;
 // -----------------------------------------------------------------------------
 void ReverseTriangleWinding::setupFilterParameters()
 {
-  SurfaceMeshFilter::setupFilterParameters();
   FilterParameterVectorType parameters;
   {
     DataContainerSelectionFilterParameter::RequirementType req;

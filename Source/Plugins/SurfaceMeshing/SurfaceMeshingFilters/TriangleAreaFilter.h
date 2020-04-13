@@ -41,19 +41,17 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
 
 /**
  * @brief The TriangleAreaFilter class. See [Filter documentation](@ref triangleareafilter) for details.
  */
-class SurfaceMeshing_EXPORT TriangleAreaFilter : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT TriangleAreaFilter : public AbstractFilter
 {
   Q_OBJECT
 
   // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(TriangleAreaFilter SUPERCLASS SurfaceMeshFilter)
+  PYB11_BEGIN_BINDINGS(TriangleAreaFilter SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(TriangleAreaFilter)
   PYB11_FILTER_NEW_MACRO(TriangleAreaFilter)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleAreasArrayPath READ getSurfaceMeshTriangleAreasArrayPath WRITE setSurfaceMeshTriangleAreasArrayPath)

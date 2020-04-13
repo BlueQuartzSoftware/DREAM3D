@@ -40,19 +40,17 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
-#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
 
 /**
  * @brief The ReverseTriangleWinding class. See [Filter documentation](@ref reversetrianglewinding) for details.
  */
-class SurfaceMeshing_EXPORT ReverseTriangleWinding : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT ReverseTriangleWinding : public AbstractFilter
 {
   Q_OBJECT
 
   // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(ReverseTriangleWinding SUPERCLASS SurfaceMeshFilter)
+  PYB11_BEGIN_BINDINGS(ReverseTriangleWinding SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ReverseTriangleWinding)
   PYB11_FILTER_NEW_MACRO(ReverseTriangleWinding)
   PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
