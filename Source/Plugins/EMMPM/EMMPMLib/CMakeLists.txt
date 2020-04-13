@@ -34,7 +34,7 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 # set project's name
 PROJECT( EMMPMLib VERSION 1.0)
-cmake_minimum_required(VERSION 3.8.0)
+cmake_minimum_required(VERSION 3.14.0)
 
 if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
 
