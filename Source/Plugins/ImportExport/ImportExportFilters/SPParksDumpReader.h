@@ -60,7 +60,7 @@ class ImportExport_EXPORT SPParksDumpReader : public FileReader
   Q_OBJECT
 
   // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(SPParksDumpReader SUPERCLASS FileReader)
+  PYB11_BEGIN_BINDINGS(SPParksDumpReader SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(SPParksDumpReader)
   PYB11_FILTER_NEW_MACRO(SPParksDumpReader)
   PYB11_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)

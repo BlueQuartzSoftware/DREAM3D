@@ -52,7 +52,7 @@ class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public AbstractFilter
     Q_OBJECT
 
     // Start Python bindings declarations
-    PYB11_BEGIN_BINDINGS(YSChoiAbaqusReader SUPERCLASS FileReader)
+    PYB11_BEGIN_BINDINGS(YSChoiAbaqusReader SUPERCLASS AbstractFilter)
     PYB11_SHARED_POINTERS(YSChoiAbaqusReader)
     PYB11_FILTER_NEW_MACRO(YSChoiAbaqusReader)
     PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
