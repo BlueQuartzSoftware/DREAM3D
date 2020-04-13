@@ -54,6 +54,7 @@ class OrientationAnalysis_EXPORT INLWriter : public FileWriter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(INLWriter SUPERCLASS FileWriter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(INLWriter)
   PYB11_FILTER_NEW_MACRO(INLWriter)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)

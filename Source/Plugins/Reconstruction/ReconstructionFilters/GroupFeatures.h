@@ -54,6 +54,7 @@ class Reconstruction_EXPORT GroupFeatures : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(GroupFeatures SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(GroupFeatures)
   PYB11_FILTER_NEW_MACRO(GroupFeatures)
   PYB11_PROPERTY(DataArrayPath ContiguousNeighborListArrayPath READ getContiguousNeighborListArrayPath WRITE setContiguousNeighborListArrayPath)

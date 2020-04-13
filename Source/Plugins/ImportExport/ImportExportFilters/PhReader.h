@@ -57,6 +57,7 @@ class ImportExport_EXPORT PhReader : public FileReader
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(PhReader SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(PhReader)
   PYB11_FILTER_NEW_MACRO(PhReader)
   PYB11_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)

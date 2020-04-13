@@ -61,6 +61,7 @@ class OrientationAnalysis_EXPORT ReadAngData : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ReadAngData SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ReadAngData)
   PYB11_FILTER_NEW_MACRO(ReadAngData)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)

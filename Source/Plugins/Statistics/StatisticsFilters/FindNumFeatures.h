@@ -52,6 +52,7 @@ class Statistics_EXPORT FindNumFeatures : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindNumFeatures SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindNumFeatures)
   PYB11_FILTER_NEW_MACRO(FindNumFeatures)
   PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)

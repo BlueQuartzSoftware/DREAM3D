@@ -58,6 +58,7 @@ class OrientationAnalysis_EXPORT FindMisorientations : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindMisorientations SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindMisorientations)
   PYB11_FILTER_NEW_MACRO(FindMisorientations)
   PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)

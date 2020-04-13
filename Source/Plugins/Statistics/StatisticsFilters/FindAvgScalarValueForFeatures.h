@@ -55,6 +55,7 @@ class Statistics_EXPORT FindAvgScalarValueForFeatures : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindAvgScalarValueForFeatures SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindAvgScalarValueForFeatures)
   PYB11_FILTER_NEW_MACRO(FindAvgScalarValueForFeatures)
   PYB11_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)

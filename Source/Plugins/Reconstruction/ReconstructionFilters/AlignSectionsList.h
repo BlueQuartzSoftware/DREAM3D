@@ -53,6 +53,7 @@ class Reconstruction_EXPORT AlignSectionsList : public AlignSections
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(AlignSectionsList SUPERCLASS AlignSections)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(AlignSectionsList)
   PYB11_FILTER_NEW_MACRO(AlignSectionsList)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)

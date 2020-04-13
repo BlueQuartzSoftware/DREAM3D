@@ -53,6 +53,7 @@ class OrientationAnalysis_EXPORT WritePoleFigure : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(WritePoleFigure SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(WritePoleFigure)
   PYB11_FILTER_NEW_MACRO(WritePoleFigure)
   PYB11_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)

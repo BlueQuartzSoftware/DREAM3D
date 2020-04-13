@@ -52,6 +52,7 @@ class Generic_EXPORT FindFeatureCentroids : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindFeatureCentroids SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindFeatureCentroids)
   PYB11_FILTER_NEW_MACRO(FindFeatureCentroids)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

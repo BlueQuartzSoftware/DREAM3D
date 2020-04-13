@@ -57,6 +57,7 @@ class OrientationAnalysis_EXPORT FindTwinBoundaries : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindTwinBoundaries SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindTwinBoundaries)
   PYB11_FILTER_NEW_MACRO(FindTwinBoundaries)
   PYB11_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)

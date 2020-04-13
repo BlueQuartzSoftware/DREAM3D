@@ -53,6 +53,7 @@ class Statistics_EXPORT FitFeatureData : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FitFeatureData SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FitFeatureData)
   PYB11_FILTER_NEW_MACRO(FitFeatureData)
   PYB11_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)

@@ -60,6 +60,7 @@ class OrientationAnalysis_EXPORT ReadH5Ebsd : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ReadH5Ebsd SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ReadH5Ebsd)
   PYB11_FILTER_NEW_MACRO(ReadH5Ebsd)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)

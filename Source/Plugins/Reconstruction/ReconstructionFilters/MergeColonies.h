@@ -60,6 +60,7 @@ class Reconstruction_EXPORT MergeColonies : public GroupFeatures
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(MergeColonies SUPERCLASS GroupFeatures)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(MergeColonies)
   PYB11_FILTER_NEW_MACRO(MergeColonies)
   PYB11_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)

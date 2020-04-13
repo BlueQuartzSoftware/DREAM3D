@@ -58,6 +58,7 @@ class ImportExport_EXPORT VisualizeGBCDGMT : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(VisualizeGBCDGMT SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(VisualizeGBCDGMT)
   PYB11_FILTER_NEW_MACRO(VisualizeGBCDGMT)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)

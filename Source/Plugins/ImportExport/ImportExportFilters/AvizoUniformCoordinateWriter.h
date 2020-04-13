@@ -63,6 +63,7 @@ class ImportExport_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(AvizoUniformCoordinateWriter SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(AvizoUniformCoordinateWriter)
   PYB11_FILTER_NEW_MACRO(AvizoUniformCoordinateWriter)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)

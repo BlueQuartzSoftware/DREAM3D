@@ -53,6 +53,7 @@ class OrientationAnalysis_EXPORT RotateEulerRefFrame : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(RotateEulerRefFrame SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(RotateEulerRefFrame)
   PYB11_FILTER_NEW_MACRO(RotateEulerRefFrame)
   PYB11_PROPERTY(FloatVec3Type RotationAxis READ getRotationAxis WRITE setRotationAxis)

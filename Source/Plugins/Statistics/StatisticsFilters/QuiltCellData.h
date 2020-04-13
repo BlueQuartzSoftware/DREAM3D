@@ -63,6 +63,7 @@ class Statistics_EXPORT QuiltCellData : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(QuiltCellData SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(QuiltCellData)
   PYB11_FILTER_NEW_MACRO(QuiltCellData)
   PYB11_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)

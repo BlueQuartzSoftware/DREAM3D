@@ -62,6 +62,7 @@ class Processing_EXPORT DetectEllipsoids : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(DetectEllipsoids SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(DetectEllipsoids)
   PYB11_FILTER_NEW_MACRO(DetectEllipsoids)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

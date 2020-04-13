@@ -52,6 +52,7 @@ class Generic_EXPORT GenerateVectorColors : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(GenerateVectorColors SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(GenerateVectorColors)
   PYB11_FILTER_NEW_MACRO(GenerateVectorColors)
   PYB11_PROPERTY(DataArrayPath VectorsArrayPath READ getVectorsArrayPath WRITE setVectorsArrayPath)

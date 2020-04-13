@@ -52,6 +52,7 @@ class SurfaceMeshing_EXPORT FindTriangleGeomCentroids : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindTriangleGeomCentroids SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindTriangleGeomCentroids)
   PYB11_FILTER_NEW_MACRO(FindTriangleGeomCentroids)
   PYB11_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)

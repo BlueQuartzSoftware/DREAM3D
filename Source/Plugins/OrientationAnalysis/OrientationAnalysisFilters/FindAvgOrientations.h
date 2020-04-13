@@ -57,6 +57,7 @@ class OrientationAnalysis_EXPORT FindAvgOrientations : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindAvgOrientations SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindAvgOrientations)
   PYB11_FILTER_NEW_MACRO(FindAvgOrientations)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

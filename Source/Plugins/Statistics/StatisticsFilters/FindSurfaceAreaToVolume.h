@@ -52,6 +52,7 @@ class Statistics_EXPORT FindSurfaceAreaToVolume : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindSurfaceAreaToVolume SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindSurfaceAreaToVolume)
   PYB11_FILTER_NEW_MACRO(FindSurfaceAreaToVolume)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

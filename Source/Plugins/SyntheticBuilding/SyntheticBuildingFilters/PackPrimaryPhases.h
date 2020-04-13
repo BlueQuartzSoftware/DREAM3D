@@ -70,6 +70,7 @@ class SyntheticBuilding_EXPORT PackPrimaryPhases : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(PackPrimaryPhases SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(PackPrimaryPhases)
   PYB11_FILTER_NEW_MACRO(PackPrimaryPhases)
   PYB11_PROPERTY(DataArrayPath OutputCellAttributeMatrixPath READ getOutputCellAttributeMatrixPath WRITE setOutputCellAttributeMatrixPath)

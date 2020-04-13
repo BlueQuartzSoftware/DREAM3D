@@ -68,6 +68,7 @@ class OrientationAnalysis_EXPORT FindOrientationFieldCurl : public AbstractFilte
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindOrientationFieldCurl SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindOrientationFieldCurl)
   PYB11_FILTER_NEW_MACRO(FindOrientationFieldCurl)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)

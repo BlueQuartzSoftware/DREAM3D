@@ -52,6 +52,7 @@ class SurfaceMeshing_EXPORT SharedFeatureFaceFilter : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(SharedFeatureFaceFilter SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(SharedFeatureFaceFilter)
   PYB11_FILTER_NEW_MACRO(SharedFeatureFaceFilter)
   PYB11_PROPERTY(QString FaceFeatureAttributeMatrixName READ getFaceFeatureAttributeMatrixName WRITE setFaceFeatureAttributeMatrixName)

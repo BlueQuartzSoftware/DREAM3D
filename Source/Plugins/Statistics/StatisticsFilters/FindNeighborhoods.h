@@ -53,6 +53,7 @@ class Statistics_EXPORT FindNeighborhoods : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindNeighborhoods SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindNeighborhoods)
   PYB11_FILTER_NEW_MACRO(FindNeighborhoods)
   PYB11_PROPERTY(QString NeighborhoodListArrayName READ getNeighborhoodListArrayName WRITE setNeighborhoodListArrayName)

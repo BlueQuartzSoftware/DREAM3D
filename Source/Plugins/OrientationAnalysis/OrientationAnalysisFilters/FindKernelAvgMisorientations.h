@@ -54,6 +54,7 @@ class OrientationAnalysis_EXPORT FindKernelAvgMisorientations : public AbstractF
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindKernelAvgMisorientations SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindKernelAvgMisorientations)
   PYB11_FILTER_NEW_MACRO(FindKernelAvgMisorientations)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

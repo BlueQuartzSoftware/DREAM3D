@@ -53,6 +53,7 @@ class OrientationAnalysis_EXPORT FindGBCD : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindGBCD SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindGBCD)
   PYB11_FILTER_NEW_MACRO(FindGBCD)
   PYB11_PROPERTY(QString FaceEnsembleAttributeMatrixName READ getFaceEnsembleAttributeMatrixName WRITE setFaceEnsembleAttributeMatrixName)

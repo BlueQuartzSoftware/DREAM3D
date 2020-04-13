@@ -56,6 +56,7 @@ class ImportExport_EXPORT VtkStructuredPointsReader : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(VtkStructuredPointsReader SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(VtkStructuredPointsReader)
   PYB11_FILTER_NEW_MACRO(VtkStructuredPointsReader)
   PYB11_PROPERTY(bool ReadCellData READ getReadCellData WRITE setReadCellData)

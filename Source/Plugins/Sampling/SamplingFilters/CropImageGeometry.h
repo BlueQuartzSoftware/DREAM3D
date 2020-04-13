@@ -54,6 +54,7 @@ class Sampling_EXPORT CropImageGeometry : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(CropImageGeometry SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(CropImageGeometry)
   PYB11_FILTER_NEW_MACRO(CropImageGeometry)
   PYB11_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)

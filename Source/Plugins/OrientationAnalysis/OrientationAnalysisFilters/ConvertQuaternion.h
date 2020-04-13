@@ -20,6 +20,7 @@ class OrientationAnalysis_EXPORT ConvertQuaternion : public AbstractFilter
     // clang-format off
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ConvertQuaternion SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ConvertQuaternion)
   PYB11_FILTER_NEW_MACRO(ConvertQuaternion)
   PYB11_PROPERTY(DataArrayPath QuaternionDataArrayPath READ getQuaternionDataArrayPath WRITE setQuaternionDataArrayPath)

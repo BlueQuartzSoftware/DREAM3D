@@ -60,6 +60,7 @@ class ImportExport_EXPORT SurfaceMeshToVtk : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(SurfaceMeshToVtk SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(SurfaceMeshToVtk)
   PYB11_FILTER_NEW_MACRO(SurfaceMeshToVtk)
   PYB11_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)

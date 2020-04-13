@@ -59,6 +59,7 @@ class Reconstruction_EXPORT EBSDSegmentFeatures : public SegmentFeatures
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(EBSDSegmentFeatures SUPERCLASS SegmentFeatures)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(EBSDSegmentFeatures)
   PYB11_FILTER_NEW_MACRO(EBSDSegmentFeatures)
   PYB11_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)

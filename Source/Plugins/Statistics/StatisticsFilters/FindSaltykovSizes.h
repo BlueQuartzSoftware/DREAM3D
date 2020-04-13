@@ -60,6 +60,7 @@ class Statistics_EXPORT FindSaltykovSizes : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindSaltykovSizes SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindSaltykovSizes)
   PYB11_FILTER_NEW_MACRO(FindSaltykovSizes)
   PYB11_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)

@@ -66,6 +66,7 @@ class Statistics_EXPORT FindFeatureHistogram : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindFeatureHistogram SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindFeatureHistogram)
   PYB11_FILTER_NEW_MACRO(FindFeatureHistogram)
   PYB11_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)

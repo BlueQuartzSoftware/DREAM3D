@@ -52,6 +52,7 @@ class Statistics_EXPORT FindLargestCrossSections : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindLargestCrossSections SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindLargestCrossSections)
   PYB11_FILTER_NEW_MACRO(FindLargestCrossSections)
   PYB11_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)

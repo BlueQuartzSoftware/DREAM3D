@@ -52,6 +52,7 @@ class SurfaceMeshing_EXPORT TriangleDihedralAngleFilter : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(TriangleDihedralAngleFilter SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(TriangleDihedralAngleFilter)
   PYB11_FILTER_NEW_MACRO(TriangleDihedralAngleFilter)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleDihedralAnglesArrayPath READ getSurfaceMeshTriangleDihedralAnglesArrayPath WRITE setSurfaceMeshTriangleDihedralAnglesArrayPath)

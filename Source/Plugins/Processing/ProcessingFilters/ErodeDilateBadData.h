@@ -56,6 +56,7 @@ class Processing_EXPORT ErodeDilateBadData : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ErodeDilateBadData SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ErodeDilateBadData)
   PYB11_FILTER_NEW_MACRO(ErodeDilateBadData)
   PYB11_PROPERTY(Uint Direction READ getDirection WRITE setDirection)

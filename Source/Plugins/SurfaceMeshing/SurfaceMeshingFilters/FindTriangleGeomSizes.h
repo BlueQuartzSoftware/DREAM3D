@@ -53,6 +53,7 @@ class SurfaceMeshing_EXPORT FindTriangleGeomSizes : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindTriangleGeomSizes SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindTriangleGeomSizes)
   PYB11_FILTER_NEW_MACRO(FindTriangleGeomSizes)
   PYB11_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)

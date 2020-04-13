@@ -61,6 +61,7 @@ class OrientationAnalysis_EXPORT FindMicroTextureRegions : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindMicroTextureRegions SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindMicroTextureRegions)
   PYB11_FILTER_NEW_MACRO(FindMicroTextureRegions)
   PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)

@@ -54,6 +54,7 @@ class OrientationAnalysis_EXPORT FindSchmids : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindSchmids SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindSchmids)
   PYB11_FILTER_NEW_MACRO(FindSchmids)
   PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)

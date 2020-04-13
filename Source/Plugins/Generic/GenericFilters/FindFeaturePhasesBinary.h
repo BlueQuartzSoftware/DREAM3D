@@ -52,6 +52,7 @@ class Generic_EXPORT FindFeaturePhasesBinary : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindFeaturePhasesBinary SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindFeaturePhasesBinary)
   PYB11_FILTER_NEW_MACRO(FindFeaturePhasesBinary)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

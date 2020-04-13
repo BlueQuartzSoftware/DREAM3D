@@ -53,6 +53,7 @@ class SurfaceMeshing_EXPORT FindTriangleGeomNeighbors : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindTriangleGeomNeighbors SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindTriangleGeomNeighbors)
   PYB11_FILTER_NEW_MACRO(FindTriangleGeomNeighbors)
   PYB11_PROPERTY(DataArrayPath FeatureAttributeMatrixPath READ getFeatureAttributeMatrixPath WRITE setFeatureAttributeMatrixPath)

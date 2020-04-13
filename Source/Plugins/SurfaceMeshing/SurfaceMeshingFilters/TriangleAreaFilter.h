@@ -52,6 +52,7 @@ class SurfaceMeshing_EXPORT TriangleAreaFilter : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(TriangleAreaFilter SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(TriangleAreaFilter)
   PYB11_FILTER_NEW_MACRO(TriangleAreaFilter)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleAreasArrayPath READ getSurfaceMeshTriangleAreasArrayPath WRITE setSurfaceMeshTriangleAreasArrayPath)

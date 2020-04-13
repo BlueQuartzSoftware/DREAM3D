@@ -52,6 +52,7 @@ class Processing_EXPORT ErodeDilateMask : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ErodeDilateMask SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ErodeDilateMask)
   PYB11_FILTER_NEW_MACRO(ErodeDilateMask)
   PYB11_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)

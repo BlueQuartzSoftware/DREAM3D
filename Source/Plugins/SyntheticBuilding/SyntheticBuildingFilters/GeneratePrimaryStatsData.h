@@ -26,6 +26,7 @@ class SyntheticBuilding_EXPORT GeneratePrimaryStatsData : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(GeneratePrimaryStatsData SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(GeneratePrimaryStatsData)
   PYB11_FILTER_NEW_MACRO(GeneratePrimaryStatsData)
   PYB11_PROPERTY(QString PhaseName READ getPhaseName WRITE setPhaseName)

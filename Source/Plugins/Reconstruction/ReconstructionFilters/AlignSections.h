@@ -52,6 +52,7 @@ class Reconstruction_EXPORT AlignSections : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(AlignSections SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(AlignSections)
   PYB11_FILTER_NEW_MACRO(AlignSections)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)

@@ -58,6 +58,7 @@ class EMMPM_EXPORT EMMPMFilter : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(EMMPMFilter SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(EMMPMFilter)
   PYB11_FILTER_NEW_MACRO(EMMPMFilter)
   PYB11_PROPERTY(DataArrayPath InputDataArrayPath READ getInputDataArrayPath WRITE setInputDataArrayPath)

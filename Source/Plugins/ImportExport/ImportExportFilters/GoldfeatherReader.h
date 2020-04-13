@@ -60,6 +60,7 @@ class ImportExport_EXPORT GoldfeatherReader : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(GoldfeatherReader SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(GoldfeatherReader)
   PYB11_FILTER_NEW_MACRO(GoldfeatherReader)
   PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)

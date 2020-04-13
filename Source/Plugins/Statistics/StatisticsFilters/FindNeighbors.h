@@ -53,6 +53,7 @@ class Statistics_EXPORT FindNeighbors : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindNeighbors SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindNeighbors)
   PYB11_FILTER_NEW_MACRO(FindNeighbors)
   PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)

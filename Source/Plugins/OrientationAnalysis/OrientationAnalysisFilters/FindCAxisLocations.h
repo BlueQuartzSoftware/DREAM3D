@@ -57,6 +57,7 @@ class OrientationAnalysis_EXPORT FindCAxisLocations : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindCAxisLocations SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindCAxisLocations)
   PYB11_FILTER_NEW_MACRO(FindCAxisLocations)
   PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)

@@ -60,6 +60,7 @@ class Reconstruction_EXPORT ScalarSegmentFeatures : public SegmentFeatures
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ScalarSegmentFeatures SUPERCLASS SegmentFeatures)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ScalarSegmentFeatures)
   PYB11_FILTER_NEW_MACRO(ScalarSegmentFeatures)
   PYB11_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)

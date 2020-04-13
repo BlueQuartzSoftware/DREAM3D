@@ -66,6 +66,7 @@ class OrientationAnalysis_EXPORT ImportH5OimData : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ImportH5OimData SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ImportH5OimData)
   PYB11_FILTER_NEW_MACRO(ImportH5OimData)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)

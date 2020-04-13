@@ -62,6 +62,7 @@ class OrientationAnalysis_EXPORT FindGBPDMetricBased : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindGBPDMetricBased SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindGBPDMetricBased)
   PYB11_FILTER_NEW_MACRO(FindGBPDMetricBased)
   PYB11_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)

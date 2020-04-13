@@ -51,6 +51,7 @@ class Sampling_EXPORT NearestPointFuseRegularGrids : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(NearestPointFuseRegularGrids SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(NearestPointFuseRegularGrids)
   PYB11_FILTER_NEW_MACRO(NearestPointFuseRegularGrids)
   PYB11_PROPERTY(DataArrayPath ReferenceCellAttributeMatrixPath READ getReferenceCellAttributeMatrixPath WRITE setReferenceCellAttributeMatrixPath)

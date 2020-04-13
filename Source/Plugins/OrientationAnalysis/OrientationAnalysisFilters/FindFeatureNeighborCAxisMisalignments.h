@@ -58,6 +58,7 @@ class OrientationAnalysis_EXPORT FindFeatureNeighborCAxisMisalignments : public 
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindFeatureNeighborCAxisMisalignments SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindFeatureNeighborCAxisMisalignments)
   PYB11_FILTER_NEW_MACRO(FindFeatureNeighborCAxisMisalignments)
   PYB11_PROPERTY(bool FindAvgMisals READ getFindAvgMisals WRITE setFindAvgMisals)

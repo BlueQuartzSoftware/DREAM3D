@@ -58,6 +58,7 @@ class OrientationAnalysis_EXPORT FindSlipTransmissionMetrics : public AbstractFi
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindSlipTransmissionMetrics SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindSlipTransmissionMetrics)
   PYB11_FILTER_NEW_MACRO(FindSlipTransmissionMetrics)
   PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)

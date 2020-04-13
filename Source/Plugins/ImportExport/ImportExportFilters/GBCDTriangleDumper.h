@@ -52,6 +52,7 @@ class ImportExport_EXPORT GBCDTriangleDumper : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(GBCDTriangleDumper SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(GBCDTriangleDumper)
   PYB11_FILTER_NEW_MACRO(GBCDTriangleDumper)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)

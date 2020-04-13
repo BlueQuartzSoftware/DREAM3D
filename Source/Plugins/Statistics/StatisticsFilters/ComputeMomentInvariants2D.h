@@ -21,6 +21,7 @@ class Statistics_EXPORT ComputeMomentInvariants2D : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ComputeMomentInvariants2D SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ComputeMomentInvariants2D)
   PYB11_FILTER_NEW_MACRO(ComputeMomentInvariants2D)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

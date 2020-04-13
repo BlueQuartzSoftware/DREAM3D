@@ -52,6 +52,7 @@ class SyntheticBuilding_EXPORT StatsGeneratorFilter : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(StatsGeneratorFilter SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(StatsGeneratorFilter)
   PYB11_FILTER_NEW_MACRO(StatsGeneratorFilter)
   PYB11_PROPERTY(DataArrayPath StatsGeneratorDataContainerName READ getStatsGeneratorDataContainerName WRITE setStatsGeneratorDataContainerName)

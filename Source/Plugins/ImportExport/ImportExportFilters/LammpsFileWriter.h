@@ -61,6 +61,7 @@ class ImportExport_EXPORT LammpsFileWriter : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(LammpsFileWriter SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(LammpsFileWriter)
   PYB11_FILTER_NEW_MACRO(LammpsFileWriter)
   PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)

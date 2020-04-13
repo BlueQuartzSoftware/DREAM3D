@@ -64,6 +64,7 @@ class Statistics_EXPORT FindEllipsoidError : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindEllipsoidError SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindEllipsoidError)
   PYB11_FILTER_NEW_MACRO(FindEllipsoidError)
   PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)

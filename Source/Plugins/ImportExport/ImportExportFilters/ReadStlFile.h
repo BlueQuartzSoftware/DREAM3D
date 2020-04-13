@@ -52,6 +52,7 @@ class ImportExport_EXPORT ReadStlFile : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ReadStlFile SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ReadStlFile)
   PYB11_FILTER_NEW_MACRO(ReadStlFile)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshDataContainerName READ getSurfaceMeshDataContainerName WRITE setSurfaceMeshDataContainerName)

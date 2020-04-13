@@ -63,6 +63,7 @@ class ImportExport_EXPORT AvizoRectilinearCoordinateWriter : public AbstractFilt
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(AvizoRectilinearCoordinateWriter SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(AvizoRectilinearCoordinateWriter)
   PYB11_FILTER_NEW_MACRO(AvizoRectilinearCoordinateWriter)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)

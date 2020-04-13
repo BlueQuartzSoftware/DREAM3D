@@ -51,6 +51,7 @@ class SurfaceMeshing_EXPORT GenerateGeometryConnectivity : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(GenerateGeometryConnectivity SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(GenerateGeometryConnectivity)
   PYB11_FILTER_NEW_MACRO(GenerateGeometryConnectivity)
   PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)

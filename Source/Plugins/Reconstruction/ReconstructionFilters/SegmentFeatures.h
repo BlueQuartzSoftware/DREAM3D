@@ -55,6 +55,7 @@ class Reconstruction_EXPORT SegmentFeatures : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(SegmentFeatures SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(SegmentFeatures)
   PYB11_FILTER_NEW_MACRO(SegmentFeatures)
   PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)

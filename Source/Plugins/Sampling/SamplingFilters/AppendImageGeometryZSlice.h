@@ -51,6 +51,7 @@ class Sampling_EXPORT AppendImageGeometryZSlice : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(AppendImageGeometryZSlice SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(AppendImageGeometryZSlice)
   PYB11_FILTER_NEW_MACRO(AppendImageGeometryZSlice)
   PYB11_PROPERTY(DataArrayPath InputAttributeMatrix READ getInputAttributeMatrix WRITE setInputAttributeMatrix)

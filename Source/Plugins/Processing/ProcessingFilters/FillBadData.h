@@ -52,6 +52,7 @@ class Processing_EXPORT FillBadData : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FillBadData SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FillBadData)
   PYB11_FILTER_NEW_MACRO(FillBadData)
   PYB11_PROPERTY(bool StoreAsNewPhase READ getStoreAsNewPhase WRITE setStoreAsNewPhase)

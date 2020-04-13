@@ -52,6 +52,7 @@ class SyntheticBuilding_EXPORT AddBadData : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(AddBadData SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(AddBadData)
   PYB11_FILTER_NEW_MACRO(AddBadData)
   PYB11_PROPERTY(DataArrayPath GBEuclideanDistancesArrayPath READ getGBEuclideanDistancesArrayPath WRITE setGBEuclideanDistancesArrayPath)
