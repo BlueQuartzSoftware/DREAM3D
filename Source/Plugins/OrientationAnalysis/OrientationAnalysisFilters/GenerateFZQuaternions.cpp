@@ -10,7 +10,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 #include <QtCore/QTextStream>
@@ -279,12 +278,7 @@ void GenerateFZQuaternions::execute()
   int32_t numPhases = static_cast<int32_t>(m_CrystalStructuresPtr.lock()->getNumberOfTuples());
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel)
+  if(true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), GenerateFZQuatsImpl(this, m_Quats, m_CellPhases, m_CrystalStructures, numPhases, m_GoodVoxels, m_FZQuats), tbb::auto_partitioner());
   }

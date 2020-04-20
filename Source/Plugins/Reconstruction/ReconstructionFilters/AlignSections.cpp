@@ -58,7 +58,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/task_group.h>
-#include <tbb/task_scheduler_init.h>
 #include <tbb/tick_count.h>
 #endif
 
@@ -284,102 +283,92 @@ void AlignSections::execute()
   find_shifts(xshifts, yshifts);
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   // The idea for this parallel section is to parallelize over each Data Array that
   // will need it's data adjusted. This should go faster than before by about 2x.
   // Better speed up could be achieved if we had better data locality.
-  if(doParallel)
-  {
-    std::shared_ptr<tbb::task_group> taskGroup(new tbb::task_group);
-    QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNames();
-    for(const auto& dataArrayPath : m_IgnoredDataArrayPaths)
-    {
-      voxelArrayNames.removeAll(dataArrayPath.getDataArrayName());
-    }
-    m_TotalProgress = voxelArrayNames.size() * dims[2]; // Total number of slices to update
-    // Create all the tasks
-    for(const auto& arrayName : voxelArrayNames)
-    {
-      IDataArray::Pointer dataArrayPtr = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(arrayName);
-      taskGroup->run(AlignSectionsTransferDataImpl(this, dims.data(), xshifts, yshifts, dataArrayPtr));
-    }
-    // Wait for them to complete.
-    taskGroup->wait();
-  }
-  else
-#endif
-  {
-    QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNames();
-    size_t progIncrement = dims[2] / 100;
-    size_t prog = 1;
-    size_t progressInt = 0;
-    size_t slice = 0;
 
-    for(size_t i = 1; i < dims[2]; i++)
+  std::shared_ptr<tbb::task_group> taskGroup(new tbb::task_group);
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNames();
+  for(const auto& dataArrayPath : m_IgnoredDataArrayPaths)
+  {
+    voxelArrayNames.removeAll(dataArrayPath.getDataArrayName());
+  }
+  m_TotalProgress = voxelArrayNames.size() * dims[2]; // Total number of slices to update
+  // Create all the tasks
+  for(const auto& arrayName : voxelArrayNames)
+  {
+    IDataArray::Pointer dataArrayPtr = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(arrayName);
+    taskGroup->run(AlignSectionsTransferDataImpl(this, dims.data(), xshifts, yshifts, dataArrayPtr));
+  }
+  // Wait for them to complete.
+
+#else
+
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNames();
+  size_t progIncrement = dims[2] / 100;
+  size_t prog = 1;
+  size_t progressInt = 0;
+  size_t slice = 0;
+
+  for(size_t i = 1; i < dims[2]; i++)
+  {
+    if(i > prog)
     {
-      if(i > prog)
+      progressInt = static_cast<int>((static_cast<float>(i) / static_cast<float>(dims[2])) * 100.0f);
+      QString ss = QObject::tr("Transferring Cell Data %1%").arg(progressInt);
+      notifyStatusMessage(ss);
+      prog = prog + progIncrement;
+    }
+    if(getCancel())
+    {
+      return;
+    }
+    slice = (dims[2] - 1) - i;
+    for(size_t l = 0; l < dims[1]; l++)
+    {
+      for(size_t n = 0; n < dims[0]; n++)
       {
-        progressInt = static_cast<int>((static_cast<float>(i) / static_cast<float>(dims[2])) * 100.0f);
-        QString ss = QObject::tr("Transferring Cell Data %1%").arg(progressInt);
-        notifyStatusMessage(ss);
-        prog = prog + progIncrement;
-      }
-      if(getCancel())
-      {
-        return;
-      }
-      slice = (dims[2] - 1) - i;
-      for(size_t l = 0; l < dims[1]; l++)
-      {
-        for(size_t n = 0; n < dims[0]; n++)
+        int64_t xspot = 0, yspot = 0;
+        int64_t newPosition = 0;
+        int64_t currentPosition = 0;
+        if(yshifts[i] >= 0)
         {
-          int64_t xspot = 0, yspot = 0;
-          int64_t newPosition = 0;
-          int64_t currentPosition = 0;
-          if(yshifts[i] >= 0)
+          yspot = static_cast<int64_t>(l);
+        }
+        else if(yshifts[i] < 0)
+        {
+          yspot = static_cast<int64_t>(dims[1]) - 1 - static_cast<int64_t>(l);
+        }
+        if(xshifts[i] >= 0)
+        {
+          xspot = static_cast<int64_t>(n);
+        }
+        else if(xshifts[i] < 0)
+        {
+          xspot = static_cast<int64_t>(dims[0]) - 1 - static_cast<int64_t>(n);
+        }
+        newPosition = (slice * dims[0] * dims[1]) + (yspot * dims[0]) + xspot;
+        currentPosition = (slice * dims[0] * dims[1]) + ((yspot + yshifts[i]) * dims[0]) + (xspot + xshifts[i]);
+        if((yspot + yshifts[i]) >= 0 && (yspot + yshifts[i]) <= static_cast<int64_t>(dims[1]) - 1 && (xspot + xshifts[i]) >= 0 && (xspot + xshifts[i]) <= static_cast<int64_t>(dims[0]) - 1)
+        {
+          for(const auto& arrayName : voxelArrayNames)
           {
-            yspot = static_cast<int64_t>(l);
+            IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(arrayName);
+            p->copyTuple(static_cast<size_t>(currentPosition), static_cast<size_t>(newPosition));
           }
-          else if(yshifts[i] < 0)
+        }
+        if((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > static_cast<int64_t>(dims[1] - 1) || (xspot + xshifts[i]) < 0 || (xspot + xshifts[i]) > static_cast<int64_t>(dims[0]) - 1)
+        {
+          for(const auto& arrayName : voxelArrayNames)
           {
-            yspot = static_cast<int64_t>(dims[1]) - 1 - static_cast<int64_t>(l);
-          }
-          if(xshifts[i] >= 0)
-          {
-            xspot = static_cast<int64_t>(n);
-          }
-          else if(xshifts[i] < 0)
-          {
-            xspot = static_cast<int64_t>(dims[0]) - 1 - static_cast<int64_t>(n);
-          }
-          newPosition = (slice * dims[0] * dims[1]) + (yspot * dims[0]) + xspot;
-          currentPosition = (slice * dims[0] * dims[1]) + ((yspot + yshifts[i]) * dims[0]) + (xspot + xshifts[i]);
-          if((yspot + yshifts[i]) >= 0 && (yspot + yshifts[i]) <= static_cast<int64_t>(dims[1]) - 1 && (xspot + xshifts[i]) >= 0 && (xspot + xshifts[i]) <= static_cast<int64_t>(dims[0]) - 1)
-          {
-            for(const auto& arrayName : voxelArrayNames)
-            {
-              IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(arrayName);
-              p->copyTuple(static_cast<size_t>(currentPosition), static_cast<size_t>(newPosition));
-            }
-          }
-          if((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > static_cast<int64_t>(dims[1] - 1) || (xspot + xshifts[i]) < 0 || (xspot + xshifts[i]) > static_cast<int64_t>(dims[0]) - 1)
-          {
-            for(const auto& arrayName : voxelArrayNames)
-            {
-              IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(arrayName);
-              EXECUTE_FUNCTION_TEMPLATE(this, initializeArrayValues, p, p, newPosition)
-            }
+            IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(arrayName);
+            EXECUTE_FUNCTION_TEMPLATE(this, initializeArrayValues, p, p, newPosition)
           }
         }
       }
     }
   }
-
-
+#endif
 }
 
 // -----------------------------------------------------------------------------

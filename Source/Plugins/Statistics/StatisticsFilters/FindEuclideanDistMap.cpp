@@ -42,7 +42,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/task_group.h>
-#include <tbb/task_scheduler_init.h>
 #include <tbb/tick_count.h>
 #endif
 
@@ -672,12 +671,7 @@ void FindEuclideanDistMap::findDistanceMap()
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel)
+  if(true)
   {
     std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     if(m_DoBoundaries)

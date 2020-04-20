@@ -68,7 +68,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 /**
@@ -437,18 +436,13 @@ void FindTwinBoundaries::execute()
     return;
   }
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
   size_t numTriangles = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
   float angtol = m_AngleTolerance;
   float axistol = static_cast<float>(m_AxisTolerance * M_PI / 180.0f);
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel)
+  if(true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, numTriangles), CalculateTwinBoundaryImpl(angtol, axistol, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats, m_FeaturePhases,
                                                                                              m_CrystalStructures, m_SurfaceMeshTwinBoundary, m_SurfaceMeshTwinBoundaryIncoherence, m_FindCoherence),

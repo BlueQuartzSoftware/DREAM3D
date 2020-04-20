@@ -74,7 +74,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
@@ -883,7 +882,6 @@ void FindGBCDMetricBased::execute()
 
 // ---------  find triangles (and equivalent crystallographic parameters) with +- the fixed misorientation ---------
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
   bool doParallel = true;
   tbb::concurrent_vector<GBCDMetricBased::TriAreaAndNormals> selectedTris(0);
 #else

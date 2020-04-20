@@ -43,7 +43,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 #include <QtCore/QTextStream>
@@ -476,14 +475,9 @@ void ReadStlFile::eliminate_duplicate_nodes()
     uniqueIds[i] = static_cast<int64_t>(i);
   }
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
 // Parallel algorithm to find duplicate nodes
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel)
+  if(true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, 100 * 100 * 100), FindUniqueIdsImpl(triangleGeom->getVertices(), nodesInBin, uniqueIds), tbb::auto_partitioner());
   }

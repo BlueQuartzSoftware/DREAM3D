@@ -56,7 +56,6 @@
 #include <tbb/blocked_range3d.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 /**
@@ -202,12 +201,7 @@ void RotateEulerRefFrame::execute()
   MatrixMath::Normalize3x1(rotAxis);
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel)
+  if(true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), RotateEulerRefFrameImpl(m_CellEulerAngles, rotAngle, rotAxis), tbb::auto_partitioner());
   }

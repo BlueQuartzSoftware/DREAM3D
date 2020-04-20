@@ -42,6 +42,7 @@
 #include <ostream>
 #include <sstream>
 #include <string>
+#include <thread>
 
 #include "EMMPMLib/Common/EMMPMInputParser.h"
 #include "EMMPMLib/Common/EMMPM_Math.h"
@@ -56,7 +57,6 @@
 #include "EMMPMLib/EMMPMLib.h"
 
 #if defined(EMMPM_USE_PARALLEL_ALGORITHMS)
-#include <tbb/task_scheduler_init.h>
 #endif
 
 class CLIStatsDelegate : public StatsDelegate
@@ -145,8 +145,7 @@ int main(int argc, char* argv[])
 //  unsigned long long int millis = EMMPM_getMilliSeconds();
 
 #if defined(EMMPM_USE_PARALLEL_ALGORITHMS)
-  tbb::task_scheduler_init init;
-  std::cout << "Default Number of Threads: " << init.default_num_threads() << std::endl;
+std::cout << "Default Number of Threads: " << std::thread::hardware_concurrency() << std::endl;
 #endif
 
   int err = 0;

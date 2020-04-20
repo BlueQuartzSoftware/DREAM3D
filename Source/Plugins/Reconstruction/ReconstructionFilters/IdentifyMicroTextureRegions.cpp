@@ -64,7 +64,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/task_group.h>
-#include <tbb/task_scheduler_init.h>
 #include <tbb/tick_count.h>
 #endif
 
@@ -574,14 +573,9 @@ void IdentifyMicroTextureRegions::execute()
   // Convert user defined tolerance to radians.
   m_CAxisToleranceRad = m_CAxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
 // first determine the misorientation vectors on all the voxel faces
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel)
+  if(true)
   {
     tbb::parallel_for(
         tbb::blocked_range<size_t>(0, totalPatches),

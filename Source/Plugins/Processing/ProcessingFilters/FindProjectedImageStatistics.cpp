@@ -41,7 +41,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 #include <QtCore/QTextStream>
@@ -327,11 +326,6 @@ void FindProjectedImageStatistics::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getSelectedArrayPath().getDataContainerName());
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
   SizeVec3Type geoDims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   Int32ArrayType::Pointer startingPoints = Int32ArrayType::CreateArray(0, "_INTERNAL_USE_ONLY_startingPoints", true);
@@ -400,180 +394,135 @@ void FindProjectedImageStatistics::execute()
     Int8ArrayType::Pointer cellArray = std::dynamic_pointer_cast<Int8ArrayType>(m_InDataPtr.lock());
     int8_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel)
-    {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
-                        CalcProjectedStatsImpl<int8_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
-                        tbb::auto_partitioner());
-    }
-    else
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
+                      CalcProjectedStatsImpl<int8_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
+                      tbb::auto_partitioner());
+
+#else
+    CalcProjectedStatsImpl<int8_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
+    serial.convert(0, count);
 #endif
-    {
-      CalcProjectedStatsImpl<int8_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
-    }
   }
   else if(TemplateHelpers::CanDynamicCast<UInt8ArrayType>()(m_InDataPtr.lock()))
   {
     UInt8ArrayType::Pointer cellArray = std::dynamic_pointer_cast<UInt8ArrayType>(m_InDataPtr.lock());
     uint8_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel)
-    {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
-                        CalcProjectedStatsImpl<uint8_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
-                        tbb::auto_partitioner());
-    }
-    else
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
+                      CalcProjectedStatsImpl<uint8_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
+                      tbb::auto_partitioner());
+
+#else
+    CalcProjectedStatsImpl<uint8_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
+    serial.convert(0, count);
 #endif
-    {
-      CalcProjectedStatsImpl<uint8_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
-    }
   }
   else if(TemplateHelpers::CanDynamicCast<Int16ArrayType>()(m_InDataPtr.lock()))
   {
     Int16ArrayType::Pointer cellArray = std::dynamic_pointer_cast<Int16ArrayType>(m_InDataPtr.lock());
     int16_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel)
-    {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
-                        CalcProjectedStatsImpl<int16_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
-                        tbb::auto_partitioner());
-    }
-    else
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
+                      CalcProjectedStatsImpl<int16_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
+                      tbb::auto_partitioner());
+#else
+    CalcProjectedStatsImpl<int16_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
+    serial.convert(0, count);
 #endif
-    {
-      CalcProjectedStatsImpl<int16_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
-    }
   }
   else if(TemplateHelpers::CanDynamicCast<UInt16ArrayType>()(m_InDataPtr.lock()))
   {
     UInt16ArrayType::Pointer cellArray = std::dynamic_pointer_cast<UInt16ArrayType>(m_InDataPtr.lock());
     uint16_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel)
-    {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
-                        CalcProjectedStatsImpl<uint16_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
-                        tbb::auto_partitioner());
-    }
-    else
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
+                      CalcProjectedStatsImpl<uint16_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
+                      tbb::auto_partitioner());
+#else
+    CalcProjectedStatsImpl<uint16_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
+    serial.convert(0, count);
 #endif
-    {
-      CalcProjectedStatsImpl<uint16_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
-    }
   }
   else if(TemplateHelpers::CanDynamicCast<Int32ArrayType>()(m_InDataPtr.lock()))
   {
     Int32ArrayType::Pointer cellArray = std::dynamic_pointer_cast<Int32ArrayType>(m_InDataPtr.lock());
     int32_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel)
-    {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
-                        CalcProjectedStatsImpl<int32_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
-                        tbb::auto_partitioner());
-    }
-    else
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
+                      CalcProjectedStatsImpl<int32_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
+                      tbb::auto_partitioner());
+
+#else
+    CalcProjectedStatsImpl<int32_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
+    serial.convert(0, count);
 #endif
-    {
-      CalcProjectedStatsImpl<int32_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
-    }
   }
   else if(TemplateHelpers::CanDynamicCast<UInt32ArrayType>()(m_InDataPtr.lock()))
   {
     UInt32ArrayType::Pointer cellArray = std::dynamic_pointer_cast<UInt32ArrayType>(m_InDataPtr.lock());
     uint32_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel)
-    {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
-                        CalcProjectedStatsImpl<uint32_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
-                        tbb::auto_partitioner());
-    }
-    else
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
+                      CalcProjectedStatsImpl<uint32_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
+                      tbb::auto_partitioner());
+
+#else
+    CalcProjectedStatsImpl<uint32_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
+    serial.convert(0, count);
 #endif
-    {
-      CalcProjectedStatsImpl<uint32_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
-    }
   }
   else if(TemplateHelpers::CanDynamicCast<Int64ArrayType>()(m_InDataPtr.lock()))
   {
     Int64ArrayType::Pointer cellArray = std::dynamic_pointer_cast<Int64ArrayType>(m_InDataPtr.lock());
     int64_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel)
-    {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
-                        CalcProjectedStatsImpl<int64_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
-                        tbb::auto_partitioner());
-    }
-    else
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
+                      CalcProjectedStatsImpl<int64_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
+                      tbb::auto_partitioner());
+
+#else
+    CalcProjectedStatsImpl<int64_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
+    serial.convert(0, count);
 #endif
-    {
-      CalcProjectedStatsImpl<int64_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
-    }
   }
   else if(TemplateHelpers::CanDynamicCast<UInt64ArrayType>()(m_InDataPtr.lock()))
   {
     UInt64ArrayType::Pointer cellArray = std::dynamic_pointer_cast<UInt64ArrayType>(m_InDataPtr.lock());
     uint64_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel)
-    {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
-                        CalcProjectedStatsImpl<uint64_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
-                        tbb::auto_partitioner());
-    }
-    else
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
+                      CalcProjectedStatsImpl<uint64_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
+                      tbb::auto_partitioner());
+#else
+    CalcProjectedStatsImpl<uint64_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
+    serial.convert(0, count);
 #endif
-    {
-      CalcProjectedStatsImpl<uint64_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
-    }
   }
   else if(TemplateHelpers::CanDynamicCast<FloatArrayType>()(m_InDataPtr.lock()))
   {
     FloatArrayType::Pointer cellArray = std::dynamic_pointer_cast<FloatArrayType>(m_InDataPtr.lock());
     float* cPtr = cellArray->getPointer(0);
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel)
-    {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
-                        CalcProjectedStatsImpl<float>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
-                        tbb::auto_partitioner());
-    }
-    else
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
+                      CalcProjectedStatsImpl<float>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
+                      tbb::auto_partitioner());
+#else
+    CalcProjectedStatsImpl<float> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
+    serial.convert(0, count);
 #endif
-    {
-      CalcProjectedStatsImpl<float> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
-    }
   }
   else if(TemplateHelpers::CanDynamicCast<DoubleArrayType>()(m_InDataPtr.lock()))
   {
     DoubleArrayType::Pointer cellArray = std::dynamic_pointer_cast<DoubleArrayType>(m_InDataPtr.lock());
     double* cPtr = cellArray->getPointer(0);
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel)
-    {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
-                        CalcProjectedStatsImpl<double>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
-                        tbb::auto_partitioner());
-    }
-    else
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
+                      CalcProjectedStatsImpl<double>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth),
+                      tbb::auto_partitioner());
+#else
+    CalcProjectedStatsImpl<double> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
+    serial.convert(0, count);
 #endif
-    {
-      CalcProjectedStatsImpl<double> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
-    }
   }
   else
   {

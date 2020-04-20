@@ -167,14 +167,10 @@ void ReverseTriangleWinding::execute()
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  bool doParallel = true;
-#endif
-
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel)
+  if(true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()), ReverseWindingImpl(triangleGeom->getTriangles()), tbb::auto_partitioner());
   }

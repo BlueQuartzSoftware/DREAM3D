@@ -33,27 +33,18 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "DetectEllipsoids.h"
 
 #define NOMINMAX
 
-#include <QtCore/QMutexLocker>
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/atomic.h>
-#include <tbb/blocked_range.h>
-#include <tbb/parallel_for.h>
-#include <tbb/task_group.h>
-#include <tbb/task_scheduler_init.h>
-#include <tbb/tick_count.h>
-#endif
+#include <thread>
+#include <cmath>
+#include <limits>
 
 #include <QtCore/QTextStream>
+#include <QtCore/QMutexLocker>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -73,8 +64,13 @@
 #include "Processing/ProcessingVersion.h"
 #include "ProcessingFilters/HelperClasses/DetectEllipsoidsImpl.h"
 
-#include <cmath>
-#include <limits>
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include <tbb/atomic.h>
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
+#include <tbb/task_group.h>
+#include <tbb/tick_count.h>
+#endif
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -391,13 +387,12 @@ void DetectEllipsoids::execute()
     m_MaxFeatureId = m_TotalNumberOfFeatures;
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    tbb::task_scheduler_init init;
     bool doParallel = true;
 
     if(doParallel)
     {
       std::shared_ptr<tbb::task_group> g(new tbb::task_group);
-      int threads = tbb::task_scheduler_init::default_num_threads();
+      int threads = std::thread::hardware_concurrency();
 
       for(int i = 0; i < threads; i++)
       {

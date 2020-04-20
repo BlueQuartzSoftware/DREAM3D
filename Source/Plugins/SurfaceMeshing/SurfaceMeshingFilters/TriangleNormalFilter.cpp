@@ -213,11 +213,7 @@ void TriangleNormalFilter::execute()
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  bool doParallel = true;
-#endif
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel)
+  if(true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()), CalculateNormalsImpl(triangleGeom->getVertices(), triangleGeom->getTriangles(), m_SurfaceMeshTriangleNormals),
                       tbb::auto_partitioner());

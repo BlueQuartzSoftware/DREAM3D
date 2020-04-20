@@ -66,7 +66,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 /**
@@ -457,11 +456,6 @@ void FindTwinBoundarySchmidFactors::execute()
     return;
   }
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
   size_t numTriangles = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
   float LoadingDir[3] = {0.0f, 0.0f, 0.0f};
@@ -470,7 +464,7 @@ void FindTwinBoundarySchmidFactors::execute()
   LoadingDir[2] = m_LoadingDir[2];
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel)
+  if(true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, numTriangles), CalculateTwinBoundarySchmidFactorsImpl(LoadingDir, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats,
                                                                                                           m_SurfaceMeshTwinBoundary, m_SurfaceMeshTwinBoundarySchmidFactors),

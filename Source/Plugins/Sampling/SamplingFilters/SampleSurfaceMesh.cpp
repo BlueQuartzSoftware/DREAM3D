@@ -46,7 +46,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #include <tbb/tbb_machine.h>
 #endif
 
@@ -449,11 +448,6 @@ void SampleSurfaceMesh::execute()
 
   notifyStatusMessage("Sampling triangle geometry ...");
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
   // C++11 RIGHT HERE....
   int32_t nthreads = static_cast<int32_t>(std::thread::hardware_concurrency()); // Returns ZERO if not defined on this platform
   // If the number of features is larger than the number of cores to do the work then parallelize over the number of features
@@ -461,16 +455,11 @@ void SampleSurfaceMesh::execute()
   if(numFeatures > nthreads)
   {
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel)
-    {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, numFeatures), SampleSurfaceMeshImpl(this, triangleGeom, faceLists, faceBBs, points, polyIds), tbb::auto_partitioner());
-    }
-    else
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, numFeatures), SampleSurfaceMeshImpl(this, triangleGeom, faceLists, faceBBs, points, polyIds), tbb::auto_partitioner());
+#else
+    SampleSurfaceMeshImpl serial(this, triangleGeom, faceLists, faceBBs, points, polyIds);
+    serial.checkPoints(0, numFeatures);
 #endif
-    {
-      SampleSurfaceMeshImpl serial(this, triangleGeom, faceLists, faceBBs, points, polyIds);
-      serial.checkPoints(0, numFeatures);
-    }
   }
   else
   {
@@ -481,16 +470,12 @@ void SampleSurfaceMesh::execute()
       m_Millis = m_StartMillis;
       size_t numPoints = points->getNumberOfVertices();
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      if(doParallel)
-      {
-        tbb::parallel_for(tbb::blocked_range<size_t>(0, numPoints), SampleSurfaceMeshImplByPoints(this, triangleGeom, faceLists, faceBBs, points, featureId, polyIds), tbb::auto_partitioner());
-      }
-      else
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, numPoints), SampleSurfaceMeshImplByPoints(this, triangleGeom, faceLists, faceBBs, points, featureId, polyIds), tbb::auto_partitioner());
+
+#else
+      SampleSurfaceMeshImplByPoints serial(this, triangleGeom, faceLists, faceBBs, points, featureId, polyIds);
+      serial.checkPoints(0, numPoints);
 #endif
-      {
-        SampleSurfaceMeshImplByPoints serial(this, triangleGeom, faceLists, faceBBs, points, featureId, polyIds);
-        serial.checkPoints(0, numPoints);
-      }
     }
   }
   assign_points(iArray);

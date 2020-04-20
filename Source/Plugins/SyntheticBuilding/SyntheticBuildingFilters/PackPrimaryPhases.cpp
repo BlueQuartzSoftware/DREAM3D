@@ -81,7 +81,6 @@
 #include <tbb/blocked_range3d.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 namespace
@@ -2642,11 +2641,6 @@ void PackPrimaryPhases::assignVoxels()
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
   int64_t column = 0, row = 0, plane = 0;
   float xc = 0.0f, yc = 0.0f, zc = 0.0f;
   float size[3] = {m_SizeX, m_SizeY, m_SizeZ};
@@ -2792,7 +2786,7 @@ void PackPrimaryPhases::assignVoxels()
     ShapeOps* shapeOps = m_ShapeOps[shapeclass].get();
 //#if 0
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel)
+    if(true)
     {
       tbb::parallel_for(tbb::blocked_range3d<int64_t, int64_t, int64_t>(zmin, zmax + 1, ymin, ymax + 1, xmin, xmax + 1),
                         AssignVoxelsGapsImpl(dims, spacing.data(), radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());

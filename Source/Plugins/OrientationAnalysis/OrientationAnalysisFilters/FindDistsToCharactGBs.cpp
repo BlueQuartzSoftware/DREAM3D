@@ -70,7 +70,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 
 using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
 using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
@@ -481,11 +480,6 @@ void FindDistsToCharactGBs::execute()
   int32_t* m_FaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
   double* m_FaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0);
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
   int64_t trisChunkSize = 50000;
   if(numMeshTris < trisChunkSize)
   {
@@ -506,17 +500,12 @@ void FindDistsToCharactGBs::execute()
     }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel)
-    {
-      tbb::parallel_for(tbb::blocked_range<size_t>(i, i + trisChunkSize),
-                        TrisProcessor(m_DistToTilt, m_DistToTwist, m_DistToSymmetric, m_DistTo180Tilt, m_CrystalStructures, m_Eulers, m_Phases, m_FaceLabels, m_FaceNormals), tbb::auto_partitioner());
-    }
-    else
+    tbb::parallel_for(tbb::blocked_range<size_t>(i, i + trisChunkSize),
+                      TrisProcessor(m_DistToTilt, m_DistToTwist, m_DistToSymmetric, m_DistTo180Tilt, m_CrystalStructures, m_Eulers, m_Phases, m_FaceLabels, m_FaceNormals), tbb::auto_partitioner());
+#else
+    TrisProcessor serial(m_DistToTilt, m_DistToTwist, m_DistToSymmetric, m_DistTo180Tilt, m_CrystalStructures, m_Eulers, m_Phases, m_FaceLabels, m_FaceNormals);
+    serial.process(i, i + trisChunkSize);
 #endif
-    {
-      TrisProcessor serial(m_DistToTilt, m_DistToTwist, m_DistToSymmetric, m_DistTo180Tilt, m_CrystalStructures, m_Eulers, m_Phases, m_FaceLabels, m_FaceNormals);
-      serial.process(i, i + trisChunkSize);
-    }
   }
 
 }

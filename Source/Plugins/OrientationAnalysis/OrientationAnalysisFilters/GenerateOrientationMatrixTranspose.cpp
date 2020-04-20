@@ -22,7 +22,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -177,12 +176,7 @@ void GenerateOrientationMatrixTranspose::execute()
   size_t totalPoints = m_OrientationMatrixPtr.lock()->getNumberOfTuples();
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel)
+  if(true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), GenerateOrientationMatrixTransposeImpl(this, m_OutputOrientationMatrix), tbb::auto_partitioner());
   }

@@ -41,7 +41,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 #include <QtCore/QTextStream>
@@ -190,11 +189,6 @@ void ChangeAngleRepresentation::execute()
 
   int64_t totalPoints = static_cast<int64_t>(m_CellEulerAnglesPtr.lock()->getNumberOfTuples());
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
   float conversionFactor = 1.0f;
   if(m_ConversionType == SIMPL::EulerAngleConversionType::DegreesToRadians)
   {
@@ -208,7 +202,7 @@ void ChangeAngleRepresentation::execute()
   totalPoints *= 3;
 //  qDebug() << "ChangeAngleRepresentation: " << m_ConversionFactor << "\n";
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel)
+  if(true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), ChangeAngleRepresentationImpl(m_CellEulerAngles, conversionFactor), tbb::auto_partitioner());
   }

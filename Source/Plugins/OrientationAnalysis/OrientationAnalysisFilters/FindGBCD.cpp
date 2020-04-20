@@ -66,7 +66,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
@@ -599,11 +598,6 @@ void FindGBCD::execute()
     return;
   }
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
   size_t totalPhases = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
   size_t totalFaces = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
   size_t faceChunkSize = 50000;
@@ -642,20 +636,15 @@ void FindGBCD::execute()
     }
     m_GbcdBinsArray->initializeWithValue(-1);
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel)
-    {
-      tbb::parallel_for(tbb::blocked_range<size_t>(i, i + faceChunkSize),
-                        CalculateGBCDImpl(i, numMisoReps, m_SurfaceMeshFaceLabelsPtr.lock(), m_SurfaceMeshFaceNormalsPtr.lock(), m_FeatureEulerAnglesPtr.lock(), m_FeaturePhasesPtr.lock(),
-                                          m_CrystalStructuresPtr.lock(), m_GbcdBinsArray, m_GbcdHemiCheckArray, m_GbcdDeltasArray, m_GbcdSizesArray, m_GbcdLimitsArray),
-                        tbb::auto_partitioner());
-    }
-    else
+    tbb::parallel_for(tbb::blocked_range<size_t>(i, i + faceChunkSize),
+                      CalculateGBCDImpl(i, numMisoReps, m_SurfaceMeshFaceLabelsPtr.lock(), m_SurfaceMeshFaceNormalsPtr.lock(), m_FeatureEulerAnglesPtr.lock(), m_FeaturePhasesPtr.lock(),
+                                        m_CrystalStructuresPtr.lock(), m_GbcdBinsArray, m_GbcdHemiCheckArray, m_GbcdDeltasArray, m_GbcdSizesArray, m_GbcdLimitsArray),
+                      tbb::auto_partitioner());
+#else
+    CalculateGBCDImpl serial(i, numMisoReps, m_SurfaceMeshFaceLabelsPtr.lock(), m_SurfaceMeshFaceNormalsPtr.lock(), m_FeatureEulerAnglesPtr.lock(), m_FeaturePhasesPtr.lock(),
+                             m_CrystalStructuresPtr.lock(), m_GbcdBinsArray, m_GbcdHemiCheckArray, m_GbcdDeltasArray, m_GbcdSizesArray, m_GbcdLimitsArray);
+    serial.generate(i, i + faceChunkSize);
 #endif
-    {
-      CalculateGBCDImpl serial(i, numMisoReps, m_SurfaceMeshFaceLabelsPtr.lock(), m_SurfaceMeshFaceNormalsPtr.lock(), m_FeatureEulerAnglesPtr.lock(), m_FeaturePhasesPtr.lock(),
-                               m_CrystalStructuresPtr.lock(), m_GbcdBinsArray, m_GbcdHemiCheckArray, m_GbcdDeltasArray, m_GbcdSizesArray, m_GbcdLimitsArray);
-      serial.generate(i, i + faceChunkSize);
-    }
 
     currentMillis = QDateTime::currentMSecsSinceEpoch();
     if(currentMillis - millis > 1000)

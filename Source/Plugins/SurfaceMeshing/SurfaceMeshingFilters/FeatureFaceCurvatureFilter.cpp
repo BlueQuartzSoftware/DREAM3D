@@ -53,7 +53,6 @@
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/task.h>
 #include <tbb/task_group.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 // -----------------------------------------------------------------------------
@@ -386,11 +385,6 @@ void FeatureFaceCurvatureFilter::execute()
   m_CompletedFeatureFaces = 0;
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   std::shared_ptr<tbb::task_group> g(new tbb::task_group);
 #else
 
@@ -405,7 +399,7 @@ void FeatureFaceCurvatureFilter::execute()
 
     FaceIds_t& triangleIds = (*iter).second;
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel == true)
+    if(true)
     {
       g->run(CalculateTriangleGroupCurvatures(m_NRing, triangleIds, m_UseNormalsForCurveFitting, m_SurfaceMeshPrincipalCurvature1sPtr.lock(), m_SurfaceMeshPrincipalCurvature2sPtr.lock(),
                                               m_SurfaceMeshPrincipalDirection1sPtr.lock(), m_SurfaceMeshPrincipalDirection2sPtr.lock(), m_SurfaceMeshGaussianCurvaturesPtr.lock(),

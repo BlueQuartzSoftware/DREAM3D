@@ -65,7 +65,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 using QuatF = Quaternion<float>;
@@ -576,11 +575,6 @@ void InsertAtoms::execute()
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
   SIMPL_RANDOMNG_NEW()
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
   // pull down faces
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
   int64_t numFaces = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
@@ -669,7 +663,7 @@ void InsertAtoms::execute()
 
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel)
+  if(true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, numFeatures), InsertAtomsImpl(triangleGeom, faceLists, faceBBs, m_AvgQuats, latticeConstants, m_Basis, points, inFeature), tbb::auto_partitioner());
   }

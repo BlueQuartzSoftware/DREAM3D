@@ -23,7 +23,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 /**
@@ -93,7 +92,6 @@ public:
   void Execute(IDataArray::Pointer firstArrayPtr, IDataArray::Pointer secondArrayPtr, IDataArray::Pointer differenceMapPtr)
   {
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    tbb::task_scheduler_init init;
     bool doParallel = true;
 #endif
 
