@@ -301,7 +301,7 @@ void AlignSections::execute()
     taskGroup->run(AlignSectionsTransferDataImpl(this, dims.data(), xshifts, yshifts, dataArrayPtr));
   }
   // Wait for them to complete.
-
+  taskGroup->wait();
 #else
 
   QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNames();
