@@ -66,6 +66,7 @@ class Statistics_EXPORT CorrelateValuesWithVectorDirection : public AbstractFilt
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(CorrelateValuesWithVectorDirection SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(CorrelateValuesWithVectorDirection)
   PYB11_FILTER_NEW_MACRO(CorrelateValuesWithVectorDirection)
   PYB11_PROPERTY(DataArrayPath CorrelatedDataArrayPath READ getCorrelatedDataArrayPath WRITE setCorrelatedDataArrayPath)

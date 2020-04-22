@@ -52,6 +52,7 @@ class Processing_EXPORT MinSize : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(MinSize SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(MinSize)
   PYB11_FILTER_NEW_MACRO(MinSize)
   PYB11_PROPERTY(int MinAllowedFeatureSize READ getMinAllowedFeatureSize WRITE setMinAllowedFeatureSize)

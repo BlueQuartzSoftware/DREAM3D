@@ -52,6 +52,7 @@ class Statistics_EXPORT FindVolFractions : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindVolFractions SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindVolFractions)
   PYB11_FILTER_NEW_MACRO(FindVolFractions)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)

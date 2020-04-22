@@ -53,6 +53,7 @@ class Statistics_EXPORT FindFeatureClustering : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindFeatureClustering SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindFeatureClustering)
   PYB11_FILTER_NEW_MACRO(FindFeatureClustering)
   PYB11_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)

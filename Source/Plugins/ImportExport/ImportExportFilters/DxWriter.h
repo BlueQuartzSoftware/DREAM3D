@@ -53,6 +53,7 @@ class ImportExport_EXPORT DxWriter : public FileWriter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(DxWriter SUPERCLASS FileWriter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(DxWriter)
   PYB11_FILTER_NEW_MACRO(DxWriter)
   PYB11_PROPERTY(bool AddSurfaceLayer READ getAddSurfaceLayer WRITE setAddSurfaceLayer)

@@ -41,8 +41,6 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-
 #define OUTPUT_DEBUG_VTK_FILES 1
 
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
@@ -50,12 +48,13 @@
 /**
  * @brief The LaplacianSmoothing class. See [Filter documentation](@ref laplaciansmoothing) for details.
  */
-class SurfaceMeshing_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT LaplacianSmoothing : public AbstractFilter
 {
   Q_OBJECT
 
   // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(LaplacianSmoothing SUPERCLASS SurfaceMeshFilter)
+  PYB11_BEGIN_BINDINGS(LaplacianSmoothing SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(LaplacianSmoothing)
   PYB11_FILTER_NEW_MACRO(LaplacianSmoothing)
   PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)

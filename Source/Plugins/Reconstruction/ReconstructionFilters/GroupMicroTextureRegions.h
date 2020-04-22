@@ -54,6 +54,7 @@ class Reconstruction_EXPORT GroupMicroTextureRegions : public GroupFeatures
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(GroupMicroTextureRegions SUPERCLASS GroupFeatures)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(GroupMicroTextureRegions)
   PYB11_FILTER_NEW_MACRO(GroupMicroTextureRegions)
   PYB11_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)

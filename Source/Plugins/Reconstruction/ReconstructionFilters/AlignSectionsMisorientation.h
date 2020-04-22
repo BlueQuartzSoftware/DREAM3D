@@ -55,6 +55,7 @@ class Reconstruction_EXPORT AlignSectionsMisorientation : public AlignSections
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(AlignSectionsMisorientation SUPERCLASS AlignSections)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(AlignSectionsMisorientation)
   PYB11_FILTER_NEW_MACRO(AlignSectionsMisorientation)
   PYB11_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)

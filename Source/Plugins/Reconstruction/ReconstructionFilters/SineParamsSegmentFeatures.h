@@ -70,6 +70,7 @@ class Reconstruction_EXPORT SineParamsSegmentFeatures : public SegmentFeatures
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(SineParamsSegmentFeatures SUPERCLASS SegmentFeatures)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(SineParamsSegmentFeatures)
   PYB11_FILTER_NEW_MACRO(SineParamsSegmentFeatures)
   PYB11_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)

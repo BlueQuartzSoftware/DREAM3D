@@ -52,6 +52,7 @@ class OrientationAnalysis_EXPORT ChangeAngleRepresentation : public AbstractFilt
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ChangeAngleRepresentation SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ChangeAngleRepresentation)
   PYB11_FILTER_NEW_MACRO(ChangeAngleRepresentation)
   PYB11_PROPERTY(int ConversionType READ getConversionType WRITE setConversionType)

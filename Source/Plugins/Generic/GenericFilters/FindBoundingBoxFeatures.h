@@ -52,6 +52,7 @@ class Generic_EXPORT FindBoundingBoxFeatures : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindBoundingBoxFeatures SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindBoundingBoxFeatures)
   PYB11_FILTER_NEW_MACRO(FindBoundingBoxFeatures)
   PYB11_PROPERTY(bool CalcByPhase READ getCalcByPhase WRITE setCalcByPhase)

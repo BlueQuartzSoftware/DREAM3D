@@ -56,6 +56,7 @@ class Sampling_EXPORT UncertainRegularGridSampleSurfaceMesh : public SampleSurfa
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(UncertainRegularGridSampleSurfaceMesh SUPERCLASS SampleSurfaceMesh)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(UncertainRegularGridSampleSurfaceMesh)
   PYB11_FILTER_NEW_MACRO(UncertainRegularGridSampleSurfaceMesh)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)

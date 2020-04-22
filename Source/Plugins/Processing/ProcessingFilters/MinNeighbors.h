@@ -55,6 +55,7 @@ class Processing_EXPORT MinNeighbors : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(MinNeighbors SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(MinNeighbors)
   PYB11_FILTER_NEW_MACRO(MinNeighbors)
   PYB11_PROPERTY(int MinNumNeighbors READ getMinNumNeighbors WRITE setMinNumNeighbors)

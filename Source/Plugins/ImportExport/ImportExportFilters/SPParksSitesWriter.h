@@ -54,6 +54,7 @@ class ImportExport_EXPORT SPParksSitesWriter : public FileWriter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(SPParksSitesWriter SUPERCLASS FileWriter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(SPParksSitesWriter)
   PYB11_FILTER_NEW_MACRO(SPParksSitesWriter)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

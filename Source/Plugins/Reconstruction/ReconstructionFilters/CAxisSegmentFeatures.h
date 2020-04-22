@@ -59,6 +59,7 @@ class Reconstruction_EXPORT CAxisSegmentFeatures : public SegmentFeatures
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(CAxisSegmentFeatures SUPERCLASS SegmentFeatures)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(CAxisSegmentFeatures)
   PYB11_FILTER_NEW_MACRO(CAxisSegmentFeatures)
   PYB11_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)

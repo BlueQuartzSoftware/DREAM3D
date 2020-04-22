@@ -53,6 +53,7 @@ class Sampling_EXPORT SampleSurfaceMesh : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(SampleSurfaceMesh SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(SampleSurfaceMesh)
   PYB11_FILTER_NEW_MACRO(SampleSurfaceMesh)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)

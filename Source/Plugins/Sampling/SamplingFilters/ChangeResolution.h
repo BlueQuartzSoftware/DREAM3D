@@ -53,6 +53,7 @@ class Sampling_EXPORT ChangeResolution : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ChangeResolution SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ChangeResolution)
   PYB11_FILTER_NEW_MACRO(ChangeResolution)
   PYB11_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)

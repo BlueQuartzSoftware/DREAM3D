@@ -55,6 +55,7 @@ class Reconstruction_EXPORT MergeTwins : public GroupFeatures
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(MergeTwins SUPERCLASS GroupFeatures)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(MergeTwins)
   PYB11_FILTER_NEW_MACRO(MergeTwins)
   PYB11_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)

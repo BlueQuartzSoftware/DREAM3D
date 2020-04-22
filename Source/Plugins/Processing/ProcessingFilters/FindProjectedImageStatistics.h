@@ -55,6 +55,7 @@ class Processing_EXPORT FindProjectedImageStatistics : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindProjectedImageStatistics SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindProjectedImageStatistics)
   PYB11_FILTER_NEW_MACRO(FindProjectedImageStatistics)
   PYB11_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)

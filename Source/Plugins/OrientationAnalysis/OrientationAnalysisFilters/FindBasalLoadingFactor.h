@@ -62,6 +62,7 @@ class OrientationAnalysis_EXPORT FindBasalLoadingFactor : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindBasalLoadingFactor SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindBasalLoadingFactor)
   PYB11_FILTER_NEW_MACRO(FindBasalLoadingFactor)
   PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)

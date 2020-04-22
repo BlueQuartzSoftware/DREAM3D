@@ -59,6 +59,7 @@ class OrientationAnalysis_EXPORT GenerateRodriguesColors : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(GenerateRodriguesColors SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(GenerateRodriguesColors)
   PYB11_FILTER_NEW_MACRO(GenerateRodriguesColors)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)

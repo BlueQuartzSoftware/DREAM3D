@@ -60,6 +60,7 @@ class ImportExport_EXPORT SurfaceMeshToNonconformalVtk : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(SurfaceMeshToNonconformalVtk SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(SurfaceMeshToNonconformalVtk)
   PYB11_FILTER_NEW_MACRO(SurfaceMeshToNonconformalVtk)
   PYB11_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)

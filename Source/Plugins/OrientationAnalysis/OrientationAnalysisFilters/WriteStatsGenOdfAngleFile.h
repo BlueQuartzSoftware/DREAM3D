@@ -62,6 +62,7 @@ class OrientationAnalysis_EXPORT WriteStatsGenOdfAngleFile : public AbstractFilt
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(WriteStatsGenOdfAngleFile SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(WriteStatsGenOdfAngleFile)
   PYB11_FILTER_NEW_MACRO(WriteStatsGenOdfAngleFile)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)

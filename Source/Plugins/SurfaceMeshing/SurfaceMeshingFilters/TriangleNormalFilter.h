@@ -41,19 +41,18 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
 
 /**
  * @brief The TriangleNormalFilter class. See [Filter documentation](@ref trianglenormalfilter) for details.
  */
-class SurfaceMeshing_EXPORT TriangleNormalFilter : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT TriangleNormalFilter : public AbstractFilter
 {
   Q_OBJECT
 
   // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(TriangleNormalFilter SUPERCLASS SurfaceMeshFilter)
+  PYB11_BEGIN_BINDINGS(TriangleNormalFilter SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(TriangleNormalFilter)
   PYB11_FILTER_NEW_MACRO(TriangleNormalFilter)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleNormalsArrayPath READ getSurfaceMeshTriangleNormalsArrayPath WRITE setSurfaceMeshTriangleNormalsArrayPath)

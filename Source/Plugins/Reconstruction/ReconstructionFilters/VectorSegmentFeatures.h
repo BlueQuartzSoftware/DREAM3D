@@ -55,6 +55,7 @@ class Reconstruction_EXPORT VectorSegmentFeatures : public SegmentFeatures
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(VectorSegmentFeatures SUPERCLASS SegmentFeatures)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(VectorSegmentFeatures)
   PYB11_FILTER_NEW_MACRO(VectorSegmentFeatures)
   PYB11_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)

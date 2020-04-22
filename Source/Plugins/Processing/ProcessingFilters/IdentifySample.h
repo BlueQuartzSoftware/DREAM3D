@@ -55,6 +55,7 @@ class Processing_EXPORT IdentifySample : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(IdentifySample SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(IdentifySample)
   PYB11_FILTER_NEW_MACRO(IdentifySample)
   PYB11_PROPERTY(bool FillHoles READ getFillHoles WRITE setFillHoles)

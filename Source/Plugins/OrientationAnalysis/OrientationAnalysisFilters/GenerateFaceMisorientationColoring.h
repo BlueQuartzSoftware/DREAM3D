@@ -52,6 +52,7 @@ class OrientationAnalysis_EXPORT GenerateFaceMisorientationColoring : public Abs
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(GenerateFaceMisorientationColoring SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(GenerateFaceMisorientationColoring)
   PYB11_FILTER_NEW_MACRO(GenerateFaceMisorientationColoring)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)

@@ -63,6 +63,7 @@ class SyntheticBuilding_EXPORT MatchCrystallography : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(MatchCrystallography SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(MatchCrystallography)
   PYB11_FILTER_NEW_MACRO(MatchCrystallography)
   PYB11_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)

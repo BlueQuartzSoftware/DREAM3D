@@ -52,6 +52,16 @@
 class Reconstruction_EXPORT SegmentFeatures : public AbstractFilter
 {
   Q_OBJECT
+
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(SegmentFeatures SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
+  PYB11_SHARED_POINTERS(SegmentFeatures)
+  PYB11_FILTER_NEW_MACRO(SegmentFeatures)
+  PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
+
 public:
   using Self = SegmentFeatures;
   using Pointer = std::shared_ptr<Self>;
@@ -91,6 +101,8 @@ public:
    * @return Value of DataContainerName
    */
   QString getDataContainerName() const;
+
+  Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

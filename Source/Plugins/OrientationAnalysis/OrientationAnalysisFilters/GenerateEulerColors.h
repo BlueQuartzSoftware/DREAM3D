@@ -60,6 +60,7 @@ class OrientationAnalysis_EXPORT GenerateEulerColors : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(GenerateEulerColors SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(GenerateEulerColors)
   PYB11_FILTER_NEW_MACRO(GenerateEulerColors)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)

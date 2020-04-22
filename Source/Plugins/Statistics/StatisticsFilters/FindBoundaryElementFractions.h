@@ -52,6 +52,7 @@ class Statistics_EXPORT FindBoundaryElementFractions : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindBoundaryElementFractions SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindBoundaryElementFractions)
   PYB11_FILTER_NEW_MACRO(FindBoundaryElementFractions)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

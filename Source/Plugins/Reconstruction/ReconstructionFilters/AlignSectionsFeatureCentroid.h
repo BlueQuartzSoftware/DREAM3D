@@ -54,6 +54,7 @@ class Reconstruction_EXPORT AlignSectionsFeatureCentroid : public AlignSections
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(AlignSectionsFeatureCentroid SUPERCLASS AlignSections)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(AlignSectionsFeatureCentroid)
   PYB11_FILTER_NEW_MACRO(AlignSectionsFeatureCentroid)
   PYB11_PROPERTY(int ReferenceSlice READ getReferenceSlice WRITE setReferenceSlice)

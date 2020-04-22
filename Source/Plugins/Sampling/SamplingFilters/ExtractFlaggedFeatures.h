@@ -52,6 +52,7 @@ class Sampling_EXPORT ExtractFlaggedFeatures : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ExtractFlaggedFeatures SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ExtractFlaggedFeatures)
   PYB11_FILTER_NEW_MACRO(ExtractFlaggedFeatures)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

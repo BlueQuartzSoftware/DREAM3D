@@ -54,6 +54,7 @@ class ImportExport_EXPORT LosAlamosFFTWriter : public FileWriter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(LosAlamosFFTWriter SUPERCLASS FileWriter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(LosAlamosFFTWriter)
   PYB11_FILTER_NEW_MACRO(LosAlamosFFTWriter)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

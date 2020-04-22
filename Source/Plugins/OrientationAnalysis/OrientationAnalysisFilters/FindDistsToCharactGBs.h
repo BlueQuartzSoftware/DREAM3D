@@ -60,6 +60,7 @@ class OrientationAnalysis_EXPORT FindDistsToCharactGBs : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindDistsToCharactGBs SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindDistsToCharactGBs)
   PYB11_FILTER_NEW_MACRO(FindDistsToCharactGBs)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)

@@ -54,6 +54,7 @@ class Reconstruction_EXPORT IdentifyMicroTextureRegions : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(IdentifyMicroTextureRegions SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(IdentifyMicroTextureRegions)
   PYB11_FILTER_NEW_MACRO(IdentifyMicroTextureRegions)
   PYB11_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)

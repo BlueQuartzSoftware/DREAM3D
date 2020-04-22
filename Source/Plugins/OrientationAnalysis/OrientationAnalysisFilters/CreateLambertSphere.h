@@ -53,6 +53,7 @@ class OrientationAnalysis_EXPORT CreateLambertSphere : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(CreateLambertSphere SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(CreateLambertSphere)
   PYB11_FILTER_NEW_MACRO(CreateLambertSphere)
   PYB11_PROPERTY(int Hemisphere READ getHemisphere WRITE setHemisphere)

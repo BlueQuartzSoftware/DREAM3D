@@ -52,6 +52,7 @@ class Processing_EXPORT RemoveFlaggedFeatures : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(RemoveFlaggedFeatures SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(RemoveFlaggedFeatures)
   PYB11_FILTER_NEW_MACRO(RemoveFlaggedFeatures)
   PYB11_PROPERTY(bool FillRemovedFeatures READ getFillRemovedFeatures WRITE setFillRemovedFeatures)

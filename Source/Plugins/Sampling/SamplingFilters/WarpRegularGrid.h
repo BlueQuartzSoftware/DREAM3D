@@ -54,6 +54,7 @@ class Sampling_EXPORT WarpRegularGrid : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(WarpRegularGrid SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(WarpRegularGrid)
   PYB11_FILTER_NEW_MACRO(WarpRegularGrid)
   PYB11_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)

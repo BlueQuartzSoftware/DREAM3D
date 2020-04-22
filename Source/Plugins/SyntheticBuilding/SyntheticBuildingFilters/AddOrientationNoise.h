@@ -52,6 +52,7 @@ class SyntheticBuilding_EXPORT AddOrientationNoise : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(AddOrientationNoise SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(AddOrientationNoise)
   PYB11_FILTER_NEW_MACRO(AddOrientationNoise)
   PYB11_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude)

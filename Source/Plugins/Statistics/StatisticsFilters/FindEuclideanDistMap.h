@@ -52,6 +52,7 @@ class Statistics_EXPORT FindEuclideanDistMap : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindEuclideanDistMap SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindEuclideanDistMap)
   PYB11_FILTER_NEW_MACRO(FindEuclideanDistMap)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

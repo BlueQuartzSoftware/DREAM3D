@@ -51,6 +51,7 @@ class Sampling_EXPORT RegularizeZSpacing : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(RegularizeZSpacing SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(RegularizeZSpacing)
   PYB11_FILTER_NEW_MACRO(RegularizeZSpacing)
   PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)

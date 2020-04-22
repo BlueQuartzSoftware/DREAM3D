@@ -53,6 +53,7 @@ class OrientationAnalysis_EXPORT GenerateIPFColors : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(GenerateIPFColors SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(GenerateIPFColors)
   PYB11_FILTER_NEW_MACRO(GenerateIPFColors)
   PYB11_PROPERTY(FloatVec3Type ReferenceDir READ getReferenceDir WRITE setReferenceDir)

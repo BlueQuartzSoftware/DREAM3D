@@ -55,6 +55,7 @@ class SyntheticBuilding_EXPORT InsertAtoms : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(InsertAtoms SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(InsertAtoms)
   PYB11_FILTER_NEW_MACRO(InsertAtoms)
   PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)

@@ -53,6 +53,7 @@ class SyntheticBuilding_EXPORT EstablishMatrixPhase : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(EstablishMatrixPhase SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(EstablishMatrixPhase)
   PYB11_FILTER_NEW_MACRO(EstablishMatrixPhase)
   PYB11_PROPERTY(DataArrayPath OutputCellAttributeMatrixPath READ getOutputCellAttributeMatrixPath WRITE setOutputCellAttributeMatrixPath)

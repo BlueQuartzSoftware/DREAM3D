@@ -21,6 +21,7 @@ class OrientationAnalysis_EXPORT GenerateQuaternionConjugate : public AbstractFi
   // clang-format off
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(GenerateQuaternionConjugate SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(GenerateQuaternionConjugate)
   PYB11_FILTER_NEW_MACRO(GenerateQuaternionConjugate)
   PYB11_PROPERTY(DataArrayPath QuaternionDataArrayPath READ getQuaternionDataArrayPath WRITE setQuaternionDataArrayPath)

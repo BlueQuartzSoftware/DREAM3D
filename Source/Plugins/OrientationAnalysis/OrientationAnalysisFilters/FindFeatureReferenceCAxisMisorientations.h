@@ -57,6 +57,7 @@ class OrientationAnalysis_EXPORT FindFeatureReferenceCAxisMisorientations : publ
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindFeatureReferenceCAxisMisorientations SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindFeatureReferenceCAxisMisorientations)
   PYB11_FILTER_NEW_MACRO(FindFeatureReferenceCAxisMisorientations)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

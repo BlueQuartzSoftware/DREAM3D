@@ -56,6 +56,7 @@ class Sampling_EXPORT RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(RegularGridSampleSurfaceMesh SUPERCLASS SampleSurfaceMesh)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(RegularGridSampleSurfaceMesh)
   PYB11_FILTER_NEW_MACRO(RegularGridSampleSurfaceMesh)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)

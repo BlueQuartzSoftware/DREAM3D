@@ -53,6 +53,7 @@ class SurfaceMeshing_EXPORT FindTriangleGeomShapes : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindTriangleGeomShapes SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindTriangleGeomShapes)
   PYB11_FILTER_NEW_MACRO(FindTriangleGeomShapes)
   PYB11_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)

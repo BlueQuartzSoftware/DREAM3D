@@ -52,6 +52,7 @@ class ImportExport_EXPORT AbaqusSurfaceMeshWriter : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(AbaqusSurfaceMeshWriter SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(AbaqusSurfaceMeshWriter)
   PYB11_FILTER_NEW_MACRO(AbaqusSurfaceMeshWriter)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)

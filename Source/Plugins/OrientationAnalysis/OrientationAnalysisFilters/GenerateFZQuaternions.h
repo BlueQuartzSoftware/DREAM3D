@@ -26,6 +26,7 @@ class OrientationAnalysis_EXPORT GenerateFZQuaternions : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(GenerateFZQuaternions SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(GenerateFZQuaternions)
   PYB11_FILTER_NEW_MACRO(GenerateFZQuaternions)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)

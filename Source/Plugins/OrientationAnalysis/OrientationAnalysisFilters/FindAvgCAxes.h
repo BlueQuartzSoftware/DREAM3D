@@ -57,6 +57,7 @@ class OrientationAnalysis_EXPORT FindAvgCAxes : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindAvgCAxes SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindAvgCAxes)
   PYB11_FILTER_NEW_MACRO(FindAvgCAxes)
   PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)

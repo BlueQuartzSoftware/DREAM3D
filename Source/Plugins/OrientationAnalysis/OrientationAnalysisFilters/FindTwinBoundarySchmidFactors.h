@@ -58,6 +58,7 @@ class OrientationAnalysis_EXPORT FindTwinBoundarySchmidFactors : public Abstract
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindTwinBoundarySchmidFactors SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindTwinBoundarySchmidFactors)
   PYB11_FILTER_NEW_MACRO(FindTwinBoundarySchmidFactors)
   PYB11_PROPERTY(bool WriteFile READ getWriteFile WRITE setWriteFile)

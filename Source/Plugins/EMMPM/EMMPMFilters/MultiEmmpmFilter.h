@@ -56,6 +56,7 @@ class EMMPM_EXPORT MultiEmmpmFilter : public EMMPMFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(MultiEmmpmFilter SUPERCLASS EMMPMFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(MultiEmmpmFilter)
   PYB11_FILTER_NEW_MACRO(MultiEmmpmFilter)
   PYB11_PROPERTY(QVector<DataArrayPath> InputDataArrayVector READ getInputDataArrayVector WRITE setInputDataArrayVector)

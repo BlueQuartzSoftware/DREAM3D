@@ -60,7 +60,8 @@ class ImportExport_EXPORT VASPReader : public FileReader
   Q_OBJECT
 
   // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(VASPReader SUPERCLASS FileReader)
+  PYB11_BEGIN_BINDINGS(VASPReader SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(VASPReader)
   PYB11_FILTER_NEW_MACRO(VASPReader)
   PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)

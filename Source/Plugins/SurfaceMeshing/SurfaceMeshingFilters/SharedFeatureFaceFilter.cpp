@@ -81,7 +81,6 @@ SharedFeatureFaceFilter::~SharedFeatureFaceFilter() = default;
 // -----------------------------------------------------------------------------
 void SharedFeatureFaceFilter::setupFilterParameters()
 {
-  SurfaceMeshFilter::setupFilterParameters();
   FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {

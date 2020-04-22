@@ -57,6 +57,7 @@ class OrientationAnalysis_EXPORT BadDataNeighborOrientationCheck : public Abstra
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(BadDataNeighborOrientationCheck SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(BadDataNeighborOrientationCheck)
   PYB11_FILTER_NEW_MACRO(BadDataNeighborOrientationCheck)
   PYB11_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)

@@ -51,6 +51,7 @@ class OrientationAnalysis_EXPORT EMsoftSO3Sampler : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(EMsoftSO3Sampler SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(EMsoftSO3Sampler)
   PYB11_FILTER_NEW_MACRO(EMsoftSO3Sampler)
   PYB11_PROPERTY(int sampleModeSelector READ getsampleModeSelector WRITE setsampleModeSelector)

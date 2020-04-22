@@ -57,6 +57,7 @@ class OrientationAnalysis_EXPORT ImportEbsdMontage : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ImportEbsdMontage SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ImportEbsdMontage)
   PYB11_FILTER_NEW_MACRO(ImportEbsdMontage)
   PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)

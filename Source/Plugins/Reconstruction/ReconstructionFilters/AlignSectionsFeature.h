@@ -57,6 +57,7 @@ class Reconstruction_EXPORT AlignSectionsFeature : public AlignSections
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(AlignSectionsFeature SUPERCLASS AlignSections)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(AlignSectionsFeature)
   PYB11_FILTER_NEW_MACRO(AlignSectionsFeature)
   PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)

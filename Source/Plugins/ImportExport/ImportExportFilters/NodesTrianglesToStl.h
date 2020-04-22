@@ -60,6 +60,7 @@ class ImportExport_EXPORT NodesTrianglesToStl : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(NodesTrianglesToStl SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(NodesTrianglesToStl)
   PYB11_FILTER_NEW_MACRO(NodesTrianglesToStl)
   PYB11_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile)

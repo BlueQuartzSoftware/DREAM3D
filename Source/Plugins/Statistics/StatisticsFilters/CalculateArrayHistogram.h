@@ -55,6 +55,7 @@ class Statistics_EXPORT CalculateArrayHistogram : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(CalculateArrayHistogram SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(CalculateArrayHistogram)
   PYB11_FILTER_NEW_MACRO(CalculateArrayHistogram)
   PYB11_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)

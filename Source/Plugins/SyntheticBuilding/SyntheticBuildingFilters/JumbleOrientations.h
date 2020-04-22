@@ -52,6 +52,7 @@ class SyntheticBuilding_EXPORT JumbleOrientations : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(JumbleOrientations SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(JumbleOrientations)
   PYB11_FILTER_NEW_MACRO(JumbleOrientations)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

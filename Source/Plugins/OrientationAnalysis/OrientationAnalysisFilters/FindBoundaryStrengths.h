@@ -58,6 +58,7 @@ class OrientationAnalysis_EXPORT FindBoundaryStrengths : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindBoundaryStrengths SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindBoundaryStrengths)
   PYB11_FILTER_NEW_MACRO(FindBoundaryStrengths)
   PYB11_PROPERTY(FloatVec3Type Loading READ getLoading WRITE setLoading)

@@ -72,6 +72,7 @@ class SyntheticBuilding_EXPORT InsertPrecipitatePhases : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(InsertPrecipitatePhases SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(InsertPrecipitatePhases)
   PYB11_FILTER_NEW_MACRO(InsertPrecipitatePhases)
   PYB11_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile)

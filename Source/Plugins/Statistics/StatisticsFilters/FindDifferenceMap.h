@@ -23,6 +23,7 @@ class Statistics_EXPORT FindDifferenceMap : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindDifferenceMap SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindDifferenceMap)
   PYB11_FILTER_NEW_MACRO(FindDifferenceMap)
   PYB11_PROPERTY(DataArrayPath FirstInputArrayPath READ getFirstInputArrayPath WRITE setFirstInputArrayPath)

@@ -40,19 +40,18 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
-#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
 
 /**
  * @brief The GenerateGeometryConnectivity class. See [Filter documentation](@ref generategeometryconnectivity) for details.
  */
-class SurfaceMeshing_EXPORT GenerateGeometryConnectivity : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT GenerateGeometryConnectivity : public AbstractFilter
 {
   Q_OBJECT
 
   // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(GenerateGeometryConnectivity SUPERCLASS SurfaceMeshFilter)
+  PYB11_BEGIN_BINDINGS(GenerateGeometryConnectivity SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(GenerateGeometryConnectivity)
   PYB11_FILTER_NEW_MACRO(GenerateGeometryConnectivity)
   PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)

@@ -53,7 +53,8 @@ class OrientationAnalysis_EXPORT EnsembleInfoReader : public FileReader
   Q_OBJECT
 
   // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(EnsembleInfoReader SUPERCLASS FileReader)
+  PYB11_BEGIN_BINDINGS(EnsembleInfoReader SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(EnsembleInfoReader)
   PYB11_FILTER_NEW_MACRO(EnsembleInfoReader)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)

@@ -53,6 +53,7 @@ class ImportExport_EXPORT AbaqusHexahedronWriter : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(AbaqusHexahedronWriter SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(AbaqusHexahedronWriter)
   PYB11_FILTER_NEW_MACRO(AbaqusHexahedronWriter)
   PYB11_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)

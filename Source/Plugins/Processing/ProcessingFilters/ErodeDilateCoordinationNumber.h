@@ -52,6 +52,7 @@ class Processing_EXPORT ErodeDilateCoordinationNumber : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ErodeDilateCoordinationNumber SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ErodeDilateCoordinationNumber)
   PYB11_FILTER_NEW_MACRO(ErodeDilateCoordinationNumber)
   PYB11_PROPERTY(bool Loop READ getLoop WRITE setLoop)

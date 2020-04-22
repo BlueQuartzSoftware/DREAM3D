@@ -55,6 +55,7 @@ class OrientationAnalysis_EXPORT ConvertHexGridToSquareGrid : public AbstractFil
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ConvertHexGridToSquareGrid SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ConvertHexGridToSquareGrid)
   PYB11_FILTER_NEW_MACRO(ConvertHexGridToSquareGrid)
   PYB11_PROPERTY(QString InputPath READ getInputPath WRITE setInputPath)

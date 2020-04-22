@@ -78,6 +78,7 @@ class OrientationAnalysis_EXPORT ReadCtfData : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ReadCtfData SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ReadCtfData)
   PYB11_FILTER_NEW_MACRO(ReadCtfData)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)

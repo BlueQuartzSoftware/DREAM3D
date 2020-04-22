@@ -59,6 +59,7 @@ class ImportExport_EXPORT VisualizeGBCDPoleFigure : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(VisualizeGBCDPoleFigure SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(VisualizeGBCDPoleFigure)
   PYB11_FILTER_NEW_MACRO(VisualizeGBCDPoleFigure)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)

@@ -41,19 +41,18 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
 
 /**
  * @brief The SharedFeatureFaceFilter class. See [Filter documentation](@ref sharedfeaturefacefilter) for details.
  */
-class SurfaceMeshing_EXPORT SharedFeatureFaceFilter : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT SharedFeatureFaceFilter : public AbstractFilter
 {
   Q_OBJECT
 
   // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(SharedFeatureFaceFilter SUPERCLASS SurfaceMeshFilter)
+  PYB11_BEGIN_BINDINGS(SharedFeatureFaceFilter SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(SharedFeatureFaceFilter)
   PYB11_FILTER_NEW_MACRO(SharedFeatureFaceFilter)
   PYB11_PROPERTY(QString FaceFeatureAttributeMatrixName READ getFaceFeatureAttributeMatrixName WRITE setFaceFeatureAttributeMatrixName)

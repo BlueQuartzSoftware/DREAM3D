@@ -65,6 +65,7 @@ class OrientationAnalysis_EXPORT FindLocalAverageCAxisMisalignments : public Abs
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindLocalAverageCAxisMisalignments SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindLocalAverageCAxisMisalignments)
   PYB11_FILTER_NEW_MACRO(FindLocalAverageCAxisMisalignments)
   PYB11_PROPERTY(DataArrayPath NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)

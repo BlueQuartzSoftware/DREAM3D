@@ -42,8 +42,6 @@
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Geometry/IGeometry.h"
 
-#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
 
 /**
@@ -55,6 +53,7 @@ class SurfaceMeshing_EXPORT QuickSurfaceMesh : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(QuickSurfaceMesh SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(QuickSurfaceMesh)
   PYB11_FILTER_NEW_MACRO(QuickSurfaceMesh)
   PYB11_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)

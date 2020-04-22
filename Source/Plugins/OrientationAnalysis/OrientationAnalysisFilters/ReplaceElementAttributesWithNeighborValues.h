@@ -53,6 +53,7 @@ class OrientationAnalysis_EXPORT ReplaceElementAttributesWithNeighborValues : pu
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ReplaceElementAttributesWithNeighborValues SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ReplaceElementAttributesWithNeighborValues)
   PYB11_FILTER_NEW_MACRO(ReplaceElementAttributesWithNeighborValues)
   PYB11_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)

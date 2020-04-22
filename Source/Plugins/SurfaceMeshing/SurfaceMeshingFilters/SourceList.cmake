@@ -77,9 +77,6 @@ endforeach()
 
 #-------------
 # These are files that need to be compiled into DREAM3DLib but are NOT filters
-ADD_SIMPL_SUPPORT_MOC_HEADER(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} SurfaceMeshFilter.h)
-ADD_SIMPL_SUPPORT_SOURCE(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} SurfaceMeshFilter.cpp)
-
 ADD_SIMPL_SUPPORT_MOC_HEADER(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} BinaryNodesTrianglesReader.h)
 ADD_SIMPL_SUPPORT_SOURCE(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} BinaryNodesTrianglesReader.cpp)
 

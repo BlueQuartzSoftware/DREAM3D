@@ -41,9 +41,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-
-#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -57,7 +55,7 @@
  * @date
  * @version 1.0
  */
-class SurfaceMeshing_EXPORT BinaryNodesTrianglesReader : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT BinaryNodesTrianglesReader : public AbstractFilter
 {
     Q_OBJECT
   public:

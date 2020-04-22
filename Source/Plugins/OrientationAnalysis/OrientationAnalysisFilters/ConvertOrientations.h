@@ -53,6 +53,7 @@ class OrientationAnalysis_EXPORT ConvertOrientations : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ConvertOrientations SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ConvertOrientations)
   PYB11_FILTER_NEW_MACRO(ConvertOrientations)
   PYB11_PROPERTY(int InputType READ getInputType WRITE setInputType)

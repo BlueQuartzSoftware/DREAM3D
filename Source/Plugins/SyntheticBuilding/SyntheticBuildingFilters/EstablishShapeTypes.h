@@ -53,6 +53,7 @@ class SyntheticBuilding_EXPORT EstablishShapeTypes : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(EstablishShapeTypes SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(EstablishShapeTypes)
   PYB11_FILTER_NEW_MACRO(EstablishShapeTypes)
   PYB11_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)

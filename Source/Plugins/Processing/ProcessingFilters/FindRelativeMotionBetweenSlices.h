@@ -55,6 +55,7 @@ class Processing_EXPORT FindRelativeMotionBetweenSlices : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(FindRelativeMotionBetweenSlices SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FindRelativeMotionBetweenSlices)
   PYB11_FILTER_NEW_MACRO(FindRelativeMotionBetweenSlices)
   PYB11_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)

@@ -57,6 +57,7 @@ class OrientationAnalysis_EXPORT NeighborOrientationCorrelation : public Abstrac
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(NeighborOrientationCorrelation SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(NeighborOrientationCorrelation)
   PYB11_FILTER_NEW_MACRO(NeighborOrientationCorrelation)
   PYB11_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)

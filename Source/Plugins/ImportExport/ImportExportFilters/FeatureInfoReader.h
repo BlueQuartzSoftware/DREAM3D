@@ -52,7 +52,8 @@ class ImportExport_EXPORT FeatureInfoReader : public FileReader
   Q_OBJECT
 
   // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(FeatureInfoReader SUPERCLASS FileReader)
+  PYB11_BEGIN_BINDINGS(FeatureInfoReader SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(FeatureInfoReader)
   PYB11_FILTER_NEW_MACRO(FeatureInfoReader)
   PYB11_PROPERTY(DataArrayPath CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)

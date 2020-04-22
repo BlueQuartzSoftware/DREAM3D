@@ -39,8 +39,8 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
-#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
@@ -48,11 +48,11 @@
 /**
  * @brief The FeatureFaceCurvatureFilter class. See [Filter documentation](@ref featurefacecurvaturefilter) for details.
  */
-class SurfaceMeshing_EXPORT FeatureFaceCurvatureFilter : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT FeatureFaceCurvatureFilter : public AbstractFilter
 {
   Q_OBJECT
   // Start Python bindings declarations
-  // PYB11_BEGIN_BINDINGS(FeatureFaceCurvatureFilter SUPERCLASS SurfaceMeshFilter)
+  // PYB11_BEGIN_BINDINGS(FeatureFaceCurvatureFilter SUPERCLASS AbstractFilter)
   // PYB11_PROPERTY(DataArrayPath FaceAttributeMatrixPath READ getFaceAttributeMatrixPath WRITE setFaceAttributeMatrixPath)
   // PYB11_PROPERTY(QString SurfaceMeshPrincipalCurvature1sArrayName READ getSurfaceMeshPrincipalCurvature1sArrayName WRITE setSurfaceMeshPrincipalCurvature1sArrayName)
   // PYB11_PROPERTY(QString SurfaceMeshPrincipalCurvature2sArrayName READ getSurfaceMeshPrincipalCurvature2sArrayName WRITE setSurfaceMeshPrincipalCurvature2sArrayName)

@@ -52,6 +52,7 @@ class ImportExport_EXPORT WriteStlFile : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(WriteStlFile SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(WriteStlFile)
   PYB11_FILTER_NEW_MACRO(WriteStlFile)
   PYB11_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)

@@ -57,6 +57,7 @@ class Statistics_EXPORT GenerateEnsembleStatistics : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(GenerateEnsembleStatistics SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(GenerateEnsembleStatistics)
   PYB11_FILTER_NEW_MACRO(GenerateEnsembleStatistics)
   PYB11_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixPath READ getCellEnsembleAttributeMatrixPath WRITE setCellEnsembleAttributeMatrixPath)
