@@ -242,19 +242,8 @@ if(APPLE)
   endif()
 endif()
 get_property(DREAM3D_PACKAGE_DEST_PREFIX GLOBAL PROPERTY DREAM3D_PACKAGE_DEST_PREFIX)
-
-# -----------------------------------------------------------------------
-# Set a Global Prefix where everthing is going to get intalled for EbsdLib
-# -----------------------------------------------------------------------
-set_property(GLOBAL PROPERTY EbsdLib_PACKAGE_DEST_PREFIX ".")
-if(APPLE)
-  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set_property(GLOBAL PROPERTY EbsdLib_PACKAGE_DEST_PREFIX "${SIMPLView_APPLICATION_NAME}${EXE_DEBUG_EXTENSION}.app/Contents/")
-  else()
-    set_property(GLOBAL PROPERTY EbsdLib_PACKAGE_DEST_PREFIX "${SIMPLView_APPLICATION_NAME}.app/Contents/")
-  endif()
-endif()
-get_property(EbsdLib_PACKAGE_DEST_PREFIX GLOBAL PROPERTY EbsdLib_PACKAGE_DEST_PREFIX)
+set_property(GLOBAL PROPERTY EbsdLib_PACKAGE_DEST_PREFIX ${DREAM3D_PACKAGE_DEST_PREFIX})
+set_property(GLOBAL PROPERTY EbsdLib_INSTALL_FILES 0)
 
 # ------- Enable the CTest testing. ---------------
 OPTION(SIMPL_BUILD_TESTING "Compile the test programs" ON)
