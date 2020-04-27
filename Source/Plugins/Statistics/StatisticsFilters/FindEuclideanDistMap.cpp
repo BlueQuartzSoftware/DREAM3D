@@ -38,7 +38,7 @@
 #include "FindEuclideanDistMap.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/atomic.h>
+
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/task_group.h>
