@@ -182,7 +182,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+            <iconset resource="../../../../../../../SIMPL/Resources/SIMPL.qrc">
              <normaloff>:/SIMPL/icons/images/add.png</normaloff>:/SIMPL/icons/images/add.png</iconset>
            </property>
            <property name="iconSize">
@@ -223,7 +223,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+            <iconset resource="../../../../../../../SIMPL/Resources/SIMPL.qrc">
              <normaloff>:/SIMPL/icons/images/delete_plain.png</normaloff>:/SIMPL/icons/images/delete_plain.png</iconset>
            </property>
            <property name="iconSize">
@@ -615,7 +615,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+        <iconset resource="../../../../../../../SIMPL/Resources/SIMPL.qrc">
          <normaloff>:/SIMPL/icons/images/refresh.png</normaloff>:/SIMPL/icons/images/refresh.png</iconset>
        </property>
        <property name="iconSize">
@@ -712,7 +712,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+        <iconset resource="../../../../../../../SIMPL/Resources/SIMPL.qrc">
          <normaloff>:/SIMPL/icons/images/data-transfer-download.png</normaloff>:/SIMPL/icons/images/data-transfer-download.png</iconset>
        </property>
        <property name="iconSize">
@@ -785,7 +785,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc"/>
+  <include location="../../../../../../../SIMPL/Resources/SIMPL.qrc"/>
  </resources>
  <connections/>
 </ui>

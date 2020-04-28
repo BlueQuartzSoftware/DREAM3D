@@ -171,16 +171,16 @@ int main(int argc, char* argv[])
 #if 1
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir()));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL/Source/SIMPLib/CoreFilters"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPL/Source/SIMPLib/CoreFilters"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPLView/Source"));
 
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPLView/Source"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPLVtkLib"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins/DREAM3DReview"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins/ImageProcessing"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins/ITKImageProcessing"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins/SimulationIO"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins/UCSBUtilities"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPLView/Source"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPLVtkLib"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../Plugins/DREAM3DReview"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../Plugins/ImageProcessing"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../Plugins/ITKImageProcessing"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../Plugins/SimulationIO"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../Plugins/UCSBUtilities"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Source"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Test"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Tools"));

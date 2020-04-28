@@ -110,7 +110,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+      <iconset resource="../../../../../../../SIMPL/Resources/SIMPL.qrc">
        <normaloff>:/SIMPL/icons/images/add.png</normaloff>:/SIMPL/icons/images/add.png</iconset>
      </property>
      <property name="iconSize">
@@ -151,7 +151,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+      <iconset resource="../../../../../../../SIMPL/Resources/SIMPL.qrc">
        <normaloff>:/SIMPL/icons/images/reload.png</normaloff>:/SIMPL/icons/images/reload.png</iconset>
      </property>
      <property name="iconSize">
@@ -192,7 +192,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+      <iconset resource="../../../../../../../SIMPL/Resources/SIMPL.qrc">
        <normaloff>:/SIMPL/icons/images/data-transfer-hdf.png</normaloff>:/SIMPL/icons/images/data-transfer-hdf.png</iconset>
      </property>
      <property name="iconSize">
@@ -239,7 +239,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+      <iconset resource="../../../../../../../SIMPL/Resources/SIMPL.qrc">
        <normaloff>:/SIMPL/icons/images/cog.png</normaloff>:/SIMPL/icons/images/cog.png</iconset>
      </property>
      <property name="iconSize">
@@ -283,7 +283,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+      <iconset resource="../../../../../../../SIMPL/Resources/SIMPL.qrc">
        <normaloff>:/SIMPL/icons/images/data-transfer-download.png</normaloff>:/SIMPL/icons/images/data-transfer-download.png</iconset>
      </property>
      <property name="iconSize">
@@ -324,7 +324,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+      <iconset resource="../../../../../../../SIMPL/Resources/SIMPL.qrc">
        <normaloff>:/SIMPL/icons/images/data-transfer-upload.png</normaloff>:/SIMPL/icons/images/data-transfer-upload.png</iconset>
      </property>
      <property name="iconSize">
@@ -384,7 +384,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+      <iconset resource="../../../../../../../SIMPL/Resources/SIMPL.qrc">
        <normaloff>:/SIMPL/icons/images/delete.png</normaloff>:/SIMPL/icons/images/delete.png</iconset>
      </property>
      <property name="iconSize">
@@ -490,7 +490,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc"/>
+  <include location="../../../../../../../SIMPL/Resources/SIMPL.qrc"/>
  </resources>
  <connections/>
 </ui>

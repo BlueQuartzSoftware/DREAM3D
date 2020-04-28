@@ -34,25 +34,29 @@ DREAM.3D is publicly available on Github, and can be downloaded using [Git](http
 
 4. Use git to clone the DREAM.3D repository to your **Workspace** directory:
 
-`git clone -b develop https://www.github.com/bluequartzsoftware/DREAM3D`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/DREAM3D`
 
-Create and navigate to ExternalProjects directory inside DREAM3D directory
+Clone 5 other repositories to your **Workspace** directory.  These repositories are required to build DREAM.3D:
 
-Clone 3 other repositories to your **ExternalProjects** directory.  These repositories are required to build DREAM.3D:
+    `git clone -b develop https://www.github.com/bluequartzsoftware/CMP`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/SIMPL`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/SIMPLView`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/H5Support`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/EbsdLib`
 
-`git clone -b develop https://www.github.com/bluequartzsoftware/CMP`
-`git clone -b develop https://www.github.com/bluequartzsoftware/SIMPL`
-`git clone -b develop https://www.github.com/bluequartzsoftware/SIMPLView`
-
-All 4 of these repositories should be cloned/downloaded into the **Workspace** folder so that the final paths to all 4 repositories look like the following:
+All 5 of these repositories should be cloned/downloaded into the **Workspace** folder so that the final paths to all 5 repositories look like the following:
 
 /Users/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D
 
-/Users/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D/ExternalProjects/CMP
+/Users/[*YOUR-HOME-DIRECTORY*]/Workspace/CMP
 
-/Users/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D/ExternalProjects/SIMPL
+/Users/[*YOUR-HOME-DIRECTORY*]/Workspace/SIMPL
 
-/Users/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D/ExternalProjects/SIMPLView
+/Users/[*YOUR-HOME-DIRECTORY*]/Workspace/SIMPLView
+
+/Users/[*YOUR-HOME-DIRECTORY*]/Workspace/H5Support
+
+/Users/[*YOUR-HOME-DIRECTORY*]/Workspace/EbsdLib
 
 #### Windows 10 ####
 
@@ -66,23 +70,27 @@ All 4 of these repositories should be cloned/downloaded into the **Workspace** f
 
 `git clone -b develop https://www.github.com/bluequartzsoftware/DREAM3D`
 
-Create and navigate to ExternalProjects directory inside DREAM3D directory
+Clone 5 other repositories to your **Workspace** directory that are required to build DREAM.3D:
 
-Clone 3 other repositories to your **ExternalProjects** directory that are required to build DREAM.3D:
-
-`git clone -b develop https://www.github.com/bluequartzsoftware/CMP`
-`git clone -b develop https://www.github.com/bluequartzsoftware/SIMPL`
-`git clone -b develop https://www.github.com/bluequartzsoftware/SIMPLView`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/CMP`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/SIMPL`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/SIMPLView`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/H5Support`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/EbsdLib`
 
 All 4 of these repositories should be cloned/downloaded into the **Workspace** folder so that the final paths to all 4 repositories look like the following:
 
 C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\DREAM3D
 
-C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\DREAM3D\\ExternalProjects\\CMP
+C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\CMP
 
-C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\DREAM3D\\ExternalProjects\\SIMPL
+C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\SIMPL
 
-C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\DREAM3D\\ExternalProjects\\SIMPLView
+C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\SIMPLView
+
+C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\H5Support
+
+C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\EbsdLib
 
 #### Linux ####
 
@@ -96,15 +104,17 @@ C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\DREAM3D\\ExternalProjects\\SIMPLV
 
 `git clone -b develop https://www.github.com/bluequartzsoftware/DREAM3D`
 
-Create and navigate to ExternalProjects directory inside DREAM3D directory
 
-Clone 3 other repositories to your **ExternalProjects** directory.  These repositories are required to build DREAM.3D:
+Clone 5 other repositories to your **Workspace** directory.  These repositories are required to build DREAM.3D:
 
-`git clone -b develop https://www.github.com/bluequartzsoftware/CMP`
-`git clone -b develop https://www.github.com/bluequartzsoftware/SIMPL`
-`git clone -b develop https://www.github.com/bluequartzsoftware/SIMPLView`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/CMP`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/SIMPL`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/SIMPLView`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/H5Support`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/EbsdLib`
 
-All 4 of these repositories should be cloned/downloaded into the **Workspace** folder so that the final paths to all 4 repositories look like the following:
+
+All 5 of these repositories should be cloned/downloaded into the **Workspace** folder so that the final paths to all 5 repositories look like the following:
 
 /home/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D
 
@@ -114,3 +124,6 @@ All 4 of these repositories should be cloned/downloaded into the **Workspace** f
 
 /home/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D/ExternalProjects/SIMPLView
 
+/home/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D/ExternalProjects/H5Support
+
+/home/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D/ExternalProjects/EbsdLib

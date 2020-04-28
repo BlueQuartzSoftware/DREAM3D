@@ -180,7 +180,7 @@ font-size: 11px;
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc"/>
+  <include location="../../../../../../../SIMPL/Resources/SIMPL.qrc"/>
  </resources>
  <connections/>
 </ui>

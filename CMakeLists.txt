@@ -93,7 +93,6 @@ endif()
 Find_package(Git)
 
 get_filename_component(DREAM3D_PARENT ${DREAM3DProj_SOURCE_DIR} DIRECTORY CACHE)
-set(DREAM3D_ExternalProject_DIR "${DREAM3DProj_SOURCE_DIR}/ExternalProjects")
 set(UnitTestAnalysisFile ${DREAM3DProj_BINARY_DIR}/UnitTestAnalysis.md)
 file(WRITE ${UnitTestAnalysisFile} "# Unit Test Analysis #\n")
 set(TotalFilters 0)
@@ -103,9 +102,7 @@ set(TotalTestedFilters 0)
 # If the developer has set another CMP directory then use that, otherwise look
 # for the CMP directory at the same level as the SIMPL directory
 if("${CMP_SOURCE_DIR}" STREQUAL "")
-  if(EXISTS "${DREAM3DProj_SOURCE_DIR}/ExternalProjects/CMP")
-    set(CMP_SOURCE_DIR "${DREAM3DProj_SOURCE_DIR}/ExternalProjects/CMP")
-  elseif(EXISTS "${DREAM3D_PARENT}/CMP")
+  if(EXISTS "${DREAM3D_PARENT}/CMP")
     set(CMP_SOURCE_DIR ${DREAM3D_PARENT}/CMP)
   else()
     message(FATAL_ERROR "CMP_SOURCE_DIR was not set. Where is the CMP project directory. Please set the CMP_SOURCE_DIR variable to the CMP directory.")
@@ -117,9 +114,7 @@ endif()
 # If the developer has set another SIMPL directory then use that, otherwise look
 # for the SIMPLView directory at the same level as the SIMPL directory
 if("${SIMPLProj_SOURCE_DIR}" STREQUAL "")
-  if(EXISTS "${DREAM3DProj_SOURCE_DIR}/ExternalProjects/SIMPL")
-    set(SIMPLProj_SOURCE_DIR "${DREAM3DProj_SOURCE_DIR}/ExternalProjects/SIMPL")
-  elseif(EXISTS "${DREAM3D_PARENT}/SIMPL")
+  if(EXISTS "${DREAM3D_PARENT}/SIMPL")
     set(SIMPLProj_SOURCE_DIR ${DREAM3D_PARENT}/SIMPL)
   else()
     message(FATAL_ERROR "SIMPLProj_SOURCE_DIR was not set. Where is the CMP project directory. Please set the SIMPLProj_SOURCE_DIR variable to the CMP directory.")
@@ -132,9 +127,7 @@ endif()
 # If the developer has set another SIMPLView directory then use that, otherwise look
 # for the SIMPLView directory at the same level as the SIMPL directory
 if("${SIMPLViewProj_SOURCE_DIR}" STREQUAL "")
-  if(EXISTS "${DREAM3DProj_SOURCE_DIR}/ExternalProjects/SIMPLView")
-    set(SIMPLViewProj_SOURCE_DIR "${DREAM3DProj_SOURCE_DIR}/ExternalProjects/SIMPLView")
-  elseif(EXISTS "${DREAM3D_PARENT}/SIMPLView")
+  if(EXISTS "${DREAM3D_PARENT}/SIMPLView")
     set(SIMPLViewProj_SOURCE_DIR "${DREAM3D_PARENT}/SIMPLView")
   else()
     message(FATAL_ERROR "SIMPLViewProj_SOURCE_DIR was not set. Where is the CMP project directory. Please set the SIMPLViewProj_SOURCE_DIR variable to the CMP directory.")
@@ -359,9 +352,7 @@ install(FILES ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt
 # If the developer has set another EbsdLib directory then use that, otherwise look
 # for the EbsdLib directory at the same level as the DREAM3D directory
 if("${EbsdLibProj_SOURCE_DIR}" STREQUAL "")
-  if(EXISTS "${DREAM3DProj_SOURCE_DIR}/ExternalProjects/EbsdLib")
-    set(EbsdLibProj_SOURCE_DIR "${DREAM3DProj_SOURCE_DIR}/ExternalProjects/EbsdLib")
-  elseif(EXISTS "${DREAM3D_PARENT}/EbsdLib")
+  if(EXISTS "${DREAM3D_PARENT}/EbsdLib")
     set(EbsdLibProj_SOURCE_DIR "${DREAM3D_PARENT}/EbsdLib")
   else()
     message(FATAL_ERROR "EbsdLibProj_SOURCE_DIR was not set. Where is the EbsdLib project directory. Please set the EbsdLibProj_SOURCE_DIR variable to the EbsdLib directory.")
