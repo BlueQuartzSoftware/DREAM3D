@@ -252,7 +252,8 @@ public:
 
       for(int i = 0; i < 20; i++) // compare file to what was written in array
       {
-        fscanf(f, "%d,", &num);
+        int32_t fieldsRead = fscanf(f, "%d,", &num);
+        DREAM3D_REQUIRE_EQUAL(fieldsRead, 1)
         if(i + 20 != num)
         {
           DREAM3D_REQUIRE_EQUAL(0, -3)
@@ -269,7 +270,8 @@ public:
 
       for(int i = 0; i < 20; i++) // compare file to what was written in array
       {
-        fscanf(f, "%d,", &num);
+        int32_t fieldsRead = fscanf(f, "%d,", &num);
+        DREAM3D_REQUIRE_EQUAL(fieldsRead, 1)
         if(i + 20 != num)
         {
           DREAM3D_REQUIRE_EQUAL(0, -3)
@@ -285,7 +287,8 @@ public:
       DREAM3D_REQUIRE_VALID_POINTER(f)
       for(int i = 0; i < 20; i++) // compare file to what was written in bool array
       {
-        fscanf(f, "%d,", &num);
+        int32_t fieldsRead = fscanf(f, "%d,", &num);
+        DREAM3D_REQUIRE_EQUAL(fieldsRead, 1)
         if((i % 2 == 0 && num == 1) || (i % 2 != 0 && num == 0))
         {
           DREAM3D_REQUIRE_EQUAL(0, -3)

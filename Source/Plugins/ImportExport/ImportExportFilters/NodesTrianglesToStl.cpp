@@ -195,7 +195,13 @@ void NodesTrianglesToStl::execute()
   ScopedFileMonitor nodesFilePtr(nodesFile);
   //  how many nodes are in the file
   int nNodes = 0;
-  fscanf(nodesFile, "%d", &nNodes);
+  if(fscanf(nodesFile, "%d", &nNodes) != 1)
+  {
+    QString ss = QObject::tr("Error reading number of nodes from file").arg(m_NodesFile);
+    setErrorCondition(-667, ss);
+    return;
+  }
+  else
   {
     QString ss = QObject::tr("Node Count from %1 File: %2").arg(getNodesFile()).arg(nNodes);
     notifyStatusMessage(ss);
@@ -212,8 +218,13 @@ void NodesTrianglesToStl::execute()
   ScopedFileMonitor triFilePtr(triFile);
   // how many triangles are in the file
   int nTriangles = 0;
-  fscanf(triFile, "%d", &nTriangles);
-
+  if(fscanf(triFile, "%d", &nTriangles) != 1)
+  {
+    QString ss = QObject::tr("Error reading number of triangles from file").arg(m_NodesFile);
+    setErrorCondition(-668, ss);
+    return;
+  }
+  else
   {
     QString ss = QObject::tr("Triangle Count from %1 File: %2").arg(getTrianglesFile()).arg(nTriangles);
     notifyStatusMessage(ss);

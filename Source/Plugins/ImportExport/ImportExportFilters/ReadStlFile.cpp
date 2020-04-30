@@ -33,22 +33,15 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
-
 #include "ReadStlFile.h"
 
+#include <memory>
+#include <tuple>
+
 #include <QtCore/QFileInfo>
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/blocked_range.h>
-#include <tbb/parallel_for.h>
-#include <tbb/partitioner.h>
-#endif
-
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -61,6 +54,12 @@
 
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
+
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
+#include <tbb/partitioner.h>
+#endif
 
 #define STL_HEADER_LENGTH 80
 
@@ -286,7 +285,13 @@ void ReadStlFile::readFile()
   // Read Header
   char h[STL_HEADER_LENGTH];
   int32_t triCount = 0;
-  fread(h, STL_HEADER_LENGTH, 1, f);
+  if(fread(h, STL_HEADER_LENGTH, 1, f) != 1)
+  {
+    QString msg = QString("Error reading first 8 bytes of STL header. This can't be good.");
+    setErrorCondition(-1005, msg);
+    std::ignore = fclose(f);
+    return;
+  }
 
   // Look for the tell-tale signs that the file was written from Magics Materialise
   // If the file was written by Magics as a "Color STL" file then the 2byte int
@@ -304,7 +309,13 @@ void ReadStlFile::readFile()
     magicsFile = true;
   }
   // Read the number of triangles in the file.
-  fread(&triCount, sizeof(int32_t), 1, f);
+  if(fread(&triCount, sizeof(int32_t), 1, f) != 1)
+  {
+    QString msg = QString("Error reading number of triangles from file. This is bad.");
+    setErrorCondition(-1006, msg);
+    std::ignore = fclose(f);
+    return;
+  }
 
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
   triangleGeom->resizeTriList(triCount);
@@ -320,16 +331,30 @@ void ReadStlFile::readFile()
   // Read the triangles
   static const size_t k_StlElementCount = 12;
   float v[k_StlElementCount];
-  unsigned short attr;
+  uint16_t attr;
+  std::vector<uint8_t> triangleAttributeBuffer(std::numeric_limits<uint16_t>::max()); // Just allocate a buffer of max UINT16 elements
   for(int32_t t = 0; t < triCount; ++t)
   {
-    fread(reinterpret_cast<void*>(v), sizeof(float), k_StlElementCount, f); // Read the Triangle
+    size_t objsRead = fread(reinterpret_cast<void*>(v), sizeof(float), k_StlElementCount, f); // Read the Triangle
+    if(k_StlElementCount != objsRead)
+    {
+      QString msg = QString("Error reading Triangle '%1'. Object Count was %2 and should have been %3").arg(t, objsRead, k_StlElementCount);
+      setErrorCondition(-1004, msg);
+      std::ignore = fclose(f);
+      return;
+    }
 
-    fread(reinterpret_cast<void*>(&attr), sizeof(unsigned short), 1, f); // Read the Triangle Attribute Data length
+    objsRead = fread(reinterpret_cast<void*>(&attr), sizeof(uint16_t), 1, f); // Read the Triangle Attribute Data length
+    if(objsRead != 1)
+    {
+      QString msg = QString("Error reading Number of attributes for triangle '%1'. Object Count was %2 and should have been 1").arg(t, objsRead);
+      setErrorCondition(-1005, msg);
+      std::ignore = fclose(f);
+      return;
+    }
     if(attr > 0 && !magicsFile)
     {
-      std::vector<unsigned char> buffer(attr);                       // Allocate a buffer for the STL attribute data to be placed into
-      fread(reinterpret_cast<void*>(&(buffer.front())), attr, 1, f); // Read the bytes into the buffer so that we can skip it.
+      std::ignore = std::fseek(f, static_cast<size_t>(attr), SEEK_CUR); // Skip past the Triangle Attribute data since we don't know how to read it anyways
     }
     if(v[3] < m_minXcoord)
     {
