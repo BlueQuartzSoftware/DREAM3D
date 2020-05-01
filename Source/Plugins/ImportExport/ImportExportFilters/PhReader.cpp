@@ -284,7 +284,7 @@ void PhReader::dataCheck()
       m_FileWasRead = true;
 
       // We need to read the header of the input file to get the dimensions
-      m_InStream = fopen(getInputFile().toLatin1().data(), "r");
+      m_InStream = std::fopen(getInputFile().toLatin1().data(), "r");
       if(m_InStream == nullptr)
       {
         QString ss = QObject::tr("Error opening input file '%1'").arg(getInputFile());
@@ -339,7 +339,7 @@ void PhReader::execute()
     return;
   }
 
-  m_InStream = fopen(getInputFile().toLatin1().data(), "r");
+  m_InStream = std::fopen(getInputFile().toLatin1().data(), "r");
   if(m_InStream == nullptr)
   {
     QString ss = QObject::tr("Error opening input file '%1'").arg(getInputFile());
@@ -375,7 +375,7 @@ int32_t PhReader::readHeader()
   int nz = 0;
 
   // Read Line #1 which has the dimensions
-  if(fscanf(m_InStream, "%d %d %d\n", &nx, &ny, &nz) != 3)
+  if(std::fscanf(m_InStream, "%d %d %d\n", &nx, &ny, &nz) != 3)
   {
     QString ss = QObject::tr("Could not read dimensions");
     setErrorCondition(-48031, ss);
@@ -401,7 +401,7 @@ int32_t PhReader::readHeader()
   char buf[BUF_SIZE];
   // Read Line #2 and dump it
   ::memset(buf, 0, BUF_SIZE);
-  if(nullptr == fgets(buf, BUF_SIZE, m_InStream))
+  if(nullptr == std::fgets(buf, BUF_SIZE, m_InStream))
   {
     QString ss = QObject::tr("Error reading line 2");
     setErrorCondition(-48032, ss);
@@ -409,7 +409,7 @@ int32_t PhReader::readHeader()
   }
   // Read Line #3 and dump it
   ::memset(buf, 0, BUF_SIZE);
-  if(nullptr == fgets(buf, BUF_SIZE, m_InStream))
+  if(nullptr == std::fgets(buf, BUF_SIZE, m_InStream))
   {
     QString ss = QObject::tr("Error reading line 3");
     setErrorCondition(-48033, ss);
@@ -436,7 +436,7 @@ int32_t PhReader::readFile()
 
   for(size_t n = 0; n < totalPoints; ++n)
   {
-    if(fscanf(m_InStream, "%d", m_FeatureIds + n) != 1)
+    if(std::fscanf(m_InStream, "%d", m_FeatureIds + n) != 1)
     {
       fclose(m_InStream);
       m_InStream = nullptr;

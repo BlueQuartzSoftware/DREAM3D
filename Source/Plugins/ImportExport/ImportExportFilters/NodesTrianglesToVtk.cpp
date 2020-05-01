@@ -32,18 +32,16 @@
  *    United States Prime Contract Navy N00173-07-C-2068
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "NodesTrianglesToVtk.h"
 
 #include <memory>
-
-#include "NodesTrianglesToVtk.h"
+#include <cstdio>
 
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
@@ -173,7 +171,7 @@ void NodesTrianglesToVtk::execute()
   initialize();
 
   // Open the Nodes file for reading
-  FILE* nodesFile = fopen(m_NodesFile.toLatin1().data(), "rb+");
+  FILE* nodesFile = std::fopen(m_NodesFile.toLatin1().data(), "rb+");
   if(nodesFile == nullptr)
   {
 
@@ -184,7 +182,7 @@ void NodesTrianglesToVtk::execute()
 
   //  how many nodes are in the file
   int nNodes = 0;
-  if(fscanf(nodesFile, "%d", &nNodes) != 1)
+  if(std::fscanf(nodesFile, "%d", &nNodes) != 1)
   {
     QString ss = QObject::tr("Error reading number of Nodes from file").arg(m_NodesFile);
     setErrorCondition(-668, ss);
@@ -197,7 +195,7 @@ void NodesTrianglesToVtk::execute()
   }
 
   // Open the triangles file for reading
-  FILE* triFile = fopen(m_TrianglesFile.toLatin1().data(), "rb+");
+  FILE* triFile = std::fopen(m_TrianglesFile.toLatin1().data(), "rb+");
   if(triFile == nullptr)
   {
 
@@ -207,7 +205,7 @@ void NodesTrianglesToVtk::execute()
   }
   // how many triangles are in the file
   int nTriangles = 0;
-  if(fscanf(triFile, "%d", &nTriangles) != 1)
+  if(std::fscanf(triFile, "%d", &nTriangles) != 1)
   {
     QString ss = QObject::tr("Error reading number of Triangles from file").arg(m_NodesFile);
     setErrorCondition(-668, ss);
@@ -220,7 +218,7 @@ void NodesTrianglesToVtk::execute()
   }
   // Open the output VTK File for writing
   FILE* vtkFile = nullptr;
-  vtkFile = fopen(getOutputVtkFile().toLatin1().data(), "wb");
+  vtkFile = std::fopen(getOutputVtkFile().toLatin1().data(), "wb");
   if(nullptr == vtkFile)
   {
 
@@ -250,7 +248,7 @@ void NodesTrianglesToVtk::execute()
   // Write the POINTS data (Vertex)
   for(int i = 0; i < nNodes; i++)
   {
-    nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
+    nread = std::fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
     if(nread != 5)
     {
       break;
@@ -288,7 +286,7 @@ void NodesTrianglesToVtk::execute()
   for(int i = 0; i < nTriangles; i++)
   {
     // Read from the Input Triangles Temp File
-    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8);
+    nread = std::fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8);
     if(m_WriteBinaryFile)
     {
       tData[0] = 3; // Push on the total number of entries for this entry
@@ -340,7 +338,7 @@ void NodesTrianglesToVtk::execute()
   // Write the POINT_DATA section
   if(m_WriteBinaryFile)
   {
-    err = writeBinaryPointData(m_NodesFile, vtkFile, nNodes, m_WriteConformalMesh);
+    err = writeBinaryPointData(m_NodesFile, vtkFile, nNodes);
     if(err < 0)
     {
       setErrorCondition(err, tr("Could not write binary point data to file '%1'").arg(getOutputVtkFile()));
@@ -348,7 +346,7 @@ void NodesTrianglesToVtk::execute()
   }
   else
   {
-    err = writeASCIIPointData(m_NodesFile, vtkFile, nNodes, m_WriteConformalMesh);
+    err = writeASCIIPointData(m_NodesFile, vtkFile, nNodes);
     if(err < 0)
     {
       setErrorCondition(err, tr("Could not write ASCII point data to file '%1'").arg(getOutputVtkFile()));
@@ -367,7 +365,7 @@ void NodesTrianglesToVtk::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeBinaryPointData(const QString& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
+int NodesTrianglesToVtk::writeBinaryPointData(const QString& NodesFile, FILE* vtkFile, int nNodes)
 {
   //# first line = number of nodes
   //# column 1 = node id, starts from zero.
@@ -385,12 +383,12 @@ int NodesTrianglesToVtk::writeBinaryPointData(const QString& NodesFile, FILE* vt
   float pos[3] = {0.0f, 0.0f, 0.0f};
   int swapped;
   int nread = 0;
-  FILE* nodesFile = fopen(NodesFile.toLatin1().data(), "rb");
+  FILE* nodesFile = std::fopen(NodesFile.toLatin1().data(), "rb");
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
   fprintf(vtkFile, "SCALARS Node_Type int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
-  if(fscanf(nodesFile, "%d", &nodeId) != 1) // Read the number of nodes
+  if(std::fscanf(nodesFile, "%d", &nodeId) != 1) // Read the number of nodes
   {
     QString ss = QObject::tr("Error reading number of Nodes from file").arg(m_NodesFile);
     setErrorCondition(-668, ss);
@@ -401,7 +399,7 @@ int NodesTrianglesToVtk::writeBinaryPointData(const QString& NodesFile, FILE* vt
   std::vector<int> data(nNodes, 0);
   for(int i = 0; i < nNodes; i++)
   {
-    nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
+    nread = std::fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
     if(nread != 5)
     {
       break;
@@ -423,21 +421,20 @@ int NodesTrianglesToVtk::writeBinaryPointData(const QString& NodesFile, FILE* vt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeASCIIPointData(const QString& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
+int NodesTrianglesToVtk::writeASCIIPointData(const QString& NodesFile, FILE* vtkFile, int nNodes)
 {
-  std::ignore = conformalMesh;
   int err = 0;
   int nodeId = 0;
   int nodeKind = 0;
   float pos[3] = {0.0f, 0.0f, 0.0f};
   int nread = 0;
 
-  FILE* nodesFile = fopen(NodesFile.toLatin1().data(), "rb");
+  FILE* nodesFile = std::fopen(NodesFile.toLatin1().data(), "rb");
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
   fprintf(vtkFile, "SCALARS Node_Type int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
-  if(fscanf(nodesFile, "%d", &nodeId) != 1) // Read the number of nodes
+  if(std::fscanf(nodesFile, "%d", &nodeId) != 1) // Read the number of nodes
   {
     QString ss = QObject::tr("Error reading number of Nodes from file").arg(m_NodesFile);
     setErrorCondition(-668, ss);
@@ -446,7 +443,7 @@ int NodesTrianglesToVtk::writeASCIIPointData(const QString& NodesFile, FILE* vtk
   }
   for(int i = 0; i < nNodes; i++)
   {
-    nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
+    nread = std::fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
     if(nread != 5)
     {
       break;
@@ -474,8 +471,8 @@ int NodesTrianglesToVtk::writeBinaryCellData(const QString& TrianglesFile, FILE*
   size_t offset = 1;
   int nread = 0;
   // Open the triangles file for reading
-  FILE* triFile = fopen(TrianglesFile.toLatin1().data(), "rb");
-  if(fscanf(triFile, "%d", &nread) != 1) // Read the number of triangles and throw it away
+  FILE* triFile = std::fopen(TrianglesFile.toLatin1().data(), "rb");
+  if(std::fscanf(triFile, "%d", &nread) != 1) // Read the number of triangles and throw it away
   {
     QString ss = QObject::tr("Error reading number of Triangles from file").arg(m_NodesFile);
     setErrorCondition(-669, ss);
@@ -500,7 +497,7 @@ int NodesTrianglesToVtk::writeBinaryCellData(const QString& TrianglesFile, FILE*
   std::vector<int> cell_data(triangleCount);
   for(int i = 0; i < nTriangles; i++)
   {
-    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8);
+    nread = std::fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8);
     if(nread != 9)
     {
       return -1;
@@ -546,8 +543,8 @@ int NodesTrianglesToVtk::writeASCIICellData(const QString& TrianglesFile, FILE* 
 {
   int nread = 0;
   // Open the triangles file for reading
-  FILE* triFile = fopen(TrianglesFile.toLatin1().data(), "rb");
-  if(fscanf(triFile, "%d", &nread) != 1) // Read the number of triangles and throw it away
+  FILE* triFile = std::fopen(TrianglesFile.toLatin1().data(), "rb");
+  if(std::fscanf(triFile, "%d", &nread) != 1) // Read the number of triangles and throw it away
   {
     QString ss = QObject::tr("Error reading number of Triangles from file").arg(m_NodesFile);
     setErrorCondition(-669, ss);
@@ -568,7 +565,7 @@ int NodesTrianglesToVtk::writeASCIICellData(const QString& TrianglesFile, FILE* 
   int tData[9];
   for(int i = 0; i < nTriangles; i++)
   {
-    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8);
+    nread = std::fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8);
     if(nread != 9)
     {
       return -1;

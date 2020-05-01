@@ -234,8 +234,8 @@ protected:
   int writeBinaryCellData(const QString& TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh);
   int writeASCIICellData(const QString& TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh);
 
-  int writeBinaryPointData(const QString& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
-  int writeASCIIPointData(const QString& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
+  int writeBinaryPointData(const QString& NodesFile, FILE* vtkFile, int nNodes);
+  int writeASCIIPointData(const QString& NodesFile, FILE* vtkFile, int nNodes);
 
 private:
   QString m_NodesFile = {};

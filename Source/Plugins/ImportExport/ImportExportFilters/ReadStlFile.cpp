@@ -37,6 +37,7 @@
 
 #include <memory>
 #include <tuple>
+#include <cstdio>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QTextStream>
@@ -275,7 +276,7 @@ void ReadStlFile::readFile()
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(m_SurfaceMeshDataContainerName);
 
   // Open File
-  FILE* f = fopen(m_StlFilePath.toLatin1().data(), "rb");
+  FILE* f = std::fopen(m_StlFilePath.toLatin1().data(), "rb");
   if(nullptr == f)
   {
     setErrorCondition(-1003, "Error opening STL file");
@@ -285,7 +286,7 @@ void ReadStlFile::readFile()
   // Read Header
   char h[STL_HEADER_LENGTH];
   int32_t triCount = 0;
-  if(fread(h, STL_HEADER_LENGTH, 1, f) != 1)
+  if(std::fread(h, STL_HEADER_LENGTH, 1, f) != 1)
   {
     QString msg = QString("Error reading first 8 bytes of STL header. This can't be good.");
     setErrorCondition(-1005, msg);
@@ -309,7 +310,7 @@ void ReadStlFile::readFile()
     magicsFile = true;
   }
   // Read the number of triangles in the file.
-  if(fread(&triCount, sizeof(int32_t), 1, f) != 1)
+  if(std::fread(&triCount, sizeof(int32_t), 1, f) != 1)
   {
     QString msg = QString("Error reading number of triangles from file. This is bad.");
     setErrorCondition(-1006, msg);
@@ -335,7 +336,7 @@ void ReadStlFile::readFile()
   std::vector<uint8_t> triangleAttributeBuffer(std::numeric_limits<uint16_t>::max()); // Just allocate a buffer of max UINT16 elements
   for(int32_t t = 0; t < triCount; ++t)
   {
-    size_t objsRead = fread(reinterpret_cast<void*>(v), sizeof(float), k_StlElementCount, f); // Read the Triangle
+    size_t objsRead = std::fread(reinterpret_cast<void*>(v), sizeof(float), k_StlElementCount, f); // Read the Triangle
     if(k_StlElementCount != objsRead)
     {
       QString msg = QString("Error reading Triangle '%1'. Object Count was %2 and should have been %3").arg(t, objsRead, k_StlElementCount);
@@ -344,7 +345,7 @@ void ReadStlFile::readFile()
       return;
     }
 
-    objsRead = fread(reinterpret_cast<void*>(&attr), sizeof(uint16_t), 1, f); // Read the Triangle Attribute Data length
+    objsRead = std::fread(reinterpret_cast<void*>(&attr), sizeof(uint16_t), 1, f); // Read the Triangle Attribute Data length
     if(objsRead != 1)
     {
       QString msg = QString("Error reading Number of attributes for triangle '%1'. Object Count was %2 and should have been 1").arg(t, objsRead);
