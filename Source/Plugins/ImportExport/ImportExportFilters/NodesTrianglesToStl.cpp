@@ -32,18 +32,16 @@
  *    United States Prime Contract Navy N00173-07-C-2068
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "NodesTrianglesToStl.h"
 
 #include <memory>
-
-#include "NodesTrianglesToStl.h"
+#include <cstdio>
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
@@ -184,7 +182,7 @@ void NodesTrianglesToStl::execute()
   }
 
   // Open the Nodes file for reading
-  FILE* nodesFile = fopen(m_NodesFile.toLatin1().data(), "rb+");
+  FILE* nodesFile = std::fopen(m_NodesFile.toLatin1().data(), "rb+");
   if(nodesFile == nullptr)
   {
 
@@ -195,13 +193,19 @@ void NodesTrianglesToStl::execute()
   ScopedFileMonitor nodesFilePtr(nodesFile);
   //  how many nodes are in the file
   int nNodes = 0;
-  fscanf(nodesFile, "%d", &nNodes);
+  if(std::fscanf(nodesFile, "%d", &nNodes) != 1)
+  {
+    QString ss = QObject::tr("Error reading number of nodes from file").arg(m_NodesFile);
+    setErrorCondition(-667, ss);
+    return;
+  }
+  else
   {
     QString ss = QObject::tr("Node Count from %1 File: %2").arg(getNodesFile()).arg(nNodes);
     notifyStatusMessage(ss);
   }
   // Open the triangles file for reading
-  FILE* triFile = fopen(m_TrianglesFile.toLatin1().data(), "rb+");
+  FILE* triFile = std::fopen(m_TrianglesFile.toLatin1().data(), "rb+");
   if(triFile == nullptr)
   {
 
@@ -212,8 +216,13 @@ void NodesTrianglesToStl::execute()
   ScopedFileMonitor triFilePtr(triFile);
   // how many triangles are in the file
   int nTriangles = 0;
-  fscanf(triFile, "%d", &nTriangles);
-
+  if(std::fscanf(triFile, "%d", &nTriangles) != 1)
+  {
+    QString ss = QObject::tr("Error reading number of triangles from file").arg(m_NodesFile);
+    setErrorCondition(-668, ss);
+    return;
+  }
+  else
   {
     QString ss = QObject::tr("Triangle Count from %1 File: %2").arg(getTrianglesFile()).arg(nTriangles);
     notifyStatusMessage(ss);
@@ -231,7 +240,7 @@ void NodesTrianglesToStl::execute()
 
   for(int i = 0; i < nNodes; i++)
   {
-    nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
+    nread = std::fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
     if(nread != 5)
     {
       break;
@@ -260,7 +269,7 @@ void NodesTrianglesToStl::execute()
   for(int i = 0; i < nTriangles; i++)
   {
     // Read from the Input Triangles Temp File
-    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8);
+    nread = std::fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8);
     triangles[i * 3] = tData[1];
     triangles[i * 3 + 1] = tData[2];
     triangles[i * 3 + 2] = tData[3];
@@ -293,7 +302,7 @@ void NodesTrianglesToStl::execute()
     // Generate the output file name
 
     QString filename = getOutputStlDirectory() + "/" + getOutputStlPrefix() + QString::number(spin) + ".stl";
-    FILE* f = fopen(filename.toLatin1().data(), "wb");
+    FILE* f = std::fopen(filename.toLatin1().data(), "wb");
     ScopedFileMonitor fPtr(f);
 
     {
@@ -420,7 +429,7 @@ int NodesTrianglesToStl::writeNumTrianglesToFile(const QString& filename, int tr
   // We need to update the number of triangles in the file
   int err = 0;
 
-  FILE* out = fopen(filename.toLatin1().data(), "r+b");
+  FILE* out = std::fopen(filename.toLatin1().data(), "r+b");
   fseek(out, 80L, SEEK_SET);
   fwrite((char*)(&triCount), 1, 4, out);
   fclose(out);

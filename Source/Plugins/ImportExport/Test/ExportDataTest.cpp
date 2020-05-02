@@ -35,6 +35,8 @@
 
 #include <QtCore/QDir>
 
+#include <cstdio>
+
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
@@ -245,14 +247,15 @@ public:
   {
     {
       int num = 0;
-      FILE* f;
+      FILE* f = nullptr;
       QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + SIMPL::CellData::CellPhases + ".txt";
-      f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
+      f = std::fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
       DREAM3D_REQUIRE_VALID_POINTER(f)
 
       for(int i = 0; i < 20; i++) // compare file to what was written in array
       {
-        fscanf(f, "%d,", &num);
+        int32_t fieldsRead = std::fscanf(f, "%d,", &num);
+        DREAM3D_REQUIRE_EQUAL(fieldsRead, 1)
         if(i + 20 != num)
         {
           DREAM3D_REQUIRE_EQUAL(0, -3)
@@ -262,14 +265,15 @@ public:
     }
     {
       int num = 0;
-      FILE* f;
+      FILE* f = nullptr;
       QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + SIMPL::CellData::ConfidenceIndexNoSpace + ".txt";
-      f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
+      f = std::fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
       DREAM3D_REQUIRE_VALID_POINTER(f)
 
       for(int i = 0; i < 20; i++) // compare file to what was written in array
       {
-        fscanf(f, "%d,", &num);
+        int32_t fieldsRead = std::fscanf(f, "%d,", &num);
+        DREAM3D_REQUIRE_EQUAL(fieldsRead, 1)
         if(i + 20 != num)
         {
           DREAM3D_REQUIRE_EQUAL(0, -3)
@@ -279,13 +283,14 @@ public:
     }
     {
       int num = 0;
-      FILE* f;
+      FILE* f = nullptr;
       QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + SIMPL::GeneralData::ThresholdArray + ".txt";
-      f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
+      f = std::fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
       DREAM3D_REQUIRE_VALID_POINTER(f)
       for(int i = 0; i < 20; i++) // compare file to what was written in bool array
       {
-        fscanf(f, "%d,", &num);
+        int32_t fieldsRead = std::fscanf(f, "%d,", &num);
+        DREAM3D_REQUIRE_EQUAL(fieldsRead, 1)
         if((i % 2 == 0 && num == 1) || (i % 2 != 0 && num == 0))
         {
           DREAM3D_REQUIRE_EQUAL(0, -3)
