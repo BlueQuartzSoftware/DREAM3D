@@ -37,6 +37,7 @@
 
 #include "InitializeSyntheticVolume.h"
 
+#include <memory>
 
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5ScopedSentinel.h"
@@ -45,7 +46,6 @@
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -115,7 +115,6 @@ InitializeSyntheticVolume::InitializeSyntheticVolume()
   m_Origin[2] = 0.0f;
 
   m_EstimatedPrimaryFeatures = "";
-
 }
 
 // -----------------------------------------------------------------------------
@@ -238,10 +237,7 @@ void InitializeSyntheticVolume::dataCheck()
   image->setUnits(static_cast<IGeometry::LengthUnit>(m_LengthUnit));
 
   // Create our output Cell and Ensemble Attribute Matrix objects
-  std::vector<size_t> tDims(3, 0);
-  tDims[0] = static_cast<size_t>(m_Dimensions[0]);
-  tDims[1] = static_cast<size_t>(m_Dimensions[1]);
-  tDims[2] = static_cast<size_t>(m_Dimensions[2]);
+  std::vector<size_t> tDims = {static_cast<size_t>(m_Dimensions[0]), static_cast<size_t>(m_Dimensions[1]), static_cast<size_t>(m_Dimensions[2])};
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCode() < 0 && cellAttrMat == nullptr)
   {

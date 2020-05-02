@@ -226,6 +226,10 @@ public:
   QString getEstimatedPrimaryFeatures();
   Q_PROPERTY(QString EstimatedPrimaryFeatures READ getEstimatedPrimaryFeatures)
 
+  /**
+   * @brief getBoxDimensions Returns a string describing the box dimensions and size/volume
+   * @return
+   */
   QString getBoxDimensions();
   Q_PROPERTY(QString BoxDimensions READ getBoxDimensions)
 
@@ -316,7 +320,7 @@ private:
   DataArrayPath m_DataContainerName = {};
   QString m_CellAttributeMatrixName = {};
   QString m_EnsembleAttributeMatrixName = {};
-  int32_t m_LengthUnit = {};
+  int32_t m_LengthUnit = {6}; //  Micrometers default
   IntVec3Type m_Dimensions = {};
   FloatVec3Type m_Spacing = {};
   FloatVec3Type m_Origin = {};
