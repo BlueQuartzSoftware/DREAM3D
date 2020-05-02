@@ -61,9 +61,8 @@ class Sampling_EXPORT RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
   PYB11_FILTER_NEW_MACRO(RegularGridSampleSurfaceMesh)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-  PYB11_PROPERTY(int XPoints READ getXPoints WRITE setXPoints)
-  PYB11_PROPERTY(int YPoints READ getYPoints WRITE setYPoints)
-  PYB11_PROPERTY(int ZPoints READ getZPoints WRITE setZPoints)
+  PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
+  PYB11_PROPERTY(IntVec3Type Dimensions READ getDimensions WRITE setDimensions)
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
   PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
@@ -123,37 +122,26 @@ public:
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
   /**
-   * @brief Setter property for XPoints
+   * @brief Setter property for LengthUnit
    */
-  void setXPoints(int value);
+  void setLengthUnit(int32_t value);
   /**
-   * @brief Getter property for XPoints
-   * @return Value of XPoints
+   * @brief Getter property for LengthUnit
+   * @return Value of LengthUnit
    */
-  int getXPoints() const;
-  Q_PROPERTY(int XPoints READ getXPoints WRITE setXPoints)
+  int32_t getLengthUnit() const;
+  Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
 
   /**
-   * @brief Setter property for YPoints
+   * @brief Setter property for Dimensions
    */
-  void setYPoints(int value);
+  void setDimensions(const IntVec3Type& value);
   /**
-   * @brief Getter property for YPoints
-   * @return Value of YPoints
+   * @brief Getter property for Dimensions
+   * @return Value of Dimensions
    */
-  int getYPoints() const;
-  Q_PROPERTY(int YPoints READ getYPoints WRITE setYPoints)
-
-  /**
-   * @brief Setter property for ZPoints
-   */
-  void setZPoints(int value);
-  /**
-   * @brief Getter property for ZPoints
-   * @return Value of ZPoints
-   */
-  int getZPoints() const;
-  Q_PROPERTY(int ZPoints READ getZPoints WRITE setZPoints)
+  IntVec3Type getDimensions() const;
+  Q_PROPERTY(IntVec3Type Dimensions READ getDimensions WRITE setDimensions)
 
   /**
    * @brief Setter property for Spacing
@@ -187,6 +175,13 @@ public:
    */
   QString getFeatureIdsArrayName() const;
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+
+  /**
+   * @brief getBoxDimensions Returns a string describing the box dimensions and size/volume
+   * @return
+   */
+  QString getBoxDimensions();
+  Q_PROPERTY(QString BoxDimensions READ getBoxDimensions)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -273,9 +268,8 @@ private:
 
   DataArrayPath m_DataContainerName = {};
   QString m_CellAttributeMatrixName = {};
-  int m_XPoints = {};
-  int m_YPoints = {};
-  int m_ZPoints = {};
+  int32_t m_LengthUnit = {6}; //  Micrometers default
+  IntVec3Type m_Dimensions = {};
   FloatVec3Type m_Spacing = {};
   FloatVec3Type m_Origin = {};
   QString m_FeatureIdsArrayName = {};
