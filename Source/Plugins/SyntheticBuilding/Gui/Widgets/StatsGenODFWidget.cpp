@@ -720,7 +720,7 @@ void StatsGenODFWidget::on_selectAnglesFile_clicked()
   {
     proposedFile = angleFilePath->text();
   }
-  QString file = QFileDialog::getOpenFileName(this, tr("Select Angles File"), proposedFile, tr("Text Document (*.txt)"));
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Angles File"), proposedFile, tr("Text Documents (*.txt);;CSV (*.csv);;All Files(*.*)"));
   if(!file.isEmpty())
   {
     angleFilePath->setText(file);
