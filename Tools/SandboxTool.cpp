@@ -43,17 +43,6 @@
 #include <QtCore/QFile>
 #include <QtCore/QString>
 
-// SIMPLib includes
-#if 0
-#include "SIMPLib/Filtering/FilterFactory.hpp"
-#include "SIMPLib/Filtering/FilterManager.h"
-#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
-#include "SIMPLib/Plugin/PluginManager.h"
-#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/SIMPLibVersion.h"
-#endif
-
 #include "DREAM3DToolsConfiguration.h"
 
 #include "SandboxTool/RemoveSIMPLMacros.h"
@@ -161,14 +150,8 @@ int main(int argc, char* argv[])
 
   //  std::cout << "SandboxTool Starting.\nVersion " << SIMPLib::Version::PackageComplete().toStdString() << std::endl;
 
-#if 0
-  // Register all the filters including trying to load those from Plugins
-  FilterManager* fm = FilterManager::Instance();
-  SIMPLibPluginLoader::LoadPluginFilters(fm);
-#endif
-
   std::list<QDir> dirs;
-#if 1
+#if 0
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir()));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPL/Source/SIMPLib/CoreFilters"));
@@ -204,10 +187,7 @@ int main(int argc, char* argv[])
 #endif
 
   QStringList filters;
-  // filters.append("*.cpp");
-  //  filters.append("*.hpp");
   filters.append("*.h");
-  // filters.append("*.md");
 
   for(auto const& dir : dirs)
   {
