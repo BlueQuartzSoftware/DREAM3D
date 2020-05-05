@@ -1,43 +1,39 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#include <memory>
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "InitializeSyntheticVolume.h"
-
-#include <memory>
 
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5ScopedSentinel.h"
@@ -45,7 +41,6 @@
 
 #include <QtCore/QTextStream>
 
-#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -57,10 +52,11 @@
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/StatsData/BoundaryStatsData.h"
@@ -92,29 +88,8 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 InitializeSyntheticVolume::InitializeSyntheticVolume()
-: m_DataContainerName(SIMPL::Defaults::SyntheticVolumeDataContainerName)
-, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_EnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
-, m_LengthUnit(static_cast<int32_t>(IGeometry::LengthUnit::Micrometer))
-, m_InputStatsArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics)
-, m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes)
-, m_InputPhaseNamesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseName)
-, m_EstimateNumberOfFeatures(false)
-, m_EstimatedPrimaryFeatures("")
 {
-  m_Dimensions[0] = 128;
-  m_Dimensions[1] = 128;
-  m_Dimensions[2] = 128;
-
-  m_Spacing[0] = 0.25;
-  m_Spacing[1] = 0.25;
-  m_Spacing[2] = 0.25;
-
-  m_Origin[0] = 0.0f;
-  m_Origin[1] = 0.0f;
-  m_Origin[2] = 0.0f;
-
-  m_EstimatedPrimaryFeatures = "";
+  initialize();
 }
 
 // -----------------------------------------------------------------------------
@@ -129,15 +104,22 @@ void InitializeSyntheticVolume::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
   QStringList linkedProps("EstimatedPrimaryFeatures");
-  linkedProps << "InputStatsFile"
-              << "InputPhaseTypesArrayPath";
+  linkedProps << "InputPhaseTypesArrayPath";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Estimate Number of Features", EstimateNumberOfFeatures, FilterParameter::Parameter, InitializeSyntheticVolume, linkedProps));
-  //parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input Statistics File", InputStatsFile, FilterParameter::Parameter, InitializeSyntheticVolume, "*.dream3d"));
 
   PreflightUpdatedValueFilterParameter::Pointer param =
       SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Estimated Primary Features", EstimatedPrimaryFeatures, FilterParameter::Parameter, InitializeSyntheticVolume);
   param->setReadOnly(true);
   parameters.push_back(param);
+
+  {
+    parameters.push_back(SeparatorFilterParameter::New("Geometry Selection", FilterParameter::RequiredArray));
+    parameters.back()->setGroupIndex(1);
+    parameters.back()->setPropertyName("Geometry Selection");
+    DataContainerSelectionFilterParameter::RequirementType req;
+    req.dcGeometryTypes = {IGeometry::Type::Image};
+    parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Existing Geometry", GeometryDataContainer, FilterParameter::RequiredArray, InitializeSyntheticVolume, req, 1));
+  }
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
 
@@ -160,18 +142,44 @@ void InitializeSyntheticVolume::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Types", InputPhaseTypesArrayPath, FilterParameter::RequiredArray, InitializeSyntheticVolume, req));
   }
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Synthetic Volume Data Container", DataContainerName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Synthetic Volume Data Container", DataContainerName, FilterParameter::CreatedArray, InitializeSyntheticVolume, 0));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
-  //parameters.push_back(SIMPL_NEW_STRING_FP("Ensemble Attribute Matrix", EnsembleAttributeMatrixName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, InitializeSyntheticVolume, 0));
 
-  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions (Voxels)", Dimensions, FilterParameter::Parameter, InitializeSyntheticVolume));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, InitializeSyntheticVolume));
+  {
+    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
+    parameter->setHumanLabel("Source of Geometry");
+    parameter->setPropertyName("GeometrySelection");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, GeometrySelection));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, GeometrySelection));
+
+    parameter->setDefaultValue(0);
+
+    QVector<QString> choices;
+    choices.push_back("Create Geometry");
+    choices.push_back("Copy Geometry");
+
+    parameter->setChoices(choices);
+    linkedProps.clear();
+    linkedProps << "Dimensions"
+                << "Spacing"
+                << "Origin"
+                << "LengthUnit"
+                << "GeometryDataContainer"
+                << "Geometry Selection";
+    parameter->setLinkedProperties(linkedProps);
+    parameter->setEditable(false);
+    parameter->setCategory(FilterParameter::Parameter);
+    parameters.push_back(parameter);
+  }
+
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions (Voxels)", Dimensions, FilterParameter::Parameter, InitializeSyntheticVolume, 0));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, InitializeSyntheticVolume, 0));
   parameters.back()->setLegacyPropertyName("Resolution");
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, InitializeSyntheticVolume));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, InitializeSyntheticVolume, 0));
 
   QVector<QString> choices = IGeometry::GetAllLengthUnitStrings();
-  parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Units (For Description Only)", LengthUnit, FilterParameter::Parameter, InitializeSyntheticVolume, choices, false));
+  parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Units (For Description Only)", LengthUnit, FilterParameter::Parameter, InitializeSyntheticVolume, choices, false, 0));
 
   param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Box Size in Length Units", BoxDimensions, FilterParameter::Parameter, InitializeSyntheticVolume);
   param->setReadOnly(true);
@@ -221,15 +229,32 @@ void InitializeSyntheticVolume::dataCheck()
 
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
-
-  // Sanity Check the Dimensions and Spacing
-  INIT_SYNTH_VOLUME_CHECK(Dimensions[0], -5000);
-  INIT_SYNTH_VOLUME_CHECK(Dimensions[1], -5001);
-  INIT_SYNTH_VOLUME_CHECK(Dimensions[2], -5002);
-  INIT_SYNTH_VOLUME_CHECK(Spacing[0], -5003);
-  INIT_SYNTH_VOLUME_CHECK(Spacing[1], -5004);
-  INIT_SYNTH_VOLUME_CHECK(Spacing[2], -5005);
-
+  if(m_GeometrySelection == 0)
+  {
+    // Sanity Check the Dimensions and Spacing
+    INIT_SYNTH_VOLUME_CHECK(Dimensions[0], -5000);
+    INIT_SYNTH_VOLUME_CHECK(Dimensions[1], -5001);
+    INIT_SYNTH_VOLUME_CHECK(Dimensions[2], -5002);
+    INIT_SYNTH_VOLUME_CHECK(Spacing[0], -5003);
+    INIT_SYNTH_VOLUME_CHECK(Spacing[1], -5004);
+    INIT_SYNTH_VOLUME_CHECK(Spacing[2], -5005);
+  }
+  else
+  {
+    DataContainer::Pointer sourceGeomDC = getDataContainerArray()->getPrereqDataContainer(this, m_GeometryDataContainer);
+    if(getErrorCode() < 0)
+    {
+      m_Dimensions = {0, 0, 0};
+      m_Spacing = {0.0f, 0.0f, 0.0f};
+      m_Origin = {0.0f, 0.0f, 0.0f};
+      return;
+    }
+    ImageGeom::Pointer sourceGeom = sourceGeomDC->getGeometryAs<ImageGeom>();
+    m_Dimensions = sourceGeom->getDimensions().convertType<int32_t>();
+    m_Spacing = sourceGeom->getSpacing();
+    m_Origin = sourceGeom->getOrigin();
+    m_LengthUnit = static_cast<int32_t>(sourceGeom->getUnits());
+  }
   // Set the Dimensions, Spacing and Origin of the output data container
   image->setDimensions(static_cast<size_t>(m_Dimensions[0]), static_cast<size_t>(m_Dimensions[1]), static_cast<size_t>(m_Dimensions[2]));
   image->setSpacing(m_Spacing);
@@ -425,6 +450,15 @@ QString InitializeSyntheticVolume::getBoxDimensions()
   QString lengthUnit = IGeometry::LengthUnitToString(static_cast<IGeometry::LengthUnit>(m_LengthUnit));
   QString desc;
   QTextStream ss(&desc);
+  if(m_GeometrySelection == 1)
+  {
+    ss << "Dimensions: [" << m_Dimensions[0] << ", " << m_Dimensions[1] << ", " << m_Dimensions[2] << "]"
+       << "\n";
+    ss << "Spacing: [" << m_Spacing[0] << ", " << m_Spacing[1] << ", " << m_Spacing[2] << "]"
+       << "\n";
+    ss << "Origin: [" << m_Origin[0] << ", " << m_Origin[1] << ", " << m_Origin[2] << "]"
+       << "\n";
+  }
 
   ss << "X Range: " << m_Origin[0] << " to " << (m_Origin[0] + (m_Dimensions[0] * m_Spacing[0])) << " (Delta: " << (m_Dimensions[0] * m_Spacing[0]) << ") " << lengthUnit << "\n";
   ss << "Y Range: " << m_Origin[1] << " to " << (m_Origin[1] + (m_Dimensions[1] * m_Spacing[1])) << " (Delta: " << (m_Dimensions[1] * m_Spacing[1]) << ") " << lengthUnit << "\n";
@@ -668,4 +702,27 @@ void InitializeSyntheticVolume::setEstimateNumberOfFeatures(bool value)
 bool InitializeSyntheticVolume::getEstimateNumberOfFeatures() const
 {
   return m_EstimateNumberOfFeatures;
+}
+
+// -----------------------------------------------------------------------------
+void InitializeSyntheticVolume::setGeometrySelection(int32_t value)
+{
+  m_GeometrySelection = value;
+}
+
+// -----------------------------------------------------------------------------
+int32_t InitializeSyntheticVolume::getGeometrySelection() const
+{
+  return m_GeometrySelection;
+}
+// -----------------------------------------------------------------------------
+void InitializeSyntheticVolume::setGeometryDataContainer(const DataArrayPath& value)
+{
+  m_GeometryDataContainer = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InitializeSyntheticVolume::getGeometryDataContainer() const
+{
+  return m_GeometryDataContainer;
 }
