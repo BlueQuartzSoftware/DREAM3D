@@ -335,11 +335,6 @@ protected:
   void dataCheck() override;
 
   /**
-   * @brief Initializes all the private instance variables.
-   */
-  void initialize();
-
-  /**
    * @brief estimateNumFeatures Estimates the number of Features that will be generated based on the supplied statistics
    * @param dimensions Vector containing extents of the volume dimensions
    * @param res Vector containing resolution of the volume

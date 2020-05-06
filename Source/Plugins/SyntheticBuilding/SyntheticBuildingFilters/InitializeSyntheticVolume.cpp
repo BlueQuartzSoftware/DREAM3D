@@ -87,10 +87,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-InitializeSyntheticVolume::InitializeSyntheticVolume()
-{
-  initialize();
-}
+InitializeSyntheticVolume::InitializeSyntheticVolume() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -203,13 +200,6 @@ void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersRea
   setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath()));
   setEstimateNumberOfFeatures(reader->readValue("EstimateNumberOfFeatures", getEstimateNumberOfFeatures()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void InitializeSyntheticVolume::initialize()
-{
 }
 
 // -----------------------------------------------------------------------------
