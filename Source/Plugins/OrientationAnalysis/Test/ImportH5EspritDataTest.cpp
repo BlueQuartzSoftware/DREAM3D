@@ -31,11 +31,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <QtCore/QFile>
-
 #include <QtCore/QDebug>
 
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
-
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"

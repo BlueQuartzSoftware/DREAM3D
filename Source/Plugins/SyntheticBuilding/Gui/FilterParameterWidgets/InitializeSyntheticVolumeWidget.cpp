@@ -49,7 +49,6 @@
 #include <QtCore/QDebug>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"

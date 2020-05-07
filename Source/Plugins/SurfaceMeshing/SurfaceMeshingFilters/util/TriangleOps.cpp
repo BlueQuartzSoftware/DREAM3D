@@ -38,7 +38,6 @@
 #include <QtCore/QDebug>
 
 #include "SIMPLib/DataContainers/DataContainer.h"
-
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/MatrixMath.h"
 

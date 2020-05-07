@@ -32,8 +32,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "ChangeAngleRepresentation.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -43,11 +41,9 @@
 #endif
 
 #include <QtCore/QTextStream>
-
 #include <QtCore/QDebug>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"

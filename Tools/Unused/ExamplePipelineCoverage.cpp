@@ -9,11 +9,9 @@
 #include <QtCore/QFile>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
-
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
-
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"

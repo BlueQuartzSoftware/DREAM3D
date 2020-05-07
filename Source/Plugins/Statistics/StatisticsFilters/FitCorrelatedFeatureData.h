@@ -44,7 +44,6 @@
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 

@@ -40,13 +40,11 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-
 #include <QtCore/QTextStream>
 
 #include <QtCore/QDebug>
 
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
-
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"

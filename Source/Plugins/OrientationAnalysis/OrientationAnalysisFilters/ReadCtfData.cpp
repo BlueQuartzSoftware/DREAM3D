@@ -32,19 +32,15 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "ReadCtfData.h"
 
 #include <QtCore/QDateTime>
 #include <QtCore/QFileInfo>
+#include <QtCore/QTextStream>
 
 #include "EbsdLib/IO/HKL/CtfFields.h"
 
-#include <QtCore/QTextStream>
-
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -59,7 +55,7 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
-#include "ChangeAngleRepresentation.h"
+#include "OrientationAnalysis/OrientationAnalysisFilters/ChangeAngleRepresentation.h"
 
 enum createdPathID : RenameDataPath::DataID_t
 {

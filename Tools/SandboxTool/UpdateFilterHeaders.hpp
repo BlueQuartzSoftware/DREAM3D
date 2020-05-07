@@ -18,84 +18,52 @@ public:
     QFileInfo fi(hFile);
 
     // Verify that there is a matching .cpp file
+#if 0
     QString cppFile = hFile;
     cppFile = cppFile.replace(".h", ".cpp");
     QFileInfo cfi(cppFile);
     if(!cfi.exists())
     {
-      // std::cout << "Cpp File does not exist: " << cppFile.toStdString() << std::endl;
       return;
     }
-    //    QString fName = fi.fileName();
-    //    if(fi.baseName() != "MultiEmmpmFilter")
-    //    {
-    //      return;
-    //    }
-
+#endif
+    // QString fName = fi.fileName();
+    if(fi.baseName() != "ReadCtfData")
+    {
+      return;
+    }
+    qDebug() << hFile;
     // Read the Source File
     QFile source(hFile);
     source.open(QFile::ReadOnly);
     contents = source.readAll();
     source.close();
 
-    // qDebug() << hFile;
     QVector<QString> outLines;
     QStringList list = contents.split(QRegExp("\\n"));
     QStringListIterator sourceLines(list);
 
     int32_t lineIndex = 0;
 
-    QString memoryInclude = "#include <memory>";
-    int memoryIncludeIndex = 0;
+    QString simplSearch = "#include \"SIMPLib/>";
+    int lastIndex = 0;
 
     while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
 
-      if(line.trimmed() == memoryInclude)
+      if(line.trimmed() == simplSearch)
       {
-        memoryIncludeIndex = lineIndex;
-        break;
+        std::cout << lineIndex << ": " << line.toStdString() << std::endl;
+        if(lineIndex != lineIndex + 1)
+        {
+          std::cout << "Gap found at line " << lastIndex << std::endl;
+        }
       }
       lineIndex++;
       outLines.push_back(line);
     }
 
-    // Now read the .cpp file
-    if(memoryIncludeIndex > 0)
-    {
-      outLines.clear();
-      bool updateCppFile = false;
-      // Read the Source File
-      QFile source(cppFile);
-      source.open(QFile::ReadOnly);
-      contents = source.readAll();
-      source.close();
-
-      list = contents.split(QRegExp("\\n"));
-      sourceLines = QStringListIterator(list);
-
-      while(sourceLines.hasNext())
-      {
-        QString line = sourceLines.next();
-
-        if(line.trimmed() == memoryInclude)
-        {
-          updateCppFile = true;
-          memoryIncludeIndex = lineIndex;
-        }
-        else
-        {
-          outLines.push_back(line);
-        }
-
-        lineIndex++;
-      }
-      if(updateCppFile)
-      {
-        // std::cout << "Updating: " << cppFile.toStdString() << std::endl;
-        writeOutput(updateCppFile, outLines, cppFile);
-      }
-    }
+    writeOutput(false, outLines, hFile);
   }
 };

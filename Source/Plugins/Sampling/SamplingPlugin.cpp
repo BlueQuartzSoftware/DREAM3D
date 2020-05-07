@@ -37,11 +37,9 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Filtering/FilterFactory.hpp"
-
 #include "SIMPLib/Filtering/FilterManager.h"
 
 #include "Sampling/SamplingConstants.h"

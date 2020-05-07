@@ -32,8 +32,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "VerifyTriangleWinding.h"
 
 #include <QtCore/QString>
@@ -55,7 +53,6 @@
 #include <QtCore/QDebug>
 
 #include "SIMPLib/Geometry/TriangleGeom.h"
-
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"

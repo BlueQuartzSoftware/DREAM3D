@@ -188,7 +188,7 @@ int main(int argc, char* argv[])
 #endif
 
   QStringList filters;
-  filters.append("*.h");
+  filters.append("*.cpp");
 
   for(auto const& dir : dirs)
   {

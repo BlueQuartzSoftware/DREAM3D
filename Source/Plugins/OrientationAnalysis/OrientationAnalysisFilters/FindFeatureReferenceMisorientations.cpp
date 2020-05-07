@@ -32,8 +32,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "FindFeatureReferenceMisorientations.h"
 
 #include <QtCore/QTextStream>
@@ -56,7 +54,6 @@
 #include "EbsdLib/Core/OrientationTransformation.hpp"
 #include "EbsdLib/Core/Quaternion.hpp"
 #include "EbsdLib/LaueOps/LaueOps.h"
-
 #include "EbsdLib/Core/EbsdLibConstants.h"
 
 // -----------------------------------------------------------------------------

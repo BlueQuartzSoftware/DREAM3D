@@ -56,11 +56,9 @@
 #include <limits>
 
 #include <QtCore/QTextStream>
-
 #include <QtCore/QDebug>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/DataArrays/StructArray.hpp"
 #include "SIMPLib/Geometry/MeshStructs.h"
 #include "SIMPLib/Math/SIMPLibMath.h"

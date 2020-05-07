@@ -47,7 +47,6 @@
 #include <QtCore/QDebug>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"

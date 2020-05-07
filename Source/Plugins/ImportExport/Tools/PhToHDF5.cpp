@@ -39,7 +39,6 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QString>
 #include <QtCore/QVector>
-
 #include <QtCore/QMap>
 
 #include <tclap/CmdLine.h>
@@ -51,7 +50,6 @@
 #include <QtCore/QDebug>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"

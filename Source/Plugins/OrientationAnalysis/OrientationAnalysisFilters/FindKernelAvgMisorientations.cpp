@@ -55,7 +55,6 @@
 #include "EbsdLib/Core/OrientationTransformation.hpp"
 #include "EbsdLib/Core/Quaternion.hpp"
 #include "EbsdLib/LaueOps/LaueOps.h"
-
 #include "EbsdLib/Core/EbsdLibConstants.h"
 
 // -----------------------------------------------------------------------------

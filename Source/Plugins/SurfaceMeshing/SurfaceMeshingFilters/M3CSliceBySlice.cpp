@@ -32,14 +32,11 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "M3CSliceBySlice.h"
 
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
 #include <QtCore/QTextStream>
-
 #include <QtCore/QDebug>
 
 #include "SIMPLib/Math/SIMPLibMath.h"

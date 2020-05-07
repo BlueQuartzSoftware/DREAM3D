@@ -45,7 +45,6 @@
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
 #include "SIMPLib/Utilities/SIMPLDataPathValidator.h"

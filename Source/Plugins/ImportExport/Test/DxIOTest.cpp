@@ -36,13 +36,11 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 #include <QtCore/QTime>
-
 #include <QtCore/QTextStream>
 
 #include <QtCore/QDebug>
 
 #include "SIMPLib/DataArrays/DataArray.hpp"
-
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"

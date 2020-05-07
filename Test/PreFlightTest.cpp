@@ -43,11 +43,9 @@
 #include <QtCore/QDebug>
 #include <QtCore/QMetaProperty>
 #include <QtCore/QString>
-
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Observer.h"
-
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"

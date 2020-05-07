@@ -2,10 +2,9 @@
 #include <memory>
 
 #include <QtCore/QTextStream>
+#include <QtCore/QProcess>
 
 #include <iostream>
-
-#include <QtCore/QProcess>
 #include <QtCore/QString>
 
 #include "Sandbox.h"

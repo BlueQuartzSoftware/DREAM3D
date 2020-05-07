@@ -13,7 +13,6 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
-
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 
 #include "UnitTestSupport.hpp"

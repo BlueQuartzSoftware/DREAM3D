@@ -68,7 +68,6 @@
 #include "EbsdLib/LaueOps/TriclinicOps.h"
 #include "EbsdLib/LaueOps/TrigonalLowOps.h"
 #include "EbsdLib/LaueOps/TrigonalOps.h"
-
 #include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"

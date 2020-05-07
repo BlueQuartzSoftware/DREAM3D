@@ -47,7 +47,6 @@
 #include <QtCore/QDebug>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"

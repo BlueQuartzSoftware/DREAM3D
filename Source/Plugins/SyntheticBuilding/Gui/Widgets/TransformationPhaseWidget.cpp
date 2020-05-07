@@ -48,7 +48,6 @@
 #include <QtCore/QDebug>
 
 #include "SIMPLib/DataArrays/StatsDataArray.h"
-
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"

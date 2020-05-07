@@ -6,11 +6,9 @@
 #include "ImportAvxmMDSim.h"
 
 #include <QtCore/QFileInfo>
-
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"

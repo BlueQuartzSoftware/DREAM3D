@@ -49,7 +49,6 @@
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Geometry/ImageGeom.h"
-
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"

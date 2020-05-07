@@ -45,11 +45,9 @@
 
 // DREAM3DLib includes
 #include <QtCore/QTextStream>
-
 #include <QtCore/QDebug>
 
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"

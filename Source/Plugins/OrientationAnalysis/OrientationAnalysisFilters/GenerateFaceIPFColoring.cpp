@@ -32,8 +32,6 @@
  *    United States Prime Contract Navy N00173-07-C-2068
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "GenerateFaceIPFColoring.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -45,7 +43,6 @@
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -66,7 +63,6 @@
 #include "EbsdLib/LaueOps/TriclinicOps.h"
 #include "EbsdLib/LaueOps/TrigonalLowOps.h"
 #include "EbsdLib/LaueOps/TrigonalOps.h"
-
 #include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"

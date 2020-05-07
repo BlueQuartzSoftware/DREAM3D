@@ -32,11 +32,9 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-
 #include <QtCore/QDebug>
 
 #include "SIMPLib/DataArrays/DataArray.hpp"
-
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"

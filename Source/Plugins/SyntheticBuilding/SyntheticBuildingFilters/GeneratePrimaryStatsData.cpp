@@ -29,7 +29,6 @@
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "EbsdLib/Core/EbsdLibConstants.h"
-
 #include "EbsdLib/Texture/StatsGen.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
