@@ -2,7 +2,7 @@
     "00": {
         "FaceAttributeMatrixName": "FaceData",
         "FaceNormalsArrayName": "FaceNormals",
-        "FilterVersion": "6.6.115",
+        "FilterVersion": "6.6.117",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Import STL File",
         "Filter_Name": "ReadStlFile",
@@ -15,7 +15,7 @@
         }
     },
     "01": {
-        "FilterVersion": "2.0.218",
+        "FilterVersion": "2.0.222",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Data Array",
         "Filter_Name": "CreateDataArray",
@@ -25,58 +25,16 @@
             "Min": 0
         },
         "InitializationType": 0,
-        "InitializationValue": "0",
+        "InitializationValue": "[0;2]",
         "NewArray": {
             "Attribute Matrix Name": "FaceData",
-            "Data Array Name": "Array_0",
+            "Data Array Name": "FaceLabels",
             "Data Container Name": "STL-Cylinder"
         },
-        "NumberOfComponents": 1,
+        "NumberOfComponents": 2,
         "ScalarType": 4
     },
     "02": {
-        "FilterVersion": "2.0.218",
-        "Filter_Enabled": true,
-        "Filter_Human_Label": "Create Data Array",
-        "Filter_Name": "CreateDataArray",
-        "Filter_Uuid": "{77f392fb-c1eb-57da-a1b1-e7acf9239fb8}",
-        "InitializationRange": {
-            "Max": 0,
-            "Min": 0
-        },
-        "InitializationType": 0,
-        "InitializationValue": "1",
-        "NewArray": {
-            "Attribute Matrix Name": "FaceData",
-            "Data Array Name": "Array_1",
-            "Data Container Name": "STL-Cylinder"
-        },
-        "NumberOfComponents": 1,
-        "ScalarType": 4
-    },
-    "03": {
-        "FilterVersion": "2.0.218",
-        "Filter_Enabled": true,
-        "Filter_Human_Label": "Combine Attribute Arrays",
-        "Filter_Name": "CombineAttributeArrays",
-        "Filter_Uuid": "{a6b50fb0-eb7c-5d9b-9691-825d6a4fe772}",
-        "MoveValues": 1,
-        "NormalizeData": 0,
-        "SelectedDataArrayPaths": [
-            {
-                "Attribute Matrix Name": "FaceData",
-                "Data Array Name": "Array_0",
-                "Data Container Name": "STL-Cylinder"
-            },
-            {
-                "Attribute Matrix Name": "FaceData",
-                "Data Array Name": "Array_1",
-                "Data Container Name": "STL-Cylinder"
-            }
-        ],
-        "StackedDataArrayName": "FaceLabels"
-    },
-    "04": {
         "CellAttributeMatrixName": "CellData",
         "DataContainerName": {
             "Attribute Matrix Name": "",
@@ -89,7 +47,7 @@
             "z": 300
         },
         "FeatureIdsArrayName": "Inside",
-        "FilterVersion": "6.6.115",
+        "FilterVersion": "6.6.117",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Sample Triangle Geometry on Regular Grid",
         "Filter_Name": "RegularGridSampleSurfaceMesh",
@@ -111,9 +69,9 @@
             "Data Container Name": "STL-Cylinder"
         }
     },
-    "05": {
+    "03": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "2.0.218",
+        "FilterVersion": "2.0.222",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Threshold Objects (Advanced)",
         "Filter_Name": "MultiThresholdObjects2",
@@ -131,7 +89,7 @@
             ]
         }
     },
-    "06": {
+    "04": {
         "CellEnsembleAttributeMatrixName": "CellEnsembleData",
         "CrystalStructuresArrayName": "CrystalStructures",
         "Filter_Enabled": true,
@@ -267,7 +225,7 @@
             "Data Container Name": "StatsGeneratorDataContainer"
         }
     },
-    "07": {
+    "05": {
         "CellAttributeMatrixName": "CellData",
         "DataContainerName": {
             "Attribute Matrix Name": "",
@@ -280,7 +238,7 @@
             "z": 300
         },
         "EstimateNumberOfFeatures": 1,
-        "FilterVersion": "6.6.115",
+        "FilterVersion": "6.6.117",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Initialize Synthetic Volume",
         "Filter_Name": "InitializeSyntheticVolume",
@@ -313,8 +271,8 @@
             "z": 0.10000000149011612
         }
     },
-    "08": {
-        "FilterVersion": "6.6.115",
+    "06": {
+        "FilterVersion": "6.6.117",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Establish Shape Types",
         "Filter_Name": "EstablishShapeTypes",
@@ -330,13 +288,13 @@
         ],
         "ShapeTypesArrayName": "ShapeTypes"
     },
-    "09": {
+    "07": {
         "CellPhasesArrayName": "Phases",
         "FeatureGeneration": 0,
         "FeatureIdsArrayName": "FeatureIds",
         "FeatureInputFile": "/Users/mjackson",
         "FeaturePhasesArrayName": "Phases",
-        "FilterVersion": "6.6.115",
+        "FilterVersion": "6.6.117",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Pack Primary Phases",
         "Filter_Name": "PackPrimaryPhases",
@@ -388,7 +346,7 @@
         },
         "UseMask": 1
     },
-    "10": {
+    "08": {
         "BoundaryCellsArrayName": "BoundaryCells",
         "CellFeatureAttributeMatrixPath": {
             "Attribute Matrix Name": "Grain Data",
@@ -400,7 +358,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "6.6.115",
+        "FilterVersion": "6.6.117",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
@@ -412,7 +370,7 @@
         "StoreSurfaceFeatures": 1,
         "SurfaceFeaturesArrayName": "SurfaceFeatures"
     },
-    "11": {
+    "09": {
         "AvgQuatsArrayName": "AvgQuats",
         "CellEulerAnglesArrayName": "EulerAngles",
         "CrystalStructuresArrayPath": {
@@ -431,7 +389,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "6.6.115",
+        "FilterVersion": "6.6.117",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Match Crystallography",
         "Filter_Name": "MatchCrystallography",
@@ -469,7 +427,7 @@
         },
         "VolumesArrayName": "Volumes"
     },
-    "12": {
+    "10": {
         "CellEulerAnglesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "EulerAngles",
@@ -486,7 +444,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "StatsGeneratorDataContainer"
         },
-        "FilterVersion": "6.6.115",
+        "FilterVersion": "6.6.117",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
@@ -503,8 +461,8 @@
         },
         "UseGoodVoxels": 0
     },
-    "13": {
-        "FilterVersion": "2.0.218",
+    "11": {
+        "FilterVersion": "2.0.222",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
@@ -515,7 +473,7 @@
     },
     "PipelineBuilder": {
         "Name": "Cylinder_Synthetic",
-        "Number_Filters": 14,
+        "Number_Filters": 12,
         "Version": 6
     }
 }

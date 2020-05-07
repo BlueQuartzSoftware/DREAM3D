@@ -44,7 +44,7 @@ def single_cubic_phase_rolled():
                                                                             'CellEnsembleData', 'PhaseTypes'),
                                                         simpl.DataArrayPath('StatsGeneratorDataContainer',
                                                                             'CellEnsembleData', 'PhaseName'),
-                                                        False)
+                                                        False, 0, 'NOT NEEDED')
     if err < 0:
         print('InitializeSyntheticVolume ErrorCondition: %d' % err)
 

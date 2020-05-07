@@ -59,9 +59,6 @@ class SyntheticBuilding_EXPORT InitializeSyntheticVolume : public AbstractFilter
   PYB11_SHARED_POINTERS(InitializeSyntheticVolume)
   PYB11_FILTER_NEW_MACRO(InitializeSyntheticVolume)
 
-  PYB11_PROPERTY(int32_t GeometrySelection READ getGeometrySelection WRITE setGeometrySelection)
-  PYB11_PROPERTY(DataArrayPath GeometryDataContainer READ getGeometryDataContainer WRITE setGeometryDataContainer)
-
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString EnsembleAttributeMatrixName READ getEnsembleAttributeMatrixName WRITE setEnsembleAttributeMatrixName)
@@ -76,6 +73,10 @@ class SyntheticBuilding_EXPORT InitializeSyntheticVolume : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath InputPhaseNamesArrayPath READ getInputPhaseNamesArrayPath WRITE setInputPhaseNamesArrayPath)
 
   PYB11_PROPERTY(bool EstimateNumberOfFeatures READ getEstimateNumberOfFeatures WRITE setEstimateNumberOfFeatures)
+
+  PYB11_PROPERTY(int32_t GeometrySelection READ getGeometrySelection WRITE setGeometrySelection)
+  PYB11_PROPERTY(DataArrayPath GeometryDataContainer READ getGeometryDataContainer WRITE setGeometryDataContainer)
+  
   PYB11_END_BINDINGS()
   // End Python bindings declarations
 

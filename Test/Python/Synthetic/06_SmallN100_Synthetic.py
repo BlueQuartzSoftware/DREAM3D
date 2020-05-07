@@ -236,7 +236,7 @@ def small_in100_test():
                                                                             'Phase Data', 'PhaseTypes'),
                                                         simpl.DataArrayPath('Small IN100',
                                                                             'Phase Data', 'MaterialName'),
-                                                        False)
+                                                        False, 0, 'NOT NEEDED')
     if err < 0:
         print('InitializeSyntheticVolume ErrorCondition: %d' % err)
 
