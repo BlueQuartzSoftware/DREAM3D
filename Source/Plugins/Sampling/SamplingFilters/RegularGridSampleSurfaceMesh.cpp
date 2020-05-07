@@ -176,8 +176,9 @@ void RegularGridSampleSurfaceMesh::dataCheck()
 
   // Set the Dimensions, Spacing and Origin of the output data container
   image->setDimensions(static_cast<size_t>(m_Dimensions[0]), static_cast<size_t>(m_Dimensions[1]), static_cast<size_t>(m_Dimensions[2]));
-  m->getGeometryAs<ImageGeom>()->setSpacing(m_Spacing);
-  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin);
+  image->setSpacing(m_Spacing);
+  image->setOrigin(m_Origin);
+  image->setUnits(static_cast<IGeometry::LengthUnit>(m_LengthUnit));
 
   std::vector<size_t> tDims = {static_cast<size_t>(m_Dimensions[0]), static_cast<size_t>(m_Dimensions[1]), static_cast<size_t>(m_Dimensions[2])};
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
@@ -207,14 +208,16 @@ VertexGeom::Pointer RegularGridSampleSurfaceMesh::generate_points()
 
   for(int32_t k = 0; k < m_Dimensions[2]; k++)
   {
+    float f_k = static_cast<float>(k) + 0.5f;
     for(int32_t j = 0; j < m_Dimensions[1]; j++)
     {
+      float f_j = static_cast<float>(j) + 0.5f;
       for(int32_t i = 0; i < m_Dimensions[0]; i++)
       {
         float f_i = static_cast<float>(i) + 0.5f;
         coords[0] = f_i * m_Spacing[0] + m_Origin[0];
-        coords[1] = f_i * m_Spacing[1] + m_Origin[1];
-        coords[2] = f_i * m_Spacing[2] + m_Origin[2];
+        coords[1] = f_j * m_Spacing[1] + m_Origin[1];
+        coords[2] = f_k * m_Spacing[2] + m_Origin[2];
         points->setCoords(count, coords);
         count++;
       }

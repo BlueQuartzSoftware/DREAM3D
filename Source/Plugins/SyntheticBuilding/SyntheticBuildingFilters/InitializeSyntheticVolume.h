@@ -41,6 +41,8 @@
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
@@ -56,16 +58,23 @@ class SyntheticBuilding_EXPORT InitializeSyntheticVolume : public AbstractFilter
   PYB11_FILTER()
   PYB11_SHARED_POINTERS(InitializeSyntheticVolume)
   PYB11_FILTER_NEW_MACRO(InitializeSyntheticVolume)
+
+  PYB11_PROPERTY(int32_t GeometrySelection READ getGeometrySelection WRITE setGeometrySelection)
+  PYB11_PROPERTY(DataArrayPath GeometryDataContainer READ getGeometryDataContainer WRITE setGeometryDataContainer)
+
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString EnsembleAttributeMatrixName READ getEnsembleAttributeMatrixName WRITE setEnsembleAttributeMatrixName)
+
   PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
   PYB11_PROPERTY(IntVec3Type Dimensions READ getDimensions WRITE setDimensions)
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
+
   PYB11_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
   PYB11_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
   PYB11_PROPERTY(DataArrayPath InputPhaseNamesArrayPath READ getInputPhaseNamesArrayPath WRITE setInputPhaseNamesArrayPath)
+
   PYB11_PROPERTY(bool EstimateNumberOfFeatures READ getEstimateNumberOfFeatures WRITE setEstimateNumberOfFeatures)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
@@ -76,7 +85,7 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -99,6 +108,28 @@ public:
   static QString ClassName();
 
   ~InitializeSyntheticVolume() override;
+
+  /**
+   * @brief Setter property for GeometrySelection
+   */
+  void setGeometrySelection(int32_t value);
+  /**
+   * @brief Getter property for GeometrySelection
+   * @return Value of GeometrySelection
+   */
+  int32_t getGeometrySelection() const;
+  Q_PROPERTY(int32_t GeometrySelection READ getGeometrySelection WRITE setGeometrySelection)
+
+  /**
+   * @brief Setter property for GeometryDataContainer
+   */
+  void setGeometryDataContainer(const DataArrayPath& value);
+  /**
+   * @brief Getter property for GeometryDataContainer
+   * @return Value of GeometryDataContainer
+   */
+  DataArrayPath getGeometryDataContainer() const;
+  Q_PROPERTY(DataArrayPath GeometryDataContainer READ getGeometryDataContainer WRITE setGeometryDataContainer)
 
   /**
    * @brief Setter property for DataContainerName
@@ -304,11 +335,6 @@ protected:
   void dataCheck() override;
 
   /**
-   * @brief Initializes all the private instance variables.
-   */
-  void initialize();
-
-  /**
    * @brief estimateNumFeatures Estimates the number of Features that will be generated based on the supplied statistics
    * @param dimensions Vector containing extents of the volume dimensions
    * @param res Vector containing resolution of the volume
@@ -317,19 +343,21 @@ protected:
   QString estimateNumFeatures(IntVec3Type dimensions, FloatVec3Type res);
 
 private:
-  DataArrayPath m_DataContainerName = {};
-  QString m_CellAttributeMatrixName = {};
-  QString m_EnsembleAttributeMatrixName = {};
-  int32_t m_LengthUnit = {6}; //  Micrometers default
-  IntVec3Type m_Dimensions = {};
-  FloatVec3Type m_Spacing = {};
-  FloatVec3Type m_Origin = {};
-  DataArrayPath m_InputStatsArrayPath = {};
-  DataArrayPath m_InputPhaseTypesArrayPath = {};
-  DataArrayPath m_InputPhaseNamesArrayPath = {};
-  bool m_EstimateNumberOfFeatures = {};
+  int32_t m_GeometrySelection = {0};
+  DataArrayPath m_GeometryDataContainer = {"", "", ""};
+  DataArrayPath m_DataContainerName = {SIMPL::Defaults::SyntheticVolumeDataContainerName, "", ""};
+  QString m_CellAttributeMatrixName = {SIMPL::Defaults::CellAttributeMatrixName};
+  QString m_EnsembleAttributeMatrixName = {SIMPL::Defaults::CellEnsembleAttributeMatrixName};
+  int32_t m_LengthUnit = {static_cast<int32_t>(IGeometry::LengthUnit::Micrometer)}; //  Micrometers default
+  IntVec3Type m_Dimensions = {128, 128, 128};
+  FloatVec3Type m_Spacing = {0.25f, 0.25f, 0.25f};
+  FloatVec3Type m_Origin = {0.0f, 0.0f, 0.0f};
+  DataArrayPath m_InputStatsArrayPath = {SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics};
+  DataArrayPath m_InputPhaseTypesArrayPath = {SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes};
+  DataArrayPath m_InputPhaseNamesArrayPath = {SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseName};
+  bool m_EstimateNumberOfFeatures = {false};
 
-  QString m_EstimatedPrimaryFeatures;
+  QString m_EstimatedPrimaryFeatures = {};
 
 public:
   InitializeSyntheticVolume(const InitializeSyntheticVolume&) = delete; // Copy Constructor Not Implemented
