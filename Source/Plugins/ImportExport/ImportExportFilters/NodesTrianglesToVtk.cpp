@@ -34,7 +34,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "NodesTrianglesToVtk.h"
 
-#include <memory>
 #include <cstdio>
 
 #include <QtCore/QFile>

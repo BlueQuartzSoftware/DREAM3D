@@ -148,10 +148,11 @@ int main(int argc, char* argv[])
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setApplicationName("SandboxTool");
 
-  //  std::cout << "SandboxTool Starting.\nVersion " << SIMPLib::Version::PackageComplete().toStdString() << std::endl;
+  std::cout << "SandboxTool Starting.\nVersion "
+            << "1.0.0" << std::endl;
 
   std::list<QDir> dirs;
-#if 0
+#if 1
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir()));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPL/Source/SIMPLib/CoreFilters"));
@@ -172,7 +173,7 @@ int main(int argc, char* argv[])
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Source/OrientationLib"));
 
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/AFRLDistributionC/"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/AFRLDistroC/"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/CRADA3DSystems/"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/AskNDEToolbox/"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/BrukerIntegration/"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/CAxisByPolarizedLight/"));
@@ -191,7 +192,7 @@ int main(int argc, char* argv[])
 
   for(auto const& dir : dirs)
   {
-    RecursiveFileSearch<RemoveSIMPLMacros>(dir, filters);
+    RecursiveFileSearch<UpdateFilterHeaders>(dir, filters);
   }
 
   return 0;

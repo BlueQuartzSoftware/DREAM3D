@@ -34,7 +34,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "NodesTrianglesToStl.h"
 
-#include <memory>
 #include <cstdio>
 
 #include <QtCore/QDir>

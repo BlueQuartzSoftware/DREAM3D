@@ -44,7 +44,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "FindGBCDMetricBased.h"
 
-#include <memory>
 
 #include <QtCore/QDir>
 #include <QtCore/QTextStream>

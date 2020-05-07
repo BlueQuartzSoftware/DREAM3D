@@ -37,7 +37,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "InsertPrecipitatePhases.h"
 
-#include <memory>
 #include <fstream>
 #include <random>
 #include <chrono>

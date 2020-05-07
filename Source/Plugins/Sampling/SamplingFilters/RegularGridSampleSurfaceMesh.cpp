@@ -34,7 +34,6 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "RegularGridSampleSurfaceMesh.h"
 
-#include <memory>
 
 #include <QtCore/QTextStream>
 

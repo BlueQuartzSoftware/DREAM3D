@@ -54,7 +54,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <random>
 #include <chrono>
 #include <sstream>
-#include <memory>
 #include <thread>
 
 #include "EMMPMLib/Common/EMMPM_Math.h"

@@ -35,7 +35,6 @@
 
 #include "ReadStlFile.h"
 
-#include <memory>
 #include <tuple>
 #include <cstdio>
 

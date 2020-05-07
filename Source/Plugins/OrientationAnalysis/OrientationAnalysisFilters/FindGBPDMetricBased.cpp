@@ -45,7 +45,6 @@
 
 #include "FindGBPDMetricBased.h"
 
-#include <memory>
 
 #include <QtCore/QDir>
 #include <QtCore/QTextStream>

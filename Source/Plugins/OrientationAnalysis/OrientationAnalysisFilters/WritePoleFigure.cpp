@@ -35,7 +35,6 @@
 
 #include "WritePoleFigure.h"
 
-#include <memory>
 #include <csetjmp>
 #include <vector>
 

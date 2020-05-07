@@ -35,7 +35,6 @@
 
 #include "NeighborOrientationCorrelation.h"
 
-#include <memory>
 #include <vector>
 
 #include <QtCore/QTextStream>

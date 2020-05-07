@@ -35,7 +35,6 @@
 #include "FindGBCD.h"
 
 #include <utility>
-#include <memory>
 
 #include <QtCore/QDateTime>
 #include <QtCore/QTextStream>

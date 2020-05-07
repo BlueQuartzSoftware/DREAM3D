@@ -1,5 +1,4 @@
 
-#include <memory>
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 //

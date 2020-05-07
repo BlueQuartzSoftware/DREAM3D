@@ -31,7 +31,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ImportEbsdMontage.h"
 
-#include <memory>
 
 #include <QtCore/QTextStream>
 #include <QtCore/QFileInfo>

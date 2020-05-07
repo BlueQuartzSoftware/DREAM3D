@@ -17,19 +17,26 @@ public:
     QString contents;
     QFileInfo fi(hFile);
 
-    QString fName = fi.fileName();
-    //    if(fi.baseName() != "DataArrayPathDisplay")
+    // Verify that there is a matching .cpp file
+    QString cppFile = hFile;
+    cppFile = cppFile.replace(".h", ".cpp");
+    QFileInfo cfi(cppFile);
+    if(!cfi.exists())
+    {
+      // std::cout << "Cpp File does not exist: " << cppFile.toStdString() << std::endl;
+      return;
+    }
+    //    QString fName = fi.fileName();
+    //    if(fi.baseName() != "MultiEmmpmFilter")
     //    {
     //      return;
     //    }
 
-    {
-      // Read the Source File
-      QFile source(hFile);
-      source.open(QFile::ReadOnly);
-      contents = source.readAll();
-      source.close();
-    }
+    // Read the Source File
+    QFile source(hFile);
+    source.open(QFile::ReadOnly);
+    contents = source.readAll();
+    source.close();
 
     // qDebug() << hFile;
     QVector<QString> outLines;
@@ -38,72 +45,57 @@ public:
 
     int32_t lineIndex = 0;
 
-    bool hasSearchString = false;
     QString memoryInclude = "#include <memory>";
     int memoryIncludeIndex = 0;
-
-    QString firstSIMPLInclude("#include ");
-    int32_t firstSIMPLIncludeIndex = 0;
-
-    QString sharedPtr = "std::shared_ptr<";
-    bool sharedPtrUsed = false;
 
     while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
 
-      if(line.startsWith(firstSIMPLInclude) && firstSIMPLIncludeIndex == 0)
-      {
-        firstSIMPLIncludeIndex = lineIndex;
-      }
-
       if(line.trimmed() == memoryInclude)
       {
         memoryIncludeIndex = lineIndex;
+        break;
       }
-
-      if(line.contains(sharedPtr))
-      {
-        sharedPtrUsed = true;
-      }
-
       lineIndex++;
       outLines.push_back(line);
     }
 
-    if(sharedPtrUsed && memoryIncludeIndex == 0)
+    // Now read the .cpp file
+    if(memoryIncludeIndex > 0)
     {
-      QString line = outLines[firstSIMPLIncludeIndex];
-      line = "#include <memory>\n\n" + line;
-      outLines[firstSIMPLIncludeIndex] = line;
-      hasSearchString = true;
+      outLines.clear();
+      bool updateCppFile = false;
+      // Read the Source File
+      QFile source(cppFile);
+      source.open(QFile::ReadOnly);
+      contents = source.readAll();
+      source.close();
+
+      list = contents.split(QRegExp("\\n"));
+      sourceLines = QStringListIterator(list);
+
+      while(sourceLines.hasNext())
+      {
+        QString line = sourceLines.next();
+
+        if(line.trimmed() == memoryInclude)
+        {
+          updateCppFile = true;
+          memoryIncludeIndex = lineIndex;
+        }
+        else
+        {
+          outLines.push_back(line);
+        }
+
+        lineIndex++;
+      }
+      if(updateCppFile)
+      {
+        // std::cout << "Updating: " << cppFile.toStdString() << std::endl;
+        writeOutput(updateCppFile, outLines, cppFile);
+      }
     }
-
-    writeOutput(hasSearchString, outLines, hFile);
-
-    //    if(hasSearchString && hFile.endsWith(".h"))
-    //    {
-    //      /*  *************************************** */
-    //      // Update the .cpp file
-    //      QString cppFile = hFile;
-    //      cppFile.replace(".h", ".cpp");
-    //      QFileInfo cppFi(cppFile);
-    //      if(cppFi.exists())
-    //      {
-    //        {
-    //          // Read the Source File
-    //          QFile source(cppFile);
-    //          source.open(QFile::ReadOnly);
-    //          contents = source.readAll();
-    //          source.close();
-    //        }
-    //        contents = contents + "\n" + definitionCode;
-    //        outLines.clear();
-    //        outLines.push_back(contents);
-    //        outLines.push_back(QString("JUNK"));
-
-    //        writeOutput(hasSearchString, outLines, cppFile);
-    //      }
-    //    }
   }
 };
