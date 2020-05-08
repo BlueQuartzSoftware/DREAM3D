@@ -612,7 +612,7 @@ void ReadH5Ebsd::execute()
                                    "with a Q_PROPERTY macro. Please notify the developers")
                            .arg("RotationAxis")
                            .arg(filtName);
-          setErrorCondition(-109873, ss);
+          setErrorCondition(-109883, ss);
         }
         v.setValue(true);
         propWasSet = rot_Sample->setProperty("SliceBySlice", v);
@@ -622,7 +622,7 @@ void ReadH5Ebsd::execute()
                                    "with a Q_PROPERTY macro. Please notify the developers")
                            .arg("SliceBySlice")
                            .arg(filtName);
-          setErrorCondition(-109872, ss);
+          setErrorCondition(-109882, ss);
         }
         DataArrayPath tempPath;
         tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), "");
@@ -674,7 +674,7 @@ void ReadH5Ebsd::execute()
                                    "exposed with a Q_PROPERTY macro. Please notify the developers")
                            .arg("RotationAngle")
                            .arg(filtName);
-          setErrorCondition(-109874, ss);
+          setErrorCondition(-109884, ss);
         }
         QVariant v;
         v.setValue(eulerAxis);
@@ -704,7 +704,7 @@ void ReadH5Ebsd::execute()
       else
       {
         QString ss = QObject::tr("ReadH5Ebsd Error creating filter '%1' which is a subfilter called by ReadH5Ebsd. Filter was not created/executed. Please notify the developers").arg(filtName);
-        setErrorCondition(-109871, ss);
+        setErrorCondition(-109881, ss);
       }
     }
   }
