@@ -40,9 +40,7 @@
 #include <string>
 #include <vector>
 
-
 #include "AbstractMicrostructurePreset.h"
-
 
 /**
  * @def DECLARE_FACTORY_CLASS(name, type, display)
@@ -68,7 +66,7 @@
     using Pointer = std::shared_ptr<Self>;                                                                                                                                                             \
     using ConstPointer = std::shared_ptr<const Self>;                                                                                                                                                  \
     using WeakPointer = std::weak_ptr<Self>;                                                                                                                                                           \
-    using ConstWeakPointer = std::weak_ptr<const Self>;                                                                                                                                                      \
+    using ConstWeakPointer = std::weak_ptr<const Self>;                                                                                                                                                \
     static Pointer NullPointer()                                                                                                                                                                       \
     {                                                                                                                                                                                                  \
       return Pointer(static_cast<Self*>(nullptr));                                                                                                                                                     \
@@ -190,4 +188,3 @@ public:
   AbstractMicrostructurePresetFactory& operator=(const AbstractMicrostructurePresetFactory&) = delete; // Copy Assignment Not Implemented
   AbstractMicrostructurePresetFactory& operator=(AbstractMicrostructurePresetFactory&&) = delete;      // Move Assignment Not Implemented
 };
-

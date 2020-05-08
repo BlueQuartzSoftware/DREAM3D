@@ -100,6 +100,7 @@ class TrisProcessor
   int32_t* m_FaceLabels;
   double* m_FaceNormals;
   LaueOpsContainer m_OrientationOps;
+
 public:
   TrisProcessor(double* __m_DistToTilt, double* __m_DistToTwist, double* __m_DistToSymmetric, double* __m_DistTo180Tilt, uint32_t* __m_CrystalStructures, float* __m_Eulers, int32_t* __m_Phases,
                 int32_t* __m_FaceLabels, double* __m_FaceNormals)
@@ -360,16 +361,16 @@ void FindDistsToCharactGBs::dataCheck()
   // Crystal Structures
   std::vector<size_t> cDims(1, 1);
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>>(this, getCrystalStructuresArrayPath(),
-                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_CrystalStructuresPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CrystalStructuresPtr.lock())                                                              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Euler Angels
   cDims[0] = 3;
-  m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getFeatureEulerAnglesArrayPath(),
-                                                                                                              cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureEulerAnglesPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getFeatureEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_FeatureEulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0);
@@ -377,17 +378,17 @@ void FindDistsToCharactGBs::dataCheck()
 
   // Phases
   cDims[0] = 1;
-  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeaturePhasesArrayPath(),
-                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FeaturePhasesPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_FeaturePhasesPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeaturePhasesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Face Labels
   cDims[0] = 2;
-  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getSurfaceMeshFaceLabelsArrayPath(),
-                                                                                                                   cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshFaceLabelsPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshFaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
@@ -395,8 +396,8 @@ void FindDistsToCharactGBs::dataCheck()
 
   // Face Normals
   cDims[0] = 3;
-  m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>>(this, getSurfaceMeshFaceNormalsArrayPath(),
-                                                                                                                   cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshFaceNormalsPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>>(this, getSurfaceMeshFaceNormalsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshFaceNormalsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0);
@@ -417,7 +418,7 @@ void FindDistsToCharactGBs::dataCheck()
 
   cDims[0] = 1;
   m_DistToTwistPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>>(this, getDistToTwistArrayPath(), 0, cDims, "", DataArrayID32);
-  if(nullptr != m_DistToTwistPtr.lock())          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_DistToTwistPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_DistToTwist = m_DistToTwistPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -428,7 +429,7 @@ void FindDistsToCharactGBs::dataCheck()
 
   cDims[0] = 1;
   m_DistToSymmetricPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>>(this, getDistToSymmetricArrayPath(), 0, cDims, "", DataArrayID33);
-  if(nullptr != m_DistToSymmetricPtr.lock())          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_DistToSymmetricPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_DistToSymmetric = m_DistToSymmetricPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -439,7 +440,7 @@ void FindDistsToCharactGBs::dataCheck()
 
   cDims[0] = 1;
   m_DistTo180TiltPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>>(this, getDistTo180TiltArrayPath(), 0, cDims, "", DataArrayID34);
-  if(nullptr != m_DistTo180TiltPtr.lock())          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_DistTo180TiltPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_DistTo180Tilt = m_DistTo180TiltPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -450,7 +451,6 @@ void FindDistsToCharactGBs::dataCheck()
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrays);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -503,7 +503,6 @@ void FindDistsToCharactGBs::execute()
     serial.process(i, i + trisChunkSize);
 #endif
   }
-
 }
 
 // -----------------------------------------------------------------------------

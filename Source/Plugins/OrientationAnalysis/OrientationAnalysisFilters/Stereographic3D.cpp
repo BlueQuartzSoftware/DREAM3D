@@ -185,9 +185,8 @@ void Stereographic3D::dataCheck()
   std::vector<size_t> cDims(1, 1);
 
   cDims[0] = 4;
-  m_QuatsPtr =
-      getDataContainerArray()->getPrereqArrayFromPath<FloatArrayType>(this, getQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_QuatsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<FloatArrayType>(this, getQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_QuatsPtr.lock())                                                                                /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Quats = m_QuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -205,7 +204,6 @@ void Stereographic3D::dataCheck()
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -237,7 +235,6 @@ void Stereographic3D::execute()
     GenerateCoordinatesImpl serial(this, m_Quats, m_CellCoordinates);
     serial.convert(0, totalPoints);
   }
-
 }
 
 // -----------------------------------------------------------------------------

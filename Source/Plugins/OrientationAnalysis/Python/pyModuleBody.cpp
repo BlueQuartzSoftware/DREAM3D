@@ -1,9 +1,9 @@
 py::enum_<OrientationRepresentation::Type>(mod, "OrientationType")
-  .value("Euler", OrientationRepresentation::Type::Euler)
-  .value("OrientationMatrix", OrientationRepresentation::Type::OrientationMatrix)
-  .value("Quaternion", OrientationRepresentation::Type::Quaternion)
-  .value("AxisAngle", OrientationRepresentation::Type::AxisAngle)
-  .value("Rodrigues", OrientationRepresentation::Type::Rodrigues)
-  .value("Homochoric", OrientationRepresentation::Type::Homochoric)
-  .value("Cubochoric", OrientationRepresentation::Type::Cubochoric)
-  .value("Unknown", OrientationRepresentation::Type::Unknown);
+    .value("Euler", OrientationRepresentation::Type::Euler)
+    .value("OrientationMatrix", OrientationRepresentation::Type::OrientationMatrix)
+    .value("Quaternion", OrientationRepresentation::Type::Quaternion)
+    .value("AxisAngle", OrientationRepresentation::Type::AxisAngle)
+    .value("Rodrigues", OrientationRepresentation::Type::Rodrigues)
+    .value("Homochoric", OrientationRepresentation::Type::Homochoric)
+    .value("Cubochoric", OrientationRepresentation::Type::Cubochoric)
+    .value("Unknown", OrientationRepresentation::Type::Unknown);

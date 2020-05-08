@@ -2,7 +2,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "FixNonmanifoldVoxels.h"
 
 #include <QtCore/QTextStream>
@@ -76,7 +75,6 @@ void FixNonmanifoldVoxels::dataCheck()
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -186,7 +184,6 @@ void FixNonmanifoldVoxels::execute()
       }
     }
   }
-
 }
 
 // -----------------------------------------------------------------------------

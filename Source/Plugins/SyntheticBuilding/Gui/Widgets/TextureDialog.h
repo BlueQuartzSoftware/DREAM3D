@@ -37,7 +37,6 @@
 
 #include <vector>
 
-
 #include "ui_TextureDialog.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -86,9 +85,8 @@ private:
   std::vector<TexturePreset::Pointer> m_Presets;
 
 public:
-  TextureDialog(const TextureDialog&) = delete;  // Copy Constructor Not Implemented
-  TextureDialog(TextureDialog&&) = delete;       // Move Constructor Not Implemented
+  TextureDialog(const TextureDialog&) = delete;            // Copy Constructor Not Implemented
+  TextureDialog(TextureDialog&&) = delete;                 // Move Constructor Not Implemented
   TextureDialog& operator=(const TextureDialog&) = delete; // Copy Assignment Not Implemented
   TextureDialog& operator=(TextureDialog&&) = delete;      // Move Assignment Not Implemented
 };
-

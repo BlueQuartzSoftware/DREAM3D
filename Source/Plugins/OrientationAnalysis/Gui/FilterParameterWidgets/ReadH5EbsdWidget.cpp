@@ -164,7 +164,7 @@ void ReadH5EbsdWidget::setupGui()
 
   absPathLabel->hide();
 
-//  validateInputFile();
+  //  validateInputFile();
 
   // Setup the GUI widgets from what ever is in the Filter instance
   QString inputPath = m_Filter->getInputFile();
@@ -327,7 +327,7 @@ void ReadH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
   QString inputPath = validator->convertToAbsolutePath(text);
 
   QFileInfo fi(text);
-  if (fi.isRelative())
+  if(fi.isRelative())
   {
     absPathLabel->setText(inputPath);
     absPathLabel->show();
@@ -336,7 +336,7 @@ void ReadH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
   {
     absPathLabel->hide();
   }
-  
+
   if(QtSFileUtils::VerifyPathExists(inputPath, m_LineEdit))
   {
     m_ShowFileAction->setEnabled(true);

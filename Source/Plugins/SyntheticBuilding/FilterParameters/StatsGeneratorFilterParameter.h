@@ -82,11 +82,10 @@ protected:
   StatsGeneratorFilterParameter();
 
 public:
-  StatsGeneratorFilterParameter(const StatsGeneratorFilterParameter&) = delete; // Copy Constructor Not Implemented
-  StatsGeneratorFilterParameter(StatsGeneratorFilterParameter&&) = delete;      // Move Constructor Not Implemented
+  StatsGeneratorFilterParameter(const StatsGeneratorFilterParameter&) = delete;            // Copy Constructor Not Implemented
+  StatsGeneratorFilterParameter(StatsGeneratorFilterParameter&&) = delete;                 // Move Constructor Not Implemented
   StatsGeneratorFilterParameter& operator=(const StatsGeneratorFilterParameter&) = delete; // Copy Assignment Not Implemented
   StatsGeneratorFilterParameter& operator=(StatsGeneratorFilterParameter&&) = delete;      // Move Assignment Not Implemented
 
 private:
 };
-

@@ -93,9 +93,8 @@ private:
   QwtPlotGrid* m_grid;
 
 public:
-  BoundaryPhaseWidget(const BoundaryPhaseWidget&) = delete; // Copy Constructor Not Implemented
-  BoundaryPhaseWidget(BoundaryPhaseWidget&&) = delete;      // Move Constructor Not Implemented
+  BoundaryPhaseWidget(const BoundaryPhaseWidget&) = delete;            // Copy Constructor Not Implemented
+  BoundaryPhaseWidget(BoundaryPhaseWidget&&) = delete;                 // Move Constructor Not Implemented
   BoundaryPhaseWidget& operator=(const BoundaryPhaseWidget&) = delete; // Copy Assignment Not Implemented
   BoundaryPhaseWidget& operator=(BoundaryPhaseWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

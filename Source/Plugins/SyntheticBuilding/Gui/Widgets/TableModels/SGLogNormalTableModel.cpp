@@ -111,8 +111,7 @@ QVariant SGLogNormalTableModel::data(const QModelIndex& index, qint32 role) cons
 
     switch(index.column())
     {
-    case BinNumber:
-    {
+    case BinNumber: {
       comboBox.currentText = QString("101");
       const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
       if(header.length() > comboBox.currentText.length())
@@ -121,8 +120,7 @@ QVariant SGLogNormalTableModel::data(const QModelIndex& index, qint32 role) cons
       }
       break;
     }
-    case Average:
-    {
+    case Average: {
       comboBox.currentText = QString("10001");
       const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
       if(header.length() > comboBox.currentText.length())
@@ -131,8 +129,7 @@ QVariant SGLogNormalTableModel::data(const QModelIndex& index, qint32 role) cons
       }
       break;
     }
-    case StdDev:
-    {
+    case StdDev: {
       comboBox.currentText = QString("10001");
       const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
       if(header.length() > comboBox.currentText.length())

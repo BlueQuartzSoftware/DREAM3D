@@ -83,7 +83,7 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -266,8 +266,6 @@ public:
    */
   void execute() override;
 
-
-
 protected:
   FindDistsToCharactGBs();
   /**
@@ -316,4 +314,3 @@ public:
   FindDistsToCharactGBs& operator=(const FindDistsToCharactGBs&) = delete; // Copy Assignment Not Implemented
   FindDistsToCharactGBs& operator=(FindDistsToCharactGBs&&) = delete;      // Move Assignment Not Implemented
 };
-

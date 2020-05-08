@@ -104,14 +104,19 @@ void StatsGeneratorFilter::setupFilterParameters()
 
   parameters.push_back(SeparatorFilterParameter::New("Created Ensemble AttributeMatrix", FilterParameter::CreatedArray));
 
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix Name", CellEnsembleAttributeMatrixName, StatsGeneratorDataContainerName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(
+      SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix Name", CellEnsembleAttributeMatrixName, StatsGeneratorDataContainerName, FilterParameter::CreatedArray, StatsGeneratorFilter));
 
   parameters.push_back(SeparatorFilterParameter::New("Created Ensemble Arrays", FilterParameter::CreatedArray));
 
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Statistics Array Name", StatsDataArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, StatsGeneratorFilter));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Crystal Structures Array Name", CrystalStructuresArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, StatsGeneratorFilter));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phase Types Array Name", PhaseTypesArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, StatsGeneratorFilter));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phase Names Array Name", PhaseNamesArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Statistics Array Name", StatsDataArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray,
+                                                      StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Crystal Structures Array Name", CrystalStructuresArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName,
+                                                      FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phase Types Array Name", PhaseTypesArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray,
+                                                      StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phase Names Array Name", PhaseNamesArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray,
+                                                      StatsGeneratorFilter));
 
   setFilterParameters(parameters);
 }
@@ -292,7 +297,6 @@ void StatsGeneratorFilter::dataCheck()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -437,7 +441,6 @@ void StatsGeneratorFilter::execute()
       StatsGeneratorUtilities::GenerateAxisODFBinData(statsData.get(), phaseType, axis_e1s, axis_e2s, axis_e3s, axis_weights, axis_sigmas);
     }
   }
-
 }
 
 // -----------------------------------------------------------------------------

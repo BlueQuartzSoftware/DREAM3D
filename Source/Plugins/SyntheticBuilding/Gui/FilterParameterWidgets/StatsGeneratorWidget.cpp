@@ -64,7 +64,6 @@
 
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 
-
 #include "SyntheticBuilding/FilterParameters/StatsGeneratorFilterParameter.h"
 #include "SyntheticBuilding/Gui/Widgets/EditPhaseDialog.h"
 #include "SyntheticBuilding/Gui/Widgets/StatsProgressWidget.h"
@@ -189,12 +188,11 @@ void StatsGeneratorWidget::setupGui()
 
   // Catch when the filter wants its values updated
   connect(getFilter(), &AbstractFilter::updateFilterParameters, this, &StatsGeneratorWidget::filterNeedsInputParameters);
-  
+
   // Hide the debugging buttons
   updatePipelineBtn->hide();
   saveJsonBtn->hide();
   saveH5Btn->hide();
-
 }
 
 // -----------------------------------------------------------------------------

@@ -2,7 +2,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "GenerateOrientationMatrixTranspose.h"
 
 #include <QtCore/QTextStream>
@@ -111,8 +110,8 @@ void GenerateOrientationMatrixTranspose::setupFilterParameters()
   std::vector<std::vector<size_t>> comp;
   comp.push_back(std::vector<size_t>(1, 9));
   dasReq.componentDimensions = comp;
-  dasReq.daTypes = { SIMPL::TypeNames::Float };
-  
+  dasReq.daTypes = {SIMPL::TypeNames::Float};
+
   parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternion Array", OrientationMatrixDataArrayPath, FilterParameter::Parameter, GenerateOrientationMatrixTranspose, dasReq));
   DataArrayCreationFilterParameter::RequirementType dacReq;
   parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Output Data Array Path", OutputDataArrayPath, FilterParameter::CreatedArray, GenerateOrientationMatrixTranspose, dacReq));
@@ -152,7 +151,6 @@ void GenerateOrientationMatrixTranspose::dataCheck()
     }
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //

@@ -78,7 +78,7 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -222,8 +222,6 @@ public:
    */
   void execute() override;
 
-
-
 protected:
   GenerateFaceSchuhMisorientationColoring();
 
@@ -266,4 +264,3 @@ public:
   GenerateFaceSchuhMisorientationColoring& operator=(const GenerateFaceSchuhMisorientationColoring&) = delete; // Copy Assignment Not Implemented
   GenerateFaceSchuhMisorientationColoring& operator=(GenerateFaceSchuhMisorientationColoring&&) = delete;      // Move Assignment Not Implemented
 };
-

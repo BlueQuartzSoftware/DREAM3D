@@ -159,9 +159,8 @@ private:
   bool validateInput();
 
 public:
-  StatsGenRDFWidget(const StatsGenRDFWidget&) = delete; // Copy Constructor Not Implemented
-  StatsGenRDFWidget(StatsGenRDFWidget&&) = delete;      // Move Constructor Not Implemented
+  StatsGenRDFWidget(const StatsGenRDFWidget&) = delete;            // Copy Constructor Not Implemented
+  StatsGenRDFWidget(StatsGenRDFWidget&&) = delete;                 // Move Constructor Not Implemented
   StatsGenRDFWidget& operator=(const StatsGenRDFWidget&) = delete; // Copy Assignment Not Implemented
   StatsGenRDFWidget& operator=(StatsGenRDFWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

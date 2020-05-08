@@ -1,35 +1,27 @@
 #pragma once
 
-
-
 #include <QtCore/QObject>
 #include <QtCore/QString>
-
-
 
 class AbstractFilter;
 
 class PreflightVerify : public QObject
 {
-    Q_OBJECT
-  public:
-    PreflightVerify(QObject* parent = nullptr);
-    virtual ~PreflightVerify();
+  Q_OBJECT
+public:
+  PreflightVerify(QObject* parent = nullptr);
+  virtual ~PreflightVerify();
 
+  bool m_widgetChanged;
+  bool m_beforePreflight;
+  bool m_afterPreflight;
+  bool m_filterNeedsInputParameters;
 
-    bool m_widgetChanged;
-    bool m_beforePreflight;
-    bool m_afterPreflight;
-    bool m_filterNeedsInputParameters;
+public slots:
+  void widgetChanged(const QString& msg);
+  void beforePreflight();
+  void afterPreflight();
+  void filterNeedsInputParameters(AbstractFilter* filter);
 
-
-  public slots:
-    void widgetChanged(const QString& msg);
-    void beforePreflight();
-    void afterPreflight();
-    void filterNeedsInputParameters(AbstractFilter* filter);
-  private:
-
+private:
 };
-
-

@@ -29,7 +29,8 @@
 #include <config.h> // To check for long long
 #endif
 
-namespace TCLAP {
+namespace TCLAP
+{
 
 // ======================================================================
 // Integer types
@@ -38,42 +39,47 @@ namespace TCLAP {
 /**
  * longs have value-like semantics.
  */
-template<>
-struct ArgTraits<long> {
-    typedef ValueLike ValueCategory;
+template <>
+struct ArgTraits<long>
+{
+  typedef ValueLike ValueCategory;
 };
 
 /**
  * ints have value-like semantics.
  */
-template<>
-struct ArgTraits<int> {
-    typedef ValueLike ValueCategory;
+template <>
+struct ArgTraits<int>
+{
+  typedef ValueLike ValueCategory;
 };
 
 /**
  * shorts have value-like semantics.
  */
-template<>
-struct ArgTraits<short> {
-    typedef ValueLike ValueCategory;
+template <>
+struct ArgTraits<short>
+{
+  typedef ValueLike ValueCategory;
 };
 
 /**
  * chars have value-like semantics.
  */
-template<>
-struct ArgTraits<char> {
-    typedef ValueLike ValueCategory;
+template <>
+struct ArgTraits<char>
+{
+  typedef ValueLike ValueCategory;
 };
 
 #ifdef HAVE_LONG_LONG
 /**
  * long longs have value-like semantics.
  */
-template<>
-struct ArgTraits<long long> {
-    typedef ValueLike ValueCategory;
+template <>
+struct ArgTraits<long long>
+{
+  typedef ValueLike ValueCategory;
 };
 #endif
 
@@ -84,42 +90,47 @@ struct ArgTraits<long long> {
 /**
  * unsigned longs have value-like semantics.
  */
-template<>
-struct ArgTraits<unsigned long> {
-    typedef ValueLike ValueCategory;
+template <>
+struct ArgTraits<unsigned long>
+{
+  typedef ValueLike ValueCategory;
 };
 
 /**
  * unsigned ints have value-like semantics.
  */
-template<>
-struct ArgTraits<unsigned int> {
-    typedef ValueLike ValueCategory;
+template <>
+struct ArgTraits<unsigned int>
+{
+  typedef ValueLike ValueCategory;
 };
 
 /**
  * unsigned shorts have value-like semantics.
  */
-template<>
-struct ArgTraits<unsigned short> {
-    typedef ValueLike ValueCategory;
+template <>
+struct ArgTraits<unsigned short>
+{
+  typedef ValueLike ValueCategory;
 };
 
 /**
  * unsigned chars have value-like semantics.
  */
-template<>
-struct ArgTraits<unsigned char> {
-    typedef ValueLike ValueCategory;
+template <>
+struct ArgTraits<unsigned char>
+{
+  typedef ValueLike ValueCategory;
 };
 
 #ifdef HAVE_LONG_LONG
 /**
  * unsigned long longs have value-like semantics.
  */
-template<>
-struct ArgTraits<unsigned long long> {
-    typedef ValueLike ValueCategory;
+template <>
+struct ArgTraits<unsigned long long>
+{
+  typedef ValueLike ValueCategory;
 };
 #endif
 
@@ -130,17 +141,19 @@ struct ArgTraits<unsigned long long> {
 /**
  * floats have value-like semantics.
  */
-template<>
-struct ArgTraits<float> {
-    typedef ValueLike ValueCategory;
+template <>
+struct ArgTraits<float>
+{
+  typedef ValueLike ValueCategory;
 };
 
 /**
  * doubles have value-like semantics.
  */
-template<>
-struct ArgTraits<double> {
-    typedef ValueLike ValueCategory;
+template <>
+struct ArgTraits<double>
+{
+  typedef ValueLike ValueCategory;
 };
 
 // ======================================================================
@@ -150,33 +163,34 @@ struct ArgTraits<double> {
 /**
  * bools have value-like semantics.
  */
-template<>
-struct ArgTraits<bool> {
-    typedef ValueLike ValueCategory;
+template <>
+struct ArgTraits<bool>
+{
+  typedef ValueLike ValueCategory;
 };
 
 /**
  * wchar_ts have value-like semantics.
  */
-template<>
-struct ArgTraits<wchar_t> {
-    typedef ValueLike ValueCategory;
+template <>
+struct ArgTraits<wchar_t>
+{
+  typedef ValueLike ValueCategory;
 };
 
 /**
  * Strings have string like argument traits.
  */
-template<>
-struct ArgTraits<std::string> {
-    typedef StringLike ValueCategory;
+template <>
+struct ArgTraits<std::string>
+{
+  typedef StringLike ValueCategory;
 };
 
-template<typename T>
-void SetString(T &dst, const std::string &src)
+template <typename T>
+void SetString(T& dst, const std::string& src)
 {
-    dst = src;
+  dst = src;
 }
 
-} // namespace
-
-
+} // namespace TCLAP

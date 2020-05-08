@@ -198,9 +198,8 @@ private:
   QPoint m_ContextMenuPoint;
 
 public:
-  StatsGenPlotWidget(const StatsGenPlotWidget&) = delete; // Copy Constructor Not Implemented
-  StatsGenPlotWidget(StatsGenPlotWidget&&) = delete;      // Move Constructor Not Implemented
+  StatsGenPlotWidget(const StatsGenPlotWidget&) = delete;            // Copy Constructor Not Implemented
+  StatsGenPlotWidget(StatsGenPlotWidget&&) = delete;                 // Move Constructor Not Implemented
   StatsGenPlotWidget& operator=(const StatsGenPlotWidget&) = delete; // Copy Assignment Not Implemented
   StatsGenPlotWidget& operator=(StatsGenPlotWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

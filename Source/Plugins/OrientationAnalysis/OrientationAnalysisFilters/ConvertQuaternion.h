@@ -17,7 +17,7 @@
 class OrientationAnalysis_EXPORT ConvertQuaternion : public AbstractFilter
 {
   Q_OBJECT
-    // clang-format off
+  // clang-format off
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ConvertQuaternion SUPERCLASS AbstractFilter)
   PYB11_FILTER()
@@ -196,4 +196,3 @@ public:
   ConvertQuaternion(ConvertQuaternion&&) = delete;                 // Move Constructor Not Implemented
   ConvertQuaternion& operator=(ConvertQuaternion&&) = delete;      // Move Assignment Not Implemented
 };
-

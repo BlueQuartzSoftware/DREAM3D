@@ -50,21 +50,20 @@ public:
   virtual QImage createLegend(int pixelWidth, int pixelHeight) = 0;
 
   /**
- * @brief paintSymmetryDirection This method will correctly parse the string and paint the string
- * with the proper "bar" notation. Use an under_score in front of the value that you want a bar
- * to appear over. Example: [0_12] would put the bar over the 1.
- * @param text The string to parse and paint
- * @param metrics QFontMetrics that is currently being used
- * @param painter The QPainter to use to paint the text
- * @param x The X Location on the canvas
- * @param y The Y Location on the canvas
- */
+   * @brief paintSymmetryDirection This method will correctly parse the string and paint the string
+   * with the proper "bar" notation. Use an under_score in front of the value that you want a bar
+   * to appear over. Example: [0_12] would put the bar over the 1.
+   * @param text The string to parse and paint
+   * @param metrics QFontMetrics that is currently being used
+   * @param painter The QPainter to use to paint the text
+   * @param x The X Location on the canvas
+   * @param y The Y Location on the canvas
+   */
   void paintSymmetryDirection(const QString& text, QFontMetrics* metrics, QPainter* painter, int x, int y);
 
 public:
-  IPFLegendPainter(const IPFLegendPainter&) = delete; // Copy Constructor Not Implemented
-  IPFLegendPainter(IPFLegendPainter&&) = delete;      // Move Constructor Not Implemented
+  IPFLegendPainter(const IPFLegendPainter&) = delete;            // Copy Constructor Not Implemented
+  IPFLegendPainter(IPFLegendPainter&&) = delete;                 // Move Constructor Not Implemented
   IPFLegendPainter& operator=(const IPFLegendPainter&) = delete; // Copy Assignment Not Implemented
   IPFLegendPainter& operator=(IPFLegendPainter&&) = delete;      // Move Assignment Not Implemented
 };
-

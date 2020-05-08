@@ -39,7 +39,6 @@
 
 #include <vector>
 
-
 #include <QtWidgets/QMessageBox>
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
@@ -128,9 +127,8 @@ private:
   AttributeMatrix::Pointer m_CellEnsembleAttrMat = AttributeMatrix::NullPointer();
 
 public:
-  StatsGeneratorWidget(const StatsGeneratorWidget&) = delete; // Copy Constructor Not Implemented
-  StatsGeneratorWidget(StatsGeneratorWidget&&) = delete;      // Move Constructor Not Implemented
+  StatsGeneratorWidget(const StatsGeneratorWidget&) = delete;            // Copy Constructor Not Implemented
+  StatsGeneratorWidget(StatsGeneratorWidget&&) = delete;                 // Move Constructor Not Implemented
   StatsGeneratorWidget& operator=(const StatsGeneratorWidget&) = delete; // Copy Assignment Not Implemented
   StatsGeneratorWidget& operator=(StatsGeneratorWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

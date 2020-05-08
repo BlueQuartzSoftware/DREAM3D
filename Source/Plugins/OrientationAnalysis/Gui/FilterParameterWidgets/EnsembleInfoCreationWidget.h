@@ -35,7 +35,6 @@
 
 #pragma once
 
-
 #include <QtWidgets/QWidget>
 
 #include "SVWidgetsLib/QtSupport/QtSFaderWidget.h"
@@ -195,9 +194,8 @@ private:
   EnsembleInfoTableModel* createEnsembleInfoModel();
 
 public:
-  EnsembleInfoCreationWidget(const EnsembleInfoCreationWidget&) = delete; // Copy Constructor Not Implemented
-  EnsembleInfoCreationWidget(EnsembleInfoCreationWidget&&) = delete;      // Move Constructor Not Implemented
+  EnsembleInfoCreationWidget(const EnsembleInfoCreationWidget&) = delete;            // Copy Constructor Not Implemented
+  EnsembleInfoCreationWidget(EnsembleInfoCreationWidget&&) = delete;                 // Move Constructor Not Implemented
   EnsembleInfoCreationWidget& operator=(const EnsembleInfoCreationWidget&) = delete; // Copy Assignment Not Implemented
   EnsembleInfoCreationWidget& operator=(EnsembleInfoCreationWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

@@ -62,4 +62,3 @@ public slots:
 private:
   QList<StatsGeneratorUI*> m_Windows;
 };
-

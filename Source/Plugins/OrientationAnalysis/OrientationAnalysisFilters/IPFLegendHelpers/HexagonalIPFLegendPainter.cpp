@@ -88,7 +88,7 @@ QImage HexagonalIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, Q
   int32_t fontWidth = 0;
   int size = std::max(pixelWidth, pixelHeight);
 
-  int32_t fontScale = static_cast<int32_t>( 24.0f / 256.0f * static_cast<float>(size)); // At 256 Pixel Image, we want to use 24 Point font
+  int32_t fontScale = static_cast<int32_t>(24.0f / 256.0f * static_cast<float>(size)); // At 256 Pixel Image, we want to use 24 Point font
   if(fontScale < 10)
   {
     fontScale = 10;
@@ -153,12 +153,12 @@ QImage HexagonalIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, Q
   label = QString("[0001]");
   fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
-  painter.drawText(10, fontHeight*1.75 + imageSize.height(), label);
+  painter.drawText(10, fontHeight * 1.75 + imageSize.height(), label);
 
   label = ops->getSymmetryName();
   fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
-  x = pImageWidth/2 - fontWidth/2;
+  x = pImageWidth / 2 - fontWidth / 2;
   y = fontHeight * 1.0;
   paintSymmetryDirection(label, &metrics, &painter, x, y);
 

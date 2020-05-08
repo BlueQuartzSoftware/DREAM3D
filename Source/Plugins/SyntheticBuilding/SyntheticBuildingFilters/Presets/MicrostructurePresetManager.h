@@ -35,7 +35,6 @@
 
 #pragma once
 
-
 #include <memory>
 
 #include "AbstractMicrostructurePreset.h"
@@ -147,9 +146,8 @@ private:
   AbstractMicrostructurePresetFactory::Collection _factories;
 
 public:
-  MicrostructurePresetManager(const MicrostructurePresetManager&) = delete; // Copy Constructor Not Implemented
-  MicrostructurePresetManager(MicrostructurePresetManager&&) = delete;      // Move Constructor Not Implemented
+  MicrostructurePresetManager(const MicrostructurePresetManager&) = delete;            // Copy Constructor Not Implemented
+  MicrostructurePresetManager(MicrostructurePresetManager&&) = delete;                 // Move Constructor Not Implemented
   MicrostructurePresetManager& operator=(const MicrostructurePresetManager&) = delete; // Copy Assignment Not Implemented
   MicrostructurePresetManager& operator=(MicrostructurePresetManager&&) = delete;      // Move Assignment Not Implemented
 };
-

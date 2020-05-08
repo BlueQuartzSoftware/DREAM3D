@@ -70,9 +70,8 @@ private:
   bool m_HasErrors;
 
 public:
-  OrientationUtilityCalculator(const OrientationUtilityCalculator&) = delete; // Copy Constructor Not Implemented
-  OrientationUtilityCalculator(OrientationUtilityCalculator&&) = delete;      // Move Constructor Not Implemented
+  OrientationUtilityCalculator(const OrientationUtilityCalculator&) = delete;            // Copy Constructor Not Implemented
+  OrientationUtilityCalculator(OrientationUtilityCalculator&&) = delete;                 // Move Constructor Not Implemented
   OrientationUtilityCalculator& operator=(const OrientationUtilityCalculator&) = delete; // Copy Assignment Not Implemented
   OrientationUtilityCalculator& operator=(OrientationUtilityCalculator&&) = delete;      // Move Assignment Not Implemented
 };
-

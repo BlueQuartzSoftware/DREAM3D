@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "FindShapes.h"
 
@@ -82,7 +82,6 @@ FindShapes::FindShapes()
 {
   m_FeatureMoments = nullptr;
   m_FeatureEigenVals = nullptr;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -98,14 +97,12 @@ void FindShapes::setupFilterParameters()
   FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindShapes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req =
-        AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, FilterParameter::RequiredArray, FindShapes, req));
   }
   {
@@ -116,8 +113,10 @@ void FindShapes::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Omega3s", Omega3sArrayName, CellFeatureAttributeMatrixName, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FindShapes));
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Axis Lengths", AxisLengthsArrayName, CellFeatureAttributeMatrixName, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FindShapes));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Axis Euler Angles", AxisEulerAnglesArrayName, CellFeatureAttributeMatrixName, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FindShapes));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Aspect Ratios", AspectRatiosArrayName, CellFeatureAttributeMatrixName, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FindShapes));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Axis Euler Angles", AxisEulerAnglesArrayName, CellFeatureAttributeMatrixName, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FindShapes));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Aspect Ratios", AspectRatiosArrayName, CellFeatureAttributeMatrixName, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FindShapes));
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Volumes", VolumesArrayName, CellFeatureAttributeMatrixName, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FindShapes));
   setFilterParameters(parameters);
 }
@@ -163,9 +162,9 @@ void FindShapes::dataCheck()
   m_FeatureEigenValsPtr = DataArray<double>::CreateArray(0, "m_FeatureEigenValsPtr", true);
 
   std::vector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeatureIdsArrayPath(),
-                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FeatureIdsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_FeatureIdsPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock())                                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -192,17 +191,15 @@ void FindShapes::dataCheck()
     m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getCentroidsArrayPath(),
-                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_CentroidsPtr.lock())                                                                       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getCentroidsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CentroidsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getAxisEulerAnglesArrayName());
-  m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(
-      this, tempPath, 0, cDims);                   /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_AxisEulerAnglesPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_AxisEulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -215,7 +212,6 @@ void FindShapes::dataCheck()
     m_AspectRatios = m_AspectRatiosPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -447,17 +443,17 @@ void FindShapes::find_moments2D()
       m_Volumes[gnum] = m_Volumes[gnum] + 1.0;
     }
   }
-  double konst1 = static_cast<double>( (modXRes / 2.0f) * (modYRes / 2.0f));
+  double konst1 = static_cast<double>((modXRes / 2.0f) * (modYRes / 2.0f));
   double konst2 = static_cast<double>(spacing[0] * spacing[1]);
   for(size_t i = 1; i < numfeatures; i++)
   {
-   // Eq. 12 Moment matrix. Omega 2
-   // Eq. 11 Omega 2
-   // E1. 13 Omega 1
-   // xx = u20 =
-    m_Volumes[i] = m_Volumes[i] * konst2; // Area
-    m_FeatureMoments[i * 6 + 0] = m_FeatureMoments[i * 6 + 0] * konst1; // u20
-    m_FeatureMoments[i * 6 + 1] = m_FeatureMoments[i * 6 + 1] * konst1; // u02
+    // Eq. 12 Moment matrix. Omega 2
+    // Eq. 11 Omega 2
+    // E1. 13 Omega 1
+    // xx = u20 =
+    m_Volumes[i] = m_Volumes[i] * konst2;                                // Area
+    m_FeatureMoments[i * 6 + 0] = m_FeatureMoments[i * 6 + 0] * konst1;  // u20
+    m_FeatureMoments[i * 6 + 1] = m_FeatureMoments[i * 6 + 1] * konst1;  // u02
     m_FeatureMoments[i * 6 + 2] = -m_FeatureMoments[i * 6 + 2] * konst1; // u11
   }
 }
@@ -477,7 +473,6 @@ void FindShapes::find_axes()
   double value = 0.0;
 
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
-
 
   for(size_t i = 1; i < numfeatures; i++)
   {
@@ -572,7 +567,6 @@ void FindShapes::find_axes2D()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
 
-
   size_t xPoints = 0;
   size_t yPoints = 0;
   FloatVec3Type spacing;
@@ -595,7 +589,6 @@ void FindShapes::find_axes2D()
     yPoints = imageGeom->getYPoints();
     spacing = imageGeom->getSpacing();
   }
-
 
   for(size_t i = 1; i < numfeatures; i++)
   {
@@ -881,23 +874,18 @@ void FindShapes::execute()
   m_FeatureEigenValsPtr->resizeTuples(numfeatures * 3);
   m_FeatureEigenVals = m_FeatureEigenValsPtr->getPointer(0);
 
-
   if(imageGeom->getXPoints() > 1 && imageGeom->getYPoints() > 1 && imageGeom->getZPoints() > 1)
   {
     find_moments();
     find_axes();
     find_axiseulers();
-
   }
   if(imageGeom->getXPoints() == 1 || imageGeom->getYPoints() == 1 || imageGeom->getZPoints() == 1)
   {
     find_moments2D();
     find_axes2D();
     find_axiseulers2D();
-
   }
-
-
 }
 
 // -----------------------------------------------------------------------------

@@ -40,10 +40,10 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "ImportExport/ImportExportDLLExport.h"
 
@@ -75,7 +75,7 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -265,8 +265,6 @@ public:
    * @brief execute Reimplemented from @see AbstractFilter class
    */
   void execute() override;
-
-
 
 protected:
   VtkStructuredPointsReader();

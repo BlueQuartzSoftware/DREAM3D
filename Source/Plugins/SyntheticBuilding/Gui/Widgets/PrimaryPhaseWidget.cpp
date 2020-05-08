@@ -445,7 +445,6 @@ void PrimaryPhaseWidget::setupGui()
   connect(m_FeatureSizeDistWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
 
   connect(m_FeatureSizeDistWidget, SIGNAL(userEnteredValidData(bool)), m_GenerateDefaultData, SLOT(setEnabled(bool)));
-
 }
 
 // -----------------------------------------------------------------------------

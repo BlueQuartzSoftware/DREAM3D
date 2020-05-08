@@ -155,14 +155,14 @@ void EbsdMontageImportWidget::setupGui()
   m_Ui->errorMessage->setVisible(false);
 
   // Update the widget when the data directory changes
-//  SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
-//  connect(validator, &SIMPLDataPathValidator::dataDirectoryChanged, [=] {
-//    blockSignals(true);
-//    inputDir_textChanged(m_Ui->inputDir->text());
-//    blockSignals(false);
+  //  SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
+  //  connect(validator, &SIMPLDataPathValidator::dataDirectoryChanged, [=] {
+  //    blockSignals(true);
+  //    inputDir_textChanged(m_Ui->inputDir->text());
+  //    blockSignals(false);
 
-//    emit parametersChanged();
-//  });
+  //    emit parametersChanged();
+  //  });
 
   getGuiParametersFromFilter();
 }
@@ -200,7 +200,6 @@ void EbsdMontageImportWidget::connectSignalsSlots()
   connect(m_Ui->colStart, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &EbsdMontageImportWidget::spinnerChanged);
   connect(m_Ui->colEnd, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &EbsdMontageImportWidget::spinnerChanged);
   connect(m_Ui->increment, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &EbsdMontageImportWidget::spinnerChanged);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -375,8 +374,8 @@ void EbsdMontageImportWidget::updateFileListView()
   QString inputPath = validator->convertToAbsolutePath(m_Ui->inputDir->text());
 
   // Now generate all the file names the user is asking for and populate the table
-  FilePathGenerator::TileRCIndexLayout2D tileLayout2d = FilePathGenerator::GenerateRCIndexMontageFileList(rowStart, rowEnd, colStart, colEnd, hasMissingFiles, k_RowColOrdering, inputPath, m_Ui->filePrefix->text(),
-                                                                                            m_Ui->fileSuffix->text(), m_Ui->fileExt->text(), m_Ui->totalDigits->value());
+  FilePathGenerator::TileRCIndexLayout2D tileLayout2d = FilePathGenerator::GenerateRCIndexMontageFileList(
+      rowStart, rowEnd, colStart, colEnd, hasMissingFiles, k_RowColOrdering, inputPath, m_Ui->filePrefix->text(), m_Ui->fileSuffix->text(), m_Ui->fileExt->text(), m_Ui->totalDigits->value());
 
   m_Ui->fileListView->clear();
   QIcon greenDot = QIcon(QString(":/SIMPL/icons/images/bullet_ball_green.png"));

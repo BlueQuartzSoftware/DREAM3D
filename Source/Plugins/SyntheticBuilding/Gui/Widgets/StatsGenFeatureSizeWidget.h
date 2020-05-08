@@ -160,7 +160,8 @@ public:
    * @param statsData
    * @param index
    */
-  template <typename StatsData> void extractStatsData(StatsData* statsData, int index)
+  template <typename StatsData>
+  void extractStatsData(StatsData* statsData, int index)
   {
     Q_UNUSED(index)
     float binStepSize = 0.0f;
@@ -291,4 +292,3 @@ private:
   QDoubleValidator* m_MaxCutoffValidator = nullptr;
   bool m_EsdUpdated = false;
 };
-

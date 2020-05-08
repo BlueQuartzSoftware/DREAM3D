@@ -103,7 +103,7 @@ public:
   :
 #endif
 
-      data(dPtr)
+  data(dPtr)
   , yk(ykPtr)
   , rnd(rnd)
   {
@@ -454,7 +454,7 @@ void MPMCalculation::execute()
       }
     }
     g->wait();
-    
+
 #else
     tbb::parallel_for(tbb::blocked_range2d<int>(0, rows, rows / threads, 0, cols, cols), ParallelMPMLoop(data, yk, &(rndNumbers.front())), tbb::simple_partitioner());
 #endif

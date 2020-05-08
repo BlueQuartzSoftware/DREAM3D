@@ -35,8 +35,8 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
-#include <QtCore/QTime>
 #include <QtCore/QTextStream>
+#include <QtCore/QTime>
 
 #include <QtCore/QDebug>
 

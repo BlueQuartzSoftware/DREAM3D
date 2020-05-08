@@ -155,7 +155,6 @@ void ConvertHexGridToSquareGrid::dataCheck()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -329,120 +328,120 @@ void ConvertHexGridToSquareGrid::execute()
         return;
       }
 
-        if(err == -600)
+      if(err == -600)
+      {
+        setWarningCondition(reader.getErrorCode(), reader.getErrorMessage());
+      }
+      QString origHeader = reader.getOriginalHeader();
+      if(origHeader.isEmpty())
+      {
+
+        QString ss = QObject::tr("Header could not be retrieved: %1").arg(ebsdFName);
+        setErrorCondition(-55001, ss);
+      }
+
+      QTextStream in(&origHeader);
+      // QString newEbsdFName = path.absolutePath() + "/Sqr_" + base + "." + ext;
+      QString newEbsdFName = path.absolutePath() + "/" + getOutputPrefix() + base + "." + ext;
+
+      if(newEbsdFName.compare(ebsdFName) == 0)
+      {
+        QString msg = QObject::tr("New ang file is the same as the old ang file. Overwriting is NOT allowed");
+        setErrorCondition(-201, msg);
+        return;
+      }
+
+      QFile outFile(newEbsdFName);
+      QFileInfo fi(newEbsdFName);
+      // Ensure the output path exists by creating it if necessary
+      QDir parent(fi.absolutePath());
+      if(!parent.exists())
+      {
+        parent.mkpath(fi.absolutePath());
+      }
+
+      if(!outFile.open(QIODevice::WriteOnly | QIODevice::Text))
+      {
+        QString msg = QObject::tr("Ang square output file could not be opened for writing: %1").arg(newEbsdFName);
+        setErrorCondition(-200, msg);
+        return;
+      }
+
+      QTextStream dStream(&outFile);
+
+      m_HeaderIsComplete = false;
+
+      float HexXStep = reader.getXStep();
+      float HexYStep = reader.getYStep();
+      int32_t HexNumColsOdd = reader.getNumOddCols();
+      int32_t HexNumColsEven = reader.getNumEvenCols();
+      int32_t HexNumRows = reader.getNumRows();
+      m_NumCols = (HexNumColsOdd * HexXStep) / m_XResolution;
+      m_NumRows = (HexNumRows * HexYStep) / m_YResolution;
+      float xSqr = 0.0f, ySqr = 0.0f, xHex1 = 0.0f, yHex1 = 0.0f, xHex2 = 0.0f, yHex2 = 0.0f;
+      int32_t point = 0, point1 = 0, point2 = 0;
+      int32_t row1 = 0, row2 = 0, col1 = 0, col2 = 0;
+      float dist1 = 0.0f, dist2 = 0.0f;
+      float* phi1 = reader.getPhi1Pointer();
+      float* PHI = reader.getPhiPointer();
+      float* phi2 = reader.getPhi2Pointer();
+      float* ci = reader.getConfidenceIndexPointer();
+      float* iq = reader.getImageQualityPointer();
+      float* semsig = reader.getSEMSignalPointer();
+      float* fit = reader.getFitPointer();
+      int32_t* phase = reader.getPhaseDataPointer();
+      while(!in.atEnd())
+      {
+        QString buf = in.readLine();
+        QString line = modifyAngHeaderLine(buf);
+        if(!m_HeaderIsComplete)
         {
-          setWarningCondition(reader.getErrorCode(), reader.getErrorMessage());
+          dStream << line << "\n";
         }
-        QString origHeader = reader.getOriginalHeader();
-        if(origHeader.isEmpty())
+      }
+      for(int32_t j = 0; j < m_NumRows; j++)
+      {
+        for(int32_t i = 0; i < m_NumCols; i++)
         {
-
-          QString ss = QObject::tr("Header could not be retrieved: %1").arg(ebsdFName);
-          setErrorCondition(-55001, ss);
-        }
-
-        QTextStream in(&origHeader);
-        // QString newEbsdFName = path.absolutePath() + "/Sqr_" + base + "." + ext;
-        QString newEbsdFName = path.absolutePath() + "/" + getOutputPrefix() + base + "." + ext;
-
-        if(newEbsdFName.compare(ebsdFName) == 0)
-        {
-          QString msg = QObject::tr("New ang file is the same as the old ang file. Overwriting is NOT allowed");
-          setErrorCondition(-201, msg);
-          return;
-        }
-
-        QFile outFile(newEbsdFName);
-        QFileInfo fi(newEbsdFName);
-        // Ensure the output path exists by creating it if necessary
-        QDir parent(fi.absolutePath());
-        if(!parent.exists())
-        {
-          parent.mkpath(fi.absolutePath());
-        }
-
-        if(!outFile.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-          QString msg = QObject::tr("Ang square output file could not be opened for writing: %1").arg(newEbsdFName);
-          setErrorCondition(-200, msg);
-          return;
-        }
-
-        QTextStream dStream(&outFile);
-
-        m_HeaderIsComplete = false;
-
-        float HexXStep = reader.getXStep();
-        float HexYStep = reader.getYStep();
-        int32_t HexNumColsOdd = reader.getNumOddCols();
-        int32_t HexNumColsEven = reader.getNumEvenCols();
-        int32_t HexNumRows = reader.getNumRows();
-        m_NumCols = (HexNumColsOdd * HexXStep) / m_XResolution;
-        m_NumRows = (HexNumRows * HexYStep) / m_YResolution;
-        float xSqr = 0.0f, ySqr = 0.0f, xHex1 = 0.0f, yHex1 = 0.0f, xHex2 = 0.0f, yHex2 = 0.0f;
-        int32_t point = 0, point1 = 0, point2 = 0;
-        int32_t row1 = 0, row2 = 0, col1 = 0, col2 = 0;
-        float dist1 = 0.0f, dist2 = 0.0f;
-        float* phi1 = reader.getPhi1Pointer();
-        float* PHI = reader.getPhiPointer();
-        float* phi2 = reader.getPhi2Pointer();
-        float* ci = reader.getConfidenceIndexPointer();
-        float* iq = reader.getImageQualityPointer();
-        float* semsig = reader.getSEMSignalPointer();
-        float* fit = reader.getFitPointer();
-        int32_t* phase = reader.getPhaseDataPointer();
-        while(!in.atEnd())
-        {
-          QString buf = in.readLine();
-          QString line = modifyAngHeaderLine(buf);
-          if(!m_HeaderIsComplete)
+          xSqr = float(i) * m_XResolution;
+          ySqr = float(j) * m_YResolution;
+          row1 = ySqr / (HexYStep);
+          yHex1 = row1 * HexYStep;
+          row2 = row1 + 1;
+          yHex2 = row2 * HexYStep;
+          if(row1 % 2 == 0)
           {
-            dStream << line << "\n";
+            col1 = xSqr / (HexXStep);
+            xHex1 = col1 * HexXStep;
+            point1 = ((row1 / 2) * HexNumColsEven) + ((row1 / 2) * HexNumColsOdd) + col1;
+            col2 = (xSqr - (HexXStep / 2.0)) / (HexXStep);
+            xHex2 = col2 * HexXStep + (HexXStep / 2.0);
+            point2 = ((row1 / 2) * HexNumColsEven) + (((row1 / 2) + 1) * HexNumColsOdd) + col2;
           }
-        }
-        for(int32_t j = 0; j < m_NumRows; j++)
-        {
-          for(int32_t i = 0; i < m_NumCols; i++)
+          else
           {
-            xSqr = float(i) * m_XResolution;
-            ySqr = float(j) * m_YResolution;
-            row1 = ySqr / (HexYStep);
-            yHex1 = row1 * HexYStep;
-            row2 = row1 + 1;
-            yHex2 = row2 * HexYStep;
-            if(row1 % 2 == 0)
-            {
-              col1 = xSqr / (HexXStep);
-              xHex1 = col1 * HexXStep;
-              point1 = ((row1 / 2) * HexNumColsEven) + ((row1 / 2) * HexNumColsOdd) + col1;
-              col2 = (xSqr - (HexXStep / 2.0)) / (HexXStep);
-              xHex2 = col2 * HexXStep + (HexXStep / 2.0);
-              point2 = ((row1 / 2) * HexNumColsEven) + (((row1 / 2) + 1) * HexNumColsOdd) + col2;
-            }
-            else
-            {
-              col1 = (xSqr - (HexXStep / 2.0)) / (HexXStep);
-              xHex1 = col1 * HexXStep + (HexXStep / 2.0);
-              point1 = ((row1 / 2) * HexNumColsEven) + (((row1 / 2) + 1) * HexNumColsOdd) + col1;
-              col2 = xSqr / (HexXStep);
-              xHex2 = col2 * HexXStep;
-              point2 = (((row1 / 2) + 1) * HexNumColsEven) + (((row1 / 2) + 1) * HexNumColsOdd) + col2;
-            }
-            dist1 = ((xSqr - xHex1) * (xSqr - xHex1)) + ((ySqr - yHex1) * (ySqr - yHex1));
-            dist2 = ((xSqr - xHex2) * (xSqr - xHex2)) + ((ySqr - yHex2) * (ySqr - yHex2));
-            if(dist1 <= dist2 || row1 == (HexNumRows - 1))
-            {
-              point = point1;
-            }
-            else
-            {
-              point = point2;
-            }
-            dStream << "  " << phi1[point] << "	" << PHI[point] << "	" << phi2[point] << "	" << xSqr << "	" << ySqr << "	" << iq[point] << "	" << ci[point] << "	" << phase[point] << "	"
-                    << semsig[point] << "	" << fit[point] << "	"
-                    << "\n";
+            col1 = (xSqr - (HexXStep / 2.0)) / (HexXStep);
+            xHex1 = col1 * HexXStep + (HexXStep / 2.0);
+            point1 = ((row1 / 2) * HexNumColsEven) + (((row1 / 2) + 1) * HexNumColsOdd) + col1;
+            col2 = xSqr / (HexXStep);
+            xHex2 = col2 * HexXStep;
+            point2 = (((row1 / 2) + 1) * HexNumColsEven) + (((row1 / 2) + 1) * HexNumColsOdd) + col2;
           }
+          dist1 = ((xSqr - xHex1) * (xSqr - xHex1)) + ((ySqr - yHex1) * (ySqr - yHex1));
+          dist2 = ((xSqr - xHex2) * (xSqr - xHex2)) + ((ySqr - yHex2) * (ySqr - yHex2));
+          if(dist1 <= dist2 || row1 == (HexNumRows - 1))
+          {
+            point = point1;
+          }
+          else
+          {
+            point = point2;
+          }
+          dStream << "  " << phi1[point] << "	" << PHI[point] << "	" << phi2[point] << "	" << xSqr << "	" << ySqr << "	" << iq[point] << "	" << ci[point] << "	" << phase[point] << "	"
+                  << semsig[point] << "	" << fit[point] << "	"
+                  << "\n";
         }
+      }
     }
     else if(ext.compare(EbsdLib::Ctf::FileExt) == 0)
     {

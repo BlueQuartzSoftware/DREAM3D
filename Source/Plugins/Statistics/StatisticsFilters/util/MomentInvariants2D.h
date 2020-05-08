@@ -36,45 +36,43 @@
 #include <vector>
 #include <iostream>
 
-
 #include <Eigen/Dense>
 
 class MomentInvariants2D
 {
-  public:
-    MomentInvariants2D();
-    virtual ~MomentInvariants2D();
+public:
+  MomentInvariants2D();
+  virtual ~MomentInvariants2D();
 
+  using DoubleMatrixType = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
+  using IntMatrixType = Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
-    using DoubleMatrixType = Eigen::Matrix<double,Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
-    using IntMatrixType = Eigen::Matrix<int,Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
+  //--------------------
+  // These variations use Eigen for the matrix computations
 
-//--------------------
-// These variations use Eigen for the matrix computations
+  /**
+   * @brief binomial
+   * @param max_order
+   * @return
+   */
+  DoubleMatrixType binomial(size_t max_order);
 
-    /**
-     * @brief binomial
-     * @param max_order
-     * @return
-     */
-    DoubleMatrixType binomial(size_t max_order);
+  /**
+   * @brief getBigX
+   * @param max_order
+   * @param dim
+   * @return
+   */
+  MomentInvariants2D::DoubleMatrixType getBigX(size_t max_order, size_t dim);
 
-    /**
-     * @brief getBigX
-     * @param max_order
-     * @param dim
-     * @return
-     */
-    MomentInvariants2D::DoubleMatrixType getBigX(size_t max_order, size_t dim);
-
-    /**
-     * @brief computeMomentInvariants
-     * @param input
-     * @param inputDims
-     * @param max_order
-     * @return
-     */
-    DoubleMatrixType computeMomentInvariants(DoubleMatrixType &input, size_t* inputDims, size_t max_order);
+  /**
+   * @brief computeMomentInvariants
+   * @param input
+   * @param inputDims
+   * @param max_order
+   * @return
+   */
+  DoubleMatrixType computeMomentInvariants(DoubleMatrixType& input, size_t* inputDims, size_t max_order);
 
 #if 0
     /**
@@ -241,21 +239,17 @@ class MomentInvariants2D
       }
     }
 #endif
-  protected:
+protected:
+  /**
+   * @brief factorial
+   * @param n
+   * @return
+   */
+  int factorial(int n) const;
 
-    /**
-     * @brief factorial
-     * @param n
-     * @return
-     */
-    int factorial(int n) const;
-
-
-  public:
-    MomentInvariants2D(const MomentInvariants2D&) = delete; // Copy Constructor Not Implemented
-    MomentInvariants2D(MomentInvariants2D&&) = delete;      // Move Constructor Not Implemented
-    MomentInvariants2D& operator=(const MomentInvariants2D&) = delete; // Copy Assignment Not Implemented
-    MomentInvariants2D& operator=(MomentInvariants2D&&) = delete;      // Move Assignment Not Implemented
+public:
+  MomentInvariants2D(const MomentInvariants2D&) = delete;            // Copy Constructor Not Implemented
+  MomentInvariants2D(MomentInvariants2D&&) = delete;                 // Move Constructor Not Implemented
+  MomentInvariants2D& operator=(const MomentInvariants2D&) = delete; // Copy Assignment Not Implemented
+  MomentInvariants2D& operator=(MomentInvariants2D&&) = delete;      // Move Assignment Not Implemented
 };
-
-

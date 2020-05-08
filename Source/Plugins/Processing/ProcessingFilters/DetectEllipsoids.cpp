@@ -167,19 +167,23 @@ void DetectEllipsoids::setupFilterParameters()
   }
 
   {
-    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Center Coordinates", CenterCoordinatesArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
+    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Center Coordinates", CenterCoordinatesArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath,
+                                                        FilterParameter::CreatedArray, DetectEllipsoids));
   }
 
   {
-    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Major Axis Lengths", MajorAxisLengthArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
+    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Major Axis Lengths", MajorAxisLengthArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath,
+                                                        FilterParameter::CreatedArray, DetectEllipsoids));
   }
 
   {
-    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Minor Axis Lengths", MinorAxisLengthArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
+    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Minor Axis Lengths", MinorAxisLengthArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath,
+                                                        FilterParameter::CreatedArray, DetectEllipsoids));
   }
 
   {
-    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Rotational Angles", RotationalAnglesArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
+    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Rotational Angles", RotationalAnglesArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath,
+                                                        FilterParameter::CreatedArray, DetectEllipsoids));
   }
 
   {
@@ -222,19 +226,15 @@ void DetectEllipsoids::dataCheck()
 
   DataArrayPath tmp = m_EllipseFeatureAttributeMatrixPath;
   tmp.setDataArrayName(m_CenterCoordinatesArrayName);
-  m_CenterCoordinatesPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 2), "", DataArrayID32);
+  m_CenterCoordinatesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 2), "", DataArrayID32);
   tmp.setDataArrayName(m_MajorAxisLengthArrayName);
-  m_MajorAxisLengthArrayPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 1), "", DataArrayID33);
+  m_MajorAxisLengthArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 1), "", DataArrayID33);
   tmp.setDataArrayName(m_MinorAxisLengthArrayName);
-  m_MinorAxisLengthArrayPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 1), "", DataArrayID34);
+  m_MinorAxisLengthArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 1), "", DataArrayID34);
   tmp.setDataArrayName(m_RotationalAnglesArrayName);
   m_RotationalAnglesArrayPtr =
       getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 1), "", DataArrayID35);
 }
-
 
 // -----------------------------------------------------------------------------
 //

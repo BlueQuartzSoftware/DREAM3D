@@ -80,16 +80,15 @@ public:
    * @param x
    * @param y
    */
-  static void PaintSymmetryDirection(const QString& text, QFontMetrics *metrics, QPainter *painter, int x, int y);
+  static void PaintSymmetryDirection(const QString& text, QFontMetrics* metrics, QPainter* painter, int x, int y);
 
 private:
   QVector<qint32> m_KernelWeights;
   bool m_KernelWeightsInited;
 
 public:
-  PoleFigureImageUtilities(const PoleFigureImageUtilities&) = delete; // Copy Constructor Not Implemented
-  PoleFigureImageUtilities(PoleFigureImageUtilities&&) = delete;      // Move Constructor Not Implemented
+  PoleFigureImageUtilities(const PoleFigureImageUtilities&) = delete;            // Copy Constructor Not Implemented
+  PoleFigureImageUtilities(PoleFigureImageUtilities&&) = delete;                 // Move Constructor Not Implemented
   PoleFigureImageUtilities& operator=(const PoleFigureImageUtilities&) = delete; // Copy Assignment Not Implemented
   PoleFigureImageUtilities& operator=(PoleFigureImageUtilities&&) = delete;      // Move Assignment Not Implemented
 };
-

@@ -154,7 +154,6 @@ void NodesTrianglesToVtk::dataCheck()
   FileSystemPathHelper::CheckOutputFile(this, "Output VTK File", getOutputVtkFile(), true);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

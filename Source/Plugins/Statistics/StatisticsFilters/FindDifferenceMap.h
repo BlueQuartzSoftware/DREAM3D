@@ -38,7 +38,7 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -104,7 +104,7 @@ public:
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
-  */
+   */
   QString getBrandingString() const override;
 
   /**
@@ -155,8 +155,6 @@ public:
    */
   void execute() override;
 
-
-
 protected:
   FindDifferenceMap();
   /**
@@ -182,9 +180,8 @@ private:
   DataArrayPath m_DifferenceMapArrayPath = {};
 
 public:
-  FindDifferenceMap(const FindDifferenceMap&) = delete; // Copy Constructor Not Implemented
-  FindDifferenceMap(FindDifferenceMap&&) = delete;      // Move Constructor Not Implemented
+  FindDifferenceMap(const FindDifferenceMap&) = delete;            // Copy Constructor Not Implemented
+  FindDifferenceMap(FindDifferenceMap&&) = delete;                 // Move Constructor Not Implemented
   FindDifferenceMap& operator=(const FindDifferenceMap&) = delete; // Copy Assignment Not Implemented
   FindDifferenceMap& operator=(FindDifferenceMap&&) = delete;      // Move Assignment Not Implemented
 };
-

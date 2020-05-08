@@ -127,9 +127,8 @@ private:
   QImage m_DisplayedImage;
 
 public:
-  QEbsdReferenceFrameDialog(const QEbsdReferenceFrameDialog&) = delete; // Copy Constructor Not Implemented
-  QEbsdReferenceFrameDialog(QEbsdReferenceFrameDialog&&) = delete;      // Move Constructor Not Implemented
+  QEbsdReferenceFrameDialog(const QEbsdReferenceFrameDialog&) = delete;            // Copy Constructor Not Implemented
+  QEbsdReferenceFrameDialog(QEbsdReferenceFrameDialog&&) = delete;                 // Move Constructor Not Implemented
   QEbsdReferenceFrameDialog& operator=(const QEbsdReferenceFrameDialog&) = delete; // Copy Assignment Not Implemented
   QEbsdReferenceFrameDialog& operator=(QEbsdReferenceFrameDialog&&) = delete;      // Move Assignment Not Implemented
 };
-

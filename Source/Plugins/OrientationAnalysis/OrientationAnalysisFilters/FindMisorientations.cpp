@@ -78,7 +78,6 @@ FindMisorientations::FindMisorientations()
 
   m_NeighborList = NeighborList<int32_t>::NullPointer();
   m_MisorientationList = NeighborList<float>::NullPointer();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -113,8 +112,10 @@ void FindMisorientations::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindMisorientations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Misorientation List", MisorientationListArrayName, NeighborListArrayPath, NeighborListArrayPath, FilterParameter::CreatedArray, FindMisorientations));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Average Misorientations", AvgMisorientationsArrayName, FeaturePhasesArrayPath, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindMisorientations));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Misorientation List", MisorientationListArrayName, NeighborListArrayPath, NeighborListArrayPath, FilterParameter::CreatedArray, FindMisorientations));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Average Misorientations", AvgMisorientationsArrayName, FeaturePhasesArrayPath, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindMisorientations));
   setFilterParameters(parameters);
 }
 
@@ -159,9 +160,8 @@ void FindMisorientations::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   // Feature Data
-  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getAvgQuatsArrayPath(),
-                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_AvgQuatsPtr.lock())                                                                       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getAvgQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_AvgQuatsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -171,9 +171,9 @@ void FindMisorientations::dataCheck()
   }
 
   cDims[0] = 1;
-  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeaturePhasesArrayPath(),
-                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FeaturePhasesPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_FeaturePhasesPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeaturePhasesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -186,9 +186,9 @@ void FindMisorientations::dataCheck()
   if(m_FindAvgMisors)
   {
     tempPath.update(m_FeaturePhasesArrayPath.getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAvgMisorientationsArrayName());
-    m_AvgMisorientationsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(
-        this, tempPath, 0, cDims);                      /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_AvgMisorientationsPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_AvgMisorientationsPtr =
+        getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_AvgMisorientationsPtr.lock())                                                          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_AvgMisorientations = m_AvgMisorientationsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -213,7 +213,6 @@ void FindMisorientations::dataCheck()
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 }
-
 
 // -----------------------------------------------------------------------------
 //

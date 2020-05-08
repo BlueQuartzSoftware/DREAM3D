@@ -41,14 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 #include "Reconstruction/ReconstructionDLLExport.h"
 
 class LaueOps;
 using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
 using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
-
 
 /**
  * @brief The AlignSectionsMutualInformation class. See [Filter documentation](@ref alignsectionsmutualinformation) for details.
@@ -77,7 +75,7 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return

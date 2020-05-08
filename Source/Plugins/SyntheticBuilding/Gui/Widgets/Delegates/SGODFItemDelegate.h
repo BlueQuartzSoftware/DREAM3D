@@ -155,4 +155,3 @@ private:
   QModelIndex m_Index;
   unsigned int m_CrystalStructure;
 };
-

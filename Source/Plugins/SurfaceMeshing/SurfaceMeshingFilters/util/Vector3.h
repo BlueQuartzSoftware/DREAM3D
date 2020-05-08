@@ -40,19 +40,22 @@ struct Vector3
 };
 
 //################## GLOBAL OPERATORS ##################//
-template <typename T> Vector3<T> operator+(Vector3<T>& lhs, Vector3<T>& rhs);
-template <typename T> Vector3<T> operator-(Vector3<T>& lhs, Vector3<T>& rhs);
-template <typename T> Vector3<T> operator*(double factor, Vector3<T>& v);
-template <typename T> Vector3<T> operator*(Vector3<T>& v, double factor);
-template <typename T> Vector3<T> operator/(Vector3<T>& v, double factor);
-template <typename T> std::ostream& operator<<(std::ostream& os, Vector3<T>& v);
+template <typename T>
+Vector3<T> operator+(Vector3<T>& lhs, Vector3<T>& rhs);
+template <typename T>
+Vector3<T> operator-(Vector3<T>& lhs, Vector3<T>& rhs);
+template <typename T>
+Vector3<T> operator*(double factor, Vector3<T>& v);
+template <typename T>
+Vector3<T> operator*(Vector3<T>& v, double factor);
+template <typename T>
+Vector3<T> operator/(Vector3<T>& v, double factor);
+template <typename T>
+std::ostream& operator<<(std::ostream& os, Vector3<T>& v);
 
 //################## TYPEDEFS ##################//
 typedef Vector3<float> Vector3f;
 typedef Vector3<double> Vector3d;
 
-
-typedef double           FloatType;
-typedef Vector3<FloatType>  VectorType;
-
-
+typedef double FloatType;
+typedef Vector3<FloatType> VectorType;

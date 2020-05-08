@@ -4,28 +4,28 @@
 
 namespace SyntheticBuildingConstants
 {
-  const QString SyntheticBuildingPluginFile("SyntheticBuildingPlugin");
-  const QString SyntheticBuildingPluginDisplayName("SyntheticBuilding");
-  const QString SyntheticBuildingBaseName("SyntheticBuilding");
+const QString SyntheticBuildingPluginFile("SyntheticBuildingPlugin");
+const QString SyntheticBuildingPluginDisplayName("SyntheticBuilding");
+const QString SyntheticBuildingBaseName("SyntheticBuilding");
 
-  namespace BlueQuartz
-  {
-  const QString VendorName("BlueQuartz Software, LLC");
-  const QString URL("http://www.bluequartz.net");
-  const QString Copyright("(C) 2018 BlueQuartz Software, LLC");
-  } // namespace BlueQuartz
+namespace BlueQuartz
+{
+const QString VendorName("BlueQuartz Software, LLC");
+const QString URL("http://www.bluequartz.net");
+const QString Copyright("(C) 2018 BlueQuartz Software, LLC");
+} // namespace BlueQuartz
 
-  namespace FilterGroups
-  {
-  const QString StatsGeneratorFilters("StatsGenerator");
-  }
-
-  static const float k_Mu = 1.0f;
-  static const float k_Sigma = 0.1f;
-
-  static const int k_HSV_Saturation = 160;
-  static const int k_HSV_Value = 160;
+namespace FilterGroups
+{
+const QString StatsGeneratorFilters("StatsGenerator");
 }
+
+static const float k_Mu = 1.0f;
+static const float k_Sigma = 0.1f;
+
+static const int k_HSV_Saturation = 160;
+static const int k_HSV_Value = 160;
+} // namespace SyntheticBuildingConstants
 
 /**
  * @namespace FilterParameterWidgetType
@@ -33,9 +33,8 @@ namespace SyntheticBuildingConstants
  */
 namespace FilterParameterWidgetType
 {
-  const QString InitializeSyntheticVolumeWidget("InitializeSyntheticVolumeWidget");
+const QString InitializeSyntheticVolumeWidget("InitializeSyntheticVolumeWidget");
 }
-
 
 #if defined(Q_OS_WIN)
 
@@ -54,4 +53,3 @@ namespace FilterParameterWidgetType
 #define SG_FONT_SIZE 12
 
 #endif
-

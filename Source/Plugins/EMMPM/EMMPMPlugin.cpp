@@ -14,8 +14,6 @@
 #include "EMMPM/EMMPMConstants.h"
 #include "EMMPM/EMMPMVersion.h"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -59,7 +57,6 @@ QString EMMPMPlugin::getPluginBaseName()
 {
   return EMMPMConstants::EMMPMBaseName;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -157,7 +154,7 @@ QMap<QString, QString> EMMPMPlugin::getThirdPartyLicenses()
   QMap<QString, QString> licenseMap;
   QList<QString> fileStrList;
   fileStrList.push_back(":/ThirdParty/HDF5.txt");
-  
+
   fileStrList.push_back(":/ThirdParty/Qt.txt");
   fileStrList.push_back(":/ThirdParty/Qwt.txt");
 

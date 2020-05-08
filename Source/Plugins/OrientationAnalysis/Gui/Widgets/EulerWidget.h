@@ -62,9 +62,8 @@ private:
   QVector<double> toRadians(QVector<double> data);
 
 public:
-  EulerWidget(const EulerWidget&) = delete;    // Copy Constructor Not Implemented
-  EulerWidget(EulerWidget&&) = delete;         // Move Constructor Not Implemented
+  EulerWidget(const EulerWidget&) = delete;            // Copy Constructor Not Implemented
+  EulerWidget(EulerWidget&&) = delete;                 // Move Constructor Not Implemented
   EulerWidget& operator=(const EulerWidget&) = delete; // Copy Assignment Not Implemented
   EulerWidget& operator=(EulerWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

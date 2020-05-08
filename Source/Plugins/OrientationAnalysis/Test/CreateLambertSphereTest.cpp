@@ -113,12 +113,12 @@ public:
     }
 
     /* Run a prewritten pipeline from a file. The pipeline should be the following:
-    * "Filter_Name": "ITKImageReader",
-    * "Filter_Human_Label": "Set Origin & Resolution (Image)",
-    * "Filter_Human_Label": "Color to GrayScale",
-    * "Filter_Human_Label": "Create 3D Sphere from 2D Master Pattern",
-    * "Filter_Human_Label": "Write DREAM.3D Data File",
-    */
+     * "Filter_Name": "ITKImageReader",
+     * "Filter_Human_Label": "Set Origin & Resolution (Image)",
+     * "Filter_Human_Label": "Color to GrayScale",
+     * "Filter_Human_Label": "Create 3D Sphere from 2D Master Pattern",
+     * "Filter_Human_Label": "Write DREAM.3D Data File",
+     */
 
     // Observer obs;
 

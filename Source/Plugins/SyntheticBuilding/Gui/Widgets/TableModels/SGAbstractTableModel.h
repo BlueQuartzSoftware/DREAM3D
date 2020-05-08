@@ -221,9 +221,8 @@ public:
   virtual void setColumnData(int col, QVector<float>& data) = 0;
 
 public:
-  SGAbstractTableModel(const SGAbstractTableModel&) = delete; // Copy Constructor Not Implemented
-  SGAbstractTableModel(SGAbstractTableModel&&) = delete;      // Move Constructor Not Implemented
+  SGAbstractTableModel(const SGAbstractTableModel&) = delete;            // Copy Constructor Not Implemented
+  SGAbstractTableModel(SGAbstractTableModel&&) = delete;                 // Move Constructor Not Implemented
   SGAbstractTableModel& operator=(const SGAbstractTableModel&) = delete; // Copy Assignment Not Implemented
   SGAbstractTableModel& operator=(SGAbstractTableModel&&) = delete;      // Move Assignment Not Implemented
 };
-

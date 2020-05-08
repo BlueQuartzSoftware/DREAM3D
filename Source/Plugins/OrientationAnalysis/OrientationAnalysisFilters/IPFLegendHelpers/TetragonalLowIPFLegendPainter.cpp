@@ -89,7 +89,7 @@ QImage TetragonalLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeigh
   int32_t fontWidth = 0;
   int size = std::max(pixelWidth, pixelHeight);
 
-  int32_t fontScale = static_cast<int32_t>( 24.0f / 256.0f * static_cast<float>(size)); // At 256 Pixel Image, we want to use 24 Point font
+  int32_t fontScale = static_cast<int32_t>(24.0f / 256.0f * static_cast<float>(size)); // At 256 Pixel Image, we want to use 24 Point font
   if(fontScale < 10)
   {
     fontScale = 10;
@@ -150,13 +150,13 @@ QImage TetragonalLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeigh
   label = QString("[001]");
   fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
-  painter.drawText(10, fontHeight*2, label);
+  painter.drawText(10, fontHeight * 2, label);
 
   label = ops->getSymmetryName();
   label = label.replace("-", "_");
   fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
-  painter.drawText(pImageWidth/2 - fontWidth/2, fontHeight * 1.0, label);
+  painter.drawText(pImageWidth / 2 - fontWidth / 2, fontHeight * 1.0, label);
 
   return pImage;
 }

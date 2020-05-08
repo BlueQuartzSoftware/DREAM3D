@@ -71,9 +71,8 @@ private:
   QLineEdit* C;
 
 public:
-  RolledPresetDialog(const RolledPresetDialog&) = delete; // Copy Constructor Not Implemented
-  RolledPresetDialog(RolledPresetDialog&&) = delete;      // Move Constructor Not Implemented
+  RolledPresetDialog(const RolledPresetDialog&) = delete;            // Copy Constructor Not Implemented
+  RolledPresetDialog(RolledPresetDialog&&) = delete;                 // Move Constructor Not Implemented
   RolledPresetDialog& operator=(const RolledPresetDialog&) = delete; // Copy Assignment Not Implemented
   RolledPresetDialog& operator=(RolledPresetDialog&&) = delete;      // Move Assignment Not Implemented
 };
-

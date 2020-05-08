@@ -79,7 +79,7 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -259,7 +259,7 @@ public:
    */
   bool getUseExistingImage() const;
   Q_PROPERTY(bool UseExistingImage READ getUseExistingImage WRITE setUseExistingImage)
-  
+
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
@@ -269,7 +269,7 @@ public:
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
-  */
+   */
   QString getBrandingString() const override;
 
   /**
@@ -314,8 +314,6 @@ public:
    * @brief execute Reimplemented from @see AbstractFilter class
    */
   void execute() override;
-
-
 
 protected:
   /**
@@ -407,9 +405,8 @@ private:
   float cp(float p);
 
 public:
-  CreateLambertSphere(const CreateLambertSphere&) = delete; // Copy Constructor Not Implemented
-  CreateLambertSphere(CreateLambertSphere&&) = delete;      // Move Constructor Not Implemented
+  CreateLambertSphere(const CreateLambertSphere&) = delete;            // Copy Constructor Not Implemented
+  CreateLambertSphere(CreateLambertSphere&&) = delete;                 // Move Constructor Not Implemented
   CreateLambertSphere& operator=(const CreateLambertSphere&) = delete; // Copy Assignment Not Implemented
   CreateLambertSphere& operator=(CreateLambertSphere&&) = delete;      // Move Assignment Not Implemented
 };
-

@@ -6,23 +6,22 @@
 #include <vector>
 #include <chrono>
 
-
-
 using MapType = std::map<uint64_t, float>;
 
-
-typedef struct {
-    int32_t scanWidth;
-    int32_t scanHeight;
-    int32_t patternWidth;
-    int32_t patternHeight;
-    int32_t zPoints;
+typedef struct
+{
+  int32_t scanWidth;
+  int32_t scanHeight;
+  int32_t patternWidth;
+  int32_t patternHeight;
+  int32_t zPoints;
 } ScanInfo;
 
-typedef struct {
-    int32_t x;
-    int32_t y;
-    int32_t z;
+typedef struct
+{
+  int32_t x;
+  int32_t y;
+  int32_t z;
 } KernelInfo;
 
 // -----------------------------------------------------------------------------
@@ -36,16 +35,13 @@ float computeScalar(ScanInfo scanInfo, int32_t x, int32_t y, float* data)
   float* bPtr = data + (y * scanInfo.patternWidth * scanInfo.patternHeight);
 
   float value = -1.0f;
-//  size_t patternTotal = scanInfo.patternWidth * scanInfo.patternHeight;
-//  for(size_t i = 0; i < patternTotal; i++)
-//  {
-//    value =+ (aPtr[i] - bPtr[i]) * (aPtr[i] - bPtr[i]);
-//  }
+  //  size_t patternTotal = scanInfo.patternWidth * scanInfo.patternHeight;
+  //  for(size_t i = 0; i < patternTotal; i++)
+  //  {
+  //    value =+ (aPtr[i] - bPtr[i]) * (aPtr[i] - bPtr[i]);
+  //  }
   return value;
-
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -64,44 +60,54 @@ void createMap(ScanInfo scanInfo, KernelInfo kernelInfo, float* data)
 
     for(int32_t row = 0; row < scanInfo.scanHeight; row++)
     {
-   //   std::cout << "Row: " << row << std::endl;
+      //   std::cout << "Row: " << row << std::endl;
       for(int32_t col = 0; col < scanInfo.scanWidth; col++)
       {
         int32_t point = (plane * scanInfo.scanWidth * scanInfo.scanHeight) + (row * scanInfo.scanWidth) + col;
 
-
         for(int32_t j = -kernelInfo.z; j < kernelInfo.z; j++)
         {
           int32_t kernelPlane = plane + j;
-          if(kernelPlane < 0 || kernelPlane >= scanInfo.zPoints) { continue; }
+          if(kernelPlane < 0 || kernelPlane >= scanInfo.zPoints)
+          {
+            continue;
+          }
 
           for(int32_t k = -kernelInfo.y; k < kernelInfo.y; k++)
           {
             int32_t kernelRow = row + k;
-            if(kernelRow < 0 || kernelRow >= scanInfo.scanHeight) { continue; }
+            if(kernelRow < 0 || kernelRow >= scanInfo.scanHeight)
+            {
+              continue;
+            }
             for(int32_t l = -kernelInfo.x; l < kernelInfo.x; l++)
             {
               int32_t kernelCol = col + l;
-              if(kernelCol < 0 || kernelCol >= scanInfo.scanWidth) { continue; }
-
+              if(kernelCol < 0 || kernelCol >= scanInfo.scanWidth)
+              {
+                continue;
+              }
 
               int32_t kernelPoint = (kernelPlane * scanInfo.scanWidth * scanInfo.scanHeight) + (kernelRow * scanInfo.scanWidth) + kernelCol;
-                if (kernelPoint == point) { continue; }
-                if (point < kernelPoint)
-                {
-                  p[0] = point;
-                  p[1] = kernelPoint;
-                }
-                else
-                {
-                  p[1] = point;
-                  p[0] = kernelPoint;
-                }
-                if(precomputedScalars.find(unique) == precomputedScalars.end())
-                {
-                 // std::cout << "Insert Key for " << point << ", " << kernelPoint << std::endl;
-                  precomputedScalars[unique] = computeScalar(scanInfo, point, kernelPoint, data);
-                }
+              if(kernelPoint == point)
+              {
+                continue;
+              }
+              if(point < kernelPoint)
+              {
+                p[0] = point;
+                p[1] = kernelPoint;
+              }
+              else
+              {
+                p[1] = point;
+                p[0] = kernelPoint;
+              }
+              if(precomputedScalars.find(unique) == precomputedScalars.end())
+              {
+                // std::cout << "Insert Key for " << point << ", " << kernelPoint << std::endl;
+                precomputedScalars[unique] = computeScalar(scanInfo, point, kernelPoint, data);
+              }
             }
           }
         }
@@ -112,12 +118,10 @@ void createMap(ScanInfo scanInfo, KernelInfo kernelInfo, float* data)
   std::cout << "Map Size: " << precomputedScalars.size() << std::endl;
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<float> CreateRandomData(ScanInfo &scanInfo)
+std::vector<float> CreateRandomData(ScanInfo& scanInfo)
 {
 
   std::vector<float> v(scanInfo.scanWidth * scanInfo.scanHeight * scanInfo.patternWidth * scanInfo.patternHeight);
@@ -128,7 +132,7 @@ std::vector<float> CreateRandomData(ScanInfo &scanInfo)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 
   std::cout << "Starting DRProcessing.... " << std::endl;

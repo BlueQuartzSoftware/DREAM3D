@@ -37,9 +37,9 @@
 #include <iostream>
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QMap>
 #include <QtCore/QString>
 #include <QtCore/QVector>
-#include <QtCore/QMap>
 
 #include <tclap/CmdLine.h>
 #include <tclap/ValueArg.h>

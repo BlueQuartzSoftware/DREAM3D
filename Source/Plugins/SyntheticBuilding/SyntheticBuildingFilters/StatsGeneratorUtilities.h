@@ -72,9 +72,8 @@ protected:
   StatsGeneratorUtilities();
 
 public:
-  StatsGeneratorUtilities(const StatsGeneratorUtilities&) = delete; // Copy Constructor Not Implemented
-  StatsGeneratorUtilities(StatsGeneratorUtilities&&) = delete;      // Move Constructor Not Implemented
+  StatsGeneratorUtilities(const StatsGeneratorUtilities&) = delete;            // Copy Constructor Not Implemented
+  StatsGeneratorUtilities(StatsGeneratorUtilities&&) = delete;                 // Move Constructor Not Implemented
   StatsGeneratorUtilities& operator=(const StatsGeneratorUtilities&) = delete; // Copy Assignment Not Implemented
   StatsGeneratorUtilities& operator=(StatsGeneratorUtilities&&) = delete;      // Move Assignment Not Implemented
 };
-

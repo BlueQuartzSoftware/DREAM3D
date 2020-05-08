@@ -48,7 +48,6 @@ class LaueOps;
 using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
 using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
 
-
 /**
  * @brief The VisualizeGBCDGMT class. See [Filter documentation](@ref visualizegbcdgmt) for details.
  */
@@ -75,7 +74,7 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -214,8 +213,6 @@ public:
    */
   void execute() override;
 
-
-
 protected:
   VisualizeGBCDGMT();
   /**
@@ -248,7 +245,8 @@ private:
   DataArrayPath m_GBCDArrayPath = {};
   DataArrayPath m_CrystalStructuresArrayPath = {};
 
-  LaueOpsContainer m_OrientationOps;  QVector<float> gmtValues;
+  LaueOpsContainer m_OrientationOps;
+  QVector<float> gmtValues;
 
 public:
   VisualizeGBCDGMT(const VisualizeGBCDGMT&) = delete;            // Copy Constructor Not Implemented

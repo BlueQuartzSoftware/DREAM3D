@@ -128,8 +128,7 @@ QWidget* EnsembleInfoItemDelegate::createEditor(QWidget* widgetParent, const QSt
       connect(operatorCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(crystalStructureChangedData(int)));
     }
     return operatorCombo;
-  case EnsembleInfoTableModel::PhaseType:
-  {
+  case EnsembleInfoTableModel::PhaseType: {
     operatorCombo = new QComboBox(widgetParent);
     operatorCombo->addItems(m_PhaseTypeList);
     operatorCombo->setAutoFillBackground(true);
@@ -139,8 +138,7 @@ QWidget* EnsembleInfoItemDelegate::createEditor(QWidget* widgetParent, const QSt
     }
     return operatorCombo;
   }
-  case EnsembleInfoTableModel::PhaseName:
-  {
+  case EnsembleInfoTableModel::PhaseName: {
     lineEdit = new QLineEdit(widgetParent);
     lineEdit->setFrame(false);
     QVariant var = index.model()->data(index);

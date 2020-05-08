@@ -124,7 +124,8 @@ void FeatureInfoReader::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Feature Attribute Matrix", CellFeatureAttributeMatrixName, FeatureIdsArrayPath, FilterParameter::CreatedArray, FeatureInfoReader));
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phases", FeaturePhasesArrayName, FeatureIdsArrayPath, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FeatureInfoReader));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Euler Angles", FeatureEulerAnglesArrayName, FeatureIdsArrayPath, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FeatureInfoReader));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Euler Angles", FeatureEulerAnglesArrayName, FeatureIdsArrayPath, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FeatureInfoReader));
 
   {
     QVector<QString> choices;
@@ -222,7 +223,7 @@ void FeatureInfoReader::dataCheck()
 
   std::vector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeatureIdsArrayPath(), cDims);
-  if(nullptr != m_FeatureIdsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_FeatureIdsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -266,7 +267,6 @@ void FeatureInfoReader::dataCheck()
     setErrorCondition(-10001, "The dilimiter can only have values of 0,1,2,3,4");
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //

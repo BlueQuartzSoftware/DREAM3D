@@ -112,4 +112,3 @@ public:
   EMMPMWidget& operator=(const EMMPMWidget&) = delete; // Copy Assignment Not Implemented
   EMMPMWidget& operator=(EMMPMWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

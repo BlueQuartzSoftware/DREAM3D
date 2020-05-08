@@ -34,7 +34,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "VtkStructuredPointsReader.h"
 
-
 #include <fstream>
 
 #include <QtCore/QFileInfo>
@@ -236,7 +235,6 @@ void VtkStructuredPointsReader::dataCheck()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -250,7 +248,6 @@ void VtkStructuredPointsReader::execute()
   // and vector data set names and number of tuples from the file. If the filter
   // is executing then the file data will be read into the data arrays
   dataCheck();
-
 }
 
 // -----------------------------------------------------------------------------

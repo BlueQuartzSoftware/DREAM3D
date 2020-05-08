@@ -108,4 +108,3 @@ public:
   StatsProgressWidget& operator=(const StatsProgressWidget&) = delete; // Copy Assignment Not Implemented
   StatsProgressWidget& operator=(StatsProgressWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

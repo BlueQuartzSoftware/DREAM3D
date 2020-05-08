@@ -62,9 +62,8 @@ private:
   QVector<double> getValues();
 
 public:
-  CubochoricWidget(const CubochoricWidget&) = delete; // Copy Constructor Not Implemented
-  CubochoricWidget(CubochoricWidget&&) = delete;      // Move Constructor Not Implemented
+  CubochoricWidget(const CubochoricWidget&) = delete;            // Copy Constructor Not Implemented
+  CubochoricWidget(CubochoricWidget&&) = delete;                 // Move Constructor Not Implemented
   CubochoricWidget& operator=(const CubochoricWidget&) = delete; // Copy Assignment Not Implemented
   CubochoricWidget& operator=(CubochoricWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

@@ -110,8 +110,8 @@ protected:
   PrecipitateRolledPreset();
 
 public:
-  PrecipitateRolledPreset(const PrecipitateRolledPreset&) = delete; // Copy Constructor Not Implemented
-  PrecipitateRolledPreset(PrecipitateRolledPreset&&) = delete;      // Move Constructor Not Implemented
+  PrecipitateRolledPreset(const PrecipitateRolledPreset&) = delete;            // Copy Constructor Not Implemented
+  PrecipitateRolledPreset(PrecipitateRolledPreset&&) = delete;                 // Move Constructor Not Implemented
   PrecipitateRolledPreset& operator=(const PrecipitateRolledPreset&) = delete; // Copy Assignment Not Implemented
   PrecipitateRolledPreset& operator=(PrecipitateRolledPreset&&) = delete;      // Move Assignment Not Implemented
 
@@ -121,4 +121,3 @@ private:
 };
 
 DECLARE_FACTORY_CLASS(PrecipitateRolledPresetFactory, PrecipitateRolledPreset, "Precipitate Rolled")
-

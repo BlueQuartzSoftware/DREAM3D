@@ -58,9 +58,8 @@ private:
   QVector<double> getValues();
 
 public:
-  OmWidget(const OmWidget&) = delete;       // Copy Constructor Not Implemented
-  OmWidget(OmWidget&&) = delete;            // Move Constructor Not Implemented
+  OmWidget(const OmWidget&) = delete;            // Copy Constructor Not Implemented
+  OmWidget(OmWidget&&) = delete;                 // Move Constructor Not Implemented
   OmWidget& operator=(const OmWidget&) = delete; // Copy Assignment Not Implemented
   OmWidget& operator=(OmWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

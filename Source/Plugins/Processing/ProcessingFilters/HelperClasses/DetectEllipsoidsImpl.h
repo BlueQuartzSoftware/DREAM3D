@@ -43,7 +43,6 @@
 
 #include "Processing/ProcessingFilters/DetectEllipsoids.h"
 
-
 class DetectEllipsoids;
 
 using DE_ComplexDoubleVector = std::vector<std::complex<double>>;
@@ -224,7 +223,8 @@ public:
    * @param array
    * @return
    */
-  template <typename T> int getIdOfMax(typename DataArray<T>::Pointer array) const
+  template <typename T>
+  int getIdOfMax(typename DataArray<T>::Pointer array) const
   {
     if(array.get() == nullptr)
     {
@@ -347,4 +347,3 @@ private:
   AttributeMatrix::Pointer m_EllipseFeatureAM;
   int m_ThreadIndex = 0;
 };
-

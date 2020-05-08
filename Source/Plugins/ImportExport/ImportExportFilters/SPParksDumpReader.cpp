@@ -203,7 +203,6 @@ void SPParksDumpReader::dataCheck()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -280,7 +279,7 @@ int32_t SPParksDumpReader::readHeader()
     setErrorCondition(-26000, QString("Error reading the number of atoms. Current line read was: %1").arg(QString(buf)));
     return getErrorCode();
   }
-  buf = m_InStream.readLine();       // ITEM: BOX BOUNDS
+  buf = m_InStream.readLine(); // ITEM: BOX BOUNDS
   buf = m_InStream.readLine(); // 0.5 44.5
   buf = buf.trimmed();
   QList<QByteArray> tokens = buf.split(' ');

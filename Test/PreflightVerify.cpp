@@ -3,7 +3,6 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-
 PreflightVerify::PreflightVerify(QObject* parent)
 : QObject(parent)
 , m_widgetChanged(false)

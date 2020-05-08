@@ -176,9 +176,8 @@ private:
   AbstractMicrostructurePreset::Pointer m_MicroPreset;
 
 public:
-  TransformationPhaseWidget(const TransformationPhaseWidget&) = delete; // Copy Constructor Not Implemented
-  TransformationPhaseWidget(TransformationPhaseWidget&&) = delete;      // Move Constructor Not Implemented
+  TransformationPhaseWidget(const TransformationPhaseWidget&) = delete;            // Copy Constructor Not Implemented
+  TransformationPhaseWidget(TransformationPhaseWidget&&) = delete;                 // Move Constructor Not Implemented
   TransformationPhaseWidget& operator=(const TransformationPhaseWidget&) = delete; // Copy Assignment Not Implemented
   TransformationPhaseWidget& operator=(TransformationPhaseWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

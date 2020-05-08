@@ -204,11 +204,16 @@ void FindProjectedImageStatistics::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Quantify", SelectedArrayPath, FilterParameter::RequiredArray, FindProjectedImageStatistics, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Min", ProjectedImageMinArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Max", ProjectedImageMaxArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Avg", ProjectedImageAvgArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Std", ProjectedImageStdArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Var", ProjectedImageVarArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Min", ProjectedImageMinArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Max", ProjectedImageMaxArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Avg", ProjectedImageAvgArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Std", ProjectedImageStdArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Var", ProjectedImageVarArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
   setFilterParameters(parameters);
 }
 
@@ -255,41 +260,41 @@ void FindProjectedImageStatistics::dataCheck()
 
   std::vector<size_t> cDims(1, 1);
   tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageMinArrayName());
-  m_ProjectedImageMinPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(
-      this, tempPath, 0, cDims);                     /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_ProjectedImageMinPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_ProjectedImageMinPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_ProjectedImageMinPtr.lock())                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_ProjectedImageMin = m_ProjectedImageMinPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageMaxArrayName());
-  m_ProjectedImageMaxPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(
-      this, tempPath, 0, cDims);               /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_ProjectedImageMaxPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_ProjectedImageMaxPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_ProjectedImageMaxPtr.lock())                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_ProjectedImageMax = m_ProjectedImageMaxPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageAvgArrayName());
-  m_ProjectedImageAvgPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(
-      this, tempPath, 0, cDims);                     /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_ProjectedImageAvgPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_ProjectedImageAvgPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_ProjectedImageAvgPtr.lock())                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_ProjectedImageAvg = m_ProjectedImageAvgPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageStdArrayName());
-  m_ProjectedImageStdPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(
-      this, tempPath, 0, cDims);                     /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_ProjectedImageStdPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_ProjectedImageStdPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_ProjectedImageStdPtr.lock())                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_ProjectedImageStd = m_ProjectedImageStdPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageVarArrayName());
-  m_ProjectedImageVarPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(
-      this, tempPath, 0, cDims);                     /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_ProjectedImageVarPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_ProjectedImageVarPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_ProjectedImageVarPtr.lock())                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_ProjectedImageVar = m_ProjectedImageVarPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -305,7 +310,6 @@ void FindProjectedImageStatistics::dataCheck()
     setErrorCondition(-999, "The Image Geometry is not 3D and cannot be run through this Filter");
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -526,7 +530,6 @@ void FindProjectedImageStatistics::execute()
     setErrorCondition(-11001, ss);
     return;
   }
-
 }
 
 // -----------------------------------------------------------------------------

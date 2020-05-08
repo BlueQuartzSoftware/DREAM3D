@@ -45,7 +45,6 @@
 
 #include "SVWidgetsLib/Widgets/SVControlWidgets.h"
 
-
 /**
  * @class EditPhaseDialog EditPhaseDialog.h StatsGenerator/EditPhaseDialog.h
  * @brief Simple dialog that is presented to the user when a new phase is added.
@@ -94,9 +93,8 @@ private:
   QDoubleValidator* m_PptFractionValidator = nullptr;
 
 public:
-  EditPhaseDialog(const EditPhaseDialog&) = delete; // Copy Constructor Not Implemented
-  EditPhaseDialog(EditPhaseDialog&&) = delete;      // Move Constructor Not Implemented
+  EditPhaseDialog(const EditPhaseDialog&) = delete;            // Copy Constructor Not Implemented
+  EditPhaseDialog(EditPhaseDialog&&) = delete;                 // Move Constructor Not Implemented
   EditPhaseDialog& operator=(const EditPhaseDialog&) = delete; // Copy Assignment Not Implemented
   EditPhaseDialog& operator=(EditPhaseDialog&&) = delete;      // Move Assignment Not Implemented
 };
-

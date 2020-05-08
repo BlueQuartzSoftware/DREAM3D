@@ -88,7 +88,7 @@ QImage HexagonalLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight
   int32_t fontWidth = 0;
   int size = std::max(pixelWidth, pixelHeight);
 
-  int32_t fontScale = static_cast<int32_t>( 24.0f / 256.0f * static_cast<float>(size)); // At 256 Pixel Image, we want to use 24 Point font
+  int32_t fontScale = static_cast<int32_t>(24.0f / 256.0f * static_cast<float>(size)); // At 256 Pixel Image, we want to use 24 Point font
   if(fontScale < 10)
   {
     fontScale = 10;
@@ -138,7 +138,7 @@ QImage HexagonalLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight
   QString label("[11_20]");
   fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
-  int x = pImageWidth/2 - fontWidth/2;
+  int x = pImageWidth / 2 - fontWidth / 2;
   int y = fontHeight * 2;
   paintSymmetryDirection(label, &metrics, &painter, x, y);
 
@@ -152,13 +152,12 @@ QImage HexagonalLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight
   label = QString("[0001]"); // Red
   fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
-  painter.drawText(10, fontHeight*1.90 + imageSize.height(), label);
+  painter.drawText(10, fontHeight * 1.90 + imageSize.height(), label);
 
   label = ops->getSymmetryName();
   fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
-  painter.drawText(pImageWidth/2 - fontWidth/2, fontHeight * 1.0, label);
-
+  painter.drawText(pImageWidth / 2 - fontWidth / 2, fontHeight * 1.0, label);
 
   return pImage;
 }

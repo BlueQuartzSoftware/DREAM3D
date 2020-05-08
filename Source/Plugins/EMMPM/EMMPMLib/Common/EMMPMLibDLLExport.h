@@ -10,7 +10,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-
 /* Cmake will define EMMPMLib_EXPORTS on Windows when it
 configures to build a shared library. If you are going to use
 another build system on windows or create the visual studio
@@ -18,19 +17,19 @@ projects by hand you need to define EMMPMLib_EXPORTS when
 building the EMMPMDatModel DLL on windows.
 */
 
-#if defined (EMMPMLib_BUILT_AS_DYNAMIC_LIB)
+#if defined(EMMPMLib_BUILT_AS_DYNAMIC_LIB)
 
-#if defined (EMMPMLib_EXPORTS)  /* Compiling the EMMPM DLL/Dylib */
-#if defined (_MSC_VER)  /* MSVC Compiler Case */
-#define  EMMPMLib_EXPORT __declspec(dllexport)
-#elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
-#define EMMPMLib_EXPORT __attribute__ ((visibility("default")))
+#if defined(EMMPMLib_EXPORTS) /* Compiling the EMMPM DLL/Dylib */
+#if defined(_MSC_VER)         /* MSVC Compiler Case */
+#define EMMPMLib_EXPORT __declspec(dllexport)
+#elif(__GNUC__ >= 4) /* GCC 4.x has support for visibility options */
+#define EMMPMLib_EXPORT __attribute__((visibility("default")))
 #endif
-#else  /* Importing the DLL into another project */
-#if defined (_MSC_VER)  /* MSVC Compiler Case */
-#define  EMMPMLib_EXPORT __declspec(dllimport)
-#elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
-#define EMMPMLib_EXPORT __attribute__ ((visibility("default")))
+#else                 /* Importing the DLL into another project */
+#if defined(_MSC_VER) /* MSVC Compiler Case */
+#define EMMPMLib_EXPORT __declspec(dllimport)
+#elif(__GNUC__ >= 4) /* GCC 4.x has support for visibility options */
+#define EMMPMLib_EXPORT __attribute__((visibility("default")))
 #endif
 #endif
 #endif
@@ -39,5 +38,3 @@ building the EMMPMDatModel DLL on windows.
 #ifndef EMMPMLib_EXPORT
 #define EMMPMLib_EXPORT
 #endif
-
-

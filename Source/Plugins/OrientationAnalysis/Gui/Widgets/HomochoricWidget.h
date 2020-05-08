@@ -58,9 +58,8 @@ private:
   QVector<double> getValues();
 
 public:
-  HomochoricWidget(const HomochoricWidget&) = delete; // Copy Constructor Not Implemented
-  HomochoricWidget(HomochoricWidget&&) = delete;      // Move Constructor Not Implemented
+  HomochoricWidget(const HomochoricWidget&) = delete;            // Copy Constructor Not Implemented
+  HomochoricWidget(HomochoricWidget&&) = delete;                 // Move Constructor Not Implemented
   HomochoricWidget& operator=(const HomochoricWidget&) = delete; // Copy Assignment Not Implemented
   HomochoricWidget& operator=(HomochoricWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

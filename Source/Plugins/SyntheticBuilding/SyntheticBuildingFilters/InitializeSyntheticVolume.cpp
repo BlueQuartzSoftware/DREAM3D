@@ -265,7 +265,6 @@ void InitializeSyntheticVolume::dataCheck()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -288,8 +287,6 @@ void InitializeSyntheticVolume::execute()
   tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
   tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
   cellAttrMat->resizeAttributeArrays(tDims);
-
-
 }
 
 // -----------------------------------------------------------------------------

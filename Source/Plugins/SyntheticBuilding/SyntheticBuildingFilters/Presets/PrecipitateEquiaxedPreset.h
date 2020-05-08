@@ -98,4 +98,3 @@ private:
 };
 
 DECLARE_FACTORY_CLASS(PrecipitateEquiaxedPresetFactory, PrecipitateEquiaxedPreset, "Precipitate Equiaxed")
-

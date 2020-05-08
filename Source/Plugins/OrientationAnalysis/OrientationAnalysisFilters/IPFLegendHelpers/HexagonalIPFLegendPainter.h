@@ -52,9 +52,8 @@ protected:
   QImage overlayText(int pixelWidth, int pixelHeight, QImage image, LaueOps* ops);
 
 public:
-  HexagonalIPFLegendPainter(const HexagonalIPFLegendPainter&) = delete; // Copy Constructor Not Implemented
-  HexagonalIPFLegendPainter(HexagonalIPFLegendPainter&&) = delete;      // Move Constructor Not Implemented
+  HexagonalIPFLegendPainter(const HexagonalIPFLegendPainter&) = delete;            // Copy Constructor Not Implemented
+  HexagonalIPFLegendPainter(HexagonalIPFLegendPainter&&) = delete;                 // Move Constructor Not Implemented
   HexagonalIPFLegendPainter& operator=(const HexagonalIPFLegendPainter&) = delete; // Copy Assignment Not Implemented
   HexagonalIPFLegendPainter& operator=(HexagonalIPFLegendPainter&&) = delete;      // Move Assignment Not Implemented
 };
-

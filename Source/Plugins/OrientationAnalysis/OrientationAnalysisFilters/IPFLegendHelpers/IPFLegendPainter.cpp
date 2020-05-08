@@ -50,7 +50,7 @@ IPFLegendPainter::~IPFLegendPainter() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IPFLegendPainter::paintSymmetryDirection(const QString& text, QFontMetrics *metrics, QPainter *painter, int x, int y)
+void IPFLegendPainter::paintSymmetryDirection(const QString& text, QFontMetrics* metrics, QPainter* painter, int x, int y)
 {
 
   QVector<int> offsets;

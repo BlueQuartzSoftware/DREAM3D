@@ -46,7 +46,7 @@ public:
     while(sourceLines.hasNext())
     {
       QString line;
-      if (readLine)
+      if(readLine)
       {
         line = sourceLines.next();
         lineCount++;
@@ -83,7 +83,7 @@ public:
 
             line.replace(setterSearchString, "setWarningCondition");
           }
-          else if (line.contains(errCodeSearchString))
+          else if(line.contains(errCodeSearchString))
           {
             readLine = false;
           }

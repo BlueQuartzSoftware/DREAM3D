@@ -10,13 +10,12 @@ class ProcessingGuiPlugin : public ProcessingPlugin
 
 public:
   ProcessingGuiPlugin();
-   ~ProcessingGuiPlugin() override;
-  
+  ~ProcessingGuiPlugin() override;
+
   /**
    * @brief Register all the filters with the FilterWidgetFactory
    */
   void registerFilterWidgets(FilterWidgetManager* fwm) override;
-  
 
 public:
   ProcessingGuiPlugin(const ProcessingGuiPlugin&) = delete;            // Copy Constructor Not Implemented

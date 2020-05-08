@@ -219,8 +219,8 @@ public:
   }
 
   /**
-  * @brief
-  */
+   * @brief
+   */
   void operator()()
   {
     int err = EXIT_SUCCESS;

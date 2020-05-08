@@ -191,7 +191,6 @@ void ImportH5EspritData::execute()
 
   IDataArrayMap ebsdArrayMap;
   setEbsdArrayMap(ebsdArrayMap);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -376,7 +375,6 @@ void ImportH5EspritData::dataCheckOEM()
     return;
   }
 
-
   cDims.resize(1);
   cDims[0] = 3;
 
@@ -394,7 +392,6 @@ void ImportH5EspritData::dataCheckOEM()
     }
     ebsdArrayMap.insert(EbsdLib::Esprit::EulerAngles, IDataArray::Pointer(m_CellEulerAnglesPtr));
   }
-
 
   cDims[0] = 1;
   tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), EbsdLib::Esprit::CrystalStructures);
@@ -670,7 +667,6 @@ void ImportH5EspritData::copyRawEbsdData(EbsdReader* ebsdReader, std::vector<siz
 
   auto reader = dynamic_cast<H5EspritReader*>(ebsdReader);
 
-
   float degToRad = 1.0f;
   if(getDegreesToRadians())
   {
@@ -686,7 +682,6 @@ void ImportH5EspritData::copyRawEbsdData(EbsdReader* ebsdReader, std::vector<siz
     cDims[0] = 3;
     fArray = std::dynamic_pointer_cast<FloatArrayType>(ebsdArrayMap.value(SIMPL::CellData::EulerAngles));
     float* cellEulerAngles = fArray->getTuplePointer(offset);
-
 
     for(size_t i = 0; i < totalPoints; i++)
     {

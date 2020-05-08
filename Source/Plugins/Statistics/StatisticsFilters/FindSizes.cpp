@@ -98,7 +98,8 @@ void FindSizes::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Feature Attribute Matrix", FeatureAttributeMatrixName, FilterParameter::RequiredArray, FindSizes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Equivalent Diameters", EquivalentDiametersArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindSizes));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Equivalent Diameters", EquivalentDiametersArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindSizes));
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Number of Elements", NumElementsArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindSizes));
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Volumes", VolumesArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindSizes));
   setFilterParameters(parameters);
@@ -156,16 +157,15 @@ void FindSizes::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getEquivalentDiametersArrayName());
-  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(
-      this, tempPath, 0, cDims);                 /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_EquivalentDiametersPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_EquivalentDiametersPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_EquivalentDiametersPtr.lock())                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getNumElementsArrayName());
-  m_NumElementsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>>(
-      this, tempPath, 0, cDims);         /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NumElementsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_NumElementsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_NumElements = m_NumElementsPtr.lock()->getPointer(0);
@@ -188,7 +188,6 @@ void FindSizes::dataCheck()
     setErrorCondition(-10200, ss);
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -368,7 +367,6 @@ void FindSizes::execute()
   IGeometry::Pointer igeom = m->getGeometry();
 
   findSizes(igeom);
-
 }
 
 // -----------------------------------------------------------------------------

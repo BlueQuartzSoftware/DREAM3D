@@ -130,7 +130,7 @@ void QuatWidget::valuesUpdated(const QString& text)
 
   if(errorCode >= 0)
   {
-      QVECTOR_FROM_STD_VECTOR(QVector<double>, qvec, values)
+    QVECTOR_FROM_STD_VECTOR(QVector<double>, qvec, values)
     emit valuesChanged(qvec, OrientationRepresentation::Type::Quaternion, false);
   }
   else

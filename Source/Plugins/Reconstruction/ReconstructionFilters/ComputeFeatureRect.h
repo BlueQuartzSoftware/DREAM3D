@@ -35,7 +35,7 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -90,7 +90,7 @@ public:
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
-  */
+   */
   QString getBrandingString() const override;
 
   /**
@@ -136,19 +136,17 @@ public:
    */
   void execute() override;
 
-
-
 protected:
   ComputeFeatureRect();
 
   /**
-  * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-  */
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
   void dataCheck() override;
 
   /**
-  * @brief Initializes all the private instance variables.
-  */
+   * @brief Initializes all the private instance variables.
+   */
   void initialize();
 
   /**
@@ -171,9 +169,8 @@ private:
   DataArrayPath m_FeatureRectArrayPath = {};
 
 public:
-  ComputeFeatureRect(const ComputeFeatureRect&) = delete; // Copy Constructor Not Implemented
-  ComputeFeatureRect(ComputeFeatureRect&&) = delete;      // Move Constructor Not Implemented
+  ComputeFeatureRect(const ComputeFeatureRect&) = delete;            // Copy Constructor Not Implemented
+  ComputeFeatureRect(ComputeFeatureRect&&) = delete;                 // Move Constructor Not Implemented
   ComputeFeatureRect& operator=(const ComputeFeatureRect&) = delete; // Copy Assignment Not Implemented
   ComputeFeatureRect& operator=(ComputeFeatureRect&&) = delete;      // Move Assignment Not Implemented
 };
-

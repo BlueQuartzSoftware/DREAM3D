@@ -44,7 +44,6 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
@@ -60,8 +59,8 @@ public:
   , m_Output(outputRod)
   {
   }
-  RodriguesConvertorImpl(const RodriguesConvertorImpl&) = default; // Copy Constructor
-  RodriguesConvertorImpl(RodriguesConvertorImpl&&) = delete;      // Move Constructor Not Implemented
+  RodriguesConvertorImpl(const RodriguesConvertorImpl&) = default;           // Copy Constructor
+  RodriguesConvertorImpl(RodriguesConvertorImpl&&) = delete;                 // Move Constructor Not Implemented
   RodriguesConvertorImpl& operator=(const RodriguesConvertorImpl&) = delete; // Copy Assignment Not Implemented
   RodriguesConvertorImpl& operator=(RodriguesConvertorImpl&&) = delete;      // Move Assignment Not Implemented
 
@@ -69,20 +68,22 @@ public:
 
   void convert(size_t start, size_t end) const
   {
-     for(size_t i = start; i < end; i++)
+    for(size_t i = start; i < end; i++)
     {
-      if(m_Filter->getCancel()) { return; }
-      float r0 = m_Input[i*3];
-      float r1 = m_Input[i*3 + 1];
-      float r2 = m_Input[i*3 + 2];
+      if(m_Filter->getCancel())
+      {
+        return;
+      }
+      float r0 = m_Input[i * 3];
+      float r1 = m_Input[i * 3 + 1];
+      float r2 = m_Input[i * 3 + 2];
       float length = sqrtf(r0 * r0 + r1 * r1 + r2 * r2);
 
-      m_Output[i*4] = r0/length;
-      m_Output[i*4+1] = r1/length;
-      m_Output[i*4+2] = r2/length;
-      m_Output[i*4+3] = length;
+      m_Output[i * 4] = r0 / length;
+      m_Output[i * 4 + 1] = r1 / length;
+      m_Output[i * 4 + 2] = r2 / length;
+      m_Output[i * 4 + 3] = length;
     }
-    
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -97,12 +98,11 @@ private:
   float* m_Output;
 };
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RodriguesConvertor::RodriguesConvertor() :
-m_DeleteOriginalData(true)
+RodriguesConvertor::RodriguesConvertor()
+: m_DeleteOriginalData(true)
 {
   initialize();
 }
@@ -132,7 +132,7 @@ void RodriguesConvertor::setupFilterParameters()
   std::vector<std::vector<size_t>> comp;
   comp.push_back(std::vector<size_t>(1, 3));
   dasReq.componentDimensions = comp;
-  dasReq.daTypes = { SIMPL::TypeNames::Float };
+  dasReq.daTypes = {SIMPL::TypeNames::Float};
   parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Rodrigues Array", RodriguesDataArrayPath, FilterParameter::Parameter, RodriguesConvertor, dasReq));
   DataArrayCreationFilterParameter::RequirementType dacReq;
   parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Output Data Array Path", OutputDataArrayPath, FilterParameter::CreatedArray, RodriguesConvertor, dacReq));
@@ -151,18 +151,19 @@ void RodriguesConvertor::dataCheck()
   std::vector<size_t> cDims(1, 1);
   cDims[0] = 3;
   m_RodriguesVectorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getRodriguesDataArrayPath(), cDims);
-  if(nullptr != m_RodriguesVectorsPtr.lock())                                                                       
+  if(nullptr != m_RodriguesVectorsPtr.lock())
   {
     m_RodriguesVectors = m_RodriguesVectorsPtr.lock()->getPointer(0);
   }
-  
+
   cDims[0] = 4;
-  m_OutputRodriguesVectorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, getOutputDataArrayPath(), 0, cDims);                 /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_OutputRodriguesVectorsPtr.lock())   
+  m_OutputRodriguesVectorsPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, getOutputDataArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_OutputRodriguesVectorsPtr.lock())
   {
     m_OutputRodriguesVectors = m_OutputRodriguesVectorsPtr.lock()->getPointer(0);
   }
-  
+
   if(getDeleteOriginalData() && getInPreflight())
   {
     AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(getRodriguesDataArrayPath());
@@ -171,7 +172,6 @@ void RodriguesConvertor::dataCheck()
       am->removeAttributeArray(getRodriguesDataArrayPath().getDataArrayName());
     }
   }
-  
 }
 
 // -----------------------------------------------------------------------------
@@ -186,7 +186,10 @@ void RodriguesConvertor::execute()
     return;
   }
 
-  if (getCancel()) { return; }
+  if(getCancel())
+  {
+    return;
+  }
 
   size_t totalPoints = m_RodriguesVectorsPtr.lock()->getNumberOfTuples();
 
@@ -201,13 +204,12 @@ void RodriguesConvertor::execute()
     RodriguesConvertorImpl serial(this, m_RodriguesVectors, m_OutputRodriguesVectors);
     serial.convert(0, totalPoints);
   }
-  
+
   /* Do not forget to remove the original array if requested */
   if(getDeleteOriginalData())
   {
     getDataContainerArray()->getAttributeMatrix(getRodriguesDataArrayPath())->removeAttributeArray(getRodriguesDataArrayPath().getDataArrayName());
   }
-  
 }
 
 // -----------------------------------------------------------------------------
@@ -227,7 +229,7 @@ AbstractFilter::Pointer RodriguesConvertor::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 QString RodriguesConvertor::getCompiledLibraryName() const
-{ 
+{
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
 
@@ -246,7 +248,7 @@ QString RodriguesConvertor::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 
@@ -254,7 +256,7 @@ QString RodriguesConvertor::getFilterVersion() const
 //
 // -----------------------------------------------------------------------------
 QString RodriguesConvertor::getGroupName() const
-{ 
+{
   return SIMPL::FilterGroups::ProcessingFilters;
 }
 
@@ -262,7 +264,7 @@ QString RodriguesConvertor::getGroupName() const
 //
 // -----------------------------------------------------------------------------
 QString RodriguesConvertor::getSubGroupName() const
-{ 
+{
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
@@ -270,10 +272,9 @@ QString RodriguesConvertor::getSubGroupName() const
 //
 // -----------------------------------------------------------------------------
 QString RodriguesConvertor::getHumanLabel() const
-{ 
-  return "Rodrigues Convertor"; 
+{
+  return "Rodrigues Convertor";
 }
-
 
 // -----------------------------------------------------------------------------
 //

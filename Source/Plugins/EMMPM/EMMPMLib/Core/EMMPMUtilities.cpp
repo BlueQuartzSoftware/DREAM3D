@@ -162,7 +162,6 @@ void EMMPMUtilities::ConvertXtToOutputImage(EMMPM_Data::Pointer data)
       }
     }
   }
-
 }
 
 // -----------------------------------------------------------------------------

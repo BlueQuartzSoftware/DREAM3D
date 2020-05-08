@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "FindBoundingBoxFeatures.h"
 
 #include <QtCore/QTextStream>
@@ -139,9 +139,8 @@ void FindBoundingBoxFeatures::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   std::vector<size_t> cDims(1, 3);
-  m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getCentroidsArrayPath(),
-                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_CentroidsPtr.lock())                                                                       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getCentroidsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CentroidsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -151,9 +150,9 @@ void FindBoundingBoxFeatures::dataCheck()
   }
 
   cDims[0] = 1;
-  m_SurfaceFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>>(this, getSurfaceFeaturesArrayPath(),
-                                                                                                          cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_SurfaceFeaturesPtr.lock())                                                                      /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_SurfaceFeaturesPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>>(this, getSurfaceFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_SurfaceFeaturesPtr.lock())                                                                        /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -171,9 +170,8 @@ void FindBoundingBoxFeatures::dataCheck()
 
   if(getCalcByPhase())
   {
-    m_PhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getPhasesArrayPath(),
-                                                                                                      cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_PhasesPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_PhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_PhasesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_Phases = m_PhasesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -250,22 +248,22 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
           dist[j] = std::numeric_limits<float>::max();
           if(j % 2 == 1)
           {
-            if(coords[j-1] > boundbox[j-1])
+            if(coords[j - 1] > boundbox[j - 1])
             {
-              dist[j] = (coords[j-1] - boundbox[j-1]);
+              dist[j] = (coords[j - 1] - boundbox[j - 1]);
             }
-            if(coords[j-1] <= boundbox[j-1])
+            if(coords[j - 1] <= boundbox[j - 1])
             {
               move = 0;
             }
           }
           if(j % 2 == 0)
           {
-            if(coords[j-1] < boundbox[j-1])
+            if(coords[j - 1] < boundbox[j - 1])
             {
-              dist[j] = (boundbox[j-1] - coords[j-1]);
+              dist[j] = (boundbox[j - 1] - coords[j - 1]);
             }
-            if(coords[j-1] >= boundbox[j-1])
+            if(coords[j - 1] >= boundbox[j - 1])
             {
               move = 0;
             }
@@ -273,7 +271,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
           if(dist[j] < mindist)
           {
             mindist = dist[j];
-            sidetomove = j-1;
+            sidetomove = j - 1;
           }
         }
         if(move == 1)
@@ -326,7 +324,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
   size_t size = m_CentroidsPtr.lock()->getNumberOfTuples();
   float xOrigin = 0.0f;
   float yOrigin = 0.0f;
-  //float zOrigin = 0.0f;
+  // float zOrigin = 0.0f;
 
   float boundbox[6] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
   float coords[4] = {0.0f, 0.0f, 0.0f, 0.0f};
@@ -382,22 +380,22 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
         dist[j] = std::numeric_limits<float>::max();
         if(j % 2 == 1)
         {
-          if(coords[j-1] > boundbox[j-1])
+          if(coords[j - 1] > boundbox[j - 1])
           {
-            dist[j] = (coords[j-1] - boundbox[j-1]);
+            dist[j] = (coords[j - 1] - boundbox[j - 1]);
           }
-          if(coords[j-1] <= boundbox[j-1])
+          if(coords[j - 1] <= boundbox[j - 1])
           {
             move = 0;
           }
         }
         if(j % 2 == 0)
         {
-          if(coords[j-1] < boundbox[j-1])
+          if(coords[j - 1] < boundbox[j - 1])
           {
-            dist[j] = (boundbox[j-1] - coords[j-1]);
+            dist[j] = (boundbox[j - 1] - coords[j - 1]);
           }
-          if(coords[j-1] >= boundbox[j-1])
+          if(coords[j - 1] >= boundbox[j - 1])
           {
             move = 0;
           }
@@ -405,7 +403,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
         if(dist[j] < mindist)
         {
           mindist = dist[j];
-          sidetomove = j-1;
+          sidetomove = j - 1;
         }
       }
       if(move == 1)
@@ -459,7 +457,6 @@ void FindBoundingBoxFeatures::execute()
   {
     find_boundingboxfeatures2D();
   }
-
 }
 
 // -----------------------------------------------------------------------------

@@ -21,7 +21,7 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -183,8 +183,8 @@ private:
   }
 
 public:
-  GenerateFeatureIds(const GenerateFeatureIds&) = delete; // Copy Constructor Not Implemented
-  GenerateFeatureIds(GenerateFeatureIds&&) = delete;      // Move Constructor Not Implemented
+  GenerateFeatureIds(const GenerateFeatureIds&) = delete;            // Copy Constructor Not Implemented
+  GenerateFeatureIds(GenerateFeatureIds&&) = delete;                 // Move Constructor Not Implemented
   GenerateFeatureIds& operator=(const GenerateFeatureIds&) = delete; // Copy Assignment Not Implemented
   GenerateFeatureIds& operator=(GenerateFeatureIds&&) = delete;      // Move Assignment Not Implemented
 };
@@ -205,7 +205,7 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -232,36 +232,36 @@ public:
   }
 
   /**
-  * @brief This returns the group that the filter belonds to. You can select
-  * a different group if you want. The string returned here will be displayed
-  * in the GUI for the filter
-  */
+   * @brief This returns the group that the filter belonds to. You can select
+   * a different group if you want. The string returned here will be displayed
+   * in the GUI for the filter
+   */
   virtual const QString getGroupName()
   {
     return "UnitTest";
   }
 
   /**
-  * @brief This returns a string that is displayed in the GUI. It should be readable
-  * and understandable by humans.
-  */
+   * @brief This returns a string that is displayed in the GUI. It should be readable
+   * and understandable by humans.
+   */
   virtual const QString getHumanLabel()
   {
     return "CreateDataContainer Filter";
   }
 
   /**
-  * @brief Reimplemented from @see AbstractFilter class
-  */
+   * @brief Reimplemented from @see AbstractFilter class
+   */
   virtual void execute()
   {
     dataCheck();
   }
 
   /**
-  * @brief This function runs some sanity checks on the DataContainer and inputs
-  * in an attempt to ensure the filter can process the inputs.
-  */
+   * @brief This function runs some sanity checks on the DataContainer and inputs
+   * in an attempt to ensure the filter can process the inputs.
+   */
   virtual void preflight()
   {
     dataCheck();
@@ -286,13 +286,13 @@ protected:
   }
 
   /**
-  * @brief Checks for the appropriate parameter values and availability of
-  * arrays in the data container
-  * @param preflight
-  * @param voxels The number of voxels
-  * @param features The number of features
-  * @param ensembles The number of ensembles
-  */
+   * @brief Checks for the appropriate parameter values and availability of
+   * arrays in the data container
+   * @param preflight
+   * @param voxels The number of voxels
+   * @param features The number of features
+   * @param ensembles The number of ensembles
+   */
   void dataCheck()
   {
     DataContainer::Pointer m = DataContainer::New(); /* FIXME: What Geometry do we need? */
@@ -316,4 +316,3 @@ public:
   CreateDataContainer& operator=(const CreateDataContainer&) = delete; // Copy Assignment Not Implemented
   CreateDataContainer& operator=(CreateDataContainer&&) = delete;      // Move Assignment Not Implemented
 };
-

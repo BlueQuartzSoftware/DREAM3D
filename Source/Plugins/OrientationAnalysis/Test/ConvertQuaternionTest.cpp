@@ -3,7 +3,6 @@
 // -----------------------------------------------------------------------------
 #pragma once
 
-
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -23,13 +22,13 @@
 class ConvertQuaternionTest
 {
 
-  public:
-    ConvertQuaternionTest() = default;
-    ~ConvertQuaternionTest() = default;
-    ConvertQuaternionTest(const ConvertQuaternionTest&) = delete;            // Copy Constructor
-    ConvertQuaternionTest(ConvertQuaternionTest&&) = delete;                 // Move Constructor
-    ConvertQuaternionTest& operator=(const ConvertQuaternionTest&) = delete; // Copy Assignment
-    ConvertQuaternionTest& operator=(ConvertQuaternionTest&&) = delete;      // Move Assignment
+public:
+  ConvertQuaternionTest() = default;
+  ~ConvertQuaternionTest() = default;
+  ConvertQuaternionTest(const ConvertQuaternionTest&) = delete;            // Copy Constructor
+  ConvertQuaternionTest(ConvertQuaternionTest&&) = delete;                 // Move Constructor
+  ConvertQuaternionTest& operator=(const ConvertQuaternionTest&) = delete; // Copy Assignment
+  ConvertQuaternionTest& operator=(ConvertQuaternionTest&&) = delete;      // Move Assignment
 
   // -----------------------------------------------------------------------------
   //

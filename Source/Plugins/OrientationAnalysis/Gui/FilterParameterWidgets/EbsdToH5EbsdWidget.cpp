@@ -187,7 +187,7 @@ void EbsdToH5EbsdWidget::setupGui()
 
   m_RefFrameOptionsBtn->setEnabled(false);
 
-//  validateInputFile();
+  //  validateInputFile();
   getGuiParametersFromFilter();
 }
 // -----------------------------------------------------------------------------
@@ -332,7 +332,7 @@ void EbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString& text)
   QString outputPath = validator->convertToAbsolutePath(text);
 
   QFileInfo fi(text);
-  if (fi.isRelative())
+  if(fi.isRelative())
   {
     outputAbsPathLabel->setText(outputPath);
     outputAbsPathLabel->show();
@@ -400,7 +400,7 @@ void EbsdToH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
   QString inputPath = validator->convertToAbsolutePath(text);
 
   QFileInfo fi(text);
-  if (fi.isRelative())
+  if(fi.isRelative())
   {
     inputAbsPathLabel->setText(inputPath);
     inputAbsPathLabel->show();
@@ -591,7 +591,7 @@ void EbsdToH5EbsdWidget::generateExampleEbsdInputFile()
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
 {
-  //referenceFrameCheck->setStyleSheet(QString(""));
+  // referenceFrameCheck->setStyleSheet(QString(""));
   referenceFrameCheck->setText("");
 
   int start = m_ZStartIndex->value();
@@ -856,7 +856,6 @@ void EbsdToH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
   ebsdConverter->setZResolution(m_zSpacing->text().toDouble(&ok));
   ebsdConverter->setRefFrameZDir(getRefFrameZDir());
 
-
   QString inputPath = m_LineEdit->text();
   inputPath = validator->convertToAbsolutePath(inputPath);
 
@@ -922,7 +921,7 @@ QString EbsdToH5EbsdWidget::getOutputPath()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::setInputDirectory(const QString &val)
+void EbsdToH5EbsdWidget::setInputDirectory(const QString& val)
 {
   m_LineEdit->setText(val);
   setValidFilePath(m_LineEdit->text());

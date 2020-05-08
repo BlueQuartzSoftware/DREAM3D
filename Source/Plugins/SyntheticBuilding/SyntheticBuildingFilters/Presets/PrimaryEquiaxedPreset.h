@@ -89,8 +89,8 @@ protected:
   PrimaryEquiaxedPreset();
 
 public:
-  PrimaryEquiaxedPreset(const PrimaryEquiaxedPreset&) = delete; // Copy Constructor Not Implemented
-  PrimaryEquiaxedPreset(PrimaryEquiaxedPreset&&) = delete;      // Move Constructor Not Implemented
+  PrimaryEquiaxedPreset(const PrimaryEquiaxedPreset&) = delete;            // Copy Constructor Not Implemented
+  PrimaryEquiaxedPreset(PrimaryEquiaxedPreset&&) = delete;                 // Move Constructor Not Implemented
   PrimaryEquiaxedPreset& operator=(const PrimaryEquiaxedPreset&) = delete; // Copy Assignment Not Implemented
   PrimaryEquiaxedPreset& operator=(PrimaryEquiaxedPreset&&) = delete;      // Move Assignment Not Implemented
 
@@ -98,4 +98,3 @@ private:
 };
 
 DECLARE_FACTORY_CLASS(PrimaryEquiaxedPresetFactory, PrimaryEquiaxedPreset, "Primary Equiaxed")
-

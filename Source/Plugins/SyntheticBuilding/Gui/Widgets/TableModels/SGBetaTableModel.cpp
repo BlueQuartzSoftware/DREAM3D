@@ -111,8 +111,7 @@ QVariant SGBetaTableModel::data(const QModelIndex& index, qint32 role) const
 
     switch(index.column())
     {
-    case BinNumber:
-    {
+    case BinNumber: {
       comboBox.currentText = QString("101");
       const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
       if(header.length() > comboBox.currentText.length())
@@ -121,8 +120,7 @@ QVariant SGBetaTableModel::data(const QModelIndex& index, qint32 role) const
       }
       break;
     }
-    case Alpha:
-    {
+    case Alpha: {
       comboBox.currentText = QString("10001");
       const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
       if(header.length() > comboBox.currentText.length())
@@ -131,8 +129,7 @@ QVariant SGBetaTableModel::data(const QModelIndex& index, qint32 role) const
       }
       break;
     }
-    case Beta:
-    {
+    case Beta: {
       comboBox.currentText = QString("10001");
       const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
       if(header.length() > comboBox.currentText.length())

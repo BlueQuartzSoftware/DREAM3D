@@ -52,9 +52,8 @@ protected:
   QImage overlayText(int pixelWidth, int pixelHeight, QImage image, LaueOps* ops);
 
 public:
-  TetragonalLowIPFLegendPainter(const TetragonalLowIPFLegendPainter&) = delete; // Copy Constructor Not Implemented
-  TetragonalLowIPFLegendPainter(TetragonalLowIPFLegendPainter&&) = delete;      // Move Constructor Not Implemented
+  TetragonalLowIPFLegendPainter(const TetragonalLowIPFLegendPainter&) = delete;            // Copy Constructor Not Implemented
+  TetragonalLowIPFLegendPainter(TetragonalLowIPFLegendPainter&&) = delete;                 // Move Constructor Not Implemented
   TetragonalLowIPFLegendPainter& operator=(const TetragonalLowIPFLegendPainter&) = delete; // Copy Assignment Not Implemented
   TetragonalLowIPFLegendPainter& operator=(TetragonalLowIPFLegendPainter&&) = delete;      // Move Assignment Not Implemented
 };
-

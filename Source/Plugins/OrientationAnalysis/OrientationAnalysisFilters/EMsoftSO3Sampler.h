@@ -74,7 +74,7 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -232,7 +232,7 @@ public:
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
-  */
+   */
   QString getBrandingString() const override;
 
   /**
@@ -329,8 +329,6 @@ public:
    */
   void setUpdateProgress(int tuplesCompleted);
 
-
-
 protected:
   EMsoftSO3Sampler();
   /**
@@ -360,9 +358,8 @@ private:
   QString m_EMsoftAttributeMatrixName = {};
 
 public:
-  EMsoftSO3Sampler(const EMsoftSO3Sampler&) = delete; // Copy Constructor Not Implemented
-  EMsoftSO3Sampler(EMsoftSO3Sampler&&) = delete;      // Move Constructor Not Implemented
+  EMsoftSO3Sampler(const EMsoftSO3Sampler&) = delete;            // Copy Constructor Not Implemented
+  EMsoftSO3Sampler(EMsoftSO3Sampler&&) = delete;                 // Move Constructor Not Implemented
   EMsoftSO3Sampler& operator=(const EMsoftSO3Sampler&) = delete; // Copy Assignment Not Implemented
   EMsoftSO3Sampler& operator=(EMsoftSO3Sampler&&) = delete;      // Move Assignment Not Implemented
 };
-

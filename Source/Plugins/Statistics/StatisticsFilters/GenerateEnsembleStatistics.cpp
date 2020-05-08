@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "GenerateEnsembleStatistics.h"
 
@@ -70,7 +70,6 @@
 #include "Statistics/DistributionAnalysisOps/PowerLawOps.h"
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
-
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -127,7 +126,6 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()
   m_SharedSurfaceAreaList = NeighborList<float>::NullPointer();
 
   m_StatsDataArray = StatsDataArray::NullPointer();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -148,10 +146,8 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   QStringList phaseTypeStrings;
   PhaseType::getPhaseTypeStrings(phaseTypeStrings);
   PhaseTypeSelectionFilterParameter::Pointer phaseType_parameter = PhaseTypeSelectionFilterParameter::New(
-        "Phase Types", "PhaseTypeData", getCellEnsembleAttributeMatrixPath(), FilterParameter::Parameter,
-        SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, PhaseTypeData),
-        SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, PhaseTypeData),
-        "PhaseTypeArray", "PhaseCount", "CellEnsembleAttributeMatrixPath", phaseTypeStrings);
+      "Phase Types", "PhaseTypeData", getCellEnsembleAttributeMatrixPath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, PhaseTypeData),
+      SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, PhaseTypeData), "PhaseTypeArray", "PhaseCount", "CellEnsembleAttributeMatrixPath", phaseTypeStrings);
   parameters.push_back(phaseType_parameter);
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Size Correlation Spacing", SizeCorrelationResolution, FilterParameter::Parameter, GenerateEnsembleStatistics));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
@@ -243,9 +239,11 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
   // The user types in an array name for the Phase Types
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phase Types", PhaseTypesArrayName, CellEnsembleAttributeMatrixPath, CellEnsembleAttributeMatrixPath, FilterParameter::CreatedArray, GenerateEnsembleStatistics));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phase Types", PhaseTypesArrayName, CellEnsembleAttributeMatrixPath, CellEnsembleAttributeMatrixPath, FilterParameter::CreatedArray, GenerateEnsembleStatistics));
   // The user types in an array name for Statistics
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Statistics", StatisticsArrayName, CellEnsembleAttributeMatrixPath, CellEnsembleAttributeMatrixPath, FilterParameter::CreatedArray, GenerateEnsembleStatistics));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Statistics", StatisticsArrayName, CellEnsembleAttributeMatrixPath, CellEnsembleAttributeMatrixPath, FilterParameter::CreatedArray, GenerateEnsembleStatistics));
 
   linkedProps.clear();
   linkedProps << "RDFArrayPath"
@@ -306,7 +304,7 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
   setCalculateAxisODF(reader->readValue("CalculateAxisODF", getCalculateAxisODF()));
   setSizeCorrelationResolution(reader->readValue("SizeCorrelationResolution", getSizeCorrelationResolution()));
 
-  QVector<PhaseType::EnumType> data;// = getPhaseTypeData();
+  QVector<PhaseType::EnumType> data; // = getPhaseTypeData();
   data = reader->readArray("PhaseTypeArray", data);
   PhaseType::Types vec = PhaseType::FromQVector(data);
 
@@ -412,9 +410,9 @@ void GenerateEnsembleStatistics::dataCheck()
 
   QVector<DataArrayPath> dataArrayPaths;
 
-  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeaturePhasesArrayPath(),
-                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FeaturePhasesPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_FeaturePhasesPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeaturePhasesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -425,9 +423,9 @@ void GenerateEnsembleStatistics::dataCheck()
 
   if(m_ComputeSizeDistribution || m_ComputeOmega3Distribution || m_ComputeAspectRatioDistribution || m_ComputeNeighborhoodDistribution || m_CalculateAxisODF)
   {
-    m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>>(this, getBiasedFeaturesArrayPath(),
-                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_BiasedFeaturesPtr.lock())                                                                      /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_BiasedFeaturesPtr =
+        getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>>(this, getBiasedFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_BiasedFeaturesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -436,8 +434,8 @@ void GenerateEnsembleStatistics::dataCheck()
       dataArrayPaths.push_back(getBiasedFeaturesArrayPath());
     }
 
-    m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getEquivalentDiametersArrayPath(),
-                                                                                                                 cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_EquivalentDiametersPtr =
+        getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getEquivalentDiametersArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_EquivalentDiametersPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
@@ -450,8 +448,8 @@ void GenerateEnsembleStatistics::dataCheck()
 
   if(m_ComputeNeighborhoodDistribution)
   {
-    m_NeighborhoodsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getNeighborhoodsArrayPath(),
-                                                                                                             cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_NeighborhoodsPtr =
+        getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getNeighborhoodsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_NeighborhoodsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0);
@@ -465,9 +463,9 @@ void GenerateEnsembleStatistics::dataCheck()
   if(m_ComputeAspectRatioDistribution)
   {
     cDims[0] = 2;
-    m_AspectRatiosPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getAspectRatiosArrayPath(),
-                                                                                                          cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_AspectRatiosPtr.lock())                                                                       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_AspectRatiosPtr =
+        getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getAspectRatiosArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_AspectRatiosPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_AspectRatios = m_AspectRatiosPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -480,9 +478,8 @@ void GenerateEnsembleStatistics::dataCheck()
   if(m_ComputeOmega3Distribution)
   {
     cDims[0] = 1;
-    m_Omega3sPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getOmega3sArrayPath(),
-                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_Omega3sPtr.lock())                                                                       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_Omega3sPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getOmega3sArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_Omega3sPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_Omega3s = m_Omega3sPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -495,8 +492,8 @@ void GenerateEnsembleStatistics::dataCheck()
   if(m_CalculateAxisODF)
   {
     cDims[0] = 3;
-    m_AxisEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getAxisEulerAnglesArrayPath(),
-                                                                                                             cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_AxisEulerAnglesPtr =
+        getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getAxisEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_AxisEulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0);
@@ -517,9 +514,9 @@ void GenerateEnsembleStatistics::dataCheck()
     }
 
     cDims[0] = 2;
-    m_MaxMinRadialDistFuncPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getMaxMinRDFArrayPath(),
-                                                                                                                  cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_MaxMinRadialDistFuncPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_MaxMinRadialDistFuncPtr =
+        getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getMaxMinRDFArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_MaxMinRadialDistFuncPtr.lock())                                                              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_MaxMinRadialDistFunc = m_MaxMinRadialDistFuncPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -528,16 +525,16 @@ void GenerateEnsembleStatistics::dataCheck()
   if(m_CalculateODF || m_CalculateMDF)
   {
     cDims[0] = 1;
-    m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>>(
-        this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_CrystalStructuresPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>>(this, getCrystalStructuresArrayPath(),
+                                                                                                      cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_CrystalStructuresPtr.lock())                                                              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-    m_SurfaceFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>>(this, getSurfaceFeaturesArrayPath(),
-                                                                                                            cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_SurfaceFeaturesPtr.lock())                                                                      /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_SurfaceFeaturesPtr =
+        getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>>(this, getSurfaceFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_SurfaceFeaturesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -550,9 +547,8 @@ void GenerateEnsembleStatistics::dataCheck()
   if(m_CalculateODF)
   {
     cDims[0] = 1;
-    m_VolumesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getVolumesArrayPath(),
-                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_VolumesPtr.lock())                                                                       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_VolumesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getVolumesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_VolumesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_Volumes = m_VolumesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -562,8 +558,8 @@ void GenerateEnsembleStatistics::dataCheck()
     }
 
     cDims[0] = 3;
-    m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getFeatureEulerAnglesArrayPath(),
-                                                                                                                cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_FeatureEulerAnglesPtr =
+        getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getFeatureEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_FeatureEulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0);
@@ -577,9 +573,8 @@ void GenerateEnsembleStatistics::dataCheck()
   if(m_CalculateMDF)
   {
     cDims[0] = 4;
-    m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getAvgQuatsArrayPath(),
-                                                                                                      cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_AvgQuatsPtr.lock())                                                                       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getAvgQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_AvgQuatsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -615,15 +610,14 @@ void GenerateEnsembleStatistics::dataCheck()
     return;
   }
 
-    cDims[0] = 1;
-    tempPath.update(getCellEnsembleAttributeMatrixPath().getDataContainerName(), getCellEnsembleAttributeMatrixPath().getAttributeMatrixName(), getPhaseTypesArrayName());
-    m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>>(this, tempPath, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown),
-                                                                                                                           cDims, "", DataArrayID31);
-    if(nullptr != m_PhaseTypesPtr.lock())                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    {
-      m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
-      m_PhaseTypeData.resize(m_PhaseTypesPtr.lock()->getNumberOfTuples());
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
+  cDims[0] = 1;
+  tempPath.update(getCellEnsembleAttributeMatrixPath().getDataContainerName(), getCellEnsembleAttributeMatrixPath().getAttributeMatrixName(), getPhaseTypesArrayName());
+  m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>>(this, tempPath, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown), cDims, "", DataArrayID31);
+  if(nullptr != m_PhaseTypesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
+    m_PhaseTypeData.resize(m_PhaseTypesPtr.lock()->getNumberOfTuples());
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // now create and add the stats array itself
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getCellEnsembleAttributeMatrixPath().getDataContainerName());
@@ -660,7 +654,6 @@ void GenerateEnsembleStatistics::dataCheck()
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -807,8 +800,9 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
   }
   for(size_t i = 1; i < numfeatures; i++)
   {
-    if (m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary) || m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate) ||
-      m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
+    if(m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary) ||
+       m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate) ||
+       m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
     {
       if(!m_BiasedFeatures[i])
       {
@@ -895,8 +889,9 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
   }
   for(size_t i = 1; i < numfeatures; i++)
   {
-    if (m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary) || m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate) ||
-      m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
+    if(m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary) ||
+       m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate) ||
+       m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
     {
       if(!m_BiasedFeatures[i])
       {
@@ -977,8 +972,9 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
 
   for(size_t i = 1; i < numfeatures; i++)
   {
-    if (m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary) || m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate) ||
-      m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
+    if(m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary) ||
+       m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate) ||
+       m_PhaseTypes[m_FeaturePhases[i]] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
     {
       if(!m_BiasedFeatures[i])
       {
@@ -1318,7 +1314,7 @@ void GenerateEnsembleStatistics::calculatePPTBoundaryFrac()
 
   for(size_t k = 1; k < numensembles; k++)
   {
-    if (m_PhaseTypes[k] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
+    if(m_PhaseTypes[k] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
     {
       for(size_t i = 1; i < numfeatures; i++)
       {
@@ -1329,8 +1325,9 @@ void GenerateEnsembleStatistics::calculatePPTBoundaryFrac()
           for(size_t j = 0; j < neighborlist[i].size(); j++)
           {
             if(m_FeaturePhases[i] != m_FeaturePhases[neighborlist[i][j]] &&
-              m_PhaseTypes[m_FeaturePhases[neighborlist[i][j]]] != static_cast<PhaseType::EnumType>(PhaseType::Type::Matrix)) // Currently counts something as on the boundary if it has at least two neighbors of a different
-                                                                                                                                   // non-matrix phase. Might want to specify which phase in the future.
+               m_PhaseTypes[m_FeaturePhases[neighborlist[i][j]]] !=
+                   static_cast<PhaseType::EnumType>(PhaseType::Type::Matrix)) // Currently counts something as on the boundary if it has at least two neighbors of a different
+                                                                              // non-matrix phase. Might want to specify which phase in the future.
             {
               count++;
             }
@@ -1458,7 +1455,6 @@ void GenerateEnsembleStatistics::execute()
   }
 
   calculatePPTBoundaryFrac();
-
 }
 
 // -----------------------------------------------------------------------------

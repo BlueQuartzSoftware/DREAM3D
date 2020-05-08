@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "FindTriangleGeomShapes.h"
 
 #include <QtCore/QTextStream>
@@ -80,7 +80,6 @@ FindTriangleGeomShapes::FindTriangleGeomShapes()
 {
   featuremoments = nullptr;
   featureeigenvals = nullptr;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -96,31 +95,32 @@ void FindTriangleGeomShapes::setupFilterParameters()
   FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
-	  DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
-	  parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", FaceLabelsArrayPath, FilterParameter::RequiredArray, FindTriangleGeomShapes, req));
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", FaceLabelsArrayPath, FilterParameter::RequiredArray, FindTriangleGeomShapes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req =
-    AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::FaceFeature, IGeometry::Type::Triangle);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::FaceFeature, IGeometry::Type::Triangle);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Face Feature Attribute Matrix", FeatureAttributeMatrixName, FilterParameter::RequiredArray, FindTriangleGeomShapes, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-    DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Type::FaceFeature, IGeometry::Type::Triangle);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Type::FaceFeature, IGeometry::Type::Triangle);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindTriangleGeomShapes, req));
   }
   {
-	  DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 1, AttributeMatrix::Type::FaceFeature, IGeometry::Type::Triangle);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 1, AttributeMatrix::Type::FaceFeature, IGeometry::Type::Triangle);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Volumes", VolumesArrayPath, FilterParameter::RequiredArray, FindTriangleGeomShapes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Omega3s", Omega3sArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Axis Lengths", AxisLengthsArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Axis Euler Angles", AxisEulerAnglesArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Aspect Ratios", AspectRatiosArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Axis Lengths", AxisLengthsArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Axis Euler Angles", AxisEulerAnglesArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Aspect Ratios", AspectRatiosArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
   setFilterParameters(parameters);
 }
 
@@ -147,34 +147,31 @@ void FindTriangleGeomShapes::dataCheck()
   m_FeatureMoments = DataArray<double>::CreateArray(0, "m_FeatureMoments", true);
   m_FeatureEigenVals = DataArray<double>::CreateArray(0, "m_FeatureEigenVals", true);
 
-  //REQUIRED FACE DATA
+  // REQUIRED FACE DATA
   std::vector<size_t> cDims(1, 2);
-  m_FaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFaceLabelsArrayPath(),
-                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FaceLabelsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_FaceLabelsPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FaceLabelsPtr.lock())                                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
-	  m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0);
+    m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  //REQUIRED FEATURE DATA
+  // REQUIRED FEATURE DATA
   cDims[0] = 3;
-  m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getCentroidsArrayPath(),
-	  cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getCentroidsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_CentroidsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
-	  m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
+    m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 1;
-  m_VolumesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getVolumesArrayPath(),
-	  cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_VolumesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getVolumesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_VolumesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
-	  m_Volumes = m_VolumesPtr.lock()->getPointer(0);
+    m_Volumes = m_VolumesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-
-  //CREATED FEATURE DATA
+  // CREATED FEATURE DATA
   tempPath.update(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getOmega3sArrayName());
   m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_Omega3sPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -191,9 +188,8 @@ void FindTriangleGeomShapes::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getAxisEulerAnglesArrayName());
-  m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(
-      this, tempPath, 0, cDims);                   /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_AxisEulerAnglesPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_AxisEulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -207,110 +203,106 @@ void FindTriangleGeomShapes::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindTriangleGeomShapes::findTetrahedronInfo(MeshIndexType vertIds[3], float* vertPtr, float centroid[3], float tetInfo[32])
 {
-	double coords[30];
-	coords[0] = vertPtr[3 * vertIds[0] + 0];
-	coords[1] = vertPtr[3 * vertIds[0] + 1];
-	coords[2] = vertPtr[3 * vertIds[0] + 2];
-	coords[3] = vertPtr[3 * vertIds[1] + 0];
-	coords[4] = vertPtr[3 * vertIds[1] + 1];
-	coords[5] = vertPtr[3 * vertIds[1] + 2];
-	coords[6] = vertPtr[3 * vertIds[2] + 0];
-	coords[7] = vertPtr[3 * vertIds[2] + 1];
-	coords[8] = vertPtr[3 * vertIds[2] + 2];
-	coords[9] = centroid[0];
-	coords[10] = centroid[1];
-	coords[11] = centroid[2];
-	coords[12] = 0.5 * (vertPtr[3 * vertIds[0] + 0] + centroid[0]);
-	coords[13] = 0.5 * (vertPtr[3 * vertIds[0] + 1] + centroid[1]);
-	coords[14] = 0.5 * (vertPtr[3 * vertIds[0] + 2] + centroid[2]);
-	coords[15] = 0.5 * (vertPtr[3 * vertIds[1] + 0] + centroid[0]);
-	coords[16] = 0.5 * (vertPtr[3 * vertIds[1] + 1] + centroid[1]);
-	coords[17] = 0.5 * (vertPtr[3 * vertIds[1] + 2] + centroid[2]);
-	coords[18] = 0.5 * (vertPtr[3 * vertIds[2] + 0] + centroid[0]);
-	coords[19] = 0.5 * (vertPtr[3 * vertIds[2] + 1] + centroid[1]);
-	coords[20] = 0.5 * (vertPtr[3 * vertIds[2] + 2] + centroid[2]);
-	coords[21] = 0.5 * (vertPtr[3 * vertIds[0] + 0] + vertPtr[3 * vertIds[1] + 0]);
-	coords[22] = 0.5 * (vertPtr[3 * vertIds[0] + 1] + vertPtr[3 * vertIds[1] + 1]);
-	coords[23] = 0.5 * (vertPtr[3 * vertIds[0] + 2] + vertPtr[3 * vertIds[1] + 2]);
-	coords[24] = 0.5 * (vertPtr[3 * vertIds[1] + 0] + vertPtr[3 * vertIds[2] + 0]);
-	coords[25] = 0.5 * (vertPtr[3 * vertIds[1] + 1] + vertPtr[3 * vertIds[2] + 1]);
-	coords[26] = 0.5 * (vertPtr[3 * vertIds[1] + 2] + vertPtr[3 * vertIds[2] + 2]);
-	coords[27] = 0.5 * (vertPtr[3 * vertIds[2] + 0] + vertPtr[3 * vertIds[0] + 0]);
-	coords[28] = 0.5 * (vertPtr[3 * vertIds[2] + 1] + vertPtr[3 * vertIds[0] + 1]);
-	coords[29] = 0.5 * (vertPtr[3 * vertIds[2] + 2] + vertPtr[3 * vertIds[0] + 2]);
+  double coords[30];
+  coords[0] = vertPtr[3 * vertIds[0] + 0];
+  coords[1] = vertPtr[3 * vertIds[0] + 1];
+  coords[2] = vertPtr[3 * vertIds[0] + 2];
+  coords[3] = vertPtr[3 * vertIds[1] + 0];
+  coords[4] = vertPtr[3 * vertIds[1] + 1];
+  coords[5] = vertPtr[3 * vertIds[1] + 2];
+  coords[6] = vertPtr[3 * vertIds[2] + 0];
+  coords[7] = vertPtr[3 * vertIds[2] + 1];
+  coords[8] = vertPtr[3 * vertIds[2] + 2];
+  coords[9] = centroid[0];
+  coords[10] = centroid[1];
+  coords[11] = centroid[2];
+  coords[12] = 0.5 * (vertPtr[3 * vertIds[0] + 0] + centroid[0]);
+  coords[13] = 0.5 * (vertPtr[3 * vertIds[0] + 1] + centroid[1]);
+  coords[14] = 0.5 * (vertPtr[3 * vertIds[0] + 2] + centroid[2]);
+  coords[15] = 0.5 * (vertPtr[3 * vertIds[1] + 0] + centroid[0]);
+  coords[16] = 0.5 * (vertPtr[3 * vertIds[1] + 1] + centroid[1]);
+  coords[17] = 0.5 * (vertPtr[3 * vertIds[1] + 2] + centroid[2]);
+  coords[18] = 0.5 * (vertPtr[3 * vertIds[2] + 0] + centroid[0]);
+  coords[19] = 0.5 * (vertPtr[3 * vertIds[2] + 1] + centroid[1]);
+  coords[20] = 0.5 * (vertPtr[3 * vertIds[2] + 2] + centroid[2]);
+  coords[21] = 0.5 * (vertPtr[3 * vertIds[0] + 0] + vertPtr[3 * vertIds[1] + 0]);
+  coords[22] = 0.5 * (vertPtr[3 * vertIds[0] + 1] + vertPtr[3 * vertIds[1] + 1]);
+  coords[23] = 0.5 * (vertPtr[3 * vertIds[0] + 2] + vertPtr[3 * vertIds[1] + 2]);
+  coords[24] = 0.5 * (vertPtr[3 * vertIds[1] + 0] + vertPtr[3 * vertIds[2] + 0]);
+  coords[25] = 0.5 * (vertPtr[3 * vertIds[1] + 1] + vertPtr[3 * vertIds[2] + 1]);
+  coords[26] = 0.5 * (vertPtr[3 * vertIds[1] + 2] + vertPtr[3 * vertIds[2] + 2]);
+  coords[27] = 0.5 * (vertPtr[3 * vertIds[2] + 0] + vertPtr[3 * vertIds[0] + 0]);
+  coords[28] = 0.5 * (vertPtr[3 * vertIds[2] + 1] + vertPtr[3 * vertIds[0] + 1]);
+  coords[29] = 0.5 * (vertPtr[3 * vertIds[2] + 2] + vertPtr[3 * vertIds[0] + 2]);
 
-	int32_t tets[32];
-	tets[0] = 4;
-	tets[1] = 5;
-	tets[2] = 6;
-	tets[3] = 3;
+  int32_t tets[32];
+  tets[0] = 4;
+  tets[1] = 5;
+  tets[2] = 6;
+  tets[3] = 3;
 
-	tets[4] = 0;
-	tets[5] = 7;
-	tets[6] = 9;
-	tets[7] = 4;
+  tets[4] = 0;
+  tets[5] = 7;
+  tets[6] = 9;
+  tets[7] = 4;
 
-	tets[8] = 1;
-	tets[9] = 8;
-	tets[10] = 7;
-	tets[11] = 5;
+  tets[8] = 1;
+  tets[9] = 8;
+  tets[10] = 7;
+  tets[11] = 5;
 
-	tets[12] = 2;
-	tets[13] = 9;
-	tets[14] = 8;
-	tets[15] = 6;
+  tets[12] = 2;
+  tets[13] = 9;
+  tets[14] = 8;
+  tets[15] = 6;
 
-	tets[16] = 7;
-	tets[17] = 5;
-	tets[18] = 6;
-	tets[19] = 4;
+  tets[16] = 7;
+  tets[17] = 5;
+  tets[18] = 6;
+  tets[19] = 4;
 
-	tets[20] = 6;
-	tets[21] = 9;
-	tets[22] = 7;
-	tets[23] = 4;
+  tets[20] = 6;
+  tets[21] = 9;
+  tets[22] = 7;
+  tets[23] = 4;
 
-	tets[24] = 6;
-	tets[25] = 5;
-	tets[26] = 7;
-	tets[27] = 8;
+  tets[24] = 6;
+  tets[25] = 5;
+  tets[26] = 7;
+  tets[27] = 8;
 
-	tets[28] = 7;
-	tets[29] = 9;
-	tets[30] = 6;
-	tets[31] = 8;
+  tets[28] = 7;
+  tets[29] = 9;
+  tets[30] = 6;
+  tets[31] = 8;
 
-	for (size_t iter = 0; iter < 8; iter++)
-	{
-		float ax = coords[3 * tets[4 * iter + 0] + 0];
-		float ay = coords[3 * tets[4 * iter + 0] + 1];
-		float az = coords[3 * tets[4 * iter + 0] + 2];
-		float bx = coords[3 * tets[4 * iter + 1] + 0];
-		float by = coords[3 * tets[4 * iter + 1] + 1];
-		float bz = coords[3 * tets[4 * iter + 1] + 2];
-		float cx = coords[3 * tets[4 * iter + 2] + 0];
-		float cy = coords[3 * tets[4 * iter + 2] + 1];
-		float cz = coords[3 * tets[4 * iter + 2] + 2];
-		float dx = coords[3 * tets[4 * iter + 3] + 0];
-		float dy = coords[3 * tets[4 * iter + 3] + 1];
-		float dz = coords[3 * tets[4 * iter + 3] + 2];
+  for(size_t iter = 0; iter < 8; iter++)
+  {
+    float ax = coords[3 * tets[4 * iter + 0] + 0];
+    float ay = coords[3 * tets[4 * iter + 0] + 1];
+    float az = coords[3 * tets[4 * iter + 0] + 2];
+    float bx = coords[3 * tets[4 * iter + 1] + 0];
+    float by = coords[3 * tets[4 * iter + 1] + 1];
+    float bz = coords[3 * tets[4 * iter + 1] + 2];
+    float cx = coords[3 * tets[4 * iter + 2] + 0];
+    float cy = coords[3 * tets[4 * iter + 2] + 1];
+    float cz = coords[3 * tets[4 * iter + 2] + 2];
+    float dx = coords[3 * tets[4 * iter + 3] + 0];
+    float dy = coords[3 * tets[4 * iter + 3] + 1];
+    float dz = coords[3 * tets[4 * iter + 3] + 2];
 
-		float vertMatrix[3][3] = { { bx - ax, cx - ax, dx - ax },
-								   { by - ay, cy - ay, dy - ay },
-								   { bz - az, cz - az, dz - az } };
+    float vertMatrix[3][3] = {{bx - ax, cx - ax, dx - ax}, {by - ay, cy - ay, dy - ay}, {bz - az, cz - az, dz - az}};
 
-		tetInfo[4 * iter + 0] = (MatrixMath::Determinant3x3(vertMatrix) / 6.0f);
-		tetInfo[4 * iter + 1] = 0.25 * (ax + bx + cx + dx);
-		tetInfo[4 * iter + 2] = 0.25 * (ay + by + cy + dy);
-		tetInfo[4 * iter + 3] = 0.25 * (az + bz + cz + dz);
-	}
-
+    tetInfo[4 * iter + 0] = (MatrixMath::Determinant3x3(vertMatrix) / 6.0f);
+    tetInfo[4 * iter + 1] = 0.25 * (ax + bx + cx + dx);
+    tetInfo[4 * iter + 2] = 0.25 * (ay + by + cy + dy);
+    tetInfo[4 * iter + 3] = 0.25 * (az + bz + cz + dz);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -353,51 +345,54 @@ void FindTriangleGeomShapes::find_moments()
   double ydist = 0.0f;
   double zdist = 0.0f;
 
-  for (size_t i = 0; i < numFaces; i++)
+  for(size_t i = 0; i < numFaces; i++)
   {
-	  triangles->getVertsAtTri(i, vertIds);
-	  for (size_t j = 0; j < 2; j++)
-	  {
-		  if (j == 1) { std::swap(vertIds[2], vertIds[1]); }
-		  int32_t gnum = m_FaceLabels[2 * i + j];
-		  if (gnum > 0)
-		  {
-			  centroid[0] = m_Centroids[3 * gnum + 0];
-			  centroid[1] = m_Centroids[3 * gnum + 1];
-			  centroid[2] = m_Centroids[3 * gnum + 2];
-			  findTetrahedronInfo(vertIds, vertPtr, centroid, tetInfo);
-			  for (size_t iter = 0; iter < 8; iter++)
-			  {
-				  xdist = (tetInfo[4 * iter + 1] - m_Centroids[gnum * 3 + 0]);
-				  ydist = (tetInfo[4 * iter + 2] - m_Centroids[gnum * 3 + 1]);
-				  zdist = (tetInfo[4 * iter + 3] - m_Centroids[gnum * 3 + 2]);
+    triangles->getVertsAtTri(i, vertIds);
+    for(size_t j = 0; j < 2; j++)
+    {
+      if(j == 1)
+      {
+        std::swap(vertIds[2], vertIds[1]);
+      }
+      int32_t gnum = m_FaceLabels[2 * i + j];
+      if(gnum > 0)
+      {
+        centroid[0] = m_Centroids[3 * gnum + 0];
+        centroid[1] = m_Centroids[3 * gnum + 1];
+        centroid[2] = m_Centroids[3 * gnum + 2];
+        findTetrahedronInfo(vertIds, vertPtr, centroid, tetInfo);
+        for(size_t iter = 0; iter < 8; iter++)
+        {
+          xdist = (tetInfo[4 * iter + 1] - m_Centroids[gnum * 3 + 0]);
+          ydist = (tetInfo[4 * iter + 2] - m_Centroids[gnum * 3 + 1]);
+          zdist = (tetInfo[4 * iter + 3] - m_Centroids[gnum * 3 + 2]);
 
-				  xx = ((ydist)* (ydist)) + ((zdist)* (zdist));
-				  yy = ((xdist)* (xdist)) + ((zdist)* (zdist));
-				  zz = ((xdist)* (xdist)) + ((ydist)* (ydist));
-				  xy = ((xdist)* (ydist));
-				  yz = ((ydist)* (zdist));
-				  xz = ((xdist)* (zdist));
+          xx = ((ydist) * (ydist)) + ((zdist) * (zdist));
+          yy = ((xdist) * (xdist)) + ((zdist) * (zdist));
+          zz = ((xdist) * (xdist)) + ((ydist) * (ydist));
+          xy = ((xdist) * (ydist));
+          yz = ((ydist) * (zdist));
+          xz = ((xdist) * (zdist));
 
-				  featuremoments[gnum * 6 + 0] = featuremoments[gnum * 6 + 0] + (xx * tetInfo[4 * iter + 0]);
-				  featuremoments[gnum * 6 + 1] = featuremoments[gnum * 6 + 1] + (yy * tetInfo[4 * iter + 0]);
-				  featuremoments[gnum * 6 + 2] = featuremoments[gnum * 6 + 2] + (zz * tetInfo[4 * iter + 0]);
-				  featuremoments[gnum * 6 + 3] = featuremoments[gnum * 6 + 3] + (xy * tetInfo[4 * iter + 0]);
-				  featuremoments[gnum * 6 + 4] = featuremoments[gnum * 6 + 4] + (yz * tetInfo[4 * iter + 0]);
-				  featuremoments[gnum * 6 + 5] = featuremoments[gnum * 6 + 5] + (xz * tetInfo[4 * iter + 0]);
-			  }
-		  }
-	  }
+          featuremoments[gnum * 6 + 0] = featuremoments[gnum * 6 + 0] + (xx * tetInfo[4 * iter + 0]);
+          featuremoments[gnum * 6 + 1] = featuremoments[gnum * 6 + 1] + (yy * tetInfo[4 * iter + 0]);
+          featuremoments[gnum * 6 + 2] = featuremoments[gnum * 6 + 2] + (zz * tetInfo[4 * iter + 0]);
+          featuremoments[gnum * 6 + 3] = featuremoments[gnum * 6 + 3] + (xy * tetInfo[4 * iter + 0]);
+          featuremoments[gnum * 6 + 4] = featuremoments[gnum * 6 + 4] + (yz * tetInfo[4 * iter + 0]);
+          featuremoments[gnum * 6 + 5] = featuremoments[gnum * 6 + 5] + (xz * tetInfo[4 * iter + 0]);
+        }
+      }
+    }
   }
   double sphere = (2000.0 * M_PI * M_PI) / 9.0;
   double o3 = 0.0, vol5 = 0.0, omega3 = 0.0;
   for(size_t i = 1; i < numfeatures; i++)
   {
-	vol5 = pow(m_Volumes[i], 5.0);
-	featuremoments[i * 6 + 3] = -featuremoments[i * 6 + 3];
-	featuremoments[i * 6 + 4] = -featuremoments[i * 6 + 4];
-	featuremoments[i * 6 + 5] = -featuremoments[i * 6 + 5];
-	u200 = static_cast<float>((featuremoments[i * 6 + 1] + featuremoments[i * 6 + 2] - featuremoments[i * 6 + 0]) / 2.0f);
+    vol5 = pow(m_Volumes[i], 5.0);
+    featuremoments[i * 6 + 3] = -featuremoments[i * 6 + 3];
+    featuremoments[i * 6 + 4] = -featuremoments[i * 6 + 4];
+    featuremoments[i * 6 + 5] = -featuremoments[i * 6 + 5];
+    u200 = static_cast<float>((featuremoments[i * 6 + 1] + featuremoments[i * 6 + 2] - featuremoments[i * 6 + 0]) / 2.0f);
     u020 = static_cast<float>((featuremoments[i * 6 + 0] + featuremoments[i * 6 + 2] - featuremoments[i * 6 + 1]) / 2.0f);
     u002 = static_cast<float>((featuremoments[i * 6 + 0] + featuremoments[i * 6 + 1] - featuremoments[i * 6 + 2]) / 2.0f);
     u110 = static_cast<float>(-featuremoments[i * 6 + 3]);
@@ -692,7 +687,6 @@ void FindTriangleGeomShapes::execute()
   find_moments();
   find_axes();
   find_axiseulers();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -713,7 +707,7 @@ AbstractFilter::Pointer FindTriangleGeomShapes::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 QString FindTriangleGeomShapes::getCompiledLibraryName() const
 {
-	return SurfaceMeshingConstants::SurfaceMeshingBaseName;
+  return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
 
 // -----------------------------------------------------------------------------

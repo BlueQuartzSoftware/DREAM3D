@@ -31,7 +31,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ImportEbsdMontage.h"
 
-
 #include <QtCore/QTextStream>
 #include <QtCore/QFileInfo>
 
@@ -464,7 +463,6 @@ void ImportEbsdMontage::dataCheck()
   m_FilterCache = newFilterCache; // Swap our maps. This dumps any previous instantiations of the reader filter that are not used any more.
   clearWarningCode();
 }
-
 
 // -----------------------------------------------------------------------------
 //

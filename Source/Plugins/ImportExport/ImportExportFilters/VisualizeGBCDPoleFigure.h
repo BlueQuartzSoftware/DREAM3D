@@ -37,7 +37,6 @@
 
 #include <memory>
 
-
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -48,7 +47,6 @@
 class LaueOps;
 using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
 using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
-
 
 /**
  * @brief The VisualizeGBCDPoleFigure class. See [Filter documentation](@ref visualizegbcdpolefigure) for details.
@@ -76,7 +74,7 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -214,8 +212,6 @@ public:
    * @brief execute Reimplemented from @see AbstractFilter class
    */
   void execute() override;
-
-
 
 protected:
   VisualizeGBCDPoleFigure();

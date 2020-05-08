@@ -1,41 +1,39 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #pragma once
-
 
 #include <QtCore/QString>
 
@@ -47,7 +45,6 @@
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
 #include "ui_ConvertHexGridToSquareGridWidget.h"
-
 
 class ConvertHexGridToSquareGrid;
 class ConvertHexGridToSquareGridFilterParameter;
@@ -65,109 +62,105 @@ class ConvertHexGridToSquareGridFilterParameter;
  */
 class ConvertHexGridToSquareGridWidget : public FilterParameterWidget, private Ui::ConvertHexGridToSquareGridWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 
-  public:
-    /**
-    * @brief Constructor
-    * @param parameter The FilterParameter object that this widget represents
-    * @param filter The instance of the filter that this parameter is a part of
-    * @param parent The parent QWidget for this Widget
-    */
-    ConvertHexGridToSquareGridWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
+public:
+  /**
+   * @brief Constructor
+   * @param parameter The FilterParameter object that this widget represents
+   * @param filter The instance of the filter that this parameter is a part of
+   * @param parent The parent QWidget for this Widget
+   */
+  ConvertHexGridToSquareGridWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
 
-    virtual ~ConvertHexGridToSquareGridWidget();
+  virtual ~ConvertHexGridToSquareGridWidget();
 
-    /**
-     * @brief Initializes some of the GUI elements with selections or other GUI related items
-     */
-    virtual void setupGui();
+  /**
+   * @brief Initializes some of the GUI elements with selections or other GUI related items
+   */
+  virtual void setupGui();
 
+  void setFilter(AbstractFilter* value);
+  AbstractFilter* getFilter() const;
 
-    void setFilter(AbstractFilter* value);
-    AbstractFilter* getFilter() const;
+  void setFilterParameter(FilterParameter* value);
+  FilterParameter* getFilterParameter() const;
 
-    void setFilterParameter(FilterParameter* value);
-    FilterParameter* getFilterParameter() const;
+public slots:
+  void widgetChanged(const QString& msg);
+  void beforePreflight();
+  void afterPreflight();
+  void filterNeedsInputParameters(AbstractFilter* filter);
 
+protected slots:
 
-  public slots:
-    void widgetChanged(const QString& msg);
-    void beforePreflight();
-    void afterPreflight();
-    void filterNeedsInputParameters(AbstractFilter* filter);
+  void on_m_InputDirBtn_clicked();
+  void on_m_InputDir_textChanged(const QString& text);
 
-  protected slots:
+  void on_m_OutputDirBtn_clicked();
+  void on_m_OutputDir_textChanged(const QString& text);
 
-    void on_m_InputDirBtn_clicked();
-    void on_m_InputDir_textChanged(const QString& text);
+  void on_m_OutputPrefix_textChanged(const QString& text);
 
-    void on_m_OutputDirBtn_clicked();
-    void on_m_OutputDir_textChanged(const QString& text);
+  void on_m_FilePrefix_textChanged(const QString& string);
+  void on_m_FileSuffix_textChanged(const QString& string);
+  void on_m_FileExt_textChanged(const QString& string);
+  void on_m_TotalDigits_valueChanged(int value);
+  void on_m_ZStartIndex_valueChanged(int value);
+  void on_m_ZEndIndex_valueChanged(int value);
 
-    void on_m_OutputPrefix_textChanged(const QString& text);
+  void resolutionChanged(const QString& string);
 
-    void on_m_FilePrefix_textChanged(const QString& string);
-    void on_m_FileSuffix_textChanged(const QString& string);
-    void on_m_FileExt_textChanged(const QString& string);
-    void on_m_TotalDigits_valueChanged(int value);
-    void on_m_ZStartIndex_valueChanged(int value);
-    void on_m_ZEndIndex_valueChanged(int value);
+protected:
+  void setInputDirectory(QString val);
+  QString getInputDirectory();
 
-    void resolutionChanged(const QString& string);
+  void setOutputDirectory(QString val);
+  QString getOutputDirectory();
 
-  protected:
-    void setInputDirectory(QString val);
-    QString getInputDirectory();
+  /**
+   * @brief checkIOFiles
+   */
+  virtual void checkIOFiles();
 
-    void setOutputDirectory(QString val);
-    QString getOutputDirectory();
+  /**
+   * @brief validateInputFile
+   */
+  void validateInputFile();
 
-    /**
-     * @brief checkIOFiles
-     */
-    virtual void checkIOFiles();
+  /**
+   * @brief setWidgetListEnabled
+   */
+  void setWidgetListEnabled(bool v);
 
-    /**
-     * @brief validateInputFile
-     */
-    void validateInputFile();
+  /**
+   * @brief Method to attempt the extraction of the .ang max slice value and prefix
+   */
+  void findMaxSliceAndPrefix();
 
-    /**
-     * @brief setWidgetListEnabled
-     */
-    void setWidgetListEnabled(bool v);
+  /**
+   * @brief generateExampleInputFile
+   */
+  void generateExampleInputFile();
 
-    /**
-     * @brief Method to attempt the extraction of the .ang max slice value and prefix
-     */
-    void findMaxSliceAndPrefix();
+  /**
+   * @brief getGuiParametersFromFilter
+   */
+  void getGuiParametersFromFilter();
 
-    /**
-     * @brief generateExampleInputFile
-     */
-    void generateExampleInputFile();
+private:
+  ConvertHexGridToSquareGrid* m_Filter;
+  ConvertHexGridToSquareGridFilterParameter* m_FilterParameter;
+  QList<QWidget*> m_WidgetList;
+  QButtonGroup* m_StackingGroup;
+  QButtonGroup* m_OriginGroup;
+  QButtonGroup* m_zSpacingGroup;
 
-    /**
-     * @brief getGuiParametersFromFilter
-     */
-    void getGuiParametersFromFilter();
+  bool m_DidCausePreflight;
 
-
-  private:
-    ConvertHexGridToSquareGrid*           m_Filter;
-    ConvertHexGridToSquareGridFilterParameter*            m_FilterParameter;
-    QList<QWidget*>             m_WidgetList;
-    QButtonGroup*               m_StackingGroup;
-    QButtonGroup*               m_OriginGroup;
-    QButtonGroup*               m_zSpacingGroup;
-
-    bool m_DidCausePreflight;
-
-  public:
-    ConvertHexGridToSquareGridWidget(const ConvertHexGridToSquareGridWidget&) = delete; // Copy Constructor Not Implemented
-    ConvertHexGridToSquareGridWidget(ConvertHexGridToSquareGridWidget&&) = delete;      // Move Constructor Not Implemented
-    ConvertHexGridToSquareGridWidget& operator=(const ConvertHexGridToSquareGridWidget&) = delete; // Copy Assignment Not Implemented
-    ConvertHexGridToSquareGridWidget& operator=(ConvertHexGridToSquareGridWidget&&) = delete;      // Move Assignment Not Implemented
+public:
+  ConvertHexGridToSquareGridWidget(const ConvertHexGridToSquareGridWidget&) = delete;            // Copy Constructor Not Implemented
+  ConvertHexGridToSquareGridWidget(ConvertHexGridToSquareGridWidget&&) = delete;                 // Move Constructor Not Implemented
+  ConvertHexGridToSquareGridWidget& operator=(const ConvertHexGridToSquareGridWidget&) = delete; // Copy Assignment Not Implemented
+  ConvertHexGridToSquareGridWidget& operator=(ConvertHexGridToSquareGridWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

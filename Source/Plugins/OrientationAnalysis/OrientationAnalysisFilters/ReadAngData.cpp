@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "ReadAngData.h"
 
@@ -312,7 +312,6 @@ void ReadAngData::dataCheck()
   cellEnsembleAttrMat->insertOrAssign(materialNames);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -354,15 +353,15 @@ void ReadAngData::readDataFile(AngReader* reader, DataContainer* m, std::vector<
         return;
       }
 
-        m_FileWasRead = true;
+      m_FileWasRead = true;
 
-        if(reader->getGrid().compare(EbsdLib::Ang::HexGrid) == 0)
-        {
-          setErrorCondition(-1000, "DREAM.3D does not directly read HEX grid .ang files. Please use the 'Convert Hexagonal "
-                                   "Grid Data to Square Grid Data (TSL - .ang)' filter first to batch convert the Hex grid files.");
-          m_FileWasRead = false;
-          return;
-        }
+      if(reader->getGrid().compare(EbsdLib::Ang::HexGrid) == 0)
+      {
+        setErrorCondition(-1000, "DREAM.3D does not directly read HEX grid .ang files. Please use the 'Convert Hexagonal "
+                                 "Grid Data to Square Grid Data (TSL - .ang)' filter first to batch convert the Hex grid files.");
+        m_FileWasRead = false;
+        return;
+      }
     }
     else
     {
@@ -378,33 +377,33 @@ void ReadAngData::readDataFile(AngReader* reader, DataContainer* m, std::vector<
     tDims[1] = reader->getYDimension();
     tDims[2] = zDim; // We are reading a single slice
 
-      Ang_Private_Data data;
-      data.dims = {tDims[0], tDims[1], tDims[2]};
-      data.resolution[0] = (reader->getXStep());
-      data.resolution[1] = (reader->getYStep());
-      data.resolution[2] = (zStep);
-      data.origin[0] = (xOrigin);
-      data.origin[1] = (yOrigin);
-      data.origin[2] = (zOrigin);
-      data.phases = reader->getPhaseVector();
+    Ang_Private_Data data;
+    data.dims = {tDims[0], tDims[1], tDims[2]};
+    data.resolution[0] = (reader->getXStep());
+    data.resolution[1] = (reader->getYStep());
+    data.resolution[2] = (zStep);
+    data.origin[0] = (xOrigin);
+    data.origin[1] = (yOrigin);
+    data.origin[2] = (zOrigin);
+    data.phases = reader->getPhaseVector();
 
-      QString header = reader->getOriginalHeader();
-      if(header.contains("# TEM data") || header.contains("# File Created from ACOM RES results"))
-      {
-        data.units = 0;
-      }
-      else
-      {
-        data.units = 1;
-      }
+    QString header = reader->getOriginalHeader();
+    if(header.contains("# TEM data") || header.contains("# File Created from ACOM RES results"))
+    {
+      data.units = 0;
+    }
+    else
+    {
+      data.units = 1;
+    }
 
-      setData(data);
+    setData(data);
 
-      setInputFile_Cache(m_InputFile);
+    setInputFile_Cache(m_InputFile);
 
-      QFileInfo newFi(m_InputFile);
-      QDateTime timeStamp(newFi.lastModified());
-      setTimeStamp_Cache(timeStamp);
+    QFileInfo newFi(m_InputFile);
+    QDateTime timeStamp(newFi.lastModified());
+    setTimeStamp_Cache(timeStamp);
   }
   else
   {
@@ -654,8 +653,6 @@ void ReadAngData::execute()
       setInputFile_Cache(m_InputFile);
     }
   }
-
-
 }
 
 // -----------------------------------------------------------------------------

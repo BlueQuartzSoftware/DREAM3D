@@ -7,43 +7,43 @@
  */
 namespace OrientationAnalysisConstants
 {
-  const QString OrientationAnalysisPluginFile("OrientationAnalysisPlugin");
-  const QString OrientationAnalysisPluginDisplayName("OrientationAnalysis");
-  const QString OrientationAnalysisBaseName("OrientationAnalysis");
-  namespace BlueQuartz
-  {
-  const QString VendorName("BlueQuartz Software, LLC");
-  const QString URL("http://www.bluequartz.net");
-  const QString Copyright("(C) 2018 BlueQuartz Software, LLC");
-  } // namespace BlueQuartz
+const QString OrientationAnalysisPluginFile("OrientationAnalysisPlugin");
+const QString OrientationAnalysisPluginDisplayName("OrientationAnalysis");
+const QString OrientationAnalysisBaseName("OrientationAnalysis");
+namespace BlueQuartz
+{
+const QString VendorName("BlueQuartz Software, LLC");
+const QString URL("http://www.bluequartz.net");
+const QString Copyright("(C) 2018 BlueQuartz Software, LLC");
+} // namespace BlueQuartz
 
-  namespace
-  {
-  static const int AnorthicType = 0; // Triclinic
-  static const int CyclicType = 1;
-  static const int DihedralType = 2;
-  static const int TetrahedralType = 3;
-  static const int OctahedralType = 4;
-  }
+namespace
+{
+static const int AnorthicType = 0; // Triclinic
+static const int CyclicType = 1;
+static const int DihedralType = 2;
+static const int TetrahedralType = 3;
+static const int OctahedralType = 4;
+} // namespace
 
-  namespace
-  {
-  static const int NoAxisOrder = 0;
-  static const int TwoFoldAxisOrder = 2;
-  static const int ThreeFoldAxisOrder = 3;
-  static const int FourFoldAxisOrder = 4;
-  static const int SixFoldAxisOrder = 6;
-  }
+namespace
+{
+static const int NoAxisOrder = 0;
+static const int TwoFoldAxisOrder = 2;
+static const int ThreeFoldAxisOrder = 3;
+static const int FourFoldAxisOrder = 4;
+static const int SixFoldAxisOrder = 6;
+} // namespace
 
-  static const int FZtarray[32] = {AnorthicType, AnorthicType, CyclicType,   CyclicType,   CyclicType,   DihedralType,    DihedralType,    DihedralType,   CyclicType,      CyclicType,    CyclicType,
-                                   DihedralType, DihedralType, DihedralType, DihedralType, CyclicType,   CyclicType,      DihedralType,    DihedralType,   DihedralType,    CyclicType,    CyclicType,
-                                   CyclicType,   DihedralType, DihedralType, DihedralType, DihedralType, TetrahedralType, TetrahedralType, OctahedralType, TetrahedralType, OctahedralType};
+static const int FZtarray[32] = {AnorthicType, AnorthicType, CyclicType,   CyclicType,   CyclicType,   DihedralType,    DihedralType,    DihedralType,   CyclicType,      CyclicType,    CyclicType,
+                                 DihedralType, DihedralType, DihedralType, DihedralType, CyclicType,   CyclicType,      DihedralType,    DihedralType,   DihedralType,    CyclicType,    CyclicType,
+                                 CyclicType,   DihedralType, DihedralType, DihedralType, DihedralType, TetrahedralType, TetrahedralType, OctahedralType, TetrahedralType, OctahedralType};
 
-  static const int FZoarray[32] = {NoAxisOrder,        NoAxisOrder,        TwoFoldAxisOrder,   TwoFoldAxisOrder,   TwoFoldAxisOrder,  TwoFoldAxisOrder,  TwoFoldAxisOrder,  TwoFoldAxisOrder,
-                                   FourFoldAxisOrder,  FourFoldAxisOrder,  FourFoldAxisOrder,  FourFoldAxisOrder,  FourFoldAxisOrder, FourFoldAxisOrder, FourFoldAxisOrder, ThreeFoldAxisOrder,
-                                   ThreeFoldAxisOrder, ThreeFoldAxisOrder, ThreeFoldAxisOrder, ThreeFoldAxisOrder, SixFoldAxisOrder,  SixFoldAxisOrder,  SixFoldAxisOrder,  SixFoldAxisOrder,
-                                   SixFoldAxisOrder,   SixFoldAxisOrder,   SixFoldAxisOrder,   NoAxisOrder,        NoAxisOrder,       NoAxisOrder,       NoAxisOrder,       NoAxisOrder};
-}
+static const int FZoarray[32] = {NoAxisOrder,        NoAxisOrder,        TwoFoldAxisOrder,   TwoFoldAxisOrder,   TwoFoldAxisOrder,  TwoFoldAxisOrder,  TwoFoldAxisOrder,  TwoFoldAxisOrder,
+                                 FourFoldAxisOrder,  FourFoldAxisOrder,  FourFoldAxisOrder,  FourFoldAxisOrder,  FourFoldAxisOrder, FourFoldAxisOrder, FourFoldAxisOrder, ThreeFoldAxisOrder,
+                                 ThreeFoldAxisOrder, ThreeFoldAxisOrder, ThreeFoldAxisOrder, ThreeFoldAxisOrder, SixFoldAxisOrder,  SixFoldAxisOrder,  SixFoldAxisOrder,  SixFoldAxisOrder,
+                                 SixFoldAxisOrder,   SixFoldAxisOrder,   SixFoldAxisOrder,   NoAxisOrder,        NoAxisOrder,       NoAxisOrder,       NoAxisOrder,       NoAxisOrder};
+} // namespace OrientationAnalysisConstants
 
 /**
  * @namespace FilterParameterWidgetType
@@ -52,8 +52,7 @@ namespace OrientationAnalysisConstants
 namespace FilterParameterWidgetType
 {
 
-  const QString EbsdToH5EbsdWidget("EbsdToH5EbsdWidget");
-  const QString ReadH5EbsdWidget("ReadH5EbsdWidget");
-  const QString ConvertHexGridToSquareGridWidget("ConvertHexGridToSquareGridWidget");
-}
-
+const QString EbsdToH5EbsdWidget("EbsdToH5EbsdWidget");
+const QString ReadH5EbsdWidget("ReadH5EbsdWidget");
+const QString ConvertHexGridToSquareGridWidget("ConvertHexGridToSquareGridWidget");
+} // namespace FilterParameterWidgetType

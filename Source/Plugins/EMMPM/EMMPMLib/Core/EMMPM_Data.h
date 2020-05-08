@@ -1,38 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #pragma once
 
@@ -69,147 +68,144 @@ struct CoupleType
  */
 class EMMPMLib_EXPORT EMMPM_Data
 {
-  public:
-    using Self = EMMPM_Data;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+public:
+  using Self = EMMPM_Data;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static Pointer New();
+  static Pointer New();
 
-    /**
-     * @brief Returns the name of the class for EMMPM_Data
-     */
-    virtual QString getNameOfClass() const;
-    /**
-     * @brief Returns the name of the class for EMMPM_Data
-     */
-    static QString ClassName();
+  /**
+   * @brief Returns the name of the class for EMMPM_Data
+   */
+  virtual QString getNameOfClass() const;
+  /**
+   * @brief Returns the name of the class for EMMPM_Data
+   */
+  static QString ClassName();
 
-    virtual ~EMMPM_Data();
+  virtual ~EMMPM_Data();
 
-    int allocateDataStructureMemory();
+  int allocateDataStructureMemory();
 
-    /**
-     * @brief allocateOutputImage
-     * @param width
-     * @param height
-     * @param samplesPerPixel
-     */
-    void allocateOutputImage();
+  /**
+   * @brief allocateOutputImage
+   * @param width
+   * @param height
+   * @param samplesPerPixel
+   */
+  void allocateOutputImage();
 
-    void initVariables();
+  void initVariables();
 
-    void calculateBetaMatrix(double default_beta);
+  void calculateBetaMatrix(double default_beta);
 
+  // -----------------------------------------------------------------------------
+  //  Inputs from Command line or GUI program
+  // -----------------------------------------------------------------------------
+  int emIterations;                              /**<  */
+  int mpmIterations;                             /**<  */
+  real_t in_beta;                                /**<  */
+  int classes;                                   /**<  */
+  unsigned int rows;                             /**< The height of the image.  Applicable for both input and output images */
+  unsigned int columns;                          /**< The width of the image. Applicable for both input and output images */
+  unsigned int dims;                             /**< The number of vector elements in the image.*/
+  enum EMMPM_InitializationType initType;        /**< The type of initialization algorithm to use  */
+  unsigned int initCoords[EMMPM_MAX_CLASSES][4]; /**<  MAX_CLASSES rows x 4 Columns  */
+  // unsigned int grayTable[EMMPM_MAX_CLASSES];
+  unsigned int colorTable[EMMPM_MAX_CLASSES];
+  real_t min_variance[EMMPM_MAX_CLASSES]; /**< The minimum value that the variance can be for each class */
+  char simulatedAnnealing;                /**<  */
+  char verbose;                           /**<  */
 
-    // -----------------------------------------------------------------------------
-    //  Inputs from Command line or GUI program
-    // -----------------------------------------------------------------------------
-    int emIterations; /**<  */
-    int mpmIterations; /**<  */
-    real_t in_beta; /**<  */
-    int classes; /**<  */
-    unsigned int rows; /**< The height of the image.  Applicable for both input and output images */
-    unsigned int columns; /**< The width of the image. Applicable for both input and output images */
-    unsigned int dims; /**< The number of vector elements in the image.*/
-    enum EMMPM_InitializationType initType;  /**< The type of initialization algorithm to use  */
-    unsigned int initCoords[EMMPM_MAX_CLASSES][4];  /**<  MAX_CLASSES rows x 4 Columns  */
-    //unsigned int grayTable[EMMPM_MAX_CLASSES];
-    unsigned int colorTable[EMMPM_MAX_CLASSES];
-    real_t min_variance[EMMPM_MAX_CLASSES]; /**< The minimum value that the variance can be for each class */
-    char simulatedAnnealing; /**<  */
-    char verbose; /**<  */
+  // -----------------------------------------------------------------------------
+  //  Input/output File names and raw storage
+  // -----------------------------------------------------------------------------
+  char* input_file_name;            /**< The input file name */
+  unsigned char* inputImage;        /**< The raw image data that is used as input to the algorithm */
+  char* output_file_name;           /**< The name of the output file */
+  unsigned char* outputImage;       /**< The raw output image data which can be allocated by the library or the calling function. */
+  unsigned char inputImageChannels; /**< The number of color channels in the input image */
 
+  // -----------------------------------------------------------------------------
+  //  Working Vars section - Internal Variables to the algorithm
+  // -----------------------------------------------------------------------------
+  unsigned char* y;  /**< height*width*dims array of bytes */
+  unsigned char* xt; /**< width*height array of bytes */
 
-    // -----------------------------------------------------------------------------
-    //  Input/output File names and raw storage
-    // -----------------------------------------------------------------------------
-    char* input_file_name;/**< The input file name */
-    unsigned char* inputImage; /**< The raw image data that is used as input to the algorithm */
-    char* output_file_name; /**< The name of the output file */
-    unsigned char* outputImage; /**< The raw output image data which can be allocated by the library or the calling function. */
-    unsigned char inputImageChannels; /**< The number of color channels in the input image */
+  real_t w_gamma[EMMPM_MAX_CLASSES];     /**<  Gamma */
+  real_t* mean;                          /**< Mu or Mean   { classes * dims array (classes is slowest moving dimension) }*/
+  real_t* variance;                      /**< Variance or Sigma Squared  { classes * dims array (classes is slowest moving dimension) }*/
+  real_t* prev_mu;                       /**< Previous EM Loop Value of Mu or Mean   { classes * dims array (classes is slowest moving dimension) }*/
+  real_t* prev_variance;                 /**< Previous EM Loop Value of Variance or Sigma Squared  { classes * dims array (classes is slowest moving dimension) }*/
+  real_t N[EMMPM_MAX_CLASSES];           /**< Dimensions { classes * dims array (classes is slowest moving dimension )}*/
+  real_t* probs;                         /**< Probabilities for each pixel  classes * rows * cols (slowest to fastest)*/
+  real_t workingKappa;                   /**< Current Kappa Value being used  */
+  real_t* couplingBeta;                  /**< Beta Matrix for Coupling */
+  std::vector<CoupleType> coupleEntries; /**< The entries that map the 2 classes that will be coupled along with their value  */
 
-    // -----------------------------------------------------------------------------
-    //  Working Vars section - Internal Variables to the algorithm
-    // -----------------------------------------------------------------------------
-    unsigned char* y; /**< height*width*dims array of bytes */
-    unsigned char* xt; /**< width*height array of bytes */
+  // -----------------------------------------------------------------------------
+  //  Curvature Penalty Function Related variables
+  // -----------------------------------------------------------------------------
+  char useCurvaturePenalty; /**<  Use the curvature Penalty function */
+  char useGradientPenalty;  /**< Use the Gradient Penalty function */
+  size_t ccostLoopDelay;    /**<  How many em loops until the Curvature Penalty is calculated   */
+  real_t beta_e;            /**<  */
+  real_t beta_c;            /**<  */
+  real_t r_max;             /**<  */
+  real_t* ccost;            /**< classes * rows * cols (slowest to fastest)*/
+  real_t* ns;               /**<  */
+  real_t* ew;               /**<  */
+  real_t* sw;               /**<  */
+  real_t* nw;               /**<  */
 
-    real_t w_gamma[EMMPM_MAX_CLASSES]; /**<  Gamma */
-    real_t* mean; /**< Mu or Mean   { classes * dims array (classes is slowest moving dimension) }*/
-    real_t* variance; /**< Variance or Sigma Squared  { classes * dims array (classes is slowest moving dimension) }*/
-    real_t* prev_mu; /**< Previous EM Loop Value of Mu or Mean   { classes * dims array (classes is slowest moving dimension) }*/
-    real_t* prev_variance; /**< Previous EM Loop Value of Variance or Sigma Squared  { classes * dims array (classes is slowest moving dimension) }*/
-    real_t  N[EMMPM_MAX_CLASSES]; /**< Dimensions { classes * dims array (classes is slowest moving dimension )}*/
-    real_t* probs; /**< Probabilities for each pixel  classes * rows * cols (slowest to fastest)*/
-    real_t  workingKappa; /**< Current Kappa Value being used  */
-    real_t* couplingBeta; /**< Beta Matrix for Coupling */
-    std::vector<CoupleType> coupleEntries; /**< The entries that map the 2 classes that will be coupled along with their value  */
+  // -----------------------------------------------------------------------------
+  // Variables to hold the tolerance for the stopping condition
+  // -----------------------------------------------------------------------------
+  char useStoppingThreshold;
+  real_t stoppingThreshold;
+  real_t currentMSE; /**< Current Mean Squared Error value */
 
-    // -----------------------------------------------------------------------------
-    //  Curvature Penalty Function Related variables
-    // -----------------------------------------------------------------------------
-    char   useCurvaturePenalty; /**<  Use the curvature Penalty function */
-    char   useGradientPenalty; /**< Use the Gradient Penalty function */
-    size_t ccostLoopDelay; /**<  How many em loops until the Curvature Penalty is calculated   */
-    real_t beta_e; /**<  */
-    real_t beta_c; /**<  */
-    real_t r_max; /**<  */
-    real_t* ccost; /**< classes * rows * cols (slowest to fastest)*/
-    real_t* ns; /**<  */
-    real_t* ew; /**<  */
-    real_t* sw; /**<  */
-    real_t* nw; /**<  */
+  // -----------------------------------------------------------------------------
+  //  Variables that Functions may need to present progress information to the user
+  // -----------------------------------------------------------------------------
+  int currentEMLoop;  /**< The current EM Loop  */
+  int currentMPMLoop; /**< The current MPM Loop  */
+  float progress;     /**< A Percentage to indicate how far along the algorthm is.*/
+  char inside_em_loop;
+  char inside_mpm_loop;
 
-    // -----------------------------------------------------------------------------
-    // Variables to hold the tolerance for the stopping condition
-    // -----------------------------------------------------------------------------
-    char   useStoppingThreshold;
-    real_t stoppingThreshold;
-    real_t currentMSE; /**< Current Mean Squared Error value */
+  // -----------------------------------------------------------------------------
+  //  Variables to hold the histograms for each class weighted by area fraction
+  // -----------------------------------------------------------------------------
+  real_t* histograms; /**< classes * dims * 256 */
 
-    // -----------------------------------------------------------------------------
-    //  Variables that Functions may need to present progress information to the user
-    // -----------------------------------------------------------------------------
-    int    currentEMLoop; /**< The current EM Loop  */
-    int    currentMPMLoop; /**< The current MPM Loop  */
-    float  progress; /**< A Percentage to indicate how far along the algorthm is.*/
-    char inside_em_loop;
-    char inside_mpm_loop;
+  // -----------------------------------------------------------------------------
+  //  User defined Pointer that can point to anything
+  // -----------------------------------------------------------------------------
+  void* userData; /**< User defined Pointer that can point to anything */
+  char cancel;
 
+  // -----------------------------------------------------------------------------
+  // Some Critical TIFF related fields which are taken directly from the tifftags
+  //  of the input image. These really only appply for the command line version
+  // -----------------------------------------------------------------------------
+  char tiffResSet;
+  unsigned short xResolution;
+  unsigned short yResolution;
+  unsigned short resolutionUnits;
 
-    // -----------------------------------------------------------------------------
-    //  Variables to hold the histograms for each class weighted by area fraction
-    // -----------------------------------------------------------------------------
-    real_t* histograms; /**< classes * dims * 256 */
+protected:
+  EMMPM_Data();
 
-    // -----------------------------------------------------------------------------
-    //  User defined Pointer that can point to anything
-    // -----------------------------------------------------------------------------
-    void*    userData; /**< User defined Pointer that can point to anything */
-    char     cancel;
+public:
+  EMMPM_Data(const EMMPM_Data&) = delete;            // Copy Constructor Not Implemented
+  EMMPM_Data(EMMPM_Data&&) = delete;                 // Move Constructor Not Implemented
+  EMMPM_Data& operator=(const EMMPM_Data&) = delete; // Copy Assignment Not Implemented
+  EMMPM_Data& operator=(EMMPM_Data&&) = delete;      // Move Assignment Not Implemented
 
-    // -----------------------------------------------------------------------------
-    // Some Critical TIFF related fields which are taken directly from the tifftags
-    //  of the input image. These really only appply for the command line version
-    // -----------------------------------------------------------------------------
-    char           tiffResSet;
-    unsigned short xResolution;
-    unsigned short yResolution;
-    unsigned short resolutionUnits;
-
-  protected:
-    EMMPM_Data();
-  public:
-    EMMPM_Data(const EMMPM_Data&) = delete;     // Copy Constructor Not Implemented
-    EMMPM_Data(EMMPM_Data&&) = delete;          // Move Constructor Not Implemented
-    EMMPM_Data& operator=(const EMMPM_Data&) = delete; // Copy Assignment Not Implemented
-    EMMPM_Data& operator=(EMMPM_Data&&) = delete;      // Move Assignment Not Implemented
-
-  private:
+private:
 };
-

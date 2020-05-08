@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "PackPrimaryPhases.h"
 
@@ -67,7 +67,6 @@
 #include "SIMPLib/Utilities/TimeUtilities.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
-
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
@@ -423,18 +422,22 @@ void PackPrimaryPhases::setupFilterParameters()
   }
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Feature Ids", FeatureIdsArrayName, OutputCellAttributeMatrixPath, OutputCellAttributeMatrixPath, FilterParameter::CreatedArray, PackPrimaryPhases));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Feature Ids", FeatureIdsArrayName, OutputCellAttributeMatrixPath, OutputCellAttributeMatrixPath, FilterParameter::CreatedArray, PackPrimaryPhases));
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phases", CellPhasesArrayName, OutputCellAttributeMatrixPath, OutputCellAttributeMatrixPath, FilterParameter::CreatedArray, PackPrimaryPhases));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Feature Attribute Matrix", OutputCellFeatureAttributeMatrixName, OutputCellAttributeMatrixPath, FilterParameter::CreatedArray, PackPrimaryPhases));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phases", FeaturePhasesArrayName, OutputCellAttributeMatrixPath, OutputCellFeatureAttributeMatrixName, FilterParameter::CreatedArray, PackPrimaryPhases));
+  parameters.push_back(
+      SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Feature Attribute Matrix", OutputCellFeatureAttributeMatrixName, OutputCellAttributeMatrixPath, FilterParameter::CreatedArray, PackPrimaryPhases));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phases", FeaturePhasesArrayName, OutputCellAttributeMatrixPath, OutputCellFeatureAttributeMatrixName, FilterParameter::CreatedArray, PackPrimaryPhases));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix", OutputCellEnsembleAttributeMatrixName, OutputCellAttributeMatrixPath, FilterParameter::CreatedArray, PackPrimaryPhases));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Number of Features", NumFeaturesArrayName, OutputCellAttributeMatrixPath, OutputCellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, PackPrimaryPhases));
+  parameters.push_back(
+      SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix", OutputCellEnsembleAttributeMatrixName, OutputCellAttributeMatrixPath, FilterParameter::CreatedArray, PackPrimaryPhases));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Number of Features", NumFeaturesArrayName, OutputCellAttributeMatrixPath, OutputCellEnsembleAttributeMatrixName, FilterParameter::CreatedArray,
+                                                      PackPrimaryPhases));
 
-  
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Feature Generation");
@@ -455,10 +458,10 @@ void PackPrimaryPhases::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
-
   linkedProps.clear();
-  linkedProps << "FeatureInputFile" << "InputStatsArrayPath";
- // parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Already Have Features", HaveFeatures, FilterParameter::Parameter, PackPrimaryPhases, linkedProps));
+  linkedProps << "FeatureInputFile"
+              << "InputStatsArrayPath";
+  // parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Already Have Features", HaveFeatures, FilterParameter::Parameter, PackPrimaryPhases, linkedProps));
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Feature Input File", FeatureInputFile, FilterParameter::Parameter, PackPrimaryPhases, "*.txt", "Text File", 1));
   linkedProps.clear();
   //  linkedProps << "CsvOutputFile";
@@ -520,7 +523,7 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
   setPeriodicBoundaries(reader->readValue("PeriodicBoundaries", false));
   setWriteGoalAttributes(reader->readValue("WriteGoalAttributes", false));
   setUseMask(reader->readValue("UseMask", getUseMask()));
-  
+
   bool haveFeatures = reader->readValue("HaveFeatures", false);
   if(haveFeatures)
   {
@@ -530,7 +533,7 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
   {
     setFeatureGeneration(1);
   }
-  
+
   setFeatureInputFile(reader->readString("FeatureInputFile", getFeatureInputFile()));
   setCsvOutputFile(reader->readString("CsvOutputFile", getCsvOutputFile()));
   setInputStatsArrayPath(reader->readDataArrayPath("InputStatsArrayPath", getInputStatsArrayPath()));
@@ -643,7 +646,7 @@ void PackPrimaryPhases::dataCheck()
   {
     ensembleDataArrayPaths.push_back(getInputShapeTypesArrayPath());
   }
-  
+
   if(getFeatureGeneration() == 0)
   {
     m_StatsDataArray = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray>(this, getInputStatsArrayPath(), cDims);
@@ -655,8 +658,8 @@ void PackPrimaryPhases::dataCheck()
   }
   if(getFeatureGeneration() > 1 || getFeatureGeneration() < 0)
   {
-      QString ss = QObject::tr("The value for 'Feature Generation' can only be 0 or 1. The value being used is ").arg(getFeatureGeneration());
-      setErrorCondition(-78001, ss);
+    QString ss = QObject::tr("The value for 'Feature Generation' can only be 0 or 1. The value being used is ").arg(getFeatureGeneration());
+    setErrorCondition(-78001, ss);
   }
   if(getErrorCode() >= 0)
   {
@@ -938,7 +941,6 @@ void PackPrimaryPhases::execute()
     IDataArray::Pointer outputPhaseNames = inputPhaseNames->deepCopy();
     cellEnsembleAttrMat->insertOrAssign(outputPhaseNames);
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -949,7 +951,7 @@ int32_t PackPrimaryPhases::writeVtkFile(int32_t* featureOwners, int32_t* exclusi
   size_t featureOwnersIdx = 0;
   std::ofstream outFile;
   outFile.open(m_VtkOutputFile.toLatin1().data(), std::ios_base::binary);
-  if(!outFile.is_open() )
+  if(!outFile.is_open())
   {
     qDebug() << "m_VtkOutputFile: " << m_VtkOutputFile << "\n";
     setErrorCondition(-78005, "Could not open Vtk File for writing from PackFeatures");
@@ -1110,7 +1112,9 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
-      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+      static_cast<int64_t>(udims[0]),
+      static_cast<int64_t>(udims[1]),
+      static_cast<int64_t>(udims[2]),
   };
 
   FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
@@ -2008,7 +2012,7 @@ float PackPrimaryPhases::checkNeighborhoodError(int32_t gadd, int32_t gremove)
   int32_t index = 0;
   int32_t phase = 0;
 
-  using VectOfVectFloat_t = std::vector<std::vector<float>> ;
+  using VectOfVectFloat_t = std::vector<std::vector<float>>;
   size_t numPhases = m_SimNeighborDist.size();
   for(size_t iter = 0; iter < numPhases; ++iter)
   {
@@ -2638,7 +2642,9 @@ void PackPrimaryPhases::assignVoxels()
   SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
-      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+      static_cast<int64_t>(udims[0]),
+      static_cast<int64_t>(udims[1]),
+      static_cast<int64_t>(udims[2]),
   };
 
   int64_t column = 0, row = 0, plane = 0;
@@ -3042,7 +3048,9 @@ void PackPrimaryPhases::cleanupFeatures()
   SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
-      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+      static_cast<int64_t>(udims[0]),
+      static_cast<int64_t>(udims[1]),
+      static_cast<int64_t>(udims[2]),
   };
 
   int64_t neighpoints[6] = {0, 0, 0, 0, 0, 0};

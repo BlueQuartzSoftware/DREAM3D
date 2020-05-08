@@ -92,9 +92,8 @@ private:
   QwtPlotGrid* m_grid;
 
 public:
-  MatrixPhaseWidget(const MatrixPhaseWidget&) = delete; // Copy Constructor Not Implemented
-  MatrixPhaseWidget(MatrixPhaseWidget&&) = delete;      // Move Constructor Not Implemented
+  MatrixPhaseWidget(const MatrixPhaseWidget&) = delete;            // Copy Constructor Not Implemented
+  MatrixPhaseWidget(MatrixPhaseWidget&&) = delete;                 // Move Constructor Not Implemented
   MatrixPhaseWidget& operator=(const MatrixPhaseWidget&) = delete; // Copy Assignment Not Implemented
   MatrixPhaseWidget& operator=(MatrixPhaseWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

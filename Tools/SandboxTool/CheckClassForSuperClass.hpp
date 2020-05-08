@@ -13,9 +13,12 @@ class CheckClassForSuperClass : public Sandbox
 
 public:
   CheckClassForSuperClass() = default;
-  
-  std::set<QString> getQObjectClasses() { return qobjectClasses; }
-  
+
+  std::set<QString> getQObjectClasses()
+  {
+    return qobjectClasses;
+  }
+
   void operator()(const QString& hFile)
   {
     QString contents;
@@ -75,20 +78,20 @@ public:
 
         outLines.push_back(line);
       }
-//      else if(line.contains("SIMPL_STATIC_NEW_MACRO") && isFilter)
-//      {
-//        QString replaceString = line;
-//        replaceString = replaceString.replace("SIMPL_STATIC_NEW_MACRO", "SIMPL_FILTER_NEW_MACRO");
-//        outLines.push_back(replaceString);
-//        didReplace = true;
-//      }
+      //      else if(line.contains("SIMPL_STATIC_NEW_MACRO") && isFilter)
+      //      {
+      //        QString replaceString = line;
+      //        replaceString = replaceString.replace("SIMPL_STATIC_NEW_MACRO", "SIMPL_FILTER_NEW_MACRO");
+      //        outLines.push_back(replaceString);
+      //        didReplace = true;
+      //      }
       else
       {
         outLines.push_back(line);
       }
     }
 
-    //writeOutput(didReplace, outLines, hFile);
+    // writeOutput(didReplace, outLines, hFile);
     index++;
   }
 };

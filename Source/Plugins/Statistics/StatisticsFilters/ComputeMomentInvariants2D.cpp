@@ -2,7 +2,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ComputeMomentInvariants2D.h"
 
 #include <Eigen/Dense>
@@ -84,7 +83,6 @@ void ComputeMomentInvariants2D::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Normalize Moment Invariants", NormalizeMomentInvariants, FilterParameter::Parameter, ComputeMomentInvariants2D));
 
-
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
   DataArrayCreationFilterParameter::RequirementType dacReq;
   dacReq.amTypes = {AttributeMatrix::Type::CellFeature};
@@ -116,7 +114,7 @@ void ComputeMomentInvariants2D::dataCheck()
   }
   ImageGeom::Pointer imageGeom = std::dynamic_pointer_cast<ImageGeom>(igeom);
   SizeVec3Type imageDims = imageGeom->getDimensions();
-  if (imageDims[2] != 1)
+  if(imageDims[2] != 1)
   {
     QString ss = QObject::tr("This filter currently only works on XY Planes in 2D data. Either crop the 3D data down to 2D in the Z Direction or use other data.");
     setErrorCondition(-73000, ss);
@@ -161,7 +159,6 @@ void ComputeMomentInvariants2D::dataCheck()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -187,8 +184,8 @@ void ComputeMomentInvariants2D::execute()
   Int32ArrayType::Pointer featureIdArray = m_FeatureIdsPtr.lock();
   int32_t numFeatures = static_cast<int32_t>(m_FeatureRectPtr.lock()->getNumberOfTuples());
 
-//  static const double k_Pi14 = std::pow(SIMPLib::Constants::k_Pi, 0.25);
-//  static const double k_Root2 = std::sqrt(2.0);
+  //  static const double k_Pi14 = std::pow(SIMPLib::Constants::k_Pi, 0.25);
+  //  static const double k_Root2 = std::sqrt(2.0);
 
   // This loop SHOULD be parallelized
 
@@ -197,7 +194,7 @@ void ComputeMomentInvariants2D::execute()
     uint32_t* corner = m_FeatureRectPtr.lock()->getTuplePointer(featureId);
     MomentInvariants2D moments;
     size_t max_order = 2;
-    //size_t mDim = max_order + 1;
+    // size_t mDim = max_order + 1;
 
     // Figure the largest X || Y dimension so we can create a square matrix
     uint32_t xDim = corner[3] - corner[0] + 1;
@@ -228,8 +225,8 @@ void ComputeMomentInvariants2D::execute()
     {
       for(uint32_t x = corner[0]; x <= corner[3]; x++)
       {
-        size_t index =  (volDims[1] * volDims[0] * height) + (volDims[0] * y) + x;
-        if( *(m_FeatureIds + index) == featureId)
+        size_t index = (volDims[1] * volDims[0] * height) + (volDims[0] * y) + x;
+        if(*(m_FeatureIds + index) == featureId)
         {
           input2D(y - corner[1], x - corner[0]) = 1;
         }
@@ -240,18 +237,18 @@ void ComputeMomentInvariants2D::execute()
       }
     }
 
-    size_t inputDims[2] = { dim, dim };
+    size_t inputDims[2] = {dim, dim};
     MomentInvariants2D::DoubleMatrixType m2D = moments.computeMomentInvariants(input2D, inputDims, max_order);
-    //std::cout << "Central Moments=\n" << m2D << std::endl;
+    // std::cout << "Central Moments=\n" << m2D << std::endl;
     // compute the second order moment invariants
-    double omega1 = 2.0 * (m2D(0,0)* m2D(0,0)) / (m2D(0,2) + m2D(2,0));
-    double omega2 = std::pow(m2D(0,0), 4) / ( m2D(2,0)*m2D(0,2) - std::pow(m2D(1,1), 2) );
-    //std::cout << ",'2D moment invariants : " << omega1 << "\t" << omega2 << " (should be 12 and 144)" << std::endl;
+    double omega1 = 2.0 * (m2D(0, 0) * m2D(0, 0)) / (m2D(0, 2) + m2D(2, 0));
+    double omega2 = std::pow(m2D(0, 0), 4) / (m2D(2, 0) * m2D(0, 2) - std::pow(m2D(1, 1), 2));
+    // std::cout << ",'2D moment invariants : " << omega1 << "\t" << omega2 << " (should be 12 and 144)" << std::endl;
 
     if(getNormalizeMomentInvariants())
     {
       // normalize the invariants by those of the circle
-      double circle_omega[2] = { 4.0*M_PI, 16.0 * M_PI*M_PI };
+      double circle_omega[2] = {4.0 * M_PI, 16.0 * M_PI * M_PI};
       omega1 /= circle_omega[0];
       omega2 /= circle_omega[1];
       //    std::cout << "normalized moment invariants: " << omega1 << "\t" << omega2 << std::endl;
@@ -284,7 +281,6 @@ void ComputeMomentInvariants2D::execute()
     QString ss = QObject::tr("[%1/%2] Completed:").arg(featureId).arg(numFeatures);
     notifyStatusMessage(ss);
   }
-
 }
 
 // -----------------------------------------------------------------------------

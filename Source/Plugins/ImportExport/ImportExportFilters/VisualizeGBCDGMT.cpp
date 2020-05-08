@@ -156,8 +156,8 @@ void VisualizeGBCDGMT::dataCheck()
 
   std::vector<size_t> cDims(1, 1);
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>>(this, getCrystalStructuresArrayPath(),
-                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_CrystalStructuresPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CrystalStructuresPtr.lock())                                                              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -171,8 +171,7 @@ void VisualizeGBCDGMT::dataCheck()
   if(nullptr != tmpGBCDPtr.get())
   {
     std::vector<size_t> cDims = tmpGBCDPtr->getComponentDimensions();
-    m_GBCDPtr =
-        getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>>(this, getGBCDArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_GBCDPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>>(this, getGBCDArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_GBCDPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_GBCD = m_GBCDPtr.lock()->getPointer(0);
@@ -185,7 +184,6 @@ void VisualizeGBCDGMT::dataCheck()
     setErrorCondition(-1, ss);
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -443,8 +441,6 @@ void VisualizeGBCDGMT::execute()
     fprintf(f, "%f %f %f\n", gmtValues[3 * i], gmtValues[3 * i + 1], gmtValues[3 * i + 2]);
   }
   fclose(f);
-
-
 }
 
 // -----------------------------------------------------------------------------

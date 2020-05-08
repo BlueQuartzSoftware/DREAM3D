@@ -63,7 +63,7 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -118,7 +118,7 @@ public:
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
-  */
+   */
   QString getBrandingString() const override;
 
   /**
@@ -169,19 +169,17 @@ public:
    */
   void execute() override;
 
-
-
 protected:
   Stereographic3D();
 
   /**
-  * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-  */
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
   void dataCheck() override;
 
   /**
-  * @brief Initializes all the private instance variables.
-  */
+   * @brief Initializes all the private instance variables.
+   */
   void initialize();
 
 private:
@@ -194,9 +192,8 @@ private:
   QString m_CoordinatesArrayName = {};
 
 public:
-  Stereographic3D(const Stereographic3D&) = delete; // Copy Constructor Not Implemented
-  Stereographic3D(Stereographic3D&&) = delete;      // Move Constructor Not Implemented
+  Stereographic3D(const Stereographic3D&) = delete;            // Copy Constructor Not Implemented
+  Stereographic3D(Stereographic3D&&) = delete;                 // Move Constructor Not Implemented
   Stereographic3D& operator=(const Stereographic3D&) = delete; // Copy Assignment Not Implemented
   Stereographic3D& operator=(Stereographic3D&&) = delete;      // Move Assignment Not Implemented
 };
-

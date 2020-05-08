@@ -37,8 +37,6 @@
 
 #include <cassert>
 
-
-
 #include "EMMPM/EMMPMFilters/EMMPMFilter.h"
 #include "EMMPM/FilterParameters/EMMPMFilterParameter.h"
 #include "EMMPMLib/Core/EMMPM_Data.h"

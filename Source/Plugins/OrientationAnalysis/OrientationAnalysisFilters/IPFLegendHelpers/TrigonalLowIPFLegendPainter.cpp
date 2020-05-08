@@ -88,7 +88,7 @@ QImage TrigonalLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight,
   int32_t fontWidth = 0;
   int size = std::max(pixelWidth, pixelHeight);
 
-  int32_t fontScale = static_cast<int32_t>( 24.0f / 256.0f * static_cast<float>(size)); // At 256 Pixel Image, we want to use 24 Point font
+  int32_t fontScale = static_cast<int32_t>(24.0f / 256.0f * static_cast<float>(size)); // At 256 Pixel Image, we want to use 24 Point font
   if(fontScale < 10)
   {
     fontScale = 10;
@@ -114,7 +114,7 @@ QImage TrigonalLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight,
   {
     pImageWidth = fontWidth + xMargin * 2;
   }
-  int32_t pImageHeight = imageSize.height()/2.0f + fontHeight * 4.0f;
+  int32_t pImageHeight = imageSize.height() / 2.0f + fontHeight * 4.0f;
 
   QImage pImage(pImageWidth, pImageHeight, QImage::Format_ARGB32_Premultiplied);
   pImage.fill(0xFFFFFFFF); // All white background
@@ -129,7 +129,7 @@ QImage TrigonalLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight,
 
   // Draw the Figure starting at y=3*FontHeight. The first "Row" will be the title, the second any other text
   // and starting at the third, the figure.
-  QPoint point(xMargin, -imageSize.height()*0.5f + fontHeight * 2.25); // The "Y" coordinate may have to be adjusted for each type of figure.
+  QPoint point(xMargin, -imageSize.height() * 0.5f + fontHeight * 2.25); // The "Y" coordinate may have to be adjusted for each type of figure.
   painter.drawImage(point, image);
 
   qint32 penWidth = 2;
@@ -156,7 +156,7 @@ QImage TrigonalLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight,
   label = label.replace("-", "_");
   fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
-  int x = pImageWidth/2 - fontWidth/2;
+  int x = pImageWidth / 2 - fontWidth / 2;
   int y = fontHeight * 1.0;
   paintSymmetryDirection(label, &metrics, &painter, x, y);
 

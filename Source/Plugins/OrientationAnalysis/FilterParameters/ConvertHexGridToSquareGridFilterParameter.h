@@ -114,20 +114,20 @@ public:
    * @brief readJson
    * @return
    */
-  void readJson(const QJsonObject &json) override;
+  void readJson(const QJsonObject& json) override;
 
   /**
    * @brief writeJson
    * @return
    */
-  void writeJson(QJsonObject &json) override;
+  void writeJson(QJsonObject& json) override;
 
 protected:
   ConvertHexGridToSquareGridFilterParameter();
 
 public:
-  ConvertHexGridToSquareGridFilterParameter(const ConvertHexGridToSquareGridFilterParameter&) = delete; // Copy Constructor Not Implemented
-  ConvertHexGridToSquareGridFilterParameter(ConvertHexGridToSquareGridFilterParameter&&) = delete;      // Move Constructor Not Implemented
+  ConvertHexGridToSquareGridFilterParameter(const ConvertHexGridToSquareGridFilterParameter&) = delete;            // Copy Constructor Not Implemented
+  ConvertHexGridToSquareGridFilterParameter(ConvertHexGridToSquareGridFilterParameter&&) = delete;                 // Move Constructor Not Implemented
   ConvertHexGridToSquareGridFilterParameter& operator=(const ConvertHexGridToSquareGridFilterParameter&) = delete; // Copy Assignment Not Implemented
   ConvertHexGridToSquareGridFilterParameter& operator=(ConvertHexGridToSquareGridFilterParameter&&) = delete;      // Move Assignment Not Implemented
 
@@ -136,4 +136,3 @@ private:
   QString m_FileType = {};
   ConvertHexGridToSquareGrid* m_Filter = nullptr;
 };
-

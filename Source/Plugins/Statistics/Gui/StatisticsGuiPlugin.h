@@ -10,13 +10,12 @@ class StatisticsGuiPlugin : public StatisticsPlugin
 
 public:
   StatisticsGuiPlugin();
-   ~StatisticsGuiPlugin() override;
-  
+  ~StatisticsGuiPlugin() override;
+
   /**
    * @brief Register all the filters with the FilterWidgetFactory
    */
   void registerFilterWidgets(FilterWidgetManager* fwm) override;
-  
 
 public:
   StatisticsGuiPlugin(const StatisticsGuiPlugin&) = delete;            // Copy Constructor Not Implemented

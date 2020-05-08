@@ -35,8 +35,8 @@
 
 #include "ReadStlFile.h"
 
-#include <tuple>
 #include <cstdio>
+#include <tuple>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QTextStream>
@@ -245,7 +245,6 @@ void ReadStlFile::dataCheck()
     m_FaceNormals = m_FaceNormalsPtr.lock()->getPointer(0);
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //

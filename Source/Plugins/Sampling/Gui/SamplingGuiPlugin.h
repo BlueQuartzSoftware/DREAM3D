@@ -10,13 +10,12 @@ class SamplingGuiPlugin : public SamplingPlugin
 
 public:
   SamplingGuiPlugin();
-   ~SamplingGuiPlugin() override;
-  
+  ~SamplingGuiPlugin() override;
+
   /**
    * @brief Register all the filters with the FilterWidgetFactory
    */
   void registerFilterWidgets(FilterWidgetManager* fwm) override;
-  
 
 public:
   SamplingGuiPlugin(const SamplingGuiPlugin&) = delete;            // Copy Constructor Not Implemented

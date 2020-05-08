@@ -120,7 +120,6 @@ void StatsGenRDFWidget::setupGui()
 void StatsGenRDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot)
 {
 
-
   QPalette pal;
   pal.setColor(QPalette::Text, SVStyle::Instance()->getQLabel_color());
   pal.setColor(QPalette::Foreground, Qt::white);

@@ -309,7 +309,7 @@ bool StatsGenFeatureSizeWidget::validateValue(QDoubleValidator* val, QLineEdit* 
     return false;
   }
 
-    lineEdit->setStyleSheet("");
+  lineEdit->setStyleSheet("");
 
   return true;
 }

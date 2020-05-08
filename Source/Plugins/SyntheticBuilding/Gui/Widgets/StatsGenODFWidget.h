@@ -130,12 +130,12 @@ protected slots:
 
   void on_m_WeightSpreads_clicked(bool b);
   void on_m_WeightSpreadsBulkLoad_clicked(bool b);
-  
+
   void on_m_PFImageSize_valueChanged(int i);
   void on_m_ImageLayoutCB_currentIndexChanged(int index);
   void on_m_PFTypeCB_currentIndexChanged(int index);
   void on_m_PFLambertSize_valueChanged(int i);
-  void updatePFStatus(const QString &msg);
+  void updatePFStatus(const QString& msg);
 
 signals:
   void dataChanged();
@@ -168,9 +168,8 @@ private:
   QString m_OpenDialogLastFilePath; // Must be last in the list
 
 public:
-  StatsGenODFWidget(const StatsGenODFWidget&) = delete; // Copy Constructor Not Implemented
-  StatsGenODFWidget(StatsGenODFWidget&&) = delete;      // Move Constructor Not Implemented
+  StatsGenODFWidget(const StatsGenODFWidget&) = delete;            // Copy Constructor Not Implemented
+  StatsGenODFWidget(StatsGenODFWidget&&) = delete;                 // Move Constructor Not Implemented
   StatsGenODFWidget& operator=(const StatsGenODFWidget&) = delete; // Copy Assignment Not Implemented
   StatsGenODFWidget& operator=(StatsGenODFWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

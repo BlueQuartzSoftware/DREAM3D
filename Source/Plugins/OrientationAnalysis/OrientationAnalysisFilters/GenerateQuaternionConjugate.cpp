@@ -2,7 +2,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "GenerateQuaternionConjugate.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -107,7 +106,7 @@ void GenerateQuaternionConjugate::setupFilterParameters()
   std::vector<std::vector<size_t>> comp;
   comp.push_back(std::vector<size_t>(1, 4));
   dasReq.componentDimensions = comp;
-  dasReq.daTypes = { SIMPL::TypeNames::Float };
+  dasReq.daTypes = {SIMPL::TypeNames::Float};
   parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternion Array", QuaternionDataArrayPath, FilterParameter::Parameter, GenerateQuaternionConjugate, dasReq));
   DataArrayCreationFilterParameter::RequirementType dacReq;
   parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Output Data Array Path", OutputDataArrayPath, FilterParameter::CreatedArray, GenerateQuaternionConjugate, dacReq));
@@ -147,7 +146,6 @@ void GenerateQuaternionConjugate::dataCheck()
     }
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //

@@ -2,7 +2,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ImportAvxmMDSim.h"
 
 #include <QtCore/QFileInfo>
@@ -133,7 +132,6 @@ void ImportAvxmMDSim::dataCheck()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -237,7 +235,6 @@ void ImportAvxmMDSim::execute()
     VertexGeom::Pointer vertex = VertexGeom::CreateGeometry(verts, SIMPL::Geometry::VertexGeometry);
     dc->setGeometry(vertex);
   }
-
 }
 
 // -----------------------------------------------------------------------------

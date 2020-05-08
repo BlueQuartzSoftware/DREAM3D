@@ -153,4 +153,3 @@ public:
 private:
   QModelIndex m_Index;
 };
-

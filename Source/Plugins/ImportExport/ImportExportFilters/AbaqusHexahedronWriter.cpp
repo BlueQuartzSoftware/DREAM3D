@@ -132,9 +132,9 @@ void AbaqusHexahedronWriter::dataCheck()
   }
 
   std::vector<size_t> cDims(1, 1); // The component dimensions of the needed array.
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeatureIdsArrayPath(),
-                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FeatureIdsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_FeatureIdsPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock())                                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -151,11 +151,11 @@ void AbaqusHexahedronWriter::dataCheck()
   {
     QString ss = QObject::tr("The number of Tuples for the DataArray %1 is %2 and for the associated Image Geometry is %3. The number of tuples must match")
                      .arg(m_FeatureIdsPtr.lock()->getName())
-                     .arg(m_FeatureIdsPtr.lock()->getNumberOfTuples()).arg(volTuples);
+                     .arg(m_FeatureIdsPtr.lock()->getNumberOfTuples())
+                     .arg(volTuples);
     setErrorCondition(-10200, ss);
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -260,7 +260,6 @@ void AbaqusHexahedronWriter::execute()
     deleteFile(fileNames); // delete files
     return;
   }
-
 }
 
 // -----------------------------------------------------------------------------

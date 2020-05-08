@@ -10,13 +10,12 @@ class SurfaceMeshingGuiPlugin : public SurfaceMeshingPlugin
 
 public:
   SurfaceMeshingGuiPlugin();
-   ~SurfaceMeshingGuiPlugin() override;
-  
+  ~SurfaceMeshingGuiPlugin() override;
+
   /**
    * @brief Register all the filters with the FilterWidgetFactory
    */
   void registerFilterWidgets(FilterWidgetManager* fwm) override;
-  
 
 public:
   SurfaceMeshingGuiPlugin(const SurfaceMeshingGuiPlugin&) = delete;            // Copy Constructor Not Implemented

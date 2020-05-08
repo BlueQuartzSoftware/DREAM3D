@@ -37,8 +37,6 @@
 
 #include "EnsembleInfoCreationWidget.h"
 
-
-
 #include "SVWidgetsLib/Core/SVWidgetsLibConstants.h"
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 
@@ -125,7 +123,6 @@ void EnsembleInfoCreationWidget::setupGui()
   // Set the data into the TableModel
   EnsembleInfo info = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<EnsembleInfo>();
   m_EnsembleInfoTableModel->setTableData(info);
-
 
 #if 0
   // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
@@ -371,7 +368,7 @@ EnsembleInfoTableModel* EnsembleInfoCreationWidget::createEnsembleInfoModel()
   EnsembleInfoTableModel* newModel = new EnsembleInfoTableModel(m_ShowOperators);
   QAbstractItemModel* oldModel = ensemblePhasesTableView->model();
 
-    delete oldModel;
+  delete oldModel;
 
   ensemblePhasesTableView->setModel(newModel);
   newModel->setNumberOfPhases(1);

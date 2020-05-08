@@ -71,9 +71,8 @@ protected slots:
   void updateAngleMeasurement(bool isRadians);
 
 public:
-  OrientationWidget(const OrientationWidget&) = delete; // Copy Constructor Not Implemented
-  OrientationWidget(OrientationWidget&&) = delete;      // Move Constructor Not Implemented
+  OrientationWidget(const OrientationWidget&) = delete;            // Copy Constructor Not Implemented
+  OrientationWidget(OrientationWidget&&) = delete;                 // Move Constructor Not Implemented
   OrientationWidget& operator=(const OrientationWidget&) = delete; // Copy Assignment Not Implemented
   OrientationWidget& operator=(OrientationWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

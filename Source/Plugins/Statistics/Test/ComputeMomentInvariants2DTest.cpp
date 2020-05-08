@@ -105,7 +105,7 @@ public:
     dca->addOrReplaceDataContainer(dc);
 
     ImageGeom::Pointer igeom = ImageGeom::New();
-    size_t dims_in[3] = { 5, 5, 1};
+    size_t dims_in[3] = {5, 5, 1};
     igeom->setDimensions(dims_in);
     dc->setGeometry(igeom);
     std::vector<size_t> dims(3, 0);

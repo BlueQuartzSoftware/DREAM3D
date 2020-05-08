@@ -119,8 +119,8 @@ void AbaqusSurfaceMeshWriter::dataCheck()
   }
 
   std::vector<size_t> cDims(1, 2);
-  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getSurfaceMeshFaceLabelsArrayPath(),
-                                                                                                                   cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshFaceLabelsPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshFaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
@@ -132,7 +132,6 @@ void AbaqusSurfaceMeshWriter::dataCheck()
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrays);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -201,7 +200,6 @@ void AbaqusSurfaceMeshWriter::execute()
     setErrorCondition(-8004, ss);
     return;
   }
-
 }
 
 // -----------------------------------------------------------------------------

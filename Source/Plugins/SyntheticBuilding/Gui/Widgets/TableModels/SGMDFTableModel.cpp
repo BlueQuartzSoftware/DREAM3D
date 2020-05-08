@@ -108,8 +108,7 @@ QVariant SGMDFTableModel::data(const QModelIndex& index, qint32 role) const
     QLineEdit contents("1");
     switch(index.column())
     {
-    case Angle:
-    {
+    case Angle: {
       contents.setText(QString("11."));
       const QString header = headerData(Angle, Qt::Horizontal, Qt::DisplayRole).toString();
       if(header.length() > contents.text().length())
@@ -118,8 +117,7 @@ QVariant SGMDFTableModel::data(const QModelIndex& index, qint32 role) const
       }
       break;
     }
-    case Axis:
-    {
+    case Axis: {
       contents.setText(QString("1,1,1"));
       const QString header = headerData(Axis, Qt::Horizontal, Qt::DisplayRole).toString();
       if(header.length() > contents.text().length())
@@ -128,8 +126,7 @@ QVariant SGMDFTableModel::data(const QModelIndex& index, qint32 role) const
       }
       break;
     }
-    case Weight:
-    {
+    case Weight: {
       contents.setText(QString("11."));
       const QString header = headerData(Weight, Qt::Horizontal, Qt::DisplayRole).toString();
       if(header.length() > contents.text().length())

@@ -79,7 +79,8 @@ enum createdPathID : RenameDataPath::DataID_t
 
 namespace
 {
-template <class T> inline void hashCombine(size_t& seed, const T& obj)
+template <class T>
+inline void hashCombine(size_t& seed, const T& obj)
 {
   std::hash<T> hasher;
   seed ^= hasher(obj) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
@@ -256,9 +257,9 @@ void QuickSurfaceMesh::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   std::vector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeatureIdsArrayPath(),
-                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FeatureIdsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_FeatureIdsPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock())                                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -353,7 +354,6 @@ void QuickSurfaceMesh::dataCheck()
   // Create the TripleLines DataContainer
   getDataContainerArray()->createNonPrereqDataContainer(this, getTripleLineDataContainerName(), DataContainerID02);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -946,7 +946,6 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
 
   SizeVec3Type udims = grid->getDimensions();
 
-
   MeshIndexType xP = udims[0];
   MeshIndexType yP = udims[1];
   MeshIndexType zP = udims[2];
@@ -1528,7 +1527,6 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
       m_NodeTypes[i] += 10;
     }
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -1680,7 +1678,6 @@ void QuickSurfaceMesh::generateTripleLines()
   ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
 
   SizeVec3Type udims = grid->getDimensions();
-
 
   MeshIndexType xP = udims[0];
   MeshIndexType yP = udims[1];

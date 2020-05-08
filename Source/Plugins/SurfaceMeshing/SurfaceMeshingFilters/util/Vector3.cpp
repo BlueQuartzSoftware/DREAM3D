@@ -2,12 +2,12 @@
  * Name:  Vector3.cpp
  * Purpose: m3c_basics.math.vectors.Vector3 Implementation
  * Notice:  Copyright Stuart Golodetz, 2008. All rights reserved.
-* This work is licensed under the Creative Commons Attribution-NonCommercial 3.0
-* Unported License. To view a copy of this license, visit
-* http://creativecommons.org/licenses/by-nc/3.0/
-* or send a letter to Creative Commons,
-* 171 Second Street, Suite 300,
-* San Francisco, California, 94105, USA.
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 3.0
+ * Unported License. To view a copy of this license, visit
+ * http://creativecommons.org/licenses/by-nc/3.0/
+ * or send a letter to Creative Commons,
+ * 171 Second Street, Suite 300,
+ * San Francisco, California, 94105, USA.
  ***/
 
 #include "Vector3.h"
@@ -23,7 +23,7 @@ namespace Vector3Detail
 double EPSILON = 0.0001f;
 double PI = 3.141592654;
 double SMALL_EPSILON = 0.0000000001;
-}
+} // namespace Vector3Detail
 
 using m3c_basics::exceptions::Exception;
 using namespace Vector3Detail;
@@ -54,7 +54,8 @@ Vector3<T>::Vector3(float* node)
 }
 
 //################## PUBLIC OPERATORS ##################//
-template <typename T> Vector3<T>& Vector3<T>::operator+=(Vector3& rhs)
+template <typename T>
+Vector3<T>& Vector3<T>::operator+=(Vector3& rhs)
 {
   x += rhs.x;
   y += rhs.y;
@@ -62,7 +63,8 @@ template <typename T> Vector3<T>& Vector3<T>::operator+=(Vector3& rhs)
   return *this;
 }
 
-template <typename T> Vector3<T>& Vector3<T>::operator-=(Vector3& rhs)
+template <typename T>
+Vector3<T>& Vector3<T>::operator-=(Vector3& rhs)
 {
   x -= rhs.x;
   y -= rhs.y;
@@ -70,7 +72,8 @@ template <typename T> Vector3<T>& Vector3<T>::operator-=(Vector3& rhs)
   return *this;
 }
 
-template <typename T> Vector3<T>& Vector3<T>::operator*=(double factor)
+template <typename T>
+Vector3<T>& Vector3<T>::operator*=(double factor)
 {
   x *= static_cast<T>(factor);
   y *= static_cast<T>(factor);
@@ -78,7 +81,8 @@ template <typename T> Vector3<T>& Vector3<T>::operator*=(double factor)
   return *this;
 }
 
-template <typename T> Vector3<T>& Vector3<T>::operator/=(double factor)
+template <typename T>
+Vector3<T>& Vector3<T>::operator/=(double factor)
 {
   x /= static_cast<T>(factor);
   y /= static_cast<T>(factor);
@@ -86,23 +90,27 @@ template <typename T> Vector3<T>& Vector3<T>::operator/=(double factor)
   return *this;
 }
 
-template <typename T> Vector3<T> Vector3<T>::operator-()
+template <typename T>
+Vector3<T> Vector3<T>::operator-()
 {
   return Vector3(-x, -y, -z);
 }
 
 //################## PUBLIC METHODS ##################//
-template <typename T> Vector3<T> Vector3<T>::cross(Vector3& rhs)
+template <typename T>
+Vector3<T> Vector3<T>::cross(Vector3& rhs)
 {
   return Vector3(y * rhs.z - z * rhs.y, z * rhs.x - x * rhs.z, x * rhs.y - y * rhs.x);
 }
 
-template <typename T> double Vector3<T>::distance(Vector3& rhs)
+template <typename T>
+double Vector3<T>::distance(Vector3& rhs)
 {
   return sqrt(distance_squared(rhs));
 }
 
-template <typename T> double Vector3<T>::distance_squared(Vector3& rhs)
+template <typename T>
+double Vector3<T>::distance_squared(Vector3& rhs)
 {
   double dx = x - rhs.x;
   double dy = y - rhs.y;
@@ -110,27 +118,32 @@ template <typename T> double Vector3<T>::distance_squared(Vector3& rhs)
   return dx * dx + dy * dy + dz * dz;
 }
 
-template <typename T> double Vector3<T>::dot(Vector3& rhs)
+template <typename T>
+double Vector3<T>::dot(Vector3& rhs)
 {
   return x * rhs.x + y * rhs.y + z * rhs.z;
 }
 
-template <typename T> double Vector3<T>::dot(float* rhs)
+template <typename T>
+double Vector3<T>::dot(float* rhs)
 {
   return x * rhs[0] + y * rhs[1] + z * rhs[2];
 }
 
-template <typename T> double Vector3<T>::length()
+template <typename T>
+double Vector3<T>::length()
 {
   return sqrt(length_squared());
 }
 
-template <typename T> double Vector3<T>::length_squared()
+template <typename T>
+double Vector3<T>::length_squared()
 {
   return x * x + y * y + z * z;
 }
 
-template <typename T> Vector3<T>& Vector3<T>::negate()
+template <typename T>
+Vector3<T>& Vector3<T>::negate()
 {
   x = -x;
   y = -y;
@@ -138,7 +151,8 @@ template <typename T> Vector3<T>& Vector3<T>::negate()
   return *this;
 }
 
-template <typename T> Vector3<T>& Vector3<T>::normalize()
+template <typename T>
+Vector3<T>& Vector3<T>::normalize()
 {
   double len = length();
   if(len < SMALL_EPSILON)
@@ -148,49 +162,56 @@ template <typename T> Vector3<T>& Vector3<T>::normalize()
   return (*this) *= 1.0 / len;
 }
 
-template <typename T> Vector3<T> Vector3<T>::project_onto(Vector3& rhs)
+template <typename T>
+Vector3<T> Vector3<T>::project_onto(Vector3& rhs)
 {
   // (lhs . rhs / |rhs|) * (rhs / |rhs|) = rhs * (lhs . rhs / |rhs|^2)
   return rhs * (dot(rhs) / rhs.length_squared());
 }
 
 //################## GLOBAL OPERATORS ##################//
-template <typename T> Vector3<T> operator+(Vector3<T>& lhs, Vector3<T>& rhs)
+template <typename T>
+Vector3<T> operator+(Vector3<T>& lhs, Vector3<T>& rhs)
 {
   Vector3<T> copy = lhs;
   copy += rhs;
   return copy;
 }
 
-template <typename T> Vector3<T> operator-(Vector3<T>& lhs, Vector3<T>& rhs)
+template <typename T>
+Vector3<T> operator-(Vector3<T>& lhs, Vector3<T>& rhs)
 {
   Vector3<T> copy = lhs;
   copy -= rhs;
   return copy;
 }
 
-template <typename T> Vector3<T> operator*(double factor, Vector3<T>& v)
+template <typename T>
+Vector3<T> operator*(double factor, Vector3<T>& v)
 {
   Vector3<T> copy = v;
   copy *= factor;
   return copy;
 }
 
-template <typename T> Vector3<T> operator*(Vector3<T>& v, double factor)
+template <typename T>
+Vector3<T> operator*(Vector3<T>& v, double factor)
 {
   Vector3<T> copy = v;
   copy *= factor;
   return copy;
 }
 
-template <typename T> Vector3<T> operator/(Vector3<T>& v, double factor)
+template <typename T>
+Vector3<T> operator/(Vector3<T>& v, double factor)
 {
   Vector3<T> copy = v;
   copy /= factor;
   return copy;
 }
 
-template <typename T> std::ostream& operator<<(std::ostream& os, Vector3<T>& v)
+template <typename T>
+std::ostream& operator<<(std::ostream& os, Vector3<T>& v)
 {
   os << '(' << v.x << ',' << v.y << ',' << v.z << ')';
   return os;

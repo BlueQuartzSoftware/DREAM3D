@@ -145,9 +145,8 @@ private:
   QString m_OpenDialogLastDirectory; // Must be last in the list
 
 public:
-  StatsGenAxisODFWidget(const StatsGenAxisODFWidget&) = delete; // Copy Constructor Not Implemented
-  StatsGenAxisODFWidget(StatsGenAxisODFWidget&&) = delete;      // Move Constructor Not Implemented
+  StatsGenAxisODFWidget(const StatsGenAxisODFWidget&) = delete;            // Copy Constructor Not Implemented
+  StatsGenAxisODFWidget(StatsGenAxisODFWidget&&) = delete;                 // Move Constructor Not Implemented
   StatsGenAxisODFWidget& operator=(const StatsGenAxisODFWidget&) = delete; // Copy Assignment Not Implemented
   StatsGenAxisODFWidget& operator=(StatsGenAxisODFWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

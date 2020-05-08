@@ -115,8 +115,7 @@ QVariant EnsembleInfoTableModel::data(const QModelIndex& index, qint32 role) con
 
     switch(index.column())
     {
-    case CrystalStructure:
-    {
+    case CrystalStructure: {
       comboBox.currentText = QString("Hexagonal-High");
       const QString header = headerData(CrystalStructure, Qt::Horizontal, Qt::DisplayRole).toString();
       if(header.length() > comboBox.currentText.length())
@@ -125,8 +124,7 @@ QVariant EnsembleInfoTableModel::data(const QModelIndex& index, qint32 role) con
       }
       break;
     }
-    case PhaseType:
-    {
+    case PhaseType: {
       comboBox.currentText = QString("Primary Phase");
       const QString header = headerData(PhaseType, Qt::Horizontal, Qt::DisplayRole).toString();
       if(header.length() > comboBox.currentText.length())
@@ -135,8 +133,7 @@ QVariant EnsembleInfoTableModel::data(const QModelIndex& index, qint32 role) con
       }
       break;
     }
-    case PhaseName:
-    {
+    case PhaseName: {
       lineEdit.setText("Phase Name");
       const QString header = headerData(PhaseType, Qt::Horizontal, Qt::DisplayRole).toString();
       if(header.length() > lineEdit.text().length())

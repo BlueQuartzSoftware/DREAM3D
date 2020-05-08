@@ -109,9 +109,8 @@ private:
   StatsGenRDFWidget* m_RdfPlot = nullptr;
 
 public:
-  PrecipitatePhaseWidget(const PrecipitatePhaseWidget&) = delete; // Copy Constructor Not Implemented
-  PrecipitatePhaseWidget(PrecipitatePhaseWidget&&) = delete;      // Move Constructor Not Implemented
+  PrecipitatePhaseWidget(const PrecipitatePhaseWidget&) = delete;            // Copy Constructor Not Implemented
+  PrecipitatePhaseWidget(PrecipitatePhaseWidget&&) = delete;                 // Move Constructor Not Implemented
   PrecipitatePhaseWidget& operator=(const PrecipitatePhaseWidget&) = delete; // Copy Assignment Not Implemented
   PrecipitatePhaseWidget& operator=(PrecipitatePhaseWidget&&) = delete;      // Move Assignment Not Implemented
 };
-

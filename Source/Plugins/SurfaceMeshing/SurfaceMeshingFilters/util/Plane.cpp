@@ -2,12 +2,12 @@
  * Name:  Plane.cpp
  * Purpose: m3c_basics.math.geom.Plane Implementation
  * Notice:  Copyright Stuart Golodetz, 2008. All rights reserved.
-* This work is licensed under the Creative Commons Attribution-NonCommercial 3.0
-* Unported License. To view a copy of this license, visit
-* http://creativecommons.org/licenses/by-nc/3.0/
-* or send a letter to Creative Commons,
-* 171 Second Street, Suite 300,
-* San Francisco, California, 94105, USA.
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 3.0
+ * Unported License. To view a copy of this license, visit
+ * http://creativecommons.org/licenses/by-nc/3.0/
+ * or send a letter to Creative Commons,
+ * 171 Second Street, Suite 300,
+ * San Francisco, California, 94105, USA.
  ***/
 
 #include "Plane.h"
@@ -23,7 +23,7 @@ namespace PlaneDetail
 double EPSILON = 0.0001f;
 double PI = 3.141592654;
 double SMALL_EPSILON = 0.0000000001;
-}
+} // namespace PlaneDetail
 
 using namespace m3c_basics::exceptions;
 using namespace PlaneDetail;

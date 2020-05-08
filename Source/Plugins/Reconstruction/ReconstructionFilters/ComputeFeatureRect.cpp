@@ -2,7 +2,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ComputeFeatureRect.h"
 
 #include <QtCore/QTextStream>
@@ -93,9 +92,7 @@ void ComputeFeatureRect::dataCheck()
   {
     m_FeatureRect = m_FeatureRectPtr.lock()->getPointer(0);
   }
-
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -108,8 +105,6 @@ void ComputeFeatureRect::execute()
   {
     return;
   }
-
-
 
   int featureId = 0;
   size_t numComps = 6;
@@ -198,7 +193,6 @@ void ComputeFeatureRect::execute()
       }
     }
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -208,7 +202,6 @@ size_t ComputeFeatureRect::sub2ind(std::vector<size_t> tDims, size_t x, size_t y
 {
   return (tDims[1] * tDims[0] * z) + (tDims[0] * y) + x;
 }
-
 
 // -----------------------------------------------------------------------------
 //

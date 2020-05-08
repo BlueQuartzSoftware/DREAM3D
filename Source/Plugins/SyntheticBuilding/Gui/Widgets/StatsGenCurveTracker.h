@@ -51,4 +51,3 @@ private:
   QString curveInfoAt(const QwtPlotCurve*, const QPointF&) const;
   QLineF curveLineAt(const QwtPlotCurve*, double x) const;
 };
-

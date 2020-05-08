@@ -118,44 +118,43 @@ void CreateLambertSphere::setupFilterParameters()
   parameter->setCategory(FilterParameter::Parameter);
   parameters.push_back(parameter);
 
-  
   {
     QStringList linkedProperties = {"VertexDataContainerName", "VertexAttributeMatrixName"};
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Vertex Geometry", CreateVertexGeometry, FilterParameter::Parameter, CreateLambertSphere, linkedProperties));
     parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Vertex DataContainer Name", VertexDataContainerName, FilterParameter::Parameter, CreateLambertSphere));
-//    parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, FilterParameter::Parameter, CreateLambertSphere));
+    //    parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, FilterParameter::Parameter, CreateLambertSphere));
   }
-  
+
   {
     QStringList linkedProperties = {"EdgeDataContainerName", "EdgeAttributeMatrixName"};
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Edge Geometry", CreateEdgeGeometry, FilterParameter::Parameter, CreateLambertSphere, linkedProperties));
     parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Edge DataContainer Name", EdgeDataContainerName, FilterParameter::Parameter, CreateLambertSphere));
-//    parameters.push_back(SIMPL_NEW_STRING_FP("Edge Attribute Matrix", EdgeAttributeMatrixName, FilterParameter::Parameter, CreateLambertSphere));
+    //    parameters.push_back(SIMPL_NEW_STRING_FP("Edge Attribute Matrix", EdgeAttributeMatrixName, FilterParameter::Parameter, CreateLambertSphere));
   }
-  
+
   {
     QStringList linkedProperties = {"TriangleDataContainerName"};
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Triangle Geometry", CreateTriangleGeometry, FilterParameter::Parameter, CreateLambertSphere, linkedProperties));
     parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Triangle DataContainer Name", TriangleDataContainerName, FilterParameter::Parameter, CreateLambertSphere));
   }
-  
+
   {
     QStringList linkedProperties = {"QuadDataContainerName", "FaceAttributeMatrixName", "ImageFaceDataArrayName"};
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Quad Geometry", CreateQuadGeometry, FilterParameter::Parameter, CreateLambertSphere, linkedProperties));
     parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Quad DataContainer Name", QuadDataContainerName, FilterParameter::Parameter, CreateLambertSphere));
-//    parameters.push_back(SIMPL_NEW_STRING_FP("Quad Attribute Matrix", FaceAttributeMatrixName, FilterParameter::Parameter, CreateLambertSphere));
-//    parameters.push_back(SIMPL_NEW_STRING_FP("Quad Face ArrayName", ImageFaceDataArrayName, FilterParameter::Parameter, CreateLambertSphere));
+    //    parameters.push_back(SIMPL_NEW_STRING_FP("Quad Attribute Matrix", FaceAttributeMatrixName, FilterParameter::Parameter, CreateLambertSphere));
+    //    parameters.push_back(SIMPL_NEW_STRING_FP("Quad Face ArrayName", ImageFaceDataArrayName, FilterParameter::Parameter, CreateLambertSphere));
   }
-  
-   {
+
+  {
     // Option to map an existing image
-  //  QStringList linkedProperties = {"ImageDataArrayPath"};
-  //  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Existing Image", UseExistingImage, FilterParameter::Parameter, CreateLambertSphere, linkedProperties));
- 
+    //  QStringList linkedProperties = {"ImageDataArrayPath"};
+    //  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Existing Image", UseExistingImage, FilterParameter::Parameter, CreateLambertSphere, linkedProperties));
+
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Image Data", ImageDataArrayPath, FilterParameter::RequiredArray, CreateLambertSphere, req));
   }
-  
+
   setFilterParameters(parameters);
 }
 
@@ -183,13 +182,12 @@ void CreateLambertSphere::dataCheck()
   }
   std::vector<size_t> cDims = {1};
   DataContainerArray::Pointer dca = getDataContainerArray();
-  
-  
+
   m_VertexDataName = "Vertex_" + getImageDataArrayPath().getDataArrayName();
   m_EdgeDataName = "Edge_" + getImageDataArrayPath().getDataArrayName();
   m_TriangleDataName = "Triangle_" + getImageDataArrayPath().getDataArrayName();
   m_QuadDataName = "Quad_" + getImageDataArrayPath().getDataArrayName();
-  
+
   if(getUseExistingImage())
   {
     m_ImageDataPtr = getDataContainerArray()->getPrereqArrayFromPath<UInt8ArrayType>(this, getImageDataArrayPath(), cDims);
@@ -253,7 +251,7 @@ void CreateLambertSphere::dataCheck()
     {
       return;
     }
-    
+
     // Create the Vertex Geometry
     VertexGeom::Pointer vertGeom = VertexGeom::CreateGeometry(m_Vertices, "VertexGeometry");
     vertDC->setGeometry(vertGeom);
@@ -290,7 +288,7 @@ void CreateLambertSphere::dataCheck()
     std::vector<size_t> cDims = {2};
     EdgeGeom::Pointer edgetGeom = EdgeGeom::CreateGeometry(numEdges, m_Vertices, "EdgeGeometry");
     edgeDC->setGeometry(edgetGeom);
-    
+
     cDims[0] = 1;
     DataArrayPath path(getEdgeDataContainerName().getDataContainerName(), getEdgeAttributeMatrixName(), m_EdgeDataName);
     m_EdgeDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>>(this, path, 0, cDims, "", DataArrayID32);
@@ -357,7 +355,6 @@ void CreateLambertSphere::dataCheck()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -378,7 +375,6 @@ void CreateLambertSphere::execute()
   createEdgeGeometry();
   createTriangleGeometry();
   createQuadGeometry();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -391,21 +387,18 @@ void CreateLambertSphere::createVertices()
   ImageGeom::Pointer imageGeom = getDataContainerArray()->getDataContainer(getImageDataArrayPath())->getGeometryAs<ImageGeom>();
   SizeVec3Type imageDims = imageGeom->getDimensions();
 
-  UInt8ArrayType::Pointer masterPattern =
-      getDataContainerArray()->getAttributeMatrix(getImageDataArrayPath())->getAttributeArrayAs<UInt8ArrayType>(getImageDataArrayPath().getDataArrayName());
-
+  UInt8ArrayType::Pointer masterPattern = getDataContainerArray()->getAttributeMatrix(getImageDataArrayPath())->getAttributeArrayAs<UInt8ArrayType>(getImageDataArrayPath().getDataArrayName());
 
   float L = static_cast<float>(SIMPLib::Constants::k_SqrtHalfPi);
   float res = (2.0f * L) / imageDims[0];
 
   // The number of vertices in X & Y is one more than the dims
   int64_t points[3] = {static_cast<int64_t>(imageDims[0] + 1), static_cast<int64_t>(imageDims[1] + 1), 1};
-  
-  
-//  DataContainer::Pointer vertexDC = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
-//  m_VertexData = m_VertexDataPtr.lock()->getPointer(0);
 
-  //int64_t iIndex = 0;
+  //  DataContainer::Pointer vertexDC = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
+  //  m_VertexData = m_VertexDataPtr.lock()->getPointer(0);
+
+  // int64_t iIndex = 0;
   size_t vIndex = 0;
   // Generate all the vertex values
   for(int64_t y = 0; y < points[1]; y++)
@@ -417,12 +410,12 @@ void CreateLambertSphere::createVertices()
       vert[0] = x * res - L;
       vert[1] = y * res - L;
       vert[2] = 0.0;
-      
-//      if (x < points[0]-1 && y < points[1] - 1) 
-//      {
-//        iIndex = (imageDims[0] * y) + x;
-//        m_VertexData[iIndex] = masterPattern->getValue(iIndex);
-//      }
+
+      //      if (x < points[0]-1 && y < points[1] - 1)
+      //      {
+      //        iIndex = (imageDims[0] * y) + x;
+      //        m_VertexData[iIndex] = masterPattern->getValue(iIndex);
+      //      }
       vIndex++;
     }
   }
@@ -439,7 +432,6 @@ void CreateLambertSphere::createVertexGeometry()
   {
     return;
   }
-   
 }
 
 // -----------------------------------------------------------------------------
@@ -513,15 +505,13 @@ void CreateLambertSphere::createTriangleGeometry()
   ImageGeom::Pointer imageGeom = getDataContainerArray()->getDataContainer(getImageDataArrayPath())->getGeometryAs<ImageGeom>();
   SizeVec3Type imageDims = imageGeom->getDimensions();
 
-  UInt8ArrayType::Pointer masterPattern =
-      getDataContainerArray()->getAttributeMatrix(getImageDataArrayPath())->getAttributeArrayAs<UInt8ArrayType>(getImageDataArrayPath().getDataArrayName());
+  UInt8ArrayType::Pointer masterPattern = getDataContainerArray()->getAttributeMatrix(getImageDataArrayPath())->getAttributeArrayAs<UInt8ArrayType>(getImageDataArrayPath().getDataArrayName());
 
   // now create node and triangle arrays knowing the number that will be needed
   DataContainer::Pointer triangleDC = getDataContainerArray()->getDataContainer(getTriangleDataContainerName());
 
   TriangleGeom::Pointer triangleGeom = triangleDC->getGeometryAs<TriangleGeom>();
   SharedTriList::Pointer triangles = triangleGeom->getTriangles();
-
 
   m_TriangleFaceData = m_TriangleFaceDataPtr.lock()->getPointer(0);
   size_t iIndex = 0;
@@ -539,7 +529,7 @@ void CreateLambertSphere::createTriangleGeometry()
       tri[2] = static_cast<int64_t>(vIndex + imageDims[0] + 1 + 1);
       m_TriangleFaceData[tIndex] = masterPattern->getValue(iIndex);
       tIndex++;
-      
+
       tri = triangles->getTuplePointer(tIndex);
       tri[0] = static_cast<int64_t>(vIndex);
       tri[1] = static_cast<int64_t>(vIndex + imageDims[0] + 1 + 1);
@@ -567,8 +557,7 @@ void CreateLambertSphere::createQuadGeometry()
   ImageGeom::Pointer imageGeom = getDataContainerArray()->getDataContainer(getImageDataArrayPath())->getGeometryAs<ImageGeom>();
   SizeVec3Type imageDims = imageGeom->getDimensions();
 
-  UInt8ArrayType::Pointer masterPattern =
-      getDataContainerArray()->getAttributeMatrix(getImageDataArrayPath())->getAttributeArrayAs<UInt8ArrayType>(getImageDataArrayPath().getDataArrayName());
+  UInt8ArrayType::Pointer masterPattern = getDataContainerArray()->getAttributeMatrix(getImageDataArrayPath())->getAttributeArrayAs<UInt8ArrayType>(getImageDataArrayPath().getDataArrayName());
 
   // The number of vertices in X & Y is one more than the dims
   // int64_t points[3] = {static_cast<int64_t>(imageDims[0] + 1), static_cast<int64_t>(imageDims[1] + 1), 1};

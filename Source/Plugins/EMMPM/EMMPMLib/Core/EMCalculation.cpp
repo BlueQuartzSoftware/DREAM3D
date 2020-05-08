@@ -60,7 +60,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "EMMPMLib/Core/MPMCalculation.h"
 #include "EMMPMLib/Core/MorphFilt.h"
 
-
 /**
  * @brief This message handler is used by EMCalculation instances to re-emit incoming generic messages from the
  * MPMCalculation observable object as its own generic messages.  It also prepends the EM Loop number to the
@@ -68,46 +67,49 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 class EMCalculationMessageHandler : public AbstractMessageHandler
 {
-  public:
-    explicit EMCalculationMessageHandler(EMCalculation* calcObj) : m_CalculationObject(calcObj) {}
+public:
+  explicit EMCalculationMessageHandler(EMCalculation* calcObj)
+  : m_CalculationObject(calcObj)
+  {
+  }
 
-    /**
-     * @brief Re-emits incoming GenericProgressMessages as FilterProgressMessages.
-     */
-    void processMessage(const GenericProgressMessage* msg) const override
-    {
-      emit m_CalculationObject->notifyProgressMessage(msg->getProgressValue(), msg->getMessageText());
-    }
+  /**
+   * @brief Re-emits incoming GenericProgressMessages as FilterProgressMessages.
+   */
+  void processMessage(const GenericProgressMessage* msg) const override
+  {
+    emit m_CalculationObject->notifyProgressMessage(msg->getProgressValue(), msg->getMessageText());
+  }
 
-    /**
-     * @brief Re-emits incoming GenericStatusMessages as FilterStatusMessages.  Appends a message to
-     * the end of the message text that shows what EM Loop number the filter is on.
-     */
-    void processMessage(const GenericStatusMessage* msg) const override
-    {
-      EMMPM_Data* data = m_CalculationObject->m_Data.get();
-      QString prefix = QObject::tr("EM Loop %1").arg(data->currentEMLoop);
-      emit m_CalculationObject->notifyStatusMessageWithPrefix(prefix, msg->getMessageText());
-    }
+  /**
+   * @brief Re-emits incoming GenericStatusMessages as FilterStatusMessages.  Appends a message to
+   * the end of the message text that shows what EM Loop number the filter is on.
+   */
+  void processMessage(const GenericStatusMessage* msg) const override
+  {
+    EMMPM_Data* data = m_CalculationObject->m_Data.get();
+    QString prefix = QObject::tr("EM Loop %1").arg(data->currentEMLoop);
+    emit m_CalculationObject->notifyStatusMessageWithPrefix(prefix, msg->getMessageText());
+  }
 
-    /**
-     * @brief Handle incoming GenericErrorMessages
-     */
-    void processMessage(const GenericErrorMessage* msg) const override
-    {
-      emit m_CalculationObject->setErrorCondition(msg->getCode(), msg->getMessageText());
-    }
+  /**
+   * @brief Handle incoming GenericErrorMessages
+   */
+  void processMessage(const GenericErrorMessage* msg) const override
+  {
+    emit m_CalculationObject->setErrorCondition(msg->getCode(), msg->getMessageText());
+  }
 
-    /**
-     * @brief Handle incoming GenericWarningMessages
-     */
-    void processMessage(const GenericWarningMessage* msg) const override
-    {
-      emit m_CalculationObject->setWarningCondition(msg->getCode(), msg->getMessageText());
-    }
+  /**
+   * @brief Handle incoming GenericWarningMessages
+   */
+  void processMessage(const GenericWarningMessage* msg) const override
+  {
+    emit m_CalculationObject->setWarningCondition(msg->getCode(), msg->getMessageText());
+  }
 
-  private:
-    EMCalculation* m_CalculationObject = nullptr;
+private:
+  EMCalculation* m_CalculationObject = nullptr;
 };
 
 // -----------------------------------------------------------------------------
@@ -189,7 +191,7 @@ void EMCalculation::execute()
   acvmpm->setStatsDelegate(getStatsDelegate());
 
   // Connect up the Error/Warning/Progress object so the filter can report those things
-  connect(acvmpm.get(), &MPMCalculation::messageGenerated, [=] (AbstractMessage::Pointer msg) {
+  connect(acvmpm.get(), &MPMCalculation::messageGenerated, [=](AbstractMessage::Pointer msg) {
     EMCalculationMessageHandler msgHandler(this);
     msg->visit(&msgHandler);
   });
@@ -199,8 +201,8 @@ void EMCalculation::execute()
   QString ss;
   QTextStream msgOut(&ss);
   /* -----------------------------------------------------------
-  *                Perform EM Loops
-  * ------------------------------------------------------------ */
+   *                Perform EM Loops
+   * ------------------------------------------------------------ */
   for(k = 0; k < emiter; k++)
   {
 
@@ -209,7 +211,7 @@ void EMCalculation::execute()
     notifyStatusMessage(ss);
 
     /* Send back the Progress Stats and the segmented image. If we never get into this loop because
-    * emiter == 0 then we will still send back the stats just after the end of the EM Loops */
+     * emiter == 0 then we will still send back the stats just after the end of the EM Loops */
     EMMPMUtilities::ConvertXtToOutputImage(getData());
     if(m_StatsDelegate != nullptr)
     {

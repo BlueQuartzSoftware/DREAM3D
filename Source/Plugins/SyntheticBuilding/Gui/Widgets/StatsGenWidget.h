@@ -173,7 +173,8 @@ public:
    * @param microstructurePresetCombo
    * @return
    */
-  template <typename T> AbstractMicrostructurePresetFactory::Pointer RegisterPresetFactory(QComboBox* microstructurePresetCombo)
+  template <typename T>
+  AbstractMicrostructurePresetFactory::Pointer RegisterPresetFactory(QComboBox* microstructurePresetCombo)
   {
     AbstractMicrostructurePresetFactory::Pointer presetFactory = T::New();
     MicrostructurePresetManager::registerFactory(presetFactory);
@@ -195,8 +196,8 @@ public:
   //    void phaseParametersChanged();
 
 public:
-  StatsGenWidget(const StatsGenWidget&) = delete; // Copy Constructor Not Implemented
-  StatsGenWidget(StatsGenWidget&&) = delete;      // Move Constructor Not Implemented
+  StatsGenWidget(const StatsGenWidget&) = delete;            // Copy Constructor Not Implemented
+  StatsGenWidget(StatsGenWidget&&) = delete;                 // Move Constructor Not Implemented
   StatsGenWidget& operator=(const StatsGenWidget&) = delete; // Copy Assignment Not Implemented
   StatsGenWidget& operator=(StatsGenWidget&&) = delete;      // Move Assignment Not Implemented
 
@@ -212,4 +213,3 @@ private:
   QString m_PhaseName = {};
   AbstractMicrostructurePreset::Pointer m_MicroPreset = {};
 };
-

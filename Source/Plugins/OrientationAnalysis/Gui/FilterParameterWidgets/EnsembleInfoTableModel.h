@@ -162,9 +162,8 @@ private:
   EnsembleInfo m_EnsembleInfo;
 
 public:
-  EnsembleInfoTableModel(const EnsembleInfoTableModel&) = delete; // Copy Constructor Not Implemented
-  EnsembleInfoTableModel(EnsembleInfoTableModel&&) = delete;      // Move Constructor Not Implemented
+  EnsembleInfoTableModel(const EnsembleInfoTableModel&) = delete;            // Copy Constructor Not Implemented
+  EnsembleInfoTableModel(EnsembleInfoTableModel&&) = delete;                 // Move Constructor Not Implemented
   EnsembleInfoTableModel& operator=(const EnsembleInfoTableModel&) = delete; // Copy Assignment Not Implemented
   EnsembleInfoTableModel& operator=(EnsembleInfoTableModel&&) = delete;      // Move Assignment Not Implemented
 };
-

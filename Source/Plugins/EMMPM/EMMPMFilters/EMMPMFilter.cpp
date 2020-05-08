@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, Data, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, Data, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "EMMPMFilter.h"
 
 #include <QtGui/QColor>
@@ -73,43 +73,46 @@
  */
 class EMMPMFilterMessageHandler : public AbstractMessageHandler
 {
-  public:
-    explicit EMMPMFilterMessageHandler(EMMPMFilter* filter) : m_Filter(filter) {}
+public:
+  explicit EMMPMFilterMessageHandler(EMMPMFilter* filter)
+  : m_Filter(filter)
+  {
+  }
 
-    /**
-     * @brief Re-emits incoming GenericProgressMessages as FilterProgressMessages.
-     */
-    void processMessage(const GenericProgressMessage* msg) const override
-    {
-      emit m_Filter->notifyProgressMessage(msg->getProgressValue(), msg->getMessageText());
-    }
+  /**
+   * @brief Re-emits incoming GenericProgressMessages as FilterProgressMessages.
+   */
+  void processMessage(const GenericProgressMessage* msg) const override
+  {
+    emit m_Filter->notifyProgressMessage(msg->getProgressValue(), msg->getMessageText());
+  }
 
-    /**
-     * @brief Re-emits incoming GenericStatusMessages as FilterStatusMessages.
-     */
-    void processMessage(const GenericStatusMessage* msg) const override
-    {
-      emit m_Filter->notifyStatusMessage(msg->getMessageText());
-    }
+  /**
+   * @brief Re-emits incoming GenericStatusMessages as FilterStatusMessages.
+   */
+  void processMessage(const GenericStatusMessage* msg) const override
+  {
+    emit m_Filter->notifyStatusMessage(msg->getMessageText());
+  }
 
-    /**
-     * @brief Re-emits incoming GenericErrorMessages as FilterErrorMessages.
-     */
-    void processMessage(const GenericErrorMessage* msg) const override
-    {
-      emit m_Filter->setErrorCondition(msg->getCode(), msg->getMessageText());
-    }
+  /**
+   * @brief Re-emits incoming GenericErrorMessages as FilterErrorMessages.
+   */
+  void processMessage(const GenericErrorMessage* msg) const override
+  {
+    emit m_Filter->setErrorCondition(msg->getCode(), msg->getMessageText());
+  }
 
-    /**
-     * @brief Re-emits incoming GenericWarningMessages as FilterWarningMessages.
-     */
-    void processMessage(const GenericWarningMessage* msg) const override
-    {
-      emit m_Filter->setWarningCondition(msg->getCode(), msg->getMessageText());
-    }
+  /**
+   * @brief Re-emits incoming GenericWarningMessages as FilterWarningMessages.
+   */
+  void processMessage(const GenericWarningMessage* msg) const override
+  {
+    emit m_Filter->setWarningCondition(msg->getCode(), msg->getMessageText());
+  }
 
-  private:
-    EMMPMFilter* m_Filter = nullptr;
+private:
+  EMMPMFilter* m_Filter = nullptr;
 };
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
@@ -138,7 +141,7 @@ EMMPMFilter::EMMPMFilter()
 , m_EmmpmInitType(EMMPM_Basic)
 , m_Data(EMMPM_Data::New())
 {
-  std::vector<std::vector<double> > tableData(2, std::vector<double>(4));
+  std::vector<std::vector<double>> tableData(2, std::vector<double>(4));
   tableData[0][0] = 0;
   tableData[0][1] = 4.5;
   tableData[0][2] = 128;
@@ -150,13 +153,16 @@ EMMPMFilter::EMMPMFilter()
   m_EMMPMTableData.setTableData(tableData);
 
   QStringList rHeaders;
-  rHeaders << "1" << "2";
+  rHeaders << "1"
+           << "2";
   m_EMMPMTableData.setRowHeaders(rHeaders);
 
   QStringList cHeaders;
-  cHeaders << "Chem. Pntl" << "Min Std Dev" << "Mean" << "Std Dev";
+  cHeaders << "Chem. Pntl"
+           << "Min Std Dev"
+           << "Mean"
+           << "Std Dev";
   m_EMMPMTableData.setColHeaders(cHeaders);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -190,7 +196,9 @@ void EMMPMFilter::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_CONSTRAINED_DOUBLE_FP("Beta E", GradientBetaE, FilterParameter::Parameter, EMMPMFilter));
   {
     QStringList linkedProps;
-    linkedProps << "CurvatureBetaC" << "CurvatureRMax" << "CurvatureEMLoopDelay";
+    linkedProps << "CurvatureBetaC"
+                << "CurvatureRMax"
+                << "CurvatureEMLoopDelay";
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Curvature Penalty", UseCurvaturePenalty, FilterParameter::Parameter, EMMPMFilter, linkedProps));
   }
   parameters.push_back(SIMPL_NEW_CONSTRAINED_DOUBLE_FP("Beta C", CurvatureBetaC, FilterParameter::Parameter, EMMPMFilter));
@@ -199,8 +207,7 @@ void EMMPMFilter::setupFilterParameters()
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Input Attribute Array", InputDataArrayPath, FilterParameter::RequiredArray, EMMPMFilter, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -246,7 +253,7 @@ void EMMPMFilter::initialize()
 
   // Store the values from the table as the previous
   DynamicTableData tableDataObj = getEMMPMTableData();
-  std::vector<std::vector<double> > tableData = tableDataObj.getTableData();
+  std::vector<std::vector<double>> tableData = tableDataObj.getTableData();
   for(std::vector<float>::size_type i = 0; i < getNumClasses(); i++)
   {
     for(uint32_t d = 0; d < m_Data->dims; d++)
@@ -268,15 +275,15 @@ void EMMPMFilter::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getInputDataArrayPath().getDataContainerName());
 
   std::vector<size_t> cDims(1, 1); // We need a single component, gray scale image
-  m_InputImagePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>>(this, getInputDataArrayPath(),
-                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_InputImagePtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_InputImagePtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>>(this, getInputDataArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_InputImagePtr.lock())                                                                          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_InputImage = m_InputImagePtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to Data from the DataArray<T> object */
 
   m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
-  if(nullptr != m_OutputImagePtr.lock())         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_OutputImagePtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_OutputImage = m_OutputImagePtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to Data from the DataArray<T> object */
@@ -312,16 +319,14 @@ void EMMPMFilter::execute()
 
   if(m_UseOneBasedValues && m_OutputImagePtr.lock() != nullptr)
   {
-    UInt8ArrayType::Pointer outputArray =  m_OutputImagePtr.lock();
-    for (int i=0; i<outputArray->getNumberOfTuples(); i++)
+    UInt8ArrayType::Pointer outputArray = m_OutputImagePtr.lock();
+    for(int i = 0; i < outputArray->getNumberOfTuples(); i++)
     {
       uint8_t curVal = outputArray->getValue(i);
       uint8_t newVal = curVal + 1;
       outputArray->setValue(i, newVal);
     }
   }
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -354,7 +359,7 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   m_Data->mpmIterations = getSegmentationLoops();
 
   DynamicTableData tableDataObj = getEMMPMTableData();
-  std::vector<std::vector<double> > tableData = tableDataObj.getTableData();
+  std::vector<std::vector<double>> tableData = tableDataObj.getTableData();
   for(int32_t i = 0; i < m_Data->classes; i++)
   {
     int32_t gray = 255 / (m_Data->classes - 1);
@@ -433,7 +438,7 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EMMPMFilter::handleEmmpmMessage(const AbstractMessage::Pointer &msg)
+void EMMPMFilter::handleEmmpmMessage(const AbstractMessage::Pointer& msg)
 {
   EMMPMFilterMessageHandler msgHandler(this);
   msg->visit(&msgHandler);

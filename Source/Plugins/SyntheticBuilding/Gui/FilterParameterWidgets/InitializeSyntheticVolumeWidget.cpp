@@ -75,28 +75,30 @@
  */
 class ReaderMessageHandler : public AbstractMessageHandler
 {
-  public:
-    explicit ReaderMessageHandler() {}
+public:
+  explicit ReaderMessageHandler()
+  {
+  }
 
-    /**
-     * @brief Dumps the DataContainerReader error messages to the debugger.
-     * @param msg
-     */
-    void processMessage(const FilterErrorMessage* msg) const override
-    {
-      qDebug() << msg->getClassName() << msg->getCode() << msg->getMessageText();
-    }
+  /**
+   * @brief Dumps the DataContainerReader error messages to the debugger.
+   * @param msg
+   */
+  void processMessage(const FilterErrorMessage* msg) const override
+  {
+    qDebug() << msg->getClassName() << msg->getCode() << msg->getMessageText();
+  }
 
-    /**
-     * @brief Dumps the DataContainerReader warning messages to the debugger.
-     * @param msg
-     */
-    void processMessage(const FilterWarningMessage* msg) const override
-    {
-      qDebug() << msg->getClassName() << msg->getCode() << msg->getMessageText();
-    }
+  /**
+   * @brief Dumps the DataContainerReader warning messages to the debugger.
+   * @param msg
+   */
+  void processMessage(const FilterWarningMessage* msg) const override
+  {
+    qDebug() << msg->getClassName() << msg->getCode() << msg->getMessageText();
+  }
 
-  private:
+private:
 };
 
 // -----------------------------------------------------------------------------

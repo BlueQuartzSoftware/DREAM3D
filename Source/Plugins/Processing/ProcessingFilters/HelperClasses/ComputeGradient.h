@@ -61,4 +61,3 @@ private:
   DoubleArrayType::Pointer m_GradX = DoubleArrayType::NullPointer();
   DoubleArrayType::Pointer m_GradY = DoubleArrayType::NullPointer();
 };
-

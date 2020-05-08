@@ -2,7 +2,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "OrientationUtility.h"
 
 #include <QtCore/QTextStream>
@@ -60,7 +59,6 @@ void OrientationUtility::initialize()
 void OrientationUtility::dataCheck()
 {
 }
-
 
 // -----------------------------------------------------------------------------
 //

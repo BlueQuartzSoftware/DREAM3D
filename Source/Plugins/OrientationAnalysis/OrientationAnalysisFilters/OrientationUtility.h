@@ -24,7 +24,7 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -57,7 +57,7 @@ public:
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
-  */
+   */
   QString getBrandingString() const override;
 
   /**
@@ -108,8 +108,6 @@ public:
    */
   void execute() override;
 
-
-
 protected:
   OrientationUtility();
   /**
@@ -123,11 +121,10 @@ protected:
   void initialize();
 
 public:
-  OrientationUtility(const OrientationUtility&) = delete; // Copy Constructor Not Implemented
-  OrientationUtility(OrientationUtility&&) = delete;      // Move Constructor Not Implemented
+  OrientationUtility(const OrientationUtility&) = delete;            // Copy Constructor Not Implemented
+  OrientationUtility(OrientationUtility&&) = delete;                 // Move Constructor Not Implemented
   OrientationUtility& operator=(const OrientationUtility&) = delete; // Copy Assignment Not Implemented
   OrientationUtility& operator=(OrientationUtility&&) = delete;      // Move Assignment Not Implemented
 
 private:
 };
-

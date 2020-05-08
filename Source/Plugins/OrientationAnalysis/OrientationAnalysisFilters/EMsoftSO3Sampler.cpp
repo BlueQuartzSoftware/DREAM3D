@@ -28,7 +28,6 @@
  * ###################################################################
  */
 
-
 #include "EMsoftSO3Sampler.h"
 
 #include <cmath>
@@ -257,7 +256,6 @@ void EMsoftSO3Sampler::dataCheck()
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArraypaths);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -546,7 +544,6 @@ void EMsoftSO3Sampler::execute()
     m_EulerAngles[j * 3 + 1] = static_cast<float>(eu[1]);
     m_EulerAngles[j * 3 + 2] = static_cast<float>(eu[2]);
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -644,7 +641,7 @@ bool EMsoftSO3Sampler::insideCyclicFZ(double* rod, int order)
 
   bool insideFZ = false;
 
-  if(! std::isinf(rod[3]))
+  if(!std::isinf(rod[3]))
   {
     // check the z-component vs. tan(pi/2n)
     insideFZ = fabs(rod[2] * rod[3]) <= LPs::BP[order - 1];

@@ -2,7 +2,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "FindDifferenceMap.h"
 
 #include <QtCore/QTextStream>
@@ -27,7 +26,8 @@
  * @brief The FindDifferenceMapImpl class implements a threaded algorithm that computes the difference map
  * between two arrays
  */
-template <typename DataType> class FindDifferenceMapImpl
+template <typename DataType>
+class FindDifferenceMapImpl
 {
 public:
   FindDifferenceMapImpl(IDataArray::Pointer firstArray, IDataArray::Pointer secondArray, IDataArray::Pointer differenceMap)
@@ -76,7 +76,8 @@ private:
  * @brief The ExecuteFindDifferenceMap class wraps the FindDifferenceMapImpl class so that the
  * EXECUTE_TEMPLATE macro can be used in the main execute() of the Filter
  */
-template <typename DataType> class ExecuteFindDifferenceMap
+template <typename DataType>
+class ExecuteFindDifferenceMap
 {
 public:
   ExecuteFindDifferenceMap() = default;
@@ -161,7 +162,8 @@ void FindDifferenceMap::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename DataType> void validateArrayTypes(AbstractFilter* filter, QVector<IDataArray::Pointer> ptrArray)
+template <typename DataType>
+void validateArrayTypes(AbstractFilter* filter, QVector<IDataArray::Pointer> ptrArray)
 {
   for(QVector<IDataArray::Pointer>::iterator it = ptrArray.begin(); it != ptrArray.end(); ++it)
   {
@@ -183,7 +185,8 @@ template <typename DataType> void validateArrayTypes(AbstractFilter* filter, QVe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename DataType> void warnOnUnsignedTypes(AbstractFilter* filter, IDataArray::Pointer ptr)
+template <typename DataType>
+void warnOnUnsignedTypes(AbstractFilter* filter, IDataArray::Pointer ptr)
 {
   if(TemplateHelpers::CanDynamicCast<DataArray<uint8_t>>()(ptr))
   {
@@ -275,7 +278,6 @@ void FindDifferenceMap::dataCheck()
   getDataContainerArray()->validateNumberOfTuples(this, dataArrays);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -290,7 +292,6 @@ void FindDifferenceMap::execute()
   }
 
   EXECUTE_TEMPLATE(this, ExecuteFindDifferenceMap, m_FirstInputArrayPtr.lock(), m_FirstInputArrayPtr.lock(), m_SecondInputArrayPtr.lock(), m_DifferenceMapPtr.lock())
-
 }
 
 // -----------------------------------------------------------------------------

@@ -25,7 +25,8 @@
 
 #pragma once
 
-namespace TCLAP {
+namespace TCLAP
+{
 
 // We use two empty structs to get compile type specialization
 // function to work
@@ -34,8 +35,9 @@ namespace TCLAP {
  * A value like argument value type is a value that can be set using
  * operator>>. This is the default value type.
  */
-struct ValueLike {
-    typedef ValueLike ValueCategory;
+struct ValueLike
+{
+  typedef ValueLike ValueCategory;
 };
 
 /**
@@ -43,15 +45,18 @@ struct ValueLike {
  * operator=(string). Usefull if the value type contains spaces which
  * will be broken up into individual tokens by operator>>.
  */
-struct StringLike {};
+struct StringLike
+{
+};
 
 /**
  * A class can inherit from this object to make it have string like
  * traits. This is a compile time thing and does not add any overhead
  * to the inherenting class.
  */
-struct StringLikeTrait {
-    typedef StringLike ValueCategory;
+struct StringLikeTrait
+{
+  typedef StringLike ValueCategory;
 };
 
 /**
@@ -59,8 +64,9 @@ struct StringLikeTrait {
  * traits. This is a compile time thing and does not add any overhead
  * to the inherenting class.
  */
-struct ValueLikeTrait {
-    typedef ValueLike ValueCategory;
+struct ValueLikeTrait
+{
+  typedef ValueLike ValueCategory;
 };
 
 /**
@@ -69,11 +75,11 @@ struct ValueLikeTrait {
  * values gets assigned to any particular type during parsing. The two
  * supported types are string like and value like.
  */
-template<typename T>
-struct ArgTraits {
-    typedef typename T::ValueCategory ValueCategory;
-    //typedef ValueLike ValueCategory;
+template <typename T>
+struct ArgTraits
+{
+  typedef typename T::ValueCategory ValueCategory;
+  // typedef ValueLike ValueCategory;
 };
 
-
-} // namespace
+} // namespace TCLAP

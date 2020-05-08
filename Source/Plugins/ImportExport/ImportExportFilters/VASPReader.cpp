@@ -40,9 +40,9 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QTextStream>
 
-#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -188,8 +188,8 @@ void VASPReader::dataCheck()
 
   std::vector<size_t> dims(1, 3);
   tempPath.update(getVertexDataContainerName().getDataContainerName(), getVertexAttributeMatrixName(), getAtomVelocitiesArrayName());
-  m_AtomVelocitiesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(
-      this, tempPath, 0.0, dims, "", DataArrayID31); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AtomVelocitiesPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0.0, dims, "", DataArrayID31); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_AtomVelocitiesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_AtomVelocities = m_AtomVelocitiesPtr.lock()->getPointer(0);
@@ -222,7 +222,6 @@ void VASPReader::dataCheck()
     }
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //

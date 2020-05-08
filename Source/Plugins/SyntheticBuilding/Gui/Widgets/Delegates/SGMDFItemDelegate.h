@@ -157,4 +157,3 @@ private:
   // QWidget* m_Widget;
   //  QAbstractItemModel* m_Model;
 };
-

@@ -246,7 +246,7 @@ QImage PoleFigureImageUtilities::GenerateScalarBar(int imageWidth, int imageHeig
     metrics = QFontMetrics(font);
     QString label("Upper & Lower");
     QString label2 = QString("Samples: ") + QString::number(config.eulers->getNumberOfTuples());
-    fontPixelsHeight = metrics.height();   // Update the font height
+    fontPixelsHeight = metrics.height();                // Update the font height
     int labelWidth = metrics.QFONTMETRICS_WIDTH(label); // Figure out which string is longer (pixel wise)
     if(labelWidth < metrics.QFONTMETRICS_WIDTH(label2))
     {
@@ -284,7 +284,7 @@ QImage PoleFigureImageUtilities::GenerateScalarBar(int imageWidth, int imageHeig
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PoleFigureImageUtilities::PaintSymmetryDirection(const QString& text, QFontMetrics *metrics, QPainter *painter, int x, int y)
+void PoleFigureImageUtilities::PaintSymmetryDirection(const QString& text, QFontMetrics* metrics, QPainter* painter, int x, int y)
 {
 
   QVector<int> offsets;
@@ -310,7 +310,6 @@ void PoleFigureImageUtilities::PaintSymmetryDirection(const QString& text, QFont
   }
   painter->drawText(x, y, mod);
 }
-
 
 // -----------------------------------------------------------------------------
 //

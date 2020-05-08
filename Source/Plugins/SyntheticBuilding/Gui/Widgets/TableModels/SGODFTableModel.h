@@ -180,9 +180,8 @@ private:
   QVector<float> m_Sigmas;
 
 public:
-  SGODFTableModel(const SGODFTableModel&) = delete; // Copy Constructor Not Implemented
-  SGODFTableModel(SGODFTableModel&&) = delete;      // Move Constructor Not Implemented
+  SGODFTableModel(const SGODFTableModel&) = delete;            // Copy Constructor Not Implemented
+  SGODFTableModel(SGODFTableModel&&) = delete;                 // Move Constructor Not Implemented
   SGODFTableModel& operator=(const SGODFTableModel&) = delete; // Copy Assignment Not Implemented
   SGODFTableModel& operator=(SGODFTableModel&&) = delete;      // Move Assignment Not Implemented
 };
-

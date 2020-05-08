@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <cstdio>
 #include <cstdlib>
@@ -56,50 +56,53 @@
  */
 class EMMPMMessageHandler : public AbstractMessageHandler
 {
-  public:
-    explicit EMMPMMessageHandler(EMMPM* emmpmObj) : m_EmmpmObject(emmpmObj) {}
-    virtual ~EMMPMMessageHandler() = default;
+public:
+  explicit EMMPMMessageHandler(EMMPM* emmpmObj)
+  : m_EmmpmObject(emmpmObj)
+  {
+  }
+  virtual ~EMMPMMessageHandler() = default;
 
-    /**
-     * @brief Re-emits incoming GenericProgressMessages as FilterProgressMessages.
-     */
-    void processMessage(const GenericProgressMessage* msg) const override
-    {
-      emit m_EmmpmObject->notifyProgressMessage(msg->getProgressValue(), msg->getMessageText());
-    }
+  /**
+   * @brief Re-emits incoming GenericProgressMessages as FilterProgressMessages.
+   */
+  void processMessage(const GenericProgressMessage* msg) const override
+  {
+    emit m_EmmpmObject->notifyProgressMessage(msg->getProgressValue(), msg->getMessageText());
+  }
 
-    /**
-     * @brief Re-emits incoming GenericStatusMessages as FilterStatusMessages.
-     */
-    void processMessage(const GenericStatusMessage* msg) const override
-    {
-      emit m_EmmpmObject->notifyStatusMessage(msg->getMessageText());
-    }
+  /**
+   * @brief Re-emits incoming GenericStatusMessages as FilterStatusMessages.
+   */
+  void processMessage(const GenericStatusMessage* msg) const override
+  {
+    emit m_EmmpmObject->notifyStatusMessage(msg->getMessageText());
+  }
 
-    /**
-     * @brief Re-emits incoming GenericErrorMessages as FilterErrorMessages.
-     */
-    void processMessage(const GenericErrorMessage* msg) const override
-    {
-      emit m_EmmpmObject->setErrorCondition(msg->getCode(), msg->getMessageText());
-    }
+  /**
+   * @brief Re-emits incoming GenericErrorMessages as FilterErrorMessages.
+   */
+  void processMessage(const GenericErrorMessage* msg) const override
+  {
+    emit m_EmmpmObject->setErrorCondition(msg->getCode(), msg->getMessageText());
+  }
 
-    /**
-     * @brief Re-emits incoming GenericWarningMessages as FilterWarningMessages.
-     */
-    void processMessage(const GenericWarningMessage* msg) const override
-    {
-      emit m_EmmpmObject->setWarningCondition(msg->getCode(), msg->getMessageText());
-    }
+  /**
+   * @brief Re-emits incoming GenericWarningMessages as FilterWarningMessages.
+   */
+  void processMessage(const GenericWarningMessage* msg) const override
+  {
+    emit m_EmmpmObject->setWarningCondition(msg->getCode(), msg->getMessageText());
+  }
 
-  private:
-    EMMPM* m_EmmpmObject = nullptr;
+private:
+  EMMPM* m_EmmpmObject = nullptr;
 
-  public:
-    EMMPMMessageHandler(const EMMPMMessageHandler&) = delete;            // Copy Constructor Not Implemented
-    EMMPMMessageHandler(EMMPMMessageHandler&&) = delete;                 // Move Constructor Not Implemented
-    EMMPMMessageHandler& operator=(const EMMPMMessageHandler&) = delete; // Copy Assignment Not Implemented
-    EMMPMMessageHandler& operator=(EMMPMMessageHandler&&) = delete;      // Move Assignment Not Implemented
+public:
+  EMMPMMessageHandler(const EMMPMMessageHandler&) = delete;            // Copy Constructor Not Implemented
+  EMMPMMessageHandler(EMMPMMessageHandler&&) = delete;                 // Move Constructor Not Implemented
+  EMMPMMessageHandler& operator=(const EMMPMMessageHandler&) = delete; // Copy Assignment Not Implemented
+  EMMPMMessageHandler& operator=(EMMPMMessageHandler&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -309,7 +312,7 @@ void EMMPM::execute()
   em->setStatsDelegate(getStatsDelegate());
 
   // Connect up the Error/Warning/Progress object so the filter can report those things
-  connect(em.get(), &EMCalculation::messageGenerated, [=] (AbstractMessage::Pointer msg) {
+  connect(em.get(), &EMCalculation::messageGenerated, [=](AbstractMessage::Pointer msg) {
     EMMPMMessageHandler msgHandler(this);
     msg->visit(&msgHandler);
   });

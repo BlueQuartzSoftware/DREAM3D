@@ -16,7 +16,6 @@ class LaueOps;
 using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
 using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
 
-
 /**
  * @brief The GenerateFZQuaternions class. See [Filter documentation](@ref generatefzquaternions) for details.
  */
@@ -44,7 +43,7 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -148,7 +147,7 @@ public:
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
-  */
+   */
   QString getBrandingString() const override;
 
   /**
@@ -194,19 +193,17 @@ public:
    */
   void execute() override;
 
-
-
 protected:
   GenerateFZQuaternions();
 
   /**
-  * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-  */
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
   void dataCheck() override;
 
   /**
-  * @brief Initializes all the private instance variables.
-  */
+   * @brief Initializes all the private instance variables.
+   */
   void initialize();
 
 private:
@@ -228,12 +225,12 @@ private:
   DataArrayPath m_GoodVoxelsArrayPath = {};
   DataArrayPath m_FZQuatsArrayPath = {};
 
-  LaueOpsContainer m_OrientationOps;  int32_t m_PhaseWarningCount = 0;
+  LaueOpsContainer m_OrientationOps;
+  int32_t m_PhaseWarningCount = 0;
 
 public:
-  GenerateFZQuaternions(const GenerateFZQuaternions&) = delete; // Copy Constructor Not Implemented
-  GenerateFZQuaternions(GenerateFZQuaternions&&) = delete;      // Move Constructor Not Implemented
+  GenerateFZQuaternions(const GenerateFZQuaternions&) = delete;            // Copy Constructor Not Implemented
+  GenerateFZQuaternions(GenerateFZQuaternions&&) = delete;                 // Move Constructor Not Implemented
   GenerateFZQuaternions& operator=(const GenerateFZQuaternions&) = delete; // Copy Assignment Not Implemented
   GenerateFZQuaternions& operator=(GenerateFZQuaternions&&) = delete;      // Move Assignment Not Implemented
 };
-
