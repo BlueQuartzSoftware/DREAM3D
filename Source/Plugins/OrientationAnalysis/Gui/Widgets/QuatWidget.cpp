@@ -37,7 +37,10 @@
 
 #include <QtGui/QDoubleValidator>
 
+#include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
+
 #include "EbsdLib/Core/OrientationTransformation.hpp"
+
 #include "OrientationUtilityCalculator.h"
 
 // -----------------------------------------------------------------------------
@@ -110,7 +113,7 @@ void QuatWidget::updateData(OrientationUtilityCalculator* calculator)
 // -----------------------------------------------------------------------------
 void QuatWidget::valuesUpdated(const QString& text)
 {
-  QVector<double> values = getValues();
+  std::vector<double> values = getValues();
 
   QuatType quat(values[0], values[1], values[2], values[3]);
   quat = quat.unitQuaternion();
@@ -127,7 +130,8 @@ void QuatWidget::valuesUpdated(const QString& text)
 
   if(errorCode >= 0)
   {
-    emit valuesChanged(values, OrientationRepresentation::Type::Quaternion, false);
+      QVECTOR_FROM_STD_VECTOR(QVector<double>, qvec, values)
+    emit valuesChanged(qvec, OrientationRepresentation::Type::Quaternion, false);
   }
   else
   {
@@ -139,9 +143,9 @@ void QuatWidget::valuesUpdated(const QString& text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<double> QuatWidget::getValues()
+std::vector<double> QuatWidget::getValues()
 {
-  QVector<double> values;
+  std::vector<double> values;
 
   if(q1->text() == "nan")
   {

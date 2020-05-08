@@ -35,6 +35,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "OrientationWidget.h"
 
 #include "ui_QuatWidget.h"
@@ -55,7 +57,7 @@ protected slots:
 private:
   void setupGui();
 
-  QVector<double> getValues();
+  std::vector<double> getValues();
 
 public:
   QuatWidget(const QuatWidget&) = delete;     // Copy Constructor Not Implemented
