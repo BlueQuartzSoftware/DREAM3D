@@ -25,7 +25,7 @@
             "Min": 0
         },
         "InitializationType": 0,
-        "InitializationValue": "[0;2]",
+        "InitializationValue": "0;1",
         "NewArray": {
             "Attribute Matrix Name": "FaceData",
             "Data Array Name": "FaceLabels",
