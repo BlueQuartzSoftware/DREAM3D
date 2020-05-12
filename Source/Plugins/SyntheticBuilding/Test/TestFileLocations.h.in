@@ -1,5 +1,4 @@
-#ifndef _SamplingTestFileLocation_H_
-#define _SamplingTestFileLocation_H_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -49,5 +48,3 @@ namespace UnitTest
   }
 
 }
-
-#endif

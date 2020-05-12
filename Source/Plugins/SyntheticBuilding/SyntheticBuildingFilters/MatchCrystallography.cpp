@@ -103,8 +103,6 @@ MatchCrystallography::MatchCrystallography()
   m_SimOdf = FloatArrayType::NullPointer();
   m_ActualMdf = FloatArrayType::NullPointer();
   m_SimMdf = FloatArrayType::NullPointer();
-
-  m_OrientationOps = LaueOps::GetAllOrientationOps();
 }
 
 // -----------------------------------------------------------------------------
@@ -230,8 +228,6 @@ void MatchCrystallography::initialize()
   m_ActualMdf = FloatArrayType::NullPointer();
   m_SimMdf = FloatArrayType::NullPointer();
   m_MisorientationLists.clear();
-
-  m_OrientationOps = LaueOps::GetAllOrientationOps();
 }
 
 // -----------------------------------------------------------------------------
@@ -577,24 +573,15 @@ void MatchCrystallography::assign_eulers(size_t ensem)
 
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
-  CubicOps cOps;
-  HexagonalOps hOps;
+  std::vector<LaueOps::Pointer> laueOps = LaueOps::GetAllOrientationOps();
 
   for(size_t i = 1; i < totalFeatures; i++)
   {
     phase = m_FeaturePhases[i];
-    if(phase == ensem)
+    if(static_cast<size_t>(phase) == ensem)
     {
       random = static_cast<float>(distribution(generator));
-
-      if(EbsdLib::CrystalStructure::Cubic_High == m_CrystalStructures[phase])
-      {
-        numbins = cOps.getODFSize();
-      };
-      if(EbsdLib::CrystalStructure::Hexagonal_High == m_CrystalStructures[phase])
-      {
-        numbins = hOps.getODFSize();
-      }
+      numbins = laueOps[m_CrystalStructures[phase]]->getODFSize();
 
       // If we get to here and numbins is still zero, then an unknown or unsupported crystal structure
       // was used, so we bail
@@ -610,8 +597,8 @@ void MatchCrystallography::assign_eulers(size_t ensem)
       randx3[0] = distribution(generator);
       randx3[1] = distribution(generator);
       randx3[2] = distribution(generator);
-      OrientationD eulers = m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(randx3.data(), choose);
-      eulers = m_OrientationOps[m_CrystalStructures[ensem]]->randomizeEulerAngles(eulers);
+      OrientationD eulers = laueOps[m_CrystalStructures[ensem]]->determineEulerAngles(randx3.data(), choose);
+      eulers = laueOps[m_CrystalStructures[ensem]]->randomizeEulerAngles(eulers);
       m_FeatureEulerAngles[3 * i] = eulers[0];
       m_FeatureEulerAngles[3 * i + 1] = eulers[1];
       m_FeatureEulerAngles[3 * i + 2] = eulers[2];
@@ -652,7 +639,7 @@ int32_t MatchCrystallography::pick_euler(float random, int32_t numbins)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MatchCrystallography::MC_LoopBody1(int32_t feature, size_t ensem, size_t j, float neighsurfarea, uint32_t sym, const QuatF& q1, const QuatF& q2)
+void MatchCrystallography::MC_LoopBody1(int32_t feature, size_t ensem, size_t j, float neighsurfarea, const QuatF& q1, const QuatF& q2, LaueOps* ops)
 {
   double curmiso1 = 0.0f, curmiso2 = 0.0f, curmiso3 = 0.0f;
   size_t curmisobin = 0, newmisobin = 0;
@@ -675,13 +662,13 @@ void MatchCrystallography::MC_LoopBody1(int32_t feature, size_t ensem, size_t j,
     rod[2] = rod[2] / rod[3];
   }
 
-  curmisobin = m_OrientationOps[sym]->getMisoBin(rod);
+  curmisobin = ops->getMisoBin(rod);
   QuatType qq1(q1[0], q1[1], q1[2], q1[3]);
   QuatType qq2(q2[0], q2[1], q2[2], q2[3]);
-  OrientationD axisAngle = m_OrientationOps[sym]->calculateMisorientation(q1, q2);
+  OrientationD axisAngle = ops->calculateMisorientation(q1, q2);
 
   rod = OrientationTransformation::ax2ro<OrientationD, OrientationD>(axisAngle);
-  newmisobin = m_OrientationOps[sym]->getMisoBin(rod);
+  newmisobin = ops->getMisoBin(rod);
   m_MdfChange = m_MdfChange + (((m_ActualMdf->getValue(curmisobin) - m_SimMdf->getValue(curmisobin)) * (m_ActualMdf->getValue(curmisobin) - m_SimMdf->getValue(curmisobin))) -
                                ((m_ActualMdf->getValue(curmisobin) - (m_SimMdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem]))) *
                                 (m_ActualMdf->getValue(curmisobin) - (m_SimMdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])))));
@@ -693,7 +680,7 @@ void MatchCrystallography::MC_LoopBody1(int32_t feature, size_t ensem, size_t j,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MatchCrystallography::MC_LoopBody2(int32_t feature, size_t ensem, size_t j, float neighsurfarea, uint32_t sym, QuatF& q1, QuatF& q2)
+void MatchCrystallography::MC_LoopBody2(int32_t feature, size_t ensem, size_t j, float neighsurfarea, QuatF& q1, QuatF& q2, LaueOps* ops)
 {
   float curmiso1 = 0.0f, curmiso2 = 0.0f, curmiso3 = 0.0f;
   size_t curmisobin = 0, newmisobin = 0;
@@ -717,11 +704,11 @@ void MatchCrystallography::MC_LoopBody2(int32_t feature, size_t ensem, size_t j,
     rod[2] = rod[2] / rod[3];
   }
 
-  curmisobin = m_OrientationOps[sym]->getMisoBin(rod);
-  OrientationD axisAngle = m_OrientationOps[sym]->calculateMisorientation(q1, q2);
+  curmisobin = ops->getMisoBin(rod);
+  OrientationD axisAngle = ops->calculateMisorientation(q1, q2);
 
   rod = OrientationTransformation::ax2ro<OrientationD, OrientationD>(axisAngle);
-  newmisobin = m_OrientationOps[sym]->getMisoBin(rod);
+  newmisobin = ops->getMisoBin(rod);
   m_MisorientationLists[feature][3 * j] = miso1;
   m_MisorientationLists[feature][3 * j + 1] = miso2;
   m_MisorientationLists[feature][3 * j + 2] = miso3;
@@ -766,14 +753,11 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
   int32_t selectedfeature1 = 0, selectedfeature2 = 0;
   iterations = 0;
   badtrycount = 0;
-  if(EbsdLib::CrystalStructure::Cubic_High == m_CrystalStructures[ensem])
-  {
-    numbins = 18 * 18 * 18;
-  }
-  if(EbsdLib::CrystalStructure::Hexagonal_High == m_CrystalStructures[ensem])
-  {
-    numbins = 36 * 36 * 12;
-  }
+
+  std::vector<LaueOps::Pointer> laueOps = LaueOps::GetAllOrientationOps();
+  uint32_t laueIndex = m_CrystalStructures[ensem];
+  LaueOps::Pointer laueOp = laueOps[laueIndex];
+  numbins = laueOp->getODFSize();
 
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();
   uint64_t startMillis = millis;
@@ -851,7 +835,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
         OrientationD eu(m_FeatureEulerAngles[3 * selectedfeature1], m_FeatureEulerAngles[3 * selectedfeature1 + 1], m_FeatureEulerAngles[3 * selectedfeature1 + 2]);
         rod = OrientationTransformation::eu2ro<OrientationD, OrientationD>(eu);
 
-        g1odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(rod);
+        g1odfbin = laueOp->getOdfBin(rod);
         random = static_cast<float>(distribution(generator));
         int32_t choose = 0;
 
@@ -860,8 +844,8 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
         randx3[0] = distribution(generator);
         randx3[1] = distribution(generator);
         randx3[2] = distribution(generator);
-        OrientationD g1ea = m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(randx3.data(), choose);
-        g1ea = m_OrientationOps[m_CrystalStructures[ensem]]->randomizeEulerAngles(g1ea);
+        OrientationD g1ea = laueOp->determineEulerAngles(randx3.data(), choose);
+        g1ea = laueOp->randomizeEulerAngles(g1ea);
 
         q1 = OrientationTransformation::eu2qu<OrientationD, QuatF>(g1ea);
 
@@ -885,7 +869,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
 
           q2 = OrientationTransformation::eu2qu<OrientationD, QuatF>(eu);
           float neighsurfarea = neighborsurfacearealist[selectedfeature1][j];
-          MC_LoopBody1(selectedfeature1, ensem, j, neighsurfarea, m_CrystalStructures[ensem], q1, q2);
+          MC_LoopBody1(selectedfeature1, ensem, j, neighsurfarea, q1, q2, laueOp.get());
         }
 
         deltaerror = (m_OdfChange / currentodferror) + (m_MdfChange / currentmdferror);
@@ -910,7 +894,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
 
             q2 = OrientationTransformation::eu2qu<OrientationD, QuatF>(eu);
             float neighsurfarea = neighborsurfacearealist[selectedfeature1][j];
-            MC_LoopBody2(selectedfeature1, ensem, j, neighsurfarea, m_CrystalStructures[ensem], q1, q2);
+            MC_LoopBody2(selectedfeature1, ensem, j, neighsurfarea, q1, q2, laueOp.get());
           }
         }
       }
@@ -981,12 +965,12 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
           OrientationD eu(m_FeatureEulerAngles[3 * selectedfeature1], m_FeatureEulerAngles[3 * selectedfeature1 + 1], m_FeatureEulerAngles[3 * selectedfeature1 + 2]);
           OrientationD rod = OrientationTransformation::eu2ro<OrientationD, OrientationD>(eu);
 
-          g1odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(rod);
+          g1odfbin = laueOp->getOdfBin(rod);
           q1.copyInto(m_AvgQuats + selectedfeature2 * 4, 4);
 
           eu = OrientationD(m_FeatureEulerAngles[3 * selectedfeature2], m_FeatureEulerAngles[3 * selectedfeature2 + 1], m_FeatureEulerAngles[3 * selectedfeature2 + 2]);
           rod = OrientationTransformation::eu2ro<OrientationD, OrientationD>(eu);
-          g2odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(rod);
+          g2odfbin = laueOp->getOdfBin(rod);
 
           m_OdfChange =
               ((m_ActualOdf->getValue(g1odfbin) - m_SimOdf->getValue(g1odfbin)) * (m_ActualOdf->getValue(g1odfbin) - m_SimOdf->getValue(g1odfbin))) -
@@ -1017,7 +1001,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
             float neighsurfarea = neighborsurfacearealist[selectedfeature1][j];
             if(neighbor != static_cast<int>(selectedfeature2))
             {
-              MC_LoopBody1(selectedfeature1, ensem, j, neighsurfarea, m_CrystalStructures[ensem], q1, q2);
+              MC_LoopBody1(selectedfeature1, ensem, j, neighsurfarea, q1, q2, laueOp.get());
             }
           }
 
@@ -1035,7 +1019,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
             float neighsurfarea = neighborsurfacearealist[selectedfeature2][j];
             if(neighbor != selectedfeature1)
             {
-              MC_LoopBody1(selectedfeature2, ensem, j, neighsurfarea, m_CrystalStructures[ensem], q1, q2);
+              MC_LoopBody1(selectedfeature2, ensem, j, neighsurfarea, q1, q2, laueOp.get());
             }
           }
 
@@ -1070,7 +1054,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
               float neighsurfarea = neighborsurfacearealist[selectedfeature1][j];
               if(neighbor != selectedfeature2)
               {
-                MC_LoopBody2(selectedfeature1, ensem, j, neighsurfarea, m_CrystalStructures[ensem], q1, q2);
+                MC_LoopBody2(selectedfeature1, ensem, j, neighsurfarea, q1, q2, laueOp.get());
               }
             }
 
@@ -1091,7 +1075,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
               float neighsurfarea = neighborsurfacearealist[selectedfeature2][j];
               if(neighbor != selectedfeature1)
               {
-                MC_LoopBody2(selectedfeature2, ensem, j, neighsurfarea, m_CrystalStructures[ensem], q1, q2);
+                MC_LoopBody2(selectedfeature2, ensem, j, neighsurfarea, q1, q2, laueOp.get());
               }
             }
           }
@@ -1129,7 +1113,10 @@ void MatchCrystallography::measure_misorientations(size_t ensem)
   NeighborList<float>& neighborsurfacearealist = *(m_SharedSurfaceAreaList.lock());
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
-  uint32_t crys1 = 0;
+  std::vector<LaueOps::Pointer> laueOps = LaueOps::GetAllOrientationOps();
+  uint32_t laueIndex = m_CrystalStructures[ensem];
+  LaueOps::Pointer laueOp = laueOps[laueIndex];
+
   int32_t mbin = 0;
 
   m_MisorientationLists.resize(totalFeatures);
@@ -1148,7 +1135,7 @@ void MatchCrystallography::measure_misorientations(size_t ensem)
       }
 
       QuatF q1(m_AvgQuats + i * 4);
-      crys1 = m_CrystalStructures[ensem];
+
       size_t size = 0;
       if(!neighborlist[i].empty() && neighborsurfacearealist[i].size() == neighborlist[i].size())
       {
@@ -1162,13 +1149,13 @@ void MatchCrystallography::measure_misorientations(size_t ensem)
         {
           QuatF q2(m_AvgQuats + nname * 4);
 
-          OrientationD axisAngle = m_OrientationOps[crys1]->calculateMisorientation(q1, q2);
+          OrientationD axisAngle = laueOp->calculateMisorientation(q1, q2);
 
           OrientationD rod = OrientationTransformation::ax2ro<OrientationD, OrientationD>(axisAngle);
           m_MisorientationLists[i][3 * j] = rod[0];
           m_MisorientationLists[i][3 * j + 1] = rod[1];
           m_MisorientationLists[i][3 * j + 2] = rod[2];
-          mbin = m_OrientationOps[crys1]->getMisoBin(rod);
+          mbin = laueOp->getMisoBin(rod);
           if(!m_SurfaceFeatures[i] && (nname > static_cast<int32_t>(i) || m_SurfaceFeatures[nname]))
           {
             float neighsurfarea = neighborsurfacearealist[i][j];

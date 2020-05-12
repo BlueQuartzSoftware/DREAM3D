@@ -50,8 +50,6 @@
 #include "EbsdLib/Core/Quaternion.hpp"
 
 class LaueOps;
-using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
-using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
 
 /**
  * @brief The MatchCrystallography class. See [Filter documentation](@ref matchcrystallography) for details.
@@ -383,7 +381,7 @@ protected:
    * @param q1 Quaterions for the Feature
    * @param q2 Quaterions for the Feature neighbor
    */
-  void MC_LoopBody1(int32_t feature, size_t ensem, size_t j, float neighsurfarea, uint32_t sym, const QuatF& q1, const QuatF& q2);
+  void MC_LoopBody1(int32_t feature, size_t ensem, size_t j, float neighsurfarea, const QuatF& q1, const QuatF& q2, LaueOps* ops);
 
   /**
    * @brief MC_LoopBody2 Reinserts the swapped orientation if the swap did not improve the fit
@@ -395,7 +393,7 @@ protected:
    * @param q1 Quaternions for the Feature
    * @param q2 Quaternions for the Feature neighbor
    */
-  void MC_LoopBody2(int32_t feature, size_t phase, size_t j, float neighsurfarea, uint32_t sym, QuatF& q1, QuatF& q2);
+  void MC_LoopBody2(int32_t feature, size_t phase, size_t j, float neighsurfarea, QuatF& q1, QuatF& q2, LaueOps* ops);
 
   /**
    * @brief matchCrystallography Swaps orientations for Features unitl convergence to
@@ -473,8 +471,6 @@ private:
   FloatArrayType::Pointer m_SimMdf;
 
   std::vector<std::vector<float>> m_MisorientationLists;
-
-  LaueOpsContainer m_OrientationOps;
 
 public:
   MatchCrystallography(const MatchCrystallography&) = delete;            // Copy Constructor Not Implemented
