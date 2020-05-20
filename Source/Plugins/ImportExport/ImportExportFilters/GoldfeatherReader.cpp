@@ -344,7 +344,12 @@ void GoldfeatherReader::execute()
   ScopedFileMonitor fileMonitor(f);
 
   int nNodes = 0;
-  fscanf(f, "%d\n", &nNodes);
+  if(fscanf(f, "%d\n", &nNodes) != 1)
+  {
+    setErrorCondition(-999, "Error reading number of nodes from file");
+    fclose(f);
+    return;
+  }
 
   // Allocate the Nodes, Normals, curvatures and principal direction vectors
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
@@ -359,7 +364,12 @@ void GoldfeatherReader::execute()
   float x, y, z, n0, n1, n2, p1, p2;
   for(int n = 0; n < nNodes; ++n)
   {
-    fscanf(f, "%f %f %f %f %f %f %f %f\n", &x, &y, &z, &n0, &n1, &n2, &p1, &p2);
+    if(fscanf(f, "%f %f %f %f %f %f %f %f\n", &x, &y, &z, &n0, &n1, &n2, &p1, &p2) != 8)
+    {
+      setErrorCondition(-876, "Error Reading the Triangle vertex and normal");
+      fclose(f);
+      return;
+    }
     nodes[n * 3] = x;
     nodes[n * 3 + 1] = y;
     nodes[n * 3 + 2] = z;
@@ -370,7 +380,12 @@ void GoldfeatherReader::execute()
     m_SurfaceMeshPrincipalCurvature2s[n] = p2;
 
     // Read the next line of the data which is the principal direction vectors
-    fscanf(f, "%f %f %f %f %f %f\n", &x, &y, &z, &n0, &n1, &n2);
+    if(fscanf(f, "%f %f %f %f %f %f\n", &x, &y, &z, &n0, &n1, &n2) != 6)
+    {
+      setErrorCondition(-876, "Error Reading the principal direction vector.");
+      fclose(f);
+      return;
+    }
     m_SurfaceMeshPrincipalDirection1s[n * 3 + 0] = x;
     m_SurfaceMeshPrincipalDirection1s[n * 3 + 1] = y;
     m_SurfaceMeshPrincipalDirection1s[n * 3 + 2] = z;
@@ -381,10 +396,10 @@ void GoldfeatherReader::execute()
   }
 
   int nTriangles = 0;
-  int err = fscanf(f, "%d\n", &nTriangles);
-  if(err < 0)
+  if(fscanf(f, "%d\n", &nTriangles) != 1)
   {
     setErrorCondition(-876, "Error Reading the number of Triangles from the file.");
+    fclose(f);
     return;
   }
 
@@ -397,7 +412,12 @@ void GoldfeatherReader::execute()
 
   for(int t = 0; t < nTriangles; ++t)
   {
-    fscanf(f, "%f %f %f %f %f %f", &x, &y, &z, &n0, &n1, &n2);
+    if(fscanf(f, "%f %f %f %f %f %f", &x, &y, &z, &n0, &n1, &n2) != 6)
+    {
+      setErrorCondition(-876, "Error Reading a Triangle from the file.");
+      fclose(f);
+      return;
+    }
     triangles[t * 3] = x;
     triangles[t * 3 + 1] = y;
     triangles[t * 3 + 2] = z;
