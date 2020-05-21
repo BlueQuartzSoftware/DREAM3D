@@ -136,7 +136,7 @@ public:
   bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
   /**
-   *
+   * @brief getItemDelegate
    * @return
    */
   QAbstractItemDelegate* getItemDelegate();
@@ -149,22 +149,43 @@ public:
   std::vector<float> getData(int col);
 
   /**
-   *
-   * @param col
-   * @param row
+   * @brief Parses an "Axes" value
+   * @param row The row that is going to be parsed.
+   * @param h
+   * @param k
+   * @param l
    * @return
    */
-  // virtual float getDataValue(int col, int row);
+  int parseHKLRow(int row, float& h, float& k, float& l) const;
 
-  int parseHKLRow(int row, float& h, float& k, float& l);
+  /**
+   * @brief Sets the data for a column of data
+   * @param col
+   * @param data
+   */
+  void setColumnData(int col, const QVector<float>& data);
 
-  void setColumnData(int col, QVector<float>& data);
+  /**
+   * @brief Sets the data for a row in the table
+   * @param row
+   * @param angle
+   * @param axis
+   * @param weight
+   */
+  void setRowData(int row, float angle, const QString& axis, float weight);
 
-  void setRowData(int row, float angle, QString axis, float weight);
-
+  /**
+   * @brief setInitialValues
+   */
   void setInitialValues();
 
-  void setTableData(QVector<float> angles, QVector<float> axis, QVector<float> weights);
+  /**
+   * @brief Sets all the table data in one function
+   * @param angles The Angles
+   * @param axis The Axis
+   * @param weights The weight values
+   */
+  void setTableData(const QVector<float>& angles, const QVector<float>& axis, const QVector<float>& weights);
 
 private:
   int m_ColumnCount;

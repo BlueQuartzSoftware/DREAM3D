@@ -90,6 +90,7 @@
 #include "SyntheticBuilding/Gui/Widgets/TableModels/SGODFTableModel.h"
 #include "SyntheticBuilding/Gui/Widgets/TextureDialog.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/StatsGeneratorUtilities.h"
+#include "SyntheticBuilding/Gui/Widgets/StatsProgressWidget.h"
 
 #define SHOW_POLE_FIGURES 1
 #define COLOR_POLE_FIGURES 1
@@ -519,11 +520,15 @@ void StatsGenODFWidget::calculateODF()
   {
     return;
   }
-  ProgressDialog* progressDialog = new ProgressDialog();
-  progressDialog->setLabelText("Updating ODF Sampling.... ");
-  progressDialog->show();
-  progressDialog->raise();
-  progressDialog->activateWindow();
+  StatsProgressWidget progress("Calculating/Updating the ODF", "Cancel", nullptr);
+  progress.setLabelText("Please Wait...");
+  progress.setProgTitle("Generating ODF Plot Data...");
+  progress.setVisible(true);
+  progress.show();
+  qApp->processEvents();
+
+  progress.setValue(0);
+  progress.setLabelText("Calculating ODF");
 
   using ContainerType = std::vector<float>;
   ContainerType e1s;
@@ -671,8 +676,6 @@ void StatsGenODFWidget::calculateODF()
     m_PoleFigureLabel->setPixmap(QPixmap::fromImage(image));
     emit dataChanged();
   }
-
-  delete progressDialog;
 }
 
 // -----------------------------------------------------------------------------
@@ -680,7 +683,7 @@ void StatsGenODFWidget::calculateODF()
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::on_addODFTextureBtn_clicked()
 {
-  TextureDialog t(m_CrystalStructure, nullptr);
+  TextureDialog t(m_CrystalStructure, this);
   int r = t.exec();
   if(r == QDialog::Accepted)
   {

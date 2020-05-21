@@ -438,12 +438,14 @@ void PrimaryPhaseWidget::setupGui()
 
   connect(m_ODFWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
   connect(m_ODFWidget, SIGNAL(bulkLoadEvent(bool)), this, SLOT(bulkLoadEvent(bool)));
-  connect(m_AxisODFWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
+  connect(m_ODFWidget, SIGNAL(odfDataChanged()), this, SLOT(dataChanged()));
+  connect(m_ODFWidget, SIGNAL(odfDataChanged()), m_MDFWidget, SLOT(updatePlots()));
+
   connect(m_MDFWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
 
-  connect(m_ODFWidget, SIGNAL(odfDataChanged()), m_MDFWidget, SLOT(updatePlots()));
-  connect(m_FeatureSizeDistWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
+  connect(m_AxisODFWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
 
+  connect(m_FeatureSizeDistWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
   connect(m_FeatureSizeDistWidget, SIGNAL(userEnteredValidData(bool)), m_GenerateDefaultData, SLOT(setEnabled(bool)));
 }
 
@@ -760,7 +762,7 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool p
     }
 
     m_ODFWidget->getOrientationData(primaryStatsData.get(), PhaseType::Type::Primary, preflight);
-    m_MDFWidget->getMisorientationData(primaryStatsData.get(), PhaseType::Type::Primary, !preflight);
+    m_MDFWidget->getMisorientationData(primaryStatsData.get(), PhaseType::Type::Primary, preflight);
 
     err = m_AxisODFWidget->getOrientationData(primaryStatsData.get(), PhaseType::Type::Primary, preflight);
   }

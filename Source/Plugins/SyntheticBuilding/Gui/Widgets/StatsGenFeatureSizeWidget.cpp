@@ -37,14 +37,11 @@
 #include <iostream>
 #include <limits>
 
+#include <QtCore/QDebug>
+
 #include <QtGui/QDoubleValidator>
 #include <QtGui/QMouseEvent>
 #include <QtWidgets/QLineEdit>
-
-// Needed for AxisAngle_t and Crystal Symmetry constants
-#include "EbsdLib/Core/EbsdLibConstants.h"
-
-#include <QtCore/QDebug>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/SIMPLib.h"
@@ -55,6 +52,7 @@
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 
 #include "EbsdLib/Texture/StatsGen.hpp"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "SyntheticBuilding/Gui/Widgets/StatsGenCurveTracker.h"
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"

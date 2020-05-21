@@ -636,7 +636,7 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat,
     }
 
     m_ODFWidget->getOrientationData(primaryStatsData.get(), PhaseType::Type::Primary, preflight);
-    m_MDFWidget->getMisorientationData(primaryStatsData.get(), PhaseType::Type::Primary, !preflight);
+    m_MDFWidget->getMisorientationData(primaryStatsData.get(), PhaseType::Type::Primary, preflight);
 
     err = m_AxisODFWidget->getOrientationData(primaryStatsData.get(), PhaseType::Type::Primary, preflight);
   }
