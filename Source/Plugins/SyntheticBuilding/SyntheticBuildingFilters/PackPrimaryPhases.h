@@ -47,7 +47,7 @@
 
 #include "EbsdLib/LaueOps/OrthoRhombicOps.h"
 
-typedef struct
+struct Feature_t
 {
   float m_Volumes;
   float m_EquivalentDiameters;
@@ -56,7 +56,7 @@ typedef struct
   float m_Omega3s;
   int32_t m_FeaturePhases;
   int32_t m_Neighborhoods;
-} Feature_t;
+};
 
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 

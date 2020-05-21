@@ -50,7 +50,7 @@ using IDataArrayShPtrType = std::shared_ptr<IDataArray>;
 
 class LaueOps;
 
-typedef struct
+struct Precip_t
 {
   float m_Volumes;
   float m_EquivalentDiameters;
@@ -59,7 +59,7 @@ typedef struct
   float m_Omega3s;
   int m_FeaturePhases;
   int m_Neighborhoods;
-} Precip_t;
+};
 
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
