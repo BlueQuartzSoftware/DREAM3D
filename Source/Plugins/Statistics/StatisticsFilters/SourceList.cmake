@@ -45,7 +45,7 @@ set_property(GLOBAL PROPERTY PluginNumFilters ${PluginNumFilters})
 foreach(f ${_PublicFilters} )
   ADD_SIMPL_FILTER(  "Statistics" "Statistics"
                         ${_filterGroupName} ${f}
-                        ${Statistics_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md TRUE ${Statistics_BINARY_DIR})
+                        ${Statistics_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md TRUE)
 endforeach()
 
 
@@ -66,7 +66,7 @@ set(_PrivateFilters
 foreach(f ${_PrivateFilters} )
   ADD_SIMPL_FILTER(  "Statistics" "Statistics"
                         ${_filterGroupName} ${f}
-                        ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE ${${PLUGIN_NAME}_BINARY_DIR})
+                        ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE)
 endforeach()
 
 ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/MomentInvariants2D.h)

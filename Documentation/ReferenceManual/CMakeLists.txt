@@ -108,16 +108,38 @@ if(SIMPL_USE_MKDOCS)
   get_property(DREAM3DDoc_GROUPS GLOBAL PROPERTY DREAM3DDoc_GROUPS)
   foreach(DocGroup ${DREAM3DDoc_GROUPS})
     file(APPEND "${docsCmakeFile}" "# ${DocGroup}\n")
-    if(${DocGroup} STREQUAL "Core" OR ${DocGroup} STREQUAL "Test")
+    if(${DocGroup} STREQUAL "Test")
+      set(FILTER_LIST_FILE "${SIMPLProj_BINARY_DIR}/Documentation/${DocGroup}Filters.txt")
+      set(SOURCE_DOC_DIRECTORY "")
+    elseif(${DocGroup} STREQUAL "Core" )
       set(DREAM3D_${DocGroup}_SOURCE_DIR ${${DocGroup}_SOURCE_DIR})
       string(REPLACE "/${DocGroup}Filters" "/Documentation/SIMPLibFilters" tempstring ${DREAM3D_${DocGroup}_SOURCE_DIR})
-      file(APPEND "${docsCmakeFile}" "file(COPY \n       \"${tempstring}/${DocGroup}Filters\"
-     DESTINATION
-     \"${docsDestDir}/Filters\")\n")
+
+      set(FILTER_LIST_FILE "${SIMPLProj_BINARY_DIR}/Documentation/SIMPLibFilters.txt")
+      set(SOURCE_DOC_DIRECTORY "${tempstring}/${DocGroup}Filters/")
     else()
-      file(APPEND "${docsCmakeFile}" "file(COPY \n      \"${DREAM3D_${DocGroup}_SOURCE_DIR}/Documentation/${DocGroup}Filters\"
-     DESTINATION
-      \"${docsDestDir}/Filters\")\n")
+      set(FILTER_LIST_FILE "${SIMPLProj_BINARY_DIR}/Documentation/${DocGroup}Filters.txt")
+      set(SOURCE_DOC_DIRECTORY "${DREAM3D_${DocGroup}_SOURCE_DIR}/Documentation/${DocGroup}Filters/")
+    endif()
+
+    file(STRINGS "${FILTER_LIST_FILE}" FILTERS)
+    # Pop the first line off the list as that is a header
+    list(REMOVE_AT FILTERS 0)
+    foreach(filter ${FILTERS})
+      string(REPLACE ".h" ".md" filter ${filter})
+      if(EXISTS "${SOURCE_DOC_DIRECTORY}/${filter}")
+        file(APPEND "${docsCmakeFile}" "file(COPY \n      \"${SOURCE_DOC_DIRECTORY}/${filter}\"
+      DESTINATION
+        \"${docsDestDir}/Filters/${DocGroup}_Filters/\")\n")
+      endif()
+    endforeach(filter ${FILTERS})
+
+    # Copy the Images Folder from the source to the destination
+    file(APPEND "${docsCmakeFile}" "# Copy the Images folder for Plugin ${DocGroup}\n")
+    if(EXISTS "${SOURCE_DOC_DIRECTORY}/Images")
+      file(APPEND "${docsCmakeFile}" "file(COPY \n       \"${SOURCE_DOC_DIRECTORY}/Images\"
+      DESTINATION
+      \"${docsDestDir}/Filters/${DocGroup}_Filters\")\n")
     endif()
   endforeach()
 

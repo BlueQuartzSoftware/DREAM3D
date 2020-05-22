@@ -41,7 +41,7 @@ set_property(GLOBAL PROPERTY PluginNumFilters ${PluginNumFilters})
 foreach(f ${_PublicFilters} )
   ADD_SIMPL_FILTER(  "SyntheticBuilding" "SyntheticBuilding"
                         ${_filterGroupName} ${f}
-                        ${SyntheticBuilding_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md TRUE ${SyntheticBuilding_BINARY_DIR})
+                        ${SyntheticBuilding_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md TRUE)
 endforeach()
 
 
@@ -57,7 +57,7 @@ set(_PrivateFilters
 foreach(f ${_PrivateFilters} )
   ADD_SIMPL_FILTER(  "SyntheticBuilding" "SyntheticBuilding"
                         ${_filterGroupName} ${f}
-                        ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE ${${PLUGIN_NAME}_BINARY_DIR})
+                        ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE)
 endforeach()
 
 
