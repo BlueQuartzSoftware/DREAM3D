@@ -375,6 +375,12 @@ QString BinaryNodesTrianglesReader::ClassName()
 }
 
 // -----------------------------------------------------------------------------
+QUuid BinaryNodesTrianglesReader::getUuid() const
+{
+  return QUuid("{310286e3-31d0-5a6f-a564-e393a876ab8b}");
+}
+
+// -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::setSurfaceDataContainerName(const QString& value)
 {
   m_SurfaceDataContainerName = value;

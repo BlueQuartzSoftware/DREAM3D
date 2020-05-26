@@ -148,6 +148,8 @@ public:
    */
   QString getBinaryTrianglesFile() const;
 
+  QUuid getUuid() const override;
+
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
    */

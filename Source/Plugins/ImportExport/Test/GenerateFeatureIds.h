@@ -50,6 +50,11 @@ public:
     return sharedPtr;
   }
 
+  QUuid getUuid() const override
+  {
+    return QUuid("{d3edfa13-32ee-58d1-897b-f7d1660169a1}");
+  }
+
   /**
    * @brief Returns the name of the class for AbstractMessage
    */
@@ -254,6 +259,11 @@ public:
   {
     Pointer sharedPtr(new(Self));
     return sharedPtr;
+  }
+
+  QUuid getUuid() const override
+  {
+    return QUuid("{6d793aa0-eb87-5d1a-9302-08e5beb52824}");
   }
 
   /**
