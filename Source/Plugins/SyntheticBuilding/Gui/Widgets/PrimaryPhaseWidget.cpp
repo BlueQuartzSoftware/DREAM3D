@@ -438,7 +438,7 @@ void PrimaryPhaseWidget::setupGui()
 
   connect(m_ODFWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
   connect(m_ODFWidget, SIGNAL(bulkLoadEvent(bool)), this, SLOT(bulkLoadEvent(bool)));
-  connect(m_ODFWidget, SIGNAL(odfDataChanged()), this, SLOT(dataChanged()));
+  connect(m_ODFWidget, &StatsGenODFWidget::odfDataChanged, this, &PrimaryPhaseWidget::dataChanged);
   connect(m_ODFWidget, SIGNAL(odfDataChanged()), m_MDFWidget, SLOT(updatePlots()));
 
   connect(m_MDFWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
