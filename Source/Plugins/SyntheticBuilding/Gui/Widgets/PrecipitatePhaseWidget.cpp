@@ -393,7 +393,7 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bo
     }
 
     getODFWidget()->getOrientationData(precipitateStatsData.get(), PhaseType::Type::Precipitate, preflight);
-    getMDFWidget()->getMisorientationData(precipitateStatsData.get(), PhaseType::Type::Precipitate, !preflight);
+    getMDFWidget()->getMisorientationData(precipitateStatsData.get(), PhaseType::Type::Precipitate, preflight);
 
     err = getAxisODFWidget()->getOrientationData(precipitateStatsData.get(), PhaseType::Type::Precipitate, preflight);
   }

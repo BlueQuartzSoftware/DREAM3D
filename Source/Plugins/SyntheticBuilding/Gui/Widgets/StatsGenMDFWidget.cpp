@@ -46,6 +46,7 @@
 #include <QtCore/QModelIndex>
 #include <QtCore/QString>
 #include <QtCore/QVector>
+
 #include <QtWidgets/QAbstractItemDelegate>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
@@ -64,10 +65,11 @@
 #include <qwt_scale_widget.h>
 #include <qwt_series_data.h>
 #include <qwt_symbol.h>
-
-#include "EbsdLib/Core/EbsdLibConstants.h"
+#include <qwt_picker_machine.h>
+#include <qwt_plot_picker.h>
 
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Utilities/UTFUtilities.hpp"
 
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 
@@ -87,6 +89,7 @@
 #include "EbsdLib/Texture/Texture.hpp"
 
 #include "SyntheticBuilding/Gui/Widgets/TableModels/SGMDFTableModel.h"
+#include "SyntheticBuilding/Gui/Widgets/StatsProgressWidget.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/StatsGeneratorUtilities.h"
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
@@ -95,8 +98,6 @@
 // -----------------------------------------------------------------------------
 StatsGenMDFWidget::StatsGenMDFWidget(QWidget* parent)
 : QWidget(parent)
-, m_PhaseIndex(-1)
-, m_CrystalStructure(EbsdLib::CrystalStructure::Cubic_High)
 {
   this->setupUi(this);
   this->setupGui();
@@ -110,6 +111,14 @@ StatsGenMDFWidget::~StatsGenMDFWidget()
   if(nullptr != m_MDFTableModel)
   {
     m_MDFTableModel->deleteLater();
+  }
+  if(nullptr != m_PlotPicker)
+  {
+    delete m_PlotPicker;
+  }
+  if(nullptr != m_PlotPickerMachine)
+  {
+    delete m_PlotPickerMachine;
   }
 }
 
@@ -146,8 +155,7 @@ void StatsGenMDFWidget::tableDataChanged(const QModelIndex& topLeft, const QMode
   Q_UNUSED(topLeft);
   Q_UNUSED(bottomRight);
 
-  on_m_MDFUpdateBtn_clicked();
-  emit dataChanged();
+  updatePlots();
 }
 
 // -----------------------------------------------------------------------------
@@ -184,7 +192,9 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
   xAxis.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
   xAxis.setFont(font);
   xAxis.setColor(SVStyle::Instance()->getQLabel_color());
+
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
+  plot->setAxisScale(QwtPlot::xBottom, 0.0, 180.0, 10);
 
   QwtText yAxis(yAxisName);
   yAxis.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
@@ -197,6 +207,11 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 
   plot->setAxisTitle(QwtPlot::xBottom, xAxis);
   plot->setAxisTitle(QwtPlot::yLeft, yAxis);
+
+  QwtPlotPicker* m_PlotPicker = new QwtPlotPicker(plot->xBottom, plot->yLeft, QwtPicker::CrossRubberBand, QwtPicker::AlwaysOn, plot->canvas());
+  QwtPickerMachine* m_PlotPickerMachine = new QwtPickerClickPointMachine();
+  m_PlotPicker->setTrackerPen(QPen(SVStyle::Instance()->getQLabel_color()));
+  m_PlotPicker->setStateMachine(m_PlotPickerMachine);
 }
 
 // -----------------------------------------------------------------------------
@@ -221,12 +236,23 @@ void StatsGenMDFWidget::updatePlots()
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
+  // Convert Degrees to Radians for ODF
   for(size_t i = 0; i < e1s.size(); i++)
   {
     e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
     e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
     e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
   }
+
+  StatsProgressWidget progress("Calculating/Updating the ODF", "Cancel", nullptr);
+  progress.setLabelText("Please Wait...");
+  progress.setProgTitle("Generating ODF Plot Data...");
+  progress.setVisible(true);
+  progress.show();
+  qApp->processEvents();
+
+  progress.setValue(0);
+  progress.setLabelText("Calculating ODF");
 
   std::vector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalStructure, e1s, e2s, e3s, weights, sigmas);
 
@@ -251,23 +277,68 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float>& odf)
   int err = 0;
   int size = 100000;
 
+  StatsProgressWidget progress("Calculating/Updating the MDF", "Cancel", nullptr);
+  progress.setLabelText("Please Wait...");
+  progress.setProgTitle("Generating MDF Plot Data...");
+  progress.setVisible(true);
+  progress.show();
+  qApp->processEvents();
+
   // These are the input vectors
   using ContainerType = std::vector<float>;
-  ContainerType angles;
-  ContainerType axes;
-  ContainerType weights;
 
-  // ContainerType odf = odfInput; // Do this copy because using std::vector is 2x faster than QVector
+  ContainerType angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
+  ContainerType axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
+  ContainerType weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
 
-  angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
-  weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
-  axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
+  // Ensure that the angle is in range of [0,pi] and Convert Angles to Radians
+  for(auto& angle : angles)
+  {
+    while(angle > 180.0)
+    {
+      angle -= 180.0;
+    }
+    while(angle < 0.0)
+    {
+      angle += 180.0;
+    }
+    angle *= SIMPLib::Constants::k_DegToRad;
+  }
+
+  // Normalize the axis to unit norm
+  for(size_t i = 0; i < axes.size(); i = i + 3)
+  {
+    float length = std::sqrt(axes[i] * axes[i] + axes[i + 1] * axes[i + 1] + axes[i + 2] * axes[i + 2]);
+    axes[i] /= length;
+    axes[i + 1] /= length;
+    axes[i + 2] /= length;
+  }
+
+  // Sanity check the Axis_Angle inputs;
+  for(size_t i = 0; i < angles.size(); i++)
+  {
+    OrientationF ax(axes[i * 3], axes[i * 3 + 1], axes[i * 3 + 2], angles[i]);
+    OrientationTransformation::ResultType result = OrientationTransformation::ax_check<OrientationF>(ax);
+    if(result.result < 0)
+    {
+      QMessageBox msgBox;
+      msgBox.setText("The Axis Angle was not normalized and/or the angle was not within the range of [0, Pi]");
+      msgBox.setStandardButtons(QMessageBox::Ok);
+      msgBox.setDefaultButton(QMessageBox::Ok);
+      std::ignore = msgBox.exec();
+
+      return;
+    }
+  }
 
   // These are the output vectors
   int npoints = 36;
   ContainerType x(npoints);
   ContainerType y(npoints);
   ContainerType mdf;
+
+  progress.setValue(1);
+  progress.setLabelText("Calculating and Generating MDF.....");
 
   //// ODF/MDF Update Codes
   switch(m_CrystalStructure)
@@ -360,12 +431,11 @@ void StatsGenMDFWidget::on_addMDFRowBtn_clicked()
   {
     return;
   }
+  QModelIndex index = m_MDFTableModel->index(m_MDFTableModel->rowCount() - 1, 0);
+  m_MDFTableView->setCurrentIndex(index);
   m_MDFTableView->resizeColumnsToContents();
   m_MDFTableView->scrollToBottom();
   m_MDFTableView->setFocus();
-  QModelIndex index = m_MDFTableModel->index(m_MDFTableModel->rowCount() - 1, 0);
-  m_MDFTableView->setCurrentIndex(index);
-  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -388,7 +458,6 @@ void StatsGenMDFWidget::on_deleteMDFRowBtn_clicked()
   {
     m_MDFTableView->resizeColumnsToContents();
   }
-  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -406,34 +475,51 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
   QFileInfo fi(file);
   m_OpenDialogLastFilePath = fi.filePath();
 
-  size_t numMisorients = 0;
+  std::pair<bool, int32_t> isUtf8 = UTFUtilities::IsUtf8(fi.filePath().toStdString());
+
   QString filename = file;
   std::ifstream inFile;
-  inFile.open(filename.toLatin1().data());
+  inFile.open(filename.toLatin1().data(), std::ios::in);
+  if(!inFile.is_open())
+  {
+    return;
+  }
+
+  int32_t numMisorients = 0;
+
+  // If the file is UTF8 with a BOM marker then read the first 3 bytes and dump them.
+  if(isUtf8.first)
+  {
+    char a = '\0';
+    char b = '\0';
+    char c = '\0';
+    inFile >> a >> b >> c;
+  }
 
   inFile >> numMisorients;
 
-  float angle, weight;
-  std::string n1, n2, n3;
-  for(size_t i = 0; i < numMisorients; i++)
+  QVector<float> angles(numMisorients);
+  QVector<float> axis(numMisorients * 3);
+  QVector<float> weights(numMisorients);
+
+  float angle, weight, n1, n2, n3;
+  for(int32_t i = 0; i < numMisorients - 1; i++)
   {
     inFile >> angle >> n1 >> n2 >> n3 >> weight;
-
-    QString axis = QString("<" + QString::fromStdString(n1) + "," + QString::fromStdString(n2) + "," + QString::fromStdString(n3) + ">");
-
-    if(!m_MDFTableModel->insertRow(m_MDFTableModel->rowCount()))
-    {
-      return;
-    }
-    int row = m_MDFTableModel->rowCount() - 1;
-    m_MDFTableModel->setRowData(row, angle, axis, weight);
-
-    m_MDFTableView->resizeColumnsToContents();
-    m_MDFTableView->scrollToBottom();
-    m_MDFTableView->setFocus();
-    QModelIndex index = m_MDFTableModel->index(m_MDFTableModel->rowCount() - 1, 0);
-    m_MDFTableView->setCurrentIndex(index);
+    angles[i] = angle;
+    axis[i * 3] = n1;
+    axis[i * 3 + 1] = n2;
+    axis[i * 3 + 2] = n3;
+    weights[i] = weight;
   }
+
+  m_MDFTableModel->setTableData(angles, axis, weights);
+
+  m_MDFTableView->resizeColumnsToContents();
+  m_MDFTableView->scrollToBottom();
+  m_MDFTableView->setFocus();
+  QModelIndex index = m_MDFTableModel->index(m_MDFTableModel->rowCount() - 1, 0);
+  m_MDFTableView->setCurrentIndex(index);
 }
 
 // -----------------------------------------------------------------------------
@@ -460,7 +546,7 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
   }
 
   QVector<float> axis;
-  QVector<float> angle;
+  QVector<float> angles;
   QVector<float> weights;
 
   for(int i = 0; i < arrays.size(); i++)
@@ -468,25 +554,30 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
     if(arrays[i]->getName().compare(SIMPL::StringConstants::Axis) == 0)
     {
       axis = QVector<float>(static_cast<int>(arrays[i]->getSize())); // This one is 3xn in size
-      ::memcpy(&(axis.front()), arrays[i]->getVoidPointer(0), sizeof(float) * axis.size());
+      std::copy_n(arrays[i]->cbegin(), axis.size(), axis.begin());
     }
 
     if(arrays[i]->getName().compare(SIMPL::StringConstants::Angle) == 0)
     {
-      angle = QVector<float>(static_cast<int>(arrays[i]->getNumberOfTuples()));
-      ::memcpy(&(angle.front()), arrays[i]->getVoidPointer(0), sizeof(float) * angle.size());
+      angles = QVector<float>(static_cast<int>(arrays[i]->getNumberOfTuples()));
+      std::copy_n(arrays[i]->cbegin(), angles.size(), angles.begin());
     }
 
     if(arrays[i]->getName().compare(SIMPL::StringConstants::Weight) == 0)
     {
       weights = QVector<float>(static_cast<int>(arrays[i]->getNumberOfTuples()));
-      ::memcpy(&(weights.front()), arrays[i]->getVoidPointer(0), sizeof(float) * weights.size());
+      std::copy_n(arrays[i]->cbegin(), weights.size(), weights.begin());
     }
+  }
+  // Convert from Radians to Degrees
+  for(float& a : angles)
+  {
+    a *= static_cast<float>(SIMPLib::Constants::k_RadToDeg);
   }
   if(!arrays.empty())
   {
     // Load the data into the table model
-    m_MDFTableModel->setTableData(angle, axis, weights);
+    m_MDFTableModel->setTableData(angles, axis, weights);
   }
 
   on_m_MDFUpdateBtn_clicked();
@@ -512,17 +603,24 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, PhaseType::Ty
   odf_weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
+  // Convert from Degrees to Radians
   for(size_t i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
-    e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
-    e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    e1s[i] *= static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    e2s[i] *= static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    e3s[i] *= static_cast<float>(SIMPLib::Constants::k_PiOver180);
   }
 
   std::vector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalStructure, e1s, e2s, e3s, odf_weights, sigmas, !preflight);
 
   // Now use the ODF data to generate the MDF data ************************************************
   std::vector<float> angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
+  // Convert from Degrees to Radians
+  for(float& a : angles)
+  {
+    a *= static_cast<float>(SIMPLib::Constants::k_DegToRad);
+  }
+
   std::vector<float> weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
   std::vector<float> axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
 

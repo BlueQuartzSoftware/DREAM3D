@@ -194,13 +194,22 @@ Choice of delimiter can be Comma (,), semicolon (;), space ( ), colon (:) or tab
 
 ### MDF Section ###
 
-This sub-tab will display the baseline _misorientation distribution function_ (MDF) for the generated ODF.  The  implemented algorithm proceeds by randomly sampling pairs of orientations from the ODF and calculating the misorientation (axis-angle only). Only the angle is plotted in the misorientation distribution plot.  The user can also add axis-angle pairs to increase in weight.
+This sub-tab will display the baseline _misorientation distribution function_ (MDF) for the generated ODF.  The  implemented algorithm proceeds by randomly sampling pairs of orientations from the ODF and calculating the misorientation (axis-angle only). Only the angle is plotted in the misorientation distribution plot.  The user can also add axis-angle pairs to weight the sampling in favor of a particular misorientation.
 
 ![MDF GUI](Images/SG_MDF_Plot.png)
 
-+ **Angle**: The angle of the misorientation to increase in weight
-+ **Axis**: The axis of the misorientation to increase in weight.  If the crystal structure being used for the phase is Hexagonal, then this axis is in the 3-index, orthogonal convention, not the true (hkil) convention
++ **Angle**: The angle in **Degrees** of the misorientation to increase in weight
++ **Axis**: The axis of the misorientation to increase in weight.  If the crystal structure being used for the phase is Hexagonal, then this axis is in the 3-index, orthogonal convention, not the true (_hkil_) convention. For other Laue systems the user can use either the HKL integers or a normalized HKL vector.
 + **Weight**: The weight in units of MRD (multiples of random distribution) for the entered misorientation
+
+The option to load each row of data from a file is also allowed. The data in the input file must be of the following form:
+
+        [NUMBER OF ENTRIES]
+        [ANGLE] [AXIS H] [AXIS K] [AXIS L] [WEIGHT]
+
+Note that the text file is **not** allowed to have any comment lines or extra lines.
+
+Note that during the computation the Axis-Angle will be sanity checked to ensure that the angle is within the [0.0, Pi] range and the *axis* part is normalized.
 
 ## Axis ODF Tab ##
 
@@ -210,12 +219,12 @@ This tab works in a similar fashion to the ODF tab in that the user can enter va
 
 ### Weights and Spreads Section (Axis ODF) ###
 
-+ **Euler 1-3**: The Euler angles that define an orientation that the user would like to increase in weight
++ **Euler 1-3**: The Euler angles that define an orientation that the user would like to increase in weight given in **Degrees** and in the **Bunge** convention
 + **Weight**: The weight in units of MRD (multiples of random distribution) for the entered orientation
 + **Sigma**: Spread to use in blurring out the orientation chosen. The value corresponds to the number of bins in Rodrigues (orientation) space it takes for the MRD value entered in the _Weight_ column to reduce to 0.0 (decreasing quadratically from the bin of the entered orientation)
 + **Calculate ODF**: Builds the ODF and then creates pole figures (PFs) for the user to inspect
 
-+ Three PFs are formed, which correspond to the location of the 3 principal axes of the grains to be generated (i.e., A > B > C)
++ Three polefigures are formed, which correspond to the location of the 3 principal axes of the grains to be generated (i.e., A > B > C)
 
 ## Required Geometry ##
 

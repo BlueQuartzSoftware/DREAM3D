@@ -36,6 +36,7 @@
 #pragma once
 
 #include "ui_StatsGenMDFWidget.h"
+
 #include <QtWidgets/QWidget>
 
 #include "SIMPLib/Common/Constants.h"
@@ -44,11 +45,16 @@
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/StatsData.h"
 #include "SIMPLib/StatsData/TransformationStatsData.h"
+
+#include "EbsdLib/Core/EbsdLibConstants.h"
+
 #include "SyntheticBuilding/Gui/Widgets/TableModels/SGODFTableModel.h"
 
 class SGMDFTableModel;
 class QwtPlot;
 class QwtPlotCurve;
+class QwtPlotPicker;
+class QwtPickerMachine;
 
 /**
  * @class StatsGenMDFWidget StatsGenMDFWidget.h StatsGenerator/StatsGenMDFWidget.h
@@ -66,6 +72,13 @@ public:
   virtual ~StatsGenMDFWidget();
 
   void setupGui();
+
+  /**
+   * @brief initQwtPlot
+   * @param xAxisName
+   * @param yAxisName
+   * @param plot
+   */
   void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
 
   /**
@@ -99,8 +112,19 @@ public:
   SGODFTableModel* getODFTableModel() const;
 
   int getMisorientationData(StatsData* statsData, PhaseType::Type phaseType, bool preflight = false);
+
+  /**
+   * @brief extractStatsData
+   * @param index
+   * @param statsData
+   * @param phaseType
+   */
   void extractStatsData(int index, StatsData* statsData, PhaseType::Type phaseType);
 
+  /**
+   * @brief tableModel
+   * @return
+   */
   SGMDFTableModel* tableModel();
 
 public slots:
@@ -112,9 +136,15 @@ protected slots:
   void on_m_MDFUpdateBtn_clicked();
   void on_loadMDFBtn_clicked();
 
+  /**
+   * @brief tableDataChanged
+   * @param topLeft
+   * @param bottomRight
+   */
   void tableDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight);
 
 signals:
+
   void dataChanged();
 
 protected:
@@ -123,11 +153,14 @@ protected:
 private:
   SGODFTableModel* m_ODFTableModel = nullptr;
 
-  int m_PhaseIndex = {};
-  unsigned int m_CrystalStructure = {};
+  int m_PhaseIndex = {-1};
+  unsigned int m_CrystalStructure = {EbsdLib::CrystalStructure::Cubic_High};
 
   SGMDFTableModel* m_MDFTableModel = nullptr;
   QwtPlotCurve* m_PlotCurve = nullptr;
+
+  QwtPlotPicker* m_PlotPicker = nullptr;
+  QwtPickerMachine* m_PlotPickerMachine = nullptr;
 
   QString m_OpenDialogLastFilePath; // Must be last in the list
 
