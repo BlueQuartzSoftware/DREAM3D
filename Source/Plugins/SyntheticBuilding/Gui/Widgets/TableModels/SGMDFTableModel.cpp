@@ -314,7 +314,6 @@ std::vector<float> SGMDFTableModel::getData(int col)
   if(col == Axis)
   {
     int count = rowCount();
-    QVector<float> values;
     float h = 0.0;
     float k = 0.0;
     float l = 0.0;
@@ -324,12 +323,11 @@ std::vector<float> SGMDFTableModel::getData(int col)
       err = parseHKLRow(r, h, k, l);
       if(err >= 0)
       {
-        values.push_back(h);
-        values.push_back(k);
-        values.push_back(l);
+        data.push_back(h);
+        data.push_back(k);
+        data.push_back(l);
       }
     }
-    return std::vector<float>(values.begin(), values.end());
   }
   return data;
 }
@@ -344,7 +342,15 @@ int SGMDFTableModel::parseHKLRow(int row, float& h, float& k, float& l) const
   hklStr.remove(0, 1); // Remove the front "<" character
   bool ok = false;
   h = hklStr.section(',', 0, 0).toFloat(&ok);
+  if(ok)
+  {
+    return 0;
+  }
   k = hklStr.section(',', 1, 1).toFloat(&ok);
+  if(ok)
+  {
+    return 0;
+  }
   l = hklStr.section(',', 2, 2).toFloat(&ok);
   if(ok)
   {
@@ -394,7 +400,7 @@ void SGMDFTableModel::setTableData(const QVector<float>& angles, const QVector<f
     m_Weights = weights;
 
     m_Axis.clear();
-    float h, k, l;
+    float h = 0.0f, k = 0.0f, l = 0.0f;
     for(int i = 0; i < axis.size(); ++i)
     {
       h = axis[i];

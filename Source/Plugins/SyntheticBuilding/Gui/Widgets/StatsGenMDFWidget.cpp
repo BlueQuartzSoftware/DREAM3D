@@ -296,22 +296,22 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float>& odf)
   {
     while(angle > 180.0)
     {
-      angle = angle - 180.0;
+      angle -= 180.0;
     }
     while(angle < 0.0)
     {
-      angle = angle + 180.0;
+      angle += 180.0;
     }
-    angle = angle * SIMPLib::Constants::k_DegToRad;
+    angle *= SIMPLib::Constants::k_DegToRad;
   }
 
   // Normalize the axis to unit norm
   for(size_t i = 0; i < axes.size(); i = i + 3)
   {
     float length = std::sqrt(axes[i] * axes[i] + axes[i + 1] * axes[i + 1] + axes[i + 2] * axes[i + 2]);
-    axes[i] = axes[i] / length;
-    axes[i + 1] = axes[i + 1] / length;
-    axes[i + 2] = axes[i + 2] / length;
+    axes[i] /= length;
+    axes[i + 1] /= length;
+    axes[i + 2] /= length;
   }
 
   // Sanity check the Axis_Angle inputs;
@@ -490,7 +490,9 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
   // If the file is UTF8 with a BOM marker then read the first 3 bytes and dump them.
   if(isUtf8.first)
   {
-    char a, b, c;
+    char a = '\0';
+    char b = '\0';
+    char c = '\0';
     inFile >> a >> b >> c;
   }
 
@@ -552,25 +554,25 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
     if(arrays[i]->getName().compare(SIMPL::StringConstants::Axis) == 0)
     {
       axis = QVector<float>(static_cast<int>(arrays[i]->getSize())); // This one is 3xn in size
-      ::memcpy(axis.data(), arrays[i]->getVoidPointer(0), sizeof(float) * axis.size());
+      std::copy_n(arrays[i]->cbegin(), axis.size(), axis.begin());
     }
 
     if(arrays[i]->getName().compare(SIMPL::StringConstants::Angle) == 0)
     {
       angles = QVector<float>(static_cast<int>(arrays[i]->getNumberOfTuples()));
-      ::memcpy(angles.data(), arrays[i]->getVoidPointer(0), sizeof(float) * angles.size());
+      std::copy_n(arrays[i]->cbegin(), angles.size(), angles.begin());
     }
 
     if(arrays[i]->getName().compare(SIMPL::StringConstants::Weight) == 0)
     {
       weights = QVector<float>(static_cast<int>(arrays[i]->getNumberOfTuples()));
-      ::memcpy(weights.data(), arrays[i]->getVoidPointer(0), sizeof(float) * weights.size());
+      std::copy_n(arrays[i]->cbegin(), weights.size(), weights.begin());
     }
   }
   // Convert from Radians to Degrees
   for(float& a : angles)
   {
-    a = a * static_cast<float>(SIMPLib::Constants::k_RadToDeg);
+    a *= static_cast<float>(SIMPLib::Constants::k_RadToDeg);
   }
   if(!arrays.empty())
   {
@@ -604,9 +606,9 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, PhaseType::Ty
   // Convert from Degrees to Radians
   for(size_t i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
-    e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
-    e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    e1s[i] *= static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    e2s[i] *= static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    e3s[i] *= static_cast<float>(SIMPLib::Constants::k_PiOver180);
   }
 
   std::vector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalStructure, e1s, e2s, e3s, odf_weights, sigmas, !preflight);
@@ -616,7 +618,7 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, PhaseType::Ty
   // Convert from Degrees to Radians
   for(float& a : angles)
   {
-    a = a * static_cast<float>(SIMPLib::Constants::k_DegToRad);
+    a *= static_cast<float>(SIMPLib::Constants::k_DegToRad);
   }
 
   std::vector<float> weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
