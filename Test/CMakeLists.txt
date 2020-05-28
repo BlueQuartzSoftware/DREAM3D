@@ -158,6 +158,8 @@ if(SIMPL_ENABLE_PYTHON)
     "Threshold2_MoveData"
     "TxCopper_Exposed"
     "TxCopper_Unexposed"
+    "BatchProcssing_EBSD"
+    "CreatePipeline"
 
     "EBSD/Reconstruction/01_SmallIN100_Archive"
     "EBSD/Reconstruction/02_SmallIN100_Initial_Visualization"
