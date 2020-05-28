@@ -1,65 +1,39 @@
-/* ============================================================================
- * Copyright (c) 2009-2016 BlueQuartz Software, LLC
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
- * contributors may be used to endorse or promote products derived from this software
- * without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * The code contained herein was partially funded by the followig contracts:
- *    United States Air Force Prime Contract FA8650-07-D-5800
- *    United States Air Force Prime Contract FA8650-10-D-5210
- *    United States Prime Contract Navy N00173-07-C-2068
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+/*
+ * Your License or Copyright can go here
+ */
 
 #pragma once
 
 #include <memory>
 
-#include "SIMPLib/CoreFilters/FileReader.h"
+#include <QtCore/QFile>
+#include <QtCore/QScopedPointer>
+#include <QtGui/QAbstractUndoItem>
+#include <QtWidgets/QWidget>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
-
-// our PIMPL private class
-class PhReaderPrivate;
 
 #include "ImportExport/ImportExportDLLExport.h"
 
+// our PIMPL private class
+class ImportOnscaleTableFilePrivate;
+
 /**
- * @brief The PhReader class. See [Filter documentation](@ref phreader) for details.
+ * @brief The ImportOnscaleTableFile class. See [Filter documentation](@ref importonscaletablefile) for details.
  */
-class ImportExport_EXPORT PhReader : public FileReader
+class ImportExport_EXPORT ImportOnscaleTableFile : public AbstractFilter
 {
   Q_OBJECT
 
-  // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(PhReader SUPERCLASS FileReader)
+  // clang-format off
+  PYB11_BEGIN_BINDINGS(ImportOnscaleTableFile SUPERCLASS AbstractFilter)
   PYB11_FILTER()
-  PYB11_SHARED_POINTERS(PhReader)
-  PYB11_FILTER_NEW_MACRO(PhReader)
+  PYB11_SHARED_POINTERS(ImportOnscaleTableFile)
+  PYB11_FILTER_NEW_MACRO(ImportOnscaleTableFile)
+  
   PYB11_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
@@ -67,39 +41,32 @@ class ImportExport_EXPORT PhReader : public FileReader
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(bool FileWasRead READ getFileWasRead WRITE setFileWasRead)
   PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
-  PYB11_END_BINDINGS()
-  // End Python bindings declarations
 
-  Q_DECLARE_PRIVATE(PhReader)
+  PYB11_END_BINDINGS()
+  // clang-format on
+
+  Q_DECLARE_PRIVATE(ImportOnscaleTableFile)
 public:
-  using Self = PhReader;
+  using Self = ImportOnscaleTableFile;
   using Pointer = std::shared_ptr<Self>;
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-
-  /**
-   * @brief Returns a NullPointer wrapped by a shared_ptr<>
-   * @return
-   */
   static Pointer NullPointer();
 
-  /**
-   * @brief Creates a new object wrapped in a shared_ptr<>
-   * @return
-   */
   static Pointer New();
 
   /**
-   * @brief Returns the name of the class for PhReader
+   * @brief Returns the name of the class for ImportOnscaleTableFile
    */
   QString getNameOfClass() const override;
+
   /**
-   * @brief Returns the name of the class for PhReader
+   * @brief Returns the name of the class for ImportOnscaleTableFile
    */
   static QString ClassName();
 
-  ~PhReader() override;
+  ~ImportOnscaleTableFile() override;
 
   /**
    * @brief Setter property for VolumeDataContainerName
@@ -259,34 +226,28 @@ public:
   void setupFilterParameters() override;
 
   /**
-   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
-
-  /**
    * @brief execute Reimplemented from @see AbstractFilter class
    */
   void execute() override;
 
 public slots:
-
   /**
    * @brief flushCache Clears the input file cache
    */
   void flushCache();
 
 protected:
-  PhReader();
+  ImportOnscaleTableFile();
 
   /**
    * @brief readHeader Reimplemented from @see FileReader class
    */
-  virtual int32_t readHeader();
+  int32_t readHeader();
 
   /**
    * @brief readFile Reimplemented from @see FileReader class
    */
-  virtual int32_t readFile();
+  int32_t readFile();
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -298,31 +259,26 @@ protected:
    */
   void initialize();
 
-  /**
-   * @brief updateCellInstancePointers Updates raw cell pointers
-   */
-  void updateCellInstancePointers();
-
 private:
-  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  std::weak_ptr<Int32ArrayType> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
 
-  DataArrayPath m_VolumeDataContainerName = {};
-  QString m_CellAttributeMatrixName = {};
-  QString m_InputFile = {};
-  FloatVec3Type m_Origin = {};
-  FloatVec3Type m_Spacing = {};
-  bool m_FileWasRead = {};
-  QString m_FeatureIdsArrayName = {};
+  DataArrayPath m_VolumeDataContainerName = {"DataContainer", "", ""};
+  QString m_CellAttributeMatrixName = {"Table Data"};
+  QString m_InputFile = {""};
+  FloatVec3Type m_Origin = {0.0f, 0.0f, 0.0f};
+  FloatVec3Type m_Spacing = {1.0f, 1.0f, 1.0f};
+  bool m_FileWasRead = {false};
+  QString m_FeatureIdsArrayName = {"Material"};
 
-  QScopedPointer<PhReaderPrivate> const d_ptr;
+  QScopedPointer<ImportOnscaleTableFilePrivate> const d_ptr;
 
-  size_t m_Dims[3];
-  FILE* m_InStream;
+  SizeVec3Type m_Dims = {0, 0, 0};
+  QFile m_InStream;
 
 public:
-  PhReader(const PhReader&) = delete;            // Copy Constructor Not Implemented
-  PhReader(PhReader&&) = delete;                 // Move Constructor Not Implemented
-  PhReader& operator=(const PhReader&) = delete; // Copy Assignment Not Implemented
-  PhReader& operator=(PhReader&&) = delete;      // Move Assignment Not Implemented
+  ImportOnscaleTableFile(const ImportOnscaleTableFile&) = delete;            // Copy Constructor Not Implemented
+  ImportOnscaleTableFile& operator=(const ImportOnscaleTableFile&) = delete; // Copy Assignment Not Implemented
+  ImportOnscaleTableFile(ImportOnscaleTableFile&&) = delete;                 // Move Constructor Not Implemented
+  ImportOnscaleTableFile& operator=(ImportOnscaleTableFile&&) = delete;      // Move Assignment Not Implemented
 };

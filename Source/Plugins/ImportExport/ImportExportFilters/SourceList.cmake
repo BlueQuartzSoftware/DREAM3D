@@ -23,6 +23,7 @@ set(_PublicFilters
   AvizoUniformCoordinateWriter
   DxReader
   DxWriter
+  ImportOnscaleTableFile
   FeatureInfoReader
   GBCDTriangleDumper
   LosAlamosFFTWriter

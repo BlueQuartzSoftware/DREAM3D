@@ -37,7 +37,6 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QFileInfo>
 #include <QtCore/QTextStream>
-
 #include <QtCore/QDebug>
 
 #include "SIMPLib/Common/Constants.h"
