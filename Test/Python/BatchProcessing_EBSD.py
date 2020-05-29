@@ -40,7 +40,7 @@ def batch_process():
         err = orientationanalysispy.rotate_euler_ref_frame(dca, simpl.FloatVec3([0.0, 0.0, 1.0]), 90.0,
                                                         simpl.DataArrayPath('EBSD Scan', 'Scan Data', 'EulerAngles'))
         if err < 0:
-            print('RotateEulerRefFrame ErrorCondition: %d' % err)
+            print(f'RotateEulerRefFrame ErrorCondition: {err}')
 
         # Threshold Objects
         err = sc.MultiThresholdObjects(dca, 'Mask', [('EBSD Scan', 'Scan Data', 'Confidence Index', '>', 0.1)])
