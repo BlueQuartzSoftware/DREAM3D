@@ -94,7 +94,7 @@ def CreatePipeline():
     pipeline.pushBack(filter)
 
     # Write out a .dream3d file which will also save a copy of the pipeline as JSON
-    output_file = "{}/Data/Output/Python_Examples/CreatePipeline/Small_IN100_1.dream3d".format(sd.GetBuildDirectory())
+    output_file = f'{sd.GetBuildDirectory()}/Data/Output/Python_Examples/CreatePipeline/Small_IN100_1.dream3d'
     filter = simpl.DataContainerWriter.New()
     filter.OutputFile = output_file
     pipeline.pushBack(filter)
