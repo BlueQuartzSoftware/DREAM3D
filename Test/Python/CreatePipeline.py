@@ -3,6 +3,10 @@ This example shows building up an actual pipeline object with filters,
 preflighting that pipeline and then executing that pipeline.
 The important note here is that none of the filters run until the pipeline.run()
 is executed.
+
+This example also shows reading in a pipeline from a file and executing that pipeline.
+** IMPORTANT: If you are blindly reading a pipeline from a file then you should also be
+** import'ing all of the modules.
 '''
 import numpy as np
 
@@ -10,14 +14,17 @@ import simpl
 import simplpy as d3d
 import simpl_helpers as sc
 import simpl_test_dirs as sd
+
 import orientationanalysis
 import orientationanalysispy
 import itkimageprocessing
 
-def CreatePipeline():
-    pipeline = simpl.FilterPipeline()
 
+
+def CreatePipeline():
+    print("======== Construct Pipeline")
     #Create an Observer to report errors/progress from the executing pipeline
+    pipeline = simpl.FilterPipeline()
     obs = simpl.Observer()
     pipeline.addObserver(obs)
 
@@ -100,7 +107,29 @@ def CreatePipeline():
     dca = pipeline.run()
     print(f'Execution error = {pipeline.ErrorCode}')
 
+    pwriter = simpl.JsonFilterParametersWriter()
+    err = pwriter.exportPipelineToFile(pipeline, sd.GetTestTempDirectory() + "/out.json", "Name of Pipeline", True, obs)
+
+
+def ReadPipeline():
+    print("======== ReadPipeline")
+    obs = simpl.IObserver()
+    preader = simpl.JsonFilterParametersReader()
+    pipeline = preader.readPipelineFromFile(sd.GetTestTempDirectory() + "/out.json", obs)
+    print(f"Filters in Pipeline: {pipeline.size()}")
+
+    # We can preflight the pipeline at this point
+    pipeline.preflightPipeline()
+    print(f'Preflight error = {pipeline.ErrorCode}')
+
+    # We can now run the built up pipeline
+    dca = pipeline.run()
+    print(f'Execution error = {pipeline.ErrorCode}')
+
 if __name__ == '__main__':
     print('Starting the Pipeline construction example...')
+
     CreatePipeline()
+    ReadPipeline()
+
     print('[CreatePipeline] Complete')
