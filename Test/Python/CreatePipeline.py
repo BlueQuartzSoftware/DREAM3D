@@ -86,7 +86,7 @@ def CreatePipeline():
 
     # ITK Image Writer
     image_file = "{}/Data/Output/Python_Examples/CreatePipeline/Small_IN100_1.png".format(sd.GetBuildDirectory())
-    filter = itkimageprocessing.ITKImageWriter.New()
+    filter = itkimageprocessing.ITKImageWriter()
     filter.registerImageIOFactories()
     filter.FileName = image_file
     filter.ImageArrayPath = simpl.DataArrayPath(data_container_name, cell_attribute_matrix_name, 'IPFColor')
