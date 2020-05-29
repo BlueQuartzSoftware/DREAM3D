@@ -45,7 +45,7 @@ def batch_process():
         # Threshold Objects
         err = sc.MultiThresholdObjects(dca, 'Mask', [('EBSD Scan', 'Scan Data', 'Confidence Index', '>', 0.1)])
         if err < 0:
-            print('MultiThresholdObjects ErrorCondition: %d' % err)
+            print(f'MultiThresholdObjects ErrorCondition: {err}')
 
         # Generate IPF Colors
         err = orientationanalysispy.generate_ipf_colors(dca, simpl.FloatVec3([0, 0, 1]),
