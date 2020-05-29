@@ -60,7 +60,7 @@ def batch_process():
         # ITK Image Writer
         image_file = "{}/Data/Output/Examples/Small_IN100_Batch_{}.png".format(sd.GetBuildDirectory(), i)
 
-        image_writer = itkimageprocessing.ITKImageWriter.New()
+        image_writer = itkimageprocessing.ITKImageWriter()
         image_writer.registerImageIOFactories()
         err = itkimageprocessingpy.itk_image_writer(dca, image_file,
                                                     simpl.DataArrayPath('EBSD Scan', 'Scan Data', 'IPFColor'), 0)
