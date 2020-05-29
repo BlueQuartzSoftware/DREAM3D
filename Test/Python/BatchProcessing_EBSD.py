@@ -55,7 +55,7 @@ def batch_process():
                                                         True,
                                                         simpl.DataArrayPath('EBSD Scan', 'Scan Data', 'Mask'), 'IPFColor')
         if err < 0:
-            print('GenerateIPFColors ErrorCondition: %d' % err)
+            print(f'GenerateIPFColors ErrorCondition: {err}')
 
         # ITK Image Writer
         image_file = "{}/Data/Output/Examples/Small_IN100_Batch_{}.png".format(sd.GetBuildDirectory(), i)
