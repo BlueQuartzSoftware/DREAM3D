@@ -34,7 +34,7 @@ def batch_process():
         err = simplpy.rotate_sample_ref_frame(dca, simpl.DataArrayPath('EBSD Scan', 'Scan Data', ''),
                                                 simpl.FloatVec3([0.0, 1.0, 0.0]), 180.0, False, sc.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
         if err < 0:
-            print('RotateSampleRefFrame ErrorCondition: %d' % err)
+            print(f'RotateSampleRefFrame ErrorCondition: {err}')
 
         # Rotate Euler Reference Frame
         err = orientationanalysispy.rotate_euler_ref_frame(dca, simpl.FloatVec3([0.0, 0.0, 1.0]), 90.0,
