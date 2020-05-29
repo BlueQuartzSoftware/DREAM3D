@@ -85,7 +85,7 @@ def CreatePipeline():
     pipeline.pushBack(filter)
 
     # ITK Image Writer
-    image_file = "{}/Data/Output/Python_Examples/CreatePipeline/Small_IN100_1.png".format(sd.GetBuildDirectory())
+    image_file = f'{sd.GetBuildDirectory()}/Data/Output/Python_Examples/CreatePipeline/Small_IN100_1.png'
     filter = itkimageprocessing.ITKImageWriter()
     filter.registerImageIOFactories()
     filter.FileName = image_file
