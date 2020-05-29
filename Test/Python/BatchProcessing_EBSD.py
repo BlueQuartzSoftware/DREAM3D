@@ -23,7 +23,7 @@ def batch_process():
         # Create Data Container Array
         dca = simpl.DataContainerArray()
 
-        input_file = "{}/Data/SmallIN100/Slice_{}.ang".format(sd.GetDataDirectory(), i)
+        input_file = f'{sd.GetDataDirectory()}/Data/SmallIN100/Slice_{i}.ang'
         print(f"i:{input_file}")
         err = orientationanalysispy.read_ang_data(dca, 'EBSD Scan', 'Phase Data', 'Scan Data',
                                               input_file)
