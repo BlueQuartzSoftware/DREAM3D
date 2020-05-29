@@ -87,7 +87,7 @@ SpaceBeforeParens: Never
 # SpacesInParentheses: false
 # SpacesInSquareBrackets: false
 Standard:        Cpp11
-TabWidth:        4
+TabWidth:        2
 UseTab:          Never
 ...
 
