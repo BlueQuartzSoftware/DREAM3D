@@ -31,7 +31,7 @@ def CreatePipeline():
     data_container_name =  'EBSD Scan'
     cell_ensemble_attribute_matrix_name = 'Phase Data'
     cell_attribute_matrix_name = 'Scan Data'
-    input_file = "{}/Data/SmallIN100/Slice_1.ang".format(sd.GetDataDirectory())
+    input_file = f'{sd.GetDataDirectory()}/Data/SmallIN100/Slice_1.ang'
 
     # Import the EDAX data from an .ang file
     filter = orientationanalysis.ReadAngData()
