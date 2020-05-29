@@ -19,7 +19,7 @@ def batch_process():
 
     # Each filter is instantiated and executed immediately
     # The programmer is responsible for providing some sort of feedback to the user of the script
-    for i in range(1,10,1):
+    for i in range(1, 10, 1):
         # Create Data Container Array
         dca = simpl.DataContainerArray()
 
