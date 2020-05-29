@@ -28,7 +28,7 @@ def batch_process():
         err = orientationanalysispy.read_ang_data(dca, 'EBSD Scan', 'Phase Data', 'Scan Data',
                                               input_file)
         if err < 0:
-            print('ReadAngData ErrorCondition: %d' % err)
+            print(f'ReadAngData ErrorCondition: {err}')
 
         # Rotate Sample Reference Frame
         err = simplpy.rotate_sample_ref_frame(dca, simpl.DataArrayPath('EBSD Scan', 'Scan Data', ''),
