@@ -49,7 +49,7 @@
 //
 // -----------------------------------------------------------------------------
 SamplingPlugin::SamplingPlugin()
-: m_Version(Sampling::Version::Package())
+: m_Version(Sampling::Version::Complete())
 , m_CompatibilityVersion(Sampling::Version::Package())
 , m_Vendor(SamplingConstants::BlueQuartz::VendorName)
 , m_URL(SamplingConstants::BlueQuartz::URL)

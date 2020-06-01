@@ -19,7 +19,7 @@
 //
 // -----------------------------------------------------------------------------
 ImportExportPlugin::ImportExportPlugin()
-: m_Version(ImportExport::Version::Package())
+: m_Version(ImportExport::Version::Complete())
 , m_CompatibilityVersion(ImportExport::Version::Package())
 , m_Vendor(ImportExportConstants::BlueQuartz::VendorName)
 , m_URL(ImportExportConstants::BlueQuartz::URL)

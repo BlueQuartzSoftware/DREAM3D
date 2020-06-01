@@ -49,7 +49,7 @@
 //
 // -----------------------------------------------------------------------------
 StatisticsPlugin::StatisticsPlugin()
-: m_Version(Statistics::Version::Package())
+: m_Version(Statistics::Version::Complete())
 , m_CompatibilityVersion(Statistics::Version::Package())
 , m_Vendor(StatisticsConstants::BlueQuartz::VendorName)
 , m_URL(StatisticsConstants::BlueQuartz::URL)

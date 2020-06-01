@@ -18,7 +18,7 @@
 //
 // -----------------------------------------------------------------------------
 EMMPMPlugin::EMMPMPlugin()
-: m_Version(EM_MPM::Version::Package())
+: m_Version(EM_MPM::Version::Complete())
 , m_CompatibilityVersion(EM_MPM::Version::Package())
 , m_Vendor(EMMPMConstants::BlueQuartz::VendorName)
 , m_URL(EMMPMConstants::BlueQuartz::URL)

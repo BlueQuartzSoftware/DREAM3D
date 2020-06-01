@@ -49,7 +49,7 @@
 //
 // -----------------------------------------------------------------------------
 OrientationAnalysisPlugin::OrientationAnalysisPlugin()
-: m_Version(OrientationAnalysis::Version::Package())
+: m_Version(OrientationAnalysis::Version::Complete())
 , m_CompatibilityVersion(OrientationAnalysis::Version::Package())
 , m_Vendor(OrientationAnalysisConstants::BlueQuartz::VendorName)
 , m_URL(OrientationAnalysisConstants::BlueQuartz::URL)

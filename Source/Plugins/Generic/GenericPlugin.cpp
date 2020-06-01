@@ -49,7 +49,7 @@
 //
 // -----------------------------------------------------------------------------
 GenericPlugin::GenericPlugin()
-: m_Version(Generic::Version::Package())
+: m_Version(Generic::Version::Complete())
 , m_CompatibilityVersion(Generic::Version::Package())
 , m_Vendor(GenericConstants::BlueQuartz::VendorName)
 , m_URL(GenericConstants::BlueQuartz::URL)

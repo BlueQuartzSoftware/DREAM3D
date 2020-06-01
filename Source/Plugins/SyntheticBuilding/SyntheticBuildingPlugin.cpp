@@ -49,7 +49,7 @@
 //
 // -----------------------------------------------------------------------------
 SyntheticBuildingPlugin::SyntheticBuildingPlugin()
-: m_Version(SyntheticBuilding::Version::Package())
+: m_Version(SyntheticBuilding::Version::Complete())
 , m_CompatibilityVersion(SyntheticBuilding::Version::Package())
 , m_Vendor(SyntheticBuildingConstants::BlueQuartz::VendorName)
 , m_URL(SyntheticBuildingConstants::BlueQuartz::URL)

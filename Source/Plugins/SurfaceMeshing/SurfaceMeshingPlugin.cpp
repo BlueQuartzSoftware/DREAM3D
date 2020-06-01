@@ -49,7 +49,7 @@
 //
 // -----------------------------------------------------------------------------
 SurfaceMeshingPlugin::SurfaceMeshingPlugin()
-: m_Version(SurfaceMeshing::Version::Package())
+: m_Version(SurfaceMeshing::Version::Complete())
 , m_CompatibilityVersion(SurfaceMeshing::Version::Package())
 , m_Vendor(SurfaceMeshingConstants::BlueQuartz::VendorName)
 , m_URL(SurfaceMeshingConstants::BlueQuartz::URL)

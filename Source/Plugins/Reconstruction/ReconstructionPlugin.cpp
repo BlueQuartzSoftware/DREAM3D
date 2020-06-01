@@ -49,7 +49,7 @@
 //
 // -----------------------------------------------------------------------------
 ReconstructionPlugin::ReconstructionPlugin()
-: m_Version(Reconstruction::Version::Package())
+: m_Version(Reconstruction::Version::Complete())
 , m_CompatibilityVersion(Reconstruction::Version::Package())
 , m_Vendor(ReconstructionConstants::BlueQuartz::VendorName)
 , m_URL(ReconstructionConstants::BlueQuartz::URL)

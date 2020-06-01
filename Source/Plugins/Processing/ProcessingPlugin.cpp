@@ -49,7 +49,7 @@
 //
 // -----------------------------------------------------------------------------
 ProcessingPlugin::ProcessingPlugin()
-: m_Version(Processing::Version::Package())
+: m_Version(Processing::Version::Complete())
 , m_CompatibilityVersion(Processing::Version::Package())
 , m_Vendor(ProcessingConstants::BlueQuartz::VendorName)
 , m_URL(ProcessingConstants::BlueQuartz::URL)
