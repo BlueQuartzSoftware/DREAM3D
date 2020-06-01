@@ -1,8 +1,40 @@
-/*
- * Your License or Copyright can go here
- */
+/* ============================================================================
+ * Copyright (c) 2020 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "ImportOnscaleTableFile.h"
+
+#include <cstddef>
+#include <memory>
 
 #include <QtCore/QDateTime>
 #include <QtCore/QDebug>
@@ -21,7 +53,8 @@
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Geometry/IGeometry.h"
+#include "SIMPLib/Geometry/RectGridGeom.h"
 
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
@@ -29,9 +62,9 @@
 enum createdPathID : RenameDataPath::DataID_t
 {
   AttributeMatrixID21 = 21,
-
+  AttributeMatrixID22 = 22,
   DataArrayID31 = 31,
-
+  DataArrayID32 = 32,
   DataContainerID = 1
 };
 
@@ -46,6 +79,8 @@ class ImportOnscaleTableFilePrivate
   ImportOnscaleTableFile* const q_ptr;
   ImportOnscaleTableFilePrivate(ImportOnscaleTableFile* ptr);
   std::vector<size_t> m_Dims;
+  std::vector<FloatArrayType::Pointer> m_Coords;
+  std::vector<QString> m_Names;
   QString m_InputFile_Cache;
   QDateTime m_LastRead;
 };
@@ -80,9 +115,6 @@ void ImportOnscaleTableFile::initialize()
 }
 
 // -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-// -----------------------------------------------------------------------------
 void ImportOnscaleTableFile::setDims(const std::vector<size_t>& value)
 {
   Q_D(ImportOnscaleTableFile);
@@ -94,6 +126,34 @@ std::vector<size_t> ImportOnscaleTableFile::getDims() const
 {
   Q_D(const ImportOnscaleTableFile);
   return d->m_Dims;
+}
+
+// -----------------------------------------------------------------------------
+void ImportOnscaleTableFile::setCoords(const std::vector<FloatArrayType::Pointer>& value)
+{
+  Q_D(ImportOnscaleTableFile);
+  d->m_Coords = value;
+}
+
+// -----------------------------------------------------------------------------
+std::vector<FloatArrayType::Pointer> ImportOnscaleTableFile::getCoords() const
+{
+  Q_D(const ImportOnscaleTableFile);
+  return d->m_Coords;
+}
+
+// -----------------------------------------------------------------------------
+void ImportOnscaleTableFile::setNames(const std::vector<QString>& value)
+{
+  Q_D(ImportOnscaleTableFile);
+  d->m_Names = value;
+}
+
+// -----------------------------------------------------------------------------
+std::vector<QString> ImportOnscaleTableFile::getNames() const
+{
+  Q_D(const ImportOnscaleTableFile);
+  return d->m_Names;
 }
 
 // -----------------------------------------------------------------------------
@@ -139,6 +199,11 @@ void ImportOnscaleTableFile::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, VolumeDataContainerName, FilterParameter::CreatedArray, ImportOnscaleTableFile));
   parameters.push_back(
       SIMPL_NEW_DA_WITH_LINKED_AM_FP("Cell Feature Ids", FeatureIdsArrayName, VolumeDataContainerName, CellAttributeMatrixName, FilterParameter::CreatedArray, ImportOnscaleTableFile));
+  parameters.push_back(SeparatorFilterParameter::New("Material Data", FilterParameter::CreatedArray));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Phase Attribute Matrix", PhaseAttributeMatrixName, VolumeDataContainerName, FilterParameter::CreatedArray, ImportOnscaleTableFile));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Material Names", MaterialNameArrayName, VolumeDataContainerName, PhaseAttributeMatrixName, FilterParameter::CreatedArray, ImportOnscaleTableFile));
+
   setFilterParameters(parameters);
 }
 
@@ -147,9 +212,9 @@ void ImportOnscaleTableFile::flushCache()
 {
   setInputFile_Cache("");
   std::vector<size_t> v;
-  v.push_back(1);
-  v.push_back(1);
-  v.push_back(1);
+  v.push_back(2);
+  v.push_back(2);
+  v.push_back(2);
   setDims(v);
   setLastRead(QDateTime());
 }
@@ -168,7 +233,8 @@ void ImportOnscaleTableFile::dataCheck()
     return;
   }
 
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
+  RectGridGeom::Pointer image = RectGridGeom::CreateGeometry(SIMPL::Geometry::RectGridGeometry);
+  image->setUnits(IGeometry::LengthUnit::Meter);
   m->setGeometry(image);
 
   QFileInfo fi(getInputFile());
@@ -186,10 +252,6 @@ void ImportOnscaleTableFile::dataCheck()
     return;
   }
 
-  if(m_InStream.isOpen())
-  {
-    m_InStream.close();
-  }
   if(!getInputFile().isEmpty() && fi.exists())
   {
     QDateTime lastModified(fi.lastModified());
@@ -199,10 +261,13 @@ void ImportOnscaleTableFile::dataCheck()
       // We are reading from the cache, so set the FileWasRead flag to false
       m_FileWasRead = false;
       std::vector<size_t> v = getDims();
-      ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
-      if(nullptr != imageGeom.get())
+      v[0] -= 1;
+      v[1] -= 1;
+      v[2] -= 1;
+      RectGridGeom::Pointer rectGridGeom = std::dynamic_pointer_cast<RectGridGeom>(m->getGeometry());
+      if(nullptr != rectGridGeom.get())
       {
-        imageGeom->setDimensions(v.data());
+        rectGridGeom->setDimensions(v.data());
       }
     }
     else
@@ -211,16 +276,16 @@ void ImportOnscaleTableFile::dataCheck()
       m_FileWasRead = true;
 
       // We need to read the header of the input file to get the dimensions
-      m_InStream.setFileName(getInputFile());
-      if(!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
+      QFile fileStream(getInputFile());
+      if(!fileStream.open(QIODevice::ReadOnly | QIODevice::Text))
       {
         QString ss = QObject::tr("Error opening input file: %1").arg(getInputFile());
         setErrorCondition(-100, ss);
         return;
       }
 
-      int32_t error = readHeader();
-      m_InStream.close();
+      int32_t error = readHeader(fileStream);
+      fileStream.close();
       if(error < 0)
       {
         QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
@@ -233,14 +298,16 @@ void ImportOnscaleTableFile::dataCheck()
     }
   }
 
-  std::vector<size_t> tDims = getDims();
+  // Create the Cell Data AM and DA
+  RectGridGeom::Pointer rectGridGeom = std::dynamic_pointer_cast<RectGridGeom>(m->getGeometry());
+  std::vector<size_t> tDims = rectGridGeom->getDimensions().toContainer<std::vector<size_t>>();
   m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCode() < 0)
   {
     return;
   }
 
-  std::vector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims = {1};
   tempPath.update(getVolumeDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_FeatureIdsPtr.lock())
@@ -248,8 +315,20 @@ void ImportOnscaleTableFile::dataCheck()
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   }
 
-  m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
-  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin[0], m_Origin[1], m_Origin[2]));
+  // Create the Phase Data AM and DA
+  std::vector<QString> names = getNames();
+  m->createNonPrereqAttributeMatrix(this, getPhaseAttributeMatrixName(), {names.size()}, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID22);
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
+
+  tempPath.update(getVolumeDataContainerName().getDataContainerName(), getPhaseAttributeMatrixName(), getMaterialNameArrayName());
+  m_MaterialNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray>(this, tempPath, nullptr, cDims, "", DataArrayID32);
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -265,22 +344,16 @@ void ImportOnscaleTableFile::execute()
     return;
   }
 
-  m_InStream.setFileName(getInputFile());
-  if(!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
+  QFile fileStream(getInputFile());
+  if(!fileStream.open(QIODevice::ReadOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Error opening input file '%1'").arg(getInputFile());
     setErrorCondition(-100, ss);
     return;
   }
 
-  int32_t err = readHeader();
-  if(err < 0)
-  {
-    m_InStream.close();
-    return;
-  }
-  err = readFile();
-  m_InStream.close();
+  int32_t err = readFile(fileStream);
+  fileStream.close();
   if(err < 0)
   {
     return;
@@ -288,81 +361,8 @@ void ImportOnscaleTableFile::execute()
 }
 
 // -----------------------------------------------------------------------------
-int32_t ImportOnscaleTableFile::readHeader()
+int32_t parseValues(QFile& in, FloatArrayType& data)
 {
-  QString ss;
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
-
-  int32_t error = 0;
-
-  QByteArray buf;
-  QStringList tokens; /* vector to store the split data */
-
-  bool ok = false;
-  // Process the header information and look for the QString "counts"
-  // Then read the data size after that
-  size_t nx = 1;
-  size_t ny = 1;
-  size_t nz = 1;
-  bool done = false;
-  bool nxDone = false;
-  bool nyDone = false;
-  bool nzDone = false;
-  while(!m_InStream.atEnd() && !done)
-  {
-    QString line = m_InStream.readLine();
-
-    if(line.startsWith("xcrd"))
-    {
-      line = line.trimmed();
-      tokens = line.split(" ", Qt::SkipEmptyParts);
-      nx = tokens[1].toULongLong(&ok);
-      nxDone = true;
-    }
-    else if(line.startsWith("ycrd"))
-    {
-      line = line.trimmed();
-      tokens = line.split(" ", Qt::SkipEmptyParts);
-      ny = tokens[1].toULongLong(&ok);
-      nyDone = true;
-    }
-    else if(line.startsWith("zcrd"))
-    {
-      line = line.trimmed();
-      tokens = line.split(" ", Qt::SkipEmptyParts);
-      nz = tokens[1].toULongLong(&ok);
-      nzDone = true;
-    }
-    if(nxDone && nyDone && nzDone)
-    {
-      done = true;
-    }
-  }
-
-  // Set the values into the cache, so that they can be used later
-  std::vector<size_t> v;
-  v.push_back(nx);
-  v.push_back(ny);
-  v.push_back(nz);
-
-  setDims(v);
-
-  if(nullptr != m.get())
-  {
-    ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
-    if(nullptr != imageGeom.get())
-    {
-      imageGeom->setDimensions(v.data());
-    }
-  }
-
-  return error;
-}
-
-// -----------------------------------------------------------------------------
-int32_t parseValues(QFile& in, std::vector<float>& data)
-{
-  bool done = false;
   bool ok = false;
   size_t count = 0;
   while(count < data.size())
@@ -387,9 +387,8 @@ int32_t parseValues(QFile& in, std::vector<float>& data)
 }
 
 // -----------------------------------------------------------------------------
-int32_t parseValues(QFile& in, std::vector<int32_t>& data)
+int32_t parseValues(QFile& in, Int32ArrayType& data)
 {
-  bool done = false;
   bool ok = false;
   size_t count = 0;
   while(count < data.size())
@@ -416,8 +415,6 @@ int32_t parseValues(QFile& in, std::vector<int32_t>& data)
 // -----------------------------------------------------------------------------
 int32_t parseValues(QFile& in, std::vector<QString>& data)
 {
-  bool done = false;
-  bool ok = false;
   size_t count = 0;
   while(count < data.size())
   {
@@ -431,38 +428,67 @@ int32_t parseValues(QFile& in, std::vector<QString>& data)
   }
   return 0;
 }
+
 // -----------------------------------------------------------------------------
-int32_t ImportOnscaleTableFile::readFile()
+int32_t ImportOnscaleTableFile::readHeader(QFile& fileStream)
 {
+  QString ss;
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
-  ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
-  SizeVec3Type tDims = imageGeom->getDimensions();
+  RectGridGeom::Pointer rectGridGeom = std::dynamic_pointer_cast<RectGridGeom>(m->getGeometry());
+
+  FloatArrayType::Pointer xValues;
+  FloatArrayType::Pointer yValues;
+  FloatArrayType::Pointer zValues;
+  std::vector<QString> names;
+
+  int32_t error = 0;
+
+  QByteArray buf;
+  QStringList tokens; /* vector to store the split data */
 
   bool ok = false;
-
-  size_t xIdx = 0, yIdx = 0, zIdx = 0;
-  size_t count = 0;
-
-  std::vector<float> xValues(tDims[0], 0.0f);
-  std::vector<float> yValues(tDims[1], 0.0f);
-  std::vector<float> zValues(tDims[2], 0.0f);
-  std::vector<QString> names;
-  std::vector<int32_t> featuresIds;
-  while(!m_InStream.atEnd())
+  // Process the header information and look for the QString "counts"
+  // Then read the data size after that
+  size_t nx = 2;
+  size_t ny = 2;
+  size_t nz = 2;
+  bool done = false;
+  bool nxDone = false;
+  bool nyDone = false;
+  bool nzDone = false;
+  while(!fileStream.atEnd() && !done)
   {
-    QString line = m_InStream.readLine();
+    QString line = fileStream.readLine();
 
     if(line.startsWith("xcrd"))
     {
-      parseValues(m_InStream, xValues);
+      line = line.trimmed();
+      tokens = line.split(" ", Qt::SkipEmptyParts);
+      nx = tokens[1].toULongLong(&ok);
+      nxDone = true;
+      xValues = FloatArrayType::CreateArray(nx, "X Bounds", true);
+      rectGridGeom->setXBounds(xValues);
+      parseValues(fileStream, *xValues);
     }
     else if(line.startsWith("ycrd"))
     {
-      parseValues(m_InStream, yValues);
+      line = line.trimmed();
+      tokens = line.split(" ", Qt::SkipEmptyParts);
+      ny = tokens[1].toULongLong(&ok);
+      nyDone = true;
+      yValues = FloatArrayType::CreateArray(ny, "Y Bounds", true);
+      rectGridGeom->setYBounds(yValues);
+      parseValues(fileStream, *yValues);
     }
     else if(line.startsWith("zcrd"))
     {
-      parseValues(m_InStream, zValues);
+      line = line.trimmed();
+      tokens = line.split(" ", Qt::SkipEmptyParts);
+      nz = tokens[1].toULongLong(&ok);
+      nzDone = true;
+      zValues = FloatArrayType::CreateArray(nx, "Z Bounds", true);
+      rectGridGeom->setZBounds(zValues);
+      parseValues(fileStream, *zValues);
     }
     else if(line.startsWith("name"))
     {
@@ -470,19 +496,176 @@ int32_t ImportOnscaleTableFile::readFile()
       QStringList tokens = line.split(" ", Qt::SkipEmptyParts);
       size_t numNames = tokens[1].toULongLong(&ok);
       names.resize(numNames);
-      parseValues(m_InStream, names);
+      parseValues(fileStream, names);
+
+      if(!nxDone)
+      {
+        nxDone = true;
+      }
+      if(!nyDone)
+      {
+        nyDone = true;
+      }
+      if(!nzDone)
+      {
+        nzDone = true;
+      }
     }
     else if(line.startsWith("matr"))
     {
+      if(!nxDone)
+      {
+        nxDone = true;
+      }
+      if(!nyDone)
+      {
+        nyDone = true;
+      }
+      if(!nzDone)
+      {
+        nzDone = true;
+      }
+    }
+
+    if(nxDone && nyDone && nzDone)
+    {
+      done = true;
+    }
+  }
+
+  // Set the values into the cache, so that they can be used later
+  setDims({nx, ny, nz});
+  setCoords({xValues, yValues, zValues});
+  setNames(names);
+
+  if(nullptr != m.get())
+  {
+    RectGridGeom::Pointer rectGridGeom = std::dynamic_pointer_cast<RectGridGeom>(m->getGeometry());
+    if(nullptr != rectGridGeom.get())
+    {
+      std::vector<size_t> v;
+      v.push_back(nx - 1);
+      v.push_back(ny - 1);
+      v.push_back(nz - 1);
+      rectGridGeom->setDimensions(v.data());
+      rectGridGeom->setXBounds(xValues);
+      rectGridGeom->setYBounds(yValues);
+      rectGridGeom->setZBounds(zValues);
+    }
+  }
+
+  return error;
+}
+
+// -----------------------------------------------------------------------------
+int32_t ImportOnscaleTableFile::readFile(QFile& fileStream)
+{
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
+
+  RectGridGeom::Pointer rectGridGeom = std::dynamic_pointer_cast<RectGridGeom>(m->getGeometry());
+  SizeVec3Type tDims = getDims();
+  AttributeMatrix::Pointer am = m->getAttributeMatrix(getCellAttributeMatrixName());
+
+  AttributeMatrix::Pointer enAm = m->getAttributeMatrix(getPhaseAttributeMatrixName());
+  bool ok = false;
+
+  FloatArrayType::Pointer xValues = FloatArrayType::CreateArray(tDims[0], "X Bounds", true);
+  rectGridGeom->setXBounds(xValues);
+
+  FloatArrayType::Pointer yValues = FloatArrayType::CreateArray(tDims[1], "Y Bounds", true);
+  rectGridGeom->setYBounds(yValues);
+
+  FloatArrayType::Pointer zValues = FloatArrayType::CreateArray(tDims[2], "Z Bounds", true);
+  rectGridGeom->setZBounds(zValues);
+
+  Int32ArrayType::Pointer featureIds = std::dynamic_pointer_cast<Int32ArrayType>(am->getAttributeArray(getFeatureIdsArrayName()));
+  if(featureIds->allocate() < 0)
+  {
+    QString ss = QObject::tr("Error trying to allocate the Material array.");
+    setErrorCondition(-1, ss);
+    return -1;
+  }
+
+  StringDataArray::Pointer matNames = std::dynamic_pointer_cast<StringDataArray>(enAm->getAttributeArray(getMaterialNameArrayName()));
+  std::array<bool, 3> boundsRead = {false, false, false};
+  std::vector<QString> names;
+
+  while(!fileStream.atEnd())
+  {
+    QString line = fileStream.readLine();
+
+    if(line.startsWith("xcrd"))
+    {
+      QString ss = QObject::tr("Reading X Axis Values");
+      notifyStatusMessage(ss);
+      parseValues(fileStream, *xValues);
+      boundsRead[0] = true;
+    }
+    else if(line.startsWith("ycrd"))
+    {
+      QString ss = QObject::tr("Reading Y Axis Values");
+      notifyStatusMessage(ss);
+      parseValues(fileStream, *yValues);
+      boundsRead[1] = true;
+    }
+    else if(line.startsWith("zcrd"))
+    {
+      QString ss = QObject::tr("Reading Z Axis Values");
+      notifyStatusMessage(ss);
+      parseValues(fileStream, *zValues);
+      boundsRead[2] = true;
+    }
+    else if(line.startsWith("name"))
+    {
+      QString ss = QObject::tr("Reading Names");
+      notifyStatusMessage(ss);
+      line = line.trimmed();
+      QStringList tokens = line.split(" ", Qt::SkipEmptyParts);
+      size_t numNames = tokens[1].toULongLong(&ok);
+      names.resize(numNames);
+      parseValues(fileStream, names);
+      for(size_t i = 0; i < names.size(); i++)
+      {
+        matNames->setValue(i, names[i]);
+      }
+    }
+    else if(line.startsWith("matr"))
+    {
+      QString ss = QObject::tr("Reading Material Values");
+      notifyStatusMessage(ss);
       line = line.trimmed();
       QStringList tokens = line.split(" ", Qt::SkipEmptyParts);
       size_t numGridElements = tokens[1].toULongLong(&ok);
-      featuresIds.resize(numGridElements);
-      parseValues(m_InStream, featuresIds);
+      // featureIds->resizeTuples(numGridElements);
+      parseValues(fileStream, *featureIds);
     }
   }
-  m_InStream.close();
 
+  // Sanity check the X, Y or Z Bounds
+  if(!boundsRead[0])
+  {
+    xValues->resizeTuples(2);
+    float value = 0.0f;
+    xValues->setTuple(0, &value);
+    value = value + m_Spacing[0];
+    xValues->setTuple(1, &value);
+  }
+  if(!boundsRead[1])
+  {
+    yValues->resizeTuples(2);
+    float value = 0.0f;
+    yValues->setTuple(0, &value);
+    value = value + m_Spacing[1];
+    yValues->setTuple(1, &value);
+  }
+  if(!boundsRead[2])
+  {
+    zValues->resizeTuples(2);
+    float value = 0.0f;
+    zValues->setTuple(0, &value);
+    value = value + m_Spacing[2];
+    zValues->setTuple(1, &value);
+  }
   return 0;
 }
 
@@ -669,4 +852,26 @@ void ImportOnscaleTableFile::setFeatureIdsArrayName(const QString& value)
 QString ImportOnscaleTableFile::getFeatureIdsArrayName() const
 {
   return m_FeatureIdsArrayName;
+}
+// -----------------------------------------------------------------------------
+void ImportOnscaleTableFile::setPhaseAttributeMatrixName(const QString& value)
+{
+  m_PhaseAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportOnscaleTableFile::getPhaseAttributeMatrixName() const
+{
+  return m_PhaseAttributeMatrixName;
+}
+// -----------------------------------------------------------------------------
+void ImportOnscaleTableFile::setMaterialNameArrayName(const QString& value)
+{
+  m_MaterialNameArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportOnscaleTableFile::getMaterialNameArrayName() const
+{
+  return m_MaterialNameArrayName;
 }

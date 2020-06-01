@@ -1,6 +1,35 @@
-/*
- * Your License or Copyright can go here
- */
+/* ============================================================================
+ * Copyright (c) 2020 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #pragma once
 
@@ -13,6 +42,7 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
@@ -28,7 +58,7 @@ class ImportExport_EXPORT ImportOnscaleTableFile : public AbstractFilter
 {
   Q_OBJECT
 
-  // clang-format off
+  // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ImportOnscaleTableFile SUPERCLASS AbstractFilter)
   PYB11_FILTER()
   PYB11_SHARED_POINTERS(ImportOnscaleTableFile)
@@ -36,6 +66,9 @@ class ImportExport_EXPORT ImportOnscaleTableFile : public AbstractFilter
   
   PYB11_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  PYB11_PROPERTY(QString PhaseAttributeMatrixName READ getPhaseAttributeMatrixName WRITE setPhaseAttributeMatrixName)
+  PYB11_PROPERTY(QString MaterialNameArrayName READ getMaterialNameArrayName WRITE setMaterialNameArrayName)
+
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
@@ -43,7 +76,7 @@ class ImportExport_EXPORT ImportOnscaleTableFile : public AbstractFilter
   PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
   PYB11_END_BINDINGS()
-  // clang-format on
+  // End Python bindings declarations
 
   Q_DECLARE_PRIVATE(ImportOnscaleTableFile)
 public:
@@ -146,6 +179,28 @@ public:
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
   /**
+   * @brief Setter property for PhaseAttributeMatrixName
+   */
+  void setPhaseAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for PhaseAttributeMatrixName
+   * @return Value of PhaseAttributeMatrixName
+   */
+  QString getPhaseAttributeMatrixName() const;
+  Q_PROPERTY(QString PhaseAttributeMatrixName READ getPhaseAttributeMatrixName WRITE setPhaseAttributeMatrixName)
+
+  /**
+   * @brief Setter property for MaterialNameArrayName
+   */
+  void setMaterialNameArrayName(const QString& value);
+  /**
+   * @brief Getter property for MaterialNameArrayName
+   * @return Value of MaterialNameArrayName
+   */
+  QString getMaterialNameArrayName() const;
+  Q_PROPERTY(QString MaterialNameArrayName READ getMaterialNameArrayName WRITE setMaterialNameArrayName)
+
+  /**
    * @brief Setter property for Dims
    */
   void setDims(const std::vector<size_t>& value);
@@ -154,6 +209,26 @@ public:
    * @return Value of Dims
    */
   std::vector<size_t> getDims() const;
+
+  /**
+   * @brief Setter property for Dims
+   */
+  void setCoords(const std::vector<FloatArrayType::Pointer>& value);
+  /**
+   * @brief Getter property for Dims
+   * @return Value of Dims
+   */
+  std::vector<FloatArrayType::Pointer> getCoords() const;
+
+  /**
+   * @brief Setter property for Dims
+   */
+  void setNames(const std::vector<QString>& value);
+  /**
+   * @brief Getter property for Dims
+   * @return Value of Dims
+   */
+  std::vector<QString> getNames() const;
 
   /**
    * @brief Setter property for InputFile_Cache
@@ -242,12 +317,12 @@ protected:
   /**
    * @brief readHeader Reimplemented from @see FileReader class
    */
-  int32_t readHeader();
+  int32_t readHeader(QFile& fileStream);
 
   /**
    * @brief readFile Reimplemented from @see FileReader class
    */
-  int32_t readFile();
+  int32_t readFile(QFile& fileStream);
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -263,6 +338,8 @@ private:
   std::weak_ptr<Int32ArrayType> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
 
+  std::weak_ptr<StringDataArray> m_MaterialNamesPtr;
+
   DataArrayPath m_VolumeDataContainerName = {"DataContainer", "", ""};
   QString m_CellAttributeMatrixName = {"Table Data"};
   QString m_InputFile = {""};
@@ -271,10 +348,12 @@ private:
   bool m_FileWasRead = {false};
   QString m_FeatureIdsArrayName = {"Material"};
 
+  QString m_MaterialNameArrayName = {"Material Names"};
+  QString m_PhaseAttributeMatrixName = {"Phase Info"};
+
   QScopedPointer<ImportOnscaleTableFilePrivate> const d_ptr;
 
   SizeVec3Type m_Dims = {0, 0, 0};
-  QFile m_InStream;
 
 public:
   ImportOnscaleTableFile(const ImportOnscaleTableFile&) = delete;            // Copy Constructor Not Implemented
