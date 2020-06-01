@@ -24,7 +24,7 @@ def batch_process():
         dca = simpl.DataContainerArray()
 
         input_file = f'{sd.GetDataDirectory()}/Data/SmallIN100/Slice_{i}.ang'
-        print(f"i:{input_file}")
+        print(f'i:{input_file}')
         err = orientationanalysispy.read_ang_data(dca, 'EBSD Scan', 'Phase Data', 'Scan Data',
                                               input_file)
         if err < 0:
@@ -58,26 +58,25 @@ def batch_process():
             print(f'GenerateIPFColors ErrorCondition: {err}')
 
         # ITK Image Writer
-        image_file = "{}/Data/Output/Examples/Small_IN100_Batch_{}.png".format(sd.GetBuildDirectory(), i)
+        image_file = f'{sd.GetBuildDirectory()}/Data/Output/Examples/Small_IN100_Batch_{i}.png'
 
         image_writer = itkimageprocessing.ITKImageWriter()
         image_writer.registerImageIOFactories()
         err = itkimageprocessingpy.itk_image_writer(dca, image_file,
                                                     simpl.DataArrayPath('EBSD Scan', 'Scan Data', 'IPFColor'), 0)
         if err < 0:
-            print('ITKImageWriter ErrorCondition: %d' % err)
+            print(f'ITKImageWriter ErrorCondition: {err}')
 
         # Write to DREAM3D file
-        output_file = "{}/Data/Output/Examples/Small_IN100_Batch_{}.dream3d".format(sd.GetBuildDirectory(), i)
+        output_file = f'{sd.GetBuildDirectory()}/Data/Output/Examples/Small_IN100_Batch_{i}.dream3d'
         err = sc.WriteDREAM3DFile(output_file, dca)
         if err < 0:
-            print('WriteDREAM3DFile ErrorCondition: %d' % err)
+            print(f'WriteDREAM3DFile ErrorCondition: {err}')
         #----------------------------------------------------------------------
         # End of Processing Loop
         #----------------------------------------------------------------------
 
-    print("FINISHED")
-
+    print('FINISHED')
 
 if __name__ == '__main__':
     batch_process()

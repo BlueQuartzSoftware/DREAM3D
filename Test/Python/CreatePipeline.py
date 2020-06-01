@@ -6,7 +6,7 @@ is executed.
 
 This example also shows reading in a pipeline from a file and executing that pipeline.
 ** IMPORTANT: If you are blindly reading a pipeline from a file then you should also be
-** import'ing all of the modules.
+** importing all of the modules.
 '''
 import numpy as np
 
@@ -19,10 +19,8 @@ import orientationanalysis
 import orientationanalysispy
 import itkimageprocessing
 
-
-
 def CreatePipeline():
-    print("======== Construct Pipeline")
+    print('======== Construct Pipeline')
     #Create an Observer to report errors/progress from the executing pipeline
     pipeline = simpl.FilterPipeline()
     obs = simpl.Observer()
@@ -108,15 +106,15 @@ def CreatePipeline():
     print(f'Execution error = {pipeline.ErrorCode}')
 
     pwriter = simpl.JsonFilterParametersWriter()
-    err = pwriter.exportPipelineToFile(pipeline, sd.GetTestTempDirectory() + "/out.json", "Name of Pipeline", True, obs)
+    err = pwriter.exportPipelineToFile(pipeline, f'{sd.GetTestTempDirectory()}/out.json', 'Name of Pipeline', True, obs)
 
 
 def ReadPipeline():
-    print("======== ReadPipeline")
+    print('======== ReadPipeline')
     obs = simpl.IObserver()
     preader = simpl.JsonFilterParametersReader()
-    pipeline = preader.readPipelineFromFile(sd.GetTestTempDirectory() + "/out.json", obs)
-    print(f"Filters in Pipeline: {pipeline.size()}")
+    pipeline = preader.readPipelineFromFile(f'{sd.GetTestTempDirectory()}/out.json', obs)
+    print(f'Filters in Pipeline: {pipeline.size()}')
 
     # We can preflight the pipeline at this point
     pipeline.preflightPipeline()
