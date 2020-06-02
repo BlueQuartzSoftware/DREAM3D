@@ -44,9 +44,7 @@
 #include <QtCore/QString>
 
 #include "DREAM3DToolsConfiguration.h"
-
-#include "SandboxTool/RemoveSIMPLMacros.h"
-#include "SandboxTool/UpdateFilterHeaders.hpp"
+#include "SandboxTool/UpdateMDHeader.hpp"
 
 /**
  * @brief findPath
@@ -155,22 +153,18 @@ int main(int argc, char* argv[])
 #if 1
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir()));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPL/Source/SIMPLib/CoreFilters"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPL/Source/"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPLView/Source"));
 
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPLView/Source"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPLVtkLib"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../Plugins/DREAM3DReview"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../Plugins/ImageProcessing"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../Plugins/ITKImageProcessing"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../Plugins/SimulationIO"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../Plugins/UCSBUtilities"));
+
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Source"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Test"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Tools"));
 
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Source/EbsdLib"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Source/OrientationLib"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../EbsdLib"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../H5Support"));
 
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/AFRLDistributionC/"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/CRADA3DSystems/"));
@@ -184,15 +178,19 @@ int main(int argc, char* argv[])
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/SMTKPlugin/"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/TomvizToolbox/"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/VolumeMeshing/"));
-
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/DREAM3DReview"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/ImageProcessing"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/ITKImageProcessing"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/SimulationIO"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/UCSBUtilities"));
 #endif
 
   QStringList filters;
-  filters.append("*.cpp");
+  filters.append("*.md");
 
   for(auto const& dir : dirs)
   {
-    RecursiveFileSearch<UpdateFilterHeaders>(dir, filters);
+    RecursiveFileSearch<UpdateMDHeader>(dir, filters);
   }
 
   return 0;

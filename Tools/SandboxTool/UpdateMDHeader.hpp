@@ -21,15 +21,15 @@ public:
     QTextStream out(&msg);
 
     out << hFile;
-    qDebug() << msg;
+    // qDebug() << msg;
 
     QString contents;
     QFileInfo fi(hFile);
 
-    //     if (fi.baseName().compare("IObserver") != 0)
-    //     {
-    //       return;
-    //     }
+    //    if(fi.baseName().compare("Contributing") != 0)
+    //    {
+    //      return;
+    //    }
 
     {
       // Read the Source File
@@ -39,52 +39,38 @@ public:
       source.close();
     }
 
-    bool hasInclude = false;
     bool hasSearchString = false;
 
-    QString searchString = "DEFINE_IDATAARRAY_VARIABLE";
-    QString includString = "#include \"SIMPLib";
-
-    int includeIndex = 0;
+    QString searchString = "# ";
 
     QVector<QString> outLines;
     QStringList list = contents.split(QRegExp("\\n"));
     QStringListIterator sourceLines(list);
 
     int32_t lineIndex = 0;
-
+    hasSearchString = true;
     // First Pass is to analyze the header file
     while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
 
-      if(line.startsWith(includString))
+      if(line.startsWith(searchString))
       {
-        includeIndex = lineIndex;
+        line = line.replace("#", "").trimmed();
+        line = line + "\n=============";
       }
-      if(line.contains(searchString))
-      {
-        hasSearchString = true;
-      }
-      if(line.contains("#include \"SIMPLib/DataArrays/IDataArray.h\""))
-      {
-        hasInclude = true;
-      }
+
       lineIndex++;
       outLines.push_back(line);
     }
 
-    if(!hasInclude && hasSearchString)
+    while(outLines.back().isEmpty())
     {
-      QString line = outLines[includeIndex];
-      line = line + "\n#include \"SIMPLib/DataArrays/IDataArray.h\"";
-      outLines[includeIndex] = line;
+      outLines.pop_back();
     }
-    qDebug() << "Last SIMPLib Include Directive is line " << includeIndex;
 
-    if(!hasInclude && hasSearchString)
+    if(hasSearchString)
     {
-
       writeOutput(hasSearchString, outLines, hFile);
     }
   }
