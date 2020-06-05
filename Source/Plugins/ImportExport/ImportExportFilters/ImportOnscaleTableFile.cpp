@@ -73,6 +73,8 @@ namespace
 constexpr int32_t k_InputFileNotSet = -42000;
 constexpr int32_t k_InputFileDoesNotExist = -42001;
 constexpr int32_t k_ErrorOpeningFile = -42002;
+constexpr int32_t k_MaterialParseError = -42003;
+constexpr int32_t k_CoordParseError = -42004;
 
 } // namespace
 
@@ -358,7 +360,6 @@ void ImportOnscaleTableFile::execute()
   }
 
   int32_t err = readFile(fileStream);
-  fileStream.close();
   if(err < 0)
   {
     return;
@@ -384,7 +385,7 @@ int32_t parseValues(QFile& in, FloatArrayType& data)
       }
       else
       {
-        return -1;
+        return ::k_CoordParseError;
       }
     }
   }
@@ -392,10 +393,13 @@ int32_t parseValues(QFile& in, FloatArrayType& data)
 }
 
 // -----------------------------------------------------------------------------
-int32_t parseValues(QFile& in, Int32ArrayType& data)
+int32_t parseValues(ImportOnscaleTableFile* filter, QFile& in, Int32ArrayType& data)
 {
   bool ok = false;
   size_t count = 0;
+  size_t increment = data.size() / 100;
+  size_t prog = 0;
+  int32_t progress = 0;
   while(count < data.size())
   {
     QString line = in.readLine().trimmed();
@@ -410,7 +414,15 @@ int32_t parseValues(QFile& in, Int32ArrayType& data)
       }
       else
       {
-        return -1;
+        return ::k_MaterialParseError;
+      }
+      prog++;
+      if(prog > increment)
+      {
+        prog = 0;
+        progress++;
+        QString ss = QString("Reading Material Data %1%").arg(progress);
+        filter->notifyStatusMessage(ss);
       }
     }
   }
@@ -418,9 +430,10 @@ int32_t parseValues(QFile& in, Int32ArrayType& data)
 }
 
 // -----------------------------------------------------------------------------
-int32_t parseValues(QFile& in, std::vector<QString>& data)
+void parseValues(QFile& in, std::vector<QString>& data)
 {
   size_t count = 0;
+
   while(count < data.size())
   {
     QString line = in.readLine().trimmed();
@@ -431,7 +444,6 @@ int32_t parseValues(QFile& in, std::vector<QString>& data)
       count++;
     }
   }
-  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -473,7 +485,12 @@ int32_t ImportOnscaleTableFile::readHeader(QFile& fileStream)
       nxDone = true;
       xValues = FloatArrayType::CreateArray(nx, "X Bounds", true);
       rectGridGeom->setXBounds(xValues);
-      parseValues(fileStream, *xValues);
+      if(parseValues(fileStream, *xValues) == ::k_CoordParseError)
+      {
+        QString ss = QObject::tr("Error Parsing X Coordinate Value");
+        setErrorCondition(::k_CoordParseError, ss);
+        return ::k_CoordParseError;
+      }
     }
     else if(line.startsWith("ycrd"))
     {
@@ -483,7 +500,12 @@ int32_t ImportOnscaleTableFile::readHeader(QFile& fileStream)
       nyDone = true;
       yValues = FloatArrayType::CreateArray(ny, "Y Bounds", true);
       rectGridGeom->setYBounds(yValues);
-      parseValues(fileStream, *yValues);
+      if(parseValues(fileStream, *yValues) == k_CoordParseError)
+      {
+        QString ss = QObject::tr("Error Parsing Y Coordinate Value");
+        setErrorCondition(::k_CoordParseError, ss);
+        return ::k_CoordParseError;
+      }
     }
     else if(line.startsWith("zcrd"))
     {
@@ -493,7 +515,12 @@ int32_t ImportOnscaleTableFile::readHeader(QFile& fileStream)
       nzDone = true;
       zValues = FloatArrayType::CreateArray(nx, "Z Bounds", true);
       rectGridGeom->setZBounds(zValues);
-      parseValues(fileStream, *zValues);
+      if(parseValues(fileStream, *zValues) == k_CoordParseError)
+      {
+        QString ss = QObject::tr("Error Parsing Z Coordinate Value");
+        setErrorCondition(::k_CoordParseError, ss);
+        return ::k_CoordParseError;
+      }
     }
     else if(line.startsWith("name"))
     {
@@ -603,21 +630,36 @@ int32_t ImportOnscaleTableFile::readFile(QFile& fileStream)
     {
       QString ss = QObject::tr("Reading X Axis Values");
       notifyStatusMessage(ss);
-      parseValues(fileStream, *xValues);
+      if(parseValues(fileStream, *xValues) == ::k_CoordParseError)
+      {
+        QString ss = QObject::tr("Error Parsing X Coordinate Value");
+        setErrorCondition(::k_CoordParseError, ss);
+        return ::k_CoordParseError;
+      }
       boundsRead[0] = true;
     }
     else if(line.startsWith("ycrd"))
     {
       QString ss = QObject::tr("Reading Y Axis Values");
       notifyStatusMessage(ss);
-      parseValues(fileStream, *yValues);
+      if(parseValues(fileStream, *yValues) == k_CoordParseError)
+      {
+        QString ss = QObject::tr("Error Parsing Y Coordinate Value");
+        setErrorCondition(::k_CoordParseError, ss);
+        return ::k_CoordParseError;
+      }
       boundsRead[1] = true;
     }
     else if(line.startsWith("zcrd"))
     {
       QString ss = QObject::tr("Reading Z Axis Values");
       notifyStatusMessage(ss);
-      parseValues(fileStream, *zValues);
+      if(parseValues(fileStream, *zValues) == k_CoordParseError)
+      {
+        QString ss = QObject::tr("Error Parsing Z Coordinate Value");
+        setErrorCondition(::k_CoordParseError, ss);
+        return ::k_CoordParseError;
+      }
       boundsRead[2] = true;
     }
     else if(line.startsWith("name"))
@@ -638,11 +680,12 @@ int32_t ImportOnscaleTableFile::readFile(QFile& fileStream)
     {
       QString ss = QObject::tr("Reading Material Values");
       notifyStatusMessage(ss);
-      line = line.trimmed();
-      QStringList tokens = line.split(" ", Qt::SkipEmptyParts);
-      size_t numGridElements = tokens[1].toULongLong(&ok);
-      // featureIds->resizeTuples(numGridElements);
-      parseValues(fileStream, *featureIds);
+      if(parseValues(this, fileStream, *featureIds) == ::k_MaterialParseError)
+      {
+        QString ss = QObject::tr("Error Parsing material value");
+        setErrorCondition(::k_MaterialParseError, ss);
+        return ::k_MaterialParseError;
+      }
     }
   }
 
