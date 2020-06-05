@@ -60,7 +60,8 @@ class ImportExport_EXPORT VASPReader : public FileReader
   Q_OBJECT
 
   // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(VASPReader SUPERCLASS FileReader)
+  // We are using AbstractFilter because FileReader is not wrapped by python which will cause problems.
+  PYB11_BEGIN_BINDINGS(VASPReader SUPERCLASS AbstractFilter)
   PYB11_FILTER()
   PYB11_SHARED_POINTERS(VASPReader)
   PYB11_FILTER_NEW_MACRO(VASPReader)

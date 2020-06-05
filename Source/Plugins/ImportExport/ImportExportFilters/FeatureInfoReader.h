@@ -52,7 +52,8 @@ class ImportExport_EXPORT FeatureInfoReader : public FileReader
   Q_OBJECT
 
   // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(FeatureInfoReader SUPERCLASS FileReader)
+  // We are using AbstractFilter because FileReader is not wrapped by python which will cause problems.
+  PYB11_BEGIN_BINDINGS(FeatureInfoReader SUPERCLASS AbstractFilter)
   PYB11_FILTER()
   PYB11_SHARED_POINTERS(FeatureInfoReader)
   PYB11_FILTER_NEW_MACRO(FeatureInfoReader)
