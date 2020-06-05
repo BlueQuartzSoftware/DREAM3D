@@ -68,16 +68,42 @@ enum createdPathID : RenameDataPath::DataID_t
   DataContainerID = 1
 };
 
-/* ############## Start Private Implementation ############################### */
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-class ImportOnscaleTableFilePrivate
+namespace
 {
-  Q_DISABLE_COPY(ImportOnscaleTableFilePrivate)
-  Q_DECLARE_PUBLIC(ImportOnscaleTableFile)
-  ImportOnscaleTableFile* const q_ptr;
-  ImportOnscaleTableFilePrivate(ImportOnscaleTableFile* ptr);
+constexpr int32_t k_InputFileNotSet = -42000;
+constexpr int32_t k_InputFileDoesNotExist = -42001;
+constexpr int32_t k_ErrorOpeningFile = -42002;
+
+} // namespace
+
+//==============================================================================
+// Start Private Implementation
+//==============================================================================
+
+// clang-format off
+
+#define S_PIMPL_PRIVATE_CLASS(Class)\
+public:\
+Class##Private(Class* ptr) : q_ptr(ptr){}\
+~Class##Private() = default;\
+Class##Private(const Class##Private&) = delete;            \
+Class##Private(Class##Private&&) = delete;       \
+Class##Private& operator=(const Class##Private&) = delete; \
+Class##Private& operator=(Class##Private&&) = delete;\
+inline Class* q_func() { return static_cast<Class*>(q_ptr);}\
+inline const Class* q_func() const{  return static_cast<const Class*>(q_ptr);}\
+friend class Class;\
+private:\
+Class* const q_ptr = nullptr;
+
+// clang-format on
+
+class ImportOnscaleTableFile::ImportOnscaleTableFilePrivate
+{
+public:
+  S_PIMPL_PRIVATE_CLASS(ImportOnscaleTableFile)
+
+private:
   std::vector<size_t> m_Dims;
   std::vector<FloatArrayType::Pointer> m_Coords;
   std::vector<QString> m_Names;
@@ -85,22 +111,15 @@ class ImportOnscaleTableFilePrivate
   QDateTime m_LastRead;
 };
 
-// -----------------------------------------------------------------------------
-ImportOnscaleTableFilePrivate::ImportOnscaleTableFilePrivate(ImportOnscaleTableFile* ptr)
-: q_ptr(ptr)
-, m_InputFile_Cache("")
-{
-}
-
-// -----------------------------------------------------------------------------
+//==============================================================================
+// Start Public Implementation
+//==============================================================================
 ImportOnscaleTableFile::ImportOnscaleTableFile()
 : d_ptr(new ImportOnscaleTableFilePrivate(this))
 {
   initialize();
 }
 
-// -----------------------------------------------------------------------------
-//
 // -----------------------------------------------------------------------------
 ImportOnscaleTableFile::~ImportOnscaleTableFile() = default;
 
@@ -117,71 +136,61 @@ void ImportOnscaleTableFile::initialize()
 // -----------------------------------------------------------------------------
 void ImportOnscaleTableFile::setDims(const std::vector<size_t>& value)
 {
-  Q_D(ImportOnscaleTableFile);
-  d->m_Dims = value;
+  d_ptr->m_Dims = value;
 }
 
 // -----------------------------------------------------------------------------
 std::vector<size_t> ImportOnscaleTableFile::getDims() const
 {
-  Q_D(const ImportOnscaleTableFile);
-  return d->m_Dims;
+  return d_ptr->m_Dims;
 }
 
 // -----------------------------------------------------------------------------
 void ImportOnscaleTableFile::setCoords(const std::vector<FloatArrayType::Pointer>& value)
 {
-  Q_D(ImportOnscaleTableFile);
-  d->m_Coords = value;
+  d_ptr->m_Coords = value;
 }
 
 // -----------------------------------------------------------------------------
 std::vector<FloatArrayType::Pointer> ImportOnscaleTableFile::getCoords() const
 {
-  Q_D(const ImportOnscaleTableFile);
-  return d->m_Coords;
+  return d_ptr->m_Coords;
 }
 
 // -----------------------------------------------------------------------------
 void ImportOnscaleTableFile::setNames(const std::vector<QString>& value)
 {
-  Q_D(ImportOnscaleTableFile);
-  d->m_Names = value;
+  d_ptr->m_Names = value;
 }
 
 // -----------------------------------------------------------------------------
 std::vector<QString> ImportOnscaleTableFile::getNames() const
 {
-  Q_D(const ImportOnscaleTableFile);
-  return d->m_Names;
+  return d_ptr->m_Names;
 }
 
 // -----------------------------------------------------------------------------
 void ImportOnscaleTableFile::setInputFile_Cache(const QString& value)
 {
-  Q_D(ImportOnscaleTableFile);
-  d->m_InputFile_Cache = value;
+  d_ptr->m_InputFile_Cache = value;
 }
 
 // -----------------------------------------------------------------------------
 QString ImportOnscaleTableFile::getInputFile_Cache() const
 {
-  Q_D(const ImportOnscaleTableFile);
-  return d->m_InputFile_Cache;
+  return d_ptr->m_InputFile_Cache;
 }
 
 // -----------------------------------------------------------------------------
 void ImportOnscaleTableFile::setLastRead(const QDateTime& value)
 {
-  Q_D(ImportOnscaleTableFile);
-  d->m_LastRead = value;
+  d_ptr->m_LastRead = value;
 }
 
 // -----------------------------------------------------------------------------
 QDateTime ImportOnscaleTableFile::getLastRead() const
 {
-  Q_D(const ImportOnscaleTableFile);
-  return d->m_LastRead;
+  return d_ptr->m_LastRead;
 }
 
 // -----------------------------------------------------------------------------
@@ -211,11 +220,7 @@ void ImportOnscaleTableFile::setupFilterParameters()
 void ImportOnscaleTableFile::flushCache()
 {
   setInputFile_Cache("");
-  std::vector<size_t> v;
-  v.push_back(2);
-  v.push_back(2);
-  v.push_back(2);
-  setDims(v);
+  setDims({2, 2, 2});
   setLastRead(QDateTime());
 }
 // -----------------------------------------------------------------------------
@@ -242,13 +247,13 @@ void ImportOnscaleTableFile::dataCheck()
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
-    setErrorCondition(-387, ss);
+    setErrorCondition(::k_InputFileNotSet, ss);
     return;
   }
   if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist: %1").arg(getInputFile());
-    setErrorCondition(-388, ss);
+    setErrorCondition(k_InputFileDoesNotExist, ss);
     return;
   }
 
@@ -280,7 +285,7 @@ void ImportOnscaleTableFile::dataCheck()
       if(!fileStream.open(QIODevice::ReadOnly | QIODevice::Text))
       {
         QString ss = QObject::tr("Error opening input file: %1").arg(getInputFile());
-        setErrorCondition(-100, ss);
+        setErrorCondition(::k_ErrorOpeningFile, ss);
         return;
       }
 
@@ -348,7 +353,7 @@ void ImportOnscaleTableFile::execute()
   if(!fileStream.open(QIODevice::ReadOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Error opening input file '%1'").arg(getInputFile());
-    setErrorCondition(-100, ss);
+    setErrorCondition(::k_ErrorOpeningFile, ss);
     return;
   }
 
@@ -645,7 +650,7 @@ int32_t ImportOnscaleTableFile::readFile(QFile& fileStream)
   if(!boundsRead[0])
   {
     xValues->resizeTuples(2);
-    float value = 0.0f;
+    float value = 0.0F;
     xValues->setTuple(0, &value);
     value = value + m_Spacing[0];
     xValues->setTuple(1, &value);
@@ -653,7 +658,7 @@ int32_t ImportOnscaleTableFile::readFile(QFile& fileStream)
   if(!boundsRead[1])
   {
     yValues->resizeTuples(2);
-    float value = 0.0f;
+    float value = 0.0F;
     yValues->setTuple(0, &value);
     value = value + m_Spacing[1];
     yValues->setTuple(1, &value);
@@ -661,7 +666,7 @@ int32_t ImportOnscaleTableFile::readFile(QFile& fileStream)
   if(!boundsRead[2])
   {
     zValues->resizeTuples(2);
-    float value = 0.0f;
+    float value = 0.0F;
     zValues->setTuple(0, &value);
     value = value + m_Spacing[2];
     zValues->setTuple(1, &value);
@@ -738,7 +743,7 @@ QString ImportOnscaleTableFile::getHumanLabel() const
 // -----------------------------------------------------------------------------
 QUuid ImportOnscaleTableFile::getUuid() const
 {
-  return QUuid("{06dd6e66-84fb-5170-a923-d925dc39bb94}");
+  return {"{06dd6e66-84fb-5170-a923-d925dc39bb94}"};
 }
 
 // -----------------------------------------------------------------------------

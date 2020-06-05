@@ -36,7 +36,7 @@ set(_PublicFilters
   SampleSurfaceMeshSpecifiedPoints
   UncertainRegularGridSampleSurfaceMesh
   WarpRegularGrid
-  RegularGridSampleRectilinearGrid
+  ResampleRectGridToImageGeom
 )
 
 

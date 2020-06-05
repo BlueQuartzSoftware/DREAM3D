@@ -44,17 +44,17 @@
 #include "Sampling/SamplingPlugin.h"
 
 /**
- * @brief The RegularGridSampleRectilinearGrid class. See [Filter documentation](@ref regulargridsamplerectilineargrid) for details.
+ * @brief The ResampleRectGridToImageGeom class. See [Filter documentation](@ref ResampleRectGridToImageGeom) for details.
  */
-class Sampling_EXPORT RegularGridSampleRectilinearGrid : public AbstractFilter
+class Sampling_EXPORT ResampleRectGridToImageGeom : public AbstractFilter
 {
   Q_OBJECT
 
   // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(RegularGridSampleRectilinearGrid SUPERCLASS AbstractFilter)
+  PYB11_BEGIN_BINDINGS(ResampleRectGridToImageGeom SUPERCLASS AbstractFilter)
   PYB11_FILTER()
-  PYB11_SHARED_POINTERS(RegularGridSampleRectilinearGrid)
-  PYB11_FILTER_NEW_MACRO(RegularGridSampleRectilinearGrid)
+  PYB11_SHARED_POINTERS(ResampleRectGridToImageGeom)
+  PYB11_FILTER_NEW_MACRO(ResampleRectGridToImageGeom)
   PYB11_PROPERTY(DataArrayPath RectilinearGridPath READ getRectilinearGridPath WRITE setRectilinearGridPath)
   // PYB11_PROPERTY(DataArrayPath RectGridCellAttributeMatrix READ getRectGridCellAttributeMatrix WRITE setRectGridCellAttributeMatrix)
   PYB11_PROPERTY(QString RectGridGeometryDesc READ getRectGridGeometryDesc)
@@ -68,7 +68,7 @@ class Sampling_EXPORT RegularGridSampleRectilinearGrid : public AbstractFilter
 
 public:
 
-  using Self = RegularGridSampleRectilinearGrid;
+  using Self = ResampleRectGridToImageGeom;
   using Pointer = std::shared_ptr<Self>;
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
@@ -78,16 +78,16 @@ public:
   static Pointer New();
 
   /**
-   * @brief Returns the name of the class for RegularGridSampleRectilinearGrid
+   * @brief Returns the name of the class for ResampleRectGridToImageGeom
    */
   QString getNameOfClass() const override;
 
   /**
-   * @brief Returns the name of the class for RegularGridSampleRectilinearGrid
+   * @brief Returns the name of the class for ResampleRectGridToImageGeom
    */
   static QString ClassName();
 
-  ~RegularGridSampleRectilinearGrid() override;
+  ~ResampleRectGridToImageGeom() override;
 
   /**
    * @brief Setter property for RectilinearGridPath
@@ -225,7 +225,7 @@ public:
   void execute() override;
 
 protected:
-  RegularGridSampleRectilinearGrid();
+  ResampleRectGridToImageGeom();
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -251,9 +251,9 @@ private:
   ImageGeom::Pointer m_GeneratedVolume;
 
 public:
-  RegularGridSampleRectilinearGrid(const RegularGridSampleRectilinearGrid&) = delete;            // Copy Constructor Not Implemented
-  RegularGridSampleRectilinearGrid& operator=(const RegularGridSampleRectilinearGrid&) = delete; // Copy Assignment Not Implemented
-  RegularGridSampleRectilinearGrid(RegularGridSampleRectilinearGrid &&) = delete;                // Move Constructor Not Implemented
-  RegularGridSampleRectilinearGrid& operator=(RegularGridSampleRectilinearGrid&&) = delete;      // Move Assignment Not Implemented
+  ResampleRectGridToImageGeom(const ResampleRectGridToImageGeom&) = delete;            // Copy Constructor Not Implemented
+  ResampleRectGridToImageGeom& operator=(const ResampleRectGridToImageGeom&) = delete; // Copy Assignment Not Implemented
+  ResampleRectGridToImageGeom(ResampleRectGridToImageGeom &&) = delete;                // Move Constructor Not Implemented
+  ResampleRectGridToImageGeom& operator=(ResampleRectGridToImageGeom&&) = delete;      // Move Assignment Not Implemented
 };
 

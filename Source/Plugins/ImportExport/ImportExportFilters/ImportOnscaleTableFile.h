@@ -78,7 +78,6 @@ class ImportExport_EXPORT ImportOnscaleTableFile : public AbstractFilter
   PYB11_END_BINDINGS()
   // End Python bindings declarations
 
-  Q_DECLARE_PRIVATE(ImportOnscaleTableFile)
 public:
   using Self = ImportOnscaleTableFile;
   using Pointer = std::shared_ptr<Self>;
@@ -343,17 +342,18 @@ private:
   DataArrayPath m_VolumeDataContainerName = {"DataContainer", "", ""};
   QString m_CellAttributeMatrixName = {"Table Data"};
   QString m_InputFile = {""};
-  FloatVec3Type m_Origin = {0.0f, 0.0f, 0.0f};
-  FloatVec3Type m_Spacing = {1.0f, 1.0f, 1.0f};
+  FloatVec3Type m_Origin = {0.0F, 0.0F, 0.0F};
+  FloatVec3Type m_Spacing = {1.0F, 1.0F, 1.0F};
   bool m_FileWasRead = {false};
   QString m_FeatureIdsArrayName = {"Material"};
 
   QString m_MaterialNameArrayName = {"Material Names"};
   QString m_PhaseAttributeMatrixName = {"Phase Info"};
 
-  QScopedPointer<ImportOnscaleTableFilePrivate> const d_ptr;
-
   SizeVec3Type m_Dims = {0, 0, 0};
+
+  class ImportOnscaleTableFilePrivate;
+  std::unique_ptr<ImportOnscaleTableFilePrivate> const d_ptr;
 
 public:
   ImportOnscaleTableFile(const ImportOnscaleTableFile&) = delete;            // Copy Constructor Not Implemented

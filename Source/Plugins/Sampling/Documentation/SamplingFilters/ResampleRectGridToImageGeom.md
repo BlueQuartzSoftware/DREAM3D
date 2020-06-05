@@ -1,4 +1,4 @@
-# Regular Grid Sample Rectilinear Grid #
+# Resample RectGrid To ImageGeom #
 
 ## Group (Subgroup) ##
 

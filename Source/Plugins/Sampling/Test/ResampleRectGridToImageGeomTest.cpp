@@ -19,30 +19,30 @@
 
 #include "SamplingTestFileLocations.h"
 
-class RegularGridSampleRectilinearGridTest
+class ResampleRectGridToImageGeomTest
 {
 
   public:
-    RegularGridSampleRectilinearGridTest() = default;
-    ~RegularGridSampleRectilinearGridTest() = default;
-    RegularGridSampleRectilinearGridTest(const RegularGridSampleRectilinearGridTest&) = delete;            // Copy Constructor
-    RegularGridSampleRectilinearGridTest(RegularGridSampleRectilinearGridTest&&) = delete;                 // Move Constructor
-    RegularGridSampleRectilinearGridTest& operator=(const RegularGridSampleRectilinearGridTest&) = delete; // Copy Assignment
-    RegularGridSampleRectilinearGridTest& operator=(RegularGridSampleRectilinearGridTest&&) = delete;      // Move Assignment
+    ResampleRectGridToImageGeomTest() = default;
+    ~ResampleRectGridToImageGeomTest() = default;
+    ResampleRectGridToImageGeomTest(const ResampleRectGridToImageGeomTest&) = delete;            // Copy Constructor
+    ResampleRectGridToImageGeomTest(ResampleRectGridToImageGeomTest&&) = delete;                 // Move Constructor
+    ResampleRectGridToImageGeomTest& operator=(const ResampleRectGridToImageGeomTest&) = delete; // Copy Assignment
+    ResampleRectGridToImageGeomTest& operator=(ResampleRectGridToImageGeomTest&&) = delete;      // Move Assignment
 
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
   int TestFilterAvailability()
   {
-    // Now instantiate the RegularGridSampleRectilinearGridTest Filter from the FilterManager
-    QString filtName = "RegularGridSampleRectilinearGrid";
+    // Now instantiate the ResampleRectGridToImageGeomTest Filter from the FilterManager
+    QString filtName = "ResampleRectGridToImageGeom";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     if (nullptr == filterFactory.get())
     {
       std::stringstream ss;
-      ss << "The RegularGridSampleRectilinearGridTest Requires the use of the " << filtName.toStdString()
+      ss << "The ResampleRectGridToImageGeomTest Requires the use of the " << filtName.toStdString()
          << " filter which is found in the Sampling Plugin";
       DREAM3D_TEST_THROW_EXCEPTION(ss.str())
     }
@@ -52,13 +52,13 @@ class RegularGridSampleRectilinearGridTest
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  int TestRegularGridSampleRectilinearGridTest()
+  int TestResampleRectGridToImageGeomTest()
   {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   /* Please write RegularGridSampleRectilinearGridTest test code here.
+   /* Please write ResampleRectGridToImageGeomTest test code here.
     *
     * To create IO test files, please edit the file template at Sampling/Test/TestFileLocations.h.in.
-    * Add a RegularGridSampleRectilinearGridTest namespace inside the UnitTest namespace, and add your test file paths to your new namespace.
+    * Add a ResampleRectGridToImageGeomTest namespace inside the UnitTest namespace, and add your test file paths to your new namespace.
     *
     * SIMPLib provides some macros that will throw exceptions when a test fails
     * and thus report that during testing. These macros are located in the
@@ -87,7 +87,7 @@ class RegularGridSampleRectilinearGridTest
 
     DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
-    DREAM3D_REGISTER_TEST( TestRegularGridSampleRectilinearGridTest() )
+    DREAM3D_REGISTER_TEST( TestResampleRectGridToImageGeomTest() )
   }
 
   private:

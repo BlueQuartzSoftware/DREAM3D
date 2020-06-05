@@ -31,7 +31,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "RegularGridSampleRectilinearGrid.h"
+#include "ResampleRectGridToImageGeom.h"
 
 #include <QtCore/QTextStream>
 
@@ -52,12 +52,29 @@
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
 
-#define INIT_SYNTH_VOLUME_CHECK(var, errCond)                                                                                                                                                          \
-  if(m_##var <= 0)                                                                                                                                                                                     \
-  {                                                                                                                                                                                                    \
-    QString ss = QObject::tr("%1 must be positive").arg(#var);                                                                                                                                         \
-    setErrorCondition(errCond, ss);                                                                                                                                                                    \
+namespace
+{
+
+constexpr int32_t k_BadGeometry = -10101;
+constexpr int32_t k_NotEnoughAttributeArrays = -11001;
+constexpr int32_t k_AttributeMatrixOwnership = -11004;
+
+constexpr int32_t k_Dim0Error = -5000;
+constexpr int32_t k_Dim1Error = -5001;
+constexpr int32_t k_Dim2Error = -5002;
+
+constexpr float k_Half = 0.5F;
+
+template <class Filter, typename T>
+void checkPositiveDimension(Filter* filter, T var, int32_t err)
+{
+  if(var < 0)
+  {
+    QString ss = QObject::tr("%1 must be positive").arg(var);
+    filter->setErrorCondition(err, ss);
   }
+}
+} // namespace
 
 enum createdPathID : RenameDataPath::DataID_t
 {
@@ -68,7 +85,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RegularGridSampleRectilinearGrid::RegularGridSampleRectilinearGrid()
+ResampleRectGridToImageGeom::ResampleRectGridToImageGeom()
 {
   initialize();
 }
@@ -76,12 +93,12 @@ RegularGridSampleRectilinearGrid::RegularGridSampleRectilinearGrid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RegularGridSampleRectilinearGrid::~RegularGridSampleRectilinearGrid() = default;
+ResampleRectGridToImageGeom::~ResampleRectGridToImageGeom() = default;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RegularGridSampleRectilinearGrid::initialize()
+void ResampleRectGridToImageGeom::initialize()
 {
   clearErrorCode();
   clearWarningCode();
@@ -91,33 +108,33 @@ void RegularGridSampleRectilinearGrid::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RegularGridSampleRectilinearGrid::setupFilterParameters()
+void ResampleRectGridToImageGeom::setupFilterParameters()
 {
   FilterParameterVectorType parameters = getFilterParameters();
 
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Input Rectilinear Grid", RectilinearGridPath, FilterParameter::Parameter, RegularGridSampleRectilinearGrid, req));
+    parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Input Rectilinear Grid", RectilinearGridPath, FilterParameter::Parameter, ResampleRectGridToImageGeom, req));
   }
   {
     MultiDataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Copy", SelectedDataArrayPaths, FilterParameter::RequiredArray, RegularGridSampleRectilinearGrid, req));
+    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Copy", SelectedDataArrayPaths, FilterParameter::RequiredArray, ResampleRectGridToImageGeom, req));
   }
 
-  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Rect Grid Geom Info.", RectGridGeometryDesc, FilterParameter::Parameter, RegularGridSampleRectilinearGrid);
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Rect Grid Geom Info.", RectGridGeometryDesc, FilterParameter::Parameter, ResampleRectGridToImageGeom);
   param->setReadOnly(true);
   parameters.push_back(param);
 
   parameters.push_back(SeparatorFilterParameter::New("Output Image Geometry Parameters", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions (Voxels)", Dimensions, FilterParameter::Parameter, RegularGridSampleRectilinearGrid));
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions (Voxels)", Dimensions, FilterParameter::Parameter, ResampleRectGridToImageGeom));
 
-  param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Created Volume Info.", CreatedGeometryDescription, FilterParameter::Parameter, RegularGridSampleRectilinearGrid);
+  param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Created Volume Info.", CreatedGeometryDescription, FilterParameter::Parameter, ResampleRectGridToImageGeom);
   param->setReadOnly(true);
   parameters.push_back(param);
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", ImageGeometryPath, FilterParameter::CreatedArray, RegularGridSampleRectilinearGrid));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", ImageGeometryPath, FilterParameter::CreatedArray, ResampleRectGridToImageGeom));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", ImageGeomCellAttributeMatrix, ImageGeometryPath, FilterParameter::CreatedArray, RegularGridSampleRectilinearGrid));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", ImageGeomCellAttributeMatrix, ImageGeometryPath, FilterParameter::CreatedArray, ResampleRectGridToImageGeom));
 
   setFilterParameters(parameters);
 }
@@ -125,7 +142,7 @@ void RegularGridSampleRectilinearGrid::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RegularGridSampleRectilinearGrid::dataCheck()
+void ResampleRectGridToImageGeom::dataCheck()
 {
   clearErrorCode();
   clearWarningCode();
@@ -138,10 +155,10 @@ void RegularGridSampleRectilinearGrid::dataCheck()
   }
 
   RectGridGeom::Pointer rectGrid = inputDC->getGeometryAs<RectGridGeom>();
-  if(rectGrid.get() == nullptr)
+  if(rectGrid == nullptr)
   {
     QString ss = QObject::tr("Input Geometry is NOT Rectilinear Grid or does not exist");
-    setErrorCondition(-10101, ss);
+    setErrorCondition(::k_BadGeometry, ss);
     return;
   }
   m_InputRectGridGeometry = rectGrid;
@@ -149,7 +166,7 @@ void RegularGridSampleRectilinearGrid::dataCheck()
   if(m_SelectedDataArrayPaths.isEmpty())
   {
     QString ss = QObject::tr("At least one Attribute Array must be selected");
-    setErrorCondition(-11001, ss);
+    setErrorCondition(k_NotEnoughAttributeArrays, ss);
     return;
   }
 
@@ -157,13 +174,12 @@ void RegularGridSampleRectilinearGrid::dataCheck()
   if(!DataArrayPath::ValidateVector(paths))
   {
     QString ss = QObject::tr("There are Attribute Arrays selected that are not contained in the same Attribute Matrix. All selected Attribute Arrays must belong to the same Attribute Matrix");
-    setErrorCondition(-11004, ss);
+    setErrorCondition(k_AttributeMatrixOwnership, ss);
     return;
   }
 
-  for(int32_t i = 0; i < paths.count(); i++)
+  for(const DataArrayPath& path : paths)
   {
-    DataArrayPath path = paths.at(i);
     IDataArray::WeakPointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, path);
     m_SelectedWeakPtrVector.push_back(ptr);
   }
@@ -179,9 +195,9 @@ void RegularGridSampleRectilinearGrid::dataCheck()
   outputDC->setGeometry(image);
 
   // Sanity Check the Dimensions and Spacing
-  INIT_SYNTH_VOLUME_CHECK(Dimensions[0], -5000);
-  INIT_SYNTH_VOLUME_CHECK(Dimensions[1], -5001);
-  INIT_SYNTH_VOLUME_CHECK(Dimensions[2], -5002);
+  checkPositiveDimension<ResampleRectGridToImageGeom, int32_t>(this, m_Dimensions[0], k_Dim0Error);
+  checkPositiveDimension<ResampleRectGridToImageGeom, int32_t>(this, m_Dimensions[1], k_Dim1Error);
+  checkPositiveDimension<ResampleRectGridToImageGeom, int32_t>(this, m_Dimensions[2], k_Dim2Error);
 
   // Set the Dimensions, Spacing and Origin of the output data container
   image->setDimensions(static_cast<size_t>(m_Dimensions[0]), static_cast<size_t>(m_Dimensions[1]), static_cast<size_t>(m_Dimensions[2]));
@@ -189,7 +205,7 @@ void RegularGridSampleRectilinearGrid::dataCheck()
 
   std::vector<size_t> tDims = {static_cast<size_t>(m_Dimensions[0]), static_cast<size_t>(m_Dimensions[1]), static_cast<size_t>(m_Dimensions[2])};
   AttributeMatrix::Pointer imageGeomCellAM = outputDC->createNonPrereqAttributeMatrix(this, getImageGeomCellAttributeMatrix(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
-  if(getErrorCode() < 0 || nullptr == imageGeomCellAM.get())
+  if(getErrorCode() < 0 || nullptr == imageGeomCellAM)
   {
     return;
   }
@@ -207,11 +223,14 @@ void RegularGridSampleRectilinearGrid::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RegularGridSampleRectilinearGrid::execute()
+void ResampleRectGridToImageGeom::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCode() < 0) { return; }
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
 
   if(getCancel())
   {
@@ -232,7 +251,7 @@ void RegularGridSampleRectilinearGrid::execute()
   FloatVec3Type imageGeomSpacing = {(xGridValues->back() - xGridValues->front()) / imageGeomDims[0], (yGridValues->back() - yGridValues->front()) / imageGeomDims[1],
                                     (zGridValues->back() - zGridValues->front()) / imageGeomDims[2]};
   imageGeom->setSpacing(imageGeomSpacing);
-  FloatVec3Type halfSpacing = {imageGeomSpacing[0] * 0.5f, imageGeomSpacing[1] * 0.5f, imageGeomSpacing[2] * 0.5f};
+  FloatVec3Type halfSpacing = {imageGeomSpacing[0] * ::k_Half, imageGeomSpacing[1] * ::k_Half, imageGeomSpacing[2] * ::k_Half};
 
   FloatVec3Type imageGeomOrigin = {xGridValues->getValue(0), yGridValues->getValue(0), zGridValues->getValue(0)};
   imageGeom->setOrigin(imageGeomOrigin);
@@ -288,15 +307,15 @@ void RegularGridSampleRectilinearGrid::execute()
   // Store the mapped XYZ index into the RectGrid data ararys
   std::vector<size_t> newIdxs(imageGeom->getNumberOfElements());
   size_t currIdx = 0;
-  for(size_t z = 0; z < zIdx.size(); z++)
+  for(size_t z : zIdx)
   {
-    for(size_t y = 0; y < yIdx.size(); y++)
+    for(size_t y : yIdx)
     {
-      for(size_t x = 0; x < xIdx.size(); x++)
+      for(size_t x : xIdx)
       {
         // Compute the index into the RectGrid Data Array
-        size_t idx = (rectGridDims[0] * rectGridDims[1] * zIdx[z]) + (rectGridDims[0] * yIdx[y]) + xIdx[x];
-        // Compute the index into the
+        size_t idx = (rectGridDims[0] * rectGridDims[1] * z) + (rectGridDims[0] * y) + x;
+        // Compute the index into the new Idx Array
         newIdxs[currIdx++] = idx;
       }
     }
@@ -315,9 +334,9 @@ void RegularGridSampleRectilinearGrid::execute()
     size_t totalPoints = imageGeom->getNumberOfElements();
 
     QList<QString> voxelArrayNames = rectGridCellAM->getAttributeArrayNames();
-    for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+    for(const QString& voxelArrayName : voxelArrayNames)
     {
-      IDataArray::Pointer inputDataArray = rectGridCellAM->getAttributeArray(*iter);
+      IDataArray::Pointer inputDataArray = rectGridCellAM->getAttributeArray(voxelArrayName);
       // Make a copy of the 'p' array that has the same name. When placed into
       // the data container this will over write the current array with
       // the same name. At least in theory
@@ -343,9 +362,9 @@ void RegularGridSampleRectilinearGrid::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer RegularGridSampleRectilinearGrid::newFilterInstance(bool copyFilterParameters) const
+AbstractFilter::Pointer ResampleRectGridToImageGeom::newFilterInstance(bool copyFilterParameters) const
 {
-  RegularGridSampleRectilinearGrid::Pointer filter = RegularGridSampleRectilinearGrid::New();
+  ResampleRectGridToImageGeom::Pointer filter = ResampleRectGridToImageGeom::New();
   if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -356,15 +375,15 @@ AbstractFilter::Pointer RegularGridSampleRectilinearGrid::newFilterInstance(bool
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString RegularGridSampleRectilinearGrid::getCompiledLibraryName() const
-{ 
+QString ResampleRectGridToImageGeom::getCompiledLibraryName() const
+{
   return SamplingConstants::SamplingBaseName;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString RegularGridSampleRectilinearGrid::getBrandingString() const
+QString ResampleRectGridToImageGeom::getBrandingString() const
 {
   return "Sampling";
 }
@@ -372,56 +391,56 @@ QString RegularGridSampleRectilinearGrid::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString RegularGridSampleRectilinearGrid::getFilterVersion() const
+QString ResampleRectGridToImageGeom::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
+  vStream << Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
   return version;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString RegularGridSampleRectilinearGrid::getGroupName() const
-{ 
-  return SIMPL::FilterGroups::Unsupported; 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString RegularGridSampleRectilinearGrid::getSubGroupName() const
-{ 
-  return "Sampling"; 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString RegularGridSampleRectilinearGrid::getHumanLabel() const
+QString ResampleRectGridToImageGeom::getGroupName() const
 {
-  return "Resample Rectilinear Grid to Regular Grid";
+  return SIMPL::FilterGroups::Unsupported;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QUuid RegularGridSampleRectilinearGrid::getUuid() const
+QString ResampleRectGridToImageGeom::getSubGroupName() const
 {
-  return QUuid("{77befd69-4536-5856-9f81-02996d038f73}");
+  return "Sampling";
 }
 
 // -----------------------------------------------------------------------------
-RegularGridSampleRectilinearGrid::Pointer RegularGridSampleRectilinearGrid::NullPointer()
+//
+// -----------------------------------------------------------------------------
+QString ResampleRectGridToImageGeom::getHumanLabel() const
+{
+  return "Resample Rectilinear Grid to Image Geom";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QUuid ResampleRectGridToImageGeom::getUuid() const
+{
+  return {"{77befd69-4536-5856-9f81-02996d038f73}"};
+}
+
+// -----------------------------------------------------------------------------
+ResampleRectGridToImageGeom::Pointer ResampleRectGridToImageGeom::NullPointer()
 {
   return Pointer(static_cast<Self*>(nullptr));
 }
 
 // -----------------------------------------------------------------------------
-std::shared_ptr<RegularGridSampleRectilinearGrid> RegularGridSampleRectilinearGrid::New()
+std::shared_ptr<ResampleRectGridToImageGeom> ResampleRectGridToImageGeom::New()
 {
-  struct make_shared_enabler : public RegularGridSampleRectilinearGrid
+  struct make_shared_enabler : public ResampleRectGridToImageGeom
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -430,73 +449,73 @@ std::shared_ptr<RegularGridSampleRectilinearGrid> RegularGridSampleRectilinearGr
 }
 
 // -----------------------------------------------------------------------------
-QString RegularGridSampleRectilinearGrid::getNameOfClass() const
+QString ResampleRectGridToImageGeom::getNameOfClass() const
 {
-  return QString("RegularGridSampleRectilinearGrid");
+  return QString("ResampleRectGridToImageGeom");
 }
 
 // -----------------------------------------------------------------------------
-QString RegularGridSampleRectilinearGrid::ClassName()
+QString ResampleRectGridToImageGeom::ClassName()
 {
-  return QString("RegularGridSampleRectilinearGrid");
+  return QString("ResampleRectGridToImageGeom");
 }
 
 // -----------------------------------------------------------------------------
-void RegularGridSampleRectilinearGrid::setImageGeometryPath(const DataArrayPath& value)
+void ResampleRectGridToImageGeom::setImageGeometryPath(const DataArrayPath& value)
 {
   m_ImageGeometryPath = value;
 }
 
 // -----------------------------------------------------------------------------
-DataArrayPath RegularGridSampleRectilinearGrid::getImageGeometryPath() const
+DataArrayPath ResampleRectGridToImageGeom::getImageGeometryPath() const
 {
   return m_ImageGeometryPath;
 }
 
 // -----------------------------------------------------------------------------
-void RegularGridSampleRectilinearGrid::setImageGeomCellAttributeMatrix(const QString& value)
+void ResampleRectGridToImageGeom::setImageGeomCellAttributeMatrix(const QString& value)
 {
   m_ImageGeomCellAttributeMatrix = value;
 }
 
 // -----------------------------------------------------------------------------
-QString RegularGridSampleRectilinearGrid::getImageGeomCellAttributeMatrix() const
+QString ResampleRectGridToImageGeom::getImageGeomCellAttributeMatrix() const
 {
   return m_ImageGeomCellAttributeMatrix;
 }
 
 // -----------------------------------------------------------------------------
-void RegularGridSampleRectilinearGrid::setLengthUnit(int32_t value)
+void ResampleRectGridToImageGeom::setLengthUnit(int32_t value)
 {
   m_LengthUnit = value;
 }
 
 // -----------------------------------------------------------------------------
-int32_t RegularGridSampleRectilinearGrid::getLengthUnit() const
+int32_t ResampleRectGridToImageGeom::getLengthUnit() const
 {
   return m_LengthUnit;
 }
 
 // -----------------------------------------------------------------------------
-void RegularGridSampleRectilinearGrid::setDimensions(const IntVec3Type& value)
+void ResampleRectGridToImageGeom::setDimensions(const IntVec3Type& value)
 {
   m_Dimensions = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec3Type RegularGridSampleRectilinearGrid::getDimensions() const
+IntVec3Type ResampleRectGridToImageGeom::getDimensions() const
 {
   return m_Dimensions;
 }
 
 // -----------------------------------------------------------------------------
-void RegularGridSampleRectilinearGrid::setRectilinearGridPath(const DataArrayPath& value)
+void ResampleRectGridToImageGeom::setRectilinearGridPath(const DataArrayPath& value)
 {
   m_RectilinearGridPath = value;
 }
 
 // -----------------------------------------------------------------------------
-DataArrayPath RegularGridSampleRectilinearGrid::getRectilinearGridPath() const
+DataArrayPath ResampleRectGridToImageGeom::getRectilinearGridPath() const
 {
   return m_RectilinearGridPath;
 }
@@ -527,7 +546,7 @@ QString GenerateSourceVolumeInformation(RectGridGeom* geom)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString RegularGridSampleRectilinearGrid::getRectGridGeometryDesc()
+QString ResampleRectGridToImageGeom::getRectGridGeometryDesc()
 {
   QString desc = QString("Geometry Not initialized.");
   if(m_InputRectGridGeometry.get() != nullptr)
@@ -556,10 +575,10 @@ QString GenerateImageInfoString(ImageGeom* geom)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString RegularGridSampleRectilinearGrid::getCreatedGeometryDescription()
+QString ResampleRectGridToImageGeom::getCreatedGeometryDescription()
 {
   QString desc = QString("Geometry Not initialized.");
-  if(m_GeneratedVolume.get() != nullptr)
+  if(m_GeneratedVolume != nullptr)
   {
     desc = GenerateImageInfoString(m_GeneratedVolume.get());
   }
@@ -567,13 +586,13 @@ QString RegularGridSampleRectilinearGrid::getCreatedGeometryDescription()
 }
 
 // -----------------------------------------------------------------------------
-void RegularGridSampleRectilinearGrid::setSelectedDataArrayPaths(const QVector<DataArrayPath>& value)
+void ResampleRectGridToImageGeom::setSelectedDataArrayPaths(const QVector<DataArrayPath>& value)
 {
   m_SelectedDataArrayPaths = value;
 }
 
 // -----------------------------------------------------------------------------
-QVector<DataArrayPath> RegularGridSampleRectilinearGrid::getSelectedDataArrayPaths() const
+QVector<DataArrayPath> ResampleRectGridToImageGeom::getSelectedDataArrayPaths() const
 {
   return m_SelectedDataArrayPaths;
 }
