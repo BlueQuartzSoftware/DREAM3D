@@ -85,27 +85,19 @@ constexpr int32_t k_CoordParseError = -42004;
 // clang-format off
 
 #define S_PIMPL_PRIVATE_CLASS(Class)\
-public:\
-Class##Private(Class* ptr) : q_ptr(ptr){}\
+Class##Private() = default;\
 ~Class##Private() = default;\
 Class##Private(const Class##Private&) = delete;            \
 Class##Private(Class##Private&&) = delete;       \
 Class##Private& operator=(const Class##Private&) = delete; \
-Class##Private& operator=(Class##Private&&) = delete;\
-inline Class* q_func() { return static_cast<Class*>(q_ptr);}\
-inline const Class* q_func() const{  return static_cast<const Class*>(q_ptr);}\
-friend class Class;\
-private:\
-Class* const q_ptr = nullptr;
+Class##Private& operator=(Class##Private&&) = delete;
 
 // clang-format on
 
-class ImportOnscaleTableFile::ImportOnscaleTableFilePrivate
+struct ImportOnscaleTableFile::ImportOnscaleTableFilePrivate
 {
-public:
   S_PIMPL_PRIVATE_CLASS(ImportOnscaleTableFile)
 
-private:
   std::vector<size_t> m_Dims;
   std::vector<FloatArrayType::Pointer> m_Coords;
   std::vector<QString> m_Names;
@@ -117,7 +109,7 @@ private:
 // Start Public Implementation
 //==============================================================================
 ImportOnscaleTableFile::ImportOnscaleTableFile()
-: d_ptr(new ImportOnscaleTableFilePrivate(this))
+: d_ptr(std::make_unique<ImportOnscaleTableFilePrivate>())
 {
   initialize();
 }

@@ -352,7 +352,7 @@ private:
 
   SizeVec3Type m_Dims = {0, 0, 0};
 
-  class ImportOnscaleTableFilePrivate;
+  struct ImportOnscaleTableFilePrivate;
   std::unique_ptr<ImportOnscaleTableFilePrivate> const d_ptr;
 
 public:
