@@ -366,7 +366,7 @@ int32_t parseValues(QFile& in, FloatArrayType& data)
   while(count < data.size())
   {
     QString line = in.readLine().trimmed();
-    QStringList tokens = line.split(" ", Qt::SkipEmptyParts);
+    QStringList tokens = line.split(" ", QString::SkipEmptyParts);
     for(const auto& token : tokens)
     {
       float value = token.toFloat(&ok);
@@ -395,7 +395,7 @@ int32_t parseValues(ImportOnscaleTableFile* filter, QFile& in, Int32ArrayType& d
   while(count < data.size())
   {
     QString line = in.readLine().trimmed();
-    QStringList tokens = line.split(" ", Qt::SkipEmptyParts);
+    QStringList tokens = line.split(" ", QString::SkipEmptyParts);
     for(const auto& token : tokens)
     {
       int32_t value = token.toInt(&ok);
@@ -429,7 +429,7 @@ void parseValues(QFile& in, std::vector<QString>& data)
   while(count < data.size())
   {
     QString line = in.readLine().trimmed();
-    QStringList tokens = line.split(" ", Qt::SkipEmptyParts);
+    QStringList tokens = line.split(" ", QString::SkipEmptyParts);
     for(const auto& token : tokens)
     {
       data[count] = token;
@@ -441,7 +441,7 @@ void parseValues(QFile& in, std::vector<QString>& data)
 // -----------------------------------------------------------------------------
 int32_t ImportOnscaleTableFile::readHeader(QFile& fileStream)
 {
-  QString ss;
+  // QString ss;
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
   RectGridGeom::Pointer rectGridGeom = std::dynamic_pointer_cast<RectGridGeom>(m->getGeometry());
 
@@ -452,7 +452,7 @@ int32_t ImportOnscaleTableFile::readHeader(QFile& fileStream)
 
   int32_t error = 0;
 
-  QByteArray buf;
+  // QByteArray buf;
   QStringList tokens; /* vector to store the split data */
 
   bool ok = false;
@@ -472,7 +472,7 @@ int32_t ImportOnscaleTableFile::readHeader(QFile& fileStream)
     if(line.startsWith("xcrd"))
     {
       line = line.trimmed();
-      tokens = line.split(" ", Qt::SkipEmptyParts);
+      tokens = line.split(" ", QString::SkipEmptyParts);
       nx = tokens[1].toULongLong(&ok);
       nxDone = true;
       xValues = FloatArrayType::CreateArray(nx, "X Bounds", true);
@@ -487,7 +487,7 @@ int32_t ImportOnscaleTableFile::readHeader(QFile& fileStream)
     else if(line.startsWith("ycrd"))
     {
       line = line.trimmed();
-      tokens = line.split(" ", Qt::SkipEmptyParts);
+      tokens = line.split(" ", QString::SkipEmptyParts);
       ny = tokens[1].toULongLong(&ok);
       nyDone = true;
       yValues = FloatArrayType::CreateArray(ny, "Y Bounds", true);
@@ -502,7 +502,7 @@ int32_t ImportOnscaleTableFile::readHeader(QFile& fileStream)
     else if(line.startsWith("zcrd"))
     {
       line = line.trimmed();
-      tokens = line.split(" ", Qt::SkipEmptyParts);
+      tokens = line.split(" ", QString::SkipEmptyParts);
       nz = tokens[1].toULongLong(&ok);
       nzDone = true;
       zValues = FloatArrayType::CreateArray(nx, "Z Bounds", true);
@@ -517,7 +517,7 @@ int32_t ImportOnscaleTableFile::readHeader(QFile& fileStream)
     else if(line.startsWith("name"))
     {
       line = line.trimmed();
-      QStringList tokens = line.split(" ", Qt::SkipEmptyParts);
+      QStringList tokens = line.split(" ", QString::SkipEmptyParts);
       size_t numNames = tokens[1].toULongLong(&ok);
       names.resize(numNames);
       parseValues(fileStream, names);
@@ -659,7 +659,7 @@ int32_t ImportOnscaleTableFile::readFile(QFile& fileStream)
       QString ss = QObject::tr("Reading Names");
       notifyStatusMessage(ss);
       line = line.trimmed();
-      QStringList tokens = line.split(" ", Qt::SkipEmptyParts);
+      QStringList tokens = line.split(" ", QString::SkipEmptyParts);
       size_t numNames = tokens[1].toULongLong(&ok);
       names.resize(numNames);
       parseValues(fileStream, names);
