@@ -51,6 +51,7 @@
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/IGeometry.h"
@@ -76,6 +77,10 @@ constexpr int32_t k_ErrorOpeningFile = -42002;
 constexpr int32_t k_MaterialParseError = -42003;
 constexpr int32_t k_CoordParseError = -42004;
 
+const QString k_XBounds = {"X Bounds"};
+const QString k_YBounds = {"Y Bounds"};
+const QString k_ZBounds = {"Z Bounds"};
+
 } // namespace
 
 //==============================================================================
@@ -98,11 +103,12 @@ struct ImportOnscaleTableFile::ImportOnscaleTableFilePrivate
 {
   S_PIMPL_PRIVATE_CLASS(ImportOnscaleTableFile)
 
-  std::vector<size_t> m_Dims;
+  std::vector<size_t> m_Dims = {0, 0, 0};
   std::vector<FloatArrayType::Pointer> m_Coords;
   std::vector<QString> m_Names;
   QString m_InputFile_Cache;
   QDateTime m_LastRead;
+  std::vector<bool> m_CoordDataExists = {false, false, false};
 };
 
 //==============================================================================
@@ -194,8 +200,12 @@ void ImportOnscaleTableFile::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, ImportOnscaleTableFile, "*.dx"));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ImportOnscaleTableFile));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ImportOnscaleTableFile));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Fallback Origin", Origin, FilterParameter::Parameter, ImportOnscaleTableFile));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Fallback Spacing", Spacing, FilterParameter::Parameter, ImportOnscaleTableFile));
+
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Rect Grid Geom Info.", RectGridGeometryDesc, FilterParameter::Parameter, ImportOnscaleTableFile);
+  param->setReadOnly(true);
+  parameters.push_back(param);
 
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, ImportOnscaleTableFile));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -216,6 +226,7 @@ void ImportOnscaleTableFile::flushCache()
   setInputFile_Cache("");
   setDims({2, 2, 2});
   setLastRead(QDateTime());
+  d_ptr->m_CoordDataExists = {false, false, false};
 }
 // -----------------------------------------------------------------------------
 //
@@ -232,9 +243,9 @@ void ImportOnscaleTableFile::dataCheck()
     return;
   }
 
-  RectGridGeom::Pointer image = RectGridGeom::CreateGeometry(SIMPL::Geometry::RectGridGeometry);
-  image->setUnits(IGeometry::LengthUnit::Meter);
-  m->setGeometry(image);
+  RectGridGeom::Pointer rectGridGeom = RectGridGeom::CreateGeometry(SIMPL::Geometry::RectGridGeometry);
+  rectGridGeom->setUnits(IGeometry::LengthUnit::Meter);
+  m->setGeometry(rectGridGeom);
 
   QFileInfo fi(getInputFile());
 
@@ -263,11 +274,10 @@ void ImportOnscaleTableFile::dataCheck()
       v[0] -= 1;
       v[1] -= 1;
       v[2] -= 1;
-      RectGridGeom::Pointer rectGridGeom = std::dynamic_pointer_cast<RectGridGeom>(m->getGeometry());
-      if(nullptr != rectGridGeom.get())
-      {
-        rectGridGeom->setDimensions(v.data());
-      }
+      rectGridGeom->setDimensions(v.data());
+      rectGridGeom->setXBounds(d_ptr->m_Coords[0]);
+      rectGridGeom->setYBounds(d_ptr->m_Coords[1]);
+      rectGridGeom->setZBounds(d_ptr->m_Coords[2]);
     }
     else
     {
@@ -297,8 +307,24 @@ void ImportOnscaleTableFile::dataCheck()
     }
   }
 
+  // Check if we need to adjust any of the Coords because they are not in the file
+  if(!d_ptr->m_CoordDataExists[0])
+  {
+    FloatArrayType::Pointer coords = FloatArrayType::FromStdVector({m_Origin[0], m_Origin[0] + m_Spacing[0]}, ::k_XBounds);
+    d_ptr->m_Coords[0] = coords;
+  }
+  if(!d_ptr->m_CoordDataExists[1])
+  {
+    FloatArrayType::Pointer coords = FloatArrayType::FromStdVector({m_Origin[1], m_Origin[1] + m_Spacing[1]}, ::k_YBounds);
+    d_ptr->m_Coords[1] = coords;
+  }
+  if(!d_ptr->m_CoordDataExists[2])
+  {
+    FloatArrayType::Pointer coords = FloatArrayType::FromStdVector({m_Origin[2], m_Origin[2] + m_Spacing[2]}, ::k_ZBounds);
+    d_ptr->m_Coords[2] = coords;
+  }
+
   // Create the Cell Data AM and DA
-  RectGridGeom::Pointer rectGridGeom = std::dynamic_pointer_cast<RectGridGeom>(m->getGeometry());
   std::vector<size_t> tDims = rectGridGeom->getDimensions().toContainer<std::vector<size_t>>();
   m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCode() < 0)
@@ -445,9 +471,9 @@ int32_t ImportOnscaleTableFile::readHeader(QFile& fileStream)
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
   RectGridGeom::Pointer rectGridGeom = std::dynamic_pointer_cast<RectGridGeom>(m->getGeometry());
 
-  FloatArrayType::Pointer xValues;
-  FloatArrayType::Pointer yValues;
-  FloatArrayType::Pointer zValues;
+  FloatArrayType::Pointer xValues = FloatArrayType::FromStdVector({m_Origin[0], m_Origin[0] + m_Spacing[0]}, ::k_XBounds);
+  FloatArrayType::Pointer yValues = FloatArrayType::FromStdVector({m_Origin[1], m_Origin[1] + m_Spacing[1]}, ::k_YBounds);
+  FloatArrayType::Pointer zValues = FloatArrayType::FromStdVector({m_Origin[2], m_Origin[2] + m_Spacing[2]}, ::k_ZBounds);
   std::vector<QString> names;
 
   int32_t error = 0;
@@ -462,9 +488,7 @@ int32_t ImportOnscaleTableFile::readHeader(QFile& fileStream)
   size_t ny = 2;
   size_t nz = 2;
   bool done = false;
-  bool nxDone = false;
-  bool nyDone = false;
-  bool nzDone = false;
+
   while(!fileStream.atEnd() && !done)
   {
     QString line = fileStream.readLine();
@@ -474,8 +498,8 @@ int32_t ImportOnscaleTableFile::readHeader(QFile& fileStream)
       line = line.trimmed();
       tokens = line.split(" ", QString::SkipEmptyParts);
       nx = tokens[1].toULongLong(&ok);
-      nxDone = true;
-      xValues = FloatArrayType::CreateArray(nx, "X Bounds", true);
+      d_ptr->m_CoordDataExists[0] = true;
+      xValues = FloatArrayType::CreateArray(nx, ::k_XBounds, true);
       rectGridGeom->setXBounds(xValues);
       if(parseValues(fileStream, *xValues) == ::k_CoordParseError)
       {
@@ -489,8 +513,8 @@ int32_t ImportOnscaleTableFile::readHeader(QFile& fileStream)
       line = line.trimmed();
       tokens = line.split(" ", QString::SkipEmptyParts);
       ny = tokens[1].toULongLong(&ok);
-      nyDone = true;
-      yValues = FloatArrayType::CreateArray(ny, "Y Bounds", true);
+      d_ptr->m_CoordDataExists[1] = true;
+      yValues = FloatArrayType::CreateArray(ny, ::k_YBounds, true);
       rectGridGeom->setYBounds(yValues);
       if(parseValues(fileStream, *yValues) == k_CoordParseError)
       {
@@ -504,8 +528,8 @@ int32_t ImportOnscaleTableFile::readHeader(QFile& fileStream)
       line = line.trimmed();
       tokens = line.split(" ", QString::SkipEmptyParts);
       nz = tokens[1].toULongLong(&ok);
-      nzDone = true;
-      zValues = FloatArrayType::CreateArray(nx, "Z Bounds", true);
+      d_ptr->m_CoordDataExists[2] = true;
+      zValues = FloatArrayType::CreateArray(nx, ::k_ZBounds, true);
       rectGridGeom->setZBounds(zValues);
       if(parseValues(fileStream, *zValues) == k_CoordParseError)
       {
@@ -521,39 +545,11 @@ int32_t ImportOnscaleTableFile::readHeader(QFile& fileStream)
       size_t numNames = tokens[1].toULongLong(&ok);
       names.resize(numNames);
       parseValues(fileStream, names);
-
-      if(!nxDone)
-      {
-        nxDone = true;
-      }
-      if(!nyDone)
-      {
-        nyDone = true;
-      }
-      if(!nzDone)
-      {
-        nzDone = true;
-      }
     }
     else if(line.startsWith("matr"))
     {
-      if(!nxDone)
-      {
-        nxDone = true;
-      }
-      if(!nyDone)
-      {
-        nyDone = true;
-      }
-      if(!nzDone)
-      {
-        nzDone = true;
-      }
-    }
-
-    if(nxDone && nyDone && nzDone)
-    {
-      done = true;
+      // The spec from Onscale, matr section is last.
+      done = true; // Kick out of the loop.
     }
   }
 
@@ -562,21 +558,12 @@ int32_t ImportOnscaleTableFile::readHeader(QFile& fileStream)
   setCoords({xValues, yValues, zValues});
   setNames(names);
 
-  if(nullptr != m.get())
-  {
-    RectGridGeom::Pointer rectGridGeom = std::dynamic_pointer_cast<RectGridGeom>(m->getGeometry());
-    if(nullptr != rectGridGeom.get())
-    {
-      std::vector<size_t> v;
-      v.push_back(nx - 1);
-      v.push_back(ny - 1);
-      v.push_back(nz - 1);
-      rectGridGeom->setDimensions(v.data());
-      rectGridGeom->setXBounds(xValues);
-      rectGridGeom->setYBounds(yValues);
-      rectGridGeom->setZBounds(zValues);
-    }
-  }
+  std::vector<size_t> v = {nx - 1, ny - 1, nz - 1};
+  rectGridGeom->setDimensions(v.data());
+  rectGridGeom->setXBounds(xValues);
+  rectGridGeom->setYBounds(yValues);
+  rectGridGeom->setZBounds(zValues);
+  rectGridGeom->setUnits(IGeometry::LengthUnit::Meter);
 
   return error;
 }
@@ -808,6 +795,40 @@ QString ImportOnscaleTableFile::getNameOfClass() const
 QString ImportOnscaleTableFile::ClassName()
 {
   return QString("ImportOnscaleTableFile");
+}
+
+// -----------------------------------------------------------------------------
+QString ImportOnscaleTableFile::getRectGridGeometryDesc()
+{
+  QString desc = "File not read";
+  QTextStream ss(&desc);
+  std::vector<size_t> dims = getDims();
+  std::vector<FloatArrayType::Pointer> coords = getCoords();
+  if(coords.size() != 3)
+  {
+    return desc;
+  }
+  if(dims.empty())
+  {
+    return desc;
+  }
+  if(dims[0] == 0 || dims[1] == 0 || dims[2] == 0)
+  {
+    return desc;
+  }
+
+  desc.clear();
+
+  FloatVec3Type origin = {(*coords[0]).front(), (*coords[1]).front(), (*coords[2]).front()};
+  FloatVec3Type max = {(*coords[0]).back(), (*coords[1]).back(), (*coords[2]).back()};
+
+  QString lengthUnit = IGeometry::LengthUnitToString(IGeometry::LengthUnit::Meter);
+
+  ss << "X Range: " << origin[0] << " to " << max[0] << " (Delta: " << (max[0] - origin[0]) << " " << lengthUnit << ") " << dims[0] << " Voxels\n";
+  ss << "Y Range: " << origin[1] << " to " << max[1] << " (Delta: " << (max[1] - origin[1]) << " " << lengthUnit << ") " << dims[1] << " Voxels\n";
+  ss << "Z Range: " << origin[2] << " to " << max[2] << " (Delta: " << (max[2] - origin[2]) << " " << lengthUnit << ") " << dims[2] << " Voxels\n";
+
+  return desc;
 }
 
 // -----------------------------------------------------------------------------

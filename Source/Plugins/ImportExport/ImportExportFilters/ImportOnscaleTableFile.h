@@ -68,6 +68,7 @@ class ImportExport_EXPORT ImportOnscaleTableFile : public AbstractFilter
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString PhaseAttributeMatrixName READ getPhaseAttributeMatrixName WRITE setPhaseAttributeMatrixName)
   PYB11_PROPERTY(QString MaterialNameArrayName READ getMaterialNameArrayName WRITE setMaterialNameArrayName)
+  PYB11_PROPERTY(QString RectGridGeometryDesc READ getRectGridGeometryDesc)
 
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
@@ -198,6 +199,13 @@ public:
    */
   QString getMaterialNameArrayName() const;
   Q_PROPERTY(QString MaterialNameArrayName READ getMaterialNameArrayName WRITE setMaterialNameArrayName)
+
+  /**
+   * @brief getNewBoxDimensions
+   * @return
+   */
+  QString getRectGridGeometryDesc();
+  Q_PROPERTY(QString RectGridGeometryDesc READ getRectGridGeometryDesc)
 
   /**
    * @brief Setter property for Dims

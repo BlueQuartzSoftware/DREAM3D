@@ -162,6 +162,9 @@ void ResampleRectGridToImageGeom::dataCheck()
     return;
   }
   m_InputRectGridGeometry = rectGrid;
+  FloatArrayType::Pointer rgXCoords = m_InputRectGridGeometry->getXBounds();
+  FloatArrayType::Pointer rgYCoords = m_InputRectGridGeometry->getYBounds();
+  FloatArrayType::Pointer rgZCoords = m_InputRectGridGeometry->getZBounds();
 
   if(m_SelectedDataArrayPaths.isEmpty())
   {
@@ -196,13 +199,34 @@ void ResampleRectGridToImageGeom::dataCheck()
 
   // Sanity Check the Dimensions and Spacing
   checkPositiveDimension<ResampleRectGridToImageGeom, int32_t>(this, m_Dimensions[0], k_Dim0Error);
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
   checkPositiveDimension<ResampleRectGridToImageGeom, int32_t>(this, m_Dimensions[1], k_Dim1Error);
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
   checkPositiveDimension<ResampleRectGridToImageGeom, int32_t>(this, m_Dimensions[2], k_Dim2Error);
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
 
   // Set the Dimensions, Spacing and Origin of the output data container
   image->setDimensions(static_cast<size_t>(m_Dimensions[0]), static_cast<size_t>(m_Dimensions[1]), static_cast<size_t>(m_Dimensions[2]));
   image->setUnits(rectGrid->getUnits());
 
+  if(rgXCoords != nullptr && rgXCoords->isAllocated() && rgYCoords != nullptr && rgYCoords->isAllocated() && rgZCoords != nullptr && rgZCoords->isAllocated())
+  {
+    FloatVec3Type origin = {(*rgXCoords).front(), (*rgYCoords).front(), (*rgZCoords).front()};
+    image->setOrigin(origin);
+    FloatVec3Type max = {(*rgXCoords).back(), (*rgYCoords).back(), (*rgZCoords).back()};
+
+    FloatVec3Type spacing = {(max[0] - origin[0]) / m_Dimensions[0], (max[1] - origin[1]) / m_Dimensions[1], (max[2] - origin[2]) / m_Dimensions[2]};
+    image->setSpacing(spacing);
+  }
   std::vector<size_t> tDims = {static_cast<size_t>(m_Dimensions[0]), static_cast<size_t>(m_Dimensions[1]), static_cast<size_t>(m_Dimensions[2])};
   AttributeMatrix::Pointer imageGeomCellAM = outputDC->createNonPrereqAttributeMatrix(this, getImageGeomCellAttributeMatrix(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCode() < 0 || nullptr == imageGeomCellAM)
@@ -215,7 +239,7 @@ void ResampleRectGridToImageGeom::dataCheck()
   {
     AttributeMatrix::Pointer rectGridCellAM = inputDC->getAttributeMatrix(path.getAttributeMatrixName());
     IDataArray::Pointer inputDataArray = rectGridCellAM->getAttributeArray(path.getDataArrayName());
-    IDataArray::Pointer data = inputDataArray->createNewArray(totalPoints, inputDataArray->getComponentDimensions(), inputDataArray->getName());
+    IDataArray::Pointer data = inputDataArray->createNewArray(totalPoints, inputDataArray->getComponentDimensions(), inputDataArray->getName(), !getInPreflight());
     imageGeomCellAM->insertOrAssign(data);
   }
 }
