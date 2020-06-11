@@ -199,7 +199,7 @@ QDateTime ImportOnscaleTableFile::getLastRead() const
 void ImportOnscaleTableFile::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, ImportOnscaleTableFile, "*.dx"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, ImportOnscaleTableFile, "*.flxtbl"));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Fallback Origin", Origin, FilterParameter::Parameter, ImportOnscaleTableFile));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Fallback Spacing", Spacing, FilterParameter::Parameter, ImportOnscaleTableFile));
 
