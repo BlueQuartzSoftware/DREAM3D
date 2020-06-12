@@ -2,38 +2,36 @@
 
 ## Minimum Supported Compiler Versions ##
 
-DREAM.3D is written in C\++ and the developers utilize features from the C\+\+11 specification.
-Therefore, any C\+\+ compiler that is used **MUST** be C\+\+11 compliant.
+DREAM.3D is written in C\++ and the developers utilize features from the C\+\+17 specification.
+Therefore, any C\+\+ compiler that is used **MUST** be C\+\+17 compliant.
 
 A compiler suite (Visual Studio, Xcode, GCC, etc.) for your operating system is necessary.
 The following table lists the compilers that DREAM.3D is commonly compiled against.
 
 Find your current OS and download the appropriate compiler.
 
-## Windows 8/10 ##
+## Windows ##
 
-| Compiler Version | Notes |
-| ---------------- | ----- |
-| Visual Studio 2017 Pro & Community |  |
+| Product | Product Version | Compiler Version | MSVC++ Toolset |
+| ------- | --------------- | ---------------- | -------------- |
+| Visual Studio 2017 Pro & Community | 15.8 | 19.15 | 14.15 |
 
 ## OS X ##
 
-Mac OS X 10.10 (Yosemite), 10.11 (El Capitan), and 10.12 (Sierra) are supported
+Mac OS X 10.15 (Catalina) is supported.
 
-| Compiler Version | Notes |
-| ---------------- | ----- |
-| Xcode 9.x | OS X 10.13 |
-| Xcode 10.x | OS X 10.14 |
-| Xcode 11.x | OS X 10.15 |
+| Compiler Version | OS X Version |
+| ---------------- | ------------ |
+| Xcode 11 | OS X 10.15 |
 
 ## Linux ##
 
-There are many Linux distributions in use. Below is the list of the minimum compiler versions that are known to work on linux. DREAM.3D is commonly built on Ubuntu 16.04 LTS with GCC 4.8.5
+There are many Linux distributions in use. Below is the list of the minimum compiler versions that are known to work on Linux.
 
-| Compiler Version | Notes |
-| ---------------- | ----- |
-| GCC 7.4.x | Minimum working version of GCC |
-| Clang 3.8 | Part of the LLVM 3.8 package. |
+| Compiler Version |
+| ---------------- |
+| GCC 8 |
+| Clang 7 |
 
 ## Enterprise Linux Distributions ##
 

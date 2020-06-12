@@ -6,8 +6,8 @@ cmake_policy(SET CMP0077 NEW)
 
 cmake_minimum_required(VERSION 3.14.0)
 
-# Request C++14 standard, using new CMake variables.
-set(CMAKE_CXX_STANDARD 14)
+# Request C++17 standard, using new CMake variables.
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS False)
 
