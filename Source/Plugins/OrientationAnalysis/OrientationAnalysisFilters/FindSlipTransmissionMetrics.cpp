@@ -240,7 +240,7 @@ void FindSlipTransmissionMetrics::execute()
   std::vector<std::vector<float>> F7lists;
   std::vector<std::vector<float>> mPrimelists;
 
-  double mprime = 0.0f, F1 = 0.0f, F1spt = 0.0f, F7 = 0.0f;
+  double mprime = 0.0, F1 = 0.0, F1spt = 0.0, F7 = 0.0;
   int32_t nname;
 
   // QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
@@ -269,10 +269,10 @@ void FindSlipTransmissionMetrics::execute()
 
       if(m_CrystalStructures[m_FeaturePhases[i]] == m_CrystalStructures[m_FeaturePhases[nname]] && m_FeaturePhases[i] > 0)
       {
-        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getmPrime(q1, q2, LD);
-        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getF1(q1, q2, LD, true);
-        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getF1spt(q1, q2, LD, true);
-        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getF7(q1, q2, LD, true);
+        mprime = m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getmPrime(q1, q2, LD);
+        F1 = m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getF1(q1, q2, LD, true);
+        F1spt = m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getF1spt(q1, q2, LD, true);
+        F7 = m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getF7(q1, q2, LD, true);
       }
       else
       {
