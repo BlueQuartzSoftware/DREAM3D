@@ -207,7 +207,7 @@ public:
         }
       }
     }
-  }
+  } ////
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   void operator()(const tbb::blocked_range<size_t>& r) const
