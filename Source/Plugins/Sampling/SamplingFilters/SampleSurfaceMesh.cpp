@@ -38,14 +38,6 @@
 #include <thread>
 
 #include <QtCore/QDateTime>
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/blocked_range.h>
-#include <tbb/parallel_for.h>
-#include <tbb/partitioner.h>
-#include <tbb/tbb_machine.h>
-#endif
-
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
@@ -63,6 +55,13 @@
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
+
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
+#include <tbb/partitioner.h>
+#include <tbb/tbb_machine.h>
+#endif
 
 class SampleSurfaceMeshImplByPoints
 {
@@ -93,32 +92,24 @@ public:
     float radius = 0.0f;
     float distToBoundary = 0.0f;
     int64_t numPoints = m_Points->getNumberOfVertices();
-    FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Lower", true);
-    FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Upper_Right", true);
-    float* ll = llPtr->getPointer(0);
-    float* ur = urPtr->getPointer(0);
+    std::array<float, 3> lowerLeft = {0.0F, 0.0F, 0.0F};
+    std::array<float, 3> upperRight = {0.0F, 0.0F, 0.0F};
     float* point = nullptr;
     char code = ' ';
 
     size_t iter = m_FeatureId;
 
     // find bounding box for current feature
-    GeometryMath::FindBoundingBoxOfFaces(m_Faces.get(), m_FaceIds->getElementList(iter), ll, ur);
-    GeometryMath::FindDistanceBetweenPoints(ll, ur, radius);
+    GeometryMath::FindBoundingBoxOfFaces(m_Faces.get(), m_FaceIds->getElementList(iter), lowerLeft.data(), upperRight.data());
+    GeometryMath::FindDistanceBetweenPoints(lowerLeft.data(), upperRight.data(), radius);
     int64_t pointsVisited = 0;
     // check points in vertex array to see if they are in the bounding box of the feature
     for(int64_t i = static_cast<int64_t>(start); i < static_cast<int64_t>(end); i++)
     {
-      // Check for the filter being cancelled.
-      if(m_Filter->getCancel())
-      {
-        return;
-      }
-
       point = m_Points->getVertexPointer(i);
-      if(m_PolyIds[i] == 0 && GeometryMath::PointInBox(point, ll, ur))
+      if(m_PolyIds[i] == 0 && GeometryMath::PointInBox(point, lowerLeft.data(), upperRight.data()))
       {
-        code = GeometryMath::PointInPolyhedron(m_Faces.get(), m_FaceIds->getElementList(iter), m_FaceBBs.get(), point, ll, ur, radius, distToBoundary);
+        code = GeometryMath::PointInPolyhedron(m_Faces.get(), m_FaceIds->getElementList(iter), m_FaceBBs.get(), point, lowerLeft.data(), upperRight.data(), radius, distToBoundary);
         if(code == 'i' || code == 'V' || code == 'E' || code == 'F')
         {
           m_PolyIds[i] = iter;
@@ -126,9 +117,15 @@ public:
       }
       pointsVisited++;
 
+      // Send some feedback
       if(pointsVisited % 1000 == 0)
       {
         m_Filter->sendThreadSafeProgressMessage(m_FeatureId, 1000, numPoints);
+      }
+      // Check for the filter being cancelled.
+      if(m_Filter->getCancel())
+      {
+        return;
       }
     }
   }
@@ -171,18 +168,16 @@ public:
     float radius = 0.0f;
     float distToBoundary = 0.0f;
     int64_t numPoints = m_Points->getNumberOfVertices();
-    FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Lower", true);
-    FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Upper_Right", true);
-    float* ll = llPtr->getPointer(0);
-    float* ur = urPtr->getPointer(0);
+    std::array<float, 3> lowerLeft = {0.0F, 0.0F, 0.0F};
+    std::array<float, 3> upperRight = {0.0F, 0.0F, 0.0F};
     float* point = nullptr;
     char code = ' ';
 
     for(size_t iter = start; iter < end; iter++)
     {
       // find bounding box for current feature
-      GeometryMath::FindBoundingBoxOfFaces(m_Faces.get(), m_FaceIds->getElementList(iter), ll, ur);
-      GeometryMath::FindDistanceBetweenPoints(ll, ur, radius);
+      GeometryMath::FindBoundingBoxOfFaces(m_Faces.get(), m_FaceIds->getElementList(iter), lowerLeft.data(), upperRight.data());
+      GeometryMath::FindDistanceBetweenPoints(lowerLeft.data(), upperRight.data(), radius);
 
       // check points in vertex array to see if they are in the bounding box of the feature
       for(int64_t i = 0; i < numPoints; i++)
@@ -194,9 +189,9 @@ public:
         }
 
         point = m_Points->getVertexPointer(i);
-        if(m_PolyIds[i] == 0 && GeometryMath::PointInBox(point, ll, ur))
+        if(m_PolyIds[i] == 0 && GeometryMath::PointInBox(point, lowerLeft.data(), upperRight.data()))
         {
-          code = GeometryMath::PointInPolyhedron(m_Faces.get(), m_FaceIds->getElementList(iter), m_FaceBBs.get(), point, ll, ur, radius, distToBoundary);
+          code = GeometryMath::PointInPolyhedron(m_Faces.get(), m_FaceIds->getElementList(iter), m_FaceBBs.get(), point, lowerLeft.data(), upperRight.data(), radius, distToBoundary);
           if(code == 'i' || code == 'V' || code == 'E' || code == 'F')
           {
             m_PolyIds[i] = iter;
@@ -464,6 +459,7 @@ void SampleSurfaceMesh::execute()
       m_StartMillis = QDateTime::currentMSecsSinceEpoch();
       m_Millis = m_StartMillis;
       size_t numPoints = points->getNumberOfVertices();
+
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
       tbb::parallel_for(tbb::blocked_range<size_t>(0, numPoints), SampleSurfaceMeshImplByPoints(this, triangleGeom, faceLists, faceBBs, points, featureId, polyIds), tbb::auto_partitioner());
 
