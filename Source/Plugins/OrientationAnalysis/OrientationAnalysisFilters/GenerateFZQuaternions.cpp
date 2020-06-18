@@ -90,7 +90,7 @@ public:
 
       if(phase < m_NumPhases && calcIPF && m_CrystalStructures[phase] < EbsdLib::CrystalStructure::LaueGroupEnd)
       {
-        QuatType q = QuatType(m_Quats[index], m_Quats[index + 1], m_Quats[index + 2], m_Quats[index + 3]);
+        QuatD q = QuatD(m_Quats[index], m_Quats[index + 1], m_Quats[index + 2], m_Quats[index + 3]);
         int32_t xtal = static_cast<int32_t>(m_CrystalStructures[phase]);
         ops[xtal]->getFZQuat(q);
         m_FZQuats[index] = q.x();

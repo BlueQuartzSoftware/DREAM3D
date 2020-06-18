@@ -663,8 +663,8 @@ void MatchCrystallography::MC_LoopBody1(int32_t feature, size_t ensem, size_t j,
   }
 
   curmisobin = ops->getMisoBin(rod);
-  QuatType qq1(q1[0], q1[1], q1[2], q1[3]);
-  QuatType qq2(q2[0], q2[1], q2[2], q2[3]);
+  QuatD qq1(q1[0], q1[1], q1[2], q1[3]);
+  QuatD qq2(q2[0], q2[1], q2[2], q2[3]);
   OrientationD axisAngle = ops->calculateMisorientation(q1, q2);
 
   rod = OrientationTransformation::ax2ro<OrientationD, OrientationD>(axisAngle);

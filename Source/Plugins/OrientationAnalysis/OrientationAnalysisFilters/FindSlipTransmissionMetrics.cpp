@@ -263,9 +263,9 @@ void FindSlipTransmissionMetrics::execute()
     {
       nname = neighborlist[i][j];
       float* avgQuat = m_AvgQuats + i * 4;
-      QuatType q1(avgQuat[0], avgQuat[1], avgQuat[2], avgQuat[3]);
+      QuatD q1(avgQuat[0], avgQuat[1], avgQuat[2], avgQuat[3]);
       avgQuat = m_AvgQuats + nname * 4;
-      QuatType q2(avgQuat[0], avgQuat[1], avgQuat[2], avgQuat[3]);
+      QuatD q2(avgQuat[0], avgQuat[1], avgQuat[2], avgQuat[3]);
 
       if(m_CrystalStructures[m_FeaturePhases[i]] == m_CrystalStructures[m_FeaturePhases[nname]] && m_FeaturePhases[i] > 0)
       {

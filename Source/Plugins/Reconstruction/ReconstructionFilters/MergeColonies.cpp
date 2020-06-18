@@ -397,9 +397,9 @@ bool MergeColonies::determineGrouping(int32_t referenceFeature, int32_t neighbor
   {
     w = std::numeric_limits<double>::max();
     float* avgQuatPtr = m_AvgQuats + referenceFeature * 4;
-    QuatType q1(avgQuatPtr[0], avgQuatPtr[1], avgQuatPtr[2], avgQuatPtr[3]);
+    QuatD q1(avgQuatPtr[0], avgQuatPtr[1], avgQuatPtr[2], avgQuatPtr[3]);
     avgQuatPtr = m_AvgQuats + neighborFeature * 4;
-    QuatType q2(avgQuatPtr[0], avgQuatPtr[1], avgQuatPtr[2], avgQuatPtr[3]);
+    QuatD q2(avgQuatPtr[0], avgQuatPtr[1], avgQuatPtr[2], avgQuatPtr[3]);
 
     uint32_t phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
     uint32_t phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
@@ -480,7 +480,7 @@ void MergeColonies::characterize_colonies()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool MergeColonies::check_for_burgers(const QuatType& betaQuat, const QuatType& alphaQuat) const
+bool MergeColonies::check_for_burgers(const QuatD& betaQuat, const QuatD& alphaQuat) const
 {
   double dP = 0.0;
   double angle = 0.0;
@@ -488,14 +488,14 @@ bool MergeColonies::check_for_burgers(const QuatType& betaQuat, const QuatType& 
 
   double gBeta[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
   double gBetaT[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
-  OrientationTransformation::qu2om<QuatType, OrientationD>(betaQuat).toGMatrix(gBeta);
+  OrientationTransformation::qu2om<QuatD, OrientationD>(betaQuat).toGMatrix(gBeta);
   // transpose gBeta so the sample direction is the output when
   // gBeta is multiplied by the crystal directions below
   MatrixMath::Transpose3x3(gBeta, gBetaT);
 
   double gAlpha[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
   double gAlphaT[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
-  OrientationTransformation::qu2om<QuatType, OrientationD>(alphaQuat).toGMatrix(gAlpha);
+  OrientationTransformation::qu2om<QuatD, OrientationD>(alphaQuat).toGMatrix(gAlpha);
   // transpose gBeta so the sample direction is the output when
   // gBeta is multiplied by the crystal directions below
   MatrixMath::Transpose3x3(gAlpha, gAlphaT);

@@ -141,9 +141,9 @@ public:
           if(m_CrystalStructures[phase1] == EbsdLib::CrystalStructure::Cubic_High)
           {
             float* quatPtr = m_Quats + i * grain1;
-            QuatType q1(quatPtr[0], quatPtr[1], quatPtr[2], quatPtr[3]);
+            QuatD q1(quatPtr[0], quatPtr[1], quatPtr[2], quatPtr[3]);
             quatPtr = m_Quats + i * grain2;
-            QuatType q2(quatPtr[0], quatPtr[1], quatPtr[2], quatPtr[3]);
+            QuatD q2(quatPtr[0], quatPtr[1], quatPtr[2], quatPtr[3]);
 
             argb = ops[m_CrystalStructures[phase1]]->generateMisorientationColor(q1, q2);
             m_Colors[3 * i] = RgbColor::dRed(argb);
