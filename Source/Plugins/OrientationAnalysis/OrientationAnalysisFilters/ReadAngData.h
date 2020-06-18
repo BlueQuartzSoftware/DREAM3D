@@ -74,6 +74,15 @@ class OrientationAnalysis_EXPORT ReadAngData : public AbstractFilter
   Q_DECLARE_PRIVATE(ReadAngData)
 
 public:
+  struct Ang_Private_Data
+  {
+    std::array<size_t, 3> dims = {0, 0, 0};
+    std::array<float, 3> resolution = {0.0F, 0.0F, 0.0F};
+    std::array<float, 3> origin = {0.0F, 0.0F, 0.0F};
+    std::vector<AngPhase::Pointer> phases;
+    int32_t units = 0;
+  };
+
   using Self = ReadAngData;
   using Pointer = std::shared_ptr<Self>;
   using ConstPointer = std::shared_ptr<const Self>;
@@ -349,3 +358,5 @@ public:
   ReadAngData& operator=(const ReadAngData&) = delete; // Copy Assignment Not Implemented
   ReadAngData& operator=(ReadAngData&&) = delete;      // Move Assignment Not Implemented
 };
+
+Q_DECLARE_METATYPE(ReadAngData::Ang_Private_Data)

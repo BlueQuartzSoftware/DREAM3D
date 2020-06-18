@@ -190,16 +190,16 @@ public:
 
     QString absFilePath = absPath + "/" + fname + "_Phase_" + QString::number(1) + "." + suffix;
 
-    reader->setInputFile(absFilePath);
+    reader->setInputFile(absFilePath.toStdString());
     reader->setAngleRepresentation(AngleFileLoader::EulerAngles);
-    reader->setDelimiter(QString(" "));
+    reader->setDelimiter(std::string(" "));
     reader->setFileAnglesInDegrees(true);
     reader->setOutputAnglesInDegrees(true);
 
     EbsdLib::FloatArrayType::Pointer angles = reader->loadData();
     if(reader->getErrorCode() < 0)
     {
-      qDebug() << reader->getErrorMessage();
+      std::cout << reader->getErrorMessage();
     }
     DREAM3D_REQUIRED(reader->getErrorCode(), >=, 0)
     DREAM3D_REQUIRE_VALID_POINTER(angles.get())
@@ -209,11 +209,11 @@ public:
 
     for(int i = 0; i < 100; i++)
     {
-      float angle = 360.0 / 100.0 * i;
+      float angle = 360.0F / 100.0F * i;
       DREAM3D_REQUIRED(angle, ==, angles->getComponent(i, 0));
       DREAM3D_REQUIRED(angle, ==, angles->getComponent(i, 2));
 
-      angle = 180.0 / 100.0 * i;
+      angle = 180.0F / 100.0F * i;
       DREAM3D_REQUIRED(angle, ==, angles->getComponent(i, 1));
     }
   }

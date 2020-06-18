@@ -305,7 +305,7 @@ Int32ArrayType::Pointer binData(typename DataArray<T>::Pointer featureArray, int
   T* fPtr = featureArray->getPointer(0);
   size_t numfeatures = featureArray->getNumberOfTuples();
 
-  typename DataArray<int32_t>::Pointer binArray = DataArray<int32_t>::CreateArray(numfeatures, "binIds", true);
+  typename DataArray<int32_t>::Pointer binArray = DataArray<int32_t>::CreateArray(numfeatures, std::string("binIds"), true);
   int32_t* bPtr = binArray->getPointer(0);
 
   float max = -100000000.0;

@@ -203,13 +203,13 @@ void VisualizeGBCDPoleFigure::execute()
     return;
   }
 
-  FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas", true);
+  FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::CreateArray(5, std::string("GBCDDeltas"), true);
   gbcdDeltasArray->initializeWithZeros();
 
-  FloatArrayType::Pointer gbcdLimitsArray = FloatArrayType::CreateArray(10, "GBCDLimits", true);
+  FloatArrayType::Pointer gbcdLimitsArray = FloatArrayType::CreateArray(10, std::string("GBCDLimits"), true);
   gbcdLimitsArray->initializeWithZeros();
 
-  Int32ArrayType::Pointer gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes", true);
+  Int32ArrayType::Pointer gbcdSizesArray = Int32ArrayType::CreateArray(5, std::string("GBCDSizes"), true);
   gbcdSizesArray->initializeWithZeros();
 
   float* gbcdDeltas = gbcdDeltasArray->getPointer(0);

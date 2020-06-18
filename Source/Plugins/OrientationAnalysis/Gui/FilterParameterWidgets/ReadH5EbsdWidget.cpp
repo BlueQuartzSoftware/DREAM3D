@@ -42,6 +42,7 @@
 #include <QtWidgets/QMessageBox>
 
 #include "EbsdLib/Core/EbsdLibConstants.h"
+#include "EbsdLib/Core/EbsdMacros.h"
 #include "EbsdLib/IO/H5EbsdVolumeInfo.h"
 #include "EbsdLib/IO/H5EbsdVolumeReader.h"
 #include "EbsdLib/IO/HKL/CtfFields.h"
@@ -195,7 +196,7 @@ void ReadH5EbsdWidget::setupGui()
 
   m_UseTransformations->setChecked(m_Filter->getUseTransformations());
   m_AngleRepresentationCB->setCurrentIndex(m_Filter->getAngleRepresentation());
-  m_RefFrameZDir->setText(EbsdLib::StackingOrder::Utils::getStringForEnum(m_Filter->getRefFrameZDir()));
+  m_RefFrameZDir->setText(S2Q(EbsdLib::StackingOrder::Utils::getStringForEnum(m_Filter->getRefFrameZDir())));
   updateFileInfoWidgets();
   QSet<QString> selectedArrays = m_Filter->getSelectedArrayNames();
   updateModelFromFilter(selectedArrays, true);
@@ -600,7 +601,7 @@ void ReadH5EbsdWidget::updateFileInfoWidgets()
     {
       // Read the Phase information from the .h5ang file
       H5EbsdVolumeReader::Pointer h5Reader = H5EbsdVolumeReader::New();
-      h5Reader->setFileName(inputPath);
+      h5Reader->setFileName(inputPath.toStdString());
 
       float xres = 0.0f;
       float yres = 0.0f;
@@ -652,9 +653,9 @@ void ReadH5EbsdWidget::updateFileInfoWidgets()
       }
 
       // Cache the Manufacturer from the File
-      m_EbsdManufacturer->setText(h5Reader->getManufacturer());
+      m_EbsdManufacturer->setText(S2Q(h5Reader->getManufacturer()));
 
-      m_RefFrameZDir->setText(EbsdLib::StackingOrder::Utils::getStringForEnum(h5Reader->getStackingOrder()));
+      m_RefFrameZDir->setText(S2Q(EbsdLib::StackingOrder::Utils::getStringForEnum(h5Reader->getStackingOrder())));
 
       if(h5Reader->getFileVersion() == 4 && !m_Version4Warning)
       {

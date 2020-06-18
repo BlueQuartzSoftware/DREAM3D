@@ -36,6 +36,7 @@
 #include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
+#include "EbsdLib/Core/EbsdMacros.h"
 #include "EbsdLib/LaueOps/LaueOps.h"
 #include "EbsdLib/LaueOps/TrigonalLowOps.h"
 
@@ -104,7 +105,7 @@ QImage TrigonalLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight,
     painter.setFont(font);
     QFontMetrics metrics = painter.fontMetrics();
     fontHeight = metrics.height();
-    fontWidth = metrics.QFONTMETRICS_WIDTH(ops->getSymmetryName());
+    fontWidth = metrics.QFONTMETRICS_WIDTH(S2Q(ops->getSymmetryName()));
     painter.end();
   }
 
@@ -152,7 +153,7 @@ QImage TrigonalLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight,
   fontHeight = metrics.height();
   paintSymmetryDirection(label, &metrics, &painter, pImageWidth / 2 - fontWidth / 2, fontHeight * 2);
 
-  label = ops->getSymmetryName();
+  label = QString::fromStdString(ops->getSymmetryName());
   label = label.replace("-", "_");
   fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();

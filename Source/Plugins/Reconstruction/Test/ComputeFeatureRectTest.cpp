@@ -80,7 +80,7 @@ public:
     AttributeMatrix::Pointer cellAM = AttributeMatrix::New(dims, "CellData", AttributeMatrix::Type::Cell);
     dc->addOrReplaceAttributeMatrix(cellAM);
 
-    Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(25, "FeatureIds", true);
+    Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(25, std::string("FeatureIds"), true);
     featureIds->initializeWithZeros();
     featureIds->setValue(6, 1);
     featureIds->setValue(7, 1);

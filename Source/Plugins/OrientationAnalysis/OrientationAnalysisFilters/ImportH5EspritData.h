@@ -53,6 +53,15 @@ class OrientationAnalysis_EXPORT ImportH5EspritData : public ImportH5OimData
 
   Q_DECLARE_PRIVATE(ImportH5EspritData)
 
+  struct Esprit_Private_Data
+  {
+    std::array<size_t, 3> dims;
+    std::array<float, 3> resolution;
+    std::array<float, 3> origin;
+    std::vector<EspritPhase::Pointer> phases;
+    int32_t units;
+  };
+
 public:
   using Self = ImportH5EspritData;
   using Pointer = std::shared_ptr<Self>;

@@ -492,7 +492,7 @@ void ReadStlFile::eliminate_duplicate_nodes()
   }
 
   // Create array to hold unique node numbers
-  Int64ArrayType::Pointer uniqueIdsPtr = Int64ArrayType::CreateArray(nNodes, "uniqueIds", true);
+  Int64ArrayType::Pointer uniqueIdsPtr = Int64ArrayType::CreateArray(nNodes, std::string("uniqueIds"), true);
   int64_t* uniqueIds = uniqueIdsPtr->getPointer(0);
   for(MeshIndexType i = 0; i < nNodes_; i++)
   {

@@ -244,7 +244,7 @@ void generateRepresentation(ConvertOrientations* filter, typename DataArray<T>::
   ArrayPointerType output = converters[filter->getInputType()]->getOutputData();
   if(nullptr == output.get())
   {
-    QString ss = QObject::tr("There was an error converting the input data using convertor %1").arg(converters[filter->getInputType()]->getNameOfClass());
+    QString ss = QObject::tr("There was an error converting the input data using convertor %1").arg(QString::fromStdString(converters[filter->getInputType()]->getNameOfClass()));
     filter->setErrorCondition(-1004, ss);
     return;
   }

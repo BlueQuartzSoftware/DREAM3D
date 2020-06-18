@@ -55,9 +55,9 @@ ComputeGradient::~ComputeGradient() = default;
 // -----------------------------------------------------------------------------
 void ComputeGradient::compute()
 {
-  m_GradX = DoubleArrayType::CreateArray(m_Input->getNumberOfTuples(), "X Gradient", true);
+  m_GradX = DoubleArrayType::CreateArray(m_Input->getNumberOfTuples(), std::string("X Gradient"), true);
   m_GradX->initializeWithZeros();
-  m_GradY = DoubleArrayType::CreateArray(m_Input->getNumberOfTuples(), "Y Gradient", true);
+  m_GradY = DoubleArrayType::CreateArray(m_Input->getNumberOfTuples(), std::string("Y Gradient"), true);
   m_GradY->initializeWithZeros();
 
   double* valPtr = m_Input->getPointer(0);

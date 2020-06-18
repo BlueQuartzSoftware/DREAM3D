@@ -51,7 +51,7 @@ public:
     int size = 100000;
     LaueOpsType ops;
 
-    std::cout << "############  " << ops.getNameOfClass().toStdString() << " " << ops.getSymmetryName().toStdString() << "  ############" << std::endl;
+    std::cout << "############  " << ops.getNameOfClass() << " " << ops.getSymmetryName() << "  ############" << std::endl;
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 
     // These are the input vectors
@@ -70,7 +70,7 @@ public:
     {
       Texture::CalculateMDFData<float, LaueOpsType, ContainerType>(angles, axes, weights, odf, mdfValues, angles.size());
       err = StatsGen::GenMDFPlotData<float, LaueOpsType, ContainerType>(mdfValues, x, y, size);
-    } catch(std::runtime_error)
+    } catch(std::runtime_error& e)
     {
       if(ops.getNameOfClass() == "TriclinicOps" || ops.getNameOfClass() == "MonoclinicOps" || ops.getNameOfClass() == "OrthorhombicOps")
       {

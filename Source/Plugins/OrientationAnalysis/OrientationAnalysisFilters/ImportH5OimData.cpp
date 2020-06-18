@@ -36,31 +36,30 @@
 
 #include <QtCore/QDateTime>
 #include <QtCore/QFileInfo>
+#include <QtCore/QTextStream>
 
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5ScopedSentinel.h"
 #include "H5Support/H5Utilities.h"
-#include "H5Support/QH5Lite.h"
 
+#include "EbsdLib/Core/EbsdMacros.h"
 #include "EbsdLib/IO/BrukerNano/EspritConstants.h"
 #include "EbsdLib/IO/TSL/AngFields.h"
 #include "EbsdLib/IO/TSL/H5OIMReader.h"
 
-#include <QtCore/QTextStream>
-
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DynamicChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
-#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationAnalysis/FilterParameters/OEMEbsdScanSelectionFilterParameter.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -91,7 +90,7 @@ class ImportH5OimDataPrivate
   ImportH5OimData* const q_ptr;
   ImportH5OimDataPrivate(ImportH5OimData* ptr);
 
-  Ang_Private_Data m_Data;
+  ImportH5OimData::Ang_Private_Data m_Data;
   QStringList m_FileScanNames;
   QVector<int> m_PatternDims;
 
@@ -105,7 +104,6 @@ class ImportH5OimDataPrivate
 ImportH5OimDataPrivate::ImportH5OimDataPrivate(ImportH5OimData* ptr)
 : q_ptr(ptr)
 , m_InputFile_Cache("")
-, m_TimeStamp_Cache(QDateTime())
 {
 }
 
@@ -149,7 +147,7 @@ void ImportH5OimData::setData(const Ang_Private_Data& value)
 }
 
 // -----------------------------------------------------------------------------
-Ang_Private_Data ImportH5OimData::getData() const
+ImportH5OimData::Ang_Private_Data ImportH5OimData::getData() const
 {
   Q_D(const ImportH5OimData);
   return d->m_Data;
@@ -289,7 +287,7 @@ void ImportH5OimData::dataCheck()
     return;
   }
 
-  if(fi.suffix() != EbsdLib::H5OIM::H5FileExt)
+  if(fi.suffix().toStdString() != EbsdLib::H5OIM::H5FileExt)
   {
     QString ss = QObject::tr("The file extension '%1' was not recognized. The reader only recognizes the .h5 file extension").arg(fi.suffix());
     setErrorCondition(-997, ss);
@@ -337,14 +335,14 @@ void ImportH5OimData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, std
     reader->setReadPatternData(getReadPatternData());
 
     // If the user has already set a Scan Name to read then we are good to go.
-    reader->setHDF5Path(scanName);
+    reader->setHDF5Path(scanName.toStdString());
 
     if(flag == ANG_HEADER_ONLY)
     {
       int err = reader->readHeaderOnly();
       if(err < 0)
       {
-        setErrorCondition(err, reader->getErrorMessage());
+        setErrorCondition(err, QString::fromStdString(reader->getErrorMessage()));
         m_FileWasRead = false;
         return;
       }
@@ -356,7 +354,7 @@ void ImportH5OimData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, std
       int32_t err = reader->readFile();
       if(err < 0)
       {
-        setErrorCondition(err, reader->getErrorMessage());
+        setErrorCondition(err, QString::fromStdString(reader->getErrorMessage()));
         setErrorCondition(getErrorCode(), "H5OIMReader could not read the .h5 file.");
         return;
       }
@@ -420,22 +418,22 @@ int32_t ImportH5OimData::loadMaterialInfo(EbsdReader* ebsdReader)
 {
   auto reader = dynamic_cast<H5OIMReader*>(ebsdReader);
 
-  QVector<AngPhase::Pointer> phases = getData().phases;
+  std::vector<AngPhase::Pointer> phases = getData().phases;
   if(phases.empty())
   {
-    setErrorCondition(reader->getErrorCode(), reader->getErrorMessage());
+    setErrorCondition(reader->getErrorCode(), QString::fromStdString(reader->getErrorMessage()));
     return getErrorCode();
   }
 
   DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, EbsdLib::AngFile::CrystalStructures, true);
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, EbsdLib::AngFile::MaterialName);
   std::vector<size_t> dims(1, 6);
-  FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, dims, EbsdLib::AngFile::LatticeConstants, true);
+  FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, dims, S2Q(EbsdLib::AngFile::LatticeConstants), true);
 
   // Initialize the zero'th element to unknowns. The other elements will
   // be filled in based on values from the data file
   crystalStructures->setValue(0, EbsdLib::CrystalStructure::UnknownCrystalStructure);
-  materialNames->setValue(0, "Invalid Phase");
+  materialNames->setValue(0, QString("Invalid Phase"));
   latticeConstants->setComponent(0, 0, 0.0f);
   latticeConstants->setComponent(0, 1, 0.0f);
   latticeConstants->setComponent(0, 2, 0.0f);
@@ -448,8 +446,8 @@ int32_t ImportH5OimData::loadMaterialInfo(EbsdReader* ebsdReader)
   {
     int32_t phaseID = phase->getPhaseIndex();
     crystalStructures->setValue(phaseID, phase->determineLaueGroup());
-    materialNames->setValue(phaseID, phase->getMaterialName());
-    QVector<float> lc = phase->getLatticeConstants();
+    materialNames->setValue(phaseID, S2Q(phase->getMaterialName()));
+    std::vector<float> lc = phase->getLatticeConstants();
 
     latticeConstants->setComponent(phaseID, 0, lc[0]);
     latticeConstants->setComponent(phaseID, 1, lc[1]);
@@ -557,28 +555,28 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, std::vector<size_t
   cDims[0] = 1;
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ang::ImageQuality));
-    fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(EbsdLib::Ang::ImageQuality));
+    fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(S2Q(EbsdLib::Ang::ImageQuality)));
     ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ang::ConfidenceIndex));
-    fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(EbsdLib::Ang::ConfidenceIndex));
+    fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(S2Q(EbsdLib::Ang::ConfidenceIndex)));
     ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ang::SEMSignal));
-    fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(EbsdLib::Ang::SEMSignal));
+    fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(S2Q(EbsdLib::Ang::SEMSignal)));
     ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ang::Fit));
-    fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(EbsdLib::Ang::Fit));
+    fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(S2Q(EbsdLib::Ang::Fit)));
     ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
@@ -595,12 +593,12 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, std::vector<size_t
       pDimsV[0] = pDims[0];
       pDimsV[1] = pDims[1];
 
-      UInt8ArrayType::Pointer patternData = std::dynamic_pointer_cast<UInt8ArrayType>(m_EbsdArrayMap.value(EbsdLib::Ang::PatternData));
+      UInt8ArrayType::Pointer patternData = std::dynamic_pointer_cast<UInt8ArrayType>(m_EbsdArrayMap.value(S2Q(EbsdLib::Ang::PatternData)));
       ::memcpy(patternData->getPointer(offset), ptr, sizeof(uint8_t) * totalPoints);
       ebsdAttrMat->insertOrAssign(patternData);
 
       // Remove the current PatternData array
-      ebsdAttrMat->removeAttributeArray(EbsdLib::Ang::PatternData);
+      ebsdAttrMat->removeAttributeArray(S2Q(EbsdLib::Ang::PatternData));
 
       // Push in our own PatternData array
       ebsdAttrMat->insertOrAssign(patternData);
@@ -624,7 +622,7 @@ void ImportH5OimData::execute()
   }
 
   H5OIMReader::Pointer reader = H5OIMReader::New();
-  reader->setFileName(m_InputFile);
+  reader->setFileName(m_InputFile.toStdString());
   std::vector<size_t> tDims(3, 0);
   std::vector<size_t> cDims(1, 1);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
@@ -676,23 +674,23 @@ EbsdLib::OEM ImportH5OimData::readManufacturer() const
     return manuf;
   }
   H5ScopedFileSentinel sentinel(&fid, false);
-  QString dsetName;
+  std::string dsetName;
   std::list<std::string> names;
   herr_t err = H5Utilities::getGroupObjects(fid, H5Utilities::CustomHDFDataTypes::Any, names);
-  auto findIter = std::find(names.begin(), names.end(), EbsdLib::H5OIM::Manufacturer.toStdString());
+  auto findIter = std::find(names.begin(), names.end(), EbsdLib::H5OIM::Manufacturer);
   if(findIter != names.end())
   {
     dsetName = EbsdLib::H5OIM::Manufacturer;
   }
 
-  findIter = std::find(names.begin(), names.end(), EbsdLib::H5Esprit::Manufacturer.toStdString());
+  findIter = std::find(names.begin(), names.end(), EbsdLib::H5Esprit::Manufacturer);
   if(findIter != names.end())
   {
     dsetName = EbsdLib::H5Esprit::Manufacturer;
   }
 
-  QString manufacturer("Unknown");
-  err = QH5Lite::readStringDataset(fid, dsetName, manufacturer);
+  std::string manufacturer("Unknown");
+  err = H5Lite::readStringDataset(fid, dsetName, manufacturer);
   if(err < 0)
   {
     return manuf;
@@ -821,39 +819,45 @@ void ImportH5OimData::dataCheckOEM()
   std::vector<size_t> cDims(3, 0);
 
   H5OIMReader::Pointer reader = H5OIMReader::New();
-  reader->setFileName(getInputFile());
+  reader->setFileName(getInputFile().toStdString());
 
   // We ALWAYS want to read the Scan Names from the file so that we can present that list to the user if needed.
-  QStringList scanNames;
+  std::list<std::string> scanNames;
   int32_t err = reader->readScanNames(scanNames);
   if(err < 0)
   {
-    setErrorCondition(err, reader->getErrorMessage());
+    setErrorCondition(err, S2Q(reader->getErrorMessage()));
     return;
   }
-  setFileScanNames(scanNames);
-  setNumberOfScans(scanNames.size());
+  QStringList qScanNames;
+  for(const auto& scan : scanNames)
+  {
+    qScanNames.push_back(S2Q(scan));
+  }
+  setFileScanNames(qScanNames);
+  setNumberOfScans(qScanNames.size());
 
   if(!getSelectedScanNames().empty())
   {
-    readDataFile(reader.get(), m.get(), cDims, scanNames[0], ANG_HEADER_ONLY);
+    readDataFile(reader.get(), m.get(), cDims, qScanNames[0], ANG_HEADER_ONLY);
 
     // Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
     cellAttrMat->resizeAttributeArrays(cDims);
     AngFields angfeatures;
-    QVector<QString> names = angfeatures.getFilterFeatures<QVector<QString>>();
+    std::vector<std::string> names = angfeatures.getFilterFeatures<std::vector<std::string>>();
     cDims.resize(1);
     cDims[0] = 1;
-    for(const auto& name : names)
+    for(const auto& name : qScanNames)
     {
-      if(reader->getPointerType(name) == EbsdLib::NumericTypes::Type::Int32)
+
+      if(reader->getPointerType(name.toStdString()) == EbsdLib::NumericTypes::Type::Int32)
       {
-        cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>>(this, name, 0, cDims);
+        cellAttrMat->createAndAddAttributeArray<Int32ArrayType>(this, name, 0, cDims);
         m_EbsdArrayMap.insert(name, cellAttrMat->getAttributeArray(name));
       }
-      else if(reader->getPointerType(name) == EbsdLib::NumericTypes::Type::Float)
+      else if(reader->getPointerType(name.toStdString()) == EbsdLib::NumericTypes::Type::Float)
       {
-        cellAttrMat->createAndAddAttributeArray<DataArray<float>>(this, name, 0, cDims);
+        cellAttrMat->createAndAddAttributeArray<FloatArrayType>(this, name, 0, cDims);
         m_EbsdArrayMap.insert(name, cellAttrMat->getAttributeArray(name));
       }
     }
@@ -867,39 +871,39 @@ void ImportH5OimData::dataCheckOEM()
 
   cDims.resize(1);
   cDims[0] = 3;
-  tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), EbsdLib::AngFile::EulerAngles);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), S2Q(EbsdLib::AngFile::EulerAngles));
   m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims);
   if(nullptr != m_CellEulerAnglesPtr.lock())
   {
     m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
   }
-  m_EbsdArrayMap.insert(EbsdLib::AngFile::EulerAngles, IDataArray::Pointer(m_CellEulerAnglesPtr));
+  m_EbsdArrayMap.insert(S2Q(EbsdLib::AngFile::EulerAngles), IDataArray::Pointer(m_CellEulerAnglesPtr));
 
   cDims[0] = 1;
-  tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), EbsdLib::AngFile::Phases);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), S2Q(EbsdLib::AngFile::Phases));
   m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>>(this, tempPath, 0, cDims);
   if(nullptr != m_CellPhasesPtr.lock())
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   }
-  m_EbsdArrayMap.insert(EbsdLib::AngFile::Phases, IDataArray::Pointer(m_CellPhasesPtr));
+  m_EbsdArrayMap.insert(S2Q(EbsdLib::AngFile::Phases), IDataArray::Pointer(m_CellPhasesPtr));
 
-  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), EbsdLib::AngFile::CrystalStructures);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), S2Q(EbsdLib::AngFile::CrystalStructures));
   m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>>(this, tempPath, EbsdLib::CrystalStructure::UnknownCrystalStructure, cDims);
   if(nullptr != m_CrystalStructuresPtr.lock())
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   }
-  m_EbsdArrayMap.insert(EbsdLib::AngFile::CrystalStructures, IDataArray::Pointer(m_CrystalStructuresPtr));
+  m_EbsdArrayMap.insert(S2Q(EbsdLib::AngFile::CrystalStructures), IDataArray::Pointer(m_CrystalStructuresPtr));
 
   cDims[0] = 6;
-  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), EbsdLib::AngFile::LatticeConstants);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), S2Q(EbsdLib::AngFile::LatticeConstants));
   m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0.0, cDims);
   if(nullptr != m_LatticeConstantsPtr.lock())
   {
     m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0);
   }
-  m_EbsdArrayMap.insert(EbsdLib::AngFile::LatticeConstants, IDataArray::Pointer(m_LatticeConstantsPtr));
+  m_EbsdArrayMap.insert(S2Q(EbsdLib::AngFile::LatticeConstants), IDataArray::Pointer(m_LatticeConstantsPtr));
 
   if(getReadPatternData())
   {
@@ -908,14 +912,14 @@ void ImportH5OimData::dataCheckOEM()
     cDims[1] = getPatternDims().at(1);
     if(cDims[0] != 0 && cDims[1] != 0)
     {
-      tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), EbsdLib::Ang::PatternData);
+      tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), S2Q(EbsdLib::Ang::PatternData));
       m_CellPatternDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>>(this, tempPath, 0, cDims);
       if(nullptr != m_CellPatternDataPtr.lock())
       {
         m_CellPatternData = m_CellPatternDataPtr.lock()->getPointer(0);
       }
 
-      m_EbsdArrayMap.insert(EbsdLib::Ang::PatternData, IDataArray::Pointer(m_CellPatternDataPtr));
+      m_EbsdArrayMap.insert(S2Q(EbsdLib::Ang::PatternData), IDataArray::Pointer(m_CellPatternDataPtr));
     }
     else
     {

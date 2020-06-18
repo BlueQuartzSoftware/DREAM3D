@@ -62,17 +62,18 @@
 #include <qwt_scale_draw.h>
 #include <qwt_symbol.h>
 
-#include "EbsdLib/IO/HKL/CtfReader.h"
-#include "EbsdLib/IO/TSL/AngReader.h"
-
 #include "SVWidgetsLib/Widgets/ProgressDialog.h"
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 
+#include "EbsdLib/Core/EbsdMacros.h"
 #include "EbsdLib/IO/AngleFileLoader.h"
+#include "EbsdLib/IO/HKL/CtfReader.h"
+#include "EbsdLib/IO/TSL/AngReader.h"
 #include "EbsdLib/LaueOps/CubicLowOps.h"
 #include "EbsdLib/LaueOps/CubicOps.h"
 #include "EbsdLib/LaueOps/HexagonalLowOps.h"
 #include "EbsdLib/LaueOps/HexagonalOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 #include "EbsdLib/LaueOps/MonoclinicOps.h"
 #include "EbsdLib/LaueOps/OrthoRhombicOps.h"
 #include "EbsdLib/LaueOps/TetragonalLowOps.h"
@@ -80,7 +81,6 @@
 #include "EbsdLib/LaueOps/TriclinicOps.h"
 #include "EbsdLib/LaueOps/TrigonalLowOps.h"
 #include "EbsdLib/LaueOps/TrigonalOps.h"
-#include "EbsdLib/LaueOps/LaueOps.h"
 #include "EbsdLib/Texture/StatsGen.hpp"
 #include "EbsdLib/Texture/Texture.hpp"
 #include "EbsdLib/Utilities/PoleFigureUtilities.h"
@@ -783,7 +783,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   progress.setMinimumDuration(2000);
   progress.show();
 
-  if(fi.suffix().compare(EbsdLib::Ang::FileExt) == 0)
+  if(fi.suffix() == S2Q(EbsdLib::Ang::FileExt))
   {
     QMessageBox::critical(this, "ANG File Loading NOT Supported",
                           "Please use the 'Write StatsGenerator ODF Angle File' filter from DREAM.3D to generate a file. See that filter's help for the proper format.", QMessageBox::Ok);
@@ -849,7 +849,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     }
 #endif
   }
-  if(fi.suffix().compare(EbsdLib::Ctf::FileExt) == 0)
+  if(fi.suffix() == S2Q(EbsdLib::Ctf::FileExt))
   {
     QMessageBox::critical(this, "CTF File Loading not Supported",
                           "Please use the 'Write StatsGenerator ODF Angle File' filter from DREAM.3D to generate a file. See that filter's help for the proper format.", QMessageBox::Ok);
@@ -918,7 +918,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   progress.setValue(1);
   progress.setLabelText("[1/3] Reading File ...");
   AngleFileLoader::Pointer loader = AngleFileLoader::New();
-  loader->setInputFile(angleFilePath->text());
+  loader->setInputFile(angleFilePath->text().toStdString());
   loader->setAngleRepresentation(angleRepresentation->currentIndex());
   loader->setFileAnglesInDegrees(anglesInDegrees->isChecked());
   loader->setOutputAnglesInDegrees(true);
@@ -942,11 +942,11 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     delim = " ";
   }
 
-  loader->setDelimiter(delim);
+  loader->setDelimiter(delim.toStdString());
   EbsdLib::FloatArrayType::Pointer data = loader->loadData();
   if(loader->getErrorCode() < 0)
   {
-    QMessageBox::critical(this, "Error Loading Angle data", loader->getErrorMessage(), QMessageBox::Ok);
+    QMessageBox::critical(this, "Error Loading Angle data", QString::fromStdString(loader->getErrorMessage()), QMessageBox::Ok);
     emit bulkLoadEvent(true);
     return;
   }

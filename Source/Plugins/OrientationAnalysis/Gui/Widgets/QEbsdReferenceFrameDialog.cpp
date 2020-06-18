@@ -48,6 +48,7 @@
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMessageBox>
 
+#include "EbsdLib/Core/EbsdMacros.h"
 #include "EbsdLib/IO/HKL/CtfConstants.h"
 #include "EbsdLib/IO/TSL/AngConstants.h"
 
@@ -279,7 +280,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
 
   QFileInfo fi(m_EbsdFileName);
 
-  if(fi.suffix().compare(EbsdLib::Ang::FileExtLower) == 0)
+  if(fi.suffix() == S2Q(EbsdLib::Ang::FileExtLower))
   {
     ReadAngData::Pointer reader = ReadAngData::New();
     reader->setInputFile(m_EbsdFileName);
@@ -304,11 +305,11 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     dcName = reader->getDataContainerName().getDataContainerName();
     cellAttrMatName = reader->getCellAttributeMatrixName();
     cellEnsembleName = reader->getCellEnsembleAttributeMatrixName();
-    cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, EbsdLib::AngFile::Phases);
-    cellEulerAnglesArrayPath = DataArrayPath(dcName, cellAttrMatName, EbsdLib::AngFile::EulerAngles);
-    crystalStructuresArrayPath = DataArrayPath(dcName, cellEnsembleName, EbsdLib::AngFile::CrystalStructures);
+    cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, S2Q(EbsdLib::AngFile::Phases));
+    cellEulerAnglesArrayPath = DataArrayPath(dcName, cellAttrMatName, S2Q(EbsdLib::AngFile::EulerAngles));
+    crystalStructuresArrayPath = DataArrayPath(dcName, cellEnsembleName, S2Q(EbsdLib::AngFile::CrystalStructures));
   }
-  else if(fi.suffix().compare(EbsdLib::Ctf::FileExt) == 0)
+  else if(fi.suffix() == S2Q(EbsdLib::Ctf::FileExt))
   {
     ReadCtfData::Pointer reader = ReadCtfData::New();
     reader->setInputFile(m_EbsdFileName);
@@ -335,9 +336,9 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     dcName = reader->getDataContainerName().getDataContainerName();
     cellAttrMatName = reader->getCellAttributeMatrixName();
     cellEnsembleName = reader->getCellEnsembleAttributeMatrixName();
-    cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, EbsdLib::CtfFile::Phases);
-    cellEulerAnglesArrayPath = DataArrayPath(dcName, cellAttrMatName, EbsdLib::CtfFile::EulerAngles);
-    crystalStructuresArrayPath = DataArrayPath(dcName, cellEnsembleName, EbsdLib::CtfFile::CrystalStructures);
+    cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, S2Q(EbsdLib::CtfFile::Phases));
+    cellEulerAnglesArrayPath = DataArrayPath(dcName, cellAttrMatName, S2Q(EbsdLib::CtfFile::EulerAngles));
+    crystalStructuresArrayPath = DataArrayPath(dcName, cellEnsembleName, S2Q(EbsdLib::CtfFile::CrystalStructures));
   }
 
   QString outputArrayName;
@@ -350,11 +351,11 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     DataArrayPath arrayPath = DataArrayPath(dcName, cellAttrMatName, "");
     if(m_EbsdFileName.endsWith(".ang", Qt::CaseInsensitive))
     {
-      arrayPath.setDataArrayName(EbsdLib::Ang::ConfidenceIndex);
+      arrayPath.setDataArrayName(S2Q(EbsdLib::Ang::ConfidenceIndex));
     }
     else if(m_EbsdFileName.endsWith(".ctf", Qt::CaseInsensitive))
     {
-      arrayPath.setDataArrayName(EbsdLib::Ctf::Bands);
+      arrayPath.setDataArrayName(S2Q(EbsdLib::Ctf::Bands));
     }
     else
     {
@@ -430,11 +431,11 @@ int QEbsdReferenceFrameDialog::createIpfColors(DataContainerArray::Pointer dca, 
        << "fallback DREAM.3D has selected to display the ";
     if(m_EbsdFileName.endsWith(".ang", Qt::CaseInsensitive))
     {
-      ss << EbsdLib::Ang::ConfidenceIndex;
+      ss << S2Q(EbsdLib::Ang::ConfidenceIndex);
     }
     else if(m_EbsdFileName.endsWith(".ctf", Qt::CaseInsensitive))
     {
-      ss << EbsdLib::Ctf::Bands;
+      ss << S2Q(EbsdLib::Ctf::Bands);
     }
     else
     {

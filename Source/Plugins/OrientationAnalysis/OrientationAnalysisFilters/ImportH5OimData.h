@@ -82,6 +82,15 @@ class OrientationAnalysis_EXPORT ImportH5OimData : public AbstractFilter
   PYB11_END_BINDINGS()
   // End Python bindings declarations
 
+  struct Ang_Private_Data
+  {
+    std::array<size_t, 3> dims = {0, 0, 0};
+    std::array<float, 3> resolution = {0.0F, 0.0F, 0.0F};
+    std::array<float, 3> origin = {0.0F, 0.0F, 0.0F};
+    std::vector<AngPhase::Pointer> phases;
+    int32_t units = 0;
+  };
+
   Q_DECLARE_PRIVATE(ImportH5OimData)
 
 public:

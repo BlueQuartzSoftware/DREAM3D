@@ -36,6 +36,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
@@ -54,7 +55,7 @@ struct Ctf_Private_Data
   SizeVec3Type dims;
   FloatVec3Type resolution;
   FloatVec3Type origin;
-  QVector<CtfPhase::Pointer> phases;
+  std::vector<CtfPhase::Pointer> phases;
 };
 
 enum CTF_READ_FLAG

@@ -38,20 +38,21 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QTextStream>
 
+#include "EbsdLib/Core/EbsdMacros.h"
 #include "EbsdLib/IO/HKL/CtfFields.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
-#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
-#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -252,8 +253,8 @@ void ReadCtfData::dataCheck()
     std::vector<size_t> tDims(3, 0);
 
     QString ext = fi.suffix().toLower();
-    QVector<QString> names;
-    if(ext == EbsdLib::Ctf::FileExt)
+    std::vector<std::string> names;
+    if(ext == S2Q(EbsdLib::Ctf::FileExt))
     {
       std::shared_ptr<CtfReader> reader(new CtfReader());
       readDataFile(reader.get(), m.get(), tDims, CTF_HEADER_ONLY);
@@ -261,17 +262,17 @@ void ReadCtfData::dataCheck()
       // Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
       cellAttrMat->resizeAttributeArrays(tDims);
       CtfFields ctffeatures;
-      names = ctffeatures.getFilterFeatures<QVector<QString>>();
+      names = ctffeatures.getFilterFeatures<std::vector<std::string>>();
       std::vector<size_t> cDims(1, 1);
       for(const auto& name : names)
       {
         if(reader->getPointerType(name) == EbsdLib::NumericTypes::Type::Int32)
         {
-          cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>>(this, name, 0, cDims);
+          cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>>(this, S2Q(name), 0, cDims);
         }
         else if(reader->getPointerType(name) == EbsdLib::NumericTypes::Type::Float)
         {
-          cellAttrMat->createAndAddAttributeArray<DataArray<float>>(this, name, 0, cDims);
+          cellAttrMat->createAndAddAttributeArray<DataArray<float>>(this, S2Q(name), 0, cDims);
         }
       }
     }
@@ -283,7 +284,7 @@ void ReadCtfData::dataCheck()
     }
 
     std::vector<size_t> cDims(1, 3);
-    tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), EbsdLib::CtfFile::EulerAngles);
+    tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), S2Q(EbsdLib::CtfFile::EulerAngles));
     m_CellEulerAnglesPtr =
         getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_CellEulerAnglesPtr.lock())                                                             /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -292,14 +293,14 @@ void ReadCtfData::dataCheck()
     } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     cDims[0] = 1;
-    tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), EbsdLib::CtfFile::Phases);
+    tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), S2Q(EbsdLib::CtfFile::Phases));
     m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_CellPhasesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-    tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), EbsdLib::CtfFile::CrystalStructures);
+    tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), S2Q(EbsdLib::CtfFile::CrystalStructures));
     m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>>(this, tempPath, EbsdLib::CrystalStructure::UnknownCrystalStructure, cDims);
     if(nullptr != m_CrystalStructuresPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
@@ -307,7 +308,7 @@ void ReadCtfData::dataCheck()
     } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     cDims[0] = 6;
-    tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), EbsdLib::CtfFile::LatticeConstants);
+    tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), S2Q(EbsdLib::CtfFile::LatticeConstants));
     m_LatticeConstantsPtr =
         getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0.0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_LatticeConstantsPtr.lock())                                                              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -346,7 +347,7 @@ void ReadCtfData::readDataFile(CtfReader* reader, DataContainer* m, std::vector<
   if(m_InputFile != getInputFile_Cache() || !getTimeStamp_Cache().isValid() || getTimeStamp_Cache() < timeStamp)
   {
     float xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f, zStep = 1.0f;
-    reader->setFileName(m_InputFile);
+    reader->setFileName(m_InputFile.toStdString());
 
     if(flag == CTF_HEADER_ONLY)
     {
@@ -354,7 +355,7 @@ void ReadCtfData::readDataFile(CtfReader* reader, DataContainer* m, std::vector<
       if(err < 0)
       {
         setErrorCondition(err, "CtfReader could not read the .ctf file header.");
-        setErrorCondition(err, reader->getErrorMessage());
+        setErrorCondition(err, S2Q(reader->getErrorMessage()));
         m_FileWasRead = false;
         return;
       }
@@ -366,7 +367,7 @@ void ReadCtfData::readDataFile(CtfReader* reader, DataContainer* m, std::vector<
       int32_t err = reader->readFile();
       if(err < 0)
       {
-        setErrorCondition(err, reader->getErrorMessage());
+        setErrorCondition(err, S2Q(reader->getErrorMessage()));
         setErrorCondition(getErrorCode(), "CtfReader could not read the .ctf file.");
         return;
       }
@@ -429,17 +430,17 @@ void ReadCtfData::readDataFile(CtfReader* reader, DataContainer* m, std::vector<
 // -----------------------------------------------------------------------------
 int32_t ReadCtfData::loadMaterialInfo(CtfReader* reader)
 {
-  QVector<CtfPhase::Pointer> phases = getData().phases;
+  std::vector<CtfPhase::Pointer> phases = getData().phases;
   if(phases.empty())
   {
-    setErrorCondition(reader->getErrorCode(), reader->getErrorMessage());
+    setErrorCondition(reader->getErrorCode(), S2Q(reader->getErrorMessage()));
     return getErrorCode();
   }
 
   DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, EbsdLib::CtfFile::CrystalStructures, true);
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, getMaterialNameArrayName());
   std::vector<size_t> cDims(1, 6);
-  FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, EbsdLib::CtfFile::LatticeConstants, true);
+  FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, S2Q(EbsdLib::CtfFile::LatticeConstants), true);
 
   // Initialize the zero'th element to unknowns. The other elements will
   // be filled in based on values from the data file
@@ -457,8 +458,8 @@ int32_t ReadCtfData::loadMaterialInfo(CtfReader* reader)
   {
     int32_t phaseID = phase->getPhaseIndex();
     crystalStructures->setValue(phaseID, phase->determineLaueGroup());
-    materialNames->setValue(phaseID, phase->getMaterialName());
-    QVector<float> lc = phase->getLatticeConstants();
+    materialNames->setValue(phaseID, S2Q(phase->getMaterialName()));
+    std::vector<float> lc = phase->getLatticeConstants();
 
     latticeConstants->setComponent(phaseID, 0, lc[0]);
     latticeConstants->setComponent(phaseID, 1, lc[1]);
@@ -615,14 +616,14 @@ void ReadCtfData::copyRawEbsdData(CtfReader* reader, std::vector<size_t>& tDims,
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ctf::X));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, EbsdLib::Ctf::X, true);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, S2Q(EbsdLib::Ctf::X), true);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(EbsdLib::Ctf::Y));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, EbsdLib::Ctf::Y, true);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, S2Q(EbsdLib::Ctf::Y), true);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }

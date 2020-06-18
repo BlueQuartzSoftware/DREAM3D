@@ -158,8 +158,8 @@ void FindShapes::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getFeatureIdsArrayPath().getDataContainerName());
 
-  m_FeatureMomentsPtr = DataArray<double>::CreateArray(0, "m_FeatureMomentsPtr", true);
-  m_FeatureEigenValsPtr = DataArray<double>::CreateArray(0, "m_FeatureEigenValsPtr", true);
+  m_FeatureMomentsPtr = DataArray<double>::CreateArray(0, std::string("m_FeatureMomentsPtr"), true);
+  m_FeatureEigenValsPtr = DataArray<double>::CreateArray(0, std::string("m_FeatureEigenValsPtr"), true);
 
   std::vector<size_t> cDims(1, 1);
   m_FeatureIdsPtr =

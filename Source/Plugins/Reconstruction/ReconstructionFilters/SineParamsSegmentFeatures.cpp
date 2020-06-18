@@ -283,7 +283,7 @@ void SineParamsSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, size_t 
   const size_t rangeMax = totalFeatures - 1;
   initializeVoxelSeedGenerator(rangeMin, rangeMax);
 
-  DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFeatures, "New GrainIds", true);
+  DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFeatures, std::string("New GrainIds"), true);
 
   int32_t* gid = rndNumbers->getPointer(0);
   gid[0] = 0;

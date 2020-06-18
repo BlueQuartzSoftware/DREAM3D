@@ -140,7 +140,7 @@ public:
     QString filtName = "ReadAngData";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
-    Ang_Private_Data originalData;
+    ReadAngData::Ang_Private_Data originalData;
 
     // Reading first file
     {
@@ -164,7 +164,7 @@ public:
         DREAM3D_REQUIRE_EQUAL(0, 1)
       }
 
-      Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
+      ReadAngData::Ang_Private_Data data = angReader->property("Data").value<ReadAngData::Ang_Private_Data>();
 
       // XStep, YStep -> Spacing(x, y)
       DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep1)
@@ -199,7 +199,7 @@ public:
         DREAM3D_REQUIRE_EQUAL(0, 1)
       }
 
-      Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
+      ReadAngData::Ang_Private_Data data = angReader->property("Data").value<ReadAngData::Ang_Private_Data>();
 
       // XStep, YStep -> Spacing(x, y)
       DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep1)
@@ -234,7 +234,7 @@ public:
         DREAM3D_REQUIRE_EQUAL(0, 1)
       }
 
-      Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
+      ReadAngData::Ang_Private_Data data = angReader->property("Data").value<ReadAngData::Ang_Private_Data>();
 
       // XStep, YStep -> Spacing(x, y)
       DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep2)
@@ -295,7 +295,7 @@ public:
         DREAM3D_REQUIRE_EQUAL(0, 1)
       }
 
-      Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
+      ReadAngData::Ang_Private_Data data = angReader->property("Data").value<ReadAngData::Ang_Private_Data>();
 
       // XStep, YStep -> Spacing(x, y)
       DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep2)
@@ -334,7 +334,7 @@ public:
         DREAM3D_REQUIRE_EQUAL(0, 1)
       }
 
-      Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
+      ReadAngData::Ang_Private_Data data = angReader->property("Data").value<ReadAngData::Ang_Private_Data>();
 
       // XStep, YStep -> Spacing(x, y)
       DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep2)

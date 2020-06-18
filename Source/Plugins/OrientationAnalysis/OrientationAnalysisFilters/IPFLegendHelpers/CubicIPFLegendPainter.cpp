@@ -36,8 +36,9 @@
 #include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "EbsdLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Core/EbsdMacros.h"
 #include "EbsdLib/LaueOps/CubicOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -104,7 +105,7 @@ QImage CubicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, QImag
     painter.setFont(font);
     QFontMetrics metrics = painter.fontMetrics();
     fontHeight = metrics.height();
-    fontWidth = metrics.QFONTMETRICS_WIDTH(ops->getSymmetryName());
+    fontWidth = metrics.QFONTMETRICS_WIDTH(S2Q(ops->getSymmetryName()));
     painter.end();
   }
 
@@ -151,7 +152,7 @@ QImage CubicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, QImag
   fontHeight = metrics.height();
   painter.drawText(10, fontHeight * 1.75 + imageSize.height(), label);
 
-  label = ops->getSymmetryName();
+  label = S2Q(ops->getSymmetryName());
   fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText(pImageWidth / 2 - fontWidth / 2, fontHeight * 1.0, label);

@@ -158,10 +158,10 @@ void FindBoundaryElementFractions::find_surface_voxel_fractions()
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t numfeatures = m_BoundaryCellFractionsPtr.lock()->getNumberOfTuples();
 
-  FloatArrayType::Pointer m_SurfVoxCounts = FloatArrayType::CreateArray(numfeatures, "_INTERNAL_USE_ONLY_SurfVoxCounts", true);
+  FloatArrayType::Pointer m_SurfVoxCounts = FloatArrayType::CreateArray(numfeatures, std::string("_INTERNAL_USE_ONLY_SurfVoxCounts"), true);
   m_SurfVoxCounts->initializeWithZeros();
   float* surfvoxcounts = m_SurfVoxCounts->getPointer(0);
-  FloatArrayType::Pointer m_VoxCounts = FloatArrayType::CreateArray(numfeatures, "_INTERNAL_USE_ONLY_VoxCounts", true);
+  FloatArrayType::Pointer m_VoxCounts = FloatArrayType::CreateArray(numfeatures, std::string("_INTERNAL_USE_ONLY_VoxCounts"), true);
   m_VoxCounts->initializeWithZeros();
   float* voxcounts = m_VoxCounts->getPointer(0);
 

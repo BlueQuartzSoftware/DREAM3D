@@ -166,7 +166,7 @@ void ErodeDilateMask::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_MaskArrayPath.getDataContainerName());
   size_t totalPoints = m_MaskPtr.lock()->getNumberOfTuples();
 
-  BoolArrayType::Pointer maskCopyPtr = BoolArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_MaskCopy", true);
+  BoolArrayType::Pointer maskCopyPtr = BoolArrayType::CreateArray(totalPoints, std::string("_INTERNAL_USE_ONLY_MaskCopy"), true);
   m_MaskCopy = maskCopyPtr->getPointer(0);
   maskCopyPtr->initializeWithValue(false);
 

@@ -36,6 +36,7 @@
 #include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
+#include "EbsdLib/Core/EbsdMacros.h"
 #include "EbsdLib/LaueOps/HexagonalLowOps.h"
 #include "EbsdLib/LaueOps/LaueOps.h"
 
@@ -104,7 +105,7 @@ QImage HexagonalLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight
     painter.setFont(font);
     QFontMetrics metrics0 = painter.fontMetrics();
     fontHeight = metrics0.height();
-    fontWidth = metrics0.QFONTMETRICS_WIDTH(ops->getSymmetryName());
+    fontWidth = metrics0.QFONTMETRICS_WIDTH(S2Q(ops->getSymmetryName()));
     painter.end();
   }
 
@@ -154,7 +155,7 @@ QImage HexagonalLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight
   fontHeight = metrics.height();
   painter.drawText(10, fontHeight * 1.90 + imageSize.height(), label);
 
-  label = ops->getSymmetryName();
+  label = S2Q(ops->getSymmetryName());
   fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   painter.drawText(pImageWidth / 2 - fontWidth / 2, fontHeight * 1.0, label);
