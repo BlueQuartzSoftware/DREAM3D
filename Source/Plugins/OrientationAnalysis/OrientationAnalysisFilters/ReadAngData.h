@@ -359,4 +359,4 @@ public:
   ReadAngData& operator=(ReadAngData&&) = delete;      // Move Assignment Not Implemented
 };
 
-Q_DECLARE_METATYPE(ReadAngData::Ang_Private_Data)
+// Q_DECLARE_METATYPE(ReadAngData::Ang_Private_Data)
