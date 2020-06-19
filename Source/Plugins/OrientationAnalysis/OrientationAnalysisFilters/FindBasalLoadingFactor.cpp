@@ -152,7 +152,6 @@ void FindBasalLoadingFactor::execute()
 
   size_t totalFeatures = m_BasalLoadingFactorPtr.lock()->getNumberOfTuples();
 
-  QuatF q1;
   //  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
   float sampleLoading[3];
