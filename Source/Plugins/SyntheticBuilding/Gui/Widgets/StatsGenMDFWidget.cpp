@@ -166,8 +166,8 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 
   QPalette pal;
   pal.setColor(QPalette::Text, SVStyle::Instance()->getQLabel_color());
-  pal.setColor(QPalette::Foreground, Qt::white);
-  pal.setColor(QPalette::Window, Qt::black);
+  pal.setColor(QFOREGROUND, Qt::white);
+  pal.setColor(QBACKGROUND, Qt::black);
 
   plot->setPalette(pal);
 

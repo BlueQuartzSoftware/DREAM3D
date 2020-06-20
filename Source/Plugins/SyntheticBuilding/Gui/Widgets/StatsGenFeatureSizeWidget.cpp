@@ -135,7 +135,7 @@ void StatsGenFeatureSizeWidget::initQwtPlot(const QString& title, const QString&
 
   QPalette pal;
   pal.setColor(QPalette::Text, SVStyle::Instance()->getQLabel_color());
-  pal.setColor(QPalette::Foreground, Qt::white);
+  pal.setColor(QFOREGROUND, Qt::white);
   pal.setColor(QPalette::Window, Qt::black);
 
   plot->setPalette(pal);

@@ -381,9 +381,8 @@ void StatsGenPlotWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPl
 
   QPalette pal;
   pal.setColor(QPalette::Text, SVStyle::Instance()->getQLabel_color());
-  pal.setColor(QPalette::Foreground, Qt::white);
-  pal.setColor(QPalette::Window, Qt::black);
-  pal.setColor(QPalette::Background, Qt::black);
+  pal.setColor(QFOREGROUND, Qt::white);
+  pal.setColor(QBACKGROUND, Qt::black);
 
   plot->plotLayout()->setAlignCanvasToScales(true);
   for(int axis = 0; axis < QwtPlot::axisCnt; axis++)
