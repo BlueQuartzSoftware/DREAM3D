@@ -151,7 +151,6 @@ public:
       angReader->preflight();
       int err = angReader->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, 0);
-      DREAM3D_REQUIRE_EQUAL(0, 1)
     }
 
     angReader->setInputFile(CopiedFile1);
