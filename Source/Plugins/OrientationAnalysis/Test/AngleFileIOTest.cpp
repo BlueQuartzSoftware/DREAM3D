@@ -210,6 +210,7 @@ public:
   // -----------------------------------------------------------------------------
   void operator()()
   {
+    std::cout << "#-- AngleFileIOTest Starting " << std::endl;
     int err = EXIT_SUCCESS;
     DREAM3D_REGISTER_TEST(TestWriter());
     DREAM3D_REGISTER_TEST(TestReader());
