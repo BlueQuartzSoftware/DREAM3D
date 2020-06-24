@@ -55,7 +55,7 @@
 #include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "EbsdLib/Core/EbsdLibConstants.h"
-#include "EbsdLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Core/Quaternion.hpp"
 #include "EbsdLib/LaueOps/CubicOps.h"
 #include "EbsdLib/LaueOps/HexagonalOps.h"
 #include "EbsdLib/LaueOps/LaueOps.h"
@@ -663,8 +663,8 @@ void MatchCrystallography::MC_LoopBody1(int32_t feature, size_t ensem, size_t j,
   }
 
   curmisobin = ops->getMisoBin(rod);
-  QuatType qq1(q1[0], q1[1], q1[2], q1[3]);
-  QuatType qq2(q2[0], q2[1], q2[2], q2[3]);
+  QuatD qq1(q1[0], q1[1], q1[2], q1[3]);
+  QuatD qq2(q2[0], q2[1], q2[2], q2[3]);
   OrientationD axisAngle = ops->calculateMisorientation(q1, q2);
 
   rod = OrientationTransformation::ax2ro<OrientationD, OrientationD>(axisAngle);
@@ -879,7 +879,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
           m_FeatureEulerAngles[3 * selectedfeature1] = g1ea1;
           m_FeatureEulerAngles[3 * selectedfeature1 + 1] = g1ea2;
           m_FeatureEulerAngles[3 * selectedfeature1 + 2] = g1ea3;
-          q1.copyInto(m_AvgQuats + selectedfeature1 * 4, 4);
+          q1.copyInto(m_AvgQuats + selectedfeature1 * 4, Quaternion<float>::Order::VectorScalar);
           m_SimOdf->setValue(choose, (m_SimOdf->getValue(choose) + (m_Volumes[selectedfeature1] / m_UnbiasedVolume[ensem])));
           m_SimOdf->setValue(g1odfbin, (m_SimOdf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / m_UnbiasedVolume[ensem])));
           size = 0;
@@ -961,12 +961,12 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
           g2ea1 = m_FeatureEulerAngles[3 * selectedfeature2];
           g2ea2 = m_FeatureEulerAngles[3 * selectedfeature2 + 1];
           g2ea3 = m_FeatureEulerAngles[3 * selectedfeature2 + 2];
-          q1.copyInto(m_AvgQuats + selectedfeature1 * 4, 4);
+          q1.copyInto(m_AvgQuats + selectedfeature1 * 4, Quaternion<float>::Order::VectorScalar);
           OrientationD eu(m_FeatureEulerAngles[3 * selectedfeature1], m_FeatureEulerAngles[3 * selectedfeature1 + 1], m_FeatureEulerAngles[3 * selectedfeature1 + 2]);
           OrientationD rod = OrientationTransformation::eu2ro<OrientationD, OrientationD>(eu);
 
           g1odfbin = laueOp->getOdfBin(rod);
-          q1.copyInto(m_AvgQuats + selectedfeature2 * 4, 4);
+          q1.copyInto(m_AvgQuats + selectedfeature2 * 4, Quaternion<float>::Order::VectorScalar);
 
           eu = OrientationD(m_FeatureEulerAngles[3 * selectedfeature2], m_FeatureEulerAngles[3 * selectedfeature2 + 1], m_FeatureEulerAngles[3 * selectedfeature2 + 2]);
           rod = OrientationTransformation::eu2ro<OrientationD, OrientationD>(eu);
@@ -1038,7 +1038,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
             m_SimOdf->setValue(g2odfbin, (m_SimOdf->getValue(g2odfbin) + (m_Volumes[selectedfeature1] / m_UnbiasedVolume[ensem]) - (m_Volumes[selectedfeature2] / m_UnbiasedVolume[ensem])));
 
             q1 = OrientationTransformation::eu2qu<OrientationD, QuatF>(OrientationD(g1ea1, g1ea2, g1ea3));
-            q1.copyInto(m_AvgQuats + selectedfeature1 * 4, 4);
+            q1.copyInto(m_AvgQuats + selectedfeature1 * 4, Quaternion<float>::Order::VectorScalar);
             size = 0;
             if(!neighborlist[selectedfeature1].empty())
             {
@@ -1059,7 +1059,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
             }
 
             q1 = OrientationTransformation::eu2qu<OrientationD, QuatF>(OrientationD(g1ea1, g1ea2, g1ea3));
-            q1.copyInto(m_AvgQuats + selectedfeature2 * 4, 4);
+            q1.copyInto(m_AvgQuats + selectedfeature2 * 4, Quaternion<float>::Order::VectorScalar);
             size = 0;
             if(!neighborlist[selectedfeature2].empty())
             {

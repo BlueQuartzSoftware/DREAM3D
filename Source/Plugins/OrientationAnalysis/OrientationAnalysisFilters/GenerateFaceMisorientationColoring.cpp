@@ -125,9 +125,9 @@ public:
         if((m_CrystalStructures[phase1] == EbsdLib::CrystalStructure::Hexagonal_High) || (m_CrystalStructures[phase1] == EbsdLib::CrystalStructure::Cubic_High))
         {
           float* quatPtr = m_Quats + feature1 * 4;
-          QuatType q1(quatPtr[0], quatPtr[1], quatPtr[2], quatPtr[3]);
+          QuatD q1(quatPtr[0], quatPtr[1], quatPtr[2], quatPtr[3]);
           quatPtr = m_Quats + feature2 * 4;
-          QuatType q2(quatPtr[0], quatPtr[1], quatPtr[2], quatPtr[3]);
+          QuatD q2(quatPtr[0], quatPtr[1], quatPtr[2], quatPtr[3]);
           // double w = 0.0f, n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
           OrientationD axisAngle = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
 

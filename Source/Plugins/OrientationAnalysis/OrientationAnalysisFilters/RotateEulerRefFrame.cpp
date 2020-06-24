@@ -46,6 +46,7 @@
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 
+#include "EbsdLib/Core/Orientation.hpp"
 #include "EbsdLib/Core/OrientationTransformation.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"

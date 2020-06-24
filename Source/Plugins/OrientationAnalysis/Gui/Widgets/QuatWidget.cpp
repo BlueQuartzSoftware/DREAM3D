@@ -115,7 +115,7 @@ void QuatWidget::valuesUpdated(const QString& text)
 {
   std::vector<double> values = getValues();
 
-  QuatType quat(values[0], values[1], values[2], values[3]);
+  QuatD quat(values[0], values[1], values[2], values[3]);
   quat = quat.unitQuaternion();
   values[0] = quat.x();
   values[1] = quat.y();

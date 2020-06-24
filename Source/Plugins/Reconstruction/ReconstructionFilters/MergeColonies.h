@@ -349,7 +349,7 @@ protected:
    * @param alphaQuat Alpha quaternion
    * @return Boolean vector check
    */
-  bool check_for_burgers(const QuatType& betaQuat, const QuatType& alphaQuat) const;
+  bool check_for_burgers(const QuatD& betaQuat, const QuatD& alphaQuat) const;
 
   /**
    * @brief characterize_colonies Characterizes colonies; CURRENTLY NOT IMPLEMENTED

@@ -239,7 +239,7 @@ void FindAvgOrientations::execute()
 
       if(counts[m_FeatureIds[i]] == 1.0f)
       {
-        curavgquat.identity();
+        curavgquat = QuatF::identity();
       }
       m_OrientationOps[m_CrystalStructures[phase]]->getNearestQuat(curavgquat, voxquat);
 
@@ -254,7 +254,7 @@ void FindAvgOrientations::execute()
     QuatF qAvg = QuatF(m_AvgQuats + i * 4);
     if(counts[i] == 0.0f)
     {
-      qAvg.identity();
+      qAvg = QuatF::identity();
     }
     qAvg.scalarDivide(counts[i]);
     qAvg = qAvg.unitQuaternion();

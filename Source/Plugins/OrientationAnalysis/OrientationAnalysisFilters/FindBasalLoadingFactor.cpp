@@ -47,6 +47,7 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 
+#include "EbsdLib/Core/Orientation.hpp"
 #include "EbsdLib/Core/OrientationTransformation.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
@@ -152,7 +153,6 @@ void FindBasalLoadingFactor::execute()
 
   size_t totalFeatures = m_BasalLoadingFactorPtr.lock()->getNumberOfTuples();
 
-  QuatF q1;
   //  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
   float sampleLoading[3];

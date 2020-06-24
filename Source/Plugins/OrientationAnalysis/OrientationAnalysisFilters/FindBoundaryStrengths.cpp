@@ -293,8 +293,8 @@ void FindBoundaryStrengths::execute()
     gname2 = m_SurfaceMeshFaceLabels[i * 2 + 1];
     if(gname1 > 0 && gname2 > 0)
     {
-      QuatType q1(m_AvgQuats[gname1 * 4], m_AvgQuats[gname1 * 4 + 1], m_AvgQuats[gname1 * 4 + 2], m_AvgQuats[gname1 * 4 + 3]);
-      QuatType q2(m_AvgQuats[gname2 * 4], m_AvgQuats[gname2 * 4 + 1], m_AvgQuats[gname2 * 4 + 2], m_AvgQuats[gname2 * 4 + 3]);
+      QuatD q1(m_AvgQuats[gname1 * 4], m_AvgQuats[gname1 * 4 + 1], m_AvgQuats[gname1 * 4 + 2], m_AvgQuats[gname1 * 4 + 3]);
+      QuatD q2(m_AvgQuats[gname2 * 4], m_AvgQuats[gname2 * 4 + 1], m_AvgQuats[gname2 * 4 + 2], m_AvgQuats[gname2 * 4 + 3]);
 
       if(m_CrystalStructures[m_FeaturePhases[gname1]] == m_CrystalStructures[m_FeaturePhases[gname2]] && m_FeaturePhases[gname1] > 0)
       {
