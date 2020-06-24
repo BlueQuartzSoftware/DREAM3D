@@ -47,6 +47,7 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 
+#include "EbsdLib/Core/Orientation.hpp"
 #include "EbsdLib/Core/OrientationTransformation.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
