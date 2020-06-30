@@ -71,7 +71,7 @@ enum createdPathID : RenameDataPath::DataID_t
 namespace
 {
 
-std::set<std::string> convertToStl(QSet<QString>& in)
+std::set<std::string> convertToStl(const QSet<QString>& in)
 {
   std::set<std::string> out;
   for(const auto& v : in)
