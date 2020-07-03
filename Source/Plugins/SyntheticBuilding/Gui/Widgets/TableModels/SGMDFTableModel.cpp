@@ -318,6 +318,7 @@ std::vector<float> SGMDFTableModel::getData(int col)
     float k = 0.0;
     float l = 0.0;
     int err = 0;
+    data.reserve(count * 3);
     for(int r = 0; r < count; ++r)
     {
       err = parseHKLRow(r, h, k, l);
@@ -338,25 +339,31 @@ std::vector<float> SGMDFTableModel::getData(int col)
 int SGMDFTableModel::parseHKLRow(int row, float& h, float& k, float& l) const
 {
   QString hklStr = m_Axis[row];
+  h = std::numeric_limits<float>::infinity();
+  k = std::numeric_limits<float>::infinity();
+  l = std::numeric_limits<float>::infinity();
   hklStr.chop(1);      // remove the ">" charater from the end;
   hklStr.remove(0, 1); // Remove the front "<" character
   bool ok = false;
   h = hklStr.section(',', 0, 0).toFloat(&ok);
-  if(ok)
+  if(!ok)
   {
-    return 0;
+    h = std::numeric_limits<float>::infinity();
+    return -1;
   }
   k = hklStr.section(',', 1, 1).toFloat(&ok);
-  if(ok)
+  if(!ok)
   {
-    return 0;
+    k = std::numeric_limits<float>::infinity();
+    return -1;
   }
   l = hklStr.section(',', 2, 2).toFloat(&ok);
-  if(ok)
+  if(!ok)
   {
-    return 0;
+    l = std::numeric_limits<float>::infinity();
+    return -1;
   }
-  return -1;
+  return 0;
 }
 
 // -----------------------------------------------------------------------------

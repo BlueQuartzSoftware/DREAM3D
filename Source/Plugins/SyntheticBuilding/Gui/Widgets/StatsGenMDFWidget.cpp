@@ -326,15 +326,13 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float>& odf)
       msgBox.setStandardButtons(QMessageBox::Ok);
       msgBox.setDefaultButton(QMessageBox::Ok);
       std::ignore = msgBox.exec();
-
       return;
     }
   }
 
   // These are the output vectors
-  int npoints = 36;
-  ContainerType x(npoints);
-  ContainerType y(npoints);
+  ContainerType x;
+  ContainerType y;
   ContainerType mdf;
 
   progress.setValue(1);
@@ -397,6 +395,7 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float>& odf)
     return;
   }
 
+  m_MDFPlot->setAxisScale(QwtPlot::xBottom, 0.0, x.size() * 5.0, 10);
   QwtArray<double> xD(static_cast<int>(x.size()));
   QwtArray<double> yD(static_cast<int>(x.size()));
   for(ContainerType::size_type i = 0; i < x.size(); ++i)
@@ -503,7 +502,7 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
   QVector<float> weights(numMisorients);
 
   float angle, weight, n1, n2, n3;
-  for(int32_t i = 0; i < numMisorients - 1; i++)
+  for(int32_t i = 0; i < numMisorients; i++)
   {
     inFile >> angle >> n1 >> n2 >> n3 >> weight;
     angles[i] = angle;
