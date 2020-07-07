@@ -278,13 +278,13 @@ std::shared_ptr<FixNonmanifoldVoxels> FixNonmanifoldVoxels::New()
 // -----------------------------------------------------------------------------
 QString FixNonmanifoldVoxels::getNameOfClass() const
 {
-  return QString("_SUPERFixNonmanifoldVoxels");
+  return QString("FixNonmanifoldVoxels");
 }
 
 // -----------------------------------------------------------------------------
 QString FixNonmanifoldVoxels::ClassName()
 {
-  return QString("_SUPERFixNonmanifoldVoxels");
+  return QString("FixNonmanifoldVoxels");
 }
 
 // -----------------------------------------------------------------------------
