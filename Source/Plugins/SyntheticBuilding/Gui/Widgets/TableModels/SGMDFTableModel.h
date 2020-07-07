@@ -172,7 +172,7 @@ public:
    * @param axis
    * @param weight
    */
-  void setRowData(int row, float angle, const QString& axis, float weight);
+  void setRowData(int row, float angle, float* const axis, float weight);
 
   /**
    * @brief setInitialValues
@@ -188,11 +188,11 @@ public:
   void setTableData(const QVector<float>& angles, const QVector<float>& axis, const QVector<float>& weights);
 
 private:
-  int m_ColumnCount;
-  int m_RowCount;
+  int m_ColumnCount = {ColumnCount};
+  int m_RowCount = {0};
 
   QVector<float> m_Angles;
-  QVector<QString> m_Axis;
+  QVector<float> m_Axis;
   QVector<float> m_Weights;
 
 public:

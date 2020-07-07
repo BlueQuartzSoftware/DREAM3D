@@ -37,6 +37,8 @@
 
 #include <iostream>
 
+#include <QtCore/QTextStream>
+
 #include <QtWidgets/QAbstractItemDelegate>
 #include <QtWidgets/QApplication>
 
@@ -49,9 +51,7 @@
 // -----------------------------------------------------------------------------
 SGMDFTableModel::SGMDFTableModel(QObject* parent)
 : QAbstractTableModel(parent)
-, m_RowCount(0)
 {
-  m_ColumnCount = ColumnCount;
 }
 
 // -----------------------------------------------------------------------------
@@ -160,7 +160,20 @@ QVariant SGMDFTableModel::data(const QModelIndex& index, qint32 role) const
     }
     if(col == Axis)
     {
-      return QVariant(m_Axis[index.row()]);
+      QLocale loc = QLocale::system();
+      QChar decimalPoint = loc.decimalPoint();
+      QChar separatorPoint = ',';
+      if(decimalPoint == ',')
+      {
+        separatorPoint = '.';
+      }
+      int32_t row = index.row();
+
+      QString display;
+
+      QTextStream out(&display);
+      out << "<" << loc.toString(m_Axis[row * 3]) << separatorPoint << " " << loc.toString(m_Axis[row * 3 + 1]) << separatorPoint << " " << loc.toString(m_Axis[row * 3 + 2]) << ">";
+      return QVariant(display);
     }
   }
 
@@ -195,27 +208,27 @@ QVariant SGMDFTableModel::headerData(int section, Qt::Orientation orientation, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGMDFTableModel::rowCount(const QModelIndex& index) const
+int SGMDFTableModel::rowCount(const QModelIndex& parent) const
 {
-  return index.isValid() ? 0 : m_RowCount;
+  return parent.isValid() ? 0 : m_RowCount;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGMDFTableModel::columnCount(const QModelIndex& index) const
+int SGMDFTableModel::columnCount(const QModelIndex& parent) const
 {
-  return index.isValid() ? 0 : m_ColumnCount;
+  return parent.isValid() ? 0 : m_ColumnCount;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SGMDFTableModel::setHeaderData(int col, Qt::Orientation o, const QVariant& var, int role)
+bool SGMDFTableModel::setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role)
 {
   std::ignore = col;
-  std::ignore = o;
-  std::ignore = var;
+  std::ignore = orientation;
+  std::ignore = data;
   std::ignore = role;
   return false;
 }
@@ -239,7 +252,7 @@ bool SGMDFTableModel::setData(const QModelIndex& index, const QVariant& value, i
     m_Angles[row] = value.toFloat(&ok);
     break;
   case Axis:
-    m_Axis[row] = value.toString();
+    m_Axis[row] = value.toFloat(&ok);
     break;
   case Weight:
     m_Weights[row] = value.toFloat(&ok);
@@ -256,9 +269,9 @@ bool SGMDFTableModel::setData(const QModelIndex& index, const QVariant& value, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SGMDFTableModel::insertRows(int row, int count, const QModelIndex& index)
+bool SGMDFTableModel::insertRows(int row, int count, const QModelIndex& parent)
 {
-  QString axis("<0,0,1>");
+  // QString axis("<0,0,1>");
   float weight = 50000.0; // Use a heavy default weight to show the user a major change in the MDF
   float angle = 0.0;
 
@@ -267,18 +280,20 @@ bool SGMDFTableModel::insertRows(int row, int count, const QModelIndex& index)
   {
     m_Angles.append(angle);
     m_Weights.append(weight);
-    m_Axis.append(axis);
+    m_Axis.append(0.0F);
+    m_Axis.append(0.0F);
+    m_Axis.append(1.0F);
     m_RowCount = m_Angles.count();
   }
   endInsertRows();
-  emit dataChanged(index, index);
+  emit dataChanged(parent, parent);
   return true;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SGMDFTableModel::removeRows(int row, int count, const QModelIndex& index)
+bool SGMDFTableModel::removeRows(int row, int count, const QModelIndex& parent)
 {
   if(count < 1)
   {
@@ -293,7 +308,7 @@ bool SGMDFTableModel::removeRows(int row, int count, const QModelIndex& index)
     m_RowCount = m_Angles.count();
   }
   endRemoveRows();
-  emit dataChanged(index, index);
+  emit dataChanged(parent, parent);
   return true;
 }
 
@@ -313,6 +328,8 @@ std::vector<float> SGMDFTableModel::getData(int col)
   }
   if(col == Axis)
   {
+    return std::vector<float>(m_Axis.begin(), m_Axis.end());
+#if 0
     int count = rowCount();
     float h = 0.0;
     float k = 0.0;
@@ -329,6 +346,7 @@ std::vector<float> SGMDFTableModel::getData(int col)
         data.push_back(l);
       }
     }
+#endif
   }
   return data;
 }
@@ -338,6 +356,7 @@ std::vector<float> SGMDFTableModel::getData(int col)
 // -----------------------------------------------------------------------------
 int SGMDFTableModel::parseHKLRow(int row, float& h, float& k, float& l) const
 {
+#if 0
   QString hklStr = m_Axis[row];
   h = std::numeric_limits<float>::infinity();
   k = std::numeric_limits<float>::infinity();
@@ -363,6 +382,7 @@ int SGMDFTableModel::parseHKLRow(int row, float& h, float& k, float& l) const
     l = std::numeric_limits<float>::infinity();
     return -1;
   }
+#endif
   return 0;
 }
 
@@ -405,7 +425,8 @@ void SGMDFTableModel::setTableData(const QVector<float>& angles, const QVector<f
     beginInsertRows(QModelIndex(), row, row + count - 1);
     m_Angles = angles;
     m_Weights = weights;
-
+    m_Axis = axis;
+#if 0
     m_Axis.clear();
     float h = 0.0f, k = 0.0f, l = 0.0f;
     for(int i = 0; i < axis.size(); ++i)
@@ -416,6 +437,7 @@ void SGMDFTableModel::setTableData(const QVector<float>& angles, const QVector<f
       QString status = QString("<%1,%2,%3>").arg(h).arg(k).arg(l);
       m_Axis.push_back(status);
     }
+#endif
 
     m_RowCount = count;
     endInsertRows();
@@ -428,10 +450,12 @@ void SGMDFTableModel::setTableData(const QVector<float>& angles, const QVector<f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGMDFTableModel::setRowData(int row, float angle, const QString& axis, float weight)
+void SGMDFTableModel::setRowData(int row, float angle, float* const axis, float weight)
 {
   m_Angles[row] = angle;
-  m_Axis[row] = (axis);
+  m_Axis[row * 3] = axis[0];
+  m_Axis[row * 3 + 1] = axis[1];
+  m_Axis[row * 3 + 2] = axis[2];
   m_Weights[row] = weight;
 }
 

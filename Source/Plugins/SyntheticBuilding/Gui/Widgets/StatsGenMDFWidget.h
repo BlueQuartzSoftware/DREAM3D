@@ -79,7 +79,7 @@ public:
    * @param yAxisName
    * @param plot
    */
-  void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
+  void initQwtPlot(const QString& xAxisName, const QString& yAxisName, QwtPlot* plot);
 
   /**
    * @brief Setter property for PhaseIndex
