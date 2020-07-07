@@ -112,14 +112,8 @@ StatsGenMDFWidget::~StatsGenMDFWidget()
   {
     m_MDFTableModel->deleteLater();
   }
-  if(nullptr != m_PlotPicker)
-  {
-    delete m_PlotPicker;
-  }
-  if(nullptr != m_PlotPickerMachine)
-  {
-    delete m_PlotPickerMachine;
-  }
+  delete m_PlotPicker;
+  delete m_PlotPickerMachine;
 }
 
 // -----------------------------------------------------------------------------
@@ -161,7 +155,7 @@ void StatsGenMDFWidget::tableDataChanged(const QModelIndex& topLeft, const QMode
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot)
+void StatsGenMDFWidget::initQwtPlot(const QString& xAxisName, const QString& yAxisName, QwtPlot* plot)
 {
 
   QPalette pal;

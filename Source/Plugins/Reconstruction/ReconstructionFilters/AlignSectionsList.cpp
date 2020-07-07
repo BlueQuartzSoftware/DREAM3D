@@ -40,13 +40,13 @@
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
-#include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
-#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -77,9 +77,10 @@ void AlignSectionsList::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, AlignSectionsList, "*.txt"));
   parameters.push_back(SIMPL_NEW_BOOL_FP("DREAM3D Alignment File Format", DREAM3DAlignmentFile, FilterParameter::Parameter, AlignSectionsList));
 
-  DataContainerSelectionFilterParameter::RequirementType req;
+  AttributeMatrixSelectionFilterParameter::RequirementType req;
   req.dcGeometryTypes = {IGeometry::Type::Image};
-  parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Data Container", DataContainerName, FilterParameter::Parameter, AlignSectionsList, req));
+  req.amTypes = {AttributeMatrix::Type::Cell};
+  parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", CellAttributeMatrixPath, FilterParameter::Parameter, AlignSectionsList, req));
 
   setFilterParameters(parameters);
 }
@@ -110,6 +111,11 @@ void AlignSectionsList::dataCheck()
   clearErrorCode();
   clearWarningCode();
   QString ss;
+
+  // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
+  // These are checked for validity in the Parent Class dataCheck
+  setDataContainerName(DataArrayPath(m_CellAttributeMatrixPath.getDataContainerName(), "", ""));
+  setCellAttributeMatrixName(m_CellAttributeMatrixPath.getAttributeMatrixName());
 
   AlignSections::dataCheck();
   if(getErrorCode() < 0)
@@ -327,4 +333,16 @@ void AlignSectionsList::setDREAM3DAlignmentFile(bool value)
 bool AlignSectionsList::getDREAM3DAlignmentFile() const
 {
   return m_DREAM3DAlignmentFile;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsList::setCellAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_CellAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AlignSectionsList::getCellAttributeMatrixPath() const
+{
+  return m_CellAttributeMatrixPath;
 }
