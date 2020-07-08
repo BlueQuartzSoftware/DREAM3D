@@ -4,12 +4,13 @@
 
 #include <QtCore/QFile>
 
-#include "EbsdLib/LaueOps/LaueOps.h"
 #include "EbsdLib/Core/EbsdLibConstants.h"
+#include "EbsdLib/Core/EbsdMacros.h"
 #include "EbsdLib/LaueOps/CubicLowOps.h"
 #include "EbsdLib/LaueOps/CubicOps.h"
 #include "EbsdLib/LaueOps/HexagonalLowOps.h"
 #include "EbsdLib/LaueOps/HexagonalOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 #include "EbsdLib/LaueOps/MonoclinicOps.h"
 #include "EbsdLib/LaueOps/OrthoRhombicOps.h"
 #include "EbsdLib/LaueOps/TetragonalLowOps.h"
@@ -71,6 +72,9 @@ public:
       Texture::CalculateMDFData<float, LaueOpsType, ContainerType>(angles, axes, weights, odf, mdfValues, angles.size());
       err = StatsGen::GenMDFPlotData<float, LaueOpsType, ContainerType>(mdfValues, x, y, size);
     } catch(const std::runtime_error& e)
+    {
+      err = -1;
+    } catch(EbsdLib::method_not_implemented& e)
     {
       if(ops.getNameOfClass() == "TriclinicOps" || ops.getNameOfClass() == "MonoclinicOps" || ops.getNameOfClass() == "OrthorhombicOps")
       {
