@@ -19,6 +19,7 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
+#endif
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -26,8 +27,6 @@ enum createdPathID : RenameDataPath::DataID_t
   DataArrayID30 = 30,
   DataArrayID31 = 31,
 };
-
-#endif
 
 class GenerateOrientationMatrixTransposeImpl
 {

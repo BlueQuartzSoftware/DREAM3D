@@ -66,6 +66,7 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
+#endif
 
 using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
 using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
@@ -79,8 +80,6 @@ enum createdPathID : RenameDataPath::DataID_t
   DataArrayID33 = 33,
   DataArrayID34 = 34,
 };
-
-#endif
 
 const double FindDistsToCharactGBs::INF_DIST = 999.0;
 
