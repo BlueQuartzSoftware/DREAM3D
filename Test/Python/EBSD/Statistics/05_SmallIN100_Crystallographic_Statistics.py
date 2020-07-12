@@ -13,8 +13,7 @@ def small_in100_cryst_stats():
     # Read DREAM3D File
     err = sc.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Statistics/SmallIN100_CopyCritical.dream3d')
     
-    if err < 0:
-        print('DataContainerReader ErrorCondition %d' % err)
+    assert err == 0, f'DataContainerReader ErrorCondition {err}'
 
     # We need to remove an Attribute Array that will be recreated in a filter.
     dc = dca.getDataContainer('Small IN100')
@@ -31,8 +30,7 @@ def small_in100_cryst_stats():
                                                                          'CrystalStructures'),
                                                      simpl.DataArrayPath('Small IN100', 'Grain Data', 'AvgQuats'),
                                                      simpl.DataArrayPath('Small IN100', 'Grain Data', 'AvgEulerAngles'))
-    if err < 0:
-        print('FindAvgOrientations ErrorCondition %d' % err)
+    assert err == 0, f'FindAvgOrientations ErrorCondition {err}'
 
     # Find Feature Neighbor Misorientations
     err = orientation_analysis.find_misorientations(dca,
@@ -43,8 +41,7 @@ def small_in100_cryst_stats():
                                                     simpl.DataArrayPath('Small IN100', 'Phase Data',
                                                                         'CrystalStructures'),
                                                     '', False)
-    if err < 0:
-        print('FindMisorientations ErrorCondition %d' % err)
+    assert err == 0, f'FindMisorientations ErrorCondition {err}'
 
     # Find Schmid Factors
     err = orientation_analysis.find_schmids(dca, simpl.DataArrayPath('Small IN100', 'Grain Data', 'Phases'),
@@ -52,8 +49,7 @@ def small_in100_cryst_stats():
                                             simpl.DataArrayPath('Small IN100', 'Grain Data', 'AvgQuats'),
                                             'Schmids', 'SlipSystems', 'Poles', '', '', simpl.FloatVec3([1, 1, 1]),
                                             False, False, simpl.FloatVec3([1, 1, 1]), simpl.FloatVec3([1, 1, 1]))
-    if err < 0:
-        print('FindSchmids ErrorCondition %d' % err)
+    assert err == 0, f'FindSchmids ErrorCondition {err}'
 
     # Find Feature Reference Misorientations
     err = orientation_analysis.find_feature_reference_misorientations(dca,
@@ -72,8 +68,7 @@ def small_in100_cryst_stats():
                                                                       'FeatureAvgMisorientations',
                                                                       'FeatureReferenceMisorientations',
                                                                       sc.ReferenceOrientation.AverageOrientation)
-    if err < 0:
-        print('FindFeatureReferenceMisorientations ErrorCondition %d' % err)
+    assert err == 0, f'FindFeatureReferenceMisorientations ErrorCondition {err}'
 
     # Find Kernel Average Misorientations
     err = orientation_analysis.find_kernel_avg_misorientations(dca,
@@ -87,14 +82,12 @@ def small_in100_cryst_stats():
                                                                                    'Quats'),
                                                                'KernelAverageMisorientations',
                                                                simpl.IntVec3([1, 1, 1]))
-    if err < 0:
-        print('FindKernelAvgMisorientations ErrorCondition %d' % err)
+    assert err == 0, f'FindKernelAvgMisorientations ErrorCondition {err}'
 
     # Write to DREAM3D file
     err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Statistics/SmallIN100_CrystalStats.dream3d',
                               dca)
-    if err < 0:
-        print('WriteDREAM3DFile ErrorCondition: %d' % err)
+    assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 
 if __name__ == '__main__':
     small_in100_cryst_stats()

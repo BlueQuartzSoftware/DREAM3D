@@ -35,10 +35,8 @@ def pipeline_test(dca):
     read_ang_data.CellAttributeMatrixName = 'EBSD Scan Data'
     read_ang_data.CellEnsembleAttributeMatrixName = 'Phase Data'
     read_ang_data.preflight()
-    print('  Preflight Error Code: %s' % read_ang_data.ErrorCondition)
-    filter_name = read_ang_data.NameOfClass
-    if filter_name != 'ReadAngData':
-        print('  Error: Filter class name is not correct. %s != ReadAngData' % filter_name)
+    err = read_ang_data.ErrorCondition
+    assert err == 0, f'  {read_ang_data.NameOfClass} Preflight Error Code: {err}'
 
     # RotateEulerRefFrame
     print('# --- RotateEulerRefFrame ')
@@ -49,10 +47,8 @@ def pipeline_test(dca):
     rotate_euler_ref_frame.CellEulerAnglesArrayPath = simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD Scan Data',
                                                                        'EulerAngles')
     rotate_euler_ref_frame.preflight()
-    print('  Preflight Error Code: %s' % rotate_euler_ref_frame.ErrorCondition)
-    filter_name = rotate_euler_ref_frame.NameOfClass
-    if filter_name != 'RotateEulerRefFrame':
-        print('  Error: Filter class name is not correct. %s != RotateEulerRefFrame' % filter_name)
+    err = rotate_euler_ref_frame.ErrorCondition
+    assert err == 0, f'  {rotate_euler_ref_frame.NameOfClass} Preflight Error Code: {err}'
 
     # RotateSampleRefFrame
     #
@@ -63,10 +59,8 @@ def pipeline_test(dca):
     rotate_sample_ref_frame.RotationAxis = simpl.FloatVec3([0.0, 1.0, 0.0])
     rotate_sample_ref_frame.CellAttributeMatrixPath = simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD Scan Data', '')
     rotate_sample_ref_frame.preflight()
-    print('  Preflight Error Code: %s' % rotate_sample_ref_frame.ErrorCondition)
-    filter_name = rotate_sample_ref_frame.NameOfClass
-    if filter_name != 'RotateSampleRefFrame':
-        print('  Error: Filter class name is not correct. %s != RotateSampleRefFrame' % filter_name)
+    err = rotate_sample_ref_frame.ErrorCondition
+    assert err == 0, f'  {rotate_sample_ref_frame.NameOfClass} Preflight Error Code: {err}'
 
     # MultiThresholdObjects
     #
@@ -79,10 +73,8 @@ def pipeline_test(dca):
     selected_thresholds.addInput('Small IN100 Slice 1', 'EBSD Scan Data', 'Image Quality', 1, 120)
     multi_threshold_objects.SelectedThresholds = selected_thresholds
     multi_threshold_objects.preflight()
-    print('  Preflight Error Code: %s' % multi_threshold_objects.ErrorCondition)
-    filter_name = multi_threshold_objects.NameOfClass
-    if filter_name != 'MultiThresholdObjects':
-        print('  Error: Filter class name is not correct. %s != MultiThresholdObjects' % filter_name)
+    err = multi_threshold_objects.ErrorCondition
+    assert err == 0, f'  {multi_threshold_objects.NameOfClass} Preflight Error Code: {err}'
 
     # WriteStatsGenOdfAngleFile
     #
@@ -101,10 +93,8 @@ def pipeline_test(dca):
     write_stats_gen_odf_angle_file.ConvertToDegrees = True
     write_stats_gen_odf_angle_file.UseGoodVoxels = True
     write_stats_gen_odf_angle_file.preflight()
-    print('  Preflight Error Code: %s' % write_stats_gen_odf_angle_file.ErrorCondition)
-    filter_name = write_stats_gen_odf_angle_file.NameOfClass
-    if filter_name != 'WriteStatsGenOdfAngleFile':
-        print('  Error: Filter class name is not correct. %s != WriteStatsGenOdfAngleFile' % filter_name)
+    err = write_stats_gen_odf_angle_file.ErrorCondition
+    assert err == 0, f'  {write_stats_gen_odf_angle_file.NameOfClass} Preflight Error Code: {err}'
 
     # Construct the pipeline
     pipeline = simpl.FilterPipeline.New()
@@ -121,12 +111,12 @@ def pipeline_test(dca):
     print('Filter Count: %d' % filter_count)
 
     err = pipeline.preflightPipeline()
-    print('Preflight ErrorCondition: %d' % err)
+    assert err == 0, f'  Pipeline Preflight Error Code: {err}'
 
     # Run the pipeline
     data_container = pipeline.run()
     err = pipeline.ErrorCondition
-    print('Execute ErrorCondition: %d' % err)
+    assert err == 0, f'Execute Error Code: {err}'
 
     pipeline.popFront()
     filter_count = pipeline.size()
@@ -137,20 +127,17 @@ def pipeline_test(dca):
 def pythonic_test(dca):
     err = orientationanalysis.read_ang_data(dca, 'Small IN100 Slice 1', 'Phase Data', 'EBSD Scan Data',
                                             sd.GetDataDirectory() + '/Data/SmallIN100/Slice_1.ang')
-    if err < 0:
-        print('ReadAngData ErrorCondition: %d' % err)
+    assert err == 0, f'ReadAngData ErrorCondition: {err}'
 
     err = orientationanalysis.rotate_euler_ref_frame(dca, simpl.FloatVec3([0.0, 0.0, 1.0]), 90.0,
                                                      simpl.DataArrayPath('Small IN100 Slice 1',
                                                                          'EBSD Scan Data', 'EulerAngles'))
-    if err < 0:
-        print('RotateEulerRefFrame ErrorCondition: %d' % err)
+    assert err == 0, f'RotateEulerRefFrame ErrorCondition: {err}'
 
     err = simplpy.rotate_sample_ref_frame(dca,
                                            simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD Scan Data', ''),
                                            simpl.FloatVec3([0.0, 1.0, 0.0]), 180.0, False, sc.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
-    if err < 0:
-        print('RotateSampleRefFrame ErrorCondition: %d' % err)
+    assert err == 0, f'RotateSampleRefFrame ErrorCondition: {err}'
 
     # Create the selected thresholds / comparison inputs for MultiThresholdObjects filter
     selected_thresholds = simpl.ComparisonInputs()
@@ -158,8 +145,7 @@ def pythonic_test(dca):
     selected_thresholds.addInput('Small IN100 Slice 1', 'EBSD Scan Data', 'Image Quality', 1, 120)
 
     err = simplpy.multi_threshold_objects(dca, 'Mask', selected_thresholds)
-    if err < 0:
-        print('MultiThresholdObjects ErrorCondition: %d' % err)
+    assert err == 0, f'MultiThresholdObjects ErrorCondition: {err}'
 
     am = dca.getAttributeMatrix(simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD Scan Data', ''))
     data_array = am.getAttributeArray('EulerAngles')
@@ -176,8 +162,7 @@ def pythonic_test(dca):
                                                              simpl.DataArrayPath('Small IN100 Slice 1',
                                                                                  'EBSD Scan Data', 'Mask'),
                                                              True, True)
-    if err < 0:
-        print('WriteStatsGenOdfAngleFile ErrorCondition: %d' % err)
+    assert err == 0, f'WriteStatsGenOdfAngleFile ErrorCondition: {err}'
 
 if __name__ == '__main__':
     export_small_in100_odf_data()

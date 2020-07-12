@@ -101,8 +101,7 @@ def single_cubic_phase_equiaxed():
                                axis_dynamic_table_data,
                                euler_dynamic_table_data)                               
 
-    if err < 0:
-        print('StatsGeneratorFilter ErrorCondition: %d' % err)
+    assert err == 0, f'StatsGeneratorFilter ErrorCondition: {err}'
 
     # Initialize Synthetic Volume
     err = syntheticbuilding.initialize_synthetic_volume(dca, 'SyntheticVolumeDataContainer', 'CellData',
@@ -118,16 +117,14 @@ def single_cubic_phase_equiaxed():
                                                         simpl.DataArrayPath('StatsGeneratorDataContainer',
                                                                             'CellEnsembleData', 'PhaseName'),
                                                         False, 0, 'NOT NEEDED')
-    if err < 0:
-        print('InitializeSyntheticVolume ErrorCondition: %d' % err)
+    assert err == 0, f'InitializeSyntheticVolume ErrorCondition: {err}'
 
     # Establish Shape Types
     err = syntheticbuilding.establish_shape_types(dca,
                                                   simpl.DataArrayPath('StatsGeneratorDataContainer',
                                                                       'CellEnsembleData', 'PhaseTypes'),
                                                   'ShapeTypes', [simpl.ShapeType.Ellipsoid])
-    if err < 0:
-        print('EstablishShapeTypes ErrorCondition: %d' % err)
+    assert err == 0, f'EstablishShapeTypes ErrorCondition: {err}'
 
     # Pack Primary Phases
     err = syntheticbuilding.pack_primary_phases(dca,
@@ -148,8 +145,7 @@ def single_cubic_phase_equiaxed():
                                                 False, sc.SaveShapeDescArrays.DoNotSave,
                                                 simpl.DataArrayPath('', '', ''),
                                                 simpl.DataArrayPath('', '', ''))
-    if err < 0:
-        print('PackPrimaryPhases ErrorCondition: %d' % err)
+    assert err == 0, f'PackPrimaryPhases ErrorCondition: {err}'
 
     # Find Feature Neighbors
     err = statistics.find_neighbors(dca, simpl.DataArrayPath('SyntheticVolumeDataContainer', 'Grain Data', ''),
@@ -157,8 +153,7 @@ def single_cubic_phase_equiaxed():
                                     simpl.DataArrayPath('SyntheticVolumeDataContainer', 'CellData',
                                                         'FeatureIds'),
                                     '', 'NumNeighbors', 'SurfaceFeatures', False, True)
-    if err < 0:
-        print('FindNeighbors ErrorCondition: %d' % err)
+    assert err == 0, f'FindNeighbors ErrorCondition: {err}'
 
     # Match Crystallography
     err = syntheticbuilding.match_crystallography(dca, simpl.DataArrayPath('StatsGeneratorDataContainer',
@@ -180,8 +175,7 @@ def single_cubic_phase_equiaxed():
                                                   simpl.DataArrayPath('SyntheticVolumeDataContainer',
                                                                       'CellEnsembleData', 'NumFeatures'),
                                                   'EulerAngles', 'Volumes', 'EulerAngles', 'AvgQuats', 100000)
-    if err < 0:
-        print('MatchCrystallography ErrorCondition: %d' % err)
+    assert err == 0, f'MatchCrystallography ErrorCondition: {err}'
 
     # Generate IPF Colors
     err = orientationanalysis.generate_ipf_colors(dca, simpl.FloatVec3([0, 0, 1]),
@@ -193,14 +187,12 @@ def single_cubic_phase_equiaxed():
                                                                       'CellEnsembleData', 'CrystalStructures'),
                                                   False,
                                                   simpl.DataArrayPath('', '', ''), 'IPFColor')
-    if err < 0:
-        print('GenerateIPFColors ErrorCondition: %d' % err)
+    assert err == 0, f'GenerateIPFColors ErrorCondition: {err}'
 
     # Write to DREAM3D file
     err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Synthetic/01_CubicSingleEquiaxedOut.dream3d',
                               dca)
-    if err < 0:
-        print('WriteDREAM3DFile ErrorCondition: %d' % err)
+    assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 
 if __name__ == '__main__':
     single_cubic_phase_equiaxed()

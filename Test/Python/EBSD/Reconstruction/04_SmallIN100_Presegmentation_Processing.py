@@ -14,8 +14,7 @@ def small_in100_presegmentation_processing():
 
     # Read DREAM3D File
     err = sc.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Reconstruction/03_SmallIN100_Aligned.dream3d')
-    if err < 0:
-            print('Read DataContainerArray Structure Failed %d' % err)
+    assert err == 0, f'Read DataContainerArray Structure Failed {err}'
 
     # Neighbor Orientation Comparison (Bad Data)
     err = orientation_analysis.bad_data_neighbor_orientation_check(dca, 5, 4,
@@ -27,8 +26,7 @@ def small_in100_presegmentation_processing():
                                                                                        'CrystalStructures'),
                                                                    simpl.DataArrayPath('Small IN100', 'EBSD Scan Data',
                                                                                        'Quats'))
-    if err < 0:
-        print('NeighborOrientationComparison ErrorCondition %d' % err)
+    assert err == 0, f'NeighborOrientationComparison ErrorCondition {err}'
 
     # Neighbor Orientation Correlation
     err = orientation_analysis.neighbor_orientation_correlation(dca, 5, 0.2, 2,
@@ -40,8 +38,7 @@ def small_in100_presegmentation_processing():
                                                                                     'CrystalStructures'),
                                                                 simpl.DataArrayPath('Small IN100', 'EBSD Scan Data',
                                                                                     'Quats'))
-    if err < 0:
-        print('NeighborOrientationCorrelation ErrorCondition %d' % err)
+    assert err == 0, f'NeighborOrientationCorrelation ErrorCondition {err}'
 
     # Delete Data (Remove array helper function)
     sc.RemoveArrays(dca, [('Small IN100', 'EBSD Scan Data', 'IPFColor')])
@@ -55,15 +52,13 @@ def small_in100_presegmentation_processing():
                                                    True,
                                                    simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'Mask'),
                                                    'IPFColor')
-    if err < 0:
-        print('GenerateIPFColors ErrorCondition: %d' % err)
+    assert err == 0, f'GenerateIPFColors ErrorCondition: {err}'
 
     # Write to DREAM3D file
     err = sc.WriteDREAM3DFile(
         sd.GetBuildDirectory() + '/Data/Output/Reconstruction/04_SmallIN100_Presegmentation.dream3d',
         dca)
-    if err < 0:
-        print('WriteDREAM3DFile ErrorCondition: %d' % err)
+    assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 
 if __name__ == '__main__':
     small_in100_presegmentation_processing()

@@ -26,14 +26,12 @@ def txcopper_exposed():
                                 True,      # Convert to Radians
                                 True  # Convert Hex EDAX Alignment
                                 ) 
-    if err < 0:
-        print('ReadCtfData ErrorCondition: %d' % err)
+    assert err == 0, f'ReadCtfData ErrorCondition: {err}'
 
     # Rotate Sample Reference Frame
     err = simplpy.rotate_sample_ref_frame(dca, simpl.DataArrayPath(data_container_name, 'EBSD Scan Data', ''),
                                              simpl.FloatVec3([0.0, 1.0, 0.0]), 180.0, False, sc.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
-    if err < 0:
-        print('RotateSampleRefFrame ErrorCondition: %d' % err)
+    assert err == 0, f'RotateSampleRefFrame ErrorCondition: {err}'
 
     # Crop Geometry (Image)
     err = samplingpy.crop_image_geometry(dca, '',
@@ -41,14 +39,12 @@ def txcopper_exposed():
                                          simpl.DataArrayPath(data_container_name, 'Grain Data', ''),
                                          0, 0, 0, 460, 399, 0, False, False, True,
                                          simpl.DataArrayPath(data_container_name, 'EBSD Scan Data', 'FeatureIds'))
-    if err < 0:
-        print('CropImageGeometry ErrorCondition %d' % err)
+    assert err == 0, f'CropImageGeometry ErrorCondition {err}'
 
     # MultiThresholdObjects filter
     err = sc.MultiThresholdObjects(dca, 'Mask',
                                   [(data_container_name, 'EBSD Scan Data', 'Error', 2, 0)])
-    if err < 0:
-        print('MultiThresholdObjects ErrorCondition: %d' % err)
+    assert err == 0, f'MultiThresholdObjects ErrorCondition: {err}'
     
     # Generate IPF Colors
     err = orientationanalysispy.generate_ipf_colors(dca, simpl.FloatVec3([0, 0, 1]),
@@ -61,8 +57,7 @@ def txcopper_exposed():
                                                     True,
                                                     simpl.DataArrayPath(data_container_name, 'EBSD Scan Data', 'Mask'),
                                                     'IPF_Exposed_001')
-    if err < 0:
-        print('GenerateIPFColors ErrorCondition: %d' % err)
+    assert err == 0, f'GenerateIPFColors ErrorCondition: {err}'
 
     # ITK Image Writer
     image_writer = itkimageprocessing.ITKImageWriter.New()
@@ -71,8 +66,7 @@ def txcopper_exposed():
                                                 '/Data/Output/TexturedCopper/IPF_Exposed.png',
                                                 simpl.DataArrayPath(data_container_name, 'EBSD Scan Data',
                                                                     'IPF_Exposed_001'), 0)
-    if err < 0:
-        print('ITKImageWriter ErrorCondition: %d' % err)
+    assert err == 0, f'ITKImageWriter ErrorCondition: {err}'
 
     # Export Pole Figure Images #1
     # Possible enumerations: Image Format, Image Layout, Generation Algorithm / Pole Figure Type
@@ -88,8 +82,7 @@ def txcopper_exposed():
                                                                       'MaterialName'),
                                                   simpl.DataArrayPath(data_container_name, 'EBSD Scan Data', 'Mask'),
                                                   True, 0)
-    if err < 0:
-        print('WritePoleFigure #1 ErrorCondition: %d' % err)
+    assert err == 0, f'WritePoleFigure #1 ErrorCondition: {err}'
 
     # Export Pole Figure Images #2
     err = orientationanalysispy.write_pole_figure(dca, 'Exposed_Discrete_',
@@ -104,8 +97,7 @@ def txcopper_exposed():
                                                                       'MaterialName'),
                                                   simpl.DataArrayPath(data_container_name, 'EBSD Scan Data', 'Mask'),
                                                   True, 1)
-    if err < 0:
-        print('WritePoleFigure #2 ErrorCondition: %d' % err)
+    assert err == 0, f'WritePoleFigure #2 ErrorCondition: {err}'
 
 if __name__ == '__main__':
     txcopper_exposed()

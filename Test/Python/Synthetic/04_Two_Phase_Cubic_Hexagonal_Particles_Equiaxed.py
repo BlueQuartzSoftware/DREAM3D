@@ -30,8 +30,7 @@ def two_phase_test():
                                                                                               'Euler 3', 'Weight',
                                                                                               'Sigma'], ['0']))
 
-    if err < 0:
-        print('Primary StatsData ErrorCondition: %d' % err)
+    assert err == 0, f'Primary StatsData ErrorCondition: {err}'
 
     # Generate Precipitate StatsData
     err = syntheticbuilding.generate_precipitate_stats_data(dca, 'Precipitate', 1, 0, 0,
@@ -50,8 +49,7 @@ def two_phase_test():
                                                                                               'Sigma'], ['0']),
                                simpl.FloatVec2([10, 80]), 50, simpl.FloatVec3([100, 100, 100]))
 
-    if err < 0:
-        print('Precipitate StatsData ErrorCondition: %d' % err)
+    assert err == 0, f'Precipitate StatsData ErrorCondition: {err}'
 
     # Initialize Synthetic Volume
     err = syntheticbuilding.initialize_synthetic_volume(dca, 'SyntheticVolumeDataContainer', 'CellData',
@@ -66,16 +64,14 @@ def two_phase_test():
                                                         simpl.DataArrayPath('StatsGeneratorDataContainer',
                                                                             'CellEnsembleData', 'PhaseName'),
                                                         False, 0, 'NOT NEEDED')
-    if err < 0:
-        print('InitializeSyntheticVolume ErrorCondition: %d' % err)
+    assert err == 0, f'InitializeSyntheticVolume ErrorCondition: {err}'
 
     # Establish Shape Types
     err = syntheticbuilding.establish_shape_types(dca,
                                                   simpl.DataArrayPath('StatsGeneratorDataContainer',
                                                                       'CellEnsembleData', 'PhaseTypes'),
                                                   'ShapeTypes', [simpl.ShapeType.Ellipsoid])
-    if err < 0:
-        print('EstablishShapeTypes ErrorCondition: %d' % err)
+    assert err == 0, f'EstablishShapeTypes ErrorCondition: {err}'
 
     # Pack Primary Phases
     err = syntheticbuilding.pack_primary_phases(dca,
@@ -94,16 +90,14 @@ def two_phase_test():
                                                 False, False,
                                                 simpl.DataArrayPath('', '', ''),
                                                 simpl.DataArrayPath('', '', ''))
-    if err < 0:
-        print('PackPrimaryPhases ErrorCondition: %d' % err)
+    assert err == 0, f'PackPrimaryPhases ErrorCondition: {err}'
 
     # Find Boundary Cells (Image)
     err = generic.find_boundary_cells(dca,
                                       simpl.DataArrayPath('SyntheticVolumeDataContainer', 'CellData', 'FeatureIds'),
                                       'BoundaryCells',
                                       True, False)
-    if err < 0:
-        print('FindBoundaryCells ErrorCondition: %d' % err)
+    assert err == 0, f'FindBoundaryCells ErrorCondition: {err}'
 
     # Insert Precipitate Phases
     err = syntheticbuilding.insert_precipitate_phases(dca, '', simpl.DataArrayPath('', '', ''), False, 0, '',
@@ -128,8 +122,7 @@ def two_phase_test():
                                                                           'CellEnsembleData', 'NumFeatures'),
                                                       False, simpl.DataArrayPath('', '', ''),
                                                       simpl.DataArrayPath('', '', ''))
-    if err < 0:
-        print('InsertPrecipitatePhases ErrorCondition: %d' % err)
+    assert err == 0, f'InsertPrecipitatePhases ErrorCondition: {err}'
 
     # Find Feature Neighbors
     err = statistics.find_neighbors(dca, simpl.DataArrayPath('SyntheticVolumeDataContainer', 'Grain Data', ''),
@@ -137,8 +130,7 @@ def two_phase_test():
                                     simpl.DataArrayPath('SyntheticVolumeDataContainer', 'CellData',
                                                         'FeatureIds'),
                                     '', 'NumNeighbors', 'SurfaceFeatures', False, True)
-    if err < 0:
-        print('FindNeighbors ErrorCondition: %d' % err)
+    assert err == 0, f'FindNeighbors ErrorCondition: {err}'
 
     # Match Crystallography
     err = syntheticbuilding.match_crystallography(dca, simpl.DataArrayPath('StatsGeneratorDataContainer',
@@ -160,8 +152,7 @@ def two_phase_test():
                                                   simpl.DataArrayPath('SyntheticVolumeDataContainer',
                                                                       'CellEnsembleData', 'NumFeatures'),
                                                   'EulerAngles', 'Volumes', 'EulerAngles', 'AvgQuats', 100000)
-    if err < 0:
-        print('MatchCrystallography ErrorCondition: %d' % err)
+    assert err == 0, f'MatchCrystallography ErrorCondition: {err}'
 
     # Generate IPF Colors
     err = orientationanalysis.generate_ipf_colors(dca, simpl.FloatVec3([0, 0, 1]),
@@ -173,15 +164,13 @@ def two_phase_test():
                                                                       'CellEnsembleData', 'CrystalStructures'),
                                                   False,
                                                   simpl.DataArrayPath('', '', ''), 'IPFColor')
-    if err < 0:
-        print('GenerateIPFColors ErrorCondition: %d' % err)
+    assert err == 0, f'GenerateIPFColors ErrorCondition: {err}'
 
     # Write to DREAM3D file
     err = sc.WriteDREAM3DFile(
         sd.GetBuildDirectory() + '/Data/Output/Synthetic/04_TwoPhaseCubicHexagonalEquiaxed.dream3d',
         dca)
-    if err < 0:
-        print('WriteDREAM3DFile ErrorCondition: %d' % err)
+    assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 
 if __name__ == '__main__':
     two_phase_test()

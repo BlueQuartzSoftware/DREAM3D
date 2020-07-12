@@ -12,16 +12,14 @@ def small_in100_export_stats():
     # Read DREAM3D File
     err = sc.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Statistics/SmallIN100_Morph.dream3d')
    
-    if err < 0:
-        print('DataContainerReader ErrorCondition %d' % err)
+    assert err == 0, f'DataContainerReader ErrorCondition {err}'
 
     # Export Feature Data as CSV File
     err = d3d.feature_data_csv_writer(dca, simpl.DataArrayPath('Small IN100', 'Grain Data', ''),
                                       sd.GetBuildDirectory() +
                                       '/Data/Output/Statistics/SmallIN100_Morph/FeatureStatistics.csv',
                                       False, simpl.DelimiterTypes.Comma, True)
-    if err < 0:
-        print('FeatureDataCSVWriter ErrorCondition %d' % err)
+    assert err == 0, f'FeatureDataCSVWriter ErrorCondition {err}'
 
 if __name__ == '__main__':
     small_in100_export_stats()

@@ -18,16 +18,14 @@ def image_histogram():
     image_writer.registerImageIOFactories()
     err = itkimageprocessingpy.itk_image_reader(dca, sd.GetDataDirectory() + '/Data/Image/slice_11.tif',
                                                 'ImageDataContainer', 'CellData', 'ImageData')
-    if err < 0:
-        print('ITKImageReader ErrorCondition %d' % err)
+    assert err == 0, f'ITKImageReader ErrorCondition {err}'
 
     # Calculate Frequency Histogram
     err = statisticspy.calculate_array_histogram(dca, simpl.DataArrayPath('ImageDataContainer', 'CellData',
                                                                           'ImageData'),
                                                  256, 0, 256, True, False, 'HistogramAttributeMatrix',
                                                  'Image_Histogram', False, '')
-    if err < 0:
-        print('CalculateArrayHistogram ErrorCondition %d' % err)
+    assert err == 0, f'CalculateArrayHistogram ErrorCondition {err}'
 
     # Export ASCII Data
     # Output Style = 0 Means Multiple Files, Style = 1 Means a Single file
@@ -38,8 +36,7 @@ def image_histogram():
                                    sd.GetBuildDirectory() + '/Data/Output/Histograms',
                                    sd.GetBuildDirectory() + '/Data/Output/Histograms/Histogram.csv',
                                    simpl.DelimiterTypes.Comma, '.csv', 10, outStyle)
-    if err < 0:
-        print('WriteAsciiData ErrorCondition: %d' % err)
+    assert err == 0, f'WriteAsciiData ErrorCondition: {err}'
 
 if __name__ == '__main__':
     image_histogram()

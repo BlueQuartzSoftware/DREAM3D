@@ -40,14 +40,12 @@ def image_segmentation():
     err = itkimageprocessingpy.itk_import_image_stack(dca, data_container_name, attr_matrix_name,
                                                       simpl.FloatVec3([0, 0, 0]), simpl.FloatVec3([1, 1, 1]),
                                                       file_list_info, 164, 'ImageData')
-    if err < 0:
-        print('ITK Import Image Stack ErrorCondition %d' % err)
+    assert err == 0, f'ITK Import Image Stack ErrorCondition {err}'
 
     # MultiThresholdObjects filter
     err = sc.MultiThresholdObjects(dca, 'Mask',
                                   [(data_container_name, attr_matrix_name, 'ImageData', 2, 0)])
-    if err < 0:
-        print('MultiThresholdObjects ErrorCondition: %d' % err)
+    assert err == 0, f'MultiThresholdObjects ErrorCondition: {err}'
 
     # Segment Features (Scalar)
     err = reconstructionpy.scalar_segment_features(dca, 'Pore Data',
@@ -56,15 +54,13 @@ def image_segmentation():
                                                    10, True, simpl.DataArrayPath(data_container_name,
                                                                                  attr_matrix_name, 'Mask'),
                                                    'FeatureIds', 'Active')
-    if err < 0:
-        print('ScalarSegmentFeatures ErrorCondition %d' % err)
+    assert err == 0, f'ScalarSegmentFeatures ErrorCondition {err}'
 
     # Find Feature Sizes
     err = statisticspy.find_sizes(dca, simpl.DataArrayPath(data_container_name, 'Pore Data', ''),
                                   simpl.DataArrayPath(data_container_name, attr_matrix_name, 'FeatureIds'),
                                   'Volumes', 'EquivalentDiameters', 'NumElements', False)
-    if err < 0:
-        print('FindSizes ErrorCondition %d' % err)
+    assert err == 0, f'FindSizes ErrorCondition {err}'
 
     # Copy Feature Array To Element Array
     err = simplpy.copy_feature_array_to_element_array(dca,
@@ -75,15 +71,13 @@ def image_segmentation():
                                                                           attr_matrix_name,
                                                                           'FeatureIds'),
                                                       'EquivalentDiameters')
-    if err < 0:
-        print('CopyFeatureArrayToElementArray ErrorCondition %d' % err)
+    assert err == 0, f'CopyFeatureArrayToElementArray ErrorCondition {err}'
 
     # Create Data Array
     err = simplpy.create_data_array(dca, simpl.ScalarTypes.Int32, 1,
                                     simpl.DataArrayPath(data_container_name, attr_matrix_name, 'Phases'),
                                     simpl.InitializationType.Manual, '1', (0.0, 151.1))
-    if err < 0:
-        print('DataArray ErrorCondition: %d' % err)
+    assert err == 0, f'DataArray ErrorCondition: {err}'
     
     # Replace Value in Array (Conditional)
     err = simplpy.conditional_set_value(dca, simpl.DataArrayPath(data_container_name,
@@ -92,22 +86,19 @@ def image_segmentation():
                                         simpl.DataArrayPath(data_container_name,
                                                             attr_matrix_name,
                                                             'Mask'), 2)
-    if err < 0:
-        print('ConditionalSetValue ErrorCondition: %d' % err)
+    assert err == 0, f'ConditionalSetValue ErrorCondition: {err}'
 
     # Find Feature Phases
     err = genericpy.find_feature_phases(dca, simpl.DataArrayPath(data_container_name, attr_matrix_name, 'FeatureIds'),
                                         simpl.DataArrayPath(data_container_name, attr_matrix_name, 'Phases'),
                                         simpl.DataArrayPath(data_container_name, 'Pore Data', 'Phases'))
-    if err < 0:
-        print('FindFeaturePhases ErrorCondition %d' % err)
+    assert err == 0, f'FindFeaturePhases ErrorCondition {err}'
 
     # Find Feature Centroids
     err = genericpy.find_feature_centroids(dca, simpl.DataArrayPath(data_container_name, attr_matrix_name,
                                                                     'FeatureIds'),
                                            simpl.DataArrayPath(data_container_name, 'Pore Data', 'Centroids'))
-    if err < 0:
-        print('FindFeatureCentroids ErrorCondition %d' % err)
+    assert err == 0, f'FindFeatureCentroids ErrorCondition {err}'
     
     # Create Ensemble Info
     ensemble_info = simpl.EnsembleInfo()
@@ -115,8 +106,7 @@ def image_segmentation():
     ensemble_info.addValues(simpl.CrystalStructure.Cubic_High, simpl.PhaseType.Precipitate, 'Pores')
     err = orientationanalysispy.create_ensemble_info(dca, data_container_name, 'EnsembleAttributeMatrix',
                                                      ensemble_info, 'CrystalStructures', 'PhaseTypes', 'PhaseNames')
-    if err < 0:
-        print('CreateEnsembleInfo ErrorCondition %d' % err)
+    assert err == 0, f'CreateEnsembleInfo ErrorCondition {err}'
 
     # Find Feature Clustering
     err = statisticspy.find_feature_clustering(dca, 10, 2, simpl.DataArrayPath(data_container_name,
@@ -127,14 +117,12 @@ def image_segmentation():
                                                simpl.DataArrayPath(data_container_name, 'Pore Data', 'Phases'),
                                                simpl.DataArrayPath(data_container_name, 'Pore Data', 'Centroids'),
                                                'ClusteringList', 'RDF', 'RDFMaxMinDistances')
-    if err < 0:
-        print('FindFeatureClustering ErrorCondition %d' % err)
+    assert err == 0, f'FindFeatureClustering ErrorCondition {err}'
 
     # Write to DREAM3D file
     err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/ImagesStack/Images.dream3d',
                               dca)
-    if err < 0:
-        print('WriteDREAM3DFile ErrorCondition: %d' % err)
+    assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 
 if __name__ == '__main__':
     image_segmentation()

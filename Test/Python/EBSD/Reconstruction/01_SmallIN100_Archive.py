@@ -15,8 +15,7 @@ def small_in100_archive():
                                                '/Data/Output/Reconstruction/SmallIN100.h5ebsd',
                                                'Slice_', '', 'ang', 1, 1, 117, 0.25, simpl.AxisAngleInput(0, 0, 0, 0),
                                                simpl.AxisAngleInput(0, 0, 0, 0))
-    if err < 0:
-        print('EbsdToH5Ebsd error condition: %', err)
+    assert err == 0, f'EbsdToH5Ebsd error condition: {err}'
 
 if __name__ == '__main__':
     small_in100_archive()

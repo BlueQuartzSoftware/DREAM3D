@@ -152,57 +152,48 @@ def small_in100_test():
                                     sd.GetBuildDirectory() +
                                     '/Data/Output/Statistics/SmallIN100_CrystalStats.dream3d',
                                     False, dcap_)
-    if err < 0:
-        print('DataContainerReader ErrorCondition %d' % err)
+    assert err == 0, f'DataContainerReader ErrorCondition {err}'
 
     # Find Feature Neighbors
     err = statistics.find_neighbors(dca, grain_data_attr_matrix,
                                     'SharedSurfaceAreaList', 'NeighborList', feature_ids_array_path,
                                     '', 'NumNeighbors', 'SurfaceFeatures', False, False)
-    if err < 0:
-        print('FindNeighbors #1 ErrorCondition: %d' % err)
+    assert err == 0, f'FindNeighbors #1 ErrorCondition: {err}'
 
     # Find Feature Centroids
     err = generic.find_feature_centroids(dca, feature_ids_array_path, centroids_array_path)
-    if err < 0:
-        print('FindFeatureCentroids ErrorCondition: %d' % err)
+    assert err == 0, f'FindFeatureCentroids ErrorCondition: {err}'
 
     # Find Surface Features
     err = generic.find_surface_features(dca, feature_ids_array_path, surface_features_array_path)
-    if err < 0:
-        print('FindSurfaceFeatures ErrorCondition: %d' % err)
+    assert err == 0, f'FindSurfaceFeatures ErrorCondition: {err}'
 
     # Find Biased Features (Bounding Box)
     err = generic.find_bounding_box_features(dca, False, centroids_array_path, empty_array_path,
                                              surface_features_array_path, 'BiasedFeatures')
-    if err < 0:
-        print('FindBiasedFeatures ErrorCondition: %d' % err)
+    assert err == 0, f'FindBiasedFeatures ErrorCondition: {err}'
 
     # Find Feature Sizes
     err = statistics.find_sizes(dca, grain_data_attr_matrix, feature_ids_array_path, 'SizeVolumes',
                                 'EquivalentDiameters', 'NumElements', False)
-    if err < 0:
-        print('FindSizes ErrorCondition: %d' % err)
+    assert err == 0, f'FindSizes ErrorCondition: {err}'
 
     # Find Feature Shapes
     err = statistics.find_shapes(dca, grain_data_attr_matrix, feature_ids_array_path, centroids_array_path,
                                  'Omega3s', 'ShapeVolumes', 'AxisLengths', 'AxisEulerAngles', 'AspectRatios')
-    if err < 0:
-        print('FindShapes ErrorCondition: %d' % err)
+    assert err == 0, f'FindShapes ErrorCondition: {err}'
 
     # Find Feature Neighborhoods
     err = statistics.find_neighborhoods(dca, 'NeighborhoodList', 1, equivalent_diameters_array_path,
                                         feature_phases_array_path,
                                         centroids_array_path, 'Neighborhoods')
-    if err < 0:
-        print('FindNeighborhoods ErrorCondition: %d' % err)
+    assert err == 0, f'FindNeighborhoods ErrorCondition: {err}'
 
     # Find Feature Average Orientations
     err = orientationanalysis.find_avg_orientations(dca, feature_ids_array_path, cell_phases_array_path,
                                                     quats_array_path, crystal_structures_array_path,
                                                     avg_quats_array_path, avg_euler_angles_array_path)
-    if err < 0:
-        print('FindAvgOrientations ErrorCondition: %d' % err)
+    assert err == 0, f'FindAvgOrientations ErrorCondition: {err}'
 
     # Generate Ensemble Statistics
     err = statistics.generate_ensemble_statistics(dca, cell_ensemble_attribute_matrix_path,
@@ -221,8 +212,7 @@ def small_in100_test():
                                                   True, sc.DistributionFitType.Beta,
                                                   True, sc.DistributionFitType.Lognormal,
                                                   True, False, False, False, 1)
-    if err < 0:
-        print('GenerateEnsembleStatistics ErrorCondition: %d' % err)
+    assert err == 0, f'GenerateEnsembleStatistics ErrorCondition: {err}'
 
     # Initialize Synthetic Volume
     err = syntheticbuilding.initialize_synthetic_volume(dca, 'SyntheticVolumeDataContainer', 'EBSD Scan Data',
@@ -237,16 +227,14 @@ def small_in100_test():
                                                         simpl.DataArrayPath('Small IN100',
                                                                             'Phase Data', 'MaterialName'),
                                                         False, 0, 'NOT NEEDED')
-    if err < 0:
-        print('InitializeSyntheticVolume ErrorCondition: %d' % err)
+    assert err == 0, f'InitializeSyntheticVolume ErrorCondition: {err}'
 
     # Establish Shape Types
     err = syntheticbuilding.establish_shape_types(dca,
                                                   simpl.DataArrayPath('Small IN100',
                                                                       'Phase Data', 'PhaseTypes'),
                                                   'ShapeTypes', [simpl.ShapeType.Ellipsoid])
-    if err < 0:
-        print('EstablishShapeTypes ErrorCondition: %d' % err)
+    assert err == 0, f'EstablishShapeTypes ErrorCondition: {err}'
 
     # Pack Primary Phases
     err = syntheticbuilding.pack_primary_phases(dca,
@@ -267,8 +255,7 @@ def small_in100_test():
                                                 '', '', False, False, False,
                                                 simpl.DataArrayPath('', '', ''),
                                                 simpl.DataArrayPath('', '', ''))
-    if err < 0:
-        print('PackPrimaryPhases ErrorCondition: %d' % err)
+    assert err == 0, f'PackPrimaryPhases ErrorCondition: {err}'
 
     # Find Feature Neighbors
     err = statistics.find_neighbors(dca, simpl.DataArrayPath('SyntheticVolumeDataContainer', 'Grain Data', ''),
@@ -276,8 +263,7 @@ def small_in100_test():
                                     simpl.DataArrayPath('SyntheticVolumeDataContainer', 'EBSD Scan Data',
                                                         'FeatureIds'),
                                     '', 'NumNeighbors', 'SurfaceFeatures', False, True)
-    if err < 0:
-        print('FindNeighbors #2 ErrorCondition: %d' % err)
+    assert err == 0, f'FindNeighbors #2 ErrorCondition: {err}'
 
     # Match Crystallography
     err = syntheticbuilding.match_crystallography(dca, simpl.DataArrayPath('Small IN100',
@@ -299,8 +285,7 @@ def small_in100_test():
                                                   simpl.DataArrayPath('SyntheticVolumeDataContainer',
                                                                       'Phase Data', 'NumFeatures'),
                                                   'EulerAngles', 'Volumes', 'EulerAngles', 'AvgQuats', 100000)
-    if err < 0:
-        print('MatchCrystallography ErrorCondition: %d' % err)
+    assert err == 0, f'MatchCrystallography ErrorCondition: {err}'
 
     # Generate IPF Colors
     err = orientationanalysis.generate_ipf_colors(dca, simpl.FloatVec3([0, 0, 1]),
@@ -312,8 +297,7 @@ def small_in100_test():
                                                                       'Phase Data', 'CrystalStructures'),
                                                   False,
                                                   simpl.DataArrayPath('', '', ''), 'IPFColor')
-    if err < 0:
-        print('GenerateIPFColors ErrorCondition: %d' % err)
+    assert err == 0, f'GenerateIPFColors ErrorCondition: {err}'
 
     # Set all the IPFColor values to zero
     # am = dca.getAttributeMatrix(simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', ''))
@@ -328,8 +312,7 @@ def small_in100_test():
     # Write to DREAM3D file
     err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Synthetic/06_SmallIN100Synthetic.dream3d',
                               dca)
-    if err < 0:
-        print('WriteDREAM3DFile ErrorCondition: %d' % err)
+    assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 
 if __name__ == '__main__':
     small_in100_test()

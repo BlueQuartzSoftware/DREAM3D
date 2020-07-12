@@ -14,8 +14,7 @@ def small_in100_segmentation():
 
     # Read DREAM3D File
     err = sc.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Reconstruction/04_SmallIN100_Presegmentation.dream3d')
-    if err < 0:
-            print('Read DataContainerArray Structure Failed %d' % err)
+    assert err == 0, f'Read DataContainerArray Structure Failed {err}'
 
     # Segment Features (Misorientation)
     err = reconstruction.ebsd_segment_features(dca, 'Grain Data', 5, True,
@@ -24,15 +23,13 @@ def small_in100_segmentation():
                                                simpl.DataArrayPath('Small IN100', 'Phase Data', 'CrystalStructures'),
                                                simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'Quats'),
                                                'FeatureIds', 'Active')
-    if err < 0:
-        print('SegmentFeatures ErrorCondition %d' % err)
+    assert err == 0, f'SegmentFeatures ErrorCondition {err}'
 
     # Write to DREAM3D file
     err = sc.WriteDREAM3DFile(
         sd.GetBuildDirectory() + '/Data/Output/Reconstruction/05_SmallIN100_Segmentation.dream3d',
         dca)
-    if err < 0:
-        print('WriteDREAM3DFile ErrorCondition: %d' % err)
+    assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 
 if __name__ == '__main__':
     small_in100_segmentation()

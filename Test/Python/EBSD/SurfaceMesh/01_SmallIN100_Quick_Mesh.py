@@ -14,8 +14,7 @@ def small_in100_quickmesh():
     # Read DREAM3D File
     err = sc.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Statistics/SmallIN100_CrystalStats.dream3d')
     
-    if err < 0:
-        print('DataContainerReader ErrorCondition %d' % err)
+    assert err == 0, f'DataContainerReader ErrorCondition {err}'
 
     # Crop Geometry (Image)
     err = sampling.crop_image_geometry(dca, '',
@@ -23,8 +22,7 @@ def small_in100_quickmesh():
                                        simpl.DataArrayPath('Small IN100', 'Grain Data', ''),
                                        41, 41, 0, 140, 140, 99, True, False, True,
                                        simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'))
-    if err < 0:
-        print('CropImageGeometry ErrorCondition %d' % err)
+    assert err == 0, f'CropImageGeometry ErrorCondition {err}'
 
     # Quick Surface Mesh
     err = surfacemeshing.quick_surface_mesh(dca,
@@ -36,14 +34,12 @@ def small_in100_quickmesh():
                                             'FaceLabels',
                                             'NodeType',
                                             'FaceFeatureData')
-    if err < 0:
-        print('QuickSurfaceMesh ErrorCondition %d' % err)
+    assert err == 0, f'QuickSurfaceMesh ErrorCondition {err}'
 
     # Write to DREAM3D file
     err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/SurfaceMesh/SmallIN100_Meshed.dream3d',
                               dca)
-    if err < 0:
-        print('WriteDREAM3DFile ErrorCondition: %d' % err)
+    assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 
 if __name__ == '__main__':
     small_in100_quickmesh()

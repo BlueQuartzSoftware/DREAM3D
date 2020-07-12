@@ -14,8 +14,7 @@ def small_in100_field_threshold():
     # Read DREAM3D File
     err = sc.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Statistics/SmallIN100_TransferFieldData.dream3d')
    
-    if err < 0:
-        print('DataContainerReader ErrorCondition %d' % err)
+    assert err == 0, f'DataContainerReader ErrorCondition {err}'
 
     # Create the selected thresholds / comparison inputs for MultiThresholdObjects filter
     selectedThresholds = simpl.ComparisonInputs()
@@ -24,22 +23,19 @@ def small_in100_field_threshold():
     selectedThresholds.addInput('Small IN100', 'Grain Data', 'Omega3s', 0, 0.5)
 
     err = d3d.multi_threshold_objects(dca, 'CriticalFields', selectedThresholds)
-    if err < 0:
-        print('MultiThresholdObjects ErrorCondition: %d' % err)
+    assert err == 0, f'MultiThresholdObjects ErrorCondition: {err}'
 
     # Copy Feature Array to Element Array
     err = d3d.copy_feature_array_to_element_array(dca,
                                                   simpl.DataArrayPath('Small IN100', 'Grain Data', 'CriticalFields'),
                                                   simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'),
                                                   'CriticalField')
-    if err < 0:
-        print('CopyFeatureArrayToElementArray ErrorCondition %d' % err)
+    assert err == 0, f'CopyFeatureArrayToElementArray ErrorCondition {err}'
 
     # Write to DREAM3D file
     err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Statistics/SmallIN100_CopyCritical.dream3d',
                               dca)
-    if err < 0:
-        print('WriteDREAM3DFile ErrorCondition: %d' % err)
+    assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 
 if __name__ == '__main__':
     small_in100_field_threshold()
