@@ -74,7 +74,7 @@ public:
     } catch(const std::runtime_error& e)
     {
       err = -1;
-    } catch(EbsdLib::method_not_implemented& e)
+    } catch(const EbsdLib::method_not_implemented& e)
     {
       if(ops.getNameOfClass() == "TriclinicOps" || ops.getNameOfClass() == "MonoclinicOps" || ops.getNameOfClass() == "OrthorhombicOps")
       {
