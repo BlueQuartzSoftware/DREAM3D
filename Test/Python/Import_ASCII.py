@@ -63,7 +63,7 @@ def import_ascii():
     # Remove array helper function:
     err = sc.RemoveArrays(dca, [('DataContainer', 'CellData', 'phi1'), ('DataContainer', 'CellData', 'phi2'),
                                 ('DataContainer', 'CellData', 'Phi')])
-    assert err == 0, f'Remove Arrays -  ErrorCondition: {err}'
+    assert err, f'Remove Arrays -  ErrorCondition: {err}'
 
     # Create Ensemble Info
     ensemble_info = simpl.EnsembleInfo()
