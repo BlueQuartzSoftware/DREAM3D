@@ -161,6 +161,11 @@ void CalculateArrayHistogram::dataCheck()
   clearWarningCode();
   DataArrayPath tempPath;
 
+  if(!m_NewDataContainer)
+  {
+    setNewDataContainerName(m_SelectedArrayPath);
+  }
+
   if(m_NumberOfBins <= 0)
   {
     QString ss = QObject::tr("The number of bins (%1) must be positive").arg(m_NumberOfBins);
