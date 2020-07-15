@@ -36,6 +36,7 @@
 #include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
+#include "EbsdLib/Core/EbsdMacros.h"
 #include "EbsdLib/LaueOps/LaueOps.h"
 #include "EbsdLib/LaueOps/TetragonalLowOps.h"
 
@@ -105,7 +106,7 @@ QImage TetragonalLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeigh
     painter.setFont(font);
     QFontMetrics metrics = painter.fontMetrics();
     fontHeight = metrics.height();
-    fontWidth = metrics.QFONTMETRICS_WIDTH(ops->getSymmetryName());
+    fontWidth = metrics.QFONTMETRICS_WIDTH(S2Q(ops->getSymmetryName()));
     painter.end();
   }
 
@@ -152,7 +153,7 @@ QImage TetragonalLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeigh
   fontHeight = metrics.height();
   painter.drawText(10, fontHeight * 2, label);
 
-  label = ops->getSymmetryName();
+  label = S2Q(ops->getSymmetryName());
   label = label.replace("-", "_");
   fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();

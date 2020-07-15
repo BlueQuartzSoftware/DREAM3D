@@ -197,7 +197,7 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t numfeatures = m_VolumesPtr.lock()->getNumberOfTuples();
 
-  DataArray<uint64_t>::Pointer m_FeatureCounts = DataArray<uint64_t>::CreateArray(numfeatures, "_INTERNAL_USE_ONLY_FeatureCounts", true);
+  DataArray<uint64_t>::Pointer m_FeatureCounts = DataArray<uint64_t>::CreateArray(numfeatures, std::string("_INTERNAL_USE_ONLY_FeatureCounts"), true);
   m_FeatureCounts->initializeWithZeros();
   uint64_t* featurecounts = m_FeatureCounts->getPointer(0);
 
@@ -303,7 +303,7 @@ void FindSizes::findSizesUnstructured(IGeometry::Pointer igeom)
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t numfeatures = m_VolumesPtr.lock()->getNumberOfTuples();
 
-  DataArray<float>::Pointer m_FeatureCounts = DataArray<float>::CreateArray(numfeatures, "_INTERNAL_USE_ONLY_FeatureCounts", true);
+  DataArray<float>::Pointer m_FeatureCounts = DataArray<float>::CreateArray(numfeatures, std::string("_INTERNAL_USE_ONLY_FeatureCounts"), true);
   m_FeatureCounts->initializeWithZeros();
   float* featurecounts = m_FeatureCounts->getPointer(0);
 

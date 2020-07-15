@@ -324,9 +324,9 @@ void FindRelativeMotionBetweenSlices::execute()
   int32_t buffer2 = (m_PSize2 / 2) + (m_SSize1 / 2);
 
   std::vector<size_t> cDims(1, 4);
-  Int32ArrayType::Pointer patchPointsPtr = Int32ArrayType::CreateArray((m_PSize1 * m_PSize2), "_INTERNAL_USE_ONLY_patchPoints", true);
+  Int32ArrayType::Pointer patchPointsPtr = Int32ArrayType::CreateArray((m_PSize1 * m_PSize2), std::string("_INTERNAL_USE_ONLY_patchPoints"), true);
   Int32ArrayType::Pointer searchPointsPtr = Int32ArrayType::CreateArray((m_SSize1 * m_SSize2), cDims, "_INTERNAL_USE_ONLY_searchPoints", true);
-  BoolArrayType::Pointer validPointsPtr = BoolArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_validPoints", true);
+  BoolArrayType::Pointer validPointsPtr = BoolArrayType::CreateArray(totalPoints, std::string("_INTERNAL_USE_ONLY_validPoints"), true);
   validPointsPtr->initializeWithValue(false);
   int32_t* patchPoints = patchPointsPtr->getPointer(0);
   int32_t* searchPoints = searchPointsPtr->getPointer(0);

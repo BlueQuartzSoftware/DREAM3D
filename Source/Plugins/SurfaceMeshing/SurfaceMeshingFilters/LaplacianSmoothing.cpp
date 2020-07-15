@@ -212,7 +212,7 @@ int32_t LaplacianSmoothing::generateLambdaArray()
 {
   size_t numNodes = m_SurfaceMeshNodeTypePtr.lock()->getNumberOfTuples();
 
-  DataArray<float>::Pointer lambdas = DataArray<float>::CreateArray(numNodes, "_INTERNAL_USE_ONLY_Laplacian_Smoothing_Lambda_Array", true);
+  DataArray<float>::Pointer lambdas = DataArray<float>::CreateArray(numNodes, std::string("_INTERNAL_USE_ONLY_Laplacian_Smoothing_Lambda_Array"), true);
   lambdas->initializeWithZeros();
 
   for(size_t i = 0; i < numNodes; ++i)
@@ -285,7 +285,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
   MeshIndexType* uedges = surfaceMesh->getEdgePointer(0);
   MeshIndexType nedges = surfaceMesh->getNumberOfEdges();
 
-  DataArray<int32_t>::Pointer numConnections = DataArray<int32_t>::CreateArray(nvert, "_INTERNAL_USE_ONLY_Laplacian_Smoothing_NumberConnections_Array", true);
+  DataArray<int32_t>::Pointer numConnections = DataArray<int32_t>::CreateArray(nvert, std::string("_INTERNAL_USE_ONLY_Laplacian_Smoothing_NumberConnections_Array"), true);
   numConnections->initializeWithZeros();
   int32_t* ncon = numConnections->getPointer(0);
 

@@ -57,6 +57,8 @@
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
+#include "EbsdLib/Core/EbsdLibConstants.h"
+#include "EbsdLib/Core/EbsdMacros.h"
 #include "EbsdLib/LaueOps/CubicLowOps.h"
 #include "EbsdLib/LaueOps/CubicOps.h"
 #include "EbsdLib/LaueOps/HexagonalLowOps.h"
@@ -68,7 +70,6 @@
 #include "EbsdLib/LaueOps/TriclinicOps.h"
 #include "EbsdLib/LaueOps/TrigonalLowOps.h"
 #include "EbsdLib/LaueOps/TrigonalOps.h"
-#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -839,7 +840,7 @@ void WritePoleFigure::execute()
         /* Draw image to the canvas. (normal-mode with actual size.)*/
         HPDF_Page_DrawImage(page, pdfImages[i], x + margins, y + margins + fontPtSize, imageWidth, imageHeight);
 
-        QString text = figures[i]->getName();
+        QString text = S2Q(figures[i]->getName());
         std::vector<uint8_t> buffer;
         QString modText;
         int k = 0;
@@ -922,7 +923,7 @@ void WritePoleFigure::execute()
         HPDF_Page_EndText(page);
       }
 
-      std::vector<QString> laueNames = LaueOps::GetLaueNames();
+      std::vector<std::string> laueNames = LaueOps::GetLaueNames();
       uint32_t laueIndex = m_CrystalStructures[phase];
       // Draw the title onto the canvas
       QString materialName = m_MaterialNames->getValue(phase);
@@ -936,11 +937,11 @@ void WritePoleFigure::execute()
       // Now draw the Color Scalar Bar if needed.
       if(config.discrete)
       {
-        drawDiscreteInfoArea(page, config, imagePositions[3], margins, imageHeight / 20.0f, font, static_cast<int32_t>(phase), laueNames[laueIndex], materialName);
+        drawDiscreteInfoArea(page, config, imagePositions[3], margins, imageHeight / 20.0f, font, static_cast<int32_t>(phase), S2Q(laueNames[laueIndex]), materialName);
       }
       else
       {
-        drawScalarBar(page, config, imagePositions[3], margins, imageHeight / 20.0f, font, static_cast<int32_t>(phase), laueNames[laueIndex], materialName);
+        drawScalarBar(page, config, imagePositions[3], margins, imageHeight / 20.0f, font, static_cast<int32_t>(phase), S2Q(laueNames[laueIndex]), materialName);
       }
 
       /* save the document to a file */

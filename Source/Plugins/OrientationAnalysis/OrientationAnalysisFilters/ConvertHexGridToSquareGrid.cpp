@@ -208,30 +208,30 @@ QString ConvertHexGridToSquareGrid::modifyAngHeaderLine(QString& buf)
     line = buf;
     return line;
   }
-  if(buf.contains(EbsdLib::Ang::HexGrid))
+  if(buf.contains(QString::fromStdString(EbsdLib::Ang::HexGrid)))
   {
-    line = buf.replace(EbsdLib::Ang::HexGrid, EbsdLib::Ang::SquareGrid);
+    line = buf.replace(QString::fromStdString(EbsdLib::Ang::HexGrid), QString::fromStdString(EbsdLib::Ang::SquareGrid));
     // line = "# " + word + ": SqrGrid";
   }
-  else if(buf.contains(EbsdLib::Ang::XStep))
+  else if(buf.contains(QString::fromStdString(EbsdLib::Ang::XStep)))
   {
-    line = "# " + EbsdLib::Ang::XStep + ": " + QString::number((double)m_XResolution);
+    line = "# " + QString::fromStdString(EbsdLib::Ang::XStep) + ": " + QString::number((double)m_XResolution);
   }
-  else if(buf.contains(EbsdLib::Ang::YStep))
+  else if(buf.contains(QString::fromStdString(EbsdLib::Ang::YStep)))
   {
-    line = "# " + EbsdLib::Ang::YStep + ": " + QString::number((double)m_YResolution);
+    line = "# " + QString::fromStdString(EbsdLib::Ang::YStep) + ": " + QString::number((double)m_YResolution);
   }
-  else if(buf.contains(EbsdLib::Ang::NColsOdd))
+  else if(buf.contains(QString::fromStdString(EbsdLib::Ang::NColsOdd)))
   {
-    line = "# " + EbsdLib::Ang::NColsOdd + ": " + QString::number(m_NumCols);
+    line = "# " + QString::fromStdString(EbsdLib::Ang::NColsOdd) + ": " + QString::number(m_NumCols);
   }
-  else if(buf.contains(EbsdLib::Ang::NColsEven))
+  else if(buf.contains(QString::fromStdString(EbsdLib::Ang::NColsEven)))
   {
-    line = "# " + EbsdLib::Ang::NColsEven + ": " + QString::number(m_NumCols);
+    line = "# " + QString::fromStdString(EbsdLib::Ang::NColsEven) + ": " + QString::number(m_NumCols);
   }
-  else if(buf.contains(EbsdLib::Ang::NRows))
+  else if(buf.contains(QString::fromStdString(EbsdLib::Ang::NRows)))
   {
-    line = "# " + EbsdLib::Ang::NRows + ": " + QString::number(m_NumRows);
+    line = "# " + QString::fromStdString(EbsdLib::Ang::NRows) + ": " + QString::number(m_NumRows);
   }
   else
   {
@@ -307,21 +307,21 @@ void ConvertHexGridToSquareGrid::execute()
     // Write the Manufacturer of the OIM file here
     // This list will grow to be the number of EBSD file formats we support
     QFileInfo fi(ebsdFName);
-    QString ext = fi.suffix();
+    std::string ext = fi.suffix().toStdString();
     QString base = fi.baseName();
     QDir path(getOutputPath());
-    if(ext.compare(EbsdLib::Ang::FileExt) == 0)
+    if(ext == EbsdLib::Ang::FileExt)
     {
       AngReader reader;
-      reader.setFileName(ebsdFName);
+      reader.setFileName(ebsdFName.toStdString());
       reader.setReadHexGrid(true);
       err = reader.readFile();
       if(err < 0 && err != -600)
       {
-        setErrorCondition(reader.getErrorCode(), reader.getErrorMessage());
+        setErrorCondition(reader.getErrorCode(), QString::fromStdString(reader.getErrorMessage()));
         return;
       }
-      if(reader.getGrid().startsWith(EbsdLib::Ang::SquareGrid))
+      if(reader.getGrid().find(EbsdLib::Ang::SquareGrid) == 0)
       {
         QString ss = QObject::tr("Ang file is already a square grid: %1").arg(ebsdFName);
         setErrorCondition(-55000, ss);
@@ -330,9 +330,9 @@ void ConvertHexGridToSquareGrid::execute()
 
       if(err == -600)
       {
-        setWarningCondition(reader.getErrorCode(), reader.getErrorMessage());
+        setWarningCondition(reader.getErrorCode(), QString::fromStdString(reader.getErrorMessage()));
       }
-      QString origHeader = reader.getOriginalHeader();
+      QString origHeader = QString::fromStdString(reader.getOriginalHeader());
       if(origHeader.isEmpty())
       {
 
@@ -342,7 +342,7 @@ void ConvertHexGridToSquareGrid::execute()
 
       QTextStream in(&origHeader);
       // QString newEbsdFName = path.absolutePath() + "/Sqr_" + base + "." + ext;
-      QString newEbsdFName = path.absolutePath() + "/" + getOutputPrefix() + base + "." + ext;
+      QString newEbsdFName = path.absolutePath() + "/" + getOutputPrefix() + base + "." + QString::fromStdString(ext);
 
       if(newEbsdFName.compare(ebsdFName) == 0)
       {

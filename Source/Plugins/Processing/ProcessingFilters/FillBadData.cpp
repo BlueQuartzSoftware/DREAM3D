@@ -173,11 +173,11 @@ void FillBadData::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
-  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_Neighbors", true);
+  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, std::string("_INTERNAL_USE_ONLY_Neighbors"), true);
   m_Neighbors = neighborsPtr->getPointer(0);
   neighborsPtr->initializeWithValue(-1);
 
-  BoolArrayType::Pointer alreadCheckedPtr = BoolArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_AlreadyChecked", true);
+  BoolArrayType::Pointer alreadCheckedPtr = BoolArrayType::CreateArray(totalPoints, std::string("_INTERNAL_USE_ONLY_AlreadyChecked"), true);
   m_AlreadyChecked = alreadCheckedPtr->getPointer(0);
   alreadCheckedPtr->initializeWithZeros();
 

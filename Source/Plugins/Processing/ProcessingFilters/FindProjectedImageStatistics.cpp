@@ -328,7 +328,7 @@ void FindProjectedImageStatistics::execute()
 
   SizeVec3Type geoDims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
-  Int32ArrayType::Pointer startingPoints = Int32ArrayType::CreateArray(0, "_INTERNAL_USE_ONLY_startingPoints", true);
+  Int32ArrayType::Pointer startingPoints = Int32ArrayType::CreateArray(0, std::string("_INTERNAL_USE_ONLY_startingPoints"), true);
   int32_t* startPoints = nullptr;
   size_t stride = 0, yStride = 0;
   size_t count = 0;

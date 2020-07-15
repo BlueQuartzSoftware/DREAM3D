@@ -45,6 +45,7 @@
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
+#include "EbsdLib/Core/EbsdMacros.h"
 #include "EbsdLib/IO/H5EbsdVolumeReader.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
@@ -454,14 +455,14 @@ protected:
       return -2;
     }
 
-    reader->setFileName(m_InputFile);
+    reader->setFileName(m_InputFile.toStdString());
     reader->setSliceStart(m_ZStartIndex);
     reader->setSliceEnd(m_ZEndIndex);
 
-    QVector<typename EbsdPhase::Pointer> phases = reader->getPhases();
+    std::vector<typename EbsdPhase::Pointer> phases = reader->getPhases();
     if(phases.size() == 0)
     {
-      setErrorCondition(reader->getErrorCode(), reader->getErrorMessage());
+      setErrorCondition(reader->getErrorCode(), S2Q(reader->getErrorMessage()));
       return getErrorCode();
     }
 
@@ -477,7 +478,7 @@ protected:
     // Initialize the zero'th element to unknowns. The other elements will
     // be filled in based on values from the data file
     crystalStructures->setValue(0, EbsdLib::CrystalStructure::UnknownCrystalStructure);
-    materialNames->setValue(0, "Invalid Phase");
+    materialNames->setValue(0, QString("Invalid Phase"));
     latticeConstants->setComponent(0, 0, 0.0f);
     latticeConstants->setComponent(0, 1, 0.0f);
     latticeConstants->setComponent(0, 2, 0.0f);
@@ -489,8 +490,8 @@ protected:
     {
       int32_t phaseID = phases[i]->getPhaseIndex();
       crystalStructures->setValue(phaseID, phases[i]->determineLaueGroup());
-      materialNames->setValue(phaseID, phases[i]->getMaterialName());
-      QVector<float> lc = phases[i]->getLatticeConstants();
+      materialNames->setValue(phaseID, S2Q(phases[i]->getMaterialName()));
+      std::vector<float> lc = phases[i]->getLatticeConstants();
 
       latticeConstants->setComponent(phaseID, 0, lc[0]);
       latticeConstants->setComponent(phaseID, 1, lc[1]);

@@ -638,7 +638,7 @@ void MergeColonies::execute()
     std::mt19937_64 generator(seed); // Standard mersenne_twister_engine seeded with milliseconds
     std::uniform_int_distribution<int32_t> distribution(rangeMin, rangeMax);
 
-    DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(numParents, "_INTERNAL_USE_ONLY_NewParentIds", true);
+    DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(numParents, std::string("_INTERNAL_USE_ONLY_NewParentIds"), true);
     int32_t* pid = rndNumbers->getPointer(0);
     pid[0] = 0;
     QSet<int32_t> parentIdSet;

@@ -35,24 +35,24 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QFileInfo>
 #include <QtCore/QString>
+#include <QtCore/QTextStream>
 
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5ScopedSentinel.h"
 #include "H5Support/H5Utilities.h"
 #include "H5Support/QH5Lite.h"
 
+#include "EbsdLib/Core/EbsdMacros.h"
 #include "EbsdLib/IO/BrukerNano/EspritConstants.h"
 #include "EbsdLib/IO/BrukerNano/EspritPhase.h"
 #include "EbsdLib/IO/BrukerNano/H5EspritFields.h"
 #include "EbsdLib/IO/BrukerNano/H5EspritReader.h"
 
-#include <QtCore/QTextStream>
-
-#include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
@@ -73,7 +73,7 @@ class ImportH5EspritDataPrivate
   ImportH5EspritData* const q_ptr;
   ImportH5EspritDataPrivate(ImportH5EspritData* ptr);
 
-  Esprit_Private_Data m_FileCacheData;
+  ImportH5EspritData::Esprit_Private_Data m_FileCacheData;
   QStringList m_FileScanNames;
   QVector<int> m_PatternDims;
 
@@ -109,7 +109,7 @@ void ImportH5EspritData::setFileCacheData(const Esprit_Private_Data& value)
 }
 
 // -----------------------------------------------------------------------------
-Esprit_Private_Data ImportH5EspritData::getFileCacheData() const
+ImportH5EspritData::Esprit_Private_Data ImportH5EspritData::getFileCacheData() const
 {
   Q_D(const ImportH5EspritData);
   return d->m_FileCacheData;
@@ -151,7 +151,7 @@ void ImportH5EspritData::execute()
   }
 
   H5EspritReader::Pointer reader = H5EspritReader::New();
-  reader->setFileName(getInputFile());
+  reader->setFileName(getInputFile().toStdString());
   std::vector<size_t> tDims(3, 0);
   std::vector<size_t> cDims(1, 1);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
@@ -248,23 +248,23 @@ EbsdLib::OEM ImportH5EspritData::readManufacturer() const
     return manuf;
   }
   H5ScopedFileSentinel sentinel(&fid, false);
-  QString dsetName;
+  std::string dsetName;
   std::list<std::string> names;
   herr_t err = H5Utilities::getGroupObjects(fid, H5Utilities::CustomHDFDataTypes::Any, names);
-  auto findIter = std::find(names.begin(), names.end(), EbsdLib::H5OIM::Manufacturer.toStdString());
+  auto findIter = std::find(names.begin(), names.end(), EbsdLib::H5OIM::Manufacturer);
   if(findIter != names.end())
   {
     dsetName = EbsdLib::H5OIM::Manufacturer;
   }
 
-  findIter = std::find(names.begin(), names.end(), EbsdLib::H5Esprit::Manufacturer.toStdString());
+  findIter = std::find(names.begin(), names.end(), EbsdLib::H5Esprit::Manufacturer);
   if(findIter != names.end())
   {
     dsetName = EbsdLib::H5Esprit::Manufacturer;
   }
 
-  QString manufacturer("Unknown");
-  err = QH5Lite::readStringDataset(fid, dsetName, manufacturer);
+  std::string manufacturer("Unknown");
+  err = H5Lite::readStringDataset(fid, dsetName, manufacturer);
   if(err < 0)
   {
     return manuf;
@@ -324,29 +324,34 @@ void ImportH5EspritData::dataCheckOEM()
   std::vector<size_t> cDims(3, 0);
 
   H5EspritReader::Pointer reader = H5EspritReader::New();
-  reader->setFileName(getInputFile());
+  reader->setFileName(getInputFile().toStdString());
 
   // We ALWAYS want to read the Scan Names from the file so that we can present that list to the user if needed.
-  QStringList scanNames;
+  std::list<std::string> scanNames;
   int32_t err = reader->readScanNames(scanNames);
   if(err < 0)
   {
-    setErrorCondition(err, reader->getErrorMessage());
+    setErrorCondition(err, QString::fromStdString(reader->getErrorMessage()));
     return;
   }
-  setFileScanNames(scanNames);
-  setNumberOfScans(scanNames.size());
+  QStringList qScanNames;
+  for(const auto& scan : scanNames)
+  {
+    qScanNames.push_back(S2Q(scan));
+  }
+  setFileScanNames(qScanNames);
+  setNumberOfScans(qScanNames.size());
 
   IDataArrayMap ebsdArrayMap;
 
   if(!getSelectedScanNames().empty())
   {
-    readDataFile(reader.get(), m.get(), cDims, scanNames[0], ANG_HEADER_ONLY);
+    readDataFile(reader.get(), m.get(), cDims, qScanNames[0], ANG_HEADER_ONLY);
 
     // Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
     cellAttrMat->resizeAttributeArrays(cDims);
     H5EspritFields espritFeatures;
-    QVector<QString> names = espritFeatures.getFilterFeatures<QVector<QString>>();
+    std::vector<std::string> names = espritFeatures.getFilterFeatures<std::vector<std::string>>();
     cDims.resize(1);
     cDims[0] = 1;
     // We are doing this because we DON'T want to allocate all the data right now and by forcibly setting to InPreflight
@@ -357,13 +362,13 @@ void ImportH5EspritData::dataCheckOEM()
     {
       if(reader->getPointerType(name) == EbsdLib::NumericTypes::Type::Int32)
       {
-        cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>>(this, name, 0, cDims);
-        ebsdArrayMap.insert(name, cellAttrMat->getAttributeArray(name));
+        cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>>(this, S2Q(name), 0, cDims);
+        ebsdArrayMap.insert(S2Q(name), cellAttrMat->getAttributeArray(S2Q(name)));
       }
       else if(reader->getPointerType(name) == EbsdLib::NumericTypes::Type::Float)
       {
-        cellAttrMat->createAndAddAttributeArray<DataArray<float>>(this, name, 0, cDims);
-        ebsdArrayMap.insert(name, cellAttrMat->getAttributeArray(name));
+        cellAttrMat->createAndAddAttributeArray<DataArray<float>>(this, S2Q(name), 0, cDims);
+        ebsdArrayMap.insert(S2Q(name), cellAttrMat->getAttributeArray(S2Q(name)));
       }
     }
     setInPreflight(areWeInPreflight);
@@ -380,36 +385,36 @@ void ImportH5EspritData::dataCheckOEM()
 
   if(getCombineEulerAngles())
   {
-    cellAttrMat->removeAttributeArray(EbsdLib::H5Esprit::phi1);
-    cellAttrMat->removeAttributeArray(EbsdLib::H5Esprit::PHI);
-    cellAttrMat->removeAttributeArray(EbsdLib::H5Esprit::phi2);
+    cellAttrMat->removeAttributeArray(S2Q(EbsdLib::H5Esprit::phi1));
+    cellAttrMat->removeAttributeArray(S2Q(EbsdLib::H5Esprit::PHI));
+    cellAttrMat->removeAttributeArray(S2Q(EbsdLib::H5Esprit::phi2));
 
-    tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), EbsdLib::Esprit::EulerAngles);
+    tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), S2Q(EbsdLib::Esprit::EulerAngles));
     m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims);
     if(nullptr != m_CellEulerAnglesPtr.lock())
     {
       m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
     }
-    ebsdArrayMap.insert(EbsdLib::Esprit::EulerAngles, IDataArray::Pointer(m_CellEulerAnglesPtr));
+    ebsdArrayMap.insert(S2Q(EbsdLib::Esprit::EulerAngles), IDataArray::Pointer(m_CellEulerAnglesPtr));
   }
 
   cDims[0] = 1;
-  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), EbsdLib::Esprit::CrystalStructures);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), S2Q(EbsdLib::Esprit::CrystalStructures));
   m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>>(this, tempPath, EbsdLib::CrystalStructure::UnknownCrystalStructure, cDims);
   if(nullptr != m_CrystalStructuresPtr.lock())
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   }
-  ebsdArrayMap.insert(EbsdLib::Esprit::CrystalStructures, IDataArray::Pointer(m_CrystalStructuresPtr));
+  ebsdArrayMap.insert(S2Q(EbsdLib::Esprit::CrystalStructures), IDataArray::Pointer(m_CrystalStructuresPtr));
 
   cDims[0] = 6;
-  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), EbsdLib::Esprit::LatticeConstants);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), S2Q(EbsdLib::Esprit::LatticeConstants));
   m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0.0, cDims);
   if(nullptr != m_LatticeConstantsPtr.lock())
   {
     m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0);
   }
-  ebsdArrayMap.insert(EbsdLib::Esprit::LatticeConstants, IDataArray::Pointer(m_LatticeConstantsPtr));
+  ebsdArrayMap.insert(S2Q(EbsdLib::Esprit::LatticeConstants), IDataArray::Pointer(m_LatticeConstantsPtr));
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::MaterialName, true);
   cellEnsembleAttrMat->insertOrAssign(materialNames);
@@ -426,13 +431,13 @@ void ImportH5EspritData::dataCheckOEM()
       // We will handle allocating the memory later on.
       bool areWeInPreflight = getInPreflight();
       setInPreflight(true);
-      tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), EbsdLib::H5Esprit::RawPatterns);
+      tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), S2Q(EbsdLib::H5Esprit::RawPatterns));
       m_CellPatternDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>>(this, tempPath, 0, cDims);
       if(nullptr != m_CellPatternDataPtr.lock())
       {
         m_CellPatternData = m_CellPatternDataPtr.lock()->getPointer(0);
       }
-      ebsdArrayMap.insert(EbsdLib::H5Esprit::RawPatterns, IDataArray::Pointer(m_CellPatternDataPtr));
+      ebsdArrayMap.insert(S2Q(EbsdLib::H5Esprit::RawPatterns), IDataArray::Pointer(m_CellPatternDataPtr));
       setInPreflight(areWeInPreflight);
     }
     else
@@ -465,14 +470,14 @@ void ImportH5EspritData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, 
     reader->setReadPatternData(getReadPatternData());
 
     // If the user has already set a Scan Name to read then we are good to go.
-    reader->setHDF5Path(scanName);
+    reader->setHDF5Path(scanName.toStdString());
 
     if(flag == ANG_HEADER_ONLY)
     {
       int err = reader->readHeaderOnly();
       if(err < 0)
       {
-        setErrorCondition(err, reader->getErrorMessage());
+        setErrorCondition(err, S2Q(reader->getErrorMessage()));
         setFileWasRead(false);
         return;
       }
@@ -483,7 +488,7 @@ void ImportH5EspritData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, 
       int32_t err = reader->readFile();
       if(err < 0)
       {
-        setErrorCondition(err, reader->getErrorMessage());
+        setErrorCondition(err, S2Q(reader->getErrorMessage()));
         setErrorCondition(getErrorCode(), "H5OIMReader could not read the .h5 file.");
         return;
       }
@@ -547,17 +552,17 @@ int32_t ImportH5EspritData::loadMaterialInfo(EbsdReader* ebsdReader)
 {
   auto reader = dynamic_cast<H5EspritReader*>(ebsdReader);
 
-  QVector<EspritPhase::Pointer> phases = getFileCacheData().phases;
+  std::vector<EspritPhase::Pointer> phases = getFileCacheData().phases;
   if(phases.empty())
   {
-    setErrorCondition(reader->getErrorCode(), reader->getErrorMessage());
+    setErrorCondition(reader->getErrorCode(), S2Q(reader->getErrorMessage()));
     return getErrorCode();
   }
 
   DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, EbsdLib::AngFile::CrystalStructures, true);
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, EbsdLib::AngFile::MaterialName);
   std::vector<size_t> dims(1, 6);
-  FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, dims, EbsdLib::AngFile::LatticeConstants, true);
+  FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, dims, S2Q(EbsdLib::AngFile::LatticeConstants), true);
 
   // Initialize the zero'th element to unknowns. The other elements will
   // be filled in based on values from the data file
@@ -575,8 +580,8 @@ int32_t ImportH5EspritData::loadMaterialInfo(EbsdReader* ebsdReader)
   {
     int32_t phaseID = phase->getPhaseIndex();
     crystalStructures->setValue(phaseID, phase->determineLaueGroup());
-    materialNames->setValue(phaseID, phase->getMaterialName());
-    QVector<float> lc = phase->getLatticeConstants();
+    materialNames->setValue(phaseID, S2Q(phase->getMaterialName()));
+    std::vector<float> lc = phase->getLatticeConstants();
 
     latticeConstants->setComponent(phaseID, 0, lc[0]);
     latticeConstants->setComponent(phaseID, 1, lc[1]);
@@ -621,7 +626,7 @@ int32_t ImportH5EspritData::loadMaterialInfo(EbsdReader* ebsdReader)
 
 // -----------------------------------------------------------------------------
 template <typename T, class Reader>
-void copyPointerData(Reader* reader, const QString& name, const IDataArray::Pointer& dataArray, size_t offset, size_t totalPoints, AttributeMatrix::Pointer& ebsdAttrMat)
+void copyPointerData(Reader* reader, const std::string& name, const IDataArray::Pointer& dataArray, size_t offset, size_t totalPoints, AttributeMatrix::Pointer& ebsdAttrMat)
 {
   using DataArrayType = DataArray<T>;
   // Copy Array from Reader into DataArray<>
@@ -704,32 +709,35 @@ void ImportH5EspritData::copyRawEbsdData(EbsdReader* ebsdReader, std::vector<siz
       f3[3 * i + 2] = f3[i] * degToRad;
     }
 
-    copyPointerData<EbsdLib::H5Esprit::phi1_t, H5EspritReader>(reader, EbsdLib::H5Esprit::phi1, ebsdArrayMap.value(EbsdLib::H5Esprit::phi1), offset, totalPoints, ebsdAttrMat);
-    copyPointerData<EbsdLib::H5Esprit::PHI_t, H5EspritReader>(reader, EbsdLib::H5Esprit::PHI, ebsdArrayMap.value(EbsdLib::H5Esprit::PHI), offset, totalPoints, ebsdAttrMat);
-    copyPointerData<EbsdLib::H5Esprit::phi2_t, H5EspritReader>(reader, EbsdLib::H5Esprit::phi2, ebsdArrayMap.value(EbsdLib::H5Esprit::phi2), offset, totalPoints, ebsdAttrMat);
+    copyPointerData<EbsdLib::H5Esprit::phi1_t, H5EspritReader>(reader, EbsdLib::H5Esprit::phi1, ebsdArrayMap.value(S2Q(EbsdLib::H5Esprit::phi1)), offset, totalPoints, ebsdAttrMat);
+    copyPointerData<EbsdLib::H5Esprit::PHI_t, H5EspritReader>(reader, EbsdLib::H5Esprit::PHI, ebsdArrayMap.value(S2Q(EbsdLib::H5Esprit::PHI)), offset, totalPoints, ebsdAttrMat);
+    copyPointerData<EbsdLib::H5Esprit::phi2_t, H5EspritReader>(reader, EbsdLib::H5Esprit::phi2, ebsdArrayMap.value(S2Q(EbsdLib::H5Esprit::phi2)), offset, totalPoints, ebsdAttrMat);
   }
 
   cDims[0] = 1;
 
   // Copy the rest of the data from the pointer in the reader into our IDataArrayPointer
   // copyPointerData<EbsdLib::H5Esprit::DD_t, H5EspritReader>(reader, EbsdLib::H5Esprit::DD, ebsdArrayMap.value(EbsdLib::H5Esprit::DD), offset, totalPoints, ebsdAttrMat);
-  copyPointerData<EbsdLib::H5Esprit::MAD_t, H5EspritReader>(reader, EbsdLib::H5Esprit::MAD, ebsdArrayMap.value(EbsdLib::H5Esprit::MAD), offset, totalPoints, ebsdAttrMat);
+  copyPointerData<EbsdLib::H5Esprit::MAD_t, H5EspritReader>(reader, EbsdLib::H5Esprit::MAD, ebsdArrayMap.value(S2Q(EbsdLib::H5Esprit::MAD)), offset, totalPoints, ebsdAttrMat);
   // copyPointerData<EbsdLib::H5Esprit::MADPhase_t, H5EspritReader>(reader, EbsdLib::H5Esprit::MADPhase, ebsdArrayMap.value(EbsdLib::H5Esprit::MADPhase), offset, totalPoints, ebsdAttrMat);
-  copyPointerData<EbsdLib::H5Esprit::NIndexedBands_t, H5EspritReader>(reader, EbsdLib::H5Esprit::NIndexedBands, ebsdArrayMap.value(EbsdLib::H5Esprit::NIndexedBands), offset, totalPoints, ebsdAttrMat);
+  copyPointerData<EbsdLib::H5Esprit::NIndexedBands_t, H5EspritReader>(reader, EbsdLib::H5Esprit::NIndexedBands, ebsdArrayMap.value(S2Q(EbsdLib::H5Esprit::NIndexedBands)), offset, totalPoints,
+                                                                      ebsdAttrMat);
   // copyPointerData<EbsdLib::H5Esprit::PCX_t, H5EspritReader>(reader, EbsdLib::H5Esprit::PCX, ebsdArrayMap.value(EbsdLib::H5Esprit::PCX), offset, totalPoints, ebsdAttrMat);
   // copyPointerData<EbsdLib::H5Esprit::PCY_t, H5EspritReader>(reader, EbsdLib::H5Esprit::PCY, ebsdArrayMap.value(EbsdLib::H5Esprit::PCY), offset, totalPoints, ebsdAttrMat);
-  copyPointerData<EbsdLib::H5Esprit::Phase_t, H5EspritReader>(reader, EbsdLib::H5Esprit::Phase, ebsdArrayMap.value(EbsdLib::H5Esprit::Phase), offset, totalPoints, ebsdAttrMat);
-  copyPointerData<EbsdLib::H5Esprit::RadonBandCount_t, H5EspritReader>(reader, EbsdLib::H5Esprit::RadonBandCount, ebsdArrayMap.value(EbsdLib::H5Esprit::RadonBandCount), offset, totalPoints,
+  copyPointerData<EbsdLib::H5Esprit::Phase_t, H5EspritReader>(reader, EbsdLib::H5Esprit::Phase, ebsdArrayMap.value(S2Q(EbsdLib::H5Esprit::Phase)), offset, totalPoints, ebsdAttrMat);
+  copyPointerData<EbsdLib::H5Esprit::RadonBandCount_t, H5EspritReader>(reader, EbsdLib::H5Esprit::RadonBandCount, ebsdArrayMap.value(S2Q(EbsdLib::H5Esprit::RadonBandCount)), offset, totalPoints,
                                                                        ebsdAttrMat);
-  copyPointerData<EbsdLib::H5Esprit::RadonQuality_t, H5EspritReader>(reader, EbsdLib::H5Esprit::RadonQuality, ebsdArrayMap.value(EbsdLib::H5Esprit::RadonQuality), offset, totalPoints, ebsdAttrMat);
-  copyPointerData<EbsdLib::H5Esprit::XBEAM_t, H5EspritReader>(reader, EbsdLib::H5Esprit::XBEAM, ebsdArrayMap.value(EbsdLib::H5Esprit::XBEAM), offset, totalPoints, ebsdAttrMat);
-  copyPointerData<EbsdLib::H5Esprit::YBEAM_t, H5EspritReader>(reader, EbsdLib::H5Esprit::YBEAM, ebsdArrayMap.value(EbsdLib::H5Esprit::YBEAM), offset, totalPoints, ebsdAttrMat);
+  copyPointerData<EbsdLib::H5Esprit::RadonQuality_t, H5EspritReader>(reader, EbsdLib::H5Esprit::RadonQuality, ebsdArrayMap.value(S2Q(EbsdLib::H5Esprit::RadonQuality)), offset, totalPoints,
+                                                                     ebsdAttrMat);
+  copyPointerData<EbsdLib::H5Esprit::XBEAM_t, H5EspritReader>(reader, EbsdLib::H5Esprit::XBEAM, ebsdArrayMap.value(S2Q(EbsdLib::H5Esprit::XBEAM)), offset, totalPoints, ebsdAttrMat);
+  copyPointerData<EbsdLib::H5Esprit::YBEAM_t, H5EspritReader>(reader, EbsdLib::H5Esprit::YBEAM, ebsdArrayMap.value(S2Q(EbsdLib::H5Esprit::YBEAM)), offset, totalPoints, ebsdAttrMat);
   // copyPointerData<EbsdLib::H5Esprit::XSAMPLE_t, H5EspritReader>(reader, EbsdLib::H5Esprit::XSAMPLE, ebsdArrayMap.value(EbsdLib::H5Esprit::XSAMPLE), offset, totalPoints, ebsdAttrMat);
   // copyPointerData<EbsdLib::H5Esprit::YSAMPLE_t, H5EspritReader>(reader, EbsdLib::H5Esprit::YSAMPLE, ebsdArrayMap.value(EbsdLib::H5Esprit::YSAMPLE), offset, totalPoints, ebsdAttrMat);
 
   if(getReadPatternData()) // Get the pattern Data from the
   {
-    copyPointerData<EbsdLib::H5Esprit::RawPatterns_t, H5EspritReader>(reader, EbsdLib::H5Esprit::RawPatterns, ebsdArrayMap.value(EbsdLib::H5Esprit::RawPatterns), offset, totalPoints, ebsdAttrMat);
+    copyPointerData<EbsdLib::H5Esprit::RawPatterns_t, H5EspritReader>(reader, EbsdLib::H5Esprit::RawPatterns, ebsdArrayMap.value(S2Q(EbsdLib::H5Esprit::RawPatterns)), offset, totalPoints,
+                                                                      ebsdAttrMat);
   }
 }
 

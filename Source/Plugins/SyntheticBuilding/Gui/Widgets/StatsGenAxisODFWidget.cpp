@@ -479,13 +479,13 @@ void StatsGenAxisODFWidget::calculateAxisODF()
     config.discrete = false;
   }
 
-  QVector<QString> labels(3);
-  labels[0] = QString("C Axis"); // 001
-  labels[1] = QString("A Axis"); // 100
-  labels[2] = QString("B Axis"); // 010
+  std::vector<std::string> labels(3);
+  labels[0] = std::string("C Axis"); // 001
+  labels[1] = std::string("A Axis"); // 100
+  labels[2] = std::string("B Axis"); // 010
   config.labels = labels;
 
-  QVector<unsigned int> order(3);
+  std::vector<unsigned int> order(3);
   order[0] = 2; // Show C last
   order[1] = 0; // Show A First
   order[2] = 1; // Show B Second

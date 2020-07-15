@@ -345,7 +345,7 @@ void ScalarSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t tot
   const int64_t rangeMax = totalFeatures - 1;
   initializeVoxelSeedGenerator(rangeMin, rangeMax);
 
-  DataArray<int64_t>::Pointer rndNumbers = DataArray<int64_t>::CreateArray(totalFeatures, "_INTERNAL_USE_ONLY_NewFeatureIds", true);
+  DataArray<int64_t>::Pointer rndNumbers = DataArray<int64_t>::CreateArray(totalFeatures, std::string("_INTERNAL_USE_ONLY_NewFeatureIds"), true);
 
   int64_t* gid = rndNumbers->getPointer(0);
   gid[0] = 0;

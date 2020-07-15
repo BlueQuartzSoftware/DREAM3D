@@ -36,8 +36,9 @@
 #include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-#include "EbsdLib/LaueOps/MonoclinicOps.h"
+#include "EbsdLib/Core/EbsdMacros.h"
 #include "EbsdLib/LaueOps/LaueOps.h"
+#include "EbsdLib/LaueOps/MonoclinicOps.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -104,7 +105,7 @@ QImage MonoclinicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, 
     painter.setFont(font);
     QFontMetrics metrics = painter.fontMetrics();
     fontHeight = metrics.height();
-    fontWidth = metrics.QFONTMETRICS_WIDTH(ops->getSymmetryName());
+    fontWidth = metrics.QFONTMETRICS_WIDTH(S2Q(ops->getSymmetryName()));
     painter.end();
   }
 
@@ -158,7 +159,7 @@ QImage MonoclinicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, 
   fontHeight = metrics.height();
   painter.drawText(pImageWidth / 2 - fontWidth / 2, fontHeight * 2 + imageSize.height() / 2.0 + fontHeight * 1.5, label);
 
-  label = ops->getSymmetryName();
+  label = S2Q(ops->getSymmetryName());
   fontWidth = metrics.QFONTMETRICS_WIDTH(label);
   fontHeight = metrics.height();
   x = pImageWidth / 2 - fontWidth / 2;

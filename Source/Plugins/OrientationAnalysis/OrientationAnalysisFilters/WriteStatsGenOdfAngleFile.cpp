@@ -344,6 +344,8 @@ int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCou
   out << "# Euler0 Euler1 Euler2 Weight Sigma\n";
   out << "Angle Count:" << lineCount << "\n";
 
+  out.setRealNumberNotation(QTextStream::FixedNotation);
+  out.setRealNumberPrecision(8);
   for(int64_t i = 0; i < totalPoints; i++)
   {
     writeLine = false;

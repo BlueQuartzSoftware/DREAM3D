@@ -169,7 +169,7 @@ void FindLargestCrossSections::find_crosssections()
 
   size_t numfeatures = m_LargestCrossSectionsPtr.lock()->getNumberOfTuples();
 
-  DoubleArrayType::Pointer m_FeatureCounts = DoubleArrayType::CreateArray(numfeatures, "_INTERNAL_USE_ONLY_FeatureCounts", true);
+  DoubleArrayType::Pointer m_FeatureCounts = DoubleArrayType::CreateArray(numfeatures, std::string("_INTERNAL_USE_ONLY_FeatureCounts"), true);
   double* featurecounts = m_FeatureCounts->getPointer(0);
 
   size_t outPlane = 0, inPlane1 = 0, inPlane2 = 0;

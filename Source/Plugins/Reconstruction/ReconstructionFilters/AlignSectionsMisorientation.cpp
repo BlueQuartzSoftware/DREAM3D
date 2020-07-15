@@ -244,7 +244,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
   int64_t progInt = 0;
 
   // Allocate a 2D Array which will be reused from slice to slice
-  BoolArrayType::Pointer misorientsPtr = BoolArrayType::CreateArray(dims[0] * dims[1], "_INTERNAL_USE_ONLY_Misorients", true);
+  BoolArrayType::Pointer misorientsPtr = BoolArrayType::CreateArray(dims[0] * dims[1], std::string("_INTERNAL_USE_ONLY_Misorients"), true);
   misorientsPtr->initializeWithValue(false);
   bool* misorients = misorientsPtr->getPointer(0); // Get the raw pointer to use in our calculations for speed.
 

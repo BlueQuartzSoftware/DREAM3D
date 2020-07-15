@@ -105,10 +105,10 @@ public:
   void checkPoints(size_t start, size_t end) const
   {
     float radius = 0.0f;
-    FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Lower_Left", true);
-    FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Upper_Right", true);
-    FloatArrayType::Pointer ll_rotPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Lower_Left_Rotated", true);
-    FloatArrayType::Pointer ur_rotPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Upper_Right_Rotated", true);
+    FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, std::string("_INTERNAL_USE_ONLY_Lower_Left"), true);
+    FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, std::string("_INTERNAL_USE_ONLY_Upper_Right"), true);
+    FloatArrayType::Pointer ll_rotPtr = FloatArrayType::CreateArray(3, std::string("_INTERNAL_USE_ONLY_Lower_Left_Rotated"), true);
+    FloatArrayType::Pointer ur_rotPtr = FloatArrayType::CreateArray(3, std::string("_INTERNAL_USE_ONLY_Upper_Right_Rotated"), true);
     float* ll = llPtr->getPointer(0);
     float* ur = urPtr->getPointer(0);
     float* ll_rot = ll_rotPtr->getPointer(0);
@@ -576,8 +576,8 @@ void InsertAtoms::execute()
   int64_t numFaces = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
   // create array to hold bounding vertices for each face
-  FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, "Lower_Left_Internal_Use_Only", true);
-  FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "Upper_Right_Internal_Use_Only", true);
+  FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, std::string("Lower_Left_Internal_Use_Only"), true);
+  FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, std::string("Upper_Right_Internal_Use_Only"), true);
   float* ll = llPtr->getPointer(0);
   float* ur = urPtr->getPointer(0);
   VertexGeom::Pointer faceBBs = VertexGeom::CreateGeometry(2 * numFaces, "faceBBs");
@@ -607,7 +607,7 @@ void InsertAtoms::execute()
   QVector<int32_t> linkCount(numFeatures, 0);
 
   // fill out lists with number of references to cells
-  Int32ArrayType::Pointer linkLocPtr = Int32ArrayType::CreateArray(numFaces, "_INTERNAL_USE_ONLY_cell refs", true);
+  Int32ArrayType::Pointer linkLocPtr = Int32ArrayType::CreateArray(numFaces, std::string("_INTERNAL_USE_ONLY_cell refs"), true);
   linkLocPtr->initializeWithZeros();
   int32_t* linkLoc = linkLocPtr->getPointer(0);
 
@@ -654,7 +654,7 @@ void InsertAtoms::execute()
   for(int32_t i = 0; i < numFeatures; i++)
   {
     points[i] = VertexGeom::CreateGeometry(0, "_INTERNAL_USE_ONLY_points");
-    inFeature[i] = BoolArrayType::CreateArray(0, "_INTERNAL_USE_ONLY_inside", true);
+    inFeature[i] = BoolArrayType::CreateArray(0, std::string("_INTERNAL_USE_ONLY_inside"), true);
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS

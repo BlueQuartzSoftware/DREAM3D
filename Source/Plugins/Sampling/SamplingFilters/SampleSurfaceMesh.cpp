@@ -324,8 +324,8 @@ void SampleSurfaceMesh::execute()
   int64_t numFaces = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
   // create array to hold bounding vertices for each face
-  FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Lower_Left", true);
-  FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Upper_Right", true);
+  FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, std::string("_INTERNAL_USE_ONLY_Lower_Left"), true);
+  FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, std::string("_INTERNAL_USE_ONLY_Upper_Right"), true);
   float* ll = llPtr->getPointer(0);
   float* ur = urPtr->getPointer(0);
   VertexGeom::Pointer faceBBs = VertexGeom::CreateGeometry(2 * numFaces, "_INTERNAL_USE_ONLY_faceBBs");
@@ -363,7 +363,7 @@ void SampleSurfaceMesh::execute()
   std::vector<int32_t> linkCount(numFeatures, 0);
 
   // fill out lists with number of references to cells
-  Int32ArrayType::Pointer linkLocPtr = Int32ArrayType::CreateArray(numFaces, "_INTERNAL_USE_ONLY_cell refs", true);
+  Int32ArrayType::Pointer linkLocPtr = Int32ArrayType::CreateArray(numFaces, std::string("_INTERNAL_USE_ONLY_cell refs"), true);
   linkLocPtr->initializeWithZeros();
   int32_t* linkLoc = linkLocPtr->getPointer(0);
 
@@ -432,7 +432,7 @@ void SampleSurfaceMesh::execute()
 
   // create array to hold which polyhedron (feature) each point falls in
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
-  iArray = Int32ArrayType::CreateArray(numPoints, "_INTERNAL_USE_ONLY_polyhedronIds", true);
+  iArray = Int32ArrayType::CreateArray(numPoints, std::string("_INTERNAL_USE_ONLY_polyhedronIds"), true);
   iArray->initializeWithZeros();
   int32_t* polyIds = iArray->getPointer(0);
 

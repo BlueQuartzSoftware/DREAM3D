@@ -53,39 +53,27 @@
 
 #include "OrientationAnalysisTestFileLocations.h"
 
-namespace
-{
-static const int k_AngleCount = 100;
-}
-
 class AngleFileIOTest
 {
 public:
-  AngleFileIOTest()
-  {
-  }
-  virtual ~AngleFileIOTest()
-  {
-  }
-  /**
-   * @brief Returns the name of the class for AngleFileIOTest
-   */
-  /**
-   * @brief Returns the name of the class for AngleFileIOTest
-   */
+  AngleFileIOTest() = default;
+  virtual ~AngleFileIOTest() = default;
+
+  const int k_AngleCount = 100;
+
+  // -----------------------------------------------------------------------------
   QString getNameOfClass() const
   {
     return QString("AngleFileIOTest");
   }
 
-  /**
-   * @brief Returns the name of the class for AngleFileIOTest
-   */
+  // -----------------------------------------------------------------------------
   QString ClassName()
   {
     return QString("AngleFileIOTest");
   }
 
+  // -----------------------------------------------------------------------------
   DataContainerArray::Pointer InitializeDataContainerArray()
   {
     DataContainerArray::Pointer dca = DataContainerArray::New();
@@ -108,11 +96,11 @@ public:
     for(int i = 0; i < k_AngleCount; i++)
     {
 
-      float angle = 360.0 / k_AngleCount * i;
+      float angle = 360.0F / static_cast<float>(k_AngleCount) * i;
       angles->setComponent(i, 0, angle);
-
       angles->setComponent(i, 2, angle);
-      angle = 180.0 / k_AngleCount * i;
+
+      angle = 180.0F / static_cast<float>(k_AngleCount) * i;
       angles->setComponent(i, 1, angle);
 
       phases->setValue(i, 1);
@@ -121,8 +109,6 @@ public:
     return dca;
   }
 
-  // -----------------------------------------------------------------------------
-  //
   // -----------------------------------------------------------------------------
   void TestWriter()
   {
@@ -177,8 +163,6 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
   void TestReader()
   {
     AngleFileLoader::Pointer reader = AngleFileLoader::New();
@@ -190,16 +174,16 @@ public:
 
     QString absFilePath = absPath + "/" + fname + "_Phase_" + QString::number(1) + "." + suffix;
 
-    reader->setInputFile(absFilePath);
+    reader->setInputFile(absFilePath.toStdString());
     reader->setAngleRepresentation(AngleFileLoader::EulerAngles);
-    reader->setDelimiter(QString(" "));
+    reader->setDelimiter(std::string(" "));
     reader->setFileAnglesInDegrees(true);
     reader->setOutputAnglesInDegrees(true);
 
     EbsdLib::FloatArrayType::Pointer angles = reader->loadData();
     if(reader->getErrorCode() < 0)
     {
-      qDebug() << reader->getErrorMessage();
+      std::cout << reader->getErrorMessage();
     }
     DREAM3D_REQUIRED(reader->getErrorCode(), >=, 0)
     DREAM3D_REQUIRE_VALID_POINTER(angles.get())
@@ -207,28 +191,34 @@ public:
     DREAM3D_REQUIRED(angles->getNumberOfTuples(), ==, k_AngleCount)
     DREAM3D_REQUIRED(angles->getNumberOfComponents(), ==, 5)
 
-    for(int i = 0; i < 100; i++)
+    for(int i = 0; i < k_AngleCount; i++)
     {
-      float angle = 360.0 / 100.0 * i;
-      DREAM3D_REQUIRED(angle, ==, angles->getComponent(i, 0));
-      DREAM3D_REQUIRED(angle, ==, angles->getComponent(i, 2));
+      float f0 = angles->getComponent(i, 0);
+      float f2 = angles->getComponent(i, 2);
+      float f1 = angles->getComponent(i, 1);
 
-      angle = 180.0 / 100.0 * i;
-      DREAM3D_REQUIRED(angle, ==, angles->getComponent(i, 1));
+      float angle = 360.0F / static_cast<float>(k_AngleCount) * i;
+
+      DREAM3D_REQUIRED(angle, ==, f0);
+      DREAM3D_REQUIRED(angle, ==, f2);
+
+      angle = 180.0F / static_cast<float>(k_AngleCount) * i;
+      DREAM3D_REQUIRED(angle, ==, f1);
     }
   }
 
-  /**
-   * @brief
-   */
+  // -----------------------------------------------------------------------------
   void operator()()
   {
+    std::cout << "#-- AngleFileIOTest Starting " << std::endl;
     int err = EXIT_SUCCESS;
     DREAM3D_REGISTER_TEST(TestWriter());
     DREAM3D_REGISTER_TEST(TestReader());
   }
 
-private:
-  AngleFileIOTest(const AngleFileIOTest&); // Copy Constructor Not Implemented
-  void operator=(const AngleFileIOTest&);  // Move assignment Not Implemented
+public:
+  AngleFileIOTest(const AngleFileIOTest&) = delete;            // Copy Constructor Not Implemented
+  AngleFileIOTest(AngleFileIOTest&&) = delete;                 // Move Constructor Not Implemented
+  AngleFileIOTest& operator=(const AngleFileIOTest&) = delete; // Copy Assignment Not Implemented
+  AngleFileIOTest& operator=(AngleFileIOTest&&) = delete;      // Move Assignment Not Implemented
 };

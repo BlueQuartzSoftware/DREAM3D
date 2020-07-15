@@ -269,11 +269,11 @@ void ImportEbsdMontage::dataCheck()
       }
       GridTileIndex gridIndex = gridMontage->getTileIndex(tile2D.data[0], tile2D.data[1]);
 
-      if(m_InputFileListInfo.FileExtension == EbsdLib::Ang::FileExt)
+      if(m_InputFileListInfo.FileExtension == S2Q(EbsdLib::Ang::FileExt))
       {
         readEbsdFile<ReadAngData>(this, tile2D.FileName, m_FilterCache, newFilterCache);
       }
-      if(m_InputFileListInfo.FileExtension == EbsdLib::Ctf::FileExt)
+      if(m_InputFileListInfo.FileExtension == S2Q(EbsdLib::Ctf::FileExt))
       {
         readEbsdFile<ReadCtfData>(this, tile2D.FileName, m_FilterCache, newFilterCache);
       }
@@ -353,17 +353,17 @@ void ImportEbsdMontage::dataCheck()
       QString eulersName;
       QString xtalName;
 
-      if(m_InputFileListInfo.FileExtension == EbsdLib::Ang::FileExt)
+      if(m_InputFileListInfo.FileExtension == S2Q(EbsdLib::Ang::FileExt))
       {
-        phasesName = EbsdLib::AngFile::Phases;
-        eulersName = EbsdLib::AngFile::EulerAngles;
-        xtalName = EbsdLib::AngFile::CrystalStructures;
+        phasesName = S2Q(EbsdLib::AngFile::Phases);
+        eulersName = S2Q(EbsdLib::AngFile::EulerAngles);
+        xtalName = S2Q(EbsdLib::AngFile::CrystalStructures);
       }
-      if(m_InputFileListInfo.FileExtension == EbsdLib::Ctf::FileExt)
+      if(m_InputFileListInfo.FileExtension == S2Q(EbsdLib::Ctf::FileExt))
       {
-        phasesName = EbsdLib::CtfFile::Phases;
-        eulersName = EbsdLib::CtfFile::EulerAngles;
-        xtalName = EbsdLib::CtfFile::CrystalStructures;
+        phasesName = S2Q(EbsdLib::CtfFile::Phases);
+        eulersName = S2Q(EbsdLib::CtfFile::EulerAngles);
+        xtalName = S2Q(EbsdLib::CtfFile::CrystalStructures);
       }
 
       DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(fname);
