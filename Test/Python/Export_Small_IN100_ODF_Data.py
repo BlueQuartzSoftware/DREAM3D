@@ -2,8 +2,6 @@
 # Example pipeline : Export Small IN100 ODF Data
 #
 
-import time
-
 # These are the simpl_py python modules
 
 import simpl
@@ -121,8 +119,6 @@ def pipeline_test(dca):
     pipeline.popFront()
     filter_count = pipeline.size()
     print('Filter Count: %d' % filter_count)
-
-    time.sleep(2)
 
 def pythonic_test(dca):
     err = orientationanalysis.read_ang_data(dca, 'Small IN100 Slice 1', 'Phase Data', 'EBSD Scan Data',

@@ -1,5 +1,3 @@
-import time
-
 # Based on CreateLambertSphereSurface pipeline example
 # Creates a LambertSphereSurface using Python/C++ bindings
 #
@@ -97,8 +95,6 @@ def run_pipeline_test(dca):
     pipeline.run()
     err = pipeline.ErrorCondition
     assert err == 0, f'Execute ErrorCondition: {err}'
-
-    time.sleep(2)
 
 def run_pythonic_test(dca):
     err = simplpy.create_data_container(dca, 'ImageDataContainer')
