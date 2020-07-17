@@ -4,7 +4,7 @@
 
 import simpl
 import simplpy as d3d
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy as orientation_analysis
 import reconstructionpy as reconstruction
@@ -15,7 +15,7 @@ def small_in100_alignment():
     # Create Data Container Array
     dca = simpl.DataContainerArray()
 
-    err = sc.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Reconstruction/SmallIN100.dream3d')
+    err = sh.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Reconstruction/SmallIN100.dream3d')
     assert err == 0, f'Read DataContainerArray Structure Failed {err}'
 
     # Threshold Objects
@@ -66,7 +66,7 @@ def small_in100_alignment():
     assert err == 0, f'GenerateIPFColors ErrorCondition: {err}'
 
     # Write to DREAM3D file
-    err = sc.WriteDREAM3DFile(
+    err = sh.WriteDREAM3DFile(
         sd.GetBuildDirectory() + '/Data/Output/Reconstruction/03_SmallIN100_Aligned.dream3d',
         dca)
     assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'

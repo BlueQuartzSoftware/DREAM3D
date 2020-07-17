@@ -4,7 +4,7 @@
 
 import simpl
 import simplpy
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import itkimageprocessing
 import itkimageprocessingpy
@@ -43,7 +43,7 @@ def image_segmentation():
     assert err == 0, f'ITK Import Image Stack ErrorCondition {err}'
 
     # MultiThresholdObjects filter
-    err = sc.MultiThresholdObjects(dca, 'Mask',
+    err = sh.MultiThresholdObjects(dca, 'Mask',
                                   [(data_container_name, attr_matrix_name, 'ImageData', 2, 0)])
     assert err == 0, f'MultiThresholdObjects ErrorCondition: {err}'
 
@@ -120,7 +120,7 @@ def image_segmentation():
     assert err == 0, f'FindFeatureClustering ErrorCondition {err}'
 
     # Write to DREAM3D file
-    err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/ImagesStack/Images.dream3d',
+    err = sh.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/ImagesStack/Images.dream3d',
                               dca)
     assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 

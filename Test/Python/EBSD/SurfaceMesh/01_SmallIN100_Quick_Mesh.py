@@ -2,7 +2,7 @@
 
 import simpl
 import simplpy as d3d
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import samplingpy as sampling
 import surfacemeshingpy as surfacemeshing
@@ -12,7 +12,7 @@ def small_in100_quickmesh():
     dca = simpl.DataContainerArray()
 
     # Read DREAM3D File
-    err = sc.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Statistics/SmallIN100_CrystalStats.dream3d')
+    err = sh.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Statistics/SmallIN100_CrystalStats.dream3d')
     
     assert err == 0, f'DataContainerReader ErrorCondition {err}'
 
@@ -37,7 +37,7 @@ def small_in100_quickmesh():
     assert err == 0, f'QuickSurfaceMesh ErrorCondition {err}'
 
     # Write to DREAM3D file
-    err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/SurfaceMesh/SmallIN100_Meshed.dream3d',
+    err = sh.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/SurfaceMesh/SmallIN100_Meshed.dream3d',
                               dca)
     assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 

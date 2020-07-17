@@ -3,14 +3,14 @@
 import simpl
 import simplpy as d3d
 import simpl_test_dirs as sd
-import simpl_helpers as sc
+import simpl_helpers as sh
 
 def small_in100_export_stats():
     # Create Data Container Array
     dca = simpl.DataContainerArray()
 
     # Read DREAM3D File
-    err = sc.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Statistics/SmallIN100_Morph.dream3d')
+    err = sh.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Statistics/SmallIN100_Morph.dream3d')
    
     assert err == 0, f'DataContainerReader ErrorCondition {err}'
 

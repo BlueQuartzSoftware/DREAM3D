@@ -4,7 +4,7 @@
 
 import simpl
 import simplpy as d3d
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy as orientation_analysis
 import reconstructionpy as reconstruction
@@ -17,7 +17,7 @@ def small_in100_postseg_processing():
     dca = simpl.DataContainerArray()
 
     # Read DREAM3D File
-    err = sc.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Reconstruction/05_SmallIN100_Segmentation.dream3d')
+    err = sh.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Reconstruction/05_SmallIN100_Segmentation.dream3d')
     assert err == 0, f'Read DataContainerArray Structure Failed {err}'
 
     # Find Feature Phases
@@ -83,7 +83,7 @@ def small_in100_postseg_processing():
     assert err == 0, f'MinNeighbors ErrorCondition {err}'
 
     # Write to DREAM3D file
-    err = sc.WriteDREAM3DFile(
+    err = sh.WriteDREAM3DFile(
         sd.GetBuildDirectory() + '/Data/Output/Reconstruction/06_SmallIN100_Postsegmentation.dream3d',
         dca)
     assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'

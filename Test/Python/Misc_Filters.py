@@ -4,7 +4,7 @@
 # These are the simpl_py python modules
 import simpl
 import simplpy
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy
 import samplingpy
@@ -42,7 +42,7 @@ def misc_filters_test():
 
     # Rotate Sample Reference Frame
     err = simplpy.rotate_sample_ref_frame(dca, simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD_Data', ''),
-                                             simpl.FloatVec3([0.0, 1.0, 0.0]), 180.0, False, sc.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
+                                             simpl.FloatVec3([0.0, 1.0, 0.0]), 180.0, False, sh.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
     assert err == 0, f'RotateSampleRefFrame ErrorCondition: {err}'
 
     # Rotate Euler Reference Frame

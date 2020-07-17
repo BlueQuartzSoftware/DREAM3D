@@ -4,7 +4,7 @@ Pipeline example based on Import_ASCII
 
 import simpl
 import simplpy
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy
 import itkimageprocessing
@@ -36,7 +36,7 @@ def import_ascii():
     assert err == 0, f'DataContainer ErrorCondition: {err}'
 
     # Create Geometry
-    err = sc.CreateGeometry(dca, sc.ArrayHandling.CopyArrays, simpl.IGeometry.Type.Image, 'DataContainer', False, 
+    err = sh.CreateGeometry(dca, sh.ArrayHandling.CopyArrays, simpl.IGeometry.Type.Image, 'DataContainer', False, 
                             dimensions=simpl.IntVec3([189, 201, 1]), origin=simpl.FloatVec3([0, 0, 0]),
                             spacing=simpl.FloatVec3([0.25, 0.25, 1]), cell_attribute_matrix_name='CellData')
     assert err == 0, f'Create Geometry -  ErrorCondition: {err}'
@@ -44,7 +44,7 @@ def import_ascii():
     # Import ASCII Data- Vertex Coordinates (Using helper function)
     importFile = sd.GetDataDirectory() + '/Data/SmallIN100/Slice_1.ang'
 
-    err = simplpy.read_ascii_data(dca, sc.CreateAsciiWizardData(importFile, 33, 38021, [' '], True, True, 
+    err = simplpy.read_ascii_data(dca, sh.CreateAsciiWizardData(importFile, 33, 38021, [' '], True, True, 
                                   simpl.DataArrayPath('DataContainer', 'CellData', ''),
                                   ['phi1', 'Phi', 'phi2', 'x', 'y', 'Image Quality',
                                    'Confidence Index', 'Phase', 'SEM Signal', 'Fit'],
@@ -61,7 +61,7 @@ def import_ascii():
 
     # Delete Data
     # Remove array helper function:
-    err = sc.RemoveArrays(dca, [('DataContainer', 'CellData', 'phi1'), ('DataContainer', 'CellData', 'phi2'),
+    err = sh.RemoveArrays(dca, [('DataContainer', 'CellData', 'phi1'), ('DataContainer', 'CellData', 'phi2'),
                                 ('DataContainer', 'CellData', 'Phi')])
     assert err, f'Remove Arrays -  ErrorCondition: {err}'
 

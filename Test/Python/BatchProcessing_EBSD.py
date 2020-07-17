@@ -8,7 +8,7 @@ import numpy as np
 
 import simpl
 import simplpy
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy
 import samplingpy
@@ -31,7 +31,7 @@ def batch_process():
 
         # Rotate Sample Reference Frame
         err = simplpy.rotate_sample_ref_frame(dca, simpl.DataArrayPath('EBSD Scan', 'Scan Data', ''),
-                                                simpl.FloatVec3([0.0, 1.0, 0.0]), 180.0, False, sc.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
+                                                simpl.FloatVec3([0.0, 1.0, 0.0]), 180.0, False, sh.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
         assert err == 0, f'RotateSampleRefFrame ErrorCondition: {err}'
 
         # Rotate Euler Reference Frame
@@ -40,7 +40,7 @@ def batch_process():
         assert err == 0, f'RotateEulerRefFrame ErrorCondition: {err}'
 
         # Threshold Objects
-        err = sc.MultiThresholdObjects(dca, 'Mask', [('EBSD Scan', 'Scan Data', 'Confidence Index', '>', 0.1)])
+        err = sh.MultiThresholdObjects(dca, 'Mask', [('EBSD Scan', 'Scan Data', 'Confidence Index', '>', 0.1)])
         assert err == 0, f'MultiThresholdObjects ErrorCondition: {err}'
 
         # Generate IPF Colors
@@ -63,7 +63,7 @@ def batch_process():
 
         # Write to DREAM3D file
         output_file = f'{sd.GetBuildDirectory()}/Data/Output/Examples/Small_IN100_Batch_{i}.dream3d'
-        err = sc.WriteDREAM3DFile(output_file, dca)
+        err = sh.WriteDREAM3DFile(output_file, dca)
         assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
         #----------------------------------------------------------------------
         # End of Processing Loop

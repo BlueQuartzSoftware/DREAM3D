@@ -3,7 +3,7 @@
 
 import simpl
 import simplpy
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import genericpy as generic
 import statisticspy as statistics
@@ -120,7 +120,7 @@ def link_feature_map_to_element_array_test():
     assert err == 0, f'LinkFeatureMapToElementArray ErrorCondition {err}'
 
     # Write to DREAM3D file
-    err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() +
+    err = sh.WriteDREAM3DFile(sd.GetBuildDirectory() +
                               '/Data/Output/CoreFilterTests/' + 
                               'LinkFeatureMapToElementArray.dream3d',
                               dca)

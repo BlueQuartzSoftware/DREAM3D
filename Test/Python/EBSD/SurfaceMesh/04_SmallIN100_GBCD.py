@@ -2,7 +2,7 @@
 
 import simpl
 import simplpy as d3d
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy as orientationanalysis
 import importexportpy
@@ -12,7 +12,7 @@ def small_in100_gbcd():
     dca = simpl.DataContainerArray()
 
     # Read DREAM3D File
-    err = sc.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/SurfaceMesh/SmallIN100_MeshStats.dream3d')
+    err = sh.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/SurfaceMesh/SmallIN100_MeshStats.dream3d')
     
     assert err == 0, f'DataContainerReader ErrorCondition {err}'
 
@@ -43,7 +43,7 @@ def small_in100_gbcd():
     assert err == 0, f'VisualizeGBCDPoleFigure ErrorCondition {err}'
 
     # Write to DREAM3D file
-    err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/SurfaceMesh/SmallIN100_GBCD.dream3d',
+    err = sh.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/SurfaceMesh/SmallIN100_GBCD.dream3d',
                               dca)
     assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 

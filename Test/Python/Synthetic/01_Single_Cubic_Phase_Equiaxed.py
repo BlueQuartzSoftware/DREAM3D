@@ -3,7 +3,7 @@ Test of Single Cubic Phase Equiaxed Pipeline example in Python
 '''
 
 import simpl
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy as orientationanalysis
 import statisticspy as statistics
@@ -71,7 +71,7 @@ def single_cubic_phase_equiaxed():
     #                                                                                            'Sigma'], ['0']))
 
     # Using the GenerateStatsData helper function
-    # err = sc.GenerateStatsData(dca, 'Primary', 'Primary', 0, 1, 0,
+    # err = sh.GenerateStatsData(dca, 'Primary', 'Primary', 0, 1, 0,
     #                             1, 2.3, 0.4, 4, 3, 10.5,
     #                             True, 'StatsGeneratorDataContainer',
     #                             'CellEnsembleData', False,
@@ -87,9 +87,9 @@ def single_cubic_phase_equiaxed():
     #                                                                                            'Sigma'], ['0']))
 
     # Using the GenerateStatsData and CreateDynamicTableData functions
-    euler_dynamic_table_data = sc.CreateDynamicTableData([[0, 0, 0, 0, 0]],
+    euler_dynamic_table_data = sh.CreateDynamicTableData([[0, 0, 0, 0, 0]],
                                                       ['Euler 1', 'Euler 2', 'Euler 3', 'Weight', 'Sigma'], ['0'])
-    axis_dynamic_table_data = sc.CreateDynamicTableData([[0, 0, 0, 0, 0]],
+    axis_dynamic_table_data = sh.CreateDynamicTableData([[0, 0, 0, 0, 0]],
                                                      ['Angle(w)', 'Axis (h)', 'Axis (k)', 'Axis (l)', 'Weight (MRD)'],
                                                      ['0'])
     err = syntheticbuilding.generate_primary_stats_data(dca, 'Primary', 0, 1, 0,
@@ -141,8 +141,8 @@ def single_cubic_phase_equiaxed():
                                                 simpl.DataArrayPath('StatsGeneratorDataContainer',
                                                                     'CellEnsembleData', 'ShapeTypes'),
                                                 simpl.DataArrayPath('', '', ''), False,
-                                                sc.FeatureGeneration.GenerateFeatures, '', '', False,
-                                                False, sc.SaveShapeDescArrays.DoNotSave,
+                                                sh.FeatureGeneration.GenerateFeatures, '', '', False,
+                                                False, sh.SaveShapeDescArrays.DoNotSave,
                                                 simpl.DataArrayPath('', '', ''),
                                                 simpl.DataArrayPath('', '', ''))
     assert err == 0, f'PackPrimaryPhases ErrorCondition: {err}'
@@ -190,7 +190,7 @@ def single_cubic_phase_equiaxed():
     assert err == 0, f'GenerateIPFColors ErrorCondition: {err}'
 
     # Write to DREAM3D file
-    err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Synthetic/01_CubicSingleEquiaxedOut.dream3d',
+    err = sh.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Synthetic/01_CubicSingleEquiaxedOut.dream3d',
                               dca)
     assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 

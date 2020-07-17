@@ -4,7 +4,7 @@
 
 import simpl
 import simplpy as d3d
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy as orientation_analysis
 
@@ -13,7 +13,7 @@ def small_in100_presegmentation_processing():
     dca = simpl.DataContainerArray()
 
     # Read DREAM3D File
-    err = sc.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Reconstruction/03_SmallIN100_Aligned.dream3d')
+    err = sh.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Reconstruction/03_SmallIN100_Aligned.dream3d')
     assert err == 0, f'Read DataContainerArray Structure Failed {err}'
 
     # Neighbor Orientation Comparison (Bad Data)
@@ -41,7 +41,7 @@ def small_in100_presegmentation_processing():
     assert err == 0, f'NeighborOrientationCorrelation ErrorCondition {err}'
 
     # Delete Data (Remove array helper function)
-    sc.RemoveArrays(dca, [('Small IN100', 'EBSD Scan Data', 'IPFColor')])
+    sh.RemoveArrays(dca, [('Small IN100', 'EBSD Scan Data', 'IPFColor')])
 
     # Generate IPF Colors
     err = orientation_analysis.generate_ipf_colors(dca, simpl.FloatVec3([0, 0, 1]),
@@ -55,7 +55,7 @@ def small_in100_presegmentation_processing():
     assert err == 0, f'GenerateIPFColors ErrorCondition: {err}'
 
     # Write to DREAM3D file
-    err = sc.WriteDREAM3DFile(
+    err = sh.WriteDREAM3DFile(
         sd.GetBuildDirectory() + '/Data/Output/Reconstruction/04_SmallIN100_Presegmentation.dream3d',
         dca)
     assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'

@@ -9,7 +9,7 @@
 
 import simpl
 import simplpy
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy as orientationanalysis
 
@@ -119,7 +119,7 @@ def run_pythonic_test(dca):
                                     simpl.InitializationType.Manual, '128', (0.0, 151.1))
     assert err == 0, f'DataArray ErrorCondition: {err}'
 
-    err = orientationanalysis.create_lambert_sphere(dca, sc.Hemisphere.Northern,
+    err = orientationanalysis.create_lambert_sphere(dca, sh.Hemisphere.Northern,
                                                     simpl.DataArrayPath('ImageDataContainer', 'CellAttributeMatrix',
                                                                         'ScalarValues'),
                                                     'QuadDataContainer', 'TriangleDataContainer', 'EdgeDataContainer',

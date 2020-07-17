@@ -2,7 +2,7 @@
 
 import simpl
 import simplpy as d3d
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy as orientation_analysis
 import reconstructionpy as reconstruction
@@ -18,7 +18,7 @@ def small_in100_full_reconstruction():
     err = orientation_analysis.read_h5_ebsd(dca, 'Small IN100', 'Phase Data', 'EBSD Scan Data',
                                             sd.GetBuildDirectory() +
                                             '/Data/Output/Reconstruction/SmallIN100.h5ebsd',
-                                            1, 117, True, sc.AngleRepresentation.Radians,
+                                            1, 117, True, sh.AngleRepresentation.Radians,
                                             simpl.StringSet({'Fit', 'Image Quality', 'EulerAngles',
                                                              'SEM Signal', 'Confidence Index', 'Phases'}))
     assert err == 0, f'ReadH5Ebsd ErrorCondition {err}'
@@ -161,17 +161,17 @@ def small_in100_full_reconstruction():
     assert err == 0, f'FillBadData ErrorCondition {err}'
 
     # Erode / Dilate Bad Data #1
-    err = processing.erode_dilate_bad_data(dca, sc.BadDataOperation.Erode, 2, True, True, True,
+    err = processing.erode_dilate_bad_data(dca, sh.BadDataOperation.Erode, 2, True, True, True,
                                            simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'))
     assert err == 0, f'ErodeDilateBadData #1 ErrorCondition {err}'
 
     # Erode / Dilate Bad Data #2
-    err = processing.erode_dilate_bad_data(dca, sc.BadDataOperation.Dilate, 2, True, True, True,
+    err = processing.erode_dilate_bad_data(dca, sh.BadDataOperation.Dilate, 2, True, True, True,
                                            simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'))
     assert err == 0, f'ErodeDilateBadData #1 ErrorCondition {err}'
 
     # Write to DREAM3D file
-    err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Reconstruction/SmallIN100_Final.dream3d',
+    err = sh.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Reconstruction/SmallIN100_Final.dream3d',
                               dca)
     assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 

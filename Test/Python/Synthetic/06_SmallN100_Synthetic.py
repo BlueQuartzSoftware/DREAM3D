@@ -4,7 +4,7 @@
 
 import simplpy as d3d
 import simpl
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy as orientationanalysis
 import genericpy as generic
@@ -113,7 +113,7 @@ def small_in100_test():
     dcap.getDataContainerProxy('Small IN100').getAttributeMatrixProxy('NewGrain Data').getDataArrayProxy(
         'Active').Flag =2
 
-    dcap_ = sc.CreateDataContainerProxy(dca, [['Small IN100', 'EBSD Scan Data', 'Confidence Index'],
+    dcap_ = sh.CreateDataContainerProxy(dca, [['Small IN100', 'EBSD Scan Data', 'Confidence Index'],
                                               ['Small IN100', 'EBSD Scan Data', 'CriticalField'],
                                               ['Small IN100', 'EBSD Scan Data', 'EulerAngles'],
                                               ['Small IN100', 'EBSD Scan Data', 'FeatureIds'],
@@ -207,10 +207,10 @@ def small_in100_test():
                                                   rdf_array_path, max_min_rdf_array_path,
                                                   feature_euler_angles_array_path, avg_quats_array_path,
                                                   'Statistics', False,
-                                                  True, sc.DistributionFitType.Lognormal,
-                                                  True, sc.DistributionFitType.Beta,
-                                                  True, sc.DistributionFitType.Beta,
-                                                  True, sc.DistributionFitType.Lognormal,
+                                                  True, sh.DistributionFitType.Lognormal,
+                                                  True, sh.DistributionFitType.Beta,
+                                                  True, sh.DistributionFitType.Beta,
+                                                  True, sh.DistributionFitType.Lognormal,
                                                   True, False, False, False, 1)
     assert err == 0, f'GenerateEnsembleStatistics ErrorCondition: {err}'
 
@@ -251,7 +251,7 @@ def small_in100_test():
                                                 simpl.DataArrayPath('Small IN100',
                                                                     'Phase Data', 'ShapeTypes'),
                                                 simpl.DataArrayPath('', '', ''), False,
-                                                sc.FeatureGeneration.GenerateFeatures,
+                                                sh.FeatureGeneration.GenerateFeatures,
                                                 '', '', False, False, False,
                                                 simpl.DataArrayPath('', '', ''),
                                                 simpl.DataArrayPath('', '', ''))
@@ -303,14 +303,14 @@ def small_in100_test():
     # am = dca.getAttributeMatrix(simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', ''))
     # data_array = am.getAttributeArray('IPFColor')
     # data = data_array.Data
-    # newdata = sc.ConvertToDataArray('IPFColor', np.zeros_like(data).astype('uint8'))
+    # newdata = sh.ConvertToDataArray('IPFColor', np.zeros_like(data).astype('uint8'))
     # am.addAttributeArray('IPFColor', newdata[1])
     # print(type(dataArray.Data))
     # print('Max: %d' % max(dataArray.Data))
     # print('Min: %d' % min(dataArray.Data))
 
     # Write to DREAM3D file
-    err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Synthetic/06_SmallIN100Synthetic.dream3d',
+    err = sh.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Synthetic/06_SmallIN100Synthetic.dream3d',
                               dca)
     assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 

@@ -3,7 +3,7 @@ Test of Two Phase Cubic Hexagonal Particles Equiaxed Pipeline example in Python
 '''
 
 import simpl
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy as orientationanalysis
 import genericpy as generic
@@ -167,7 +167,7 @@ def two_phase_test():
     assert err == 0, f'GenerateIPFColors ErrorCondition: {err}'
 
     # Write to DREAM3D file
-    err = sc.WriteDREAM3DFile(
+    err = sh.WriteDREAM3DFile(
         sd.GetBuildDirectory() + '/Data/Output/Synthetic/04_TwoPhaseCubicHexagonalEquiaxed.dream3d',
         dca)
     assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'

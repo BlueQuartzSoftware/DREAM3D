@@ -4,7 +4,7 @@
 
 import simpl
 import simplpy
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy
 import samplingpy
@@ -26,7 +26,7 @@ def inl_export():
 
     # Rotate Sample Reference Frame
     err = simplpy.rotate_sample_ref_frame(dca, simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD Scan Data', ''),
-                                             simpl.FloatVec3([0.0, 1.0, 0.0]), 180.0, False, sc.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
+                                             simpl.FloatVec3([0.0, 1.0, 0.0]), 180.0, False, sh.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
     assert err == 0, f'RotateSampleRefFrame ErrorCondition: {err}'
 
     # Rotate Euler Reference Frame
@@ -36,7 +36,7 @@ def inl_export():
     assert err == 0, f'RotateEulerRefFrame ErrorCondition: {err}'
 
     # MultiThresholdObjects filter
-    err = sc.MultiThresholdObjects(dca, 'Mask',
+    err = sh.MultiThresholdObjects(dca, 'Mask',
                                    [('Small IN100 Slice 1', 'EBSD Scan Data', 'Confidence Index', 1, 0.1),
                                     ('Small IN100 Slice 1', 'EBSD Scan Data', 'Image Quality', 1, 120)])
     assert err == 0, f'MultiThresholdObjects ErrorCondition: {err}'

@@ -3,7 +3,7 @@ Test of Single Cubic Phase Equiaxed Pipeline example in Python
 '''
 
 import simpl
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy as orientationanalysis
 import statisticspy as statistics
@@ -116,7 +116,7 @@ def single_cubic_phase_rolled():
     assert err == 0, f'GenerateIPFColors ErrorCondition: {err}'
 
     # Write to DREAM3D file
-    err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Synthetic/03_CubicSingleRolledOut.dream3d',
+    err = sh.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Synthetic/03_CubicSingleRolledOut.dream3d',
                               dca)
     assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 

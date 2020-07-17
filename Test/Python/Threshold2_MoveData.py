@@ -5,7 +5,7 @@
 
 import simpl
 import simplpy
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy as orientationanalysis
 import samplingpy as sampling
@@ -26,7 +26,7 @@ def threshold2_move_data_test():
     assert err == 0, f'ReadAngData ErrorCondition: {err}'
 
     err = simplpy.rotate_sample_ref_frame(dca, simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', ''),
-                                           simpl.FloatVec3([0.0, 1.0, 0.0]), 180.0, False, sc.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
+                                           simpl.FloatVec3([0.0, 1.0, 0.0]), 180.0, False, sh.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
     assert err == 0, f'RotateSampleRefFrame ErrorCondition: {err}'
 
     err = orientationanalysis.rotate_euler_ref_frame(dca, simpl.FloatVec3([0.0, 0.0, 1.0]), 90.0,
@@ -35,7 +35,7 @@ def threshold2_move_data_test():
     assert err == 0, f'RotateEulerRefFrame ErrorCondition: {err}'
 
     # MultiThresholdObjects filter
-    err = sc.MultiThresholdObjects2(dca, ['Small IN100', 'EBSD Scan Data', ''], 'Mask',
+    err = sh.MultiThresholdObjects2(dca, ['Small IN100', 'EBSD Scan Data', ''], 'Mask',
                                     ['AND', ('Confidence Index', 1, 0.1), ('Image Quality', 1, 400),
                                      ['OR', ('Image Quality', 0, 0)]])
     assert err == 0, f'MultiThresholdObjects ErrorCondition: {err}'
@@ -53,21 +53,21 @@ def threshold2_move_data_test():
 
     # Create Attribute Matrix
     # Using helper function
-    dynamic_table_data = sc.CreateDynamicTableData([[189, 201, 1]], ['0', '1', '2'], ['1'])
+    dynamic_table_data = sh.CreateDynamicTableData([[189, 201, 1]], ['0', '1', '2'], ['1'])
     err = simplpy.create_attribute_matrix(dca, simpl.DataArrayPath('Extra_DataContainer', 'Positions', ''), 13,
                                           dynamic_table_data)
 
     assert err == 0, f'CreateAttributeMatrix ErrorCondition: {err}'
 
     # Move Multiple Data Arrays
-    err = sc.MoveMultiData(dca, sc.WhatToMove.AttributeArray, [('Small IN100', 'EBSD Scan Data', 'X Position'),
+    err = sh.MoveMultiData(dca, sh.WhatToMove.AttributeArray, [('Small IN100', 'EBSD Scan Data', 'X Position'),
                                                                simpl.DataArrayPath('Small IN100', 'EBSD Scan Data',
                                                                                    'Y Position')],
                            simpl.DataArrayPath('Extra_DataContainer', 'Positions', ''))
     assert err == 0, f'MoveMultiData ErrorCondition: {err}'
 
     # Move Data Arrays
-    err = sc.MoveData(dca, 'Attribute Array', simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'SEM Signal'),
+    err = sh.MoveData(dca, 'Attribute Array', simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'SEM Signal'),
                       simpl.DataArrayPath('Extra_DataContainer', 'Positions', ''))
     assert err == 0, f'MoveData ErrorCondition: {err}'
 
@@ -82,7 +82,7 @@ def threshold2_move_data_test():
     assert err == 0, f'SetOriginResolutionImageGeom ErrorCondition: {err}'
 
     # Write to DREAM3D File 1
-    err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Example/OriginChange.dream3d', dca)
+    err = sh.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Example/OriginChange.dream3d', dca)
     assert err == 0, f'WriteDREAM3DFile 1 ErrorCondition: {err}'
 
     # Pipeline Annotation 4
@@ -94,7 +94,7 @@ def threshold2_move_data_test():
     assert err == 0, f'ScaleVolume ErrorCondition: {err}'
 
         # Write to DREAM3D File 2
-    err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Example/ScaleVolume.dream3d', dca)
+    err = sh.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Example/ScaleVolume.dream3d', dca)
     assert err == 0, f'WriteDREAM3DFile 2 ErrorCondition: {err}'
 
 if __name__ == '__main__':

@@ -2,7 +2,7 @@
 
 import simpl
 import simplpy as d3d
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import genericpy as generic
 import statisticspy as statistics
@@ -111,7 +111,7 @@ def small_in100_morph_stats():
     assert err == 0, f'FindSurfaceAreaToVolume ErrorCondition {err}'
 
     # Write to DREAM3D file
-    err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Statistics/SmallIN100_Morph.dream3d', dca)
+    err = sh.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/Statistics/SmallIN100_Morph.dream3d', dca)
     assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 
 if __name__ == '__main__':
