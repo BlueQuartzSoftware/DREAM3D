@@ -4,7 +4,7 @@
 
 import simpl
 import simplpy as d3d
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 
 def small_in100_transfer_field_data():
@@ -12,10 +12,9 @@ def small_in100_transfer_field_data():
     dca = simpl.DataContainerArray()
 
     # Read DREAM3D File
-    err = sc.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Statistics/SmallIN100_Morph.dream3d')
+    err = sh.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + '/Data/Output/Statistics/SmallIN100_Morph.dream3d')
    
-    if err < 0:
-        print('DataContainerReader ErrorCondition %d' % err)
+    assert err == 0, f'DataContainerReader ErrorCondition {err}'
 
     # Copy Feature Array to Element Array
     err = d3d.copy_feature_array_to_element_array(dca,
@@ -23,15 +22,13 @@ def small_in100_transfer_field_data():
                                                                       'EquivalentDiameters'),
                                                   simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'),
                                                   'EquivalentDiameters')
-    if err < 0:
-        print('CopyFeatureArrayToElementArray ErrorCondition %d' % err)
+    assert err == 0, f'CopyFeatureArrayToElementArray ErrorCondition {err}'
 
     # Write to DREAM3D file
-    err = sc.WriteDREAM3DFile(
+    err = sh.WriteDREAM3DFile(
         sd.GetBuildDirectory() + '/Data/Output/Statistics/SmallIN100_TransferFieldData.dream3d',
         dca)
-    if err < 0:
-        print('WriteDREAM3DFile ErrorCondition: %d' % err)
+    assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 
 if __name__ == '__main__':
     small_in100_transfer_field_data()

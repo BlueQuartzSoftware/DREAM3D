@@ -18,15 +18,13 @@ def small_in100_initial_visualization():
                                             1, 117, True, simpl_helpers.AngleRepresentation.Radians,
                                             simpl.StringSet({'Fit', 'Image Quality', 'EulerAngles',
                                                              'SEM Signal', 'Confidence Index', 'Phases'}))
-    if err < 0:
-        print('ReadH5Ebsd ErrorCondition %d' % err)
+    assert err == 0, f'ReadH5Ebsd ErrorCondition {err}'
 
     # Write to DREAM3D file
     err = simpl_helpers.WriteDREAM3DFile(
         sd.GetBuildDirectory() + '/Data/Output/Reconstruction/SmallIN100.dream3d',
         dca)
-    if err < 0:
-        print('WriteDREAM3DFile ErrorCondition: %d' % err)
+    assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 
 if __name__ == '__main__':
     small_in100_initial_visualization()

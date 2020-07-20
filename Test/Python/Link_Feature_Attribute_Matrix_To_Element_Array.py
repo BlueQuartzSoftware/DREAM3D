@@ -3,7 +3,7 @@
 
 import simpl
 import simplpy
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import genericpy as generic
 import statisticspy as statistics
@@ -62,37 +62,32 @@ def link_feature_map_to_element_array_test():
                                         sd.GetBuildDirectory() +
                                         '/Data/Output/Reconstruction/SmallIN100_Final.dream3d',
                                         False, dcap)
-    if err < 0:
-        print('DataContainerReader ErrorCondition %d' % err)
+    assert err == 0, f'DataContainerReader ErrorCondition {err}'
 
     # Find Feature Centroids
     err = generic.find_feature_centroids(dca, simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'),
                                          simpl.DataArrayPath('Small IN100', 'Grain Data', 'Centroids'))
-    if err < 0:
-        print('FindFeatureCentroids ErrorCondition %d' % err)
+    assert err == 0, f'FindFeatureCentroids ErrorCondition {err}'
 
     # Find Feature Sizes
     err = statistics.find_sizes(dca, simpl.DataArrayPath('Small IN100', 'Grain Data', ''),
                                 simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'),
                                 'Size Volumes', 'EquivalentDiameters', 'NumElements', False)
-    if err < 0:
-        print('FindSizes ErrorCondition %d' % err)
+    assert err == 0, f'FindSizes ErrorCondition {err}'
 
     # Find Feature Shapes
     err = statistics.find_shapes(dca, simpl.DataArrayPath('Small IN100', 'Grain Data', ''),
                                  simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'),
                                  simpl.DataArrayPath('Small IN100', 'Grain Data', 'Centroids'),
                                  'Omega3s', 'Shape Volumes', 'AxisLengths', 'AxisEulerAngles', 'AspectRatios')
-    if err < 0:
-        print('FindSizes ErrorCondition %d' % err)
+    assert err == 0, f'FindSizes ErrorCondition {err}'
 
     # Find Feature Neighbors
     err = statistics.find_neighbors(dca, simpl.DataArrayPath('Small IN100', 'Grain Data', ''),
                                     'SharedSurfaceAreaList', 'NeighborList',
                                     simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'),
                                     '', 'NumNeighbors', '', False, False)
-    if err < 0:
-        print('FindNeighbors ErrorCondition %d' % err)
+    assert err == 0, f'FindNeighbors ErrorCondition {err}'
 
     # Find Feature Neighborhoods
     err = statistics.find_neighborhoods(dca, 'NeighborhoodList', 1,
@@ -100,24 +95,21 @@ def link_feature_map_to_element_array_test():
                                         simpl.DataArrayPath('Small IN100', 'Grain Data', 'Phases'),
                                         simpl.DataArrayPath('Small IN100', 'Grain Data', 'Centroids'),
                                         'Neighborhoods')
-    if err < 0:
-        print('FindNeighborhoods ErrorCondition %d' % err)
+    assert err == 0, f'FindNeighborhoods ErrorCondition {err}'
 
     # Find Euclidean Distance Map
     err = statistics.find_euclidean_dist_map(dca,
                                              simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'),
                                              'GBManhattanDistances', 'TJManhattanDistances', 'QPManhattanDistances',
                                              'NearestNeighbors', True, True, True, False, True)
-    if err < 0:
-        print('FindEuclideanDistanceMap ErrorCondition %d' % err)
+    assert err == 0, f'FindEuclideanDistanceMap ErrorCondition {err}'
 
     # Find Surface Area to Volume and Sphericity
     err = statistics.find_surface_area_to_volume(dca,
                                                  simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'),
                                                  simpl.DataArrayPath('Small IN100', 'Grain Data', 'NumElements'),
                                                  'SurfaceAreaVolumeRatio', 'Sphericity', True)
-    if err < 0:
-        print('FindSurfaceAreaToVolume ErrorCondition %d' % err)
+    assert err == 0, f'FindSurfaceAreaToVolume ErrorCondition {err}'
 
     # Link Feature Attribute Matrix to Element Attribute Array 
     err = simplpy.link_feature_map_to_element_array(dca, 'FeatureAttributeMatrix',
@@ -125,16 +117,14 @@ def link_feature_map_to_element_array_test():
                                                                         'EBSD Scan Data',
                                                                         'FeatureIds'),
                                                     'Active')
-    if err < 0:
-        print('LinkFeatureMapToElementArray ErrorCondition %d' % err)
+    assert err == 0, f'LinkFeatureMapToElementArray ErrorCondition {err}'
 
     # Write to DREAM3D file
-    err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() +
+    err = sh.WriteDREAM3DFile(sd.GetBuildDirectory() +
                               '/Data/Output/CoreFilterTests/' + 
                               'LinkFeatureMapToElementArray.dream3d',
                               dca)
-    if err < 0:
-        print('WriteDREAM3DFile ErrorCondition: %d' % err)
+    assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 
 if __name__ == '__main__':
     link_feature_map_to_element_array_test()

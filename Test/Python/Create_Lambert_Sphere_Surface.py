@@ -1,5 +1,3 @@
-import time
-
 # Based on CreateLambertSphereSurface pipeline example
 # Creates a LambertSphereSurface using Python/C++ bindings
 #
@@ -11,7 +9,7 @@ import time
 
 import simpl
 import simplpy
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy as orientationanalysis
 
@@ -92,25 +90,19 @@ def run_pipeline_test(dca):
     pipeline.pushBack(data_container_writer)
 
     err = pipeline.preflightPipeline()
-    if err < 0:
-        print('Preflight ErrorCondition: %d' % err)
+    assert err == 0, f'Preflight ErrorCondition: {err}'
 
     pipeline.run()
     err = pipeline.ErrorCondition
-    if err < 0:
-        print('Execute ErrorCondition: %d' % err)
-
-    time.sleep(2)
+    assert err == 0, f'Execute ErrorCondition: {err}'
 
 def run_pythonic_test(dca):
     err = simplpy.create_data_container(dca, 'ImageDataContainer')
-    if err < 0:
-        print('DataContainer ErrorCondition: %d' % err)
+    assert err == 0, f'DataContainer ErrorCondition: {err}'
 
     err = simplpy.create_image_geometry(dca, 'ImageDataContainer', simpl.IntVec3([101, 101, 1]), simpl.FloatVec3([0, 0, 0]),
                                         simpl.FloatVec3([1, 1, 1]))
-    if err < 0:
-        print('ImageGeometry ErrorCondition: %d' % err)
+    assert err == 0, f'ImageGeometry ErrorCondition: {err}'
 
     new_row = simpl.VectorDouble()
     new_row.append(101)
@@ -120,27 +112,23 @@ def run_pythonic_test(dca):
     table_data.append(new_row)
     err = simplpy.create_attribute_matrix(dca, simpl.DataArrayPath('ImageDataContainer', 'CellAttributeMatrix', ''), 3,
                                           simpl.DynamicTableData(table_data, ['0', '1', '2'], ['0']))
-    if err < 0:
-        print('AttributeMatrix ErrorCondition: %d' % err)
+    assert err == 0, f'AttributeMatrix ErrorCondition: {err}'
 
     err = simplpy.create_data_array(dca, simpl.ScalarTypes.UInt8, 1,
                                     simpl.DataArrayPath('ImageDataContainer', 'CellAttributeMatrix', 'ScalarValues'),
                                     simpl.InitializationType.Manual, '128', (0.0, 151.1))
-    if err < 0:
-        print('DataArray ErrorCondition: %d' % err)
+    assert err == 0, f'DataArray ErrorCondition: {err}'
 
-    err = orientationanalysis.create_lambert_sphere(dca, sc.Hemisphere.Northern,
+    err = orientationanalysis.create_lambert_sphere(dca, sh.Hemisphere.Northern,
                                                     simpl.DataArrayPath('ImageDataContainer', 'CellAttributeMatrix',
                                                                         'ScalarValues'),
                                                     'QuadDataContainer', 'TriangleDataContainer', 'EdgeDataContainer',
                                                     'VertexDataContainer', 'VertexAttributeMatrix',
                                                     'EdgeAttributeMatrix', 'FaceAttributeMatrix',
                                                     True, True, True, True)
-    if err < 0:
-        print('LambertSphere ErrorCondition: %d' % err)
+    assert err == 0, f'LambertSphere ErrorCondition: {err}'
     err = simplpy.data_container_writer(dca, sd.GetBuildDirectory() + '/Data/Output/LambertSphere.dream3d', True, False)
-    if err < 0:
-        print('DataContainerWriter ErrorCondition: %d' % err)
+    assert err == 0, f'DataContainerWriter ErrorCondition: {err}'
 
 if __name__ == '__main__':
     create_lambert_sphere_test()

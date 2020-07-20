@@ -3,7 +3,7 @@
 # These are the simpl_py python modules
 
 import simpl
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import itkimageprocessing
 import itkimageprocessingpy
@@ -22,14 +22,12 @@ def image_initial_visualization():
     err = itkimageprocessingpy.itk_import_image_stack(dca, 'RoboMet.3D Image Stack', 'Optical Data',
                                                       simpl.FloatVec3([0, 0, 0]), simpl.FloatVec3([1, 1, 1]),
                                                       file_list_info, 164, 'ImageData')
-    if err < 0:
-        print('ITK Import Image Stack ErrorCondition %d' % err)
+    assert err == 0, f'ITK Import Image Stack ErrorCondition {err}'
 
     # Write to DREAM3D file
-    err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/ImagesStack/Images.dream3d',
+    err = sh.WriteDREAM3DFile(sd.GetBuildDirectory() + '/Data/Output/ImagesStack/Images.dream3d',
                               dca)
-    if err < 0:
-        print('WriteDREAM3DFile ErrorCondition: %d' % err)
+    assert err == 0, f'WriteDREAM3DFile ErrorCondition: {err}'
 
 if __name__ == '__main__':
     image_initial_visualization()

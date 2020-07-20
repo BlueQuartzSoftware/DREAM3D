@@ -4,7 +4,7 @@
 
 import simpl
 import simplpy
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy
 import samplingpy
@@ -22,42 +22,36 @@ def inl_export():
     # ReadAngData
     err = orientationanalysispy.read_ang_data(dca, 'Small IN100 Slice 1', 'Phase Data', 'EBSD Scan Data',
                                               sd.GetDataDirectory() + '/Data/SmallIN100/Slice_1.ang')
-    if err < 0:
-        print('ReadAngData ErrorCondition: %d' % err)
+    assert err == 0, f'ReadAngData ErrorCondition: {err}'
 
     # Rotate Sample Reference Frame
     err = simplpy.rotate_sample_ref_frame(dca, simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD Scan Data', ''),
-                                             simpl.FloatVec3([0.0, 1.0, 0.0]), 180.0, False, sc.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
-    if err < 0:
-        print('RotateSampleRefFrame ErrorCondition: %d' % err)
+                                             simpl.FloatVec3([0.0, 1.0, 0.0]), 180.0, False, sh.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
+    assert err == 0, f'RotateSampleRefFrame ErrorCondition: {err}'
 
     # Rotate Euler Reference Frame
     err = orientationanalysispy.rotate_euler_ref_frame(dca, simpl.FloatVec3([0.0, 0.0, 1.0]), 90.0,
                                                        simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD Scan Data',
                                                                            'EulerAngles'))
-    if err < 0:
-        print('RotateEulerRefFrame ErrorCondition: %d' % err)
+    assert err == 0, f'RotateEulerRefFrame ErrorCondition: {err}'
 
     # MultiThresholdObjects filter
-    err = sc.MultiThresholdObjects(dca, 'Mask',
+    err = sh.MultiThresholdObjects(dca, 'Mask',
                                    [('Small IN100 Slice 1', 'EBSD Scan Data', 'Confidence Index', 1, 0.1),
                                     ('Small IN100 Slice 1', 'EBSD Scan Data', 'Image Quality', 1, 120)])
-    if err < 0:
-        print('MultiThresholdObjects ErrorCondition: %d' % err)
+    assert err == 0, f'MultiThresholdObjects ErrorCondition: {err}'
 
     # Convert Orientation Representation
     err = orientationanalysispy.convert_orientations(dca, 0, 2,
                                                      simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD Scan Data',
                                                                          'EulerAngles'),
                                                      'Quats')
-    if err < 0:
-        print('ConvertOrientation ErrorCondition: %d' % err)
+    assert err == 0, f'ConvertOrientation ErrorCondition: {err}'
 
     # Isolate Largest Feature (Identify Sample)
     err = processingpy.identify_sample(dca, False,
                                        simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD Scan Data', 'Mask'))
-    if err < 0:
-        print('IdentifySample ErrorCondition: %d' % err)
+    assert err == 0, f'IdentifySample ErrorCondition: {err}'
 
     # Neighbor Orientation Comparison (Bad Data)
     err = orientationanalysispy.bad_data_neighbor_orientation_check(dca, 5, 4,
@@ -73,8 +67,7 @@ def inl_export():
                                                                     simpl.DataArrayPath('Small IN100 Slice 1',
                                                                                         'EBSD Scan Data',
                                                                                         'Quats'))
-    if err < 0:
-        print('NeighborOrientationComparison ErrorCondition %d' % err)
+    assert err == 0, f'NeighborOrientationComparison ErrorCondition {err}'
 
     # Neighbor Orientation Correlation
     err = orientationanalysispy.neighbor_orientation_correlation(dca, 5, 0.2, 2,
@@ -90,8 +83,7 @@ def inl_export():
                                                                  simpl.DataArrayPath('Small IN100 Slice 1',
                                                                                      'EBSD Scan Data',
                                                                                      'Quats'))
-    if err < 0:
-        print('NeighborOrientationCorrelation ErrorCondition %d' % err)
+    assert err == 0, f'NeighborOrientationCorrelation ErrorCondition {err}'
 
     # Segment Features (Misorientation)
     err = reconstructionpy.ebsd_segment_features(dca, 'Grain Data', 5, True,
@@ -101,22 +93,19 @@ def inl_export():
                                                                      'CrystalStructures'),
                                                  simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD Scan Data', 'Quats'),
                                                  'FeatureIds', 'Active')
-    if err < 0:
-        print('SegmentFeatures ErrorCondition %d' % err)
+    assert err == 0, f'SegmentFeatures ErrorCondition {err}'
 
     # Find Feature Phases
     err = genericpy.find_feature_phases(dca, simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD Scan Data', 'FeatureIds'),
                                         simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD Scan Data', 'Phases'),
                                         simpl.DataArrayPath('Small IN100 Slice 1', 'Grain Data', 'Phases'))
-    if err < 0:
-        print('FindFeaturePhases ErrorCondition %d' % err)
+    assert err == 0, f'FindFeaturePhases ErrorCondition {err}'
 
     # Find Number of Features
     err = statisticspy.find_num_features(dca,
                                          simpl.DataArrayPath('Small IN100 Slice 1', 'Grain Data', 'Phases'),
                                          simpl.DataArrayPath('Small IN100 Slice 1', 'Phase Data', 'NumFeatures'))
-    if err < 0:
-        print('FindNumFeatures ErrorCondition %d' % err)
+    assert err == 0, f'FindNumFeatures ErrorCondition {err}'
     
     # Export INL File
     err = orientationanalysispy.inl_writer(dca, sd.GetBuildDirectory() +
@@ -128,8 +117,7 @@ def inl_export():
                                                                'CrystalStructures'),
                                            simpl.DataArrayPath('Small IN100 Slice 1', 'Phase Data', 'NumFeatures'),
                                            simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD Scan Data', 'EulerAngles'))
-    if err < 0:
-        print('INL Writer ErrorCondition %d' % err)
+    assert err == 0, f'INL Writer ErrorCondition {err}'
 
     # Generate IPF Colors
     err = orientationanalysispy.generate_ipf_colors(dca, simpl.FloatVec3([0, 0, 1]),
@@ -143,8 +131,7 @@ def inl_export():
                                                     simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD Scan Data',
                                                                         'Mask'),
                                                     'IPFColor')
-    if err < 0:
-        print('GenerateIPFColors ErrorCondition: %d' % err)
+    assert err == 0, f'GenerateIPFColors ErrorCondition: {err}'
 
     # ITK Image Writer
     image_writer = itkimageprocessing.ITKImageWriter.New()
@@ -153,8 +140,7 @@ def inl_export():
                                                 '/Data/Output/INL_Example/Small_IN100_Slice_1.png',
                                                 simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD Scan Data',
                                                                     'IPFColor'), 0)
-    if err < 0:
-        print('ITKImageWriter ErrorCondition: %d' % err)
+    assert err == 0, f'ITKImageWriter ErrorCondition: {err}'
 
 if __name__ == '__main__':
     inl_export()

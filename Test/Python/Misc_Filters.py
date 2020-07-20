@@ -4,7 +4,7 @@
 # These are the simpl_py python modules
 import simpl
 import simplpy
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy
 import samplingpy
@@ -30,13 +30,11 @@ def misc_filters_test():
     # ReadAngData
     err = orientationanalysispy.read_ang_data(dca, 'ImageDataContainer', 'CellEnsembleData', 'CellData',
                                               sd.GetDataDirectory() + '/Data/SmallIN100/Slice_1.ang')
-    if err < 0:
-        print('ReadAngData ErrorCondition: %d' % err)
+    assert err == 0, f'ReadAngData ErrorCondition: {err}'
 
     # Rename Data Container
     err = simplpy.rename_data_container(dca, 'ImageDataContainer', 'Small IN100 Slice 1')
-    if err < 0:
-        print('RenameDataContainer ErrorCondition: %d' % err)
+    assert err == 0, f'RenameDataContainer ErrorCondition: {err}'
   
     # Rename Attribute Matrix
     err = simplpy.rename_attribute_matrix(dca, simpl.DataArrayPath('Small IN100 Slice 1', 'CellData', ''),
@@ -44,23 +42,20 @@ def misc_filters_test():
 
     # Rotate Sample Reference Frame
     err = simplpy.rotate_sample_ref_frame(dca, simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD_Data', ''),
-                                             simpl.FloatVec3([0.0, 1.0, 0.0]), 180.0, False, sc.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
-    if err < 0:
-        print('RotateSampleRefFrame ErrorCondition: %d' % err)
+                                             simpl.FloatVec3([0.0, 1.0, 0.0]), 180.0, False, sh.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
+    assert err == 0, f'RotateSampleRefFrame ErrorCondition: {err}'
 
     # Rotate Euler Reference Frame
     err = orientationanalysispy.rotate_euler_ref_frame(dca, simpl.FloatVec3([0.0, 0.0, 1.0]), 90.0,
                                                        simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD_Data',
                                                                            'EulerAngles'))
-    if err < 0:
-        print('RotateEulerRefFrame ErrorCondition: %d' % err)
+    assert err == 0, f'RotateEulerRefFrame ErrorCondition: {err}'
 
     # Create String Array
     err = simplpy.create_string_array(dca, 1, simpl.DataArrayPath('Small IN100 Slice 1', 'CellEnsembleData',
                                                                   'Description'),
                                       'A description of the phase')
-    if err < 0:
-        print('CreateStringArray ErrorCondition: %d' % err)
+    assert err == 0, f'CreateStringArray ErrorCondition: {err}'
 
     '''
     Pipeline Annotation:
@@ -101,8 +96,7 @@ def misc_filters_test():
     err = simplpy.generate_color_table(dca, 'jet', jet_json_array, simpl.DataArrayPath('Small IN100 Slice 1',
                                                                                        'EBSD_Data', 'Confidence Index'),
                                        'Confidence_Index_Jet')
-    if err < 0:
-        print('GenerateColorTable #1 ErrorCondition: %d' % err)
+    assert err == 0, f'GenerateColorTable #1 ErrorCondition: {err}'
 
     # ITK Image Writer #1
     image_writer = itkimageprocessing.ITKImageWriter.New()
@@ -111,8 +105,7 @@ def misc_filters_test():
                                                 '/Data/Output/Example/Small_IN100_Slice_1_CI_Jet.png',
                                                 simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD_Data',
                                                                     'Confidence_Index_Jet'), 0)
-    if err < 0:
-        print('ITKImageWriter #1 ErrorCondition: %d' % err)
+    assert err == 0, f'ITKImageWriter #1 ErrorCondition: {err}'
 
     '''
     Pipeline Annotation:
@@ -125,22 +118,19 @@ def misc_filters_test():
                                              simpl.DataArrayPath('Small IN100 Slice 1',
                                                                  'EBSD_Data', 'EulerAngles'),
                                              0, 'phi1')
-    if err < 0:
-        print('ExtractComponentAsArray ErrorCondition %d' % err)
+    assert err == 0, f'ExtractComponentAsArray ErrorCondition {err}'
 
     # Generate color table #1
     err = simplpy.generate_color_table(dca, 'jet', jet_json_array, simpl.DataArrayPath('Small IN100 Slice 1',
                                                                                        'EBSD_Data', 'phi1'),
                                        'phi1_Jet')
-    if err < 0:
-        print('GenerateColorTable #2 ErrorCondition: %d' % err)
+    assert err == 0, f'GenerateColorTable #2 ErrorCondition: {err}'
 
     # ITK Image Writer #2
     err = itkimageprocessingpy.itk_image_writer(dca, sd.GetBuildDirectory() +
                                                 '/Data/Output/Example/Small_IN100_Slice_1_phi1_Jet.png',
                                                 simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD_Data', 'phi1_Jet'), 0)
-    if err < 0:
-        print('ITKImageWriter #2 ErrorCondition: %d' % err)
+    assert err == 0, f'ITKImageWriter #2 ErrorCondition: {err}'
 
 if __name__ == '__main__':
     misc_filters_test()
