@@ -29,6 +29,7 @@ set(RefManual_Docs_ReleaseNotes
     ReleaseNotes_6_2_0
     ReleaseNotes_6_3_0
     ReleaseNotes_6_4_0
+    ReleaseNotes_6_5_0
   )
 
 set(RefManual_Docs_SupportedFileFormats

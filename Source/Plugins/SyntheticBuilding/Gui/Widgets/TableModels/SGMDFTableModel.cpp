@@ -411,7 +411,7 @@ void SGMDFTableModel::setTableData(QVector<float> angles, QVector<float> axis, Q
     m_Weights = weights;
 
     m_Axis.clear();
-    int h, k, l;
+    float h, k, l;
     for(int i = 0; i < axis.size(); ++i)
     {
       h = axis[i];

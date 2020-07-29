@@ -249,21 +249,61 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odf)
   int size = 100000;
 
   // These are the input vectors
-  QVector<float> angles;
-  QVector<float> axes;
-  QVector<float> weights;
+  using ContainerType = QVector<float>;
 
-  angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
-  weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
-  axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
+  ContainerType angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
+  ContainerType axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
+  ContainerType weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
+
+  // Ensure that the angle is in range of [0,pi] and Convert Angles to Radians
+  for(auto& angle : angles)
+  {
+    while(angle > 180.0)
+    {
+      angle -= 180.0;
+    }
+    while(angle < 0.0)
+    {
+      angle += 180.0;
+    }
+    angle *= SIMPLib::Constants::k_DegToRad;
+  }
+
+  // Normalize the axis to unit norm
+  for(int32_t i = 0; i < axes.size(); i = i + 3)
+  {
+    float length = std::sqrt(axes[i] * axes[i] + axes[i + 1] * axes[i + 1] + axes[i + 2] * axes[i + 2]);
+    axes[i] /= length;
+    axes[i + 1] /= length;
+    axes[i + 2] /= length;
+  }
+  using OrientationTransformType = OrientationTransforms<FOrientArrayType, float>;
+
+  // Sanity check the Axis_Angle inputs;
+  for(int32_t i = 0; i < angles.size(); i++)
+  {
+    FOrientArrayType ax(axes[i * 3], axes[i * 3 + 1], axes[i * 3 + 2], angles[i]);
+    OrientationTransformType::ResultType result = OrientationTransformType::ax_check(ax);
+    if(result.result < 0)
+    {
+      QMessageBox msgBox;
+      msgBox.setText("The Axis Angle was not normalized and/or the angle was not within the range of [0, Pi]");
+      msgBox.setStandardButtons(QMessageBox::Ok);
+      msgBox.setDefaultButton(QMessageBox::Ok);
+      std::ignore = msgBox.exec();
+      return;
+    }
+  }
 
   // These are the output vectors
-  QVector<float> x;
-  QVector<float> y;
+  ContainerType x;
+  ContainerType y;
+  ContainerType mdf;
+
   if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
     // Allocate a new vector to hold the mdf data
-    QVector<float> mdf(CubicOps::k_MdfSize);
+    mdf.resize(CubicOps::k_MdfSize);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
     Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), static_cast<size_t>(angles.size()));
     // Now generate the actual XY point data that gets plotted.
@@ -279,7 +319,7 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odf)
   else if(Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
     // Allocate a new vector to hold the mdf data
-    QVector<float> mdf(HexagonalOps::k_MdfSize);
+    mdf.resize(HexagonalOps::k_MdfSize);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
     Texture::CalculateMDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), static_cast<size_t>(angles.size()));
     // Now generate the actual XY point data that gets plotted.
@@ -378,37 +418,43 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
     return;
   }
 
-    QFileInfo fi(file);
-    m_OpenDialogLastFilePath = fi.filePath();
+  QFileInfo fi(file);
+  m_OpenDialogLastFilePath = fi.filePath();
 
-    size_t numMisorients = 0;
-    QString filename = file;
-    std::ifstream inFile;
-    inFile.open(filename.toLatin1().data());
+  QString filename = file;
+  std::ifstream inFile;
+  inFile.open(filename.toLatin1().data(), std::ios::in);
+  if(!inFile.is_open())
+  {
+    return;
+  }
 
-    inFile >> numMisorients;
+  int32_t numMisorients = 0;
 
-    float angle, weight;
-    std::string n1, n2, n3;
-    for(size_t i = 0; i < numMisorients; i++)
-    {
-      inFile >> angle >> n1 >> n2 >> n3 >> weight;
+  inFile >> numMisorients;
 
-      QString axis = QString("<" + QString::fromStdString(n1) + "," + QString::fromStdString(n2) + "," + QString::fromStdString(n3) + ">");
+  QVector<float> angles(numMisorients);
+  QVector<float> axis(numMisorients * 3);
+  QVector<float> weights(numMisorients);
 
-      if(!m_MDFTableModel->insertRow(m_MDFTableModel->rowCount()))
-      {
-        return;
-      }
-      int row = m_MDFTableModel->rowCount() - 1;
-      m_MDFTableModel->setRowData(row, angle, axis, weight);
+  float angle, weight, n1, n2, n3;
+  for(int32_t i = 0; i < numMisorients; i++)
+  {
+    inFile >> angle >> n1 >> n2 >> n3 >> weight;
+    angles[i] = angle;
+    axis[i * 3] = n1;
+    axis[i * 3 + 1] = n2;
+    axis[i * 3 + 2] = n3;
+    weights[i] = weight;
+  }
 
-      m_MDFTableView->resizeColumnsToContents();
-      m_MDFTableView->scrollToBottom();
-      m_MDFTableView->setFocus();
-      QModelIndex index = m_MDFTableModel->index(m_MDFTableModel->rowCount() - 1, 0);
-      m_MDFTableView->setCurrentIndex(index);
-    }
+  m_MDFTableModel->setTableData(angles, axis, weights);
+
+  m_MDFTableView->resizeColumnsToContents();
+  m_MDFTableView->scrollToBottom();
+  m_MDFTableView->setFocus();
+  QModelIndex index = m_MDFTableModel->index(m_MDFTableModel->rowCount() - 1, 0);
+  m_MDFTableView->setCurrentIndex(index);
 }
 
 // -----------------------------------------------------------------------------
