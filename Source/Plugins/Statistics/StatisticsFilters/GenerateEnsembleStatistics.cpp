@@ -410,9 +410,8 @@ void GenerateEnsembleStatistics::dataCheck()
 
   QVector<DataArrayPath> dataArrayPaths;
 
-  m_FeaturePhasesPtr =
-      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FeaturePhasesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeaturePhasesArrayPath(), cDims);
+  if(nullptr != m_FeaturePhasesPtr.lock())
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -423,9 +422,8 @@ void GenerateEnsembleStatistics::dataCheck()
 
   if(m_ComputeSizeDistribution || m_ComputeOmega3Distribution || m_ComputeAspectRatioDistribution || m_ComputeNeighborhoodDistribution || m_CalculateAxisODF)
   {
-    m_BiasedFeaturesPtr =
-        getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>>(this, getBiasedFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_BiasedFeaturesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>>(this, getBiasedFeaturesArrayPath(), cDims);
+    if(nullptr != m_BiasedFeaturesPtr.lock())
     {
       m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -434,9 +432,8 @@ void GenerateEnsembleStatistics::dataCheck()
       dataArrayPaths.push_back(getBiasedFeaturesArrayPath());
     }
 
-    m_EquivalentDiametersPtr =
-        getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getEquivalentDiametersArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_EquivalentDiametersPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getEquivalentDiametersArrayPath(), cDims);
+    if(nullptr != m_EquivalentDiametersPtr.lock())
     {
       m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -448,9 +445,8 @@ void GenerateEnsembleStatistics::dataCheck()
 
   if(m_ComputeNeighborhoodDistribution)
   {
-    m_NeighborhoodsPtr =
-        getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getNeighborhoodsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_NeighborhoodsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_NeighborhoodsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getNeighborhoodsArrayPath(), cDims);
+    if(nullptr != m_NeighborhoodsPtr.lock())
     {
       m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -463,9 +459,8 @@ void GenerateEnsembleStatistics::dataCheck()
   if(m_ComputeAspectRatioDistribution)
   {
     cDims[0] = 2;
-    m_AspectRatiosPtr =
-        getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getAspectRatiosArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_AspectRatiosPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_AspectRatiosPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getAspectRatiosArrayPath(), cDims);
+    if(nullptr != m_AspectRatiosPtr.lock())
     {
       m_AspectRatios = m_AspectRatiosPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -478,8 +473,8 @@ void GenerateEnsembleStatistics::dataCheck()
   if(m_ComputeOmega3Distribution)
   {
     cDims[0] = 1;
-    m_Omega3sPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getOmega3sArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_Omega3sPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_Omega3sPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getOmega3sArrayPath(), cDims);
+    if(nullptr != m_Omega3sPtr.lock())
     {
       m_Omega3s = m_Omega3sPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -492,9 +487,8 @@ void GenerateEnsembleStatistics::dataCheck()
   if(m_CalculateAxisODF)
   {
     cDims[0] = 3;
-    m_AxisEulerAnglesPtr =
-        getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getAxisEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_AxisEulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_AxisEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getAxisEulerAnglesArrayPath(), cDims);
+    if(nullptr != m_AxisEulerAnglesPtr.lock())
     {
       m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -514,9 +508,8 @@ void GenerateEnsembleStatistics::dataCheck()
     }
 
     cDims[0] = 2;
-    m_MaxMinRadialDistFuncPtr =
-        getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getMaxMinRDFArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_MaxMinRadialDistFuncPtr.lock())                                                              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_MaxMinRadialDistFuncPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getMaxMinRDFArrayPath(), cDims);
+    if(nullptr != m_MaxMinRadialDistFuncPtr.lock())
     {
       m_MaxMinRadialDistFunc = m_MaxMinRadialDistFuncPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -525,16 +518,14 @@ void GenerateEnsembleStatistics::dataCheck()
   if(m_CalculateODF || m_CalculateMDF)
   {
     cDims[0] = 1;
-    m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>>(this, getCrystalStructuresArrayPath(),
-                                                                                                      cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_CrystalStructuresPtr.lock())                                                              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>>(this, getCrystalStructuresArrayPath(), cDims);
+    if(nullptr != m_CrystalStructuresPtr.lock())
     {
       m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-    m_SurfaceFeaturesPtr =
-        getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>>(this, getSurfaceFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_SurfaceFeaturesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_SurfaceFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>>(this, getSurfaceFeaturesArrayPath(), cDims);
+    if(nullptr != m_SurfaceFeaturesPtr.lock())
     {
       m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -547,8 +538,8 @@ void GenerateEnsembleStatistics::dataCheck()
   if(m_CalculateODF)
   {
     cDims[0] = 1;
-    m_VolumesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getVolumesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_VolumesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_VolumesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getVolumesArrayPath(), cDims);
+    if(nullptr != m_VolumesPtr.lock())
     {
       m_Volumes = m_VolumesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -558,9 +549,8 @@ void GenerateEnsembleStatistics::dataCheck()
     }
 
     cDims[0] = 3;
-    m_FeatureEulerAnglesPtr =
-        getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getFeatureEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_FeatureEulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getFeatureEulerAnglesArrayPath(), cDims);
+    if(nullptr != m_FeatureEulerAnglesPtr.lock())
     {
       m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -573,8 +563,8 @@ void GenerateEnsembleStatistics::dataCheck()
   if(m_CalculateMDF)
   {
     cDims[0] = 4;
-    m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getAvgQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_AvgQuatsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getAvgQuatsArrayPath(), cDims);
+    if(nullptr != m_AvgQuatsPtr.lock())
     {
       m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -613,7 +603,7 @@ void GenerateEnsembleStatistics::dataCheck()
   cDims[0] = 1;
   tempPath.update(getCellEnsembleAttributeMatrixPath().getDataContainerName(), getCellEnsembleAttributeMatrixPath().getAttributeMatrixName(), getPhaseTypesArrayName());
   m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>>(this, tempPath, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown), cDims, "", DataArrayID31);
-  if(nullptr != m_PhaseTypesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_PhaseTypesPtr.lock())
   {
     m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
     m_PhaseTypeData.resize(m_PhaseTypesPtr.lock()->getNumberOfTuples());

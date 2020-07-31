@@ -124,15 +124,15 @@ void FindBasalLoadingFactor::dataCheck()
   clearWarningCode();
 
   std::vector<size_t> dims(1, 4);
-  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getAvgQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_AvgQuatsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getAvgQuatsArrayPath(), dims);
+  if(nullptr != m_AvgQuatsPtr.lock())
   {
     m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 1;
   m_BasalLoadingFactorPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, getBasalLoadingFactorArrayPath(), 0, dims, "", DataArrayID31);
-  if(nullptr != m_BasalLoadingFactorPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_BasalLoadingFactorPtr.lock())
   {
     m_BasalLoadingFactor = m_BasalLoadingFactorPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

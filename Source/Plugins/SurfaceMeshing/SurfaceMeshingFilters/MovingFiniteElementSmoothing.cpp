@@ -227,9 +227,8 @@ void MovingFiniteElementSmoothing::dataCheck()
     // Check for Node Type Array
     // int size = sm->getVertices()->getNumberOfTuples();
     std::vector<size_t> dims(1, 1);
-    m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(),
-                                                                                                                  dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_SurfaceMeshNodeTypePtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(), dims);
+    if(nullptr != m_SurfaceMeshNodeTypePtr.lock())
     {
       m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */

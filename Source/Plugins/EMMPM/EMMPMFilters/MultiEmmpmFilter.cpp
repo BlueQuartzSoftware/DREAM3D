@@ -227,8 +227,8 @@ void MultiEmmpmFilter::dataCheck()
   std::vector<size_t> cDims(1, 1); // We need a single component, gray scale image
 
 #if 0
-  m_InputImagePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getInputDataArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (nullptr != m_InputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_InputImagePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getInputDataArrayPath(), cDims); 
+  if (nullptr != m_InputImagePtr.lock().get()) 
   {
     m_InputImage = m_InputImagePtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to m_Data from the DataArray<T> object */
@@ -238,7 +238,7 @@ void MultiEmmpmFilter::dataCheck()
   if (getErrorCode() < 0 || nullptr == image.get()) { return; }
 
   m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
-  if (nullptr != m_OutputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if (nullptr != m_OutputImagePtr.lock().get()) 
   {
     m_OutputImage = m_OutputImagePtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to m_Data from the DataArray<T> object */

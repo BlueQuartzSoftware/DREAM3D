@@ -116,15 +116,14 @@ void FindVolFractions::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getCellPhasesArrayPath().getDataContainerName());
 
   std::vector<size_t> cDims(1, 1);
-  m_CellPhasesPtr =
-      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_CellPhasesPtr.lock())                                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getCellPhasesArrayPath(), cDims);
+  if(nullptr != m_CellPhasesPtr.lock())
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m_VolFractionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, getVolFractionsArrayPath(), 0, cDims, "", DataArrayID31);
-  if(nullptr != m_VolFractionsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_VolFractionsPtr.lock())
   {
     m_VolFractions = m_VolFractionsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

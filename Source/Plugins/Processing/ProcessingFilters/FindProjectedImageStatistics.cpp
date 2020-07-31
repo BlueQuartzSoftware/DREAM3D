@@ -260,41 +260,36 @@ void FindProjectedImageStatistics::dataCheck()
 
   std::vector<size_t> cDims(1, 1);
   tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageMinArrayName());
-  m_ProjectedImageMinPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_ProjectedImageMinPtr.lock())                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_ProjectedImageMinPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims);
+  if(nullptr != m_ProjectedImageMinPtr.lock())
   {
     m_ProjectedImageMin = m_ProjectedImageMinPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageMaxArrayName());
-  m_ProjectedImageMaxPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_ProjectedImageMaxPtr.lock())                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_ProjectedImageMaxPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims);
+  if(nullptr != m_ProjectedImageMaxPtr.lock())
   {
     m_ProjectedImageMax = m_ProjectedImageMaxPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageAvgArrayName());
-  m_ProjectedImageAvgPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_ProjectedImageAvgPtr.lock())                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_ProjectedImageAvgPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims);
+  if(nullptr != m_ProjectedImageAvgPtr.lock())
   {
     m_ProjectedImageAvg = m_ProjectedImageAvgPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageStdArrayName());
-  m_ProjectedImageStdPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_ProjectedImageStdPtr.lock())                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_ProjectedImageStdPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims);
+  if(nullptr != m_ProjectedImageStdPtr.lock())
   {
     m_ProjectedImageStd = m_ProjectedImageStdPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageVarArrayName());
-  m_ProjectedImageVarPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_ProjectedImageVarPtr.lock())                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_ProjectedImageVarPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims);
+  if(nullptr != m_ProjectedImageVarPtr.lock())
   {
     m_ProjectedImageVar = m_ProjectedImageVarPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

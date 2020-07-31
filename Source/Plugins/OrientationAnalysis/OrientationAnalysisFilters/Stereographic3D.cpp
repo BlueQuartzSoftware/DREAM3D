@@ -185,8 +185,8 @@ void Stereographic3D::dataCheck()
   std::vector<size_t> cDims(1, 1);
 
   cDims[0] = 4;
-  m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<FloatArrayType>(this, getQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_QuatsPtr.lock())                                                                                /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<FloatArrayType>(this, getQuatsArrayPath(), cDims);
+  if(nullptr != m_QuatsPtr.lock())
   {
     m_Quats = m_QuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -196,7 +196,7 @@ void Stereographic3D::dataCheck()
   DataArrayPath path = getQuatsArrayPath();
   path.setDataArrayName(getCoordinatesArrayName());
   m_CellCoordinatesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType>(this, path, 0, cDims, "", DataArrayID31);
-  if(nullptr != m_CellCoordinatesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_CellCoordinatesPtr.lock())
   {
     m_CellCoordinates = m_CellCoordinatesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

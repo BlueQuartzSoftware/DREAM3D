@@ -157,8 +157,7 @@ void RodriguesConvertor::dataCheck()
   }
 
   cDims[0] = 4;
-  m_OutputRodriguesVectorsPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, getOutputDataArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_OutputRodriguesVectorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, getOutputDataArrayPath(), 0, cDims);
   if(nullptr != m_OutputRodriguesVectorsPtr.lock())
   {
     m_OutputRodriguesVectors = m_OutputRodriguesVectorsPtr.lock()->getPointer(0);

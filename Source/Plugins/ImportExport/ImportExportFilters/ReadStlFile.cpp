@@ -179,7 +179,7 @@ void ReadStlFile::updateFaceInstancePointers()
   clearErrorCode();
   clearWarningCode();
 
-  if(nullptr != m_FaceNormalsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_FaceNormalsPtr.lock())
   {
     m_FaceNormals = m_FaceNormalsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

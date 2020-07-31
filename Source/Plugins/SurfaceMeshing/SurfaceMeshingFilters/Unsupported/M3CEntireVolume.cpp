@@ -105,8 +105,8 @@ void M3CEntireVolume::dataCheck()
 
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  m_GrainIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_GrainIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_GrainIdsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_GrainIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_GrainIdsArrayName, -300, dims);
+  if(nullptr != m_GrainIdsPtr.lock())
   {
     m_GrainIds = m_GrainIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -123,9 +123,8 @@ void M3CEntireVolume::dataCheck()
     StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, SIMPL::CellData::SurfaceMeshEdges, true);
     StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(1, SIMPL::CellData::SurfaceMeshInternalEdges, true);
 
-    m_SurfaceMeshNodeTypePtr = sattrMat->createNonPrereqArray<DataArray<int8_t>, AbstractFilter, int8_t>(this, m_CellAttributeMatrixName, m_SurfaceMeshNodeTypeArrayName, 0, 1,
-                                                                                                         1); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_SurfaceMeshNodeTypePtr.lock())                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_SurfaceMeshNodeTypePtr = sattrMat->createNonPrereqArray<DataArray<int8_t>, AbstractFilter, int8_t>(this, m_CellAttributeMatrixName, m_SurfaceMeshNodeTypeArrayName, 0, 1, 1);
+    if(nullptr != m_SurfaceMeshNodeTypePtr.lock())
     {
       m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */

@@ -249,7 +249,7 @@ void EMsoftSO3Sampler::dataCheck()
   DataArrayPath tempPath;
   tempPath.update(getDataContainerName().getDataContainerName(), getEMsoftAttributeMatrixName(), getEulerAnglesArrayName());
   m_EulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0.0f, cDims, "", DataArrayID31);
-  if(nullptr != m_EulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_EulerAnglesPtr.lock())
   {
     m_EulerAngles = m_EulerAnglesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

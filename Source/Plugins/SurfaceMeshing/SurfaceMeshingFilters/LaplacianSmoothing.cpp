@@ -154,9 +154,8 @@ void LaplacianSmoothing::dataCheck()
   }
 
   std::vector<size_t> cDims(1, 1);
-  m_SurfaceMeshNodeTypePtr =
-      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>>(this, getSurfaceMeshNodeTypeArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_SurfaceMeshNodeTypePtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>>(this, getSurfaceMeshNodeTypeArrayPath(), cDims);
+  if(nullptr != m_SurfaceMeshNodeTypePtr.lock())
   {
     m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -166,9 +165,8 @@ void LaplacianSmoothing::dataCheck()
   }
 
   cDims[0] = 2;
-  m_SurfaceMeshFaceLabelsPtr =
-      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_SurfaceMeshFaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims);
+  if(nullptr != m_SurfaceMeshFaceLabelsPtr.lock())
   {
     m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

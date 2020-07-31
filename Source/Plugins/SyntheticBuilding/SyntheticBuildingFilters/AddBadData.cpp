@@ -126,9 +126,8 @@ void AddBadData::dataCheck()
   }
 
   std::vector<size_t> cDims(1, 1);
-  m_GBEuclideanDistancesPtr =
-      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getGBEuclideanDistancesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_GBEuclideanDistancesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_GBEuclideanDistancesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getGBEuclideanDistancesArrayPath(), cDims);
+  if(nullptr != m_GBEuclideanDistancesPtr.lock())
   {
     m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

@@ -133,7 +133,7 @@ void SPParksDumpReader::updateCellInstancePointers()
   clearErrorCode();
   clearWarningCode();
 
-  // if(nullptr != m_FeatureIdsPtr.lock() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  // if(nullptr != m_FeatureIdsPtr.lock() )
   //{ m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

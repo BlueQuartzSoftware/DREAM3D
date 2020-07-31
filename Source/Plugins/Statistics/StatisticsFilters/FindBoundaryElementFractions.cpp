@@ -119,9 +119,8 @@ void FindBoundaryElementFractions::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   std::vector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr =
-      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FeatureIdsPtr.lock())                                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeatureIdsArrayPath(), cDims);
+  if(nullptr != m_FeatureIdsPtr.lock())
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -130,9 +129,8 @@ void FindBoundaryElementFractions::dataCheck()
     dataArrayPaths.push_back(getFeatureIdsArrayPath());
   }
 
-  m_BoundaryCellsPtr =
-      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>>(this, getBoundaryCellsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_BoundaryCellsPtr.lock())                                                                          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_BoundaryCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>>(this, getBoundaryCellsArrayPath(), cDims);
+  if(nullptr != m_BoundaryCellsPtr.lock())
   {
     m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -144,7 +142,7 @@ void FindBoundaryElementFractions::dataCheck()
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 
   m_BoundaryCellFractionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, getBoundaryCellFractionsArrayPath(), 0, cDims, "", DataArrayID31);
-  if(nullptr != m_BoundaryCellFractionsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_BoundaryCellFractionsPtr.lock())
   {
     m_BoundaryCellFractions = m_BoundaryCellFractionsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

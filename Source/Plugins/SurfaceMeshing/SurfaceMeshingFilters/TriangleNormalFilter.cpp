@@ -176,7 +176,7 @@ void TriangleNormalFilter::dataCheck()
 
   std::vector<size_t> cDims(1, 3);
   m_SurfaceMeshTriangleNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>>(this, getSurfaceMeshTriangleNormalsArrayPath(), 0, cDims, "", DataArrayID31);
-  if(nullptr != m_SurfaceMeshTriangleNormalsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_SurfaceMeshTriangleNormalsPtr.lock())
   {
     m_SurfaceMeshTriangleNormals = m_SurfaceMeshTriangleNormalsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

@@ -230,7 +230,7 @@ void CalculateArrayHistogram::dataCheck()
   // histogram array
   m_NewDataArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>>(
       this, tempPath, 0, cDims);          /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_NewDataArrayPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_NewDataArrayPtr.lock())
   {
     m_NewDataArray = m_NewDataArrayPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

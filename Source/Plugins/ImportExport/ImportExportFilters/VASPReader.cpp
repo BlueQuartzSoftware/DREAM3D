@@ -117,11 +117,11 @@ void VASPReader::updateVertexInstancePointers()
   clearErrorCode();
   clearWarningCode();
 
-  if(nullptr != m_AtomVelocitiesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_AtomVelocitiesPtr.lock())
   {
     m_AtomVelocities = m_AtomVelocitiesPtr.lock()->getPointer(0);
   }                                    /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(nullptr != m_AtomTypesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_AtomTypesPtr.lock())
   {
     m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -188,16 +188,15 @@ void VASPReader::dataCheck()
 
   std::vector<size_t> dims(1, 3);
   tempPath.update(getVertexDataContainerName().getDataContainerName(), getVertexAttributeMatrixName(), getAtomVelocitiesArrayName());
-  m_AtomVelocitiesPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0.0, dims, "", DataArrayID31); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_AtomVelocitiesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_AtomVelocitiesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0.0, dims, "", DataArrayID31);
+  if(nullptr != m_AtomVelocitiesPtr.lock())
   {
     m_AtomVelocities = m_AtomVelocitiesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
   tempPath.update(getVertexDataContainerName().getDataContainerName(), getVertexAttributeMatrixName(), getAtomTypesArrayName());
   m_AtomTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>>(this, tempPath, 0, dims, "", DataArrayID32);
-  if(nullptr != m_AtomTypesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_AtomTypesPtr.lock())
   {
     m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
