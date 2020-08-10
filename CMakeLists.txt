@@ -234,10 +234,12 @@ if(APPLE)
     set_property(GLOBAL PROPERTY DREAM3D_PACKAGE_DEST_PREFIX "${SIMPLView_APPLICATION_NAME}.app/Contents/")
   endif()
   set_property(GLOBAL PROPERTY EbsdLib_PACKAGE_DEST_PREFIX ${DREAM3D_PACKAGE_DEST_PREFIX})
-  set_property(GLOBAL PROPERTY EbsdLib_INSTALL_FILES 0)
+  set_property(GLOBAL PROPERTY EbsdLib_INSTALL_LIB OFF)
+else()
+  set_property(GLOBAL PROPERTY EbsdLib_INSTALL_LIB ON)
 endif()
 get_property(DREAM3D_PACKAGE_DEST_PREFIX GLOBAL PROPERTY DREAM3D_PACKAGE_DEST_PREFIX)
-
+set_property(GLOBAL PROPERTY EbsdLib_INSTALL_FILES OFF)
 
 # ------- Enable the CTest testing. ---------------
 OPTION(SIMPL_BUILD_TESTING "Compile the test programs" ON)
