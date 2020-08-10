@@ -269,10 +269,9 @@ void WriteStlFile::execute()
     }
     filename = filename + QString("Feature_") + QString::number(spin) + ".stl";
     FILE* f = fopen(filename.toLatin1().data(), "wb");
-    {
+
       QString ss = QObject::tr("Writing STL for Feature Id %1").arg(spin);
       notifyStatusMessage(ss);
-    }
 
     QString header = "DREAM3D Generated For Feature ID " + QString::number(spin);
     if(m_GroupByPhase)
