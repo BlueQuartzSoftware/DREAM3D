@@ -35,10 +35,6 @@
 
 #include "InitializeSyntheticVolume.h"
 
-#include "H5Support/H5Utilities.h"
-#include "H5Support/H5ScopedSentinel.h"
-#include "H5Support/QH5Utilities.h"
-
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/DataArrays/StatsDataArray.h"

@@ -36,7 +36,6 @@
 
 #include <QtCore/QTextStream>
 
-#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -74,21 +73,8 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 RegularGridSampleSurfaceMesh::RegularGridSampleSurfaceMesh()
-: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
-, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 {
-  m_Dimensions[0] = 128;
-  m_Dimensions[1] = 128;
-  m_Dimensions[2] = 128;
-
-  m_Spacing[0] = 1.0f;
-  m_Spacing[1] = 1.0f;
-  m_Spacing[2] = 1.0f;
-
-  m_Origin[0] = 0.0f;
-  m_Origin[1] = 0.0f;
-  m_Origin[2] = 0.0f;
+  initialize();
 }
 
 // -----------------------------------------------------------------------------

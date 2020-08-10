@@ -221,7 +221,6 @@ template <typename T> void WriteDataArray(AbstractFilter* filter, FILE* f, IData
 // -----------------------------------------------------------------------------
 VtkRectilinearGridWriter::VtkRectilinearGridWriter()
 : m_OutputFile("")
-, m_WriteBinaryFile(false)
 {
 }
 

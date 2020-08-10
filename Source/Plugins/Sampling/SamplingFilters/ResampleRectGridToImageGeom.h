@@ -1,5 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ * Copyright (c) 2020 BlueQuartz Software, LLC
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -27,99 +27,111 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * The code contained herein was partially funded by the followig contracts:
- *    United States Air Force Prime Contract FA8650-07-D-5800
  *    United States Air Force Prime Contract FA8650-10-D-5210
- *    United States Prime Contract Navy N00173-07-C-2068
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #pragma once
 
-#include <memory>
-
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Geometry/RectGridGeom.h"
 
-#include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 #include "Sampling/SamplingDLLExport.h"
+#include "Sampling/SamplingPlugin.h"
 
 /**
- * @brief The RegularGridSampleSurfaceMesh class. See [Filter documentation](@ref regulargridsamplesurfacemesh) for details.
+ * @brief The ResampleRectGridToImageGeom class. See [Filter documentation](@ref ResampleRectGridToImageGeom) for details.
  */
-class Sampling_EXPORT RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
+class Sampling_EXPORT ResampleRectGridToImageGeom : public AbstractFilter
 {
   Q_OBJECT
 
   // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(RegularGridSampleSurfaceMesh SUPERCLASS SampleSurfaceMesh)
+  PYB11_BEGIN_BINDINGS(ResampleRectGridToImageGeom SUPERCLASS AbstractFilter)
   PYB11_FILTER()
-  PYB11_SHARED_POINTERS(RegularGridSampleSurfaceMesh)
-  PYB11_FILTER_NEW_MACRO(RegularGridSampleSurfaceMesh)
-  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
-  PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  PYB11_SHARED_POINTERS(ResampleRectGridToImageGeom)
+  PYB11_FILTER_NEW_MACRO(ResampleRectGridToImageGeom)
+  PYB11_PROPERTY(DataArrayPath RectilinearGridPath READ getRectilinearGridPath WRITE setRectilinearGridPath)
+  // PYB11_PROPERTY(DataArrayPath RectGridCellAttributeMatrix READ getRectGridCellAttributeMatrix WRITE setRectGridCellAttributeMatrix)
+  PYB11_PROPERTY(QString RectGridGeometryDesc READ getRectGridGeometryDesc)
+  PYB11_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
+  PYB11_PROPERTY(DataArrayPath ImageGeometryPath READ getImageGeometryPath WRITE setImageGeometryPath)
+  PYB11_PROPERTY(QString ImageGeomCellAttributeMatrix READ getImageGeomCellAttributeMatrix WRITE setImageGeomCellAttributeMatrix)
   PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
   PYB11_PROPERTY(IntVec3Type Dimensions READ getDimensions WRITE setDimensions)
-  PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
-  PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
-  PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
 
 public:
-  using Self = RegularGridSampleSurfaceMesh;
+
+  using Self = ResampleRectGridToImageGeom;
   using Pointer = std::shared_ptr<Self>;
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-
-  /**
-   * @brief Returns a NullPointer wrapped by a shared_ptr<>
-   * @return
-   */
   static Pointer NullPointer();
 
-  /**
-   * @brief Creates a new object wrapped in a shared_ptr<>
-   * @return
-   */
   static Pointer New();
 
   /**
-   * @brief Returns the name of the class for RegularGridSampleSurfaceMesh
+   * @brief Returns the name of the class for ResampleRectGridToImageGeom
    */
   QString getNameOfClass() const override;
+
   /**
-   * @brief Returns the name of the class for RegularGridSampleSurfaceMesh
+   * @brief Returns the name of the class for ResampleRectGridToImageGeom
    */
   static QString ClassName();
 
-  ~RegularGridSampleSurfaceMesh() override;
+  ~ResampleRectGridToImageGeom() override;
 
   /**
-   * @brief Setter property for DataContainerName
+   * @brief Setter property for RectilinearGridPath
    */
-  void setDataContainerName(const DataArrayPath& value);
+  void setRectilinearGridPath(const DataArrayPath& value);
   /**
-   * @brief Getter property for DataContainerName
-   * @return Value of DataContainerName
+   * @brief Getter property for RectilinearGridPath
+   * @return Value of RectilinearGridPath
    */
-  DataArrayPath getDataContainerName() const;
-  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  DataArrayPath getRectilinearGridPath() const;
+  Q_PROPERTY(DataArrayPath RectilinearGridPath READ getRectilinearGridPath WRITE setRectilinearGridPath)
 
   /**
-   * @brief Setter property for CellAttributeMatrixName
+   * @brief Setter property for SelectedDataArrayPaths
    */
-  void setCellAttributeMatrixName(const QString& value);
+  void setSelectedDataArrayPaths(const QVector<DataArrayPath>& value);
   /**
-   * @brief Getter property for CellAttributeMatrixName
-   * @return Value of CellAttributeMatrixName
+   * @brief Getter property for SelectedDataArrayPaths
+   * @return Value of SelectedDataArrayPaths
    */
-  QString getCellAttributeMatrixName() const;
-  Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  QVector<DataArrayPath> getSelectedDataArrayPaths() const;
+  Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
+
+  /**
+   * @brief Setter property for ImageGeometryPath
+   */
+  void setImageGeometryPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for ImageGeometryPath
+   * @return Value of ImageGeometryPath
+   */
+  DataArrayPath getImageGeometryPath() const;
+  Q_PROPERTY(DataArrayPath ImageGeometryPath READ getImageGeometryPath WRITE setImageGeometryPath)
+
+  /**
+   * @brief Setter property for ImageGeomCellAttributeMatrix
+   */
+  void setImageGeomCellAttributeMatrix(const QString& value);
+  /**
+   * @brief Getter property for ImageGeomCellAttributeMatrix
+   * @return Value of ImageGeomCellAttributeMatrix
+   */
+  QString getImageGeomCellAttributeMatrix() const;
+  Q_PROPERTY(QString ImageGeomCellAttributeMatrix READ getImageGeomCellAttributeMatrix WRITE setImageGeomCellAttributeMatrix)
 
   /**
    * @brief Setter property for LengthUnit
@@ -144,44 +156,18 @@ public:
   Q_PROPERTY(IntVec3Type Dimensions READ getDimensions WRITE setDimensions)
 
   /**
-   * @brief Setter property for Spacing
+   * @brief getNewBoxDimensions
+   * @return
    */
-  void setSpacing(const FloatVec3Type& value);
-  /**
-   * @brief Getter property for Spacing
-   * @return Value of Spacing
-   */
-  FloatVec3Type getSpacing() const;
-  Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
-
-  /**
-   * @brief Setter property for Origin
-   */
-  void setOrigin(const FloatVec3Type& value);
-  /**
-   * @brief Getter property for Origin
-   * @return Value of Origin
-   */
-  FloatVec3Type getOrigin() const;
-  Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
-
-  /**
-   * @brief Setter property for FeatureIdsArrayName
-   */
-  void setFeatureIdsArrayName(const QString& value);
-  /**
-   * @brief Getter property for FeatureIdsArrayName
-   * @return Value of FeatureIdsArrayName
-   */
-  QString getFeatureIdsArrayName() const;
-  Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+  QString getRectGridGeometryDesc();
+  Q_PROPERTY(QString RectGridGeometryDesc READ getRectGridGeometryDesc)
 
   /**
    * @brief getBoxDimensions Returns a string describing the box dimensions and size/volume
    * @return
    */
-  QString getBoxDimensions();
-  Q_PROPERTY(QString BoxDimensions READ getBoxDimensions)
+  QString getCreatedGeometryDescription();
+  Q_PROPERTY(QString CreatedGeometryDescription READ getCreatedGeometryDescription)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -201,6 +187,11 @@ public:
    * @return
    */
   QString getFilterVersion() const override;
+
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
@@ -229,17 +220,13 @@ public:
   void setupFilterParameters() override;
 
   /**
-   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
-
-  /**
    * @brief execute Reimplemented from @see AbstractFilter class
    */
   void execute() override;
 
 protected:
-  RegularGridSampleSurfaceMesh();
+  ResampleRectGridToImageGeom();
+
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
@@ -250,33 +237,23 @@ protected:
    */
   void initialize();
 
-  /**
-   * @brief generate_points Reimplemented from @see SampleSurfaceMesh class
-   * @return VertexGeom object
-   */
-  VertexGeom::Pointer generate_points() override;
-
-  /**
-   * @brief assign_points Reimplemented from @see SampleSurfaceMesh class
-   * @param iArray Sampled Feature Ids from superclass
-   */
-  void assign_points(Int32ArrayType::Pointer iArray) override;
-
 private:
-  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
-  int32_t* m_FeatureIds = nullptr;
-
-  DataArrayPath m_DataContainerName = {SIMPL::Defaults::ImageDataContainerName, "", ""};
-  QString m_CellAttributeMatrixName = {SIMPL::Defaults::CellAttributeMatrixName};
+  DataArrayPath m_RectilinearGridPath = {"Resampled Geometry", "", ""};
+  // DataArrayPath m_RectGridCellAttributeMatrix = {};
+  DataArrayPath m_ImageGeometryPath = {SIMPL::Defaults::ImageDataContainerName, "", ""};
+  QString m_ImageGeomCellAttributeMatrix = {};
   int32_t m_LengthUnit = {6}; //  Micrometers default
   IntVec3Type m_Dimensions = {128, 128, 128};
-  FloatVec3Type m_Spacing = {1.0f, 1.0f, 1.0f};
-  FloatVec3Type m_Origin = {0.0f, 0.0f, 0.0f};
-  QString m_FeatureIdsArrayName = {SIMPL::CellData::FeatureIds};
+  QVector<DataArrayPath> m_SelectedDataArrayPaths = {};
+  QVector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
+
+  RectGridGeom::Pointer m_InputRectGridGeometry;
+  ImageGeom::Pointer m_GeneratedVolume;
 
 public:
-  RegularGridSampleSurfaceMesh(const RegularGridSampleSurfaceMesh&) = delete;            // Copy Constructor Not Implemented
-  RegularGridSampleSurfaceMesh(RegularGridSampleSurfaceMesh&&) = delete;                 // Move Constructor Not Implemented
-  RegularGridSampleSurfaceMesh& operator=(const RegularGridSampleSurfaceMesh&) = delete; // Copy Assignment Not Implemented
-  RegularGridSampleSurfaceMesh& operator=(RegularGridSampleSurfaceMesh&&) = delete;      // Move Assignment Not Implemented
+  ResampleRectGridToImageGeom(const ResampleRectGridToImageGeom&) = delete;            // Copy Constructor Not Implemented
+  ResampleRectGridToImageGeom& operator=(const ResampleRectGridToImageGeom&) = delete; // Copy Assignment Not Implemented
+  ResampleRectGridToImageGeom(ResampleRectGridToImageGeom &&) = delete;                // Move Constructor Not Implemented
+  ResampleRectGridToImageGeom& operator=(ResampleRectGridToImageGeom&&) = delete;      // Move Assignment Not Implemented
 };
+

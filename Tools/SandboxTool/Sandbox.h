@@ -8,7 +8,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QTextStream>
 
-#define OVERWRITE_SOURCE_FILE 0
+#define OVERWRITE_SOURCE_FILE 1
 
 class Sandbox
 {
@@ -71,7 +71,7 @@ public:
       QFile hOut(filePath);
       hOut.open(QFile::WriteOnly);
       QTextStream stream(&hOut);
-      for(qint32 i = 0; i < outLines.size() - 1; i++)
+      for(qint32 i = 0; i < outLines.size(); i++)
       {
         stream << outLines[i] << "\n";
       }
