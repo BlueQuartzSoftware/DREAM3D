@@ -259,8 +259,8 @@ protected:
    */
   void initialize();
 
-  virtual int64_t getSeed(int32_t gnum, int64_t nextSeed);
-  virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
+  int64_t getSeed(int32_t gnum, int64_t nextSeed) override;
+  bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum) override;
 
 private:
   std::weak_ptr<DataArray<float>> m_SineParamsPtr;

@@ -260,12 +260,12 @@ protected:
   /**
    * @brief getSeed Reimplemented from @see SegmentFeatures class
    */
-  virtual int64_t getSeed(int32_t gnum, int64_t nextSeed);
+  int64_t getSeed(int32_t gnum, int64_t nextSeed) override;
 
   /**
    * @brief determineGrouping Reimplemented from @see SegmentFeatures class
    */
-  virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
+  bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum) override;
 
 private:
   std::weak_ptr<DataArray<float>> m_VectorsPtr;

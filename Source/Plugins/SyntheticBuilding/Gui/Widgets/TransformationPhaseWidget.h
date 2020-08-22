@@ -80,7 +80,7 @@ public:
   /**
    * @brief Setter property for PhaseType
    */
-  void setPhaseType(PhaseType::Type value);
+  void setPhaseType(PhaseType::Type value) override;
   /**
    * @brief Getter property for PhaseType
    * @return Value of PhaseType

@@ -250,7 +250,7 @@ protected:
   /**
    * @brief find_shifts Reimplemented from @see AlignSections class
    */
-  virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
+  void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts) override;
 
   /**
    * @brief form_features_sections Determines the existing features in a give slice

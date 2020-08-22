@@ -219,7 +219,7 @@ protected slots:
    * @brief generateEmmpmMessage
    * @param msg
    */
-  virtual void handleEmmpmMessage(const AbstractMessage::Pointer& msg);
+  void handleEmmpmMessage(const AbstractMessage::Pointer& msg) override;
 
 private:
   std::weak_ptr<DataArray<uint8_t>> m_InputImagePtr;

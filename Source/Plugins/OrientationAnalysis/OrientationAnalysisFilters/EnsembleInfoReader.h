@@ -211,12 +211,12 @@ protected:
   /**
    * @brief readHeader Reimplemented from @see FileReader class
    */
-  virtual int32_t readHeader();
+  int32_t readHeader() override;
 
   /**
    * @brief readFile Reimplemented from @see FileReader class
    */
-  virtual int32_t readFile();
+  int32_t readFile() override;
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays

@@ -75,7 +75,7 @@ public:
   }
   virtual ~PrimaryRecrystallizedPreset();
 
-  virtual QString getName();
+  QString getName() override;
 
   void initializeOmega3TableModel(QMap<QString, QVector<float>>& data) override;
   void initializeBOverATableModel(QMap<QString, QVector<float>>& data) override;

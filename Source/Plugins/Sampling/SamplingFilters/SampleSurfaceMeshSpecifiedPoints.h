@@ -191,13 +191,13 @@ protected:
    * @brief generate_points Reimplemented from @see SampleSurfaceMesh class
    * @return VertexGeom object
    */
-  virtual VertexGeom::Pointer generate_points();
+  VertexGeom::Pointer generate_points() override;
 
   /**
    * @brief assign_points Reimplemented from @see SampleSurfaceMesh class
    * @param iArray Sampled Feature Ids from superclass
    */
-  virtual void assign_points(Int32ArrayType::Pointer iArray);
+  void assign_points(Int32ArrayType::Pointer iArray) override;
 
 private:
   std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;

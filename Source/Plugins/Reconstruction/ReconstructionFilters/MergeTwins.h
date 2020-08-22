@@ -300,12 +300,12 @@ protected:
   /**
    * @brief getSeed Reimplemented from @see GroupFeatures class
    */
-  virtual int32_t getSeed(int32_t newFid);
+  int32_t getSeed(int32_t newFid) override;
 
   /**
    * @brief determineGrouping Reimplemented from @see GroupFeatures class
    */
-  virtual bool determineGrouping(int32_t referenceFeature, int32_t neighborFeature, int32_t newFid);
+  bool determineGrouping(int32_t referenceFeature, int32_t neighborFeature, int32_t newFid) override;
 
   /**
    * @brief characterize_twins Characterizes twins; CURRENTLY NOT IMPLEMENTED

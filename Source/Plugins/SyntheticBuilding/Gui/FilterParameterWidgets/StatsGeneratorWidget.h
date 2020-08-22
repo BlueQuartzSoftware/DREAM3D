@@ -101,7 +101,7 @@ protected:
   /**
    * @brief Initializes some of the GUI elements with selections or other GUI related items
    */
-  void setupGui();
+  void setupGui() override;
 
   /**
    * @brief Verifies that a parent path exists on the file system.

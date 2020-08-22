@@ -199,7 +199,7 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
 
-  void dataCheck()
+  void dataCheck() override
   {
     clearErrorCode();
     clearWarningCode();
@@ -375,7 +375,7 @@ protected:
    * @param features The number of features
    * @param ensembles The number of ensembles
    */
-  void dataCheck()
+  void dataCheck() override
   {
     DataContainer::Pointer m = DataContainer::New("DataContainer");
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);

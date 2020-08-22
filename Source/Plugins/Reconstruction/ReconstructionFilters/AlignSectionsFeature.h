@@ -180,7 +180,7 @@ protected:
   /**
    * @brief find_shifts Reimplemented from @see AlignSections class
    */
-  virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
+  void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts) override;
 
 private:
   std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;

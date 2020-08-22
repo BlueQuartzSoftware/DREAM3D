@@ -171,12 +171,12 @@ protected:
   /**
    * @brief writeHeader Reimplemented from @see FileReader class
    */
-  virtual int32_t writeHeader();
+  int32_t writeHeader() override;
 
   /**
    * @brief writeFile Reimplemented from @see FileReader class
    */
-  virtual int32_t writeFile();
+  int32_t writeFile() override;
 
 private:
   std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
