@@ -241,7 +241,7 @@ void EbsdToH5Ebsd::execute()
     return;
   }
 
-  H5ScopedFileSentinel sentinel(&fileId, true);
+  H5ScopedFileSentinel sentinel(fileId, true);
 
   err = H5Lite::writeScalarDataset(fileId, EbsdLib::H5Ebsd::ZResolution, m_ZResolution);
   if(err < 0)

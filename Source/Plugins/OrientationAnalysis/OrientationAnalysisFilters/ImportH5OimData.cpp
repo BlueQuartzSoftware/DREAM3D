@@ -673,7 +673,7 @@ EbsdLib::OEM ImportH5OimData::readManufacturer() const
   {
     return manuf;
   }
-  H5ScopedFileSentinel sentinel(&fid, false);
+  H5ScopedFileSentinel sentinel(fid, false);
   std::string dsetName;
   std::list<std::string> names;
   herr_t err = H5Utilities::getGroupObjects(fid, H5Utilities::CustomHDFDataTypes::Any, names);

@@ -846,9 +846,9 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
     return;
   }
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
-  H5ScopedFileSentinel scopedFileSentinel(&fileId, true);
+  H5ScopedFileSentinel scopedFileSentinel(fileId, true);
   hid_t dcaGid = H5Gopen(fileId, SIMPL::StringConstants::DataContainerGroupName.toLatin1().constData(), 0);
-  scopedFileSentinel.addGroupId(&dcaGid);
+  scopedFileSentinel.addGroupId(dcaGid);
 
   hid_t dcGid = H5Gopen(dcaGid, SIMPL::Defaults::StatsGenerator.toLatin1().constData(), 0);
   if(dcGid < 0)
@@ -858,9 +858,9 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
     QMessageBox::critical(this, title, msg, QMessageBox::Ok, QMessageBox::Ok);
     return;
   }
-  scopedFileSentinel.addGroupId(&dcGid);
+  scopedFileSentinel.addGroupId(dcGid);
   hid_t amGid = H5Gopen(dcGid, SIMPL::Defaults::CellEnsembleAttributeMatrixName.toLatin1().constData(), 0);
-  scopedFileSentinel.addGroupId(&amGid);
+  scopedFileSentinel.addGroupId(amGid);
 
   // We need to read one of the arrays to get the number of phases so that we can resize our attributeMatrix
   UInt32ArrayType::Pointer phases = UInt32ArrayType::CreateArray(1, SIMPL::EnsembleData::PhaseTypes, true);
