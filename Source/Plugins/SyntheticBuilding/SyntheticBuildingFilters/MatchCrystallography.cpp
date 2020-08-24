@@ -804,12 +804,12 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
       }
       while((m_SurfaceFeatures[selectedfeature1] || m_FeaturePhases[selectedfeature1] != static_cast<int32_t>(ensem)) && counter < totalFeatures)
       {
-        if(selectedfeature1 >= totalFeatures)
-        {
-          selectedfeature1 = selectedfeature1 - totalFeatures;
-        }
         selectedfeature1++;
         counter++;
+        if(selectedfeature1 >= totalFeatures)
+        {
+          selectedfeature1 -= totalFeatures;
+        }
       }
       if(selectedfeature1 >= totalFeatures)
       {
@@ -907,12 +907,12 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
       }
       while((m_SurfaceFeatures[selectedfeature1] || m_FeaturePhases[selectedfeature1] != static_cast<int32_t>(ensem)) && counter < totalFeatures)
       {
-        if(selectedfeature1 >= totalFeatures)
-        {
-          selectedfeature1 = selectedfeature1 - totalFeatures;
-        }
         selectedfeature1++;
         counter++;
+        if(selectedfeature1 >= totalFeatures)
+        {
+          selectedfeature1 -= totalFeatures;
+        }
       }
       if(selectedfeature1 >= totalFeatures)
       {
@@ -932,12 +932,12 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
         }
         while((m_SurfaceFeatures[selectedfeature2] || m_FeaturePhases[selectedfeature2] != static_cast<int32_t>(ensem) || selectedfeature2 == selectedfeature1) && counter < totalFeatures)
         {
-          if(selectedfeature2 >= totalFeatures)
-          {
-            selectedfeature2 = selectedfeature2 - totalFeatures;
-          }
           selectedfeature2++;
           counter++;
+          if(selectedfeature2 >= totalFeatures)
+          {
+            selectedfeature2 -= totalFeatures;
+          }
         }
         if(selectedfeature2 >= totalFeatures)
         {
