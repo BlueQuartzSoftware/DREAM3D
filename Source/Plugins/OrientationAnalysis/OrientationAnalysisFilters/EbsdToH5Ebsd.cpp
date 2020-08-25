@@ -481,8 +481,6 @@ void EbsdToH5Ebsd::execute()
     QVector<hsize_t> dimsL = {static_cast<hsize_t>(indices.size())};
     err = QH5Lite::writeVectorDataset(fileId, QString::fromStdString(EbsdLib::H5Ebsd::Index), dimsL, indices);
   }
-  err = H5Utilities::closeFile(fileId);
-  fileId = -1;
 }
 
 // -----------------------------------------------------------------------------
