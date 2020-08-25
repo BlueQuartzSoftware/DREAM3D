@@ -12,39 +12,35 @@
  *
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  */
 
-
-
 namespace UnitTest
 {
-
-  const QString DataDir("@DREAM3D_DATA_DIR@");
-  const QString TestTempDir("@TEST_TEMP_DIR@");
-  const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
+  inline const QString DataDir("@DREAM3D_DATA_DIR@");
+  inline const QString TestTempDir("@TEST_TEMP_DIR@");
+  inline const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
 
   namespace FeatureIdsTest
   {
-    static const size_t XSize = 3;
-    static const size_t YSize = 4;
-    static const size_t ZSize = 5;
-    static const size_t Offset = 200;
+    inline constexpr size_t XSize = 3;
+    inline constexpr size_t YSize = 4;
+    inline constexpr size_t ZSize = 5;
+    inline constexpr size_t Offset = 200;
   }
 
   namespace CropVolumeTest
   {
-    const QString CropVolumeTest_3("@TEST_TEMP_DIR@/CropVolumeTest_3.dream3d");
-    const QString CropVolumeTest_4("@TEST_TEMP_DIR@/CropVolumeTest_4.dream3d");
+    inline const QString CropVolumeTest_3("@TEST_TEMP_DIR@/CropVolumeTest_3.dream3d");
+    inline const QString CropVolumeTest_4("@TEST_TEMP_DIR@/CropVolumeTest_4.dream3d");
   }
 
   namespace StatsGeneratorFilterTest
   {
-    const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
-    const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+    inline const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+    inline const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
   }
 
   namespace GeneratePrimaryStatsDataTest
   {
-   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
-   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+    inline const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+    inline const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
   }
-
 }

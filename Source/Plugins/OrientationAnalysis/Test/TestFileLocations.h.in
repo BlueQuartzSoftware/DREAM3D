@@ -1,6 +1,4 @@
-#ifndef _@PROJECT_NAME@FileLocation_h_
-#define _@PROJECT_NAME@FileLocation_h_
-
+#pragma once
 
 #include <QtCore/QString>
 
@@ -14,31 +12,29 @@
  *
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  */
 
-
 namespace UnitTest
 {
-  
-  const QString DataDir("@DREAM3D_DATA_DIR@");
-  const QString TestTempDir("@TEST_TEMP_DIR@");
-  const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
-  const QString OrientationAnalysisTestDataDir("@TEST_TEMP_DIR@");
+  inline const QString DataDir("@DREAM3D_DATA_DIR@");
+  inline const QString TestTempDir("@TEST_TEMP_DIR@");
+  inline const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
+  inline const QString OrientationAnalysisTestDataDir("@TEST_TEMP_DIR@");
 
   namespace AngCachingTest
   {
-    const QString Test1("@TEST_TEMP_DIR@/TestFile1.ang");
-    const QString Test2("@TEST_TEMP_DIR@/TestFile2.ang");
+    inline const QString Test1("@TEST_TEMP_DIR@/TestFile1.ang");
+    inline const QString Test2("@TEST_TEMP_DIR@/TestFile2.ang");
 
-    const QString TestInputFile1("@DREAM3D_DATA_DIR@/EbsdTestFiles/Test_HeaderCache-1.ang");
-    const QString TestInputFile2("@DREAM3D_DATA_DIR@/EbsdTestFiles/Test_HeaderCache-2.ang");
+    inline const QString TestInputFile1("@DREAM3D_DATA_DIR@/EbsdTestFiles/Test_HeaderCache-1.ang");
+    inline const QString TestInputFile2("@DREAM3D_DATA_DIR@/EbsdTestFiles/Test_HeaderCache-2.ang");
   }
 
   namespace CtfCachingTest
   {
-    const QString Test1("@TEST_TEMP_DIR@/TestFile1.ctf");
-    const QString Test2("@TEST_TEMP_DIR@/TestFile2.ctf");
+    inline const QString Test1("@TEST_TEMP_DIR@/TestFile1.ctf");
+    inline const QString Test2("@TEST_TEMP_DIR@/TestFile2.ctf");
 
-    const QString TestInputFile1("@DREAM3D_DATA_DIR@/EbsdTestFiles/Test_US_1.ctf");
-    const QString TestInputFile2("@DREAM3D_DATA_DIR@/EbsdTestFiles/Test_US_2.ctf");
+    inline const QString TestInputFile1("@DREAM3D_DATA_DIR@/EbsdTestFiles/Test_US_1.ctf");
+    inline const QString TestInputFile2("@DREAM3D_DATA_DIR@/EbsdTestFiles/Test_US_2.ctf");
   }
   namespace MicCachingTest
   {
@@ -47,7 +43,7 @@ namespace UnitTest
 
   namespace AngleFileIOTest
   {
-    const QString OutputFile("@TEST_TEMP_DIR@/AngleFile.txt");
+    inline const QString OutputFile("@TEST_TEMP_DIR@/AngleFile.txt");
   }
 
 }
@@ -56,8 +52,8 @@ namespace UnitTest
 {
   namespace OrientationUtilityTest
   {
-   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
-   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+    inline const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+    inline const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
   }
 }
 
@@ -65,8 +61,8 @@ namespace UnitTest
 {
   namespace Stereographic3DTest
   {
-   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
-   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+    inline const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+    inline const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
   }
 }
 
@@ -78,54 +74,49 @@ namespace UnitTest
     }
 }
 
-
 namespace UnitTest
 {
     namespace CreateLambertSphereTest
     {
-      const QString OutputFile("@TEST_TEMP_DIR@/LambertSphere.dream3d");
-      const QString MasterPattern("@TESTFILES_SOURCE_DIR@/MasterPattern.png");
-      const QString PipelineFile("@TESTFILES_SOURCE_DIR@/LambertSphere.json");
+      inline const QString OutputFile("@TEST_TEMP_DIR@/LambertSphere.dream3d");
+      inline const QString MasterPattern("@TESTFILES_SOURCE_DIR@/MasterPattern.png");
+      inline const QString PipelineFile("@TESTFILES_SOURCE_DIR@/LambertSphere.json");
     }
 }
-
 
 namespace UnitTest
 {
     namespace GenerateFZQuaternionsTest
     {
-      const QString TestFile1("@TEST_TEMP_DIR@/GenerateFZQuaternionsTest1.dream3d");
-      const QString TestFile2("@TEST_TEMP_DIR@/GenerateFZQuaternionsTest2.dream3d");
+      inline const QString TestFile1("@TEST_TEMP_DIR@/GenerateFZQuaternionsTest1.dream3d");
+      inline const QString TestFile2("@TEST_TEMP_DIR@/GenerateFZQuaternionsTest2.dream3d");
     }
 }
-
 
 namespace UnitTest
 {
   namespace RodriguesConvertorTest
   {
-   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
-   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+    inline const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+    inline const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
   }
 }
-
 
 namespace UnitTest
 {
   namespace GenerateQuaternionConjugateTest
   {
-   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
-   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+    inline const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+    inline const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
   }
 }
-
 
 namespace UnitTest
 {
   namespace GenerateOrientationMatrixTransposeTest
   {
-   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
-   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+    inline const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+    inline const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
   }
 }
 
@@ -133,10 +124,7 @@ namespace UnitTest
 {
   namespace  ImportH5EspritDataTest
   {
-    const QString OutputFile("@TEST_TEMP_DIR@/ImportH5EspritDataTest_OutputFile.dream3d");
-    const QString InputFile("@DREAM3D_DATA_DIR@/EbsdTestFiles/H5EspritReaderTest.h5");
+    inline const QString OutputFile("@TEST_TEMP_DIR@/ImportH5EspritDataTest_OutputFile.dream3d");
+    inline const QString InputFile("@DREAM3D_DATA_DIR@/EbsdTestFiles/H5EspritReaderTest.h5");
   }
 }
-
-
-#endif

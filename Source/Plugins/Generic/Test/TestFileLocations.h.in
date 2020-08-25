@@ -1,5 +1,4 @@
-#ifndef _@PROJECT_NAME@FileLocation_h_
-#define _@PROJECT_NAME@FileLocation_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -13,15 +12,9 @@
  *
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  */
 
-
 namespace UnitTest
 {
-
-  const QString DataDir("@DREAM3D_DATA_DIR@");
-  const QString TestTempDir("@TEST_TEMP_DIR@");
-  const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
-
-  
+  inline const QString DataDir("@DREAM3D_DATA_DIR@");
+  inline const QString TestTempDir("@TEST_TEMP_DIR@");
+  inline const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
 }
-
-#endif

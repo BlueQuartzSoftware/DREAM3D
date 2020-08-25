@@ -1,5 +1,4 @@
-#ifndef _IOTestFileLocation_H_
-#define _IOTestFileLocation_H_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -13,98 +12,88 @@
  *
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  */
 
-
 namespace UnitTest
 {
-
-  const QString DataDir("@DREAM3D_DATA_DIR@");
-  const QString TestTempDir("@TEST_TEMP_DIR@");
-  const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
-
+  inline const QString DataDir("@DREAM3D_DATA_DIR@");
+  inline const QString TestTempDir("@TEST_TEMP_DIR@");
+  inline const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
 
   namespace PhIOTest
   {
-    const QString TestFile("@TEST_TEMP_DIR@/PhIOTest.ph");
-    const QString TestFile2("@TEST_TEMP_DIR@/PhIOTest2.ph");
+    inline const QString TestFile("@TEST_TEMP_DIR@/PhIOTest.ph");
+    inline const QString TestFile2("@TEST_TEMP_DIR@/PhIOTest2.ph");
   }
 
   namespace DxIOTest
   {
-    const QString TestFile("@TEST_TEMP_DIR@/DxIOTest.dx");
-    const QString TestFile2("@TEST_TEMP_DIR@/DxIOTest2.dx");
+    inline const QString TestFile("@TEST_TEMP_DIR@/DxIOTest.dx");
+    inline const QString TestFile2("@TEST_TEMP_DIR@/DxIOTest2.dx");
   }
 
   namespace EnsembleInfoReaderTest
   {
-    const QString TestFileIni("@TEST_TEMP_DIR@/EnsembleInfoTest.ini");
-    const QString TestFileTxt("@TEST_TEMP_DIR@/EnsembleInfoTest.txt");
-    const QString TestFileDoc("@TEST_TEMP_DIR@/EnsembleInfoTest.doc");
+    inline const QString TestFileIni("@TEST_TEMP_DIR@/EnsembleInfoTest.ini");
+    inline const QString TestFileTxt("@TEST_TEMP_DIR@/EnsembleInfoTest.txt");
+    inline const QString TestFileDoc("@TEST_TEMP_DIR@/EnsembleInfoTest.doc");
   }
 
   namespace ExportDataTest
   {
-    const QString TestTempDir("@TEST_TEMP_DIR@");
+    inline const QString TestTempDir("@TEST_TEMP_DIR@");
   }
 
   namespace VtkGrainIdIOTest
   {
-    const QString TestFile("@TEST_TEMP_DIR@/VtkGrainIdIOTest.vtk");
-    static const size_t XSize = 5;
-    static const size_t YSize = 4;
-    static const size_t ZSize = 3;
-    static const size_t Offset = 300;
+    inline const QString TestFile("@TEST_TEMP_DIR@/VtkGrainIdIOTest.vtk");
+    inline constexpr size_t XSize = 5;
+    inline constexpr size_t YSize = 4;
+    inline constexpr size_t ZSize = 3;
+    inline constexpr size_t Offset = 300;
   }
 
   namespace VTKFileWritersTest
   {
-    static const QString TestFile("@TEST_TEMP_DIR@/VtkIOTest.vtk");
-    static const size_t XSize = 2;
-    static const size_t YSize = 10;
-    static const size_t ZSize = 5;
-    static const size_t Offset = 66;
+    inline const QString TestFile("@TEST_TEMP_DIR@/VtkIOTest.vtk");
+    inline constexpr size_t XSize = 2;
+    inline constexpr size_t YSize = 10;
+    inline constexpr size_t ZSize = 5;
+    inline constexpr size_t Offset = 66;
   }
 
   namespace FeatureIdsTest
   {
-    static const size_t XSize = 3;
-    static const size_t YSize = 4;
-    static const size_t ZSize = 5;
-    static const size_t Offset = 200;
+    inline constexpr size_t XSize = 3;
+    inline constexpr size_t YSize = 4;
+    inline constexpr size_t ZSize = 5;
+    inline constexpr size_t Offset = 200;
 
-    static const size_t XSize2 = 6;
-    static const size_t YSize2 = 7;
-    static const size_t ZSize2 = 8;
+    inline constexpr size_t XSize2 = 6;
+    inline constexpr size_t YSize2 = 7;
+    inline constexpr size_t ZSize2 = 8;
   }
 
   namespace VtkStructuredPointsReaderTest
   {
-    const QString BinaryFile("@TEST_TEMP_DIR@/binary_file.vtk");
-    const QString AsciiFile("@TEST_TEMP_DIR@/ascii_file.vtk");
+    inline const QString BinaryFile("@TEST_TEMP_DIR@/binary_file.vtk");
+    inline const QString AsciiFile("@TEST_TEMP_DIR@/ascii_file.vtk");
 
-    static const size_t XSize = 3;
-    static const size_t YSize = 4;
-    static const size_t ZSize = 5;
-
+    inline constexpr size_t XSize = 3;
+    inline constexpr size_t YSize = 4;
+    inline constexpr size_t ZSize = 5;
   }
-  
   namespace FeatureInfoReaderTest
   {
-    const QString InputFile("@TEST_TEMP_DIR@/FeatureInfoTestFileInput.txt");
-    const QString OutputFile("@TEST_TEMP_DIR@/FeatureInfoTestFile.dream3d");
-    const QString OutputFileXdmf("@TEST_TEMP_DIR@/FeatureInfoTestFile.xdmf");
-
+    inline const QString InputFile("@TEST_TEMP_DIR@/FeatureInfoTestFileInput.txt");
+    inline const QString OutputFile("@TEST_TEMP_DIR@/FeatureInfoTestFile.dream3d");
+    inline const QString OutputFileXdmf("@TEST_TEMP_DIR@/FeatureInfoTestFile.xdmf");
   }
-
 }
 
 namespace UnitTest
 {
   namespace ImportOnscaleTableFileTest
   {
-   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
-   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+    inline const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+    inline const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
   }
 }
-
-
-#endif
