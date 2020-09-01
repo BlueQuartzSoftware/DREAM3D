@@ -148,7 +148,7 @@ void FindVolFractions::execute()
   std::vector<size_t> ensembleElements(totalEnsembles);
 
   // Initialize everythign
-  for(size_t i = 1; i < totalEnsembles; i++)
+  for(size_t i = 0; i < totalEnsembles; i++)
   {
     m_VolFractions[i] = 0;
     ensembleElements[i] = 0;
@@ -160,7 +160,7 @@ void FindVolFractions::execute()
     ensembleElements[m_CellPhases[i]]++;
   }
   // Calculate the Volume Fraction
-  for(size_t i = 1; i < totalEnsembles; i++)
+  for(size_t i = 0; i < totalEnsembles; i++)
   {
     m_VolFractions[i] = static_cast<double>(ensembleElements[i]) / static_cast<double>(totalPoints);
   }
