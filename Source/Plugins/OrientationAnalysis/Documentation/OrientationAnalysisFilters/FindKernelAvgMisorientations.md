@@ -1,5 +1,4 @@
-# Find Kernel Average Misorientations  #
-
+# Find Kernel Average Misorientations #
 
 ## Group (Subgroup) ##
 
@@ -37,8 +36,7 @@ Image
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
-| **Cell Attribute Array** | KernelAverageMisorientations | float | (1) | Average misorientation for all **Cells** within the kernel and the central **Cell** |
-
+| **Cell Attribute Array** | KernelAverageMisorientations | float | (1) | Average misorientation (in Degrees) for all **Cells** within the kernel and the central **Cell** |
 
 ## Example Pipelines ##
 
@@ -52,5 +50,3 @@ Please see the description file distributed with this **Plugin**
 ## DREAM.3D Mailing Lists ##
 
 If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
-
-
