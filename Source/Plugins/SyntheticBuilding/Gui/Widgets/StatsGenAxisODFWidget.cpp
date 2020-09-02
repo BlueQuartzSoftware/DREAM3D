@@ -187,22 +187,23 @@ int StatsGenAxisODFWidget::getOrientationData(StatsData* statsData, PhaseType::T
 {
   int retErr = 0;
 
-  QVector<float> e1s;
-  QVector<float> e2s;
-  QVector<float> e3s;
-  QVector<float> weights;
-  QVector<float> sigmas;
+  using ContainerType = std::vector<float>;
+  ContainerType e1s;
+  ContainerType e2s;
+  ContainerType e3s;
+  ContainerType weights;
+  ContainerType sigmas;
 
   // Initialize xMax and yMax....
-  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
-  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
-  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
-  weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
-  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
+  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1).toStdVector();
+  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2).toStdVector();
+  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3).toStdVector();
+  weights = m_ODFTableModel->getData(SGODFTableModel::Weight).toStdVector();
+  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma).toStdVector();
 
-//  QVector<float> e1Rad = e1s;
-//  QVector<float> e2Rad = e2s;
-//  QVector<float> e3Rad = e3s;
+  //  QVector<float> e1Rad = e1s;
+  //  QVector<float> e2Rad = e2s;
+  //  QVector<float> e3Rad = e3s;
 
   // Convert from Degrees to Radians
   for(QVector<float>::size_type i = 0; i < e1s.size(); i++)
@@ -438,12 +439,13 @@ void StatsGenAxisODFWidget::calculateAxisODF()
 {
   int err = 0;
 
-  QwtArray<float> e1s;
-  QwtArray<float> e2s;
-  QwtArray<float> e3s;
-  QwtArray<float> weights;
-  QwtArray<float> sigmas;
-  QwtArray<float> odf;
+  using ContainerType = QwtArray<float>;
+  ContainerType e1s;
+  ContainerType e2s;
+  ContainerType e3s;
+  ContainerType weights;
+  ContainerType sigmas;
+  ContainerType odf;
 
   e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
   e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
@@ -468,7 +470,7 @@ void StatsGenAxisODFWidget::calculateAxisODF()
 
   odf.resize(OrthoRhombicOps::k_OdfSize);
 
-  Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
+  Texture::CalculateOrthoRhombicODFData<float, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
 
   err = StatsGen::GenAxisODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 

@@ -58,12 +58,13 @@ class TextureTest
 
     void operator()()
     {
-      QVector<float> e1s;
-      QVector<float> e2s;
-      QVector<float> e3s;
-      QVector<float> weights;
-      QVector<float> sigmas;
-      QVector<float> odf;
+      using Container = QVector<float>;
+      Container e1s;
+      Container e2s;
+      Container e3s;
+      Container weights;
+      Container sigmas;
+      Container odf;
 
       CubicOps cubicOps;
       HexagonalOps hexagonalOps;
@@ -71,27 +72,23 @@ class TextureTest
 
       size_t numEntries = e1s.size();
       odf.resize(cubicOps.getODFSize());
-      Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
+      Texture::CalculateCubicODFData<float, Container>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
       odf.resize(hexagonalOps.getODFSize());
-      Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true,
-                                   odf.data(), numEntries);
-
+      Texture::CalculateHexODFData<float, Container>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
 
       odf.resize(orthOps.getODFSize());
-      Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true,
-                                            odf.data(), numEntries);
+      Texture::CalculateOrthoRhombicODFData<float, Container>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
 
-
-      //int size = 1000;
+      // int size = 1000;
       // Now generate the actual XY point data that gets plotted.
       // These are the output vectors
       QVector<float> angles;
       QVector<float> axes;
       QVector<float> mdf(CubicOps::k_MdfSize);
 
-      Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
-
+      Texture::CalculateMDFData<float, CubicOps>(angles, axes, weights, odf, mdf, angles.size());
     }
+
   private:
     TextureTest(const TextureTest&); // Copy Constructor Not Implemented
     void operator=(const TextureTest&); // Move assignment Not Implemented

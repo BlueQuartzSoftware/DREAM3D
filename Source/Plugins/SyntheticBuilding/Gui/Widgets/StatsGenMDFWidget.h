@@ -94,7 +94,7 @@ signals:
   void dataChanged();
 
 protected:
-  void updateMDFPlot(QVector<float>& odf);
+  void updateMDFPlot(std::vector<float>& odf);
 
 private:
   SGMDFTableModel* m_MDFTableModel = nullptr;

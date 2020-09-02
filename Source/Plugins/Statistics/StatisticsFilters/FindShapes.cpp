@@ -34,6 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "FindShapes.h"
 
+#include <array>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -692,15 +694,9 @@ void FindShapes::find_axiseulers()
       uber[2][0] = Ixz;
       uber[2][1] = Iyz;
       uber[2][2] = Izz - e[j][0];
-      double** uberelim;
-      double** uberbelim;
-      uberelim = new double*[3];
-      uberbelim = new double*[3];
-      for(int32_t d = 0; d < 3; d++)
-      {
-        uberelim[d] = new double[3];
-        uberbelim[d] = new double[1];
-      }
+      std::array<std::array<double, 3>, 3> uberelim{};
+      std::array<std::array<double, 1>, 3> uberbelim{};
+
       int32_t elimcount = 0;
       int32_t elimcount1 = 0;
       double q = 0.0;
@@ -745,13 +741,6 @@ void FindShapes::find_axiseulers()
         q = uberbelim[p][0];
         vect[j][p] = q;
       }
-      for(int32_t d = 0; d < 3; d++)
-      {
-        delete uberelim[d];
-        delete uberbelim[d];
-      }
-      delete uberelim;
-      delete uberbelim;
     }
 
     double n1x = vect[0][0];

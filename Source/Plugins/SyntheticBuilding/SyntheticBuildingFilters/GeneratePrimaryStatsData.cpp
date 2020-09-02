@@ -4,6 +4,8 @@
 
 #include "GeneratePrimaryStatsData.h"
 
+#include <vector>
+
 #include "EbsdLib/EbsdConstants.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -496,14 +498,14 @@ void GeneratePrimaryStatsData::execute()
     m_PrimaryStatsData->setBOverA_DistType(absPresetPtr->getDistributionType(AbstractMicrostructurePreset::kNeighborDistribution));
   }
 
+  using Container = std::vector<float>;
   {
     absPresetPtr->initializeODFTableModel(dataMap);
-
-    QVector<float> e1s;
-    QVector<float> e2s;
-    QVector<float> e3s;
-    QVector<float> weights;
-    QVector<float> sigmas;
+    Container e1s;
+    Container e2s;
+    Container e3s;
+    Container weights;
+    Container sigmas;
 
     std::vector<std::vector<double>> odfData = m_OdfData.getTableData();
     for(size_t i = 0; i < odfData.size(); i++)
@@ -520,11 +522,11 @@ void GeneratePrimaryStatsData::execute()
 
   {
     absPresetPtr->initializeMDFTableModel(dataMap);
-    QVector<float> e1s;
-    QVector<float> e2s;
-    QVector<float> e3s;
-    QVector<float> odf_weights;
-    QVector<float> sigmas;
+    Container e1s;
+    Container e2s;
+    Container e3s;
+    Container odf_weights;
+    Container sigmas;
     std::vector<std::vector<double>> odfData = m_OdfData.getTableData();
     for(size_t i = 0; i < odfData.size(); i++)
     {
@@ -535,11 +537,11 @@ void GeneratePrimaryStatsData::execute()
       sigmas.push_back(odfData[i][4]);
     }
 
-    QVector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalSymmetry, e1s, e2s, e3s, odf_weights, sigmas, true);
+    Container odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalSymmetry, e1s, e2s, e3s, odf_weights, sigmas, true);
 
-    QVector<float> angles;
-    QVector<float> axes;
-    QVector<float> weights;
+    Container angles;
+    Container axes;
+    Container weights;
     std::vector<std::vector<double>> mdfData = m_MdfData.getTableData();
     for(size_t i = 0; i < mdfData.size(); i++)
     {
@@ -555,11 +557,11 @@ void GeneratePrimaryStatsData::execute()
 
   {
     absPresetPtr->initializeAxisODFTableModel(dataMap);
-    QVector<float> e1s;
-    QVector<float> e2s;
-    QVector<float> e3s;
-    QVector<float> weights;
-    QVector<float> sigmas;
+    Container e1s;
+    Container e2s;
+    Container e3s;
+    Container weights;
+    Container sigmas;
     std::vector<std::vector<double>> axisOdfData = m_AxisOdfData.getTableData();
     for(size_t i = 0; i < axisOdfData.size(); i++)
     {

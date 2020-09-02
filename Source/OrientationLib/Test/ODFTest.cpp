@@ -60,12 +60,8 @@
 class ODFTest
 {
 public:
-  ODFTest()
-  {
-  }
-  virtual ~ODFTest()
-  {
-  }
+  ODFTest() = default;
+  virtual ~ODFTest() = default;
 
   // -----------------------------------------------------------------------------
   //
@@ -78,13 +74,15 @@ public:
 
   void CubicODFTest()
   {
+    using ContainerType = std::vector<float>;
+
     // Resize the ODF vector properly for Cubic
-    std::vector<float> odf(CubicOps::k_OdfSize);
-    std::vector<float> e1s(2);
-    std::vector<float> e2s(2);
-    std::vector<float> e3s(2);
-    std::vector<float> weights(2);
-    std::vector<float> sigmas(2);
+    ContainerType odf(CubicOps::k_OdfSize);
+    ContainerType e1s(2);
+    ContainerType e2s(2);
+    ContainerType e3s(2);
+    ContainerType weights(2);
+    ContainerType sigmas(2);
 
     POPULATE_DATA(0, 35, 45, 0, 1000.0, 2.0)
     POPULATE_DATA(1, 59, 37, 63, 1000.0, 1.0)
@@ -92,7 +90,7 @@ public:
     // Calculate the ODF Data
 
     size_t numEntries = e1s.size();
-    Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()), &(weights.front()), &(sigmas.front()), true, &(odf.front()), numEntries);
+    Texture::CalculateCubicODFData<float, ContainerType>(e1s, e2s, e3s, weights, sigmas, true, odf, numEntries);
 
     size_t npoints = 1000;
     std::vector<float> x001(npoints * 3);

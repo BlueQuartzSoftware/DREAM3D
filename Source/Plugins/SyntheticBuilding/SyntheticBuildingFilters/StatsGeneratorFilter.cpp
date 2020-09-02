@@ -370,11 +370,11 @@ void StatsGeneratorFilter::execute()
       }
 
       // ODF Data ************************************************************************
-      QVector<float> e1s;
-      QVector<float> e2s;
-      QVector<float> e3s;
-      QVector<float> weights;
-      QVector<float> sigmas;
+      std::vector<float> e1s;
+      std::vector<float> e2s;
+      std::vector<float> e3s;
+      std::vector<float> weights;
+      std::vector<float> sigmas;
 
       if(odfWeights.size() == 5)
       {
@@ -393,9 +393,9 @@ void StatsGeneratorFilter::execute()
       StatsGeneratorUtilities::GenerateODFBinData(statsData.get(), phaseType, crystalStruct, e1s, e2s, e3s, weights, sigmas);
 
       // MDF Data ************************************************************************
-      QVector<float> mdf_angles;
-      QVector<float> mdf_axes;
-      QVector<float> mdf_weights;
+      std::vector<float> mdf_angles;
+      std::vector<float> mdf_axes;
+      std::vector<float> mdf_weights;
 
       if(mdfWeights.size() == 3)
       {
@@ -411,17 +411,17 @@ void StatsGeneratorFilter::execute()
       }
 
       // Compute the ODF representation that will be used to determine the MDF
-      QVector<float> odf = StatsGeneratorUtilities::GenerateODFData(crystalStruct, e1s, e2s, e3s, weights, sigmas);
+      std::vector<float> odf = StatsGeneratorUtilities::GenerateODFData(crystalStruct, e1s, e2s, e3s, weights, sigmas);
 
       // Compute the binned MDF and set it into the StatsDataArray
       StatsGeneratorUtilities::GenerateMisorientationBinData(statsData.get(), phaseType, crystalStruct, odf, mdf_angles, mdf_axes, mdf_weights);
 
       // AxisODF Data ********************************************************************
-      QVector<float> axis_e1s;
-      QVector<float> axis_e2s;
-      QVector<float> axis_e3s;
-      QVector<float> axis_weights;
-      QVector<float> axis_sigmas;
+      std::vector<float> axis_e1s;
+      std::vector<float> axis_e2s;
+      std::vector<float> axis_e3s;
+      std::vector<float> axis_weights;
+      std::vector<float> axis_sigmas;
 
       if(aodfWeights.size() == 5)
       {

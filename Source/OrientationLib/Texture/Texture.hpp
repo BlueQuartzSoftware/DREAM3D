@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #pragma once
 
@@ -65,30 +65,30 @@
 class Texture
 {
 public:
-  virtual ~Texture()
-  {
-  }
+  virtual ~Texture() = default;
 
   /**
-  * @brief This will calculate ODF data based on an array of weights that are
-  * passed in and a Cubic Crystal Structure. The input data for the
-  * euler angles is in Columnar fashion instead of row major format.
-  * @param e1s Pointer to first Euler Angles
-  * @param e2s Pointer to the second euler angles
-  * @param e3s Pointer to the third euler angles
-  * @param weights Pointer to the Array of weights values.
-  * @param sigmas Pointer to the Array of sigma values.
-  * @param normalize Should the ODF data be normalized by the totalWeight value
-  * before returning.
-  * @param odf (OUT) Pointer to the ODF array that is generated from this function. NOTE: The memory
-  * for this MUST have already been allocated. Use ops.getODFSize() to allocate the proper amount
-  * @param numEntries The number of entries of Angle/Weight/Sigmas
-  */
-  template <typename T> static void CalculateCubicODFData(T* e1s, T* e2s, T* e3s, T* weights, T* sigmas, bool normalize, T* odf, size_t numEntries)
+   * @brief This will calculate ODF data based on an array of weights that are
+   * passed in and a Cubic Crystal Structure. The input data for the
+   * euler angles is in Columnar fashion instead of row major format.
+   * @param e1s Pointer to first Euler Angles
+   * @param e2s Pointer to the second euler angles
+   * @param e3s Pointer to the third euler angles
+   * @param weights Pointer to the Array of weights values.
+   * @param sigmas Pointer to the Array of sigma values.
+   * @param normalize Should the ODF data be normalized by the totalWeight value
+   * before returning.
+   * @param odf (OUT) Pointer to the ODF array that is generated from this function. NOTE: The memory
+   * for this MUST have already been allocated. Use ops.getODFSize() to allocate the proper amount
+   * @param numEntries The number of entries of Angle/Weight/Sigmas
+   */
+  template <typename T, typename Container>
+  static void CalculateCubicODFData(Container& e1s, Container& e2s, Container& e3s, Container& weights, Container& sigmas, bool normalize, Container& odf, size_t numEntries)
   {
     CubicOps ops;
-    Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
-    int32_t* TextureBins = textureBins->getPointer(0);
+    Int32ArrayType::Pointer textureBinsPtr = Int32ArrayType::CreateArray(numEntries, "textureBins");
+    int32_t* textureBins = textureBinsPtr->getPointer(0);
+    odf.resize(ops.getODFSize());
 
     float addweight = 0;
     float totaladdweight = 0;
@@ -106,7 +106,7 @@ public:
 
       rod = ops.getODFFZRod(rod);
       bin = ops.getOdfBin(rod);
-      TextureBins[i] = static_cast<int>(bin);
+      textureBins[i] = static_cast<int>(bin);
     }
 
     for(int i = 0; i < ops.getODFSize(); i++)
@@ -115,7 +115,7 @@ public:
     }
     for(size_t i = 0; i < numEntries; i++)
     {
-      bin = TextureBins[i];
+      bin = textureBins[i];
       bin1 = bin % 18;
       bin2 = (bin / 18) % 18;
       bin3 = bin / (18 * 18);
@@ -207,26 +207,29 @@ public:
   }
 
   /**
-  * @brief This will calculate ODF data based on an array of weights that are
-  * passed in and a Hexagonal Crystal Structure. This is templated on the container
-  * type that holds the data. Containers that adhere to the STL Vector API
-  * should be usable. QVector falls into this category. The input data for the
-  * euler angles is in Columnar fashion instead of row major format.
-  * @param e1s The first euler angles
-  * @param e2s The second euler angles
-  * @param e3s The third euler angles
-  * @param weights Array of weights values.
-  * @param sigmas Array of sigma values.
-  * @param normalize Should the ODF data be normalized by the totalWeight value
-  * before returning.
-  * @param odf (OUT) The ODF data that is generated from this function.
-  * @param numEntries (OUT) The TotalWeight value that is also calculated
-  */
-  template <typename T> static void CalculateHexODFData(T* e1s, T* e2s, T* e3s, T* weights, T* sigmas, bool normalize, T* odf, size_t numEntries)
+   * @brief This will calculate ODF data based on an array of weights that are
+   * passed in and a Hexagonal Crystal Structure. This is templated on the container
+   * type that holds the data. Containers that adhere to the STL Vector API
+   * should be usable. QVector falls into this category. The input data for the
+   * euler angles is in Columnar fashion instead of row major format.
+   * @param e1s The first euler angles
+   * @param e2s The second euler angles
+   * @param e3s The third euler angles
+   * @param weights Array of weights values.
+   * @param sigmas Array of sigma values.
+   * @param normalize Should the ODF data be normalized by the totalWeight value
+   * before returning.
+   * @param odf (OUT) The ODF data that is generated from this function.
+   * @param numEntries (OUT) The TotalWeight value that is also calculated
+   */
+  template <typename T, typename Container>
+  static void CalculateHexODFData(Container& e1s, Container& e2s, Container& e3s, Container& weights, Container& sigmas, bool normalize, Container& odf, size_t numEntries)
   {
     HexagonalOps hexOps;
-    Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
-    int32_t* TextureBins = textureBins->getPointer(0);
+    Int32ArrayType::Pointer textureBinsPtr = Int32ArrayType::CreateArray(numEntries, "textureBins");
+    int32_t* textureBins = textureBinsPtr->getPointer(0);
+    odf.resize(hexOps.getODFSize());
+
     float addweight = 0;
     float totaladdweight = 0;
     float totalweight = float(hexOps.getODFSize());
@@ -243,7 +246,7 @@ public:
 
       rod = ops.getODFFZRod(rod);
       bin = ops.getOdfBin(rod);
-      TextureBins[i] = static_cast<int>(bin);
+      textureBins[i] = static_cast<int>(bin);
     }
 
     for(int i = 0; i < hexOps.getODFSize(); i++)
@@ -252,7 +255,7 @@ public:
     }
     for(size_t i = 0; i < numEntries; i++)
     {
-      bin = TextureBins[i];
+      bin = textureBins[i];
       bin1 = bin % 36;
       bin2 = (bin / 36) % 36;
       bin3 = bin / (36 * 36);
@@ -344,27 +347,30 @@ public:
   }
 
   /**
-  * @brief This will calculate ODF data based on an array of weights that are
-  * passed in and a OrthoRhombic Crystal Structure. This is templated on the container
-  * type that holds the data. Containers that adhere to the STL Vector API
-  * should be usable. QVector falls into this category. The input data for the
-  * euler angles is in Columnar fashion instead of row major format.
-  * @param e1s The first euler angles
-  * @param e2s The second euler angles
-  * @param e3s The third euler angles
-  * @param weights Array of weights values.
-  * @param sigmas Array of sigma values.
-  * @param normalize Should the ODF data be normalized by the totalWeight value
-  * before returning.
-  * @param odf (OUT) The ODF data that is generated from this function.
-  * @param numEntries The TotalWeight value that is also calculated
-  */
-  template <typename T> static void CalculateOrthoRhombicODFData(T* e1s, T* e2s, T* e3s, T* weights, T* sigmas, bool normalize, T* odf, size_t numEntries)
+   * @brief This will calculate ODF data based on an array of weights that are
+   * passed in and a OrthoRhombic Crystal Structure. This is templated on the container
+   * type that holds the data. Containers that adhere to the STL Vector API
+   * should be usable. QVector falls into this category. The input data for the
+   * euler angles is in Columnar fashion instead of row major format.
+   * @param e1s The first euler angles
+   * @param e2s The second euler angles
+   * @param e3s The third euler angles
+   * @param weights Array of weights values.
+   * @param sigmas Array of sigma values.
+   * @param normalize Should the ODF data be normalized by the totalWeight value
+   * before returning.
+   * @param odf (OUT) The ODF data that is generated from this function.
+   * @param numEntries The TotalWeight value that is also calculated
+   */
+  template <typename T, typename Container>
+  static void CalculateOrthoRhombicODFData(Container& e1s, Container& e2s, Container& e3s, Container& weights, Container& sigmas, bool normalize, Container& odf, size_t numEntries)
   {
     OrthoRhombicOps ops;
     SIMPL_RANDOMNG_NEW()
-    Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
-    int32_t* TextureBins = textureBins->getPointer(0);
+    Int32ArrayType::Pointer textureBinsPtr = Int32ArrayType::CreateArray(numEntries, "textureBins");
+    int32_t* textureBins = textureBinsPtr->getPointer(0);
+    odf.resize(ops.getODFSize());
+
     float addweight = 0;
     float totaladdweight = 0;
     float totalweight = float(ops.getODFSize());
@@ -380,7 +386,7 @@ public:
 
       rod = ops.getODFFZRod(rod);
       bin = ops.getOdfBin(rod);
-      TextureBins[i] = static_cast<int>(bin);
+      textureBins[i] = static_cast<int>(bin);
     }
 
     for(int i = 0; i < ops.getODFSize(); i++)
@@ -389,7 +395,7 @@ public:
     }
     for(size_t i = 0; i < numEntries; i++)
     {
-      bin = TextureBins[i];
+      bin = textureBins[i];
       bin1 = bin % 36;
       bin2 = (bin / 36) % 36;
       bin3 = bin / (36 * 36);
@@ -491,11 +497,13 @@ public:
    * the value passed here is the minium size of all the arrays. The sizes of the ODF and MDF arrays are
    * determined by calling the getODFSize and getMDFSize functions of the parameterized LaueOps class.
    */
-  template <typename T, class LaueOps> static void CalculateMDFData(T* angles, T* axes, T* weights, T* odf, T* mdf, size_t numEntries)
+  template <typename T, class LaueOps, typename Container>
+  static void CalculateMDFData(Container& angles, Container& axes, Container& weights, Container& odf, Container& mdf, size_t numEntries)
   {
     LaueOps orientationOps;
     const int odfsize = orientationOps.getODFSize();
     const int mdfsize = orientationOps.getMDFSize();
+    mdf.resize(static_cast<size_t>(mdfsize));
 
     uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
     SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
@@ -589,12 +597,9 @@ public:
   }
 
 protected:
-  Texture()
-  {
-  }
+  Texture() = default;
 
 private:
   Texture(const Texture&);        // Copy Constructor Not Implemented
   void operator=(const Texture&); // Move assignment Not Implemented
 };
-

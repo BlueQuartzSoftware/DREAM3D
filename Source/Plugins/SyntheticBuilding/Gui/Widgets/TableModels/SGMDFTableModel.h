@@ -38,7 +38,6 @@
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QVariant>
 #include <QtCore/QVector>
-#include <QtGui/QColor>
 
 class QAbstractItemDelegate;
 
@@ -58,7 +57,7 @@ public:
     ColumnCount
   };
 
-  SGMDFTableModel(QObject* parent = 0);
+  SGMDFTableModel(QObject* parent = nullptr);
   virtual ~SGMDFTableModel();
 
   /**
@@ -66,7 +65,7 @@ public:
    * @param index
    * @return
    */
-  virtual Qt::ItemFlags flags(const QModelIndex& index) const;
+  Qt::ItemFlags flags(const QModelIndex& index) const override;
 
   /**
    *
@@ -74,7 +73,7 @@ public:
    * @param role
    * @return
    */
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+  QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
   /**
    *
@@ -83,21 +82,21 @@ public:
    * @param role
    * @return
    */
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
   /**
    *
    * @param parent
    * @return
    */
-  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+  int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
   /**
    *
    * @param parent
    * @return
    */
-  virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
+  int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 
   /**
    *
@@ -106,7 +105,7 @@ public:
    * @param role
    * @return
    */
-  virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+  bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
 
   /**
    *
@@ -116,7 +115,7 @@ public:
    * @param role
    * @return
    */
-  virtual bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role = Qt::EditRole);
+  bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role = Qt::EditRole) override;
 
   /**
    *
@@ -125,7 +124,7 @@ public:
    * @param parent
    * @return
    */
-  virtual bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex());
+  bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
   /**
    *
@@ -134,51 +133,61 @@ public:
    * @param parent
    * @return
    */
-  virtual bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex());
+  bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
   /**
-   *
+   * @brief getItemDelegate
    * @return
    */
-  virtual QAbstractItemDelegate* getItemDelegate();
+  QAbstractItemDelegate* getItemDelegate();
 
   /**
    *
    * @param col
    * @return
    */
-  virtual QVector<float> getData(int col);
+  std::vector<float> getData(int col);
 
   /**
-   *
+   * @brief Sets the data for a column of data
    * @param col
+   * @param data
+   */
+  void setColumnData(int col, const QVector<float>& data);
+
+  /**
+   * @brief Sets the data for a row in the table
    * @param row
-   * @return
+   * @param angle
+   * @param axis
+   * @param weight
    */
-  // virtual float getDataValue(int col, int row);
+  void setRowData(int row, float angle, float* const axis, float weight);
 
-  int parseHKLRow(int row, float& h, float& k, float& l);
+  /**
+   * @brief setInitialValues
+   */
+  void setInitialValues();
 
-  virtual void setColumnData(int col, QVector<float>& data);
-
-  virtual void setRowData(int row, float angle, QString axis, float weight);
-
-  virtual void setInitialValues();
-
-  void setTableData(QVector<float> angles, QVector<float> axis, QVector<float> weights);
+  /**
+   * @brief Sets all the table data in one function
+   * @param angles The Angles
+   * @param axis The Axis
+   * @param weights The weight values
+   */
+  void setTableData(const QVector<float>& angles, const QVector<float>& axis, const QVector<float>& weights);
 
 private:
-  int m_ColumnCount;
-  int m_RowCount;
+  int m_ColumnCount = {ColumnCount};
+  int m_RowCount = {0};
 
   QVector<float> m_Angles;
-  QVector<QString> m_Axis;
+  QVector<float> m_Axis;
   QVector<float> m_Weights;
 
 public:
-  SGMDFTableModel(const SGMDFTableModel&) = delete; // Copy Constructor Not Implemented
-  SGMDFTableModel(SGMDFTableModel&&) = delete;      // Move Constructor Not Implemented
+  SGMDFTableModel(const SGMDFTableModel&) = delete;            // Copy Constructor Not Implemented
+  SGMDFTableModel(SGMDFTableModel&&) = delete;                 // Move Constructor Not Implemented
   SGMDFTableModel& operator=(const SGMDFTableModel&) = delete; // Copy Assignment Not Implemented
   SGMDFTableModel& operator=(SGMDFTableModel&&) = delete;      // Move Assignment Not Implemented
 };
-
