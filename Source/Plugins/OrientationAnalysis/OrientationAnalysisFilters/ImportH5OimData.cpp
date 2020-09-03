@@ -497,29 +497,41 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& t
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ImageQuality));
     fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::ImageQuality));
-    ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::ImageQuality, fArray);
+    if(fArray.get() != nullptr)
+    {
+      ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
+      ebsdAttrMat->addAttributeArray(Ebsd::Ang::ImageQuality, fArray);
+    }
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ConfidenceIndex));
     fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::ConfidenceIndex));
-    ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::ConfidenceIndex, fArray);
+    if(fArray.get() != nullptr)
+    {
+      ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
+      ebsdAttrMat->addAttributeArray(Ebsd::Ang::ConfidenceIndex, fArray);
+    }
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::SEMSignal));
     fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::SEMSignal));
-    ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::SEMSignal, fArray);
+    if(fArray.get() != nullptr)
+    {
+      ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
+      ebsdAttrMat->addAttributeArray(Ebsd::Ang::SEMSignal, fArray);
+    }
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Fit));
     fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::Fit));
-    ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::Fit, fArray);
+    if(fArray.get() != nullptr)
+    {
+      ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
+      ebsdAttrMat->addAttributeArray(Ebsd::Ang::Fit, fArray);
+    }
   }
 
   if(getReadPatternData()) // Get the pattern Data from the
@@ -535,16 +547,19 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& t
       pDimsV[1] = pDims[1];
 
       UInt8ArrayType::Pointer patternData = std::dynamic_pointer_cast<UInt8ArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::PatternData));
-      ::memcpy(patternData->getPointer(offset), ptr, sizeof(uint8_t) * totalPoints);
-      ebsdAttrMat->addAttributeArray(Ebsd::Ang::PatternData, patternData);
+      if(patternData.get() != nullptr)
+      {
+        ::memcpy(patternData->getPointer(offset), ptr, sizeof(uint8_t) * totalPoints);
+        ebsdAttrMat->addAttributeArray(Ebsd::Ang::PatternData, patternData);
 
-      // Remove the current PatternData array
-      ebsdAttrMat->removeAttributeArray(Ebsd::Ang::PatternData);
+        // Remove the current PatternData array
+        ebsdAttrMat->removeAttributeArray(Ebsd::Ang::PatternData);
 
-      // Push in our own PatternData array
-      ebsdAttrMat->addAttributeArray(patternData->getName(), patternData);
-      // Set the readers pattern data pointer to nullptr so that reader does not "free" the memory
-      reader->setPatternData(nullptr);
+        // Push in our own PatternData array
+        ebsdAttrMat->addAttributeArray(patternData->getName(), patternData);
+        // Set the readers pattern data pointer to nullptr so that reader does not "free" the memory
+        reader->setPatternData(nullptr);
+      }
     }
   }
 }

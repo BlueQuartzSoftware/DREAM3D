@@ -604,13 +604,13 @@ void AngReader::parseHeaderLine(QByteArray& buf)
       m_CurrentPhase->parseFormula(tokens);
     }
   }
-  else if(word == Ebsd::Ang::Info && m_CurrentPhase.get() != nullptr)
-  {
-    if(tokens.size() > 1)
-    {
-      m_CurrentPhase->parseInfo(tokens);
-    }
-  }
+  //  else if(word == Ebsd::Ang::Info && m_CurrentPhase.get() != nullptr)
+  //  {
+  //    if(tokens.size() > 1)
+  //    {
+  //      m_CurrentPhase->parseInfo(tokens);
+  //    }
+  //  }
   else if(word == Ebsd::Ang::Symmetry && m_CurrentPhase.get() != nullptr)
   {
     if(tokens.size() > 1)

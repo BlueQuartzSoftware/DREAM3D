@@ -10,6 +10,28 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.5.141 ##
+
+### Version 6.5.141 KNOWN ISSUES ###
+
+EDAX Version 8 HDF5 files are not supported in this release of DREAM.3D.
+
+### Version 6.5.141 New Filters & Features ###
+
++ Establish Foam Morphology Filter has been added to the DREAM3DReview plugin.
+
+### 6.5.141 Fixed DREAM3D Issues ###
+
++ FindTriangleGeomShapes & FindShapes: Fix memory leak
++ CalculateArrayHistogram: Allow the use of existing data containers
++ FindVolFractions: Calculate Volume Fractions for ALL phases
++ Texture.hpp: Change API to handle STL style containers. This required updating many other classes.
++ SGMDFTableModel: Update API to take STL containers, Update parsing functions that take data from the UI in the form of a table row. All data is stored as floats instead of a mix of float and string.
++ MatchCrystallography: Fix walking off the end of an array
++ StatsGeneratorUtilities: Update calls to API where possible. To fix all instances we would need to back-port the complete standalone EBSDLib which is not going to happen for this release.
++ SIMPL: internal API updates to allow back-porting of bug fixes
++ REMOVED FILTERS: ITK Vector Connected Component Image and ITK Vector Rescale Intensity Image. Neither will pass their unit test.
+
 ## Version 6.5.138 ##
 
 ### Version 6.5.138 New Filters & Features ###

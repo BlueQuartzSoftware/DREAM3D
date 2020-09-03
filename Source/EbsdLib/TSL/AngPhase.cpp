@@ -83,32 +83,6 @@ void AngPhase::parseFormula(QList<QByteArray>& tokens)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::parseInfo(QList<QByteArray>& tokens)
-{
-  m_Info.clear();
-  for(int i = 1; i < tokens.size(); ++i)
-  {
-    m_Info.append(tokens.at(i)).append(" ");
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-//void AngPhase::parseSymmetry(char* value, size_t start, size_t length)
-//{
-//  if (value[start] == ':')
-//  {
-//    ++start;
-//  } // move past the ":" character
-//  QByteArray data(&(value[start]), strlen(value) - start);
-//  bool ok = false;
-//  m_Symmetry = data.toUInt(&ok, 10);
-//}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void AngPhase::parseLatticeConstants(QList<QByteArray>& tokens)
 {
   m_LatticeConstants.clear();
@@ -122,20 +96,6 @@ void AngPhase::parseLatticeConstants(QList<QByteArray>& tokens)
   m_LatticeConstants.push_back(tokens[6].toFloat(&ok)); // Gamma
 
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-//void AngPhase::parseNumberFamilies(char* value, size_t start, size_t length)
-//{
-//  if (value[start] == ':')
-//  {
-//    ++start;
-//  } // move past the ":" character
-//  QByteArray data(&(value[start]), strlen(value) - start);
-//  bool ok = false;
-//  m_NumberFamilies = data.toInt(&ok, 10);
-//}
 
 // -----------------------------------------------------------------------------
 //
@@ -185,7 +145,7 @@ void AngPhase::printSelf(QTextStream& stream)
   stream << Ebsd::Ang::Phase << ": " << m_PhaseIndex << QString("\n");
   stream << Ebsd::Ang::MaterialName << ": " << m_MaterialName << QString("\n");
   stream << Ebsd::Ang::Formula << ": " << m_Formula << QString("\n");
-  stream << Ebsd::Ang::Info << ": " << m_Info << QString("\n");
+  // stream << Ebsd::Ang::Info << ": " << m_Info << QString("\n");
   stream << Ebsd::Ang::Symmetry << ": " << m_Symmetry << QString("\n");
 
   stream << Ebsd::Ang::LatticeConstants;

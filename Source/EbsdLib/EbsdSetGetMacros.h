@@ -417,7 +417,7 @@ public:                                                                         
   {                                                                                                                                                                                                    \
     if(nullptr != m_##var)                                                                                                                                                                             \
     {                                                                                                                                                                                                  \
-      free(m_##var);                                                                                                                                                                                   \
+      deallocateArrayData(m_##var);                                                                                                                                                                    \
       m_##var = nullptr;                                                                                                                                                                               \
       m_##var##Cleanup = true;                                                                                                                                                                         \
     }                                                                                                                                                                                                  \

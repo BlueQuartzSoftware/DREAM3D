@@ -120,7 +120,9 @@ namespace H5OIM
 {
 const QString EDAX("EDAX");
 const QString Manufacturer(" Manufacturer");
-const QString Version(" Version");
+const std::string Version7(" Version");
+const std::string Version8("Version");
+
 const QString H5FileExt("h5");
 
 const QString OriginalHeader("OriginalHeader");
@@ -138,6 +140,11 @@ const QString SEM("SEM");
 const QString FileVersionStr("FileVersion");
 const unsigned int FileVersion = 5;
 const QString EbsdLibVersionStr("EbsdLibVersion");
+
+const std::string OIMAnalysisVersion("OIM Analysis");
+const std::string OIMAnalysisVersion7("OIM Analysis 7");
+const std::string OIMAnalysisVersion8("OIM Analysis 8");
+
 } // namespace H5OIM
 
   namespace Ang
@@ -196,7 +203,7 @@ const QString EbsdLibVersionStr("EbsdLibVersion");
     const QString PhaseName(ANG_PHASE_NAME);
     const QString MaterialName(ANG_MATERIAL_NAME);
     const QString Formula(ANG_FORMULA);
-    const QString Info(ANG_INFO);
+    // const QString Info(ANG_INFO);
     const QString Symmetry(ANG_SYMMETRY);
     const QString LatticeConstants(ANG_LATTICE_CONSTANTS);
     const QString NumberFamilies(ANG_NUMBER_FAMILIES);

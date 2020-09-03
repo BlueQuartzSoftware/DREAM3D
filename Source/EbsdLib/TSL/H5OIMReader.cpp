@@ -253,6 +253,16 @@ int H5OIMReader::readHeaderOnly()
     setErrorMessage(str);
     return getErrorCode();
   }
+  // Read and parse the OIM Analysis version that created the file.
+  if(H5Lite::datasetExists(fileId, Ebsd::H5OIM::Version7))
+  {
+    err = H5Lite::readStringDataset(fileId, Ebsd::H5OIM::Version7, m_OIMVersion);
+  }
+  // Read and parse the OIM Analysis version that created the file.
+  if(H5Lite::datasetExists(fileId, Ebsd::H5OIM::Version8))
+  {
+    err = H5Lite::readStringDataset(fileId, Ebsd::H5OIM::Version8, m_OIMVersion);
+  }
 
   hid_t gid = H5Gopen(fileId, m_HDF5Path.toLatin1().data(), H5P_DEFAULT);
   if(gid < 0)
@@ -371,10 +381,11 @@ int H5OIMReader::readHeader(hid_t parId)
     setErrorMessage("H5OIMReader Error: Could not open 'Pattern Center Calibration' Group");
     return -1;
   }
-  sentinel.addGroupId(&patternCenterCalibrationGid);
   ReadH5EbsdHeaderData<H5OIMReader, float, AngHeaderFloatType>(this, Ebsd::Ang::XStar, patternCenterCalibrationGid, m_HeaderMap);
   ReadH5EbsdHeaderData<H5OIMReader, float, AngHeaderFloatType>(this, Ebsd::Ang::YStar, patternCenterCalibrationGid, m_HeaderMap);
   ReadH5EbsdHeaderData<H5OIMReader, float, AngHeaderFloatType>(this, Ebsd::Ang::ZStar, patternCenterCalibrationGid, m_HeaderMap);
+  err = H5Gclose(patternCenterCalibrationGid);
+  patternCenterCalibrationGid = -1;
 
   ReadH5EbsdHeaderData<H5OIMReader, float, AngHeaderFloatType>(this, Ebsd::Ang::Working_Distance, gid, m_HeaderMap);
   ReadH5EbsdHeaderData<H5OIMReader, float, AngHeaderFloatType>(this, Ebsd::Ang::StepX, gid, m_HeaderMap);
@@ -406,11 +417,16 @@ int H5OIMReader::readHeader(hid_t parId)
   }
   HDF_ERROR_HANDLER_ON
 
-  ReadH5EbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::Operator, gid, m_HeaderMap);
-  ReadH5EbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::SampleID, gid, m_HeaderMap);
-  ReadH5EbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::ScanID, gid, m_HeaderMap);
+  // Version 7/8
   ReadH5EbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::GridType, gid, m_HeaderMap);
 
+  // Version 7 Only
+  if(m_OIMVersion.find(Ebsd::H5OIM::OIMAnalysisVersion7) != std::string::npos)
+  {
+    ReadH5EbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::Operator, gid, m_HeaderMap);
+    ReadH5EbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::SampleID, gid, m_HeaderMap);
+    ReadH5EbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::ScanID, gid, m_HeaderMap);
+  }
   hid_t phasesGid = H5Gopen(gid, Ebsd::H5OIM::Phase.toLatin1().data(), H5P_DEFAULT);
   if(phasesGid < 0)
   {
@@ -442,7 +458,7 @@ int H5OIMReader::readHeader(hid_t parId)
     currentPhase->setPhaseIndex(phaseGroupName.toInt());
     READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::MaterialName, MaterialName, currentPhase)
     READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Formula, Formula, currentPhase)
-    READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Info, Info, currentPhase)
+    // READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Info, Info, currentPhase)
     READ_PHASE_HEADER_DATA("H5OIMReader", pid, int32_t, Ebsd::Ang::Symmetry, Symmetry, currentPhase)
     READ_PHASE_HEADER_DATA("H5OIMReader", pid, int32_t, Ebsd::Ang::NumberFamilies, NumberFamilies, currentPhase)
 

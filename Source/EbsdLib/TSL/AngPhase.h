@@ -32,12 +32,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-
-
-
-
 #pragma once
 
 #include <QtCore/QString>
@@ -162,7 +156,6 @@ class EbsdLib_EXPORT AngPhase
     EBSD_INSTANCE_PROPERTY(int, PhaseIndex)
     EBSD_INSTANCE_STRING_PROPERTY(MaterialName)
     EBSD_INSTANCE_STRING_PROPERTY(Formula)
-    EBSD_INSTANCE_STRING_PROPERTY(Info)
     EBSD_INSTANCE_PROPERTY(uint32_t, Symmetry)
     EBSD_INSTANCE_PROPERTY(QVector<float>, LatticeConstants)
     EBSD_INSTANCE_PROPERTY(int, NumberFamilies)
@@ -178,7 +171,6 @@ class EbsdLib_EXPORT AngPhase
 
     void parseMaterialName(QList<QByteArray>& tokens);
     void parseFormula(QList<QByteArray>& tokens);
-    void parseInfo(QList<QByteArray>& tokens);
     void parseLatticeConstants(QList<QByteArray>& tokens);
     void parseHKLFamilies(QList<QByteArray>& tokens);
     void parseCategories(QList<QByteArray>& tokens);

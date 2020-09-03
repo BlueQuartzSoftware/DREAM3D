@@ -99,6 +99,8 @@ public:
 
   EBSD_INSTANCE_PROPERTY(bool, ReadPatternData)
 
+  EBSD_INSTANCE_PROPERTY(std::string, OIMVersion)
+
   EBSD_PTR_INSTANCE_PROPERTY(uint8_t*, PatternData)
 
   EBSD_INSTANCE_2DVECTOR_PROPERTY(int, PatternDims)
