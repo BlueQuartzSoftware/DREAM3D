@@ -1092,7 +1092,7 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   int32_t mbin = 0;
   float w = 0.0f;
 
-  // QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+  float* currentAvgQuatPtr = nullptr;
 
   size_t numfeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
   size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
@@ -1126,14 +1126,17 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   float nsa = 0.0f;
   for(size_t i = 1; i < numfeatures; i++)
   {
-    QuatF q1(m_AvgQuatsPtr.lock()->getTuplePointer(i));
+    currentAvgQuatPtr = m_AvgQuatsPtr.lock()->getTuplePointer(i);
+
+    QuatF q1(currentAvgQuatPtr[0], currentAvgQuatPtr[1], currentAvgQuatPtr[2], currentAvgQuatPtr[3]);
     phase1 = m_CrystalStructures[m_FeaturePhases[i]];
     for(size_t j = 0; j < neighborlist[i].size(); j++)
     {
       w = 10000.0f;
       nname = neighborlist[i][j];
+      currentAvgQuatPtr = m_AvgQuatsPtr.lock()->getTuplePointer(nname);
 
-      QuatF q2(m_AvgQuatsPtr.lock()->getTuplePointer(nname));
+      QuatF q2(currentAvgQuatPtr[0], currentAvgQuatPtr[1], currentAvgQuatPtr[2], currentAvgQuatPtr[3]);
 
       phase2 = m_CrystalStructures[m_FeaturePhases[nname]];
       if(phase1 == phase2)

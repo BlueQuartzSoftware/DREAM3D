@@ -220,6 +220,7 @@ void BadDataNeighborOrientationCheck::execute()
   uint32_t phase1 = 0, phase2 = 0;
 
   QVector<int32_t> neighborCount(totalPoints, 0);
+  float* currentQuatPtr = nullptr;
 
   for(size_t i = 0; i < totalPoints; i++)
   {
@@ -259,10 +260,12 @@ void BadDataNeighborOrientationCheck::execute()
         if(good == 1 && m_GoodVoxels[neighbor])
         {
           phase1 = m_CrystalStructures[m_CellPhases[i]];
-          QuatF q1(m_Quats + i * 4); // BEWARE POINTER MATH!!
+          currentQuatPtr = m_Quats + i * 4;
+          QuatF q1(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
 
           phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-          QuatF q2(m_Quats + neighbor * 4); // BEWARE POINTER MATH!!
+          currentQuatPtr = m_Quats + neighbor * 4;
+          QuatF q2(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
 
           if(m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0)
           {
@@ -326,11 +329,13 @@ void BadDataNeighborOrientationCheck::execute()
             }
             if(good == 1 && !m_GoodVoxels[neighbor])
             {
-              phase1 = m_CrystalStructures[m_CellPhases[i]];
-              QuatF q1(m_Quats + i * 4); // BEWARE POINTER MATH!!
+
+              currentQuatPtr = m_Quats + i * 4;
+              QuatF q1(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
 
               phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-              QuatF q2(m_Quats + neighbor * 4); // BEWARE POINTER MATH!!
+              currentQuatPtr = m_Quats + neighbor * 4;
+              QuatF q2(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
 
               if(m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0)
               {

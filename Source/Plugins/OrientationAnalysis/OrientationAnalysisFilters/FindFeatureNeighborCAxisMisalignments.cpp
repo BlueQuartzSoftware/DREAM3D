@@ -254,12 +254,12 @@ void FindFeatureNeighborCAxisMisalignments::execute()
   uint32_t phase1 = 0, phase2 = 0;
   size_t nname = 0;
   misalignmentlists.resize(totalFeatures);
-
+  float* currentAvgQuatPtr = nullptr;
   for(size_t i = 1; i < totalFeatures; i++)
   {
     phase1 = m_CrystalStructures[m_FeaturePhases[i]];
-    QuatF q1(avgQuatsPtr->getTuplePointer(i));
-    OrientationTransformation::qu2om<QuatF, OrientF>(q1).toGMatrix(g1);
+    currentAvgQuatPtr = avgQuatsPtr->getTuplePointer(i);
+    OrientationTransformation::qu2om<QuatF, OrientF>({currentAvgQuatPtr[0], currentAvgQuatPtr[1], currentAvgQuatPtr[2], currentAvgQuatPtr[3]}).toGMatrix(g1);
 
     // transpose the g matrix so when caxis is multiplied by it
     // it will give the sample direction that the caxis is along
@@ -277,8 +277,8 @@ void FindFeatureNeighborCAxisMisalignments::execute()
       hexneighborlistsize = neighborlist[i].size();
       if(phase1 == phase2 && (phase1 == EbsdLib::CrystalStructure::Hexagonal_High))
       {
-        QuatF q2(avgQuatsPtr->getTuplePointer(nname));
-        OrientationTransformation::qu2om<QuatF, OrientF>(q2).toGMatrix(g2);
+        currentAvgQuatPtr = avgQuatsPtr->getTuplePointer(nname);
+        OrientationTransformation::qu2om<QuatF, OrientF>({currentAvgQuatPtr[0], currentAvgQuatPtr[1], currentAvgQuatPtr[2], currentAvgQuatPtr[3]}).toGMatrix(g2);
 
         // transpose the g matrix so when caxis is multiplied by it
         // it will give the sample direction that the caxis is along

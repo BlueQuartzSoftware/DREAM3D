@@ -597,9 +597,11 @@ void MatchCrystallography::assign_eulers(size_t ensem)
       m_FeatureEulerAngles[3 * i + 1] = eulers[1];
       m_FeatureEulerAngles[3 * i + 2] = eulers[2];
 
-      QuatF q(m_AvgQuats + i * 4);
+      float* currentAvgQuatPtr = m_AvgQuats + i * 4;
       OrientationF eu(m_FeatureEulerAngles[3 * i], m_FeatureEulerAngles[3 * i + 1], m_FeatureEulerAngles[3 * i + 2]);
-      q = OrientationTransformation::eu2qu<OrientationF, QuatF>(eu);
+      QuatF q = OrientationTransformation::eu2qu<OrientationF, QuatF>(eu);
+      q.copyInto(currentAvgQuatPtr, QuatF::Order::VectorScalar);
+
       if(!m_SurfaceFeatures[i])
       {
         m_SimOdf->setValue(choose, (m_SimOdf->getValue(choose) + m_Volumes[i] / m_UnbiasedVolume[ensem]));
@@ -1128,7 +1130,8 @@ void MatchCrystallography::measure_misorientations(size_t ensem)
         m_MisorientationLists[i].assign(neighborlist[i].size() * 3, 0.0f);
       }
 
-      QuatF q1(m_AvgQuats + i * 4);
+      float* currentAvgQuatPtr = m_AvgQuats + i * 4;
+      QuatF q1(currentAvgQuatPtr[0], currentAvgQuatPtr[1], currentAvgQuatPtr[2], currentAvgQuatPtr[3]); // Copy from the array
 
       size_t size = 0;
       if(!neighborlist[i].empty() && neighborsurfacearealist[i].size() == neighborlist[i].size())
@@ -1141,8 +1144,8 @@ void MatchCrystallography::measure_misorientations(size_t ensem)
         int32_t nname = neighborlist[i][j];
         if(m_FeaturePhases[nname] == ensem)
         {
-          QuatF q2(m_AvgQuats + nname * 4);
-
+          currentAvgQuatPtr = m_AvgQuats + nname * 4;
+          QuatF q2(currentAvgQuatPtr[0], currentAvgQuatPtr[1], currentAvgQuatPtr[2], currentAvgQuatPtr[3]); // Copy into the quaternion
           OrientationD axisAngle = laueOp->calculateMisorientation(q1, q2);
 
           OrientationD rod = OrientationTransformation::ax2ro<OrientationD, OrientationD>(axisAngle);

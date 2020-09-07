@@ -317,6 +317,8 @@ void FindFeatureReferenceMisorientations::execute()
   int64_t zPoints = static_cast<int64_t>(udims[2]);
   int64_t point = 0;
   int32_t idx = 0;
+  float* currentQuatPtr = nullptr;
+
   for(int64_t col = 0; col < xPoints; col++)
   {
     for(int64_t row = 0; row < yPoints; row++)
@@ -326,17 +328,21 @@ void FindFeatureReferenceMisorientations::execute()
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
         if(m_FeatureIds[point] > 0 && m_CellPhases[point] > 0)
         {
-          QuatF q1(quatsPtr->getTuplePointer(point));
+          currentQuatPtr = quatsPtr->getTuplePointer(point);
+
+          QuatF q1(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
           QuatF q2;
           phase1 = m_CrystalStructures[m_CellPhases[point]];
           if(m_ReferenceOrientation == 0)
           {
-            q2 = QuatF(avgQuatsPtr->getTuplePointer(m_FeatureIds[point]));
+            currentQuatPtr = avgQuatsPtr->getTuplePointer(m_FeatureIds[point]);
+            q2 = QuatF(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
           }
           else if(m_ReferenceOrientation == 1)
           {
             gnum = m_FeatureIds[point];
-            q2 = QuatF(avgQuatsPtr->getTuplePointer(m_Centers[gnum]));
+            currentQuatPtr = avgQuatsPtr->getTuplePointer(m_Centers[gnum]);
+            q2 = QuatF(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
             phase2 = m_CrystalStructures[m_CellPhases[m_Centers[gnum]]];
           }
 

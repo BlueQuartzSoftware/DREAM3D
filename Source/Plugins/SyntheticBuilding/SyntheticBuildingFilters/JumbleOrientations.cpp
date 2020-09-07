@@ -243,8 +243,8 @@ void JumbleOrientations::execute()
 
   for(int32_t i = 1; i < totalFeatures; i++)
   {
-    QuatF quat(m_AvgQuats + i * 4);
-    quat = OrientationTransformation::eu2qu<OrientationF, QuatF>(OrientationF(m_FeatureEulerAngles + (3 * i), 3));
+    QuatF quat = OrientationTransformation::eu2qu<OrientationF, QuatF>(OrientationF(m_FeatureEulerAngles + (3 * i), 3));
+    quat.copyInto(m_AvgQuats + i * 4, QuatF::Order::VectorScalar);
   }
 }
 

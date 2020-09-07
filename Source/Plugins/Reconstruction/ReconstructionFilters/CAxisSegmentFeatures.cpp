@@ -351,9 +351,6 @@ bool CAxisSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t nei
 {
   bool group = false;
   float w = std::numeric_limits<float>::max();
-  //  QuatF q1 = QuaternionMathF::New();
-  //  QuatF q2 = QuaternionMathF::New();
-  //  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
   float g1[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   float g2[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
@@ -362,11 +359,13 @@ bool CAxisSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t nei
   float caxis[3] = {0.0f, 0.0f, 1.0f};
   float c1[3] = {0.0f, 0.0f, 0.0f};
   float c2[3] = {0.0f, 0.0f, 0.0f};
-
+  float* currentQuatPtr = nullptr;
   if(m_FeatureIds[neighborpoint] == 0 && (!m_UseGoodVoxels || m_GoodVoxels[neighborpoint]))
   {
-    QuatF q1(m_Quats + referencepoint * 4);
-    QuatF q2(m_Quats + neighborpoint * 4);
+    currentQuatPtr = m_Quats + referencepoint * 4;
+    QuatF q1(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
+    currentQuatPtr = m_Quats + neighborpoint * 4;
+    QuatF q2(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
 
     if(m_CellPhases[referencepoint] == m_CellPhases[neighborpoint])
     {
@@ -429,7 +428,7 @@ void CAxisSegmentFeatures::execute()
   updateFeatureInstancePointers();
 
   // Convert user defined tolerance to radians.
-  m_MisoTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_MisoTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_PiOver180;
 
   // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
   const int64_t rangeMin = 0;

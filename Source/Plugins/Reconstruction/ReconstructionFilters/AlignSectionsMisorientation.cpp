@@ -272,6 +272,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
     misorientsPtr->initializeWithValue(false); // Initialize everything to false
 
     float misorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_PiOver180;
+    float* currentQuatPtr = nullptr;
 
     while(newxshift != oldxshift || newyshift != oldyshift)
     {
@@ -303,9 +304,11 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
                     if(m_CellPhases[refposition] > 0 && m_CellPhases[curposition] > 0)
                     {
 
-                      QuatF q1(m_Quats + refposition * 4); // BEWARE POINTER MATH!!
+                      currentQuatPtr = m_Quats + refposition * 4;
+                      QuatF q1(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
                       phase1 = m_CrystalStructures[m_CellPhases[refposition]];
-                      QuatF q2(m_Quats + curposition * 4); // BEWARE POINTER MATH!!
+                      currentQuatPtr = m_Quats + curposition * 4;
+                      QuatF q2(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
                       phase2 = m_CrystalStructures[m_CellPhases[curposition]];
                       if(phase1 == phase2 && phase1 < static_cast<uint32_t>(m_OrientationOps.size()))
                       {

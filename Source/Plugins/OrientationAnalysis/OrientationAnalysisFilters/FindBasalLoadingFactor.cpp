@@ -166,11 +166,11 @@ void FindBasalLoadingFactor::execute()
   sampleLoading[1] = m_LoadingDirection[1];
   sampleLoading[2] = m_LoadingDirection[2];
   MatrixMath::Normalize3x1(sampleLoading);
-
+  float* currentAvgQuatPtr = nullptr;
   for(size_t i = 1; i < totalFeatures; i++)
   {
-    QuatF q1(m_AvgQuats + i * 4);
-    OrientationTransformation::qu2om<QuatF, OrientationF>(q1).toGMatrix(g1);
+    currentAvgQuatPtr = m_AvgQuats + i * 4;
+    OrientationTransformation::qu2om<QuatF, OrientationF>({currentAvgQuatPtr[0], currentAvgQuatPtr[1], currentAvgQuatPtr[2], currentAvgQuatPtr[3]}).toGMatrix(g1);
     // transpose the g matricies so when caxis is multiplied by it
     // it will give the sample direction that the caxis is along
     MatrixMath::Transpose3x3(g1, g1t);

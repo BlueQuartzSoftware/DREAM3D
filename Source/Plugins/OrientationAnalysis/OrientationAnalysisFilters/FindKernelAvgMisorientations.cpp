@@ -225,7 +225,7 @@ void FindKernelAvgMisorientations::execute()
   size_t neighbor = 0;
   int64_t jStride = 0;
   int64_t kStride = 0;
-
+  float* currentQuatPtr = nullptr;
   for(int64_t col = 0; col < xPoints; col++)
   {
     for(int64_t row = 0; row < yPoints; row++)
@@ -237,7 +237,8 @@ void FindKernelAvgMisorientations::execute()
         {
           totalmisorientation = 0.0f;
           numVoxel = 0;
-          QuatF q1(quatPtr->getTuplePointer(point));
+          currentQuatPtr = quatPtr->getTuplePointer(point);
+          QuatF q1(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
 
           phase1 = m_CrystalStructures[m_CellPhases[point]];
           for(int32_t j = -m_KernelSize[2]; j < m_KernelSize[2] + 1; j++)
@@ -276,7 +277,9 @@ void FindKernelAvgMisorientations::execute()
                 }
                 if(good && m_FeatureIds[point] == m_FeatureIds[neighbor])
                 {
-                  QuatF q2(quatPtr->getTuplePointer(neighbor));
+                  currentQuatPtr = quatPtr->getTuplePointer(neighbor);
+
+                  QuatF q2(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
                   phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
                   OrientationF axisAngle = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
 

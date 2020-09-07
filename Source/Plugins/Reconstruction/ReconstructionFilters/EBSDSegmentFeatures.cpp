@@ -342,12 +342,15 @@ bool EBSDSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neig
   {
     return group;
   }
+  float* currentQuatPtr = nullptr;
 
   if(m_FeatureIds[neighborpoint] == 0 && (!m_UseGoodVoxels || m_GoodVoxels[neighborpoint]))
   {
     float w = std::numeric_limits<float>::max();
-    QuatF q1(m_Quats + referencepoint * 4);
-    QuatF q2(m_Quats + neighborpoint * 4);
+    currentQuatPtr = m_Quats + referencepoint * 4;
+    QuatF q1(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
+    currentQuatPtr = m_Quats + neighborpoint * 4;
+    QuatF q2(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
 
     if(m_CellPhases[referencepoint] == m_CellPhases[neighborpoint])
     {

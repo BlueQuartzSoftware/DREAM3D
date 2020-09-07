@@ -223,40 +223,50 @@ void FindAvgOrientations::execute()
 
   m_AvgQuatsPtr.lock()->initializeWithZeros();
 
+  float* avgQuatsPtr = nullptr;
+  float* currentVoxelQuatPtr = nullptr;
+  // Initialize all Average Quats to Identity
+  for(size_t i = 1; i < totalFeatures; i++)
+  {
+    avgQuatsPtr = m_AvgQuats + i * 4;                                           // Get the pointer to the current average quaternion
+    QuatF qAvg(avgQuatsPtr[0], avgQuatsPtr[1], avgQuatsPtr[2], avgQuatsPtr[3]); // Create a copy of the quaternion
+    qAvg = QuatF::identity();
+    qAvg.copyInto(avgQuatsPtr, QuatF::Order::VectorScalar);
+  }
+  // Initialize all Euler Angles to Zero
+  m_FeatureEulerAnglesPtr.lock()->initializeWithZeros();
+
   for(size_t i = 0; i < totalPoints; i++)
   {
     if(m_FeatureIds[i] > 0 && m_CellPhases[i] > 0)
     {
       counts[m_FeatureIds[i]] += 1.0f;
       phase = m_CellPhases[i];
-      QuatF voxquat(m_Quats + i * 4);
-      QuatF curavgquat(m_AvgQuats + m_FeatureIds[i] * 4);
+
+      avgQuatsPtr = m_AvgQuats + m_FeatureIds[i] * 4;                                   // Get the pointer to the current average quaternion
+      QuatF curavgquat(avgQuatsPtr[0], avgQuatsPtr[1], avgQuatsPtr[2], avgQuatsPtr[3]); // Makes a copy into curavgquat!!!!
       curavgquat.scalarDivide(counts[m_FeatureIds[i]]);
 
-      if(counts[m_FeatureIds[i]] == 1.0f)
-      {
-        curavgquat = QuatF::identity();
-      }
-      m_OrientationOps[m_CrystalStructures[phase]]->getNearestQuat(curavgquat, voxquat);
+      currentVoxelQuatPtr = m_Quats + i * 4;                                                                         // Get the pointer to the current voxel's Quaternion
+      QuatF voxquat(currentVoxelQuatPtr[0], currentVoxelQuatPtr[1], currentVoxelQuatPtr[2], currentVoxelQuatPtr[3]); // Makes a copy into voxquat!!!!
+      QuatF nearestQuat = m_OrientationOps[m_CrystalStructures[phase]]->getNearestQuat(curavgquat, voxquat);
 
-      QuatF qSum(m_AvgQuats + m_FeatureIds[i] * 4); // Wrap the pointer
-      qSum = qSum + voxquat;
+      // QuatF qSum(m_AvgQuats + m_FeatureIds[i] * 4); // Makes a copy into qSum!!!!
+      curavgquat = curavgquat + nearestQuat;
+      curavgquat.copyInto(avgQuatsPtr, Quaternion<float>::Order::VectorScalar); // Copy back into the m_AvgQuats storage
     }
   }
 
   for(size_t i = 1; i < totalFeatures; i++)
   {
-
-    QuatF qAvg = QuatF(m_AvgQuats + i * 4);
-    if(counts[i] == 0.0f)
-    {
-      qAvg = QuatF::identity();
-    }
+    avgQuatsPtr = m_AvgQuats + i * 4;                                           // Get the pointer to the current average quaternion
+    QuatF qAvg(avgQuatsPtr[0], avgQuatsPtr[1], avgQuatsPtr[2], avgQuatsPtr[3]); // Create a copy of the quaternion
     qAvg.scalarDivide(counts[i]);
     qAvg = qAvg.unitQuaternion();
+    qAvg.copyInto(avgQuatsPtr, QuatF::Order::VectorScalar);
 
-    Orientation<float> eu(m_FeatureEulerAngles + (3 * i), 3);                           // Wrap the pointer
-    eu = OrientationTransformation::qu2eu<Quaternion<float>, Orientation<float>>(qAvg); // Exploit the copy assignment that will not reallocate if we are wrapping an existing pointer.
+    OrientationF eu = OrientationTransformation::qu2eu<Quaternion<float>, Orientation<float>>(qAvg);
+    eu.copyInto(m_FeatureEulerAngles + (3 * i), 3);
   }
 }
 

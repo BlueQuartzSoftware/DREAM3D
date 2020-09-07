@@ -292,8 +292,9 @@ void NeighborOrientationCorrelation::execute()
   std::vector<int32_t> neighborDiffCount(totalPoints, 0);
   std::vector<int32_t> neighborSimCount(6, 0);
   std::vector<int64_t> bestNeighbor(totalPoints, -1);
-
   const int32_t startLevel = 6;
+  float* currentQuatPtr = nullptr;
+
   for(int32_t currentLevel = startLevel; currentLevel > m_Level; currentLevel--)
   {
     if(getCancel())
@@ -351,10 +352,12 @@ void NeighborOrientationCorrelation::execute()
           if(good)
           {
             phase1 = m_CrystalStructures[m_CellPhases[i]];
-            QuatF q1(m_Quats + i * 4);
+            currentQuatPtr = m_Quats + i * 4;
+            QuatF q1(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
 
             phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-            QuatF q2(m_Quats + neighbor * 4);
+            currentQuatPtr = m_Quats + neighbor * 4;
+            QuatF q2(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
             OrientationD axisAngle(0.0, 0.0, 0.0, std::numeric_limits<double>::max());
             if(m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0)
             {
@@ -395,10 +398,12 @@ void NeighborOrientationCorrelation::execute()
               if(good2)
               {
                 phase1 = m_CrystalStructures[m_CellPhases[neighbor2]];
-                q1 = QuatF(m_Quats + neighbor2 * 4);
+                currentQuatPtr = m_Quats + neighbor2 * 4;
+                q1 = QuatF(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
 
                 phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-                q2 = QuatF(m_Quats + neighbor * 4);
+                currentQuatPtr = m_Quats + neighbor2 * 4;
+                q2 = QuatF(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
                 OrientationD axisAngle(0.0, 0.0, 0.0, std::numeric_limits<double>::max());
                 if(m_CellPhases[neighbor2] == m_CellPhases[neighbor] && m_CellPhases[neighbor2] > 0)
                 {

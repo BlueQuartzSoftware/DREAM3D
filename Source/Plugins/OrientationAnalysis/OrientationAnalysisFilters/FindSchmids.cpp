@@ -311,11 +311,12 @@ void FindSchmids::execute()
     direction[2] = m_SlipDirection[2];
     MatrixMath::Normalize3x1(direction);
   }
+  float* currentAvgQuatPtr = nullptr;
 
   for(size_t i = 1; i < totalFeatures; i++)
   {
-    QuatF q1(avgQuatPtr->getTuplePointer(i));
-    OrientationTransformation::qu2om<QuatF, OrientationD>(q1).toGMatrix(g);
+    currentAvgQuatPtr = avgQuatPtr->getTuplePointer(i);
+    OrientationTransformation::qu2om<QuatF, OrientationD>({currentAvgQuatPtr[0], currentAvgQuatPtr[1], currentAvgQuatPtr[2], currentAvgQuatPtr[3]}).toGMatrix(g);
 
     MatrixMath::Multiply3x3with3x1(g, sampleLoading, crystalLoading);
 

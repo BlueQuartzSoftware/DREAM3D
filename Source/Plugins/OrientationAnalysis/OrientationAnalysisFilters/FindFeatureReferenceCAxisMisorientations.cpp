@@ -258,7 +258,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
   float c1[3] = {0.0f, 0.0f, 0.0f};
   float AvgCAxis[3] = {0.0f, 0.0f, 0.0f};
   size_t index = 0;
-
+  float* currentQuatPtr = nullptr;
   for(int64_t col = 0; col < xPoints; col++)
   {
     for(int64_t row = 0; row < yPoints; row++)
@@ -268,8 +268,8 @@ void FindFeatureReferenceCAxisMisorientations::execute()
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
         if(m_FeatureIds[point] > 0 && m_CellPhases[point] > 0)
         {
-          QuatF q1(quatsPtr->getTuplePointer(point));
-          OrientationTransformation::qu2om<QuatF, Orientation<float>>(q1).toGMatrix(g1);
+          currentQuatPtr = quatsPtr->getTuplePointer(point);
+          OrientationTransformation::qu2om<QuatF, Orientation<float>>({currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]}).toGMatrix(g1);
           // transpose the g matricies so when caxis is multiplied by it
           // it will give the sample direction that the caxis is along
           MatrixMath::Transpose3x3(g1, g1t);

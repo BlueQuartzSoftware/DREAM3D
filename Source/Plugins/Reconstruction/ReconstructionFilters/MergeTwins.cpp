@@ -313,14 +313,17 @@ bool MergeTwins::determineGrouping(int32_t referenceFeature, int32_t neighborFea
   // float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   bool twin = false;
   std::vector<LaueOps::Pointer> m_OrientationOps = LaueOps::GetAllOrientationOps();
+  float* currentAvgQuatPtr = nullptr;
 
   if(m_FeatureParentIds[neighborFeature] == -1 && m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
   {
-    QuatF q1(m_AvgQuats + referenceFeature * 4);
-
     uint32_t phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
 
-    QuatF q2(m_AvgQuats + neighborFeature * 4);
+    currentAvgQuatPtr = m_AvgQuats + referenceFeature * 4;
+    QuatF q1(currentAvgQuatPtr[0], currentAvgQuatPtr[1], currentAvgQuatPtr[2], currentAvgQuatPtr[3]);
+    currentAvgQuatPtr = m_AvgQuats + neighborFeature * 4;
+    QuatF q2(currentAvgQuatPtr[0], currentAvgQuatPtr[1], currentAvgQuatPtr[2], currentAvgQuatPtr[3]);
+
     uint32_t phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
     if(phase1 == phase2 && (phase1 == EbsdLib::CrystalStructure::Cubic_High))
     {

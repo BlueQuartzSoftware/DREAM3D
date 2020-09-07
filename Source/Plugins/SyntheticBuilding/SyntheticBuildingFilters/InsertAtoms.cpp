@@ -121,10 +121,11 @@ public:
     for(size_t iter = start; iter < end; iter++)
     {
       Int32Int32DynamicListArray::ElementList& faceIds = m_FaceIds->getElementList(iter);
-
-      QuatF q1(m_AvgQuats + iter * 4);
-      OrientationTransformation::qu2om<QuatF, Orientation<float>>(q1).toGMatrix(g);
-
+      {
+        float* currentAvgQuatPtr = m_AvgQuats + iter * 4;
+        QuatF q1(currentAvgQuatPtr[0], currentAvgQuatPtr[1], currentAvgQuatPtr[2], currentAvgQuatPtr[3]);
+        OrientationTransformation::qu2om<QuatF, Orientation<float>>(q1).toGMatrix(g);
+      }
       // find bounding box for current feature
       GeometryMath::FindBoundingBoxOfFaces(m_Faces.get(), faceIds, ll, ur);
       GeometryMath::FindBoundingBoxOfRotatedFaces(m_Faces.get(), faceIds, g, ll_rot, ur_rot);
@@ -161,13 +162,14 @@ public:
   void generatePoints(size_t iter, QVector<VertexGeom::Pointer> points, QVector<BoolArrayType::Pointer> inFeature, float* m_AvgQuats, FloatVec3Type latticeConstants, uint32_t basis, const float* ll,
                       const float* ur) const
   {
-    float g[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
     float gT[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-
-    QuatF q1(m_AvgQuats + iter * 4);
-    OrientationTransformation::qu2om<QuatF, Orientation<float>>(q1).toGMatrix(g);
-    MatrixMath::Transpose3x3(g, gT);
-
+    {
+      float* currentAvgQuatPtr = m_AvgQuats + iter * 4;
+      QuatF q1(currentAvgQuatPtr[0], currentAvgQuatPtr[1], currentAvgQuatPtr[2], currentAvgQuatPtr[3]);
+      float g[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+      OrientationTransformation::qu2om<QuatF, Orientation<float>>(q1).toGMatrix(g);
+      MatrixMath::Transpose3x3(g, gT);
+    }
     float minx = ll[0];
     float miny = ll[1];
     float minz = ll[2];

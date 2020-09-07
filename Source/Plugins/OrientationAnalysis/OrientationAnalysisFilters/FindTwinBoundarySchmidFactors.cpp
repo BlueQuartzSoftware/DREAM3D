@@ -108,6 +108,7 @@ public:
     float b[3] = {0.0f, 0.0f, 0.0f};
     float crystalLoading[3] = {0.0f, 0.0f, 0.0f};
     float cosPhi = 0.0f, cosLambda = 0.0f;
+    float* currentQuatPtr = nullptr;
 
     for(size_t i = start; i < end; i++)
     {
@@ -127,10 +128,10 @@ public:
         {
           feature = feature2;
         }
-        QuatF q1(m_Quats + feature * 4);
+        currentQuatPtr = m_Quats + feature * 4;
 
         // calculate crystal direction parallel to normal
-        OrientationTransformation::qu2om<QuatF, OrientationF>(q1).toGMatrix(g1);
+        OrientationTransformation::qu2om<QuatF, OrientationF>({currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]}).toGMatrix(g1);
         MatrixMath::Multiply3x3with3x1(g1, normal, n);
         // calculate crystal direction parallel to loading direction
         MatrixMath::Multiply3x3with3x1(g1, m_LoadDir, crystalLoading);
