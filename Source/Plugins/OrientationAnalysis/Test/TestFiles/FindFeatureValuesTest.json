@@ -1,0 +1,245 @@
+{
+    "0": {
+        "DataContainerName": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "2.0.294",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Create Data Container",
+        "Filter_Name": "CreateDataContainer",
+        "Filter_Uuid": "{816fbe6b-7c38-581b-b149-3f839fb65b93}"
+    },
+    "1": {
+        "FilterVersion": "2.0.294",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Import ASCII Data",
+        "Filter_Name": "ReadASCIIData",
+        "Filter_Uuid": "{bdb978bc-96bf-5498-972c-b509c38b8d50}",
+        "Wizard_AttributeMatrixType": 3,
+        "Wizard_AutomaticAM": true,
+        "Wizard_BeginIndex": 2,
+        "Wizard_ConsecutiveDelimiters": 0,
+        "Wizard_DataHeaders": [
+            "FeatureIds",
+            "Phases",
+            "FZQuaternions_0",
+            "FZQuaternions_1",
+            "FZQuaternions_2",
+            "FZQuaternions_3"
+        ],
+        "Wizard_DataTypes": [
+            "int32_t",
+            "int32_t",
+            "float",
+            "float",
+            "float",
+            "float"
+        ],
+        "Wizard_Delimiters": ",",
+        "Wizard_HeaderIsCustom": true,
+        "Wizard_HeaderLine": -1,
+        "Wizard_HeaderUseDefaults": false,
+        "Wizard_InputFilePath": "/Users/mjackson/DREAM3D-Dev/DREAM3D/Source/Plugins/OrientationAnalysis/Test/TestFiles/fw-ar-IF1-aptr12-corr_CellData.csv",
+        "Wizard_NumberOfLines": 22951,
+        "Wizard_SelectedPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "",
+            "Data Container Name": "DataContainer"
+        },
+        "Wizard_TupleDims": [
+            306,
+            75,
+            1
+        ]
+    },
+    "2": {
+        "FilterVersion": "2.0.294",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Combine Attribute Arrays",
+        "Filter_Name": "CombineAttributeArrays",
+        "Filter_Uuid": "{a6b50fb0-eb7c-5d9b-9691-825d6a4fe772}",
+        "MoveValues": 1,
+        "NormalizeData": 0,
+        "SelectedDataArrayPaths": [
+            {
+                "Attribute Matrix Name": "CellData",
+                "Data Array Name": "FZQuaternions_0",
+                "Data Container Name": "DataContainer"
+            },
+            {
+                "Attribute Matrix Name": "CellData",
+                "Data Array Name": "FZQuaternions_1",
+                "Data Container Name": "DataContainer"
+            },
+            {
+                "Attribute Matrix Name": "CellData",
+                "Data Array Name": "FZQuaternions_2",
+                "Data Container Name": "DataContainer"
+            },
+            {
+                "Attribute Matrix Name": "CellData",
+                "Data Array Name": "FZQuaternions_3",
+                "Data Container Name": "DataContainer"
+            }
+        ],
+        "StackedDataArrayName": "Quats"
+    },
+    "3": {
+        "FilterVersion": "2.0.294",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Import ASCII Data",
+        "Filter_Name": "ReadASCIIData",
+        "Filter_Uuid": "{bdb978bc-96bf-5498-972c-b509c38b8d50}",
+        "Wizard_AttributeMatrixType": 7,
+        "Wizard_AutomaticAM": true,
+        "Wizard_BeginIndex": 2,
+        "Wizard_ConsecutiveDelimiters": 0,
+        "Wizard_DataHeaders": [
+            "AvgQuats_0",
+            "AvgQuats_1",
+            "AvgQuats_2",
+            "AvgQuats_3"
+        ],
+        "Wizard_DataTypes": [
+            "float",
+            "float",
+            "float",
+            "float"
+        ],
+        "Wizard_Delimiters": ",",
+        "Wizard_HeaderIsCustom": true,
+        "Wizard_HeaderLine": -1,
+        "Wizard_HeaderUseDefaults": false,
+        "Wizard_InputFilePath": "/Users/mjackson/DREAM3D-Dev/DREAM3D/Source/Plugins/OrientationAnalysis/Test/TestFiles/fw-ar-IF1-aptr12-corr_FeatureData.csv",
+        "Wizard_NumberOfLines": 50,
+        "Wizard_SelectedPath": {
+            "Attribute Matrix Name": "FeatureData",
+            "Data Array Name": "",
+            "Data Container Name": "DataContainer"
+        },
+        "Wizard_TupleDims": [
+            49
+        ]
+    },
+    "4": {
+        "FilterVersion": "2.0.294",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Combine Attribute Arrays",
+        "Filter_Name": "CombineAttributeArrays",
+        "Filter_Uuid": "{a6b50fb0-eb7c-5d9b-9691-825d6a4fe772}",
+        "MoveValues": 1,
+        "NormalizeData": 0,
+        "SelectedDataArrayPaths": [
+            {
+                "Attribute Matrix Name": "FeatureData",
+                "Data Array Name": "AvgQuats_0",
+                "Data Container Name": "DataContainer"
+            },
+            {
+                "Attribute Matrix Name": "FeatureData",
+                "Data Array Name": "AvgQuats_1",
+                "Data Container Name": "DataContainer"
+            },
+            {
+                "Attribute Matrix Name": "FeatureData",
+                "Data Array Name": "AvgQuats_2",
+                "Data Container Name": "DataContainer"
+            },
+            {
+                "Attribute Matrix Name": "FeatureData",
+                "Data Array Name": "AvgQuats_3",
+                "Data Container Name": "DataContainer"
+            }
+        ],
+        "StackedDataArrayName": "AvgQuats_GroundTruth"
+    },
+    "5": {
+        "CellEnsembleAttributeMatrixName": "PhaseData",
+        "CrystalStructuresArrayName": "CrystalStructures",
+        "DataContainerName": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "DataContainer"
+        },
+        "Ensemble": [
+            {
+                "CrystalStructure": 1,
+                "PhaseName": "Iron bcc",
+                "PhaseType": 0
+            }
+        ],
+        "FilterVersion": "6.6.165",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Create Ensemble Info",
+        "Filter_Name": "CreateEnsembleInfo",
+        "Filter_Uuid": "{2a0bfcd3-2517-5117-b164-964dfac8fe22}",
+        "PhaseNamesArrayName": "PhaseNames",
+        "PhaseTypesArrayName": "PhaseTypes"
+    },
+    "6": {
+        "AvgEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "FeatureData",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "DataContainer"
+        },
+        "AvgQuatsArrayPath": {
+            "Attribute Matrix Name": "FeatureData",
+            "Data Array Name": "AvgQuats",
+            "Data Container Name": "DataContainer"
+        },
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "DataContainer"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "PhaseData",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "DataContainer"
+        },
+        "FeatureIdsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "FeatureIds",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "6.6.165",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Find Feature Average Orientations",
+        "Filter_Name": "FindAvgOrientations",
+        "Filter_Uuid": "{bf7036d8-25bd-540e-b6de-3a5ab0e42c5f}",
+        "QuatsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Quats",
+            "Data Container Name": "DataContainer"
+        }
+    },
+    "7": {
+        "DifferenceMapArrayPath": {
+            "Attribute Matrix Name": "FeatureData",
+            "Data Array Name": "AvgQuats_Difference",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "6.6.165",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Find Difference Map",
+        "Filter_Name": "FindDifferenceMap",
+        "Filter_Uuid": "{29086169-20ce-52dc-b13e-824694d759aa}",
+        "FirstInputArrayPath": {
+            "Attribute Matrix Name": "FeatureData",
+            "Data Array Name": "AvgQuats_GroundTruth",
+            "Data Container Name": "DataContainer"
+        },
+        "SecondInputArrayPath": {
+            "Attribute Matrix Name": "FeatureData",
+            "Data Array Name": "AvgQuats",
+            "Data Container Name": "DataContainer"
+        }
+    },
+    "PipelineBuilder": {
+        "Name": "FindFeatureValuesTest",
+        "Number_Filters": 8,
+        "Version": 6
+    }
+}

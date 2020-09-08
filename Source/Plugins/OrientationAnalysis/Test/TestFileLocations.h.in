@@ -18,6 +18,7 @@ namespace UnitTest
   inline const QString TestTempDir("@TEST_TEMP_DIR@");
   inline const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
   inline const QString OrientationAnalysisTestDataDir("@TEST_TEMP_DIR@");
+  inline const QString OrientationAnalysisSourceDir("@PROJECT_CODE_DIR@/Plugins/@PLUGIN_NAME@");
 
   namespace AngCachingTest
   {

@@ -18,6 +18,7 @@ set(TEST_NAMES
   OrientationUtilityTest
   RodriguesConvertorTest
   Stereographic3DTest
+  FindFeatureValuesTest
 )
 
 if(SIMPL_USE_ITK)
