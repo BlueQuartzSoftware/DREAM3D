@@ -17,6 +17,7 @@ namespace UnitTest
   inline const QString DataDir("@DREAM3D_DATA_DIR@");
   inline const QString TestTempDir("@TEST_TEMP_DIR@");
   inline const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
+  inline const QString ImportExportTestFilesDir("@DREAM3DProj_SOURCE_DIR@/Source/Plugins/@PLUGIN_NAME@/Test/TestFiles");
 
   namespace PhIOTest
   {

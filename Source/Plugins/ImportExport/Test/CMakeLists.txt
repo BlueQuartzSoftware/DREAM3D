@@ -7,12 +7,14 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
 set(TEST_NAMES
-  DxIOTest
-  EnsembleInfoReaderTest
-  ExportDataTest
-  FeatureInfoReaderTest
-  PhIOTest
-  VtkStruturedPointsReaderTest
+  SPParksDumpReaderTest
+#  DxIOTest
+#  EnsembleInfoReaderTest
+#  ExportDataTest
+#  FeatureInfoReaderTest
+#  PhIOTest
+#  VtkStruturedPointsReaderTest
+
 )
 
 #------------------------------------------------------------------------------
@@ -28,7 +30,7 @@ SIMPL_GenerateUnitTestFile(PLUGIN_NAME ${PLUGIN_NAME}
                            TEST_DATA_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test/Data
                            SOURCES ${TEST_NAMES}
                            EXTRA_SOURCES ${${PLUGIN_NAME}Test_SOURCE_DIR}/GenerateFeatureIds.h
-                           LINK_LIBRARIES Qt5::Core SIMPLib
+                           LINK_LIBRARIES Qt5::Core SIMPLib ${plug_target_name}
                            INCLUDE_DIRS ${${PLUGIN_NAME}_PARENT_SOURCE_DIR}
                                         ${${PLUGIN_NAME}Test_SOURCE_DIR}
                                         ${${PLUGIN_NAME}Test_BINARY_DIR}
