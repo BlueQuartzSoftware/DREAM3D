@@ -38,11 +38,6 @@ namespace UnitTest
     inline const QString TestFileDoc("@TEST_TEMP_DIR@/EnsembleInfoTest.doc");
   }
 
-  namespace ExportDataTest
-  {
-    inline const QString TestTempDir("@TEST_TEMP_DIR@");
-  }
-
   namespace VtkGrainIdIOTest
   {
     inline const QString TestFile("@TEST_TEMP_DIR@/VtkGrainIdIOTest.vtk");

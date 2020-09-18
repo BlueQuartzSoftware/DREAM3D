@@ -10,7 +10,6 @@ set(TEST_NAMES
   SPParksDumpReaderTest
   DxIOTest
   EnsembleInfoReaderTest
-  ExportDataTest
   FeatureInfoReaderTest
   PhIOTest
   VtkStruturedPointsReaderTest
