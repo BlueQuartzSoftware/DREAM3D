@@ -11,6 +11,7 @@ set(TEST_NAMES
   AngleFileIOTest
   ConvertQuaternionTest
   CtfCachingTest
+  EnsembleInfoReaderTest
   GenerateFZQuaternionsTest
   GenerateOrientationMatrixTransposeTest
   GenerateQuaternionConjugateTest

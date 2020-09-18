@@ -31,13 +31,6 @@ namespace UnitTest
     inline const QString TestFile2("@TEST_TEMP_DIR@/DxIOTest2.dx");
   }
 
-  namespace EnsembleInfoReaderTest
-  {
-    inline const QString TestFileIni("@TEST_TEMP_DIR@/EnsembleInfoTest.ini");
-    inline const QString TestFileTxt("@TEST_TEMP_DIR@/EnsembleInfoTest.txt");
-    inline const QString TestFileDoc("@TEST_TEMP_DIR@/EnsembleInfoTest.doc");
-  }
-
   namespace VtkGrainIdIOTest
   {
     inline const QString TestFile("@TEST_TEMP_DIR@/VtkGrainIdIOTest.vtk");

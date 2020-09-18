@@ -20,6 +20,13 @@ namespace UnitTest
   inline const QString OrientationAnalysisTestDataDir("@TEST_TEMP_DIR@");
   inline const QString OrientationAnalysisSourceDir("@PROJECT_CODE_DIR@/Plugins/@PLUGIN_NAME@");
 
+  namespace EnsembleInfoReaderTest
+  {
+    inline const QString TestFileIni("@TEST_TEMP_DIR@/EnsembleInfoTest.ini");
+    inline const QString TestFileTxt("@TEST_TEMP_DIR@/EnsembleInfoTest.txt");
+    inline const QString TestFileDoc("@TEST_TEMP_DIR@/EnsembleInfoTest.doc");
+  }
+
   namespace AngCachingTest
   {
     inline const QString Test1("@TEST_TEMP_DIR@/TestFile1.ang");

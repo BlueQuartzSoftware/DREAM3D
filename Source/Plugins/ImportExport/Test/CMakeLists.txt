@@ -9,7 +9,6 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 set(TEST_NAMES
   SPParksDumpReaderTest
   DxIOTest
-  EnsembleInfoReaderTest
   FeatureInfoReaderTest
   PhIOTest
   VtkStruturedPointsReaderTest
