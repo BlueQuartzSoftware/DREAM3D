@@ -126,22 +126,21 @@ public:
   {
     // Write first file
     {
-      FilterPipeline::Pointer pipeline = FilterPipeline::New();
-
       int err = 0;
 
+      DataContainerArray::Pointer dca = DataContainerArray::New();
+
+      DataArrayPath path(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds);
+
       // Use the helper class CreateImageGeomDataContainer to generate a valid DataContainer
-      CreateImageGeomDataContainer::Pointer createVolumeDC = CreateImageGeomDataContainer::New();
-      createVolumeDC->setXDim(UnitTest::FeatureIdsTest::XSize);
-      createVolumeDC->setYDim(UnitTest::FeatureIdsTest::YSize);
-      createVolumeDC->setZDim(UnitTest::FeatureIdsTest::ZSize);
-      pipeline->pushBack(createVolumeDC);
+      createImageGeomDataContainer(*dca, UnitTest::FeatureIdsTest::XSize, UnitTest::FeatureIdsTest::YSize, UnitTest::FeatureIdsTest::ZSize);
 
       // Generate some "Feature Ids" inside that DataContainer
-      GenerateFeatureIds::Pointer generateFeatureIds = GenerateFeatureIds::New();
-      pipeline->pushBack(generateFeatureIds);
+      err = generateFeatureIds(*dca, path);
+      DREAM3D_REQUIRE_EQUAL(err, 0);
 
       // Now instantiate the DxWriter Filter from the FilterManager
+      AbstractFilter::Pointer dxWriter = nullptr;
       QString filtName = "DxWriter";
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
@@ -149,7 +148,7 @@ public:
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
         // horribly gone wrong in which case the system is going to come down quickly after this.
-        AbstractFilter::Pointer dxWriter = filterFactory->create();
+        dxWriter = filterFactory->create();
 
         DataArrayPath path = DataArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds);
         QVariant var;
@@ -159,8 +158,7 @@ public:
 
         propWasSet = dxWriter->setProperty("OutputFile", UnitTest::DxIOTest::TestFile);
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-
-        pipeline->pushBack(dxWriter);
+        dxWriter->setDataContainerArray(dca);
       }
       else
       {
@@ -168,31 +166,31 @@ public:
         DREAM3D_REQUIRE_EQUAL(0, 1)
       }
 
-      err = pipeline->preflightPipeline();
+      dxWriter->preflight();
+      err = dxWriter->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, 0);
-      pipeline->execute();
-      err = pipeline->getErrorCode();
+      dxWriter->execute();
+      err = dxWriter->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, 0);
     }
 
     // Write second file
     {
-      FilterPipeline::Pointer pipeline = FilterPipeline::New();
-
       int err = 0;
 
+      DataContainerArray::Pointer dca = DataContainerArray::New();
+
+      DataArrayPath path(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds);
+
       // Use the helper class CreateImageGeomDataContainer to generate a valid DataContainer
-      CreateImageGeomDataContainer::Pointer createVolumeDC = CreateImageGeomDataContainer::New();
-      createVolumeDC->setXDim(UnitTest::FeatureIdsTest::XSize);
-      createVolumeDC->setYDim(UnitTest::FeatureIdsTest::YSize);
-      createVolumeDC->setZDim(UnitTest::FeatureIdsTest::ZSize);
-      pipeline->pushBack(createVolumeDC);
+      createImageGeomDataContainer(*dca, UnitTest::FeatureIdsTest::XSize, UnitTest::FeatureIdsTest::YSize, UnitTest::FeatureIdsTest::ZSize);
 
       // Generate some "Feature Ids" inside that DataContainer
-      GenerateFeatureIds::Pointer generateFeatureIds = GenerateFeatureIds::New();
-      pipeline->pushBack(generateFeatureIds);
+      err = generateFeatureIds(*dca, path);
+      DREAM3D_REQUIRE_EQUAL(err, 0);
 
       // Now instantiate the DxWriter Filter from the FilterManager
+      AbstractFilter::Pointer dxWriter = nullptr;
       QString filtName = "DxWriter";
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
@@ -200,7 +198,7 @@ public:
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
         // horribly gone wrong in which case the system is going to come down quickly after this.
-        AbstractFilter::Pointer dxWriter = filterFactory->create();
+        dxWriter = filterFactory->create();
 
         DataArrayPath path = DataArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds);
         QVariant var;
@@ -211,7 +209,7 @@ public:
 
         propWasSet = dxWriter->setProperty("OutputFile", UnitTest::DxIOTest::TestFile2);
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-        pipeline->pushBack(dxWriter);
+        dxWriter->setDataContainerArray(dca);
       }
       else
       {
@@ -219,10 +217,11 @@ public:
         DREAM3D_REQUIRE_EQUAL(0, 1)
       }
 
-      err = pipeline->preflightPipeline();
+      dxWriter->preflight();
+      err = dxWriter->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, 0);
-      pipeline->execute();
-      err = pipeline->getErrorCode();
+      dxWriter->execute();
+      err = dxWriter->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, 0);
     }
     return EXIT_SUCCESS;
