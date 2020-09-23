@@ -323,6 +323,12 @@ int32_t INLWriter::writeFile()
     return -1;
   }
 
+  if(dims[2] == 1)
+  {
+    dims[2] = 0;
+    res[2] = 0.0F;
+  }
+
   // Write the header, Each line starts with a "#" symbol
   fprintf(f, "# File written from %s\r\n", OrientationAnalysis::Version::PackageComplete().toLatin1().data());
   fprintf(f, "# DateTime: %s\r\n", QDateTime::currentDateTime().toString().toLatin1().data());
@@ -343,6 +349,10 @@ int32_t INLWriter::writeFile()
   fprintf(f, "# Z_DIM: %llu\r\n", static_cast<long long unsigned int>(dims[2]));
   fprintf(f, "#\r\n");
 
+  if(dims[2] == 0)
+  {
+    dims[2] = 1;
+  }
   StringDataArray* materialNames = m_MaterialNamePtr.lock().get();
 
 #if 0
@@ -365,24 +375,34 @@ int32_t INLWriter::writeFile()
 
   uint32_t symmetry = 0;
   int32_t count = static_cast<int32_t>(materialNames->getNumberOfTuples());
-  for(int32_t i = 1; i < count; ++i)
-  {
-    QString matName = materialNames->getValue(i);
-    fprintf(f, "# Phase_%d: %s\r\n", i, matName.toLatin1().data());
-    symmetry = m_CrystalStructures[i];
-    symmetry = mapCrystalSymmetryToTslSymmetry(symmetry);
-    fprintf(f, "# Symmetry_%d: %u\r\n", i, symmetry);
-    fprintf(f, "# Features_%d: %d\r\n", i, m_NumFeatures[i]);
-    fprintf(f, "#\r\n");
-  }
 
-  std::set<int32_t> uniqueFeatureIds;
+  // Figure out how many features each phase has.
+  std::vector<std::set<int32_t>> numFeatures(count);
   for(size_t i = 0; i < totalPoints; ++i)
   {
-    uniqueFeatureIds.insert(m_FeatureIds[i]);
+    std::set<int32_t>& uniq = numFeatures[m_CellPhases[i]];
+    uniq.insert(m_FeatureIds[i]);
   }
-  count = static_cast<int32_t>(uniqueFeatureIds.size());
-  fprintf(f, "# Num_Features: %d \r\n", count);
+
+  // Now walk through each phase and print it's header.
+  int32_t totalFeatures = 0;
+  for(int32_t i = 0; i < count; ++i)
+  {
+    int32_t phaseFeatureCount = static_cast<int32_t>(numFeatures.at(i).size());
+    if(phaseFeatureCount > 0)
+    {
+      QString matName = materialNames->getValue(i);
+      fprintf(f, "# Phase_%d: %s\r\n", i, matName.toLatin1().data());
+      symmetry = m_CrystalStructures[i];
+      symmetry = mapCrystalSymmetryToTslSymmetry(symmetry);
+      fprintf(f, "# Symmetry_%d: %u\r\n", i, symmetry);
+      fprintf(f, "# Features_%d: %d\r\n", i, phaseFeatureCount);
+      fprintf(f, "#\r\n");
+      totalFeatures += phaseFeatureCount;
+    }
+  }
+
+  fprintf(f, "# Num_Features: %d \r\n", totalFeatures);
   fprintf(f, "#\r\n");
 
   //  fprintf(f, "# Column 1-3: phi1, PHI, phi2 (orientation of point in radians)\r\n");
@@ -408,9 +428,9 @@ int32_t INLWriter::writeFile()
         phi1 = m_CellEulerAngles[index * 3];
         phi = m_CellEulerAngles[index * 3 + 1];
         phi2 = m_CellEulerAngles[index * 3 + 2];
-        xPos = origin[0] + (x * res[0]);
-        yPos = origin[1] + (y * res[1]);
-        zPos = origin[2] + (z * res[2]);
+        xPos = origin[0] + (x * res[0]) + (res[0] * 0.5F);
+        yPos = origin[1] + (y * res[1]) + (res[1] * 0.5F);
+        zPos = origin[2] + (z * res[2]) + (res[2] * 0.5F);
         featureId = m_FeatureIds[index];
         phaseId = m_CellPhases[index];
         symmetry = m_CrystalStructures[phaseId];
