@@ -395,6 +395,8 @@ bool CAxisSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t nei
       MatrixMath::Normalize3x1(c2);
 
       w = ((c1[0] * c2[0]) + (c1[1] * c2[1]) + (c1[2] * c2[2]));
+      if(w < -1.0F) { w = -1.0F; }
+      if(w > 1.0F) { w = 1.0F; }
       w = acosf(w);
       if(w <= m_MisoTolerance || (SIMPLib::Constants::k_Pi - w) <= m_MisoTolerance)
       {
