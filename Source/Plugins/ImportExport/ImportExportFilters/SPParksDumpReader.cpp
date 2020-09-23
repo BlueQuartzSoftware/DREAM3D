@@ -155,7 +155,7 @@ void SPParksDumpReader::dataCheck()
   }
   else if(!fi.exists())
   {
-    QString ss = QObject::tr("The input file does not exist");
+    QString ss = QObject::tr("The input file does not exist. '%1'").arg(getInputFile());
     setErrorCondition(-388);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -328,7 +328,7 @@ int32_t SPParksDumpReader::readHeader()
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return getErrorCondition();
     }
-    nx = static_cast<int64_t>(floor(high - 0.01f) - ceil(low)) + oneBase;
+    nx = static_cast<int64_t>(floor(high) - ceil(low)) + oneBase;
   }
 
   buf = m_InStream.readLine(); // 0.5 44.5
@@ -373,7 +373,7 @@ int32_t SPParksDumpReader::readHeader()
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return getErrorCondition();
     }
-    ny = static_cast<int64_t>(floor(high - 0.01f) - ceil(low)) + oneBase;
+    ny = static_cast<int64_t>(floor(high) - ceil(low)) + oneBase;
   }
 
   buf = m_InStream.readLine(); // 0.5 55.5
@@ -419,13 +419,15 @@ int32_t SPParksDumpReader::readHeader()
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return getErrorCondition();
     }
-    nz = static_cast<int64_t>(floor(high - 0.01f) - ceil(low)) + oneBase;
+    float flr = std::floor(high);
+    float cl = std::ceil(low);
+    nz = static_cast<int64_t>(flr - cl) + oneBase;
   }
 
   if(numAtoms != nx * ny * nz)
   {
     QString msg = QObject::tr("Number of sites does not match the calculated number of sites %1 != %2 * %3 * %4").arg(numAtoms).arg(nx).arg(ny).arg(nz);
-    setErrorCondition(-101);
+    setErrorCondition(-26010);
     notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
     return getErrorCondition();
   }
@@ -609,8 +611,23 @@ void SPParksDumpReader::parseDataLine(QByteArray& line, QVector<size_t> dims, in
   }
 
   xIdx = tokens[xCol].toInt(&ok) - oneBase;
+  if(!ok)
+  {
+    xIdx = static_cast<int64_t>(tokens[xCol].toFloat(&ok) - oneBase);
+  }
+
   yIdx = tokens[yCol].toInt(&ok) - oneBase;
+  if(!ok)
+  {
+    yIdx = static_cast<int64_t>(tokens[yCol].toFloat(&ok) - oneBase);
+  }
+
   zIdx = tokens[zCol].toInt(&ok) - oneBase;
+  if(!ok)
+  {
+    zIdx = static_cast<int64_t>(tokens[zCol].toFloat(&ok) - oneBase);
+  }
+
 
   float coords[3] = {static_cast<float>(xIdx), static_cast<float>(yIdx), static_cast<float>(zIdx)};
   // Calculate the offset into the actual array based on the x, y & z values from the data line we just read
