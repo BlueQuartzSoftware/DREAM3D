@@ -99,6 +99,10 @@ set(TotalFilters 0)
 set(TotalTestedFilters 0)
 
 #------------------------------------------------------------------------------
+# Set this so that when we create a package we do not get a bunch of headers
+set(H5Support_SKIP_INSTALL_FILES TRUE)
+
+#------------------------------------------------------------------------------
 # If the developer has set another CMP directory then use that, otherwise look
 # for the CMP directory at the same level as the SIMPL directory
 if("${CMP_SOURCE_DIR}" STREQUAL "")
