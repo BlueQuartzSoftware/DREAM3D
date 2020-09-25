@@ -366,9 +366,9 @@ int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCou
       float e2 = m_CellEulerAngles[i * 3 + 2];
       if(m_ConvertToDegrees)
       {
-        e0 = e0 * static_cast<float>(SIMPLib::Constants::k_180OverPi);
-        e1 = e1 * static_cast<float>(SIMPLib::Constants::k_180OverPi);
-        e2 = e2 * static_cast<float>(SIMPLib::Constants::k_180OverPi);
+        e0 = e0 * SIMPLib::Constants::k_180OverPiF;
+        e1 = e1 * SIMPLib::Constants::k_180OverPiF;
+        e2 = e2 * SIMPLib::Constants::k_180OverPiF;
       }
       out << e0 << delimiter[m_Delimiter] << e1 << delimiter[m_Delimiter] << e2 << delimiter[m_Delimiter] << m_Weight << delimiter[m_Delimiter] << m_Sigma << "\n";
     }

@@ -569,9 +569,9 @@ void ReadCtfData::copyRawEbsdData(CtfReader* reader, std::vector<size_t>& tDims,
       // Now convert to radians if requested by the user
       if(m_DegreesToRadians)
       {
-        cellEulerAngles[3 * i] = cellEulerAngles[3 * i] * SIMPLib::Constants::k_PiOver180;
-        cellEulerAngles[3 * i + 1] = cellEulerAngles[3 * i + 1] * SIMPLib::Constants::k_PiOver180;
-        cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] * SIMPLib::Constants::k_PiOver180;
+        cellEulerAngles[3 * i] = cellEulerAngles[3 * i] * SIMPLib::Constants::k_PiOver180D;
+        cellEulerAngles[3 * i + 1] = cellEulerAngles[3 * i + 1] * SIMPLib::Constants::k_PiOver180D;
+        cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] * SIMPLib::Constants::k_PiOver180D;
       }
     }
     ebsdAttrMat->insertOrAssign(fArray);

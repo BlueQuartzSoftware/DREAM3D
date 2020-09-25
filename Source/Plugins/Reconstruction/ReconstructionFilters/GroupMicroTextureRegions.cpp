@@ -454,7 +454,7 @@ bool GroupMicroTextureRegions::determineGrouping(int32_t referenceFeature, int32
       }
       SIMPLibMath::bound(w, -1.0f, 1.0f);
       w = acosf(w);
-      if(w <= m_CAxisToleranceRad || (SIMPLib::Constants::k_Pi - w) <= m_CAxisToleranceRad)
+      if(w <= m_CAxisToleranceRad || (SIMPLib::Constants::k_PiD - w) <= m_CAxisToleranceRad)
       {
         m_FeatureParentIds[neighborFeature] = newFid;
         if(m_UseRunningAverage)
@@ -494,7 +494,7 @@ void GroupMicroTextureRegions::execute()
   }
 
   // Convert user defined tolerance to radians.
-  m_CAxisToleranceRad = m_CAxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_CAxisToleranceRad = m_CAxisTolerance * SIMPLib::Constants::k_PiD / 180.0f;
 
   m_AvgCAxes[0] = 0.0f;
   m_AvgCAxes[1] = 0.0f;

@@ -232,7 +232,7 @@ public:
               OrientationF eu(euler_mis, 3);
               eu = OrientationTransformation::om2eu<OrientationF, OrientationF>(om);
 
-              if(euler_mis[0] < SIMPLib::Constants::k_PiOver2 && euler_mis[1] < SIMPLib::Constants::k_PiOver2 && euler_mis[2] < SIMPLib::Constants::k_PiOver2)
+              if(euler_mis[0] < SIMPLib::Constants::k_PiOver2D && euler_mis[1] < SIMPLib::Constants::k_PiOver2D && euler_mis[2] < SIMPLib::Constants::k_PiOver2D)
               {
                 // PHI euler angle is stored in GBCD as cos(PHI)
                 euler_mis[1] = cosf(euler_mis[1]);
@@ -344,14 +344,14 @@ public:
     }
     if(fabsf(xstl1_norm1[0]) >= fabsf(xstl1_norm1[1]))
     {
-      sqCoord[0] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPi / 2.0f);
+      sqCoord[0] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPiD / 2.0f);
       sqCoord[1] =
-          (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPi) * atanf(xstl1_norm1[1] / xstl1_norm1[0]));
+          (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPiD) * atanf(xstl1_norm1[1] / xstl1_norm1[0]));
     }
     else
     {
-      sqCoord[0] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPi) * atanf(xstl1_norm1[0] / xstl1_norm1[1]));
-      sqCoord[1] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPi / 2.0f);
+      sqCoord[0] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPiD) * atanf(xstl1_norm1[0] / xstl1_norm1[1]));
+      sqCoord[1] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPiD / 2.0f);
     }
     return nhCheck;
   }
@@ -732,14 +732,14 @@ void FindGBCD::sizeGBCD(size_t faceChunkSize, size_t numMisoReps)
   m_GbcdLimits[2] = 0.0f;
   m_GbcdLimits[3] = 0.0f;
   m_GbcdLimits[4] = 0.0f;
-  m_GbcdLimits[5] = SIMPLib::Constants::k_PiOver2;
+  m_GbcdLimits[5] = SIMPLib::Constants::k_PiOver2D;
   m_GbcdLimits[6] = 1.0f;
-  m_GbcdLimits[7] = SIMPLib::Constants::k_PiOver2;
+  m_GbcdLimits[7] = SIMPLib::Constants::k_PiOver2D;
   m_GbcdLimits[8] = 1.0f;
-  m_GbcdLimits[9] = SIMPLib::Constants::k_2Pi;
+  m_GbcdLimits[9] = SIMPLib::Constants::k_2PiD;
 
-  float binsize = m_GBCDRes * SIMPLib::Constants::k_PiOver180;
-  float binsize2 = binsize * (2.0 / SIMPLib::Constants::k_Pi);
+  float binsize = m_GBCDRes * SIMPLib::Constants::k_PiOver180D;
+  float binsize2 = binsize * (2.0 / SIMPLib::Constants::k_PiD);
   m_GbcdDeltas[0] = binsize;
   m_GbcdDeltas[1] = binsize2;
   m_GbcdDeltas[2] = binsize;
@@ -756,10 +756,10 @@ void FindGBCD::sizeGBCD(size_t faceChunkSize, size_t numMisoReps)
   float totalNormalBins = m_GbcdSizes[3] * m_GbcdSizes[4];
   m_GbcdSizes[3] = int32_t(sqrtf(totalNormalBins) + 0.5f);
   m_GbcdSizes[4] = int32_t(sqrtf(totalNormalBins) + 0.5f);
-  m_GbcdLimits[3] = -sqrtf(SIMPLib::Constants::k_PiOver2);
-  m_GbcdLimits[4] = -sqrtf(SIMPLib::Constants::k_PiOver2);
-  m_GbcdLimits[8] = sqrtf(SIMPLib::Constants::k_PiOver2);
-  m_GbcdLimits[9] = sqrtf(SIMPLib::Constants::k_PiOver2);
+  m_GbcdLimits[3] = -sqrtf(SIMPLib::Constants::k_PiOver2D);
+  m_GbcdLimits[4] = -sqrtf(SIMPLib::Constants::k_PiOver2D);
+  m_GbcdLimits[8] = sqrtf(SIMPLib::Constants::k_PiOver2D);
+  m_GbcdLimits[9] = sqrtf(SIMPLib::Constants::k_PiOver2D);
   m_GbcdDeltas[3] = (m_GbcdLimits[8] - m_GbcdLimits[3]) / float(m_GbcdSizes[3]);
   m_GbcdDeltas[4] = (m_GbcdLimits[9] - m_GbcdLimits[4]) / float(m_GbcdSizes[4]);
 }

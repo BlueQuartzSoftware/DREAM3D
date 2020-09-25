@@ -679,7 +679,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
     {
       values[m_FeaturePhases[i]][0].push_back(m_EquivalentDiameters[i]);
     }
-    vol = (1.0f / 6.0f) * SIMPLib::Constants::k_Pi * m_EquivalentDiameters[i] * m_EquivalentDiameters[i] * m_EquivalentDiameters[i];
+    vol = (1.0f / 6.0f) * SIMPLib::Constants::k_PiD * m_EquivalentDiameters[i] * m_EquivalentDiameters[i] * m_EquivalentDiameters[i];
     fractions[m_FeaturePhases[i]] = fractions[m_FeaturePhases[i]] + vol;
     totalUnbiasedVolume = totalUnbiasedVolume + vol;
   }

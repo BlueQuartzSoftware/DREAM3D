@@ -164,7 +164,7 @@ public:
         for(int64_t j = i; j < count; j++)
         {
           angle = GeometryMath::AngleBetweenVectors(cAxisLocsPtr->getPointer(3 * i), cAxisLocsPtr->getPointer(3 * j));
-          if(angle <= m_CAxisTolerance || (SIMPLib::Constants::k_Pi - angle) <= m_CAxisTolerance)
+          if(angle <= m_CAxisTolerance || (SIMPLib::Constants::k_PiD - angle) <= m_CAxisTolerance)
           {
             goodCounts[i]++;
             goodCounts[j]++;
@@ -566,7 +566,7 @@ void IdentifyMicroTextureRegions::execute()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Convert user defined tolerance to radians.
-  m_CAxisToleranceRad = m_CAxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_CAxisToleranceRad = m_CAxisTolerance * SIMPLib::Constants::k_PiD / 180.0f;
 
 // first determine the misorientation vectors on all the voxel faces
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS

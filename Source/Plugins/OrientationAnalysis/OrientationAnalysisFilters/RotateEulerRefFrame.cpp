@@ -195,7 +195,7 @@ void RotateEulerRefFrame::execute()
 
   size_t totalPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
 
-  float rotAngle = m_RotationAngle * SIMPLib::Constants::k_Pi / 180.0f;
+  float rotAngle = m_RotationAngle * SIMPLib::Constants::k_PiD / 180.0f;
   float rotAxis[3] = {m_RotationAxis[0], m_RotationAxis[1], m_RotationAxis[2]};
   MatrixMath::Normalize3x1(rotAxis);
 

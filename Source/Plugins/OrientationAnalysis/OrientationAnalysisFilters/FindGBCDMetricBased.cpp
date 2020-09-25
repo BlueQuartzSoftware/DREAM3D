@@ -718,8 +718,8 @@ void FindGBCDMetricBased::execute()
   float m_misorResol = FindGBCDMetricBased::k_ResolutionChoices[getChosenLimitDists()][0];
   float m_planeResol = FindGBCDMetricBased::k_ResolutionChoices[getChosenLimitDists()][1];
 
-  m_misorResol *= SIMPLib::Constants::k_PiOver180;
-  m_planeResol *= SIMPLib::Constants::k_PiOver180;
+  m_misorResol *= SIMPLib::Constants::k_PiOver180D;
+  m_planeResol *= SIMPLib::Constants::k_PiOver180D;
   float m_PlaneResolSq = m_planeResol * m_planeResol;
 
   // We want to work with the raw pointers for speed so get those pointers.
@@ -847,7 +847,7 @@ void FindGBCDMetricBased::execute()
   }
 
   // Add points at the equator for better performance of some plotting tools
-  for(double phi = 0.0; phi <= SIMPLib::Constants::k_2Pi; phi += m_planeResol)
+  for(double phi = 0.0; phi <= SIMPLib::Constants::k_2PiD; phi += m_planeResol)
   {
     samplPtsX.push_back(cosf(static_cast<float>(phi)));
     samplPtsY.push_back(sinf(static_cast<float>(phi)));
@@ -859,7 +859,7 @@ void FindGBCDMetricBased::execute()
   float gFixedT[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
 
   {
-    float gFixedAngle = static_cast<float>(m_MisorientationRotation.angle * SIMPLib::Constants::k_PiOver180);
+    float gFixedAngle = static_cast<float>(m_MisorientationRotation.angle * SIMPLib::Constants::k_PiOver180D);
     float gFixedAxis[3] = {m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l};
     MatrixMath::Normalize3x1(gFixedAxis);
     OrientationTransformation::ax2om<OrientationF, OrientationF>(OrientationF(gFixedAxis[0], gFixedAxis[1], gFixedAxis[2], gFixedAngle)).toGMatrix(gFixed);
@@ -994,8 +994,8 @@ void FindGBCDMetricBased::execute()
     float zenith = acosf(samplPtsZ.at(ptIdx));
     float azimuth = atan2f(samplPtsY.at(ptIdx), samplPtsX.at(ptIdx));
 
-    float zenithDeg = static_cast<float>(SIMPLib::Constants::k_180OverPi * zenith);
-    float azimuthDeg = static_cast<float>(SIMPLib::Constants::k_180OverPi * azimuth);
+    float zenithDeg = static_cast<float>(SIMPLib::Constants::k_180OverPiD * zenith);
+    float azimuthDeg = static_cast<float>(SIMPLib::Constants::k_180OverPiD * azimuth);
 
     fprintf(fDist, "%.2f %.2f %.4f\n", azimuthDeg, 90.0f - zenithDeg, distribValues[ptIdx]);
 

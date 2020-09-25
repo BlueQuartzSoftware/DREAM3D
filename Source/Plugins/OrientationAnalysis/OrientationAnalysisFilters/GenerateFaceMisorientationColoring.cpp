@@ -131,9 +131,9 @@ public:
           // double w = 0.0f, n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
           OrientationD axisAngle = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
 
-          m_Colors[3 * i + 0] = axisAngle[0] * (axisAngle[3] * SIMPLib::Constants::k_180OverPi);
-          m_Colors[3 * i + 1] = axisAngle[1] * (axisAngle[3] * SIMPLib::Constants::k_180OverPi);
-          m_Colors[3 * i + 2] = axisAngle[2] * (axisAngle[3] * SIMPLib::Constants::k_180OverPi);
+          m_Colors[3 * i + 0] = axisAngle[0] * (axisAngle[3] * SIMPLib::Constants::k_180OverPiD);
+          m_Colors[3 * i + 1] = axisAngle[1] * (axisAngle[3] * SIMPLib::Constants::k_180OverPiD);
+          m_Colors[3 * i + 2] = axisAngle[2] * (axisAngle[3] * SIMPLib::Constants::k_180OverPiD);
         }
       }
       else

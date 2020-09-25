@@ -183,7 +183,7 @@ void FindBasalLoadingFactor::execute()
     }
     w = GeometryMath::CosThetaBetweenVectors(c1, sampleLoading);
     w = acos(w);
-    w *= SIMPLib::Constants::k_180OverPi;
+    w *= SIMPLib::Constants::k_180OverPiD;
     m_BasalLoadingFactor[i] = w;
   }
 

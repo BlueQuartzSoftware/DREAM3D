@@ -233,9 +233,9 @@ void StatsGenMDFWidget::updatePlots()
   // Convert Degrees to Radians for ODF
   for(size_t i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
-    e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
-    e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180D);
+    e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180D);
+    e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180D);
   }
 
   StatsProgressWidget progress("Calculating/Updating the ODF", "Cancel", nullptr);
@@ -296,7 +296,7 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float>& odf)
     {
       angle += 180.0;
     }
-    angle *= SIMPLib::Constants::k_DegToRad;
+    angle *= SIMPLib::Constants::k_DegToRadD;
   }
 
   // Normalize the axis to unit norm
@@ -565,7 +565,7 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
   // Convert from Radians to Degrees
   for(float& a : angles)
   {
-    a *= static_cast<float>(SIMPLib::Constants::k_RadToDeg);
+    a *= SIMPLib::Constants::k_RadToDegF;
   }
   if(!arrays.empty())
   {
@@ -599,9 +599,9 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, PhaseType::Ty
   // Convert from Degrees to Radians
   for(size_t i = 0; i < e1s.size(); i++)
   {
-    e1s[i] *= static_cast<float>(SIMPLib::Constants::k_PiOver180);
-    e2s[i] *= static_cast<float>(SIMPLib::Constants::k_PiOver180);
-    e3s[i] *= static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    e1s[i] *= SIMPLib::Constants::k_PiOver180F;
+    e2s[i] *= SIMPLib::Constants::k_PiOver180F;
+    e3s[i] *= SIMPLib::Constants::k_PiOver180F;
   }
 
   std::vector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalStructure, e1s, e2s, e3s, odf_weights, sigmas, !preflight);
@@ -611,7 +611,7 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, PhaseType::Ty
   // Convert from Degrees to Radians
   for(float& a : angles)
   {
-    a *= static_cast<float>(SIMPLib::Constants::k_DegToRad);
+    a *= SIMPLib::Constants::k_DegToRadF;
   }
 
   std::vector<float> weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);

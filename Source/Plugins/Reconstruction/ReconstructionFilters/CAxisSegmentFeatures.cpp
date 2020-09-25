@@ -388,7 +388,7 @@ bool CAxisSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t nei
       // Validate value of w falls between [-1, 1] to ensure that acos returns a valid value
       w = std::clamp(((c1[0] * c2[0]) + (c1[1] * c2[1]) + (c1[2] * c2[2])), -1.0F, 1.0F);
       w = acosf(w);
-      if(w <= m_MisoTolerance || (SIMPLib::Constants::k_Pi - w) <= m_MisoTolerance)
+      if(w <= m_MisoTolerance || (SIMPLib::Constants::k_PiD - w) <= m_MisoTolerance)
       {
         group = true;
         m_FeatureIds[neighborpoint] = gnum;
@@ -430,7 +430,7 @@ void CAxisSegmentFeatures::execute()
   updateFeatureInstancePointers();
 
   // Convert user defined tolerance to radians.
-  m_MisoTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_PiOver180;
+  m_MisoTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_PiOver180D;
 
   // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
   const int64_t rangeMin = 0;

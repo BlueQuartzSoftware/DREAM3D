@@ -220,9 +220,9 @@ int32_t LosAlamosFFTWriter::writeFile()
       for(size_t x = 0; x < dims[0]; ++x)
       {
         index = (z * dims[0] * dims[1]) + (dims[0] * y) + x;
-        phi1 = m_CellEulerAngles[index * 3] * 180.0 * SIMPLib::Constants::k_1OverPi;
-        phi = m_CellEulerAngles[index * 3 + 1] * 180.0 * SIMPLib::Constants::k_1OverPi;
-        phi2 = m_CellEulerAngles[index * 3 + 2] * 180.0 * SIMPLib::Constants::k_1OverPi;
+        phi1 = m_CellEulerAngles[index * 3] * 180.0 * SIMPLib::Constants::k_1OverPiD;
+        phi = m_CellEulerAngles[index * 3 + 1] * 180.0 * SIMPLib::Constants::k_1OverPiD;
+        phi2 = m_CellEulerAngles[index * 3 + 2] * 180.0 * SIMPLib::Constants::k_1OverPiD;
         featureId = m_FeatureIds[index];
         phaseId = m_CellPhases[index];
         fprintf(f, "%.3f %.3f %.3f %llu %llu %llu %d %d\n", phi1, phi, phi2, LLU_CAST(x + 1), LLU_CAST(y + 1), LLU_CAST(z + 1), featureId, phaseId);

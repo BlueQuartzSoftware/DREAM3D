@@ -406,7 +406,7 @@ bool MergeColonies::determineGrouping(int32_t referenceFeature, int32_t neighbor
       rod = m_OrientationOps[phase1]->getMDFFZRod(rod);
       ax = OrientationTransformation::ro2ax<OrientationD, OrientationD>(rod);
 
-      w = ax[3] * (SIMPLib::Constants::k_180OverPi);
+      w = ax[3] * (SIMPLib::Constants::k_180OverPiD);
       float angdiff1 = std::fabs(w - 10.53f);
       float axisdiff1 = std::acos(/*std::fabs(n1) * 0.0000f + std::fabs(n2) * 0.0000f +*/ std::fabs(ax[2]) /* * 1.0000f */);
       if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisToleranceRad)
@@ -479,7 +479,7 @@ bool MergeColonies::check_for_burgers(const QuatD& betaQuat, const QuatD& alphaQ
 {
   double dP = 0.0;
   double angle = 0.0;
-  double radToDeg = 180.0 / SIMPLib::Constants::k_Pi;
+  double radToDeg = 180.0 / SIMPLib::Constants::k_PiD;
 
   double gBeta[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
   double gBetaT[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
@@ -597,7 +597,7 @@ void MergeColonies::execute()
     return;
   }
 
-  m_AxisToleranceRad = m_AxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_AxisToleranceRad = m_AxisTolerance * SIMPLib::Constants::k_PiD / 180.0f;
 
   GroupFeatures::execute();
 

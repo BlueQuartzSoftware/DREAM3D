@@ -238,7 +238,7 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
       }
       m_Volumes[i] = (static_cast<double>(featurecounts[i]) * static_cast<double>(res_scalar));
 
-      rad = m_Volumes[i] / SIMPLib::Constants::k_Pi;
+      rad = m_Volumes[i] / SIMPLib::Constants::k_PiD;
       diameter = (2 * sqrtf(rad));
       m_EquivalentDiameters[i] = diameter;
     }
@@ -246,7 +246,7 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
   else
   {
     res_scalar = spacing[0] * spacing[1] * spacing[2];
-    float vol_term = (4.0f / 3.0f) * SIMPLib::Constants::k_Pi;
+    float vol_term = (4.0f / 3.0f) * SIMPLib::Constants::k_PiD;
     for(size_t i = 1; i < numfeatures; i++)
     {
       m_NumElements[i] = static_cast<int32_t>(featurecounts[i]);
@@ -315,7 +315,7 @@ void FindSizes::findSizesUnstructured(IGeometry::Pointer igeom)
     featurecounts[gnum]++;
     m_Volumes[gnum] += sizes[j];
   }
-  float vol_term = (4.0f / 3.0f) * SIMPLib::Constants::k_Pif;
+  float vol_term = (4.0f / 3.0f) * SIMPLib::Constants::k_PiF;
   for(size_t i = 1; i < numfeatures; i++)
   {
     m_NumElements[i] = static_cast<int32_t>(featurecounts[i]);

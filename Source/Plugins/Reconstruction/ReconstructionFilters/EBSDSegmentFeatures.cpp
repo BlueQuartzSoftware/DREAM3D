@@ -397,7 +397,7 @@ void EBSDSegmentFeatures::execute()
   updateFeatureInstancePointers();
 
   // Convert user defined tolerance to radians.
-  m_MisoTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_PiOver180;
+  m_MisoTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_PiOver180D;
 
   // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
   const int64_t rangeMin = 0;

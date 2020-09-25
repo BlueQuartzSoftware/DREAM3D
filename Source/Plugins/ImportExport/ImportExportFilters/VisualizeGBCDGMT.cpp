@@ -249,13 +249,13 @@ void VisualizeGBCDGMT::execute()
   gbcdLimits[0] = 0.0f;
   gbcdLimits[1] = 0.0f;
   gbcdLimits[2] = 0.0f;
-  gbcdLimits[3] = -sqrtf(SIMPLib::Constants::k_PiOver2);
-  gbcdLimits[4] = -sqrtf(SIMPLib::Constants::k_PiOver2);
-  gbcdLimits[5] = SIMPLib::Constants::k_Pi / 2.0f;
+  gbcdLimits[3] = -sqrtf(SIMPLib::Constants::k_PiOver2D);
+  gbcdLimits[4] = -sqrtf(SIMPLib::Constants::k_PiOver2D);
+  gbcdLimits[5] = SIMPLib::Constants::k_PiD / 2.0f;
   gbcdLimits[6] = 1.0f;
-  gbcdLimits[7] = SIMPLib::Constants::k_Pi / 2.0f;
-  gbcdLimits[8] = sqrtf(SIMPLib::Constants::k_PiOver2);
-  gbcdLimits[9] = sqrtf(SIMPLib::Constants::k_PiOver2);
+  gbcdLimits[7] = SIMPLib::Constants::k_PiD / 2.0f;
+  gbcdLimits[8] = sqrtf(SIMPLib::Constants::k_PiOver2D);
+  gbcdLimits[9] = sqrtf(SIMPLib::Constants::k_PiOver2D);
 
   // get num components of GBCD
   std::vector<size_t> cDims = m_GBCDPtr.lock()->getComponentDimensions();
@@ -286,7 +286,7 @@ void VisualizeGBCDGMT::execute()
   float sym2t[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   float mis_euler1[3] = {0.0f, 0.0f, 0.0f};
 
-  float misAngle = m_MisorientationRotation.angle * SIMPLib::Constants::k_PiOver180;
+  float misAngle = m_MisorientationRotation.angle * SIMPLib::Constants::k_PiOver180D;
   float normAxis[3] = {m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l};
   MatrixMath::Normalize3x1(normAxis);
   // convert axis angle to matrix representation of misorientation
@@ -307,7 +307,7 @@ void VisualizeGBCDGMT::execute()
   float phiRes = 90.0f / float(phiPoints);
   float theta = 0.0f, phi = 0.0f;
   float thetaRad = 0.0f, phiRad = 0.0f;
-  float degToRad = SIMPLib::Constants::k_PiOver180;
+  float degToRad = SIMPLib::Constants::k_PiOver180D;
   float sum = 0.0f;
   int32_t count = 0;
   bool nhCheck = false;
@@ -355,7 +355,7 @@ void VisualizeGBCDGMT::execute()
           OrientationF mEuler(mis_euler1, 3);
           mEuler = OrientationTransformation::om2eu<OrientationF, OrientationF>(OrientationF(dg2));
 
-          if(mis_euler1[0] < SIMPLib::Constants::k_PiOver2 && mis_euler1[1] < SIMPLib::Constants::k_PiOver2 && mis_euler1[2] < SIMPLib::Constants::k_PiOver2)
+          if(mis_euler1[0] < SIMPLib::Constants::k_PiOver2D && mis_euler1[1] < SIMPLib::Constants::k_PiOver2D && mis_euler1[2] < SIMPLib::Constants::k_PiOver2D)
           {
             mis_euler1[1] = cosf(mis_euler1[1]);
             // find bins in GBCD
@@ -388,7 +388,7 @@ void VisualizeGBCDGMT::execute()
           MatrixMath::Multiply3x3with3x3(sym1, dg1, dg2);
           // convert to euler angle
           mEuler = OrientationTransformation::om2eu<OrientationF, OrientationF>(OrientationF(dg2));
-          if(mis_euler1[0] < SIMPLib::Constants::k_PiOver2 && mis_euler1[1] < SIMPLib::Constants::k_PiOver2 && mis_euler1[2] < SIMPLib::Constants::k_PiOver2)
+          if(mis_euler1[0] < SIMPLib::Constants::k_PiOver2D && mis_euler1[1] < SIMPLib::Constants::k_PiOver2D && mis_euler1[2] < SIMPLib::Constants::k_PiOver2D)
           {
             mis_euler1[1] = cosf(mis_euler1[1]);
             // find bins in GBCD
@@ -456,13 +456,13 @@ bool VisualizeGBCDGMT::getSquareCoord(float* xstl1_norm1, float* sqCoord)
   }
   if(fabsf(xstl1_norm1[0]) >= fabsf(xstl1_norm1[1]))
   {
-    sqCoord[0] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrt(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPi / 2.0f);
-    sqCoord[1] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrt(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPi) * atanf(xstl1_norm1[1] / xstl1_norm1[0]));
+    sqCoord[0] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrt(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPiD / 2.0f);
+    sqCoord[1] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrt(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPiD) * atanf(xstl1_norm1[1] / xstl1_norm1[0]));
   }
   else
   {
-    sqCoord[0] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPi) * atanf(xstl1_norm1[0] / xstl1_norm1[1]));
-    sqCoord[1] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPi / 2.0f);
+    sqCoord[0] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPiD) * atanf(xstl1_norm1[0] / xstl1_norm1[1]));
+    sqCoord[1] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPiD / 2.0f);
   }
   return nhCheck;
 }

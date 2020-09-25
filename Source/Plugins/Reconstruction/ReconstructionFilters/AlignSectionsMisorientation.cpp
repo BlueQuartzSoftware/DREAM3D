@@ -271,7 +271,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
 
     misorientsPtr->initializeWithValue(false); // Initialize everything to false
 
-    float misorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_PiOver180;
+    float misorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_PiOver180D;
     float* currentQuatPtr = nullptr;
 
     while(newxshift != oldxshift || newyshift != oldyshift)

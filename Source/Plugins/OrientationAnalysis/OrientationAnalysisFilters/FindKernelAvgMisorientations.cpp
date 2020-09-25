@@ -283,7 +283,7 @@ void FindKernelAvgMisorientations::execute()
                   phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
                   OrientationF axisAngle = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
 
-                  totalmisorientation = totalmisorientation + (axisAngle[3] * SIMPLib::Constants::k_180OverPi);
+                  totalmisorientation = totalmisorientation + (axisAngle[3] * SIMPLib::Constants::k_180OverPiD);
                   numVoxel++;
                 }
               }

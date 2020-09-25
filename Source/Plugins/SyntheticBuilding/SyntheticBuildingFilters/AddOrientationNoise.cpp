@@ -134,7 +134,7 @@ void AddOrientationNoise::execute()
     return;
   }
 
-  m_Magnitude = m_Magnitude * SIMPLib::Constants::k_Pi / 180.0f;
+  m_Magnitude = m_Magnitude * SIMPLib::Constants::k_PiD / 180.0f;
 
   add_orientation_noise();
 }

@@ -389,7 +389,7 @@ void CreateLambertSphere::createVertices()
 
   UInt8ArrayType::Pointer masterPattern = getDataContainerArray()->getAttributeMatrix(getImageDataArrayPath())->getAttributeArrayAs<UInt8ArrayType>(getImageDataArrayPath().getDataArrayName());
 
-  float L = static_cast<float>(SIMPLib::Constants::k_SqrtHalfPi);
+  float L = SIMPLib::Constants::k_SqrtHalfPiF;
   float res = (2.0f * L) / imageDims[0];
 
   // The number of vertices in X & Y is one more than the dims
@@ -551,7 +551,7 @@ void CreateLambertSphere::createQuadGeometry()
     return;
   }
 
-  float L = static_cast<float>(SIMPLib::Constants::k_SqrtHalfPi);
+  float L = SIMPLib::Constants::k_SqrtHalfPiF;
 
   // Get the dimensions of the lambert image we are going to map to a sphere.
   ImageGeom::Pointer imageGeom = getDataContainerArray()->getDataContainer(getImageDataArrayPath())->getGeometryAs<ImageGeom>();
@@ -610,7 +610,7 @@ void CreateLambertSphere::createQuadGeometry()
 // -----------------------------------------------------------------------------
 float CreateLambertSphere::cp(float p)
 {
-  float cc = (2.0f * p / SIMPLib::Constants::k_Pif) * std::sqrt(SIMPLib::Constants::k_Pif - p * p);
+  float cc = (2.0f * p / SIMPLib::Constants::k_PiF) * std::sqrt(SIMPLib::Constants::k_PiF - p * p);
   return cc;
 }
 

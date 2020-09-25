@@ -447,7 +447,7 @@ void AlignSectionsMutualInformation::form_features_sections()
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
 
-  float misorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pif / 180.0f;
+  float misorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_PiF / 180.0f;
 
   m_FeatureCounts->resizeTuples(dims[2]);
   featurecounts = m_FeatureCounts->getPointer(0);

@@ -285,7 +285,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
           w = GeometryMath::CosThetaBetweenVectors(c1, AvgCAxis);
           SIMPLibMath::bound(w, -1.0f, 1.0f);
           w = acosf(w);
-          w = w * SIMPLib::Constants::k_180OverPi;
+          w = w * SIMPLib::Constants::k_180OverPiD;
           if(w > 90.0)
           {
             w = 180.0 - w;

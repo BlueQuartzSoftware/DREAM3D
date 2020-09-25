@@ -261,7 +261,7 @@ void NeighborOrientationCorrelation::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_ConfidenceIndexArrayPath.getDataContainerName());
   size_t totalPoints = m_ConfidenceIndexPtr.lock()->getNumberOfTuples();
 
-  float misorientationToleranceR = m_MisorientationTolerance * static_cast<float>(SIMPLib::Constants::k_PiOver180);
+  float misorientationToleranceR = m_MisorientationTolerance * SIMPLib::Constants::k_PiOver180F;
 
   SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 

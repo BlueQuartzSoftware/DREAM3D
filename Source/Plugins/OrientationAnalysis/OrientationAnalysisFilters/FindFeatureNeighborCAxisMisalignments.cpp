@@ -291,12 +291,12 @@ void FindFeatureNeighborCAxisMisalignments::execute()
         w = GeometryMath::CosThetaBetweenVectors(c1, c2);
         SIMPLibMath::bound(w, -1.0f, 1.0f);
         w = acosf(w);
-        if(w > (SIMPLib::Constants::k_Pi / 2))
+        if(w > (SIMPLib::Constants::k_PiD / 2))
         {
-          w = SIMPLib::Constants::k_Pi - w;
+          w = SIMPLib::Constants::k_PiD - w;
         }
 
-        misalignmentlists[i][j] = w * SIMPLib::Constants::k_180OverPi;
+        misalignmentlists[i][j] = w * SIMPLib::Constants::k_180OverPiD;
         if(m_FindAvgMisals)
         {
           m_AvgCAxisMisalignments[i] += misalignmentlists[i][j];

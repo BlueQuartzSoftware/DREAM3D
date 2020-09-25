@@ -664,7 +664,7 @@ void FindGBPDMetricBased::execute()
     return;
   }
 
-  m_LimitDist *= SIMPLib::Constants::k_PiOver180;
+  m_LimitDist *= SIMPLib::Constants::k_PiOver180D;
 
   // We want to work with the raw pointers for speed so get those pointers.
   uint32_t* m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
@@ -808,7 +808,7 @@ void FindGBPDMetricBased::execute()
 
     if(cryst == 0) // 6/mmm
     {
-      if(x < 0.0f || y < 0.0f || y > x * SIMPLib::Constants::k_1OverRoot3)
+      if(x < 0.0f || y < 0.0f || y > x * SIMPLib::Constants::k_1OverRoot3D)
       {
         continue;
       }
@@ -822,7 +822,7 @@ void FindGBPDMetricBased::execute()
     }
     if(cryst == 2 || cryst == 10) // 6/m || -3m
     {
-      if(x < 0.0f || y < 0.0f || y > x * SIMPLib::Constants::k_Sqrt3)
+      if(x < 0.0f || y < 0.0f || y > x * SIMPLib::Constants::k_Sqrt3D)
       {
         continue;
       }
@@ -858,7 +858,7 @@ void FindGBPDMetricBased::execute()
     }
     if(cryst == 9) // -3
     {
-      if(y < 0.0f || x < -y * SIMPLib::Constants::k_1OverRoot3)
+      if(y < 0.0f || x < -y * SIMPLib::Constants::k_1OverRoot3D)
       {
         continue;
       }
@@ -870,7 +870,7 @@ void FindGBPDMetricBased::execute()
   }
 
   // Add points at the edges and vertices of a fundamental region
-  const double deg = SIMPLib::Constants::k_PiOver180;
+  const double deg = SIMPLib::Constants::k_PiOver180D;
   const double density = m_LimitDist;
 
   if(cryst == 0) // 6/mmm
@@ -882,7 +882,7 @@ void FindGBPDMetricBased::execute()
   if(cryst == 1) // m-3m
   {
     appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 45.0 * deg, density);
-    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 45.0 * deg, 0.0, acos(SIMPLib::Constants::k_1OverRoot3), density);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 45.0 * deg, 0.0, acos(SIMPLib::Constants::k_1OverRoot3D), density);
 
     for(double phi = 0; phi <= 45.0f * deg; phi += density)
     {
@@ -1092,8 +1092,8 @@ void FindGBPDMetricBased::execute()
       float zenith = acosf(sym_point[2]);
       float azimuth = atan2f(sym_point[1], sym_point[0]);
 
-      float zenithDeg = static_cast<float>(SIMPLib::Constants::k_180OverPi * zenith);
-      float azimuthDeg = static_cast<float>(SIMPLib::Constants::k_180OverPi * azimuth);
+      float zenithDeg = static_cast<float>(SIMPLib::Constants::k_180OverPiD * zenith);
+      float azimuthDeg = static_cast<float>(SIMPLib::Constants::k_180OverPiD * azimuth);
 
       fprintf(fDist, "%.2f %.2f %.4f\n", azimuthDeg, 90.0f - zenithDeg, distribValues[ptIdx]);
 

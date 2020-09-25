@@ -105,9 +105,9 @@ public:
     // Convert to Radians
     for(size_t i = 0; i < e1s.size(); i++)
     {
-      e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
-      e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
-      e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
+      e1s[i] = e1s[i] * SIMPLib::Constants::k_PiOver180F;
+      e2s[i] = e2s[i] * SIMPLib::Constants::k_PiOver180F;
+      e3s[i] = e3s[i] * SIMPLib::Constants::k_PiOver180F;
     }
 
     return StatsGeneratorUtilities::GenerateODFData(laueIndex, e1s, e2s, e3s, weights, sigmas);

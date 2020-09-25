@@ -502,9 +502,9 @@ void GeneratePrimaryStatsData::execute()
     std::vector<std::vector<double>> odfData = m_OdfData.getTableData();
     for(size_t i = 0; i < odfData.size(); i++)
     {
-      e1s.push_back(odfData[i][0] * SIMPLib::Constants::k_PiOver180);
-      e2s.push_back(odfData[i][1] * SIMPLib::Constants::k_PiOver180);
-      e3s.push_back(odfData[i][2] * SIMPLib::Constants::k_PiOver180);
+      e1s.push_back(odfData[i][0] * SIMPLib::Constants::k_PiOver180D);
+      e2s.push_back(odfData[i][1] * SIMPLib::Constants::k_PiOver180D);
+      e3s.push_back(odfData[i][2] * SIMPLib::Constants::k_PiOver180D);
       weights.push_back(odfData[i][3]);
       sigmas.push_back(odfData[i][4]);
     }
@@ -522,9 +522,9 @@ void GeneratePrimaryStatsData::execute()
     std::vector<std::vector<double>> odfData = m_OdfData.getTableData();
     for(size_t i = 0; i < odfData.size(); i++)
     {
-      e1s.push_back(odfData[i][0] * static_cast<float>(SIMPLib::Constants::k_PiOver180));
-      e2s.push_back(odfData[i][1] * static_cast<float>(SIMPLib::Constants::k_PiOver180));
-      e3s.push_back(odfData[i][2] * static_cast<float>(SIMPLib::Constants::k_PiOver180));
+      e1s.push_back(odfData[i][0] * static_cast<float>(SIMPLib::Constants::k_PiOver180D));
+      e2s.push_back(odfData[i][1] * static_cast<float>(SIMPLib::Constants::k_PiOver180D));
+      e3s.push_back(odfData[i][2] * static_cast<float>(SIMPLib::Constants::k_PiOver180D));
       odf_weights.push_back(odfData[i][3]);
       sigmas.push_back(odfData[i][4]);
     }
@@ -557,9 +557,9 @@ void GeneratePrimaryStatsData::execute()
     std::vector<std::vector<double>> axisOdfData = m_AxisOdfData.getTableData();
     for(size_t i = 0; i < axisOdfData.size(); i++)
     {
-      e1s.push_back(axisOdfData[i][0] * SIMPLib::Constants::k_PiOver180);
-      e2s.push_back(axisOdfData[i][1] * SIMPLib::Constants::k_PiOver180);
-      e3s.push_back(axisOdfData[i][2] * SIMPLib::Constants::k_PiOver180);
+      e1s.push_back(axisOdfData[i][0] * SIMPLib::Constants::k_PiOver180D);
+      e2s.push_back(axisOdfData[i][1] * SIMPLib::Constants::k_PiOver180D);
+      e3s.push_back(axisOdfData[i][2] * SIMPLib::Constants::k_PiOver180D);
       weights.push_back(axisOdfData[i][3]);
       sigmas.push_back(axisOdfData[i][4]);
     }

@@ -372,15 +372,15 @@ void EMsoftSO3Sampler::execute()
     double x, y, z, delta, omega, semi;
 
     // step size for sampling of grid; the edge length of the cube is (pi ( w - sin(w) ))^1/3 with w the misorientation angle
-    omega = getMisOr() * SIMPLib::Constants::k_PiOver180;
-    semi = pow(SIMPLib::Constants::k_Pi * (omega - sin(omega)), 1.0 / 3.0) * 0.5;
+    omega = getMisOr() * SIMPLib::Constants::k_PiOver180D;
+    semi = pow(SIMPLib::Constants::k_PiD * (omega - sin(omega)), 1.0 / 3.0) * 0.5;
     delta = semi / static_cast<double>(getNumsp());
 
     // convert the reference orientation to a 3-component Rodrigues vector sigma
     OrientationD sigma(3), referenceOrientation(3);
-    referenceOrientation[0] = static_cast<double>(getRefOr()[0] * SIMPLib::Constants::k_PiOver180);
-    referenceOrientation[1] = static_cast<double>(getRefOr()[1] * SIMPLib::Constants::k_PiOver180);
-    referenceOrientation[2] = static_cast<double>(getRefOr()[2] * SIMPLib::Constants::k_PiOver180);
+    referenceOrientation[0] = static_cast<double>(getRefOr()[0] * SIMPLib::Constants::k_PiOver180D);
+    referenceOrientation[1] = static_cast<double>(getRefOr()[1] * SIMPLib::Constants::k_PiOver180D);
+    referenceOrientation[2] = static_cast<double>(getRefOr()[2] * SIMPLib::Constants::k_PiOver180D);
     OrientationD sigm = OrientationTransformation::eu2ro<OrientationD, OrientationD>(referenceOrientation);
     sigma[0] = sigm[0] * sigm[3];
     sigma[1] = sigm[1] * sigm[3];

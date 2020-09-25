@@ -194,10 +194,10 @@ void GenerateEulerColors::execute()
   size_t index = 0;
 
   int phase;
-  float twoPi = 2.0f * SIMPLib::Constants::k_Pi;
-  float halfPi = 0.5f * SIMPLib::Constants::k_Pi;
-  float thirdPi = 0.333 * SIMPLib::Constants::k_Pi;
-  float twoThirdPi = 0.6666 * SIMPLib::Constants::k_Pi;
+  float twoPi = 2.0f * SIMPLib::Constants::k_PiD;
+  float halfPi = 0.5f * SIMPLib::Constants::k_PiD;
+  float thirdPi = 0.333 * SIMPLib::Constants::k_PiD;
+  float twoThirdPi = 0.6666 * SIMPLib::Constants::k_PiD;
 
   // Write the Euler Coloring Cell Data
   for(int i = 0; i < totalPoints; ++i)

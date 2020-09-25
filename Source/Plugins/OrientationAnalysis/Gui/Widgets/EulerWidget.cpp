@@ -174,7 +174,7 @@ QVector<double> EulerWidget::getValues()
     }
     else
     {
-      e1->setText(QString::number(SIMPLib::Constants::k_Pi));
+      e1->setText(QString::number(SIMPLib::Constants::k_PiD));
     }
   }
   else if(e1->text() == "nan")
@@ -190,7 +190,7 @@ QVector<double> EulerWidget::getValues()
     }
     else
     {
-      e2->setText(QString::number(SIMPLib::Constants::k_Pi));
+      e2->setText(QString::number(SIMPLib::Constants::k_PiD));
     }
   }
   else if(e2->text() == "nan")
@@ -206,7 +206,7 @@ QVector<double> EulerWidget::getValues()
     }
     else
     {
-      e3->setText(QString::number(SIMPLib::Constants::k_Pi));
+      e3->setText(QString::number(SIMPLib::Constants::k_PiD));
     }
   }
   else if(e3->text() == "nan")
@@ -229,7 +229,7 @@ QVector<double> EulerWidget::toDegrees(QVector<double> data)
   for(int i = 0; i < data.size(); i++)
   {
     double radVal = data[i];
-    double degVal = radVal * SIMPLib::Constants::k_RadToDeg;
+    double degVal = radVal * SIMPLib::Constants::k_RadToDegD;
     data[i] = degVal;
   }
 
@@ -244,7 +244,7 @@ QVector<double> EulerWidget::toRadians(QVector<double> data)
   for(int i = 0; i < data.size(); i++)
   {
     double degVal = data[i];
-    double radVal = degVal * SIMPLib::Constants::k_DegToRad;
+    double radVal = degVal * SIMPLib::Constants::k_DegToRadD;
     data[i] = radVal;
   }
 

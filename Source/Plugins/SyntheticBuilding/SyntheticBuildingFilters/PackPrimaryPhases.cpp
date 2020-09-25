@@ -1065,8 +1065,8 @@ void PackPrimaryPhases::loadFeatures()
   for(int32_t i = 0; i < numFeatures; i++)
   {
     inFile >> phase >> xC >> yC >> zC >> axisA >> axisB >> axisC >> omega3 >> phi1 >> PHI >> phi2;
-    vol = fourThirds * SIMPLib::Constants::k_Pi * axisA * axisB * axisC;
-    eqDiam = 2.0f * powf((vol * (0.75f) * (SIMPLib::Constants::k_1OverPi)), (SIMPLib::Constants::k_1Over3));
+    vol = fourThirds * SIMPLib::Constants::k_PiD * axisA * axisB * axisC;
+    eqDiam = 2.0f * powf((vol * (0.75f) * (SIMPLib::Constants::k_1OverPiD)), (SIMPLib::Constants::k_1Over3D));
     m_Centroids[3 * currentFeature + 0] = xC;
     m_Centroids[3 * currentFeature + 1] = yC;
     m_Centroids[3 * currentFeature + 2] = zC;
@@ -1794,7 +1794,7 @@ void PackPrimaryPhases::generateFeature(int32_t phase, Feature_t* feature, uint3
   float diam = 0.0f;
   float vol = 0.0f;
   bool volgood = false;
-  float fourThirdsPiOverEight = static_cast<float>(((4.0f / 3.0f) * (SIMPLib::Constants::k_Pi)) / 8.0f);
+  float fourThirdsPiOverEight = static_cast<float>(((4.0f / 3.0f) * (SIMPLib::Constants::k_PiD)) / 8.0f);
   PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[phase]);
   VectorOfFloatArray GSdist = pp->getFeatureSizeDistribution();
   float avg = GSdist[0]->getValue(0);

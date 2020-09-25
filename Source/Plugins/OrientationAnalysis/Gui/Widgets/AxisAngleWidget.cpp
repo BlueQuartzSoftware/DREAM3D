@@ -106,7 +106,7 @@ void AxisAngleWidget::updateData(OrientationUtilityCalculator* calculator)
   if(m_AngleMeasurement == Degrees)
   {
     double radVal = aaValues[3];
-    double degVal = radVal * SIMPLib::Constants::k_RadToDeg;
+    double degVal = radVal * SIMPLib::Constants::k_RadToDegD;
     aaValues[3] = degVal;
   }
 
@@ -131,7 +131,7 @@ void AxisAngleWidget::valuesUpdated(const QString& text)
   if(m_AngleMeasurement == Degrees)
   {
     double degVal = values[3];
-    double radVal = degVal * SIMPLib::Constants::k_DegToRad;
+    double radVal = degVal * SIMPLib::Constants::k_DegToRadD;
     values[3] = radVal;
   }
 
@@ -175,11 +175,11 @@ void AxisAngleWidget::convertData(bool isDegrees)
 
   if(isDegrees)
   {
-    value = value * SIMPLib::Constants::k_RadToDeg;
+    value = value * SIMPLib::Constants::k_RadToDegD;
   }
   else
   {
-    value = value * SIMPLib::Constants::k_DegToRad;
+    value = value * SIMPLib::Constants::k_DegToRadD;
   }
 
   aa4->setText(QString::number(value));
@@ -213,7 +213,7 @@ QVector<double> AxisAngleWidget::getValues()
     }
     else
     {
-      aa4->setText(QString::number(SIMPLib::Constants::k_Pi));
+      aa4->setText(QString::number(SIMPLib::Constants::k_PiD));
     }
   }
   else if(aa4->text() == "nan")

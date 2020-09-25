@@ -261,7 +261,7 @@ void FindMisorientations::execute()
       {
         OrientationD axisAngle = m_OrientationOps[xtalType1]->calculateMisorientation(q1, q2);
 
-        misorientationlists[i][j] = axisAngle[3] * SIMPLib::Constants::k_180OverPi;
+        misorientationlists[i][j] = axisAngle[3] * SIMPLib::Constants::k_180OverPiD;
         if(m_FindAvgMisors)
         {
           m_AvgMisorientations[i] += misorientationlists[i][j];

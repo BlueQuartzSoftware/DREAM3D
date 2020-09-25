@@ -84,7 +84,7 @@ public:
     float* nodes = m_Nodes->getPointer(0);
     MeshIndexType* triangles = m_Triangles->getPointer(0);
 
-    float radToDeg = 180.0f / SIMPLib::Constants::k_Pi;
+    float radToDeg = 180.0f / SIMPLib::Constants::k_PiD;
 
     float ABx = 0.0f, ABy = 0.0f, ABz = 0.0f, ACx = 0.0f, ACy = 0.0f, ACz = 0.0f, BCx = 0.0f, BCy = 0.0f, BCz = 0.0f;
     float magAB = 0.0f, magAC = 0.0f, magBC = 0.0f;

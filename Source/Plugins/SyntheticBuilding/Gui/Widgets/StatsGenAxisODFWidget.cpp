@@ -161,9 +161,9 @@ void StatsGenAxisODFWidget::extractStatsData(int index, StatsData* statsData, Ph
     // Convert from Radians to Degrees for the Euler Angles
     for(int i = 0; i < e1.size(); ++i)
     {
-      e1[i] = e1[i] * static_cast<float>(SIMPLib::Constants::k_RadToDeg);
-      e2[i] = e2[i] * static_cast<float>(SIMPLib::Constants::k_RadToDeg);
-      e3[i] = e3[i] * static_cast<float>(SIMPLib::Constants::k_RadToDeg);
+      e1[i] = e1[i] * SIMPLib::Constants::k_RadToDegF;
+      e2[i] = e2[i] * SIMPLib::Constants::k_RadToDegF;
+      e3[i] = e3[i] * SIMPLib::Constants::k_RadToDegF;
     }
 
     if(!e1.empty())
@@ -202,9 +202,9 @@ int StatsGenAxisODFWidget::getOrientationData(StatsData* statsData, PhaseType::T
   // Convert from Degrees to Radians
   for(std::vector<float>::size_type i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = static_cast<float>(e1s[i] * SIMPLib::Constants::k_PiOver180);
-    e2s[i] = static_cast<float>(e2s[i] * SIMPLib::Constants::k_PiOver180);
-    e3s[i] = static_cast<float>(e3s[i] * SIMPLib::Constants::k_PiOver180);
+    e1s[i] = static_cast<float>(e1s[i] * SIMPLib::Constants::k_PiOver180D);
+    e2s[i] = static_cast<float>(e2s[i] * SIMPLib::Constants::k_PiOver180D);
+    e3s[i] = static_cast<float>(e3s[i] * SIMPLib::Constants::k_PiOver180D);
   }
 
   StatsGeneratorUtilities::GenerateAxisODFBinData(statsData, phaseType, e1s, e2s, e3s, weights, sigmas, !preflight);
@@ -447,9 +447,9 @@ void StatsGenAxisODFWidget::calculateAxisODF()
 
   for(size_t i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = static_cast<float>(e1s[i] * SIMPLib::Constants::k_PiOver180);
-    e2s[i] = static_cast<float>(e2s[i] * SIMPLib::Constants::k_PiOver180);
-    e3s[i] = static_cast<float>(e3s[i] * SIMPLib::Constants::k_PiOver180);
+    e1s[i] = static_cast<float>(e1s[i] * SIMPLib::Constants::k_PiOver180D);
+    e2s[i] = static_cast<float>(e2s[i] * SIMPLib::Constants::k_PiOver180D);
+    e3s[i] = static_cast<float>(e3s[i] * SIMPLib::Constants::k_PiOver180D);
   }
   size_t numEntries = e1s.size();
 

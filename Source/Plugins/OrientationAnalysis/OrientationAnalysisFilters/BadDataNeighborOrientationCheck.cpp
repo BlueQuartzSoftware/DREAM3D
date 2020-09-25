@@ -190,7 +190,7 @@ void BadDataNeighborOrientationCheck::execute()
     return;
   }
 
-  float misorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pif / 180.0f;
+  float misorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_PiF / 180.0f;
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_GoodVoxelsArrayPath.getDataContainerName());
   size_t totalPoints = m_GoodVoxelsPtr.lock()->getNumberOfTuples();

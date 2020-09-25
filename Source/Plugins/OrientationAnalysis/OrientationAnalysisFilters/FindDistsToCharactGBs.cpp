@@ -197,7 +197,7 @@ public:
           double alpha;
           if(dotProd < -1.0)
           {
-            alpha = SIMPLib::Constants::k_Pi;
+            alpha = SIMPLib::Constants::k_PiD;
           }
           else if(dotProd > 1.0)
           {
@@ -208,8 +208,8 @@ public:
             alpha = acos(dotProd);
           }
 
-          double dist2tilt = SIMPLib::Constants::k_PiOver2 - alpha;
-          double piMinusMisorAngleSq = SIMPLib::Constants::k_Pi - misorAngle;
+          double dist2tilt = SIMPLib::Constants::k_PiOver2D - alpha;
+          double piMinusMisorAngleSq = SIMPLib::Constants::k_PiD - misorAngle;
           piMinusMisorAngleSq *= piMinusMisorAngleSq;
 
           double dist2tiltSq = dist2tilt * dist2tilt;
@@ -235,10 +235,10 @@ public:
         }
       }
 
-      m_DistToTilt[triIdx] = minDistToTilt * SIMPLib::Constants::k_180OverPi;
-      m_DistToTwist[triIdx] = minDistToTwist * SIMPLib::Constants::k_180OverPi;
-      m_DistToSymmetric[triIdx] = sqrt(minDistToSymmetric) * SIMPLib::Constants::k_180OverPi;
-      m_DistTo180Tilt[triIdx] = sqrt(minDistTo180Tilt) * SIMPLib::Constants::k_180OverPi;
+      m_DistToTilt[triIdx] = minDistToTilt * SIMPLib::Constants::k_180OverPiD;
+      m_DistToTwist[triIdx] = minDistToTwist * SIMPLib::Constants::k_180OverPiD;
+      m_DistToSymmetric[triIdx] = sqrt(minDistToSymmetric) * SIMPLib::Constants::k_180OverPiD;
+      m_DistTo180Tilt[triIdx] = sqrt(minDistTo180Tilt) * SIMPLib::Constants::k_180OverPiD;
     }
   }
 

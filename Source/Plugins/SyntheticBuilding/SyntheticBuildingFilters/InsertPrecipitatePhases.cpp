@@ -754,8 +754,8 @@ void InsertPrecipitatePhases::load_precipitates()
   for(int32_t i = 0; i < numPrecips; i++)
   {
     inFile >> phase >> xC >> yC >> zC >> axisA >> axisB >> axisC >> omega3 >> phi1 >> PHI >> phi2;
-    vol = fourThirds * SIMPLib::Constants::k_Pi * axisA * axisB * axisC;
-    eqDiam = 2.0f * powf((vol * (0.75f) * (SIMPLib::Constants::k_1OverPi)), (SIMPLib::Constants::k_1Over3));
+    vol = fourThirds * SIMPLib::Constants::k_PiD * axisA * axisB * axisC;
+    eqDiam = 2.0f * powf((vol * (0.75f) * (SIMPLib::Constants::k_1OverPiD)), (SIMPLib::Constants::k_1Over3D));
     m_Centroids[3 * currentFeature + 0] = xC;
     m_Centroids[3 * currentFeature + 1] = yC;
     m_Centroids[3 * currentFeature + 2] = zC;
@@ -1572,7 +1572,7 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* prec
   float diam = 0.0f;
   float vol = 0.0f;
   bool volgood = false;
-  float fourThirdsPi = static_cast<float>((4.0f / 3.0f) * (SIMPLib::Constants::k_Pi));
+  float fourThirdsPi = static_cast<float>((4.0f / 3.0f) * (SIMPLib::Constants::k_PiD));
   PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[phase]);
   VectorOfFloatArray GSdist = pp->getFeatureSizeDistribution();
   float avg = GSdist[0]->getValue(0);

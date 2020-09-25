@@ -348,7 +348,7 @@ void FindFeatureReferenceMisorientations::execute()
 
           OrientationD axisAngle = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
 
-          m_FeatureReferenceMisorientations[point] = SIMPLib::Constants::k_180OverPi * axisAngle[3]; // convert to degrees
+          m_FeatureReferenceMisorientations[point] = SIMPLib::Constants::k_180OverPiD * axisAngle[3]; // convert to degrees
           idx = m_FeatureIds[point] * 2;
           avgMiso[idx + 0]++;
           avgMiso[idx + 1] = avgMiso[idx + 1] + m_FeatureReferenceMisorientations[point];

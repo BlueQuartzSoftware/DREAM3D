@@ -361,7 +361,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3Type dims, FloatVe
   float vol = 0.0f;
   float diam = 0.0f;
   bool volgood = false;
-  static const float k_FourThirdsPi = 1.3333333333f * SIMPLib::Constants::k_Pif;
+  static const float k_FourThirdsPi = 1.3333333333f * SIMPLib::Constants::k_PiF;
   for(size_t j = 0; j < primaryphases.size(); ++j)
   {
     float curphasetotalvol = totalvol * static_cast<float>(primaryphasefractions[j]);

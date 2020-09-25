@@ -188,9 +188,9 @@ void StatsGenODFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
     // Convert from Radians to Degrees for the Euler Angles
     for(int i = 0; i < e1.size(); ++i)
     {
-      e1[i] = e1[i] * static_cast<float>(SIMPLib::Constants::k_RadToDeg);
-      e2[i] = e2[i] * static_cast<float>(SIMPLib::Constants::k_RadToDeg);
-      e3[i] = e3[i] * static_cast<float>(SIMPLib::Constants::k_RadToDeg);
+      e1[i] = e1[i] * SIMPLib::Constants::k_RadToDegF;
+      e2[i] = e2[i] * SIMPLib::Constants::k_RadToDegF;
+      e3[i] = e3[i] * SIMPLib::Constants::k_RadToDegF;
     }
 
     if(!e1.empty())
@@ -235,9 +235,9 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, PhaseType::Type 
   // Convert from Degrees to Radians
   for(std::vector<float>::size_type i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
-    e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
-    e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    e1s[i] = e1s[i] * SIMPLib::Constants::k_PiOver180F;
+    e2s[i] = e2s[i] * SIMPLib::Constants::k_PiOver180F;
+    e3s[i] = e3s[i] * SIMPLib::Constants::k_PiOver180F;
   }
 
   StatsGeneratorUtilities::GenerateODFBinData(statsData, phaseType, m_CrystalStructure, e1s, e2s, e3s, weights, sigmas, !preflight);
@@ -561,9 +561,9 @@ void StatsGenODFWidget::calculateODF()
   // Convert from Degrees to Radians
   for(ContainerType::size_type i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
-    e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
-    e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    e1s[i] = e1s[i] * SIMPLib::Constants::k_PiOver180F;
+    e2s[i] = e2s[i] * SIMPLib::Constants::k_PiOver180F;
+    e3s[i] = e3s[i] * SIMPLib::Constants::k_PiOver180F;
   }
   size_t numEntries = static_cast<size_t>(e1s.size());
 
@@ -839,9 +839,9 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
       {
         // Be sure to convert the ANG Radians into degrees because this part of
         // DREAM.3D stores the angles as Degrees.
-        e1s[count] = phi1[i] * SIMPLib::Constants::k_180OverPi;
-        e2s[count] = phi[i] * SIMPLib::Constants::k_180OverPi;
-        e3s[count] = phi2[i] * SIMPLib::Constants::k_180OverPi;
+        e1s[count] = phi1[i] * SIMPLib::Constants::k_180OverPiD;
+        e2s[count] = phi[i] * SIMPLib::Constants::k_180OverPiD;
+        e3s[count] = phi2[i] * SIMPLib::Constants::k_180OverPiD;
         weights[count] = 1.0;
         sigmas[count] = 0.0;
         count++;

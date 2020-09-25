@@ -53,9 +53,9 @@ CorrelateValuesWithVectorDirection::CorrelateValuesWithVectorDirection()
 : m_CorrelatedDataArrayPath("", "", "")
 , m_VectorDataArrayPath("", "", "")
 , m_Logfile("CorrelateValuesWithVectorDirection.log")
-, m_MaxCoord(sqrt(SIMPLib::Constants::k_2Pi) / 2.0)
+, m_MaxCoord(sqrt(SIMPLib::Constants::k_2PiD) / 2.0)
 , m_Dimension(72)
-, m_StepSize(sqrt(SIMPLib::Constants::k_2Pi) / 72.0)
+, m_StepSize(sqrt(SIMPLib::Constants::k_2PiD) / 72.0)
 {
 }
 
@@ -99,9 +99,9 @@ void CorrelateValuesWithVectorDirection::readFilterParameters(AbstractFilterPara
 void CorrelateValuesWithVectorDirection::initialize()
 {
   m_LambertProj = DoubleArrayType::NullPointer();
-  m_MaxCoord = sqrt(SIMPLib::Constants::k_2Pi) / 2.0;
+  m_MaxCoord = sqrt(SIMPLib::Constants::k_2PiD) / 2.0;
   m_Dimension = 72;
-  m_StepSize = sqrt(SIMPLib::Constants::k_2Pi) / 72.0;
+  m_StepSize = sqrt(SIMPLib::Constants::k_2PiD) / 72.0;
 }
 
 // -----------------------------------------------------------------------------
@@ -298,13 +298,13 @@ int CorrelateValuesWithVectorDirection::determineSquareCoordsandBin(float xyz[3]
   }
   if(fabs(xyz[0]) >= fabs(xyz[1]))
   {
-    sqCoord[0] = (xyz[0] / fabs(xyz[0])) * sqrt(2.0 * 1.0 * (1.0 + (xyz[2] * adjust))) * SIMPLib::Constants::k_HalfOfSqrtPi;
-    sqCoord[1] = (xyz[0] / fabs(xyz[0])) * sqrt(2.0 * 1.0 * (1.0 + (xyz[2] * adjust))) * ((SIMPLib::Constants::k_2OverSqrtPi)*atan(xyz[1] / xyz[0]));
+    sqCoord[0] = (xyz[0] / fabs(xyz[0])) * sqrt(2.0 * 1.0 * (1.0 + (xyz[2] * adjust))) * SIMPLib::Constants::k_HalfOfSqrtPiD;
+    sqCoord[1] = (xyz[0] / fabs(xyz[0])) * sqrt(2.0 * 1.0 * (1.0 + (xyz[2] * adjust))) * ((SIMPLib::Constants::k_2OverSqrtPiD)*atan(xyz[1] / xyz[0]));
   }
   else
   {
-    sqCoord[0] = (xyz[1] / fabs(xyz[1])) * sqrt(2.0 * 1.0 * (1.0 + (xyz[2] * adjust))) * ((SIMPLib::Constants::k_2OverSqrtPi)*atan(xyz[0] / xyz[1]));
-    sqCoord[1] = (xyz[1] / fabs(xyz[1])) * sqrt(2.0 * 1.0 * (1.0 + (xyz[2] * adjust))) * (SIMPLib::Constants::k_HalfOfSqrtPi);
+    sqCoord[0] = (xyz[1] / fabs(xyz[1])) * sqrt(2.0 * 1.0 * (1.0 + (xyz[2] * adjust))) * ((SIMPLib::Constants::k_2OverSqrtPiD)*atan(xyz[0] / xyz[1]));
+    sqCoord[1] = (xyz[1] / fabs(xyz[1])) * sqrt(2.0 * 1.0 * (1.0 + (xyz[2] * adjust))) * (SIMPLib::Constants::k_HalfOfSqrtPiD);
   }
 
   if(sqCoord[0] >= m_MaxCoord)
@@ -345,19 +345,19 @@ void CorrelateValuesWithVectorDirection::determineXYZCoords(float sqCoords[2], f
 {
   if(fabs(sqCoords[0]) >= fabs(sqCoords[1]))
   {
-    xyz[0] = (2.0 * sqCoords[0] / SIMPLib::Constants::k_Pi) * sqrt((SIMPLib::Constants::k_Pi - ((sqCoords[0] * sqCoords[0]) / (1.0 * 1.0)))) *
-             cosf((sqCoords[1] * SIMPLib::Constants::k_Pi) / (4.0 * sqCoords[0]));
-    xyz[1] = (2.0 * sqCoords[0] / SIMPLib::Constants::k_Pi) * sqrt((SIMPLib::Constants::k_Pi - ((sqCoords[0] * sqCoords[0]) / (1.0 * 1.0)))) *
-             sinf((sqCoords[1] * SIMPLib::Constants::k_Pi) / (4.0 * sqCoords[0]));
-    xyz[2] = 1.0 - ((2.0 * sqCoords[0] * sqCoords[0]) / (SIMPLib::Constants::k_Pi * 1.0));
+    xyz[0] = (2.0 * sqCoords[0] / SIMPLib::Constants::k_PiD) * sqrt((SIMPLib::Constants::k_PiD - ((sqCoords[0] * sqCoords[0]) / (1.0 * 1.0)))) *
+             cosf((sqCoords[1] * SIMPLib::Constants::k_PiD) / (4.0 * sqCoords[0]));
+    xyz[1] = (2.0 * sqCoords[0] / SIMPLib::Constants::k_PiD) * sqrt((SIMPLib::Constants::k_PiD - ((sqCoords[0] * sqCoords[0]) / (1.0 * 1.0)))) *
+             sinf((sqCoords[1] * SIMPLib::Constants::k_PiD) / (4.0 * sqCoords[0]));
+    xyz[2] = 1.0 - ((2.0 * sqCoords[0] * sqCoords[0]) / (SIMPLib::Constants::k_PiD * 1.0));
   }
   else
   {
-    xyz[0] = (2.0 * sqCoords[1] / SIMPLib::Constants::k_Pi) * sqrt((SIMPLib::Constants::k_Pi - ((sqCoords[1] * sqCoords[1]) / (1.0 * 1.0)))) *
-             sinf((sqCoords[0] * SIMPLib::Constants::k_Pi) / (4.0 * sqCoords[1]));
-    xyz[1] = (2.0 * sqCoords[1] / SIMPLib::Constants::k_Pi) * sqrt((SIMPLib::Constants::k_Pi - ((sqCoords[1] * sqCoords[1]) / (1.0 * 1.0)))) *
-             cosf((sqCoords[0] * SIMPLib::Constants::k_Pi) / (4.0 * sqCoords[1]));
-    xyz[2] = 1.0 - ((2.0 * sqCoords[1] * sqCoords[1]) / (SIMPLib::Constants::k_Pi * 1.0));
+    xyz[0] = (2.0 * sqCoords[1] / SIMPLib::Constants::k_PiD) * sqrt((SIMPLib::Constants::k_PiD - ((sqCoords[1] * sqCoords[1]) / (1.0 * 1.0)))) *
+             sinf((sqCoords[0] * SIMPLib::Constants::k_PiD) / (4.0 * sqCoords[1]));
+    xyz[1] = (2.0 * sqCoords[1] / SIMPLib::Constants::k_PiD) * sqrt((SIMPLib::Constants::k_PiD - ((sqCoords[1] * sqCoords[1]) / (1.0 * 1.0)))) *
+             cosf((sqCoords[0] * SIMPLib::Constants::k_PiD) / (4.0 * sqCoords[1]));
+    xyz[2] = 1.0 - ((2.0 * sqCoords[1] * sqCoords[1]) / (SIMPLib::Constants::k_PiD * 1.0));
   }
 }
 
@@ -598,8 +598,8 @@ void CorrelateValuesWithVectorDirection::writePFStats(size_t numComps)
 
       determineXYZCoords(sqCoord, xyz);
 
-      zbin = int((asinf(xyz[2]) * 180.0 / SIMPLib::Constants::k_Pi) / 5.0);
-      ang = atan2(xyz[1], xyz[0]) * 180.0 / SIMPLib::Constants::k_Pi;
+      zbin = int((asinf(xyz[2]) * 180.0 / SIMPLib::Constants::k_PiD) / 5.0);
+      ang = atan2(xyz[1], xyz[0]) * 180.0 / SIMPLib::Constants::k_PiD;
       if(ang < 0)
       {
         ang += 360.0;

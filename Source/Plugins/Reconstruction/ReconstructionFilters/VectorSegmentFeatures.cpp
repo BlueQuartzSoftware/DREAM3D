@@ -334,9 +334,9 @@ bool VectorSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
     }
     float w = GeometryMath::CosThetaBetweenVectors(v1, v2);
     w = acosf(w);
-    if(w > SIMPLib::Constants::k_PiOver2)
+    if(w > SIMPLib::Constants::k_PiOver2D)
     {
-      w = SIMPLib::Constants::k_Pi - w;
+      w = SIMPLib::Constants::k_PiD - w;
     }
     if(w < m_AngleToleranceRad)
     {
@@ -381,7 +381,7 @@ void VectorSegmentFeatures::execute()
   int64_t totalPoints = static_cast<int64_t>(m_FeatureIdsPtr.lock()->getNumberOfTuples());
 
   // Convert user defined tolerance to radians.
-  m_AngleToleranceRad = m_AngleTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_AngleToleranceRad = m_AngleTolerance * SIMPLib::Constants::k_PiD / 180.0f;
 
   // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
   const int64_t rangeMin = 0;

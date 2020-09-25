@@ -852,7 +852,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     float degToRad = 1.0f;
     if(m_AngleRepresentation != EbsdLib::AngleRepresentation::Radians && m_UseTransformations)
     {
-      degToRad = SIMPLib::Constants::k_PiOver180;
+      degToRad = SIMPLib::Constants::k_PiOver180D;
     }
     for(size_t i = 0; i < totalPoints; i++)
     {
@@ -955,7 +955,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     float degToRad = 1.0f;
     if(m_AngleRepresentation != EbsdLib::AngleRepresentation::Radians && m_UseTransformations)
     {
-      degToRad = SIMPLib::Constants::k_PiOver180;
+      degToRad = SIMPLib::Constants::k_PiOver180D;
     }
     for(size_t i = 0; i < totalPoints; i++)
     {

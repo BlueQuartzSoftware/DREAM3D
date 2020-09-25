@@ -675,7 +675,7 @@ void ImportH5EspritData::copyRawEbsdData(EbsdReader* ebsdReader, std::vector<siz
   float degToRad = 1.0f;
   if(getDegreesToRadians())
   {
-    degToRad = static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    degToRad = SIMPLib::Constants::k_PiOver180F;
   }
 
   if(getCombineEulerAngles())

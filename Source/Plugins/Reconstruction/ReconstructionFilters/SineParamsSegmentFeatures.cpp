@@ -363,7 +363,7 @@ bool SineParamsSegmentFeatures::determineGrouping(int64_t referencepoint, int64_
   float v1;
   float v2;
   float shift;
-  float step = 45.0f * SIMPLib::Constants::k_PiOver180;
+  float step = 45.0f * SIMPLib::Constants::k_PiOver180D;
   float avgDiff = 0;
   if(m_FeatureIds[neighborpoint] == 0 && (!m_UseGoodVoxels || m_GoodVoxels[neighborpoint]))
   {

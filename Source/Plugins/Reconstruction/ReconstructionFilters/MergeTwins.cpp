@@ -329,7 +329,7 @@ bool MergeTwins::determineGrouping(int32_t referenceFeature, int32_t neighborFea
     {
       OrientationD axisAngle = m_OrientationOps[phase1]->calculateMisorientation(q1, q2);
       double w = axisAngle[3];
-      w = w * (SIMPLib::Constants::k_180OverPi);
+      w = w * (SIMPLib::Constants::k_180OverPiD);
       double axisdiff111 = acosf(fabs(axisAngle[0]) * 0.57735f + fabs(axisAngle[1]) * 0.57735f + fabs(axisAngle[2]) * 0.57735f);
       double angdiff60 = fabs(w - 60.0f);
       if(axisdiff111 < m_AxisToleranceRad && angdiff60 < m_AngleTolerance)
@@ -366,7 +366,7 @@ void MergeTwins::execute()
     return;
   }
 
-  m_AxisToleranceRad = m_AxisTolerance * SIMPLib::Constants::k_PiOver180;
+  m_AxisToleranceRad = m_AxisTolerance * SIMPLib::Constants::k_PiOver180D;
 
   m_FeatureParentIds[0] = 0; // set feature 0 to be parent 0
 

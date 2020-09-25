@@ -174,7 +174,7 @@ void DetectEllipsoidsImpl::operator()() const
     //    }
 
     // Calculate the minimum pixel threshold
-    double min_pix = std::round(SIMPLib::Constants::k_Pi * m_Axis_Min * m_Axis_Min / 2);
+    double min_pix = std::round(SIMPLib::Constants::k_PiD * m_Axis_Min * m_Axis_Min / 2);
 
     // Find all indices of non-zero elements in the featureObjArray
     SizeTArrayType::Pointer objPixelsArray = findNonZeroIndices<double>(featureObjArray, paddedObj_tDims);
@@ -361,15 +361,15 @@ void DetectEllipsoidsImpl::operator()() const
           double rotangle_val = rot_can->getValue(accum_idx);
 
           // Convert rotational angle until it is within -pi/2 and pi/2
-          while(rotangle_val > SIMPLib::Constants::k_PiOver2 || rotangle_val < -SIMPLib::Constants::k_PiOver2)
+          while(rotangle_val > SIMPLib::Constants::k_PiOver2D || rotangle_val < -SIMPLib::Constants::k_PiOver2D)
           {
-            if(rotangle_val > SIMPLib::Constants::k_PiOver2)
+            if(rotangle_val > SIMPLib::Constants::k_PiOver2D)
             {
-              rotangle_val = rotangle_val - SIMPLib::Constants::k_Pi;
+              rotangle_val = rotangle_val - SIMPLib::Constants::k_PiD;
             }
             else
             {
-              rotangle_val = rotangle_val + SIMPLib::Constants::k_Pi;
+              rotangle_val = rotangle_val + SIMPLib::Constants::k_PiD;
             }
           }
 
@@ -924,7 +924,7 @@ void DetectEllipsoidsImpl::analyzeEdgePair(SizeTArrayType::Pointer obj_edge_pair
         SizeTArrayType::Pointer overlap = findNonZeroIndices<size_t>(combinedMatrix, I_check_dims);
 
         // Estimate perimeter length using Ramanujan'a approximation.
-        double perim = SIMPLib::Constants::k_Pi * (3 * (a + b) - sqrt((3 * a + b) * (a + 3 * b)));
+        double perim = SIMPLib::Constants::k_PiD * (3 * (a + b) - sqrt((3 * a + b) * (a + 3 * b)));
         // Calculate pixel tolerance based on
         // the calculated perimeter
         double tol_pix = std::round(perim * m_TolEllipse);

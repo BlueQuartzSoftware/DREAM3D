@@ -219,8 +219,8 @@ void GenerateVectorColors::execute()
       {
         array = array * -1.0f;
       }
-      float trend = atan2f(dir[1], dir[0]) * (180.0 / SIMPLib::Constants::k_Pi);
-      float plunge = acosf(dir[2]) * (180.0 / SIMPLib::Constants::k_Pi);
+      float trend = atan2f(dir[1], dir[0]) * (180.0 / SIMPLib::Constants::k_PiD);
+      float plunge = acosf(dir[2]) * (180.0 / SIMPLib::Constants::k_PiD);
       if(trend < 0.0)
       {
         trend += 360.0;
