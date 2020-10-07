@@ -71,10 +71,10 @@ public:
     {
       Texture::CalculateMDFData<float, LaueOpsType, ContainerType>(angles, axes, weights, odf, mdfValues, angles.size());
       err = StatsGen::GenMDFPlotData<float, LaueOpsType, ContainerType>(mdfValues, x, y, size);
-    } catch(const std::runtime_error& e)
+    } catch([[maybe_unused]] const std::runtime_error& e)
     {
       err = -1;
-    } catch(const EbsdLib::method_not_implemented& e)
+    } catch([[maybe_unused]] const EbsdLib::method_not_implemented& e)
     {
       if(ops.getNameOfClass() == "TriclinicOps" || ops.getNameOfClass() == "MonoclinicOps" || ops.getNameOfClass() == "OrthorhombicOps")
       {
