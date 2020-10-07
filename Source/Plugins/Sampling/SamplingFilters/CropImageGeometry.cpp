@@ -473,7 +473,7 @@ void CropImageGeometry::execute()
   int64_t colold = 0, rowold = 0, planeold = 0;
   int64_t index = 0;
   int64_t index_old = 0;
-  QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNames();
+  auto voxelArrays = cellAttrMat->getAttributeArrays();
   for(int64_t i = 0; i < ZP; i++)
   {
     if(getCancel())
@@ -494,10 +494,9 @@ void CropImageGeometry::execute()
         col = k;
         index_old = planeold + rowold + colold;
         index = plane + row + col;
-        for(const auto& arrayName : voxelArrayNames)
+        for(auto& da : voxelArrays)
         {
-          IDataArray::Pointer p = cellAttrMat->getAttributeArray(arrayName);
-          p->copyTuple(index_old, index);
+          da->copyTuple(index_old, index);
         }
       }
     }
