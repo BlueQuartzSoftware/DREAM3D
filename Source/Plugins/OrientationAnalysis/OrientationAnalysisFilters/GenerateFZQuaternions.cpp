@@ -90,9 +90,9 @@ public:
 
       if(phase < m_NumPhases && calcIPF && m_CrystalStructures[phase] < EbsdLib::CrystalStructure::LaueGroupEnd)
       {
-        QuatD q = QuatD(m_Quats[index], m_Quats[index + 1], m_Quats[index + 2], m_Quats[index + 3]);
-        int32_t xtal = static_cast<int32_t>(m_CrystalStructures[phase]);
-        ops[xtal]->getFZQuat(q);
+        QuatD q = QuatD(m_Quats[index], m_Quats[index + 1], m_Quats[index + 2], m_Quats[index + 3]); // Makes a copy into q
+        int32_t xtal = static_cast<int32_t>(m_CrystalStructures[phase]);                             // get the Laue Group
+        q = ops[xtal]->getFZQuat(q);
         m_FZQuats[index] = q.x();
         m_FZQuats[index + 1] = q.y();
         m_FZQuats[index + 2] = q.z();
