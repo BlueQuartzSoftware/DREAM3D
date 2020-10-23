@@ -345,9 +345,9 @@ template <typename T> int32_t vtkReadBinaryData(std::istream& in, T* data, int32
 
   numRead = 0;
   // Now start reading the data in chunks if needed.
-  size_t chunkSize = DEFAULT_BLOCKSIZE;
+  size_t chunkSize = SIMPL::DEFAULT_BLOCKSIZE;
   // Sanity check the chunk size to make sure it is not any larger than the chunk of data we are about to read
-  if(numBytesToRead < DEFAULT_BLOCKSIZE)
+  if(numBytesToRead < SIMPL::DEFAULT_BLOCKSIZE)
   {
     chunkSize = numBytesToRead;
   }
