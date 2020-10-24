@@ -39,9 +39,9 @@
 
 #include <string>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 /**
  * @class GenerateNodeTriangleConnectivity GenerateNodeTriangleConnectivity.h /SurfaceMeshFilters/GenerateNodeTriangleConnectivity.h

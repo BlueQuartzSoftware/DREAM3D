@@ -37,11 +37,11 @@
 
 #include <QtCore/QObject>
 
-#include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
 
-#include "SVWidgetsLib/SVWidgetsLib.h"
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+#include "SVWidgetsLib/SVWidgetsLib.h"
 
 #include "SyntheticBuilding/ui_InitializeSyntheticVolumeWidget.h"
 

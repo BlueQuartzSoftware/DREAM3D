@@ -44,16 +44,16 @@
 #include <QtCore/QString>
 
 // DREAM3DLib includes
-#include <QtCore/QTextStream>
 #include <QtCore/QDebug>
+#include <QtCore/QTextStream>
 
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/SIMPLibVersion.h"
 
 // -----------------------------------------------------------------------------
 //

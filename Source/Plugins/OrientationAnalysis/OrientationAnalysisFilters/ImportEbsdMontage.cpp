@@ -31,8 +31,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ImportEbsdMontage.h"
 
-#include <QtCore/QTextStream>
 #include <QtCore/QFileInfo>
+#include <QtCore/QTextStream>
 
 #include "EbsdLib/IO/HKL/CtfFields.h"
 #include "EbsdLib/IO/HKL/CtfReader.h"
@@ -41,18 +41,17 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
-#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "SIMPLib/Montages/GridMontage.h"
-#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/FloatVec2FilterParameter.h"
 #include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Montages/GridMontage.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
-#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationAnalysis/FilterParameters/EbsdMontageImportFilterParameter.h"
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"

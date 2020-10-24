@@ -43,9 +43,9 @@
 
 // LinearAlgebra.h
 #pragma once
-#include <vector>
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 namespace MFE
 {

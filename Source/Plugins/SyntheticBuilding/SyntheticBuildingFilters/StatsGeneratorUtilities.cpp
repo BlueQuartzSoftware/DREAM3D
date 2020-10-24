@@ -45,6 +45,7 @@
 #include "EbsdLib/LaueOps/CubicOps.h"
 #include "EbsdLib/LaueOps/HexagonalLowOps.h"
 #include "EbsdLib/LaueOps/HexagonalOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 #include "EbsdLib/LaueOps/MonoclinicOps.h"
 #include "EbsdLib/LaueOps/OrthoRhombicOps.h"
 #include "EbsdLib/LaueOps/TetragonalLowOps.h"
@@ -52,7 +53,6 @@
 #include "EbsdLib/LaueOps/TriclinicOps.h"
 #include "EbsdLib/LaueOps/TrigonalLowOps.h"
 #include "EbsdLib/LaueOps/TrigonalOps.h"
-#include "EbsdLib/LaueOps/LaueOps.h"
 #include "EbsdLib/Texture/StatsGen.hpp"
 #include "EbsdLib/Texture/Texture.hpp"
 

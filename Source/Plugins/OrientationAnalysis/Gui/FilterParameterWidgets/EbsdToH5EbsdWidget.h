@@ -38,12 +38,12 @@
 
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
 
-#include "EbsdLib/Core/EbsdTransform.h"
 #include "EbsdLib/Core/EbsdLibConstants.h"
+#include "EbsdLib/Core/EbsdTransform.h"
 
+#include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 #include "SVWidgetsLib/QtSupport/QtSPluginFrame.h"
 #include "SVWidgetsLib/SVWidgetsLib.h"
-#include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
 #include "ui_EbsdToH5EbsdWidget.h"
 

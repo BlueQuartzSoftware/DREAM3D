@@ -29,12 +29,12 @@
 #define HAVE_SSTREAM
 #endif
 
+#include <cstdio>
+#include <iomanip>
+#include <iostream>
+#include <list>
 #include <string>
 #include <vector>
-#include <list>
-#include <iostream>
-#include <iomanip>
-#include <cstdio>
 
 #if defined(HAVE_SSTREAM)
 #include <sstream>
@@ -47,10 +47,10 @@ typedef std::istrstream istringstream;
 #endif
 
 #include <tclap/ArgException.h>
-#include <tclap/Visitor.h>
-#include <tclap/CmdLineInterface.h>
 #include <tclap/ArgTraits.h>
+#include <tclap/CmdLineInterface.h>
 #include <tclap/StandardTraits.h>
+#include <tclap/Visitor.h>
 
 namespace TCLAP
 {

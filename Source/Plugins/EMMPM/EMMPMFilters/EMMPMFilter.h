@@ -38,9 +38,9 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/FilterParameters/DynamicTableData.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "EMMPM/EMMPMLib/Core/EMMPM_Data.h"
 #include "EMMPMLib/Core/EMMPM_Constants.h"

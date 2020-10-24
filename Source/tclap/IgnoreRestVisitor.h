@@ -21,8 +21,8 @@
 
 #pragma once
 
-#include <tclap/Visitor.h>
 #include <tclap/Arg.h>
+#include <tclap/Visitor.h>
 
 namespace TCLAP
 {

@@ -5,21 +5,21 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonParseError>
 #include <QtCore/QMetaProperty>
 #include <QtCore/QString>
 #include <QtCore/QTextStream>
-#include <QtCore/QJsonDocument>
-#include <QtCore/QJsonArray>
-#include <QtCore/QJsonObject>
-#include <QtCore/QJsonParseError>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
-#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/Plugin/PluginManager.h"
+#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 
 #include "SVWidgetsLib/SVWidgetsLib.h"
 

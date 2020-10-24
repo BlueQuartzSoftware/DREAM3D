@@ -40,8 +40,8 @@
 #include <cstring>
 
 //-- C++ includes
-#include <random>
 #include <chrono>
+#include <random>
 
 //-- EMMMPM Lib Includes
 #include "EMMPMLib/Common/EMMPM_Math.h"

@@ -42,10 +42,9 @@
 #include <QtCore/QMutex>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
-#include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 using DE_ComplexDoubleVector = std::vector<std::complex<double>>;
 

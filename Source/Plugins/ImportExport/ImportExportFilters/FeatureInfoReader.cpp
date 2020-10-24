@@ -171,7 +171,7 @@ void FeatureInfoReader::updateFeatureInstancePointers()
   if(nullptr != m_FeaturePhasesPtr.lock())
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
-  }                                             /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(nullptr != m_FeatureEulerAnglesPtr.lock())
   {
     m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0);

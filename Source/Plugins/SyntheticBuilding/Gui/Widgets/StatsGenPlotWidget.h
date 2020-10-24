@@ -39,8 +39,8 @@
 
 #include "ui_StatsGenPlotWidget.h"
 
-#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/StatsData/StatsData.h"
 
 class QTableView;

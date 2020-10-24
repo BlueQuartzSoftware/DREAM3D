@@ -55,18 +55,18 @@
 #include <qwt_abstract_scale_draw.h>
 #include <qwt_compat.h>
 #include <qwt_interval.h>
+#include <qwt_picker_machine.h>
 #include <qwt_plot.h>
 #include <qwt_plot_canvas.h>
 #include <qwt_plot_curve.h>
 #include <qwt_plot_layout.h>
 #include <qwt_plot_marker.h>
+#include <qwt_plot_picker.h>
 #include <qwt_point_3d.h>
 #include <qwt_scale_draw.h>
 #include <qwt_scale_widget.h>
 #include <qwt_series_data.h>
 #include <qwt_symbol.h>
-#include <qwt_picker_machine.h>
-#include <qwt_plot_picker.h>
 
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/UTFUtilities.hpp"
@@ -77,6 +77,7 @@
 #include "EbsdLib/LaueOps/CubicOps.h"
 #include "EbsdLib/LaueOps/HexagonalLowOps.h"
 #include "EbsdLib/LaueOps/HexagonalOps.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 #include "EbsdLib/LaueOps/MonoclinicOps.h"
 #include "EbsdLib/LaueOps/OrthoRhombicOps.h"
 #include "EbsdLib/LaueOps/TetragonalLowOps.h"
@@ -84,14 +85,13 @@
 #include "EbsdLib/LaueOps/TriclinicOps.h"
 #include "EbsdLib/LaueOps/TrigonalLowOps.h"
 #include "EbsdLib/LaueOps/TrigonalOps.h"
-#include "EbsdLib/LaueOps/LaueOps.h"
 #include "EbsdLib/Texture/StatsGen.hpp"
 #include "EbsdLib/Texture/Texture.hpp"
 
-#include "SyntheticBuilding/Gui/Widgets/TableModels/SGMDFTableModel.h"
 #include "SyntheticBuilding/Gui/Widgets/StatsProgressWidget.h"
-#include "SyntheticBuilding/SyntheticBuildingFilters/StatsGeneratorUtilities.h"
+#include "SyntheticBuilding/Gui/Widgets/TableModels/SGMDFTableModel.h"
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
+#include "SyntheticBuilding/SyntheticBuildingFilters/StatsGeneratorUtilities.h"
 
 // -----------------------------------------------------------------------------
 //

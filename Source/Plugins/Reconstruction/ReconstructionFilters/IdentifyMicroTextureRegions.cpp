@@ -39,6 +39,8 @@
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -46,17 +48,15 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/GeometryMath.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
-#include "SIMPLib/DataContainers/DataContainer.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
-#include "EbsdLib/LaueOps/LaueOps.h"
 #include "EbsdLib/Core/EbsdLibConstants.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 // included so we can call under the hood to segment the patches found in this filter
-#include "Reconstruction/ReconstructionFilters/VectorSegmentFeatures.h"
 #include "Reconstruction/ReconstructionConstants.h"
+#include "Reconstruction/ReconstructionFilters/VectorSegmentFeatures.h"
 #include "Reconstruction/ReconstructionVersion.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS

@@ -301,7 +301,8 @@ size_t VtkStructuredPointsReader::parseByteSize(QString text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> int32_t skipVolume(std::istream& in, bool binary, size_t totalSize)
+template <typename T>
+int32_t skipVolume(std::istream& in, bool binary, size_t totalSize)
 {
   int32_t err = 0;
   if(binary)
@@ -330,7 +331,8 @@ template <typename T> int32_t skipVolume(std::istream& in, bool binary, size_t t
 // -----------------------------------------------------------------------------
 //
 // -------------------------------------------------------------------------
-template <typename T> int32_t vtkReadBinaryData(std::istream& in, T* data, int32_t numTuples, int32_t numComp)
+template <typename T>
+int32_t vtkReadBinaryData(std::istream& in, T* data, int32_t numTuples, int32_t numComp)
 {
   if(numTuples == 0 || numComp == 0)
   {
@@ -400,7 +402,8 @@ template <typename T> int32_t vtkReadBinaryData(std::istream& in, T* data, int32
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> int32_t readDataChunk(AttributeMatrix::Pointer attrMat, std::istream& in, bool inPreflight, bool binary, const QString& scalarName, int32_t scalarNumComp)
+template <typename T>
+int32_t readDataChunk(AttributeMatrix::Pointer attrMat, std::istream& in, bool inPreflight, bool binary, const QString& scalarName, int32_t scalarNumComp)
 {
   size_t numTuples = attrMat->getNumberOfTuples();
 

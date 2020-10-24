@@ -36,9 +36,9 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Geometry/MeshStructs.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/MeshLinearAlgebra.h"
 

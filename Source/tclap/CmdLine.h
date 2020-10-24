@@ -23,15 +23,15 @@
 
 #pragma once
 
-#include <tclap/SwitchArg.h>
 #include <tclap/MultiSwitchArg.h>
-#include <tclap/UnlabeledValueArg.h>
+#include <tclap/SwitchArg.h>
 #include <tclap/UnlabeledMultiArg.h>
+#include <tclap/UnlabeledValueArg.h>
 
-#include <tclap/XorHandler.h>
 #include <tclap/HelpVisitor.h>
-#include <tclap/VersionVisitor.h>
 #include <tclap/IgnoreRestVisitor.h>
+#include <tclap/VersionVisitor.h>
+#include <tclap/XorHandler.h>
 
 #include <tclap/CmdLineOutput.h>
 #include <tclap/StdOutput.h>
@@ -39,13 +39,13 @@
 #include <tclap/Constraint.h>
 #include <tclap/ValuesConstraint.h>
 
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+#include <list>
+#include <stdlib.h> // Needed for exit(), which isn't defined in some envs.
 #include <string>
 #include <vector>
-#include <list>
-#include <iostream>
-#include <iomanip>
-#include <algorithm>
-#include <stdlib.h> // Needed for exit(), which isn't defined in some envs.
 
 namespace TCLAP
 {

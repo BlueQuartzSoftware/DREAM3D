@@ -39,11 +39,11 @@
 #include <random>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
-#include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
 #include "Reconstruction/ReconstructionDLLExport.h"
+#include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
 
 /**
  * @brief The GroupMicroTextureRegions class. See [Filter documentation](@ref groupmicrotextureregions) for details.

@@ -40,11 +40,11 @@
 #include <vector>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
-#include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
 #include "Reconstruction/ReconstructionDLLExport.h"
+#include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
 
 class LaueOps;
 using LaueOpsShPtrType = std::shared_ptr<LaueOps>;

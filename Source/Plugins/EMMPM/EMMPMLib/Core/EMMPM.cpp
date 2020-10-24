@@ -38,9 +38,9 @@
 #include <cstring>
 
 #include "SIMPLib/Messages/AbstractMessageHandler.h"
+#include "SIMPLib/Messages/GenericErrorMessage.h"
 #include "SIMPLib/Messages/GenericProgressMessage.h"
 #include "SIMPLib/Messages/GenericStatusMessage.h"
-#include "SIMPLib/Messages/GenericErrorMessage.h"
 #include "SIMPLib/Messages/GenericWarningMessage.h"
 
 #include "EMMPMLib/Common/EMMPM_Math.h"

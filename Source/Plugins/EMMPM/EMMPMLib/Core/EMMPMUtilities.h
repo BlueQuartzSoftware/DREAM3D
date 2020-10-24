@@ -35,9 +35,9 @@
 
 #pragma once
 
-#include "EMMPMLib/EMMPMLib.h"
-#include "EMMPMLib/Core/EMMPM_Constants.h"
 #include "EMMPMLib/Core/EMMPM.h"
+#include "EMMPMLib/Core/EMMPM_Constants.h"
+#include "EMMPMLib/EMMPMLib.h"
 
 class EMMPMLib_EXPORT EMMPMUtilities
 {

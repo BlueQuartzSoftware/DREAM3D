@@ -36,6 +36,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/CoreFilters/CreateDataArray.h"
 #include "SIMPLib/CoreFilters/CreateDataContainer.h"
 #include "SIMPLib/CoreFilters/CreateGeometry.h"
@@ -50,7 +51,6 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "UnitTestSupport.hpp"
 

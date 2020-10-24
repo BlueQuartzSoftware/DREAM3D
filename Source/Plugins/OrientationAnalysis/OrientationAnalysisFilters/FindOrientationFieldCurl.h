@@ -40,13 +40,13 @@
 
 #include <QtCore/QString>
 
-#include "EbsdLib/LaueOps/LaueOps.h"
 #include "SIMPLib/SIMPLib.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 

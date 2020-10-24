@@ -50,17 +50,17 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/QH5Utilities.h"
 
-#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/CoreFilters/DataContainerReader.h"
+#include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/Filtering/FilterPipeline.h"
 #include "SIMPLib/StatsData/BoundaryStatsData.h"
 #include "SIMPLib/StatsData/MatrixStatsData.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/TransformationStatsData.h"
-#include "SIMPLib/CoreFilters/DataContainerReader.h"
-#include "SIMPLib/CoreFilters/DataContainerWriter.h"
-#include "SIMPLib/Filtering/FilterPipeline.h"
-#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 

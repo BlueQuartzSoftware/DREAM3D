@@ -41,8 +41,8 @@
 
 #include "SVWidgetsLib/QtSupport/QtSPluginFrame.h"
 
-#include "SVWidgetsLib/SVWidgetsLib.h"
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+#include "SVWidgetsLib/SVWidgetsLib.h"
 
 #include "ui_ConvertHexGridToSquareGridWidget.h"
 

@@ -42,8 +42,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
-#include "SurfaceMeshing/SurfaceMeshingVersion.h"
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+#include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
 /**
  * @brief The FeatureFaceCurvatureFilter class. See [Filter documentation](@ref featurefacecurvaturefilter) for details.

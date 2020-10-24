@@ -32,8 +32,8 @@
 
 #pragma once
 
-#include <memory>
 #include <map>
+#include <memory>
 
 #include <QtCore/QString>
 
@@ -42,8 +42,8 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/SIMPLArray.hpp"
-#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/FilterParameters/MontageFileListInfo.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "OrientationAnalysis/FilterParameters/EbsdMontageImportFilterParameter.h"
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"

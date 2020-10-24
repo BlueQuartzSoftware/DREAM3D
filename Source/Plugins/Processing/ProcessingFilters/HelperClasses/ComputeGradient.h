@@ -35,9 +35,9 @@
 
 #pragma once
 
-#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 /**
  * @brief The ComputeGradient class computes the X and Y Gradient of a 2D array. This class mimics the

@@ -8,12 +8,12 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/Filtering/FilterPipeline.h"
-#include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/FilterPipeline.h"
+#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -22,13 +22,13 @@
 class ResampleRectGridToImageGeomTest
 {
 
-  public:
-    ResampleRectGridToImageGeomTest() = default;
-    ~ResampleRectGridToImageGeomTest() = default;
-    ResampleRectGridToImageGeomTest(const ResampleRectGridToImageGeomTest&) = delete;            // Copy Constructor
-    ResampleRectGridToImageGeomTest(ResampleRectGridToImageGeomTest&&) = delete;                 // Move Constructor
-    ResampleRectGridToImageGeomTest& operator=(const ResampleRectGridToImageGeomTest&) = delete; // Copy Assignment
-    ResampleRectGridToImageGeomTest& operator=(ResampleRectGridToImageGeomTest&&) = delete;      // Move Assignment
+public:
+  ResampleRectGridToImageGeomTest() = default;
+  ~ResampleRectGridToImageGeomTest() = default;
+  ResampleRectGridToImageGeomTest(const ResampleRectGridToImageGeomTest&) = delete;            // Copy Constructor
+  ResampleRectGridToImageGeomTest(ResampleRectGridToImageGeomTest&&) = delete;                 // Move Constructor
+  ResampleRectGridToImageGeomTest& operator=(const ResampleRectGridToImageGeomTest&) = delete; // Copy Assignment
+  ResampleRectGridToImageGeomTest& operator=(ResampleRectGridToImageGeomTest&&) = delete;      // Move Assignment
 
   // -----------------------------------------------------------------------------
   void operator()()
@@ -36,8 +36,5 @@ class ResampleRectGridToImageGeomTest
     int err = EXIT_SUCCESS;
   }
 
-  private:
-
-
+private:
 };
-

@@ -39,16 +39,16 @@
 #include <vector>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLArray.hpp"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/Common/SIMPLArray.hpp"
 
 #include "EbsdLib/IO/HKL/CtfReader.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
-#include "OrientationAnalysis/OrientationAnalysisVersion.h"
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+#include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 struct Ctf_Private_Data
 {

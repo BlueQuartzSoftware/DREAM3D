@@ -40,6 +40,7 @@
 
 #include <QtCore/QDebug>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
@@ -50,7 +51,6 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -284,7 +284,8 @@ public:
     return 1;
   }
 
-  template <typename T> void test(T x, T y, T z, const QString& type)
+  template <typename T>
+  void test(T x, T y, T z, const QString& type)
   {
     T totalPoints = x * y * z;
     qDebug() << "sizeof(" << type << "): " << sizeof(T) << " totalPoints: " << totalPoints;

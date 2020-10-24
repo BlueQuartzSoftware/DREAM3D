@@ -156,7 +156,8 @@ int closeHDF5File()
 /**
  *
  */
-template <typename T> int writeScalarData(const QString& hdfPath, const QVector<T>& scalar_data, const QString& name, int numComp, int32_t rank, hsize_t* dims)
+template <typename T>
+int writeScalarData(const QString& hdfPath, const QVector<T>& scalar_data, const QString& name, int numComp, int32_t rank, hsize_t* dims)
 {
   hid_t gid = H5Gopen(m_FileId, hdfPath.toLatin1().data(), H5P_DEFAULT);
   if(gid < 0)

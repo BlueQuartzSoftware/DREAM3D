@@ -47,11 +47,11 @@
 
 #include <QtCore/QDebug>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/StatsData.h"
 
 #include "EbsdLib/Texture/StatsGen.hpp"

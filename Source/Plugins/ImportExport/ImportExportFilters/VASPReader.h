@@ -41,10 +41,10 @@
 #include <QtCore/QString>
 #include <vector>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/CoreFilters/FileReader.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/SIMPLib.h"
 
 #include "ImportExport/ImportExportDLLExport.h"
 

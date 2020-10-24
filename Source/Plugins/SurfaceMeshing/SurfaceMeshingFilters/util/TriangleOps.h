@@ -35,12 +35,12 @@
 
 #pragma once
 
-#include <vector>
 #include <set>
+#include <vector>
 
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Geometry/IGeometry.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
 

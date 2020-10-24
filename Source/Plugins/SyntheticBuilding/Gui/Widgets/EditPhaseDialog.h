@@ -35,8 +35,8 @@
 
 #pragma once
 
-#include "ui_EditPhaseDialog.h"
 #include <QtGui/QDoubleValidator>
+#include "ui_EditPhaseDialog.h"
 
 #include "EbsdLib/Core/EbsdLibConstants.h"
 

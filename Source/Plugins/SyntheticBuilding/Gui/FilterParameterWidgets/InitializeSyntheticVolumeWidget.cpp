@@ -48,10 +48,12 @@
 
 #include <QtCore/QDebug>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -59,10 +61,8 @@
 #include "SIMPLib/Messages/AbstractMessageHandler.h"
 #include "SIMPLib/Messages/FilterErrorMessage.h"
 #include "SIMPLib/Messages/FilterWarningMessage.h"
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/StatsData.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
 #include "SVWidgetsLib/QtSupport/QtSFileUtils.h"

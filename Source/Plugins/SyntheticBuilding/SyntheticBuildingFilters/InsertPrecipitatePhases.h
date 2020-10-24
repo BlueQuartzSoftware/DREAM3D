@@ -39,11 +39,11 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/ShapeType.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/ShapeOps/ShapeOps.h"
-#include "SIMPLib/DataArrays/DataArray.hpp"
 
 class IDataArray;
 using IDataArrayShPtrType = std::shared_ptr<IDataArray>;

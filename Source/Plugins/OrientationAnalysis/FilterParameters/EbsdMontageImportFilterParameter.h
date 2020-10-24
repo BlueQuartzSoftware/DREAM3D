@@ -40,9 +40,9 @@
 #include <QtCore/QJsonObject>
 #include <QtCore/QString>
 
-#include "SIMPLib/FilterParameters/MontageFileListInfo.h"
-#include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/FilterParameters/MontageFileListInfo.h"
 
 /**
  * @brief SIMPL_NEW_EbsdMontageListInfo_FP This macro is a short-form way of instantiating an instance of

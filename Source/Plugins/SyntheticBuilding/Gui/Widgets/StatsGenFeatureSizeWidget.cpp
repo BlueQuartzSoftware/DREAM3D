@@ -43,16 +43,16 @@
 #include <QtGui/QMouseEvent>
 #include <QtWidgets/QLineEdit>
 
-#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/Utilities/ColorUtilities.h"
 
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 
-#include "EbsdLib/Texture/StatsGen.hpp"
 #include "EbsdLib/Core/EbsdLibConstants.h"
+#include "EbsdLib/Texture/StatsGen.hpp"
 
 #include "SyntheticBuilding/Gui/Widgets/StatsGenCurveTracker.h"
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"

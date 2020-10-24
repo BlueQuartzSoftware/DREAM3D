@@ -22,12 +22,12 @@
 
 #pragma once
 
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+#include <list>
 #include <string>
 #include <vector>
-#include <list>
-#include <iostream>
-#include <iomanip>
-#include <algorithm>
 
 namespace TCLAP
 {

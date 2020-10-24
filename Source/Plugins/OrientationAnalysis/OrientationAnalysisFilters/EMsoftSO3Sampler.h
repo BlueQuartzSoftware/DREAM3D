@@ -37,8 +37,8 @@
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
-#include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/Core/Orientation.hpp"
+#include "EbsdLib/EbsdLib.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 

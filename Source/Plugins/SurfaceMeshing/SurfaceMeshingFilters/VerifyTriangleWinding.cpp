@@ -52,10 +52,10 @@
 
 #include <QtCore/QDebug>
 
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/MatrixMath.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
-#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/ReverseTriangleWinding.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/Plane.h"

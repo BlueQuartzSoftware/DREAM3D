@@ -55,8 +55,8 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
-#include "OrientationAnalysis/OrientationAnalysisVersion.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/ChangeAngleRepresentation.h"
+#include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 enum createdPathID : RenameDataPath::DataID_t
 {

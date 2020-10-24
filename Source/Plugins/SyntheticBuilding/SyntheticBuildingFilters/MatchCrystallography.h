@@ -38,14 +38,14 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
-#include "SyntheticBuilding/SyntheticBuildingVersion.h"
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+#include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
 #include "EbsdLib/Core/Quaternion.hpp"
 

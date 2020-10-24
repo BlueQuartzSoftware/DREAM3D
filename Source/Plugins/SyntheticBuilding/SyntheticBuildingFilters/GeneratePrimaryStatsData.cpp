@@ -5,10 +5,14 @@
 
 #include <QtCore/QTextStream>
 
+#include "EbsdLib/Core/EbsdLibConstants.h"
+#include "EbsdLib/Texture/StatsGen.hpp"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -21,15 +25,11 @@
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/StatsData/PrimaryStatsData.h"
-#include "SIMPLib/Utilities/ColorUtilities.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
-#include "SIMPLib/DataContainers/DataContainer.h"
-#include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
-#include "EbsdLib/Core/EbsdLibConstants.h"
-#include "EbsdLib/Texture/StatsGen.hpp"
+#include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/Utilities/ColorUtilities.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/AbstractMicrostructurePreset.h"

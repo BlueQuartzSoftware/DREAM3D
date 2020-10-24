@@ -7,12 +7,12 @@
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/PluginManager.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "SIMPLView/SIMPLViewVersion.h"
 

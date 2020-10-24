@@ -40,8 +40,8 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/PhaseType.h"
 #include "SIMPLib/CoreFilters/FileReader.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 

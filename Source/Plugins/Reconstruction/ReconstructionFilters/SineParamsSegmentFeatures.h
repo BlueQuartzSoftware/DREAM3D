@@ -42,9 +42,9 @@
 #include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/DataArrays/DataArray.hpp"
 
 class IDataArray;
 using IDataArrayShPtrType = std::shared_ptr<IDataArray>;

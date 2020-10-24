@@ -39,11 +39,11 @@
 #include <QtCore/QString>
 #include <QtCore/QVector>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataContainers/DataArrayPath.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/VTKUtils/VTKWriterMacros.h"
 
 #include "ImportExport/ImportExportDLLExport.h"

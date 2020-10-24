@@ -7,12 +7,12 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QTextStream>
 
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */

@@ -37,13 +37,13 @@
 
 #include <QtCore/QTextStream>
 
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "EbsdLib/LaueOps/LaueOps.h"
 #include "EbsdLib/OrientationMath/OrientationConverter.hpp"

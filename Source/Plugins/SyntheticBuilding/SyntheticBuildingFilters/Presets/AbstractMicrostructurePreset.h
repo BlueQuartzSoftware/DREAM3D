@@ -37,9 +37,9 @@
 
 #include <memory>
 
-#include <QtCore/QVector>
-#include <QtCore/QString>
 #include <QtCore/QMap>
+#include <QtCore/QString>
+#include <QtCore/QVector>
 
 #include "SIMPLib/Utilities/ColorTable.h"
 

@@ -22,11 +22,11 @@
 
 #pragma once
 
-#include <tclap/Arg.h>
-#include <string>
-#include <vector>
 #include <algorithm>
 #include <iostream>
+#include <string>
+#include <tclap/Arg.h>
+#include <vector>
 
 namespace TCLAP
 {

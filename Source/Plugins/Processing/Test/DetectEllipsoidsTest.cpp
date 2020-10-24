@@ -38,6 +38,7 @@
 
 #include <QtCore/QDebug>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Observer.h"
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
@@ -48,7 +49,6 @@
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/SIMPLib.h"
 #include "UnitTestSupport.hpp"
 
 #include "ProcessingTestFileLocations.h"

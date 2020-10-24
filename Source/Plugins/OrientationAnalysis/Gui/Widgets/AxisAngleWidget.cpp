@@ -43,8 +43,8 @@
 
 #include "SIMPLib/Math/SIMPLibMath.h"
 
-#include "EbsdLib/Core/OrientationTransformation.hpp"
 #include "EbsdLib/Core/OrientationRepresentation.h"
+#include "EbsdLib/Core/OrientationTransformation.hpp"
 #include "OrientationUtilityCalculator.h"
 
 // -----------------------------------------------------------------------------

@@ -22,16 +22,16 @@
 
 #pragma once
 
+#include <algorithm>
+#include <iostream>
+#include <list>
 #include <string>
 #include <vector>
-#include <list>
-#include <iostream>
-#include <algorithm>
 
+#include <tclap/Arg.h>
 #include <tclap/CmdLineInterface.h>
 #include <tclap/CmdLineOutput.h>
 #include <tclap/XorHandler.h>
-#include <tclap/Arg.h>
 
 namespace TCLAP
 {

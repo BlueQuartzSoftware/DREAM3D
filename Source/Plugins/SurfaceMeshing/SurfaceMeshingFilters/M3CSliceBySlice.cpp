@@ -36,8 +36,8 @@
 
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-#include <QtCore/QTextStream>
 #include <QtCore/QDebug>
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Math/SIMPLibMath.h"
 
@@ -57,9 +57,9 @@
 
 #include "SIMPLib/Common/PipelineMessage.h"
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
-#include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/BinaryNodesTrianglesReader.h"
 

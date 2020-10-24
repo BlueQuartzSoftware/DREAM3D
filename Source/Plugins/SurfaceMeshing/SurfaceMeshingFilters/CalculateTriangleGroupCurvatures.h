@@ -37,11 +37,10 @@
 
 #include <set>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/DataArrays/DataArray.hpp"
 
 /**
  * @brief The CalculateTriangleGroupCurvatures class calculates the curvature values for a group of triangles

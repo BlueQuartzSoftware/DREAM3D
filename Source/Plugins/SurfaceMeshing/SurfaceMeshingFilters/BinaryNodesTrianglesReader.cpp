@@ -39,12 +39,12 @@
 #include <sstream>
 
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/Geometry/MeshStructs.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
-#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "BinaryNodesTrianglesReader.h"
 

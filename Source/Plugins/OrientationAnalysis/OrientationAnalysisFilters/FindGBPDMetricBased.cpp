@@ -49,6 +49,8 @@
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -58,10 +60,8 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
-#include "SIMPLib/Utilities/FileSystemPathHelper.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
-#include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #include "EbsdLib/LaueOps/LaueOps.h"
 
@@ -69,10 +69,10 @@
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include "tbb/concurrent_vector.h"
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
+#include "tbb/concurrent_vector.h"
 #endif
 
 using LaueOpsShPtrType = std::shared_ptr<LaueOps>;

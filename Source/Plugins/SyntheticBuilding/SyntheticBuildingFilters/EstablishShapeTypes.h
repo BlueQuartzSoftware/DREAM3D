@@ -39,8 +39,8 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/ShapeType.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 

@@ -170,19 +170,19 @@ void GoldfeatherReader::updateVertexInstancePointers()
   if(nullptr != m_SurfaceMeshNodeNormalsPtr.lock())
   {
     m_SurfaceMeshNodeNormals = m_SurfaceMeshNodeNormalsPtr.lock()->getPointer(0);
-  }                                                          /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(nullptr != m_SurfaceMeshPrincipalCurvature1sPtr.lock())
   {
     m_SurfaceMeshPrincipalCurvature1s = m_SurfaceMeshPrincipalCurvature1sPtr.lock()->getPointer(0);
-  }                                                          /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(nullptr != m_SurfaceMeshPrincipalCurvature2sPtr.lock())
   {
     m_SurfaceMeshPrincipalCurvature2s = m_SurfaceMeshPrincipalCurvature2sPtr.lock()->getPointer(0);
-  }                                                          /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(nullptr != m_SurfaceMeshPrincipalDirection1sPtr.lock())
   {
     m_SurfaceMeshPrincipalDirection1s = m_SurfaceMeshPrincipalDirection1sPtr.lock()->getPointer(0);
-  }                                                          /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(nullptr != m_SurfaceMeshPrincipalDirection2sPtr.lock())
   {
     m_SurfaceMeshPrincipalDirection2s = m_SurfaceMeshPrincipalDirection2sPtr.lock()->getPointer(0);
@@ -200,7 +200,7 @@ void GoldfeatherReader::updateFaceInstancePointers()
   if(nullptr != m_SurfaceMeshFaceLabelsPtr.lock())
   {
     m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
-  }                                                 /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(nullptr != m_SurfaceMeshFaceNormalsPtr.lock())
   {
     m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0);

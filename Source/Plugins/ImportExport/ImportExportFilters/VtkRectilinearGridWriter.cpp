@@ -67,7 +67,8 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <class Geometry> void WriteVTKHeader(FILE* f, DataContainer::Pointer m, bool isBinary)
+template <class Geometry>
+void WriteVTKHeader(FILE* f, DataContainer::Pointer m, bool isBinary)
 {
 
   size_t xpoints = m->getGeometryAs<Geometry>()->getXPoints() + 1;
@@ -100,7 +101,8 @@ template <class Geometry> void WriteVTKHeader(FILE* f, DataContainer::Pointer m,
  * @param max The maximum value of the axis
  * @param step The step value between each point on the axis.
  */
-template <typename T> int WriteCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T min, T max, T step, bool binary)
+template <typename T>
+int WriteCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T min, T max, T step, bool binary)
 {
   int err = 0;
 #if CMP_SIZEOF_LONG == 8 && !defined(__APPLE__)
@@ -148,7 +150,8 @@ template <typename T> int WriteCoords(FILE* f, const char* axis, const char* typ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> void WriteDataArray(AbstractFilter* filter, FILE* f, IDataArray::Pointer iDataPtr, bool writeBinary)
+template <typename T>
+void WriteDataArray(AbstractFilter* filter, FILE* f, IDataArray::Pointer iDataPtr, bool writeBinary)
 {
   QString ss = QObject::tr("Writing Cell Data %1").arg(iDataPtr->getName());
   filter->notifyStatusMessage(ss);

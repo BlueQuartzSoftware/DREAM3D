@@ -44,8 +44,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
 
-#include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 #include "Sampling/SamplingDLLExport.h"
+#include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
 /**
  * @brief The RegularGridSampleSurfaceMesh class. See [Filter documentation](@ref regulargridsamplesurfacemesh) for details.

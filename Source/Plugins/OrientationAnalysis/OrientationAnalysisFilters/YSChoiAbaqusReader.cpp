@@ -47,14 +47,14 @@
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/MatrixMath.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
-#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "EbsdLib/Core/Orientation.hpp"
 #include "EbsdLib/Core/OrientationTransformation.hpp"
@@ -168,15 +168,15 @@ void YSChoiAbaqusReader::updateCellInstancePointers()
   if(nullptr != m_CellEulerAnglesPtr.lock())
   {
     m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
-  }                                /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(nullptr != m_QuatsPtr.lock())
   {
     m_Quats = m_QuatsPtr.lock()->getPointer(0);
-  }                                     /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(nullptr != m_CellPhasesPtr.lock())
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
-  }                                     /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(nullptr != m_FeatureIdsPtr.lock())
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
@@ -194,7 +194,7 @@ void YSChoiAbaqusReader::updateFeatureInstancePointers()
   if(nullptr != m_AvgQuatsPtr.lock())
   {
     m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
-  }                                          /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(nullptr != m_SurfaceFeaturesPtr.lock())
   {
     m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0);

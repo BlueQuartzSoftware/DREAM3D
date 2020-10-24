@@ -1,11 +1,11 @@
 #pragma once
 #include <memory>
 
-#include <QtCore/QTextStream>
 #include <QtCore/QProcess>
+#include <QtCore/QTextStream>
 
-#include <iostream>
 #include <QtCore/QString>
+#include <iostream>
 
 #include "Sandbox.h"
 

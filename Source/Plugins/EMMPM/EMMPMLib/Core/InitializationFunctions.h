@@ -41,8 +41,8 @@
 #include "SIMPLib/SIMPLib.h"
 
 //-- EM/MPM Lib Includes
-#include "EMMPMLib/EMMPMLib.h"
 #include "EMMPMLib/Core/EMMPM_Data.h"
+#include "EMMPMLib/EMMPMLib.h"
 
 /**
  * @brief

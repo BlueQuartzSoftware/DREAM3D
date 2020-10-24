@@ -34,10 +34,10 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/IGeometry.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 

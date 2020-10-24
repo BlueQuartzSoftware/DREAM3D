@@ -39,8 +39,8 @@
 
 #include <QtWidgets/QWidget>
 
-#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/StatsData.h"

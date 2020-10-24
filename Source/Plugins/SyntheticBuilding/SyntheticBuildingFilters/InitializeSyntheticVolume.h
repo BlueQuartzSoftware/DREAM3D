@@ -38,10 +38,10 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"

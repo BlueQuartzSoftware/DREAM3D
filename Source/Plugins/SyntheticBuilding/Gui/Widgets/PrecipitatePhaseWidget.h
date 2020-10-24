@@ -38,8 +38,8 @@
 #include <QtCore/QList>
 #include <QtCore/QVector>
 
-#include "SIMPLib/DataContainers/AttributeMatrix.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/AttributeMatrix.h"
 
 #include "SyntheticBuilding/Gui/Widgets/PrimaryPhaseWidget.h"
 #include "SyntheticBuilding/Gui/Widgets/StatsGenWidget.h"

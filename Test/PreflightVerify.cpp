@@ -1,7 +1,7 @@
 #include "PreflightVerify.h"
 
-#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 PreflightVerify::PreflightVerify(QObject* parent)
 : QObject(parent)

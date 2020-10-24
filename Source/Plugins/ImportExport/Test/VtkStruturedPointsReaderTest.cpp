@@ -35,6 +35,7 @@
 
 #include <QtCore/QFile>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
@@ -42,7 +43,6 @@
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -116,7 +116,8 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  template <typename T> void WriteScalars(FILE* f, const std::string& type, const std::string& name, int* dims, bool binary)
+  template <typename T>
+  void WriteScalars(FILE* f, const std::string& type, const std::string& name, int* dims, bool binary)
   {
     fprintf(f, "SCALARS %s %s 1\n", name.c_str(), type.c_str());
     fprintf(f, "LOOKUP_TABLE default\n");

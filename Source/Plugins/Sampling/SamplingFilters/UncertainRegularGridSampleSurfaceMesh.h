@@ -38,10 +38,10 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
-#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 

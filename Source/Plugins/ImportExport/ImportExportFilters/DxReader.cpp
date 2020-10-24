@@ -35,9 +35,9 @@
 #include "DxReader.h"
 
 #include <QtCore/QDateTime>
+#include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 #include <QtCore/QTextStream>
-#include <QtCore/QDebug>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataContainers/DataContainer.h"

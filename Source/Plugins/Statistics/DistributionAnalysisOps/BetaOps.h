@@ -40,8 +40,8 @@
 #include <vector>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/StatsData/StatsData.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/StatsData/StatsData.h"
 
 #include "DistributionAnalysisOps/DistributionAnalysisOps.h"
 /*

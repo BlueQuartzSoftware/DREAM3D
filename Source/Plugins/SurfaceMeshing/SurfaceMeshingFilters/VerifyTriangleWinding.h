@@ -40,11 +40,11 @@
 #include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataArrays/IDataArray.h"
 
-#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
+#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"

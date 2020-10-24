@@ -23,8 +23,8 @@
 #pragma once
 
 #include <string>
-#include <vector>
 #include <tclap/Constraint.h>
+#include <vector>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

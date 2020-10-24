@@ -39,11 +39,11 @@
 
 #include <QtCore/QFile>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/CoreFilters/FileReader.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 // our PIMPL private class
 class DxReaderPrivate;

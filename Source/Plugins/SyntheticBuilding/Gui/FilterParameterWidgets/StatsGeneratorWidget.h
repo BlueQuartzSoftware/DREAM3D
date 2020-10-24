@@ -41,8 +41,8 @@
 
 #include <QtWidgets/QMessageBox>
 
-#include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
 
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 #include "SVWidgetsLib/SVWidgetsLib.h"

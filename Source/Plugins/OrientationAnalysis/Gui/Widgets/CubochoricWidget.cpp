@@ -37,9 +37,9 @@
 
 #include <QtGui/QDoubleValidator>
 
+#include "EbsdLib/Core/OrientationRepresentation.h"
 #include "EbsdLib/Core/OrientationTransformation.hpp"
 #include "EbsdLib/OrientationMath/OrientationConverter.hpp"
-#include "EbsdLib/Core/OrientationRepresentation.h"
 
 #include "OrientationUtilityCalculator.h"
 

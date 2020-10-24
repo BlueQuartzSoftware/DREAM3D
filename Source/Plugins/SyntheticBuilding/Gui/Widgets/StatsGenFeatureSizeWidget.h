@@ -6,10 +6,10 @@
 #include <QtCore/QString>
 #include <QtCore/QVector>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "SyntheticBuilding/Gui/Widgets/StatsGenWidget.h"
 #include "SyntheticBuilding/ui_StatsGenFeatureSizeWidget.h"

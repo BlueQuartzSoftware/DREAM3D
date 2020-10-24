@@ -33,8 +33,8 @@
 
 #include <assert.h>
 
-#include <vector>
 #include <iostream>
+#include <vector>
 
 #include <Eigen/Dense>
 

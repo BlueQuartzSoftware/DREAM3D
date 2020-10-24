@@ -37,8 +37,8 @@
 
 #include <QtCore/QList>
 
-#include "SIMPLib/DataContainers/AttributeMatrix.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/AttributeMatrix.h"
 
 #include "SyntheticBuilding/Gui/Widgets/StatsGenWidget.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/AbstractMicrostructurePreset.h"

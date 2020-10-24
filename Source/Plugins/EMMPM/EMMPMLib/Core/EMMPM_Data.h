@@ -48,8 +48,8 @@
 #include "SIMPLib/SIMPLib.h"
 
 // emmpm includes
-#include "EMMPMLib/EMMPMLib.h"
 #include "EMMPMLib/Core/EMMPM_Constants.h"
+#include "EMMPMLib/EMMPMLib.h"
 
 using real_t = float;
 

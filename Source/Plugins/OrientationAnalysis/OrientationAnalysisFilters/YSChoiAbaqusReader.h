@@ -40,8 +40,8 @@
 #include <cstring> // needed for the ::memcpy function below
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 

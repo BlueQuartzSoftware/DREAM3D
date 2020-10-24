@@ -37,8 +37,8 @@
 
 #include <iostream>
 
-#include <QtCore/QTextStream>
 #include <QtCore/QFileInfo>
+#include <QtCore/QTextStream>
 
 #include <QtGui/QColor>
 #include <QtGui/QFont>
@@ -52,15 +52,15 @@
 #include "EbsdLib/IO/HKL/CtfConstants.h"
 #include "EbsdLib/IO/TSL/AngConstants.h"
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/CoreFilters/GenerateColorTable.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "SVWidgetsLib/QtSupport/QtSHelpUrlGenerator.h"
 

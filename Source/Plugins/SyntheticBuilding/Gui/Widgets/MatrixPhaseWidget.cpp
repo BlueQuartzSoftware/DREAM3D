@@ -44,10 +44,10 @@
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/Core/EbsdLibConstants.h"
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/MatrixStatsData.h"
 #include "SIMPLib/StatsData/StatsData.h"
 

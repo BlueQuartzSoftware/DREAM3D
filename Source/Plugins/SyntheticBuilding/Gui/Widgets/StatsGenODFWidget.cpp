@@ -87,10 +87,10 @@
 
 #include "SyntheticBuilding/Gui/Utilities/PoleFigureImageUtilities.h"
 #include "SyntheticBuilding/Gui/Widgets/StatsGenMDFWidget.h"
+#include "SyntheticBuilding/Gui/Widgets/StatsProgressWidget.h"
 #include "SyntheticBuilding/Gui/Widgets/TableModels/SGODFTableModel.h"
 #include "SyntheticBuilding/Gui/Widgets/TextureDialog.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/StatsGeneratorUtilities.h"
-#include "SyntheticBuilding/Gui/Widgets/StatsProgressWidget.h"
 
 #define SHOW_POLE_FIGURES 1
 #define COLOR_POLE_FIGURES 1

@@ -120,7 +120,7 @@ void VASPReader::updateVertexInstancePointers()
   if(nullptr != m_AtomVelocitiesPtr.lock())
   {
     m_AtomVelocities = m_AtomVelocitiesPtr.lock()->getPointer(0);
-  }                                    /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(nullptr != m_AtomTypesPtr.lock())
   {
     m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0);

@@ -39,6 +39,7 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/SIMPLRange.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -46,10 +47,9 @@
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Utilities/ColorTable.h"
 #include "SIMPLib/Utilities/ParallelDataAlgorithm.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
-#include "SIMPLib/Math/MatrixMath.h"
 
 #include "EbsdLib/LaueOps/LaueOps.h"
 

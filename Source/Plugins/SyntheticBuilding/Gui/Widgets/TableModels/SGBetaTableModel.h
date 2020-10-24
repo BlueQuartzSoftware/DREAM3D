@@ -35,9 +35,9 @@
 
 #pragma once
 
-#include "SGAbstractTableModel.h"
 #include <QtCore/QVariant>
 #include <QtCore/QVector>
+#include "SGAbstractTableModel.h"
 
 class QAbstractItemDelegate;
 

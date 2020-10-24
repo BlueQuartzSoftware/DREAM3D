@@ -44,11 +44,11 @@
 
 #include <string>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SurfaceMeshStructs.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 /**
  * @class M3CEntireVolume M3CEntireVolume.h DREAM3DLic/SurfaceMeshingFilters/M3CEntireVolume.h

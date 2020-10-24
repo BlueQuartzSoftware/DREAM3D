@@ -2,10 +2,10 @@
 
 #include <memory>
 
-#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "TestFileLocations.h"
 

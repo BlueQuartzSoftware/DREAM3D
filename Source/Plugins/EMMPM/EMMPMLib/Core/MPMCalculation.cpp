@@ -51,8 +51,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cstring>
 
 //-- C++ includes
-#include <random>
 #include <chrono>
+#include <random>
 #include <sstream>
 #include <thread>
 

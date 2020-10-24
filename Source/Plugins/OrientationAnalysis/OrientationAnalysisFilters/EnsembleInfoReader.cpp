@@ -39,14 +39,14 @@
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
-#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -129,7 +129,7 @@ void EnsembleInfoReader::updateEnsembleInstancePointers()
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
     m_CrystalStructuresPtr.lock()->initializeWithValue(EbsdLib::CrystalStructure::UnknownCrystalStructure);
 
-  }                                     /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(nullptr != m_PhaseTypesPtr.lock())
   {
     m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);

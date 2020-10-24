@@ -40,9 +40,9 @@
 #include <QtGui/QFont>
 #include <QtGui/QPainter>
 
+#include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/ColorTable.h"
-#include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
 
 // -----------------------------------------------------------------------------
 //

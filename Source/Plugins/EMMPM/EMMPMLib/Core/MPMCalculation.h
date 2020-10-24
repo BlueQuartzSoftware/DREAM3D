@@ -42,10 +42,10 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Observable.h"
 
-#include "EMMPMLib/EMMPMLib.h"
+#include "EMMPMLib/Common/StatsDelegate.h"
 #include "EMMPMLib/Core/EMMPM_Constants.h"
 #include "EMMPMLib/Core/EMMPM_Data.h"
-#include "EMMPMLib/Common/StatsDelegate.h"
+#include "EMMPMLib/EMMPMLib.h"
 
 class EMMPMLib_EXPORT MPMCalculation : public Observable
 {

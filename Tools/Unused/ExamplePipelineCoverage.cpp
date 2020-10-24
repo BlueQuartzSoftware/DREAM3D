@@ -11,6 +11,7 @@
 #include <QtCore/QJsonObject>
 #include <QtCore/QTextStream>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
@@ -18,7 +19,6 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/PluginManager.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "DREAM3DToolsConfiguration.h"
 

@@ -67,7 +67,6 @@ class Sampling_EXPORT ResampleRectGridToImageGeom : public AbstractFilter
   // End Python bindings declarations
 
 public:
-
   using Self = ResampleRectGridToImageGeom;
   using Pointer = std::shared_ptr<Self>;
   using ConstPointer = std::shared_ptr<const Self>;
@@ -253,7 +252,6 @@ private:
 public:
   ResampleRectGridToImageGeom(const ResampleRectGridToImageGeom&) = delete;            // Copy Constructor Not Implemented
   ResampleRectGridToImageGeom& operator=(const ResampleRectGridToImageGeom&) = delete; // Copy Assignment Not Implemented
-  ResampleRectGridToImageGeom(ResampleRectGridToImageGeom &&) = delete;                // Move Constructor Not Implemented
+  ResampleRectGridToImageGeom(ResampleRectGridToImageGeom&&) = delete;                 // Move Constructor Not Implemented
   ResampleRectGridToImageGeom& operator=(ResampleRectGridToImageGeom&&) = delete;      // Move Assignment Not Implemented
 };
-

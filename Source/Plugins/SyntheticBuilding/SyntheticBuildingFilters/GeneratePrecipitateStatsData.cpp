@@ -7,9 +7,12 @@
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -25,22 +28,19 @@
 #include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/RadialDistributionFunction.h"
-#include "SIMPLib/StatsData/PrecipitateStatsData.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
-#include "SIMPLib/DataContainers/DataContainer.h"
-#include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/StatsData/PrecipitateStatsData.h"
 
 #include "EbsdLib/Core/EbsdLibConstants.h"
 #include "EbsdLib/Texture/StatsGen.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
-#include "SyntheticBuilding/SyntheticBuildingVersion.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/AbstractMicrostructurePreset.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/PrimaryEquiaxedPreset.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/PrimaryRecrystallizedPreset.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/PrimaryRolledPreset.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/StatsGeneratorUtilities.h"
+#include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
