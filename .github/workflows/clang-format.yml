@@ -1,0 +1,23 @@
+name: clang-format check
+
+on:
+  pull_request:
+    branches: [ develop ]
+  push:
+    branches: [ develop ]
+
+jobs:
+  clang_format_check:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+            fetch-depth: 2
+
+      - name: Run clang-format on diff
+        run: ./Support/Scripts/run_clang_format_diff.sh HEAD^ HEAD
