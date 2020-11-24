@@ -442,6 +442,10 @@ void ReadStlFile::readFile()
     triangles[t * 3] = 3 * t + 0;
     triangles[t * 3 + 1] = 3 * t + 1;
     triangles[t * 3 + 2] = 3 * t + 2;
+    if(getCancel())
+    {
+      return;
+    }
   }
 }
 
