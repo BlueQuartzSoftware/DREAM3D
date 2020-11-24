@@ -51,15 +51,10 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Utilities/ParallelDataAlgorithm.h"
 
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/blocked_range.h>
-#include <tbb/parallel_for.h>
-#include <tbb/partitioner.h>
-#endif
 
 #define STL_HEADER_LENGTH 80
 
@@ -72,6 +67,18 @@ enum createdPathID : RenameDataPath::DataID_t
   DataContainerID = 1
 };
 
+namespace ReadStlFileErrors
+{
+constexpr int32_t k_InputFileNotSet = -1100;
+constexpr int32_t k_InputFileDoesNotExist = -1101;
+constexpr int32_t k_UnsupportedFileType = -1102;
+constexpr int32_t k_ErrorOpeningFile = -1103;
+constexpr int32_t k_StlHeaderParseError = -1104;
+constexpr int32_t k_TriangleCountParseError = -1105;
+constexpr int32_t k_TriangleParseError = -1106;
+constexpr int32_t k_AttributeParseError = -1107;
+} // namespace ReadStlFileErrors
+
 /**
  * @brief The FindUniqueIdsImpl class implements a threaded algorithm that determines the set of
  * unique vertices in the triangle geometry
@@ -79,24 +86,25 @@ enum createdPathID : RenameDataPath::DataID_t
 class FindUniqueIdsImpl
 {
 public:
-  FindUniqueIdsImpl(SharedVertexList::Pointer vertex, QVector<std::vector<size_t>> nodesInBin, int64_t* uniqueIds)
+  FindUniqueIdsImpl(SharedVertexList::Pointer vertex, std::vector<std::vector<size_t>> nodesInBin, int64_t* uniqueIds)
   : m_Vertex(vertex)
   , m_NodesInBin(nodesInBin)
   , m_UniqueIds(uniqueIds)
   {
   }
 
+  // -----------------------------------------------------------------------------
   void convert(size_t start, size_t end) const
   {
     float* verts = m_Vertex->getPointer(0);
     for(size_t i = start; i < end; i++)
     {
-      for(int32_t j = 0; j < m_NodesInBin[i].size(); j++)
+      for(size_t j = 0; j < m_NodesInBin[i].size(); j++)
       {
         size_t node1 = m_NodesInBin[i][j];
-        if(m_UniqueIds[node1] == node1)
+        if(m_UniqueIds[node1] == static_cast<int64_t>(node1))
         {
-          for(int32_t k = j + 1; k < m_NodesInBin[i].size(); k++)
+          for(size_t k = j + 1; k < m_NodesInBin[i].size(); k++)
           {
             size_t node2 = m_NodesInBin[i][k];
             if(verts[node1 * 3] == verts[node2 * 3] && verts[node1 * 3 + 1] == verts[node2 * 3 + 1] && verts[node1 * 3 + 2] == verts[node2 * 3 + 2])
@@ -109,17 +117,46 @@ public:
     }
   }
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  void operator()(const tbb::blocked_range<size_t>& r) const
+  // -----------------------------------------------------------------------------
+  void operator()(const SIMPLRange& range) const
   {
-    convert(r.begin(), r.end());
+    convert(range.min(), range.max());
   }
-#endif
+
 private:
   SharedVertexList::Pointer m_Vertex;
-  QVector<std::vector<size_t>> m_NodesInBin;
-  int64_t* m_UniqueIds;
+  std::vector<std::vector<size_t>> m_NodesInBin;
+  int64_t* m_UniqueIds = nullptr;
 };
+
+// -----------------------------------------------------------------------------
+// Returns 0 for Binary, 1 for ASCII, anything else is an error.
+int32_t getStlFileType(const std::string& path)
+{
+  // Open File
+  FILE* f = std::fopen(path.c_str(), "rb");
+  if(nullptr == f)
+  {
+    return ReadStlFileErrors::k_ErrorOpeningFile;
+  }
+
+  char h[STL_HEADER_LENGTH];
+  if(std::fread(h, STL_HEADER_LENGTH, 1, f) != 1)
+  {
+    std::ignore = fclose(f);
+    return ReadStlFileErrors::k_StlHeaderParseError;
+  }
+  // close the file
+  std::ignore = fclose(f);
+
+  // Look for the 'solid' sequence that would indicate an ASCI STL file
+  if(h[0] == 's' && h[1] == 'o' && h[2] == 'l' && h[3] == 'i' && h[4] == 'd')
+  {
+    return 1;
+  }
+
+  return 0;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -182,7 +219,7 @@ void ReadStlFile::updateFaceInstancePointers()
   if(nullptr != m_FaceNormalsPtr.lock())
   {
     m_FaceNormals = m_FaceNormalsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -214,12 +251,26 @@ void ReadStlFile::dataCheck()
   if(getStlFilePath().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
-    setErrorCondition(-387, ss);
+    setErrorCondition(ReadStlFileErrors::k_InputFileNotSet, ss);
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
-    setErrorCondition(-388, ss);
+    setErrorCondition(ReadStlFileErrors::k_InputFileDoesNotExist, ss);
+  }
+
+  int32_t fileType = getStlFileType(getStlFilePath().toStdString());
+  if(fileType == 1)
+  {
+    QString ss = QObject::tr("The Input STL File is ASCII which is not currently supported. Please convert it to a binary STL file using another program.");
+    setErrorCondition(ReadStlFileErrors::k_UnsupportedFileType, ss);
+    return;
+  }
+  else if(fileType < 0)
+  {
+    QString ss = QObject::tr("Error reading the STL file.");
+    setErrorCondition(fileType, ss);
+    return;
   }
 
   // Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
@@ -277,7 +328,7 @@ void ReadStlFile::readFile()
   FILE* f = std::fopen(m_StlFilePath.toLatin1().data(), "rb");
   if(nullptr == f)
   {
-    setErrorCondition(-1003, "Error opening STL file");
+    setErrorCondition(ReadStlFileErrors::k_ErrorOpeningFile, "Error opening STL file");
     return;
   }
 
@@ -287,7 +338,7 @@ void ReadStlFile::readFile()
   if(std::fread(h, STL_HEADER_LENGTH, 1, f) != 1)
   {
     QString msg = QString("Error reading first 8 bytes of STL header. This can't be good.");
-    setErrorCondition(-1005, msg);
+    setErrorCondition(ReadStlFileErrors::k_StlHeaderParseError, msg);
     std::ignore = fclose(f);
     return;
   }
@@ -311,7 +362,7 @@ void ReadStlFile::readFile()
   if(std::fread(&triCount, sizeof(int32_t), 1, f) != 1)
   {
     QString msg = QString("Error reading number of triangles from file. This is bad.");
-    setErrorCondition(-1006, msg);
+    setErrorCondition(ReadStlFileErrors::k_TriangleCountParseError, msg);
     std::ignore = fclose(f);
     return;
   }
@@ -338,7 +389,7 @@ void ReadStlFile::readFile()
     if(k_StlElementCount != objsRead)
     {
       QString msg = QString("Error reading Triangle '%1'. Object Count was %2 and should have been %3").arg(t, objsRead, k_StlElementCount);
-      setErrorCondition(-1004, msg);
+      setErrorCondition(ReadStlFileErrors::k_TriangleParseError, msg);
       std::ignore = fclose(f);
       return;
     }
@@ -347,7 +398,7 @@ void ReadStlFile::readFile()
     if(objsRead != 1)
     {
       QString msg = QString("Error reading Number of attributes for triangle '%1'. Object Count was %2 and should have been 1").arg(t, objsRead);
-      setErrorCondition(-1005, msg);
+      setErrorCondition(ReadStlFileErrors::k_AttributeParseError, msg);
       std::ignore = fclose(f);
       return;
     }
@@ -444,9 +495,12 @@ void ReadStlFile::readFile()
     triangles[t * 3 + 2] = 3 * t + 2;
     if(getCancel())
     {
+      std::ignore = fclose(f);
       return;
     }
   }
+
+  std::ignore = fclose(f);
 }
 
 // -----------------------------------------------------------------------------
@@ -470,7 +524,7 @@ void ReadStlFile::eliminate_duplicate_nodes()
   float stepY = (m_maxYcoord - m_minYcoord) / 100.0f;
   float stepZ = (m_maxZcoord - m_minZcoord) / 100.0f;
 
-  QVector<std::vector<size_t>> nodesInBin(100 * 100 * 100);
+  std::vector<std::vector<size_t>> nodesInBin(100 * 100 * 100);
 
   // determine (xyz) bin each node falls in - used to speed up node comparison
   int32_t bin = 0, xBin = 0, yBin = 0, zBin = 0;
@@ -504,17 +558,9 @@ void ReadStlFile::eliminate_duplicate_nodes()
   }
 
 // Parallel algorithm to find duplicate nodes
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(true)
-  {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, 100 * 100 * 100), FindUniqueIdsImpl(triangleGeom->getVertices(), nodesInBin, uniqueIds), tbb::auto_partitioner());
-  }
-  else
-#endif
-  {
-    FindUniqueIdsImpl serial(triangleGeom->getVertices(), nodesInBin, uniqueIds);
-    serial.convert(0, 100 * 100 * 100);
-  }
+  ParallelDataAlgorithm dataAlg;
+  dataAlg.setRange(0ULL, static_cast<size_t>(100 * 100 * 100));
+  dataAlg.execute(FindUniqueIdsImpl(triangleGeom->getVertices(), nodesInBin, uniqueIds));
 
   // renumber the unique nodes
   int64_t uniqueCount = 0;
