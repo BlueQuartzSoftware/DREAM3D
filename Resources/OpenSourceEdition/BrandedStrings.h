@@ -15,6 +15,7 @@ namespace BrandedStrings
   static const QString DefaultStyleDirectory(":/SIMPL/StyleSheets");
 
   static const QStringList LoadedThemeNames;
+  static const QStringList LoadedThemeFilePaths;
 
   static const QString DefaultLoadedTheme("Default");
   static const QString DefaultThemeFilePath(":/SIMPL/StyleSheets/Default.json");
