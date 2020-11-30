@@ -10,6 +10,26 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.5.147 ##
+
+### Version 6.5.147 KNOWN ISSUES ###
+
+EDAX Version 8 HDF5 files are not supported in this release of DREAM.3D.
+
+### Version 6.5.147 New Filters & Features ###
+
+NONE
+
+### 6.5.147 Fixed DREAM3D Issues ###
+
++ Fix issue where bulked loaded ODF data was not saved to the JSON pipeline file #962
++ INLWriter: Improved determination of number of unique grains.
++ Fix issue in C-Axis Segment where 2 voxels with same orientation value would not group together
++ Improve the parsing functions for SPParkDumpReader
++ Improved the Dark Mode theme to better match native operating systems Dark Modes.
++ Fixed issue with Add Orientation Noise where nan values would result randomly.
++ Fixed issues with the MDF Plot Widget in StatsGenerator
+
 ## Version 6.5.141 ##
 
 ### Version 6.5.141 KNOWN ISSUES ###

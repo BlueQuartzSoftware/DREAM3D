@@ -38,6 +38,7 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 
 //-- C++ Includes
+#include <array>
 #include <iostream>
 #include <vector>
 
@@ -271,7 +272,7 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float>& odf)
   }
 
   // Normalize the axis to unit norm
-  for(int32_t i = 0; i < axes.size(); i = i + 3)
+  for(size_t i = 0; i < axes.size(); i = i + 3)
   {
     float length = std::sqrt(axes[i] * axes[i] + axes[i + 1] * axes[i + 1] + axes[i + 2] * axes[i + 2]);
     axes[i] /= length;
@@ -281,7 +282,7 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float>& odf)
   using OrientationTransformType = OrientationTransforms<FOrientArrayType, float>;
 
   // Sanity check the Axis_Angle inputs;
-  for(int32_t i = 0; i < angles.size(); i++)
+  for(size_t i = 0; i < angles.size(); i++)
   {
     FOrientArrayType ax(axes[i * 3], axes[i * 3 + 1], axes[i * 3 + 2], angles[i]);
     OrientationTransformType::ResultType result = OrientationTransformType::ax_check(ax);
@@ -408,6 +409,36 @@ void StatsGenMDFWidget::on_deleteMDFRowBtn_clicked()
   emit dataChanged();
 }
 
+/**
+ * @brief Determines if the file has the UTF8 BOM block of 3 bytes at the beginning of the file. This
+ * does NOT mean definitively that the file is UTF8, just that the UTF8 BOM bytes are the first 3 bytes of the
+ * file. If you know the file is a text file (and not some purely binary data file) then this method can be used
+ * to determine if thie file has the UTF8 BOM marker at the start.
+ * @param filePath The path to the file
+ * @return std::pair<bool, int32_t> where the first value is whether the BOM showed up and the second
+ * is an error code. 0 Denotes NO error where negative error values are errors.
+ */
+std::pair<bool, int32_t> IsUtf8(const std::string& filePath)
+{
+  FILE* f = fopen(filePath.c_str(), "rb");
+  if(nullptr == f)
+  {
+    return {false, -1};
+  }
+  std::array<uint8_t, 3> buf = {0, 0, 0};
+  if(fread(buf.data(), 1, 3, f) != 3)
+  {
+    std::ignore = fclose(f);
+    return {false, -1};
+  }
+  std::ignore = fclose(f);
+  if(buf[0] == 0xEF && buf[1] == 0xBB && buf[2] == 0xBF)
+  {
+    return {true, 0};
+  }
+  return {false, 0};
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -423,6 +454,8 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
   QFileInfo fi(file);
   m_OpenDialogLastFilePath = fi.filePath();
 
+  std::pair<bool, int32_t> isUtf8 = IsUtf8(fi.filePath().toStdString());
+
   QString filename = file;
   std::ifstream inFile;
   inFile.open(filename.toLatin1().data(), std::ios::in);
@@ -432,6 +465,14 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
   }
 
   int32_t numMisorients = 0;
+  // If the file is UTF8 with a BOM marker then read the first 3 bytes and dump them.
+  if(isUtf8.first)
+  {
+    char a = '\0';
+    char b = '\0';
+    char c = '\0';
+    inFile >> a >> b >> c;
+  }
 
   inFile >> numMisorients;
 

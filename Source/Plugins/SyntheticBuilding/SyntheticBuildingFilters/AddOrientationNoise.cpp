@@ -139,11 +139,7 @@ void AddOrientationNoise::execute()
     return;
   }
 
-  m_Magnitude = m_Magnitude * SIMPLib::Constants::k_Pi / 180.0f;
-
   add_orientation_noise();
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -156,11 +152,13 @@ void AddOrientationNoise::add_orientation_noise()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellEulerAnglesArrayPath().getDataContainerName());
 
+  float magnitude = m_Magnitude * SIMPLib::Constants::k_Pi / 180.0f;
+
   FOrientArrayType om(9, 0.0);
   FOrientArrayType ax(4, 0.0);
-  float g[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-  float newg[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-  float rot[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+  float g[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+  float newg[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+  float rot[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   float w = 0.0f;
   float nx = 0.0f;
   float ny = 0.0f;
@@ -173,15 +171,41 @@ void AddOrientationNoise::add_orientation_noise()
     nx = static_cast<float>(rg.genrand_res53());
     ny = static_cast<float>(rg.genrand_res53());
     nz = static_cast<float>(rg.genrand_res53());
-    w = static_cast<float>(rg.genrand_res53());
-    w = 2.0f * (w - 0.5f);
-    w *= m_Magnitude;
+
+    // Make sure the Axis Angle is of Unit norm for the vector portion.
+    float sqrOfSumSqr = std::sqrt(nx * nx + ny * ny + nz * nz);
+    nx /= sqrOfSumSqr;
+    ny /= sqrOfSumSqr;
+    nz /= sqrOfSumSqr;
+
+    w = static_cast<float>(rg.genrand_res53()) * magnitude;
+    // Make sure w is within the range of [0, Pi)
+    while(w < 0.0F && w > SIMPLib::Constants::k_Pi)
+    {
+      if(w < 0.0F)
+      {
+        w += SIMPLib::Constants::k_Pi;
+      }
+      if(w >= SIMPLib::Constants::k_Pi)
+      {
+        w -= SIMPLib::Constants::k_Pi;
+      }
+    }
     ax.fromAxisAngle(nx, ny, nz, w);
-    FOrientTransformsType::ax2om(ax, om);
-    om.toGMatrix(rot);
-    MatrixMath::Multiply3x3with3x3(g, rot, newg);
-    FOrientArrayType eu(m_CellEulerAngles + (3 * i), 3);
-    FOrientTransformsType::om2eu(FOrientArrayType(newg), eu);
+    FOrientTransformsType::ResultType result = FOrientTransformsType::ax_check(ax);
+    if(result.result < 0)
+    {
+      i--;
+    }
+    else
+    {
+      FOrientTransformsType::ax2om(ax, om);
+      om.toGMatrix(rot);
+      MatrixMath::Multiply3x3with3x3(g, rot, newg);
+      FOrientArrayType eu(m_CellEulerAngles + (3 * i), 3);
+      om = FOrientArrayType(newg);
+      FOrientTransformsType::om2eu(FOrientArrayType(newg), eu);
+    }
   }
 }
 
