@@ -163,14 +163,39 @@ void AddOrientationNoise::add_orientation_noise()
     nx = static_cast<float>(rg.genrand_res53());
     ny = static_cast<float>(rg.genrand_res53());
     nz = static_cast<float>(rg.genrand_res53());
-    w = static_cast<float>(rg.genrand_res53());
-    w = 2.0f * (w - 0.5f);
-    w *= m_Magnitude;
-    ;
-    OrientationTransformation::ax2om<OrientationF, OrientationF>(OrientationF(nx, ny, nz, w)).toGMatrix(rot);
-    MatrixMath::Multiply3x3with3x3(g, rot, newg);
-    OrientationF eu(m_CellEulerAngles + (3 * i), 3);
-    eu = OrientationTransformation::om2eu<OrientationF, OrientationF>(OrientationF(newg));
+
+    // Make sure the Axis Angle is of Unit norm for the vector portion.
+    float sqrOfSumSqr = std::sqrt(nx * nx + ny * ny + nz * nz);
+    nx /= sqrOfSumSqr;
+    ny /= sqrOfSumSqr;
+    nz /= sqrOfSumSqr;
+
+    w = static_cast<float>(rg.genrand_res53()) * magnitude;
+    // Make sure w is within the range of [0, Pi)
+    while(w < 0.0F && w > SIMPLib::Constants::k_Pi)
+    {
+      if(w < 0.0F)
+      {
+        w += SIMPLib::Constants::k_Pi;
+      }
+      if(w >= SIMPLib::Constants::k_Pi)
+      {
+        w -= SIMPLib::Constants::k_Pi;
+      }
+    }
+    OrientationF ax(nx, ny, nz, w);
+    FOrientTransformsType::ResultType result = OrientationTransformation::ax_check(ax);
+    if(result.result < 0)
+    {
+      i--;
+    }
+    else
+    {
+      OrientationTransformation::ax2om<OrientationF, OrientationF>(ax).toGMatrix(rot);
+      MatrixMath::Multiply3x3with3x3(g, rot, newg);
+      OrientationF eu = OrientationTransformation::om2eu<OrientationF, OrientationF>(OrientationF(newg));
+      eu.copyInto(m_CellEulerAngles + 3 * i, 3);
+    }
   }
 }
 
