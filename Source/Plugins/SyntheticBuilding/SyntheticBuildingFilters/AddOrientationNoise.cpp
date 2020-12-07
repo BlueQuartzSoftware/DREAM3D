@@ -134,7 +134,6 @@ void AddOrientationNoise::execute()
     return;
   }
 
-  m_Magnitude = m_Magnitude * SIMPLib::Constants::k_PiD / 180.0f;
 
   add_orientation_noise();
 }
@@ -148,6 +147,7 @@ void AddOrientationNoise::add_orientation_noise()
   SIMPL_RANDOMNG_NEW()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellEulerAnglesArrayPath().getDataContainerName());
+  float magnitude = m_Magnitude * SIMPLib::Constants::k_PiD / 180.0f;
 
   float g[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   float newg[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
@@ -172,19 +172,19 @@ void AddOrientationNoise::add_orientation_noise()
 
     w = static_cast<float>(rg.genrand_res53()) * magnitude;
     // Make sure w is within the range of [0, Pi)
-    while(w < 0.0F && w > SIMPLib::Constants::k_Pi)
+    while(w < 0.0F && w > SIMPLib::Constants::k_PiF)
     {
       if(w < 0.0F)
       {
-        w += SIMPLib::Constants::k_Pi;
+        w += SIMPLib::Constants::k_PiF;
       }
-      if(w >= SIMPLib::Constants::k_Pi)
+      if(w >= SIMPLib::Constants::k_PiF)
       {
-        w -= SIMPLib::Constants::k_Pi;
+        w -= SIMPLib::Constants::k_PiF;
       }
     }
     OrientationF ax(nx, ny, nz, w);
-    FOrientTransformsType::ResultType result = OrientationTransformation::ax_check(ax);
+    OrientationTransformation::ResultType result = OrientationTransformation::ax_check(ax);
     if(result.result < 0)
     {
       i--;
