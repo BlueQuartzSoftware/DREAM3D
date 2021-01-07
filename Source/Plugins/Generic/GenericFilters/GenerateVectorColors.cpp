@@ -58,14 +58,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateVectorColors::GenerateVectorColors()
-: m_VectorsArrayPath("", "", "")
-, m_GoodVoxelsArrayPath("", "", "")
-, m_CellVectorColorsArrayName(SIMPL::CellData::VectorColor)
-, m_UseGoodVoxels(false)
-{
-}
-
+GenerateVectorColors::GenerateVectorColors() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -81,12 +74,12 @@ void GenerateVectorColors::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply to Good Voxels Only (Bad Voxels Will Be Black)", UseGoodVoxels, FilterParameter::Parameter, GenerateVectorColors, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Category::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Category::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Vector Attribute Array", VectorsArrayPath, FilterParameter::RequiredArray, GenerateVectorColors, req));
   }
 
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Category::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Category::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, GenerateVectorColors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
@@ -131,7 +124,7 @@ void GenerateVectorColors::dataCheck()
   if(nullptr != m_VectorsPtr.lock())
   {
     m_Vectors = m_VectorsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
   if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getVectorsArrayPath());
@@ -142,7 +135,7 @@ void GenerateVectorColors::dataCheck()
   if(nullptr != m_CellVectorColorsPtr.lock())
   {
     m_CellVectorColors = m_CellVectorColorsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to ignore it
   if(getUseGoodVoxels())
@@ -193,9 +186,7 @@ void GenerateVectorColors::execute()
 
   size_t index = 0;
 
-  // SIMPL::Rgb argb = 0x00000000;
-
-  // Write the IPF Coloring Cell Data
+  // Write the Vector Coloring Cell Data
   for(size_t i = 0; i < totalPoints; i++)
   {
     index = i * 3;
@@ -219,8 +210,8 @@ void GenerateVectorColors::execute()
       {
         array = array * -1.0f;
       }
-      float trend = atan2f(dir[1], dir[0]) * (180.0 / SIMPLib::Constants::k_PiD);
-      float plunge = acosf(dir[2]) * (180.0 / SIMPLib::Constants::k_PiD);
+      float trend = atan2f(dir[1], dir[0]) * (SIMPLib::Constants::k_RadToDegF);
+      float plunge = acosf(dir[2]) * (SIMPLib::Constants::k_RadToDegF);
       if(trend < 0.0)
       {
         trend += 360.0;

@@ -209,17 +209,17 @@ protected:
   void initialize();
 
 private:
-  std::weak_ptr<DataArray<float>> m_VectorsPtr;
+  std::weak_ptr<FloatArrayType> m_VectorsPtr;
   float* m_Vectors = nullptr;
-  std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
+  std::weak_ptr<BoolArrayType> m_GoodVoxelsPtr;
   bool* m_GoodVoxels = nullptr;
-  std::weak_ptr<DataArray<uint8_t>> m_CellVectorColorsPtr;
+  std::weak_ptr<UInt8ArrayType> m_CellVectorColorsPtr;
   uint8_t* m_CellVectorColors = nullptr;
 
-  DataArrayPath m_VectorsArrayPath = {};
-  DataArrayPath m_GoodVoxelsArrayPath = {};
-  QString m_CellVectorColorsArrayName = {};
-  bool m_UseGoodVoxels = {};
+  DataArrayPath m_VectorsArrayPath = {"", "", ""};
+  DataArrayPath m_GoodVoxelsArrayPath = {"", "", ""};
+  QString m_CellVectorColorsArrayName = {SIMPL::CellData::VectorColor};
+  bool m_UseGoodVoxels = {false};
 
 public:
   GenerateVectorColors(const GenerateVectorColors&) = delete;            // Copy Constructor Not Implemented
