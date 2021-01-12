@@ -51,6 +51,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QString>
 #include <QtCore/QVector>
+
 #include <QtGui/QCloseEvent>
 #include <QtWidgets/QAbstractItemDelegate>
 #include <QtWidgets/QFileDialog>
@@ -60,18 +61,19 @@
 #include <qwt_abstract_scale_draw.h>
 #include <qwt_compat.h>
 #include <qwt_interval.h>
+#include <qwt_picker_machine.h>
 #include <qwt_plot.h>
 #include <qwt_plot_canvas.h>
 #include <qwt_plot_curve.h>
 #include <qwt_plot_layout.h>
 #include <qwt_plot_marker.h>
+#include <qwt_plot_picker.h>
 #include <qwt_point_3d.h>
 #include <qwt_scale_draw.h>
 #include <qwt_scale_widget.h>
 #include <qwt_series_data.h>
 #include <qwt_symbol.h>
 
-#include "EbsdLib/EbsdConstants.h"
 
 #include "SIMPLib/Math/SIMPLibMath.h"
 
@@ -88,13 +90,43 @@
 #include "SyntheticBuilding/SyntheticBuildingFilters/StatsGeneratorUtilities.h"
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
+
+/**
+ * @brief Determines if the file has the UTF8 BOM block of 3 bytes at the beginning of the file. This
+ * does NOT mean definitively that the file is UTF8, just that the UTF8 BOM bytes are the first 3 bytes of the
+ * file. If you know the file is a text file (and not some purely binary data file) then this method can be used
+ * to determine if thie file has the UTF8 BOM marker at the start.
+ * @param filePath The path to the file
+ * @return std::pair<bool, int32_t> where the first value is whether the BOM showed up and the second
+ * is an error code. 0 Denotes NO error where negative error values are errors.
+ */
+std::pair<bool, int32_t> IsUtf8(const std::string& filePath)
+{
+  FILE* f = fopen(filePath.c_str(), "rb");
+  if(nullptr == f)
+  {
+    return {false, -1};
+  }
+  std::array<uint8_t, 3> buf = {0, 0, 0};
+  if(fread(buf.data(), 1, 3, f) != 3)
+  {
+    std::ignore = fclose(f);
+    return {false, -1};
+  }
+  std::ignore = fclose(f);
+  if(buf[0] == 0xEF && buf[1] == 0xBB && buf[2] == 0xBF)
+  {
+    return {true, 0};
+  }
+  return {false, 0};
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 StatsGenMDFWidget::StatsGenMDFWidget(QWidget* parent)
 : QWidget(parent)
-, m_PhaseIndex(-1)
-, m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
 {
   this->setupUi(this);
   this->setupGui();
@@ -109,6 +141,8 @@ StatsGenMDFWidget::~StatsGenMDFWidget()
   {
     m_MDFTableModel->deleteLater();
   }
+  delete m_PlotPicker;
+  delete m_PlotPickerMachine;
 }
 
 // -----------------------------------------------------------------------------
@@ -134,7 +168,6 @@ void StatsGenMDFWidget::setupGui()
   QAbstractItemDelegate* aid = m_MDFTableModel->getItemDelegate();
   m_MDFTableView->setItemDelegate(aid);
   m_PlotCurve = new QwtPlotCurve;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -145,14 +178,13 @@ void StatsGenMDFWidget::tableDataChanged(const QModelIndex& topLeft, const QMode
   Q_UNUSED(topLeft);
   Q_UNUSED(bottomRight);
 
-  on_m_MDFUpdateBtn_clicked();
-  emit dataChanged();
+  updatePlots();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot)
+void StatsGenMDFWidget::initQwtPlot(const QString& xAxisName, const QString& yAxisName, QwtPlot* plot)
 {
 
   QPalette pal;
@@ -183,7 +215,9 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
   xAxis.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
   xAxis.setFont(font);
   xAxis.setColor(SVStyle::Instance()->getQLabel_color());
+
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
+  plot->setAxisScale(QwtPlot::xBottom, 0.0, 180.0, 10);
 
   QwtText yAxis(yAxisName);
   yAxis.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
@@ -196,6 +230,11 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 
   plot->setAxisTitle(QwtPlot::xBottom, xAxis);
   plot->setAxisTitle(QwtPlot::yLeft, yAxis);
+
+  QwtPlotPicker* m_PlotPicker = new QwtPlotPicker(plot->xBottom, plot->yLeft, QwtPicker::CrossRubberBand, QwtPicker::AlwaysOn, plot->canvas());
+  QwtPickerMachine* m_PlotPickerMachine = new QwtPickerClickPointMachine();
+  m_PlotPicker->setTrackerPen(QPen(SVStyle::Instance()->getQLabel_color()));
+  m_PlotPicker->setStateMachine(m_PlotPickerMachine);
 }
 
 // -----------------------------------------------------------------------------
@@ -220,7 +259,8 @@ void StatsGenMDFWidget::updatePlots()
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight).toStdVector();
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma).toStdVector();
 
-  for(qint32 i = 0; i < e1s.size(); i++)
+  // Convert Degrees to Radians for ODF
+  for(size_t i = 0; i < e1s.size(); i++)
   {
     e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
     e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
@@ -346,7 +386,7 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float>& odf)
   m_MDFPlot->setAxisScale(QwtPlot::xBottom, 0.0, x.size() * 5.0, 10);
   QwtArray<double> xD(static_cast<int>(x.size()));
   QwtArray<double> yD(static_cast<int>(x.size()));
-  for(qint32 i = 0; i < x.size(); ++i)
+  for(ContainerType::size_type i = 0; i < x.size(); ++i)
   {
     xD[i] = static_cast<double>(x.at(i));
     yD[i] = static_cast<double>(y.at(i));
@@ -378,12 +418,11 @@ void StatsGenMDFWidget::on_addMDFRowBtn_clicked()
   {
     return;
   }
+  QModelIndex index = m_MDFTableModel->index(m_MDFTableModel->rowCount() - 1, 0);
+  m_MDFTableView->setCurrentIndex(index);
   m_MDFTableView->resizeColumnsToContents();
   m_MDFTableView->scrollToBottom();
   m_MDFTableView->setFocus();
-  QModelIndex index = m_MDFTableModel->index(m_MDFTableModel->rowCount() - 1, 0);
-  m_MDFTableView->setCurrentIndex(index);
-  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -406,37 +445,6 @@ void StatsGenMDFWidget::on_deleteMDFRowBtn_clicked()
   {
     m_MDFTableView->resizeColumnsToContents();
   }
-  emit dataChanged();
-}
-
-/**
- * @brief Determines if the file has the UTF8 BOM block of 3 bytes at the beginning of the file. This
- * does NOT mean definitively that the file is UTF8, just that the UTF8 BOM bytes are the first 3 bytes of the
- * file. If you know the file is a text file (and not some purely binary data file) then this method can be used
- * to determine if thie file has the UTF8 BOM marker at the start.
- * @param filePath The path to the file
- * @return std::pair<bool, int32_t> where the first value is whether the BOM showed up and the second
- * is an error code. 0 Denotes NO error where negative error values are errors.
- */
-std::pair<bool, int32_t> IsUtf8(const std::string& filePath)
-{
-  FILE* f = fopen(filePath.c_str(), "rb");
-  if(nullptr == f)
-  {
-    return {false, -1};
-  }
-  std::array<uint8_t, 3> buf = {0, 0, 0};
-  if(fread(buf.data(), 1, 3, f) != 3)
-  {
-    std::ignore = fclose(f);
-    return {false, -1};
-  }
-  std::ignore = fclose(f);
-  if(buf[0] == 0xEF && buf[1] == 0xBB && buf[2] == 0xBF)
-  {
-    return {true, 0};
-  }
-  return {false, 0};
 }
 
 // -----------------------------------------------------------------------------
@@ -465,6 +473,7 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
   }
 
   int32_t numMisorients = 0;
+
   // If the file is UTF8 with a BOM marker then read the first 3 bytes and dump them.
   if(isUtf8.first)
   {
@@ -524,7 +533,7 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
   }
 
   QVector<float> axis;
-  QVector<float> angle;
+  QVector<float> angles;
   QVector<float> weights;
 
   for(int i = 0; i < arrays.size(); i++)
@@ -537,8 +546,8 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
 
     if(arrays[i]->getName().compare(SIMPL::StringConstants::Angle) == 0)
     {
-      angle = QVector<float>(static_cast<int>(arrays[i]->getNumberOfTuples()));
-      ::memcpy(&(angle.front()), arrays[i]->getVoidPointer(0), sizeof(float) * angle.size());
+      angles = QVector<float>(static_cast<int>(arrays[i]->getNumberOfTuples()));
+      ::memcpy(&(angles.front()), arrays[i]->getVoidPointer(0), sizeof(float) * angles.size());
     }
 
     if(arrays[i]->getName().compare(SIMPL::StringConstants::Weight) == 0)
@@ -547,10 +556,15 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
       ::memcpy(&(weights.front()), arrays[i]->getVoidPointer(0), sizeof(float) * weights.size());
     }
   }
+  // Convert from Radians to Degrees
+  for(float& a : angles)
+  {
+    a *= SIMPLib::Constants::k_RadToDeg;
+  }
   if(!arrays.empty())
   {
     // Load the data into the table model
-    m_MDFTableModel->setTableData(angle, axis, weights);
+    m_MDFTableModel->setTableData(angles, axis, weights);
   }
 
   on_m_MDFUpdateBtn_clicked();
@@ -563,6 +577,7 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, PhaseType::Ty
 {
   int retErr = 0;
   using ContainerType = std::vector<float>;
+
   // Generate the ODF Data from the current values in the ODFTableModel
   ContainerType e1s;
   ContainerType e2s;
@@ -576,20 +591,63 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, PhaseType::Ty
   odf_weights = m_ODFTableModel->getData(SGODFTableModel::Weight).toStdVector();
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma).toStdVector();
 
-  for(qint32 i = 0; i < e1s.size(); i++)
+  // Convert from Degrees to Radians
+  for(size_t i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
-    e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
-    e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_DegToRad);
+    e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_DegToRad);
+    e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_DegToRad);
   }
 
   ContainerType odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalStructure, e1s, e2s, e3s, odf_weights, sigmas, !preflight);
 
   // Now use the ODF data to generate the MDF data ************************************************
-  std::vector<float> angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
-  std::vector<float> weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
-  std::vector<float> axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
+  ContainerType angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
+  // Convert from Degrees to Radians
+  for(float& a : angles)
+  {
+    a *= SIMPLib::Constants::k_DegToRad;
+  }
+
+  ContainerType weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
+  ContainerType axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
 
   StatsGeneratorUtilities::GenerateMisorientationBinData(statsData, phaseType, m_CrystalStructure, odf, angles, axes, weights, !preflight);
   return retErr;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenMDFWidget::setPhaseIndex(int value)
+{
+  m_PhaseIndex = value;
+}
+
+// -----------------------------------------------------------------------------
+int StatsGenMDFWidget::getPhaseIndex() const
+{
+  return m_PhaseIndex;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenMDFWidget::setCrystalStructure(unsigned int value)
+{
+  m_CrystalStructure = value;
+}
+
+// -----------------------------------------------------------------------------
+unsigned int StatsGenMDFWidget::getCrystalStructure() const
+{
+  return m_CrystalStructure;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenMDFWidget::setODFTableModel(SGODFTableModel* value)
+{
+  m_ODFTableModel = value;
+}
+
+// -----------------------------------------------------------------------------
+SGODFTableModel* StatsGenMDFWidget::getODFTableModel() const
+{
+  return m_ODFTableModel;
 }

@@ -36,6 +36,7 @@
 #include "SGMDFTableModel.h"
 
 #include <iostream>
+#include <array>
 
 #include <QtCore/QTextStream>
 
@@ -45,6 +46,36 @@
 #include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
 
 #include "SyntheticBuilding/Gui/Widgets/Delegates/SGMDFItemDelegate.h"
+
+std::array<float, 3> parseHKLRow(const QString& row)
+{
+
+  QString hklStr = row;
+  float h = std::numeric_limits<float>::infinity();
+  float k = std::numeric_limits<float>::infinity();
+  float l = std::numeric_limits<float>::infinity();
+  hklStr.chop(1);      // remove the ">" charater from the end;
+  hklStr.remove(0, 1); // Remove the front "<" character
+  bool ok = false;
+  h = hklStr.section(',', 0, 0).toFloat(&ok);
+  if(!ok)
+  {
+    h = std::numeric_limits<float>::infinity();
+  }
+  k = hklStr.section(',', 1, 1).toFloat(&ok);
+  if(!ok)
+  {
+    k = std::numeric_limits<float>::infinity();
+  }
+  l = hklStr.section(',', 2, 2).toFloat(&ok);
+  if(!ok)
+  {
+    l = std::numeric_limits<float>::infinity();
+  }
+
+  return {h,k,l};
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -252,8 +283,13 @@ bool SGMDFTableModel::setData(const QModelIndex& index, const QVariant& value, i
     m_Angles[row] = value.toFloat(&ok);
     break;
   case Axis:
-    m_Axis[row] = value.toFloat(&ok);
+    {
+    std::array<float, 3> hkl = parseHKLRow(value.toString());
+    m_Axis[row*3] = hkl[0];
+    m_Axis[row*3+1] = hkl[1];
+    m_Axis[row*3+2] = hkl[2];
     break;
+    }
   case Weight:
     m_Weights[row] = value.toFloat(&ok);
     break;
@@ -304,7 +340,9 @@ bool SGMDFTableModel::removeRows(int row, int count, const QModelIndex& parent)
   {
     m_Angles.remove(row);
     m_Weights.remove(row);
-    m_Axis.remove(row);
+    m_Axis.remove(row * 3);
+    m_Axis.remove(row * 3);
+    m_Axis.remove(row * 3);
     m_RowCount = m_Angles.count();
   }
   endRemoveRows();

@@ -36,6 +36,7 @@
 #pragma once
 
 #include "ui_StatsGenMDFWidget.h"
+
 #include <QtWidgets/QWidget>
 
 #include "SIMPLib/Common/Constants.h"
@@ -47,9 +48,16 @@
 #include "SIMPLib/StatsData/TransformationStatsData.h"
 #include "SyntheticBuilding/Gui/Widgets/TableModels/SGODFTableModel.h"
 
+#include "EbsdLib/EbsdConstants.h"
+
+#include "SyntheticBuilding/Gui/Widgets/TableModels/SGODFTableModel.h"
+
 class SGMDFTableModel;
 class QwtPlot;
 class QwtPlotCurve;
+class QwtPlotPicker;
+class QwtPickerMachine;
+
 
 /**
  * @class StatsGenMDFWidget StatsGenMDFWidget.h StatsGenerator/StatsGenMDFWidget.h
@@ -67,11 +75,44 @@ public:
   virtual ~StatsGenMDFWidget();
 
   void setupGui();
-  void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
 
-  SIMPL_INSTANCE_PROPERTY(int, PhaseIndex)
-  SIMPL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
-  SIMPL_POINTER_PROPERTY(SGODFTableModel, ODFTableModel)
+  /**
+   * @brief initQwtPlot
+   * @param xAxisName
+   * @param yAxisName
+   * @param plot
+   */
+  void initQwtPlot(const QString& xAxisName, const QString& yAxisName, QwtPlot* plot);
+
+  /**
+   * @brief Setter property for PhaseIndex
+   */
+  void setPhaseIndex(int value);
+  /**
+   * @brief Getter property for PhaseIndex
+   * @return Value of PhaseIndex
+   */
+  int getPhaseIndex() const;
+
+  /**
+   * @brief Setter property for CrystalStructure
+   */
+  void setCrystalStructure(unsigned int value);
+  /**
+   * @brief Getter property for CrystalStructure
+   * @return Value of CrystalStructure
+   */
+  unsigned int getCrystalStructure() const;
+
+  /**
+   * @brief Setter property for ODFTableModel
+   */
+  void setODFTableModel(SGODFTableModel* value);
+  /**
+   * @brief Getter property for ODFTableModel
+   * @return Value of ODFTableModel
+   */
+  SGODFTableModel* getODFTableModel() const;
 
   int getMisorientationData(StatsData* statsData, PhaseType::Type phaseType, bool preflight = false);
   void extractStatsData(int index, StatsData* statsData, PhaseType::Type phaseType);
@@ -97,8 +138,16 @@ protected:
   void updateMDFPlot(std::vector<float>& odf);
 
 private:
+  SGODFTableModel* m_ODFTableModel = nullptr;
+
+  int m_PhaseIndex = {-1};
+  unsigned int m_CrystalStructure = {Ebsd::CrystalStructure::Cubic_High};
+
   SGMDFTableModel* m_MDFTableModel = nullptr;
   QwtPlotCurve* m_PlotCurve = nullptr;
+
+  QwtPlotPicker* m_PlotPicker = nullptr;
+  QwtPickerMachine* m_PlotPickerMachine = nullptr;
 
   QString m_OpenDialogLastFilePath; // Must be last in the list
 
