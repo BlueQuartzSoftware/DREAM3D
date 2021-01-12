@@ -10,6 +10,21 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.5.150 ##
+
+### Version 6.5.150 KNOWN ISSUES ###
+
+### Version 6.5.150 New Filters & Features ###
+
+NONE
+
+### 6.5.150 Fixed DREAM3D Issues ###
+
++ Fix issue where bulked loaded MDF data was not loaded correctly
++ Fix issue where MDF user entered entries were not saved correctly
++ Add missing RectilinearGrid sample file
++ Composite Synthetic pipeline now completes without crashing
+
 ## Version 6.5.147 ##
 
 ### Version 6.5.147 KNOWN ISSUES ###
