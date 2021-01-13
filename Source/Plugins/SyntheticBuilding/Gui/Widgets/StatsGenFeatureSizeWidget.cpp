@@ -41,6 +41,8 @@
 
 #include <QtGui/QDoubleValidator>
 #include <QtGui/QMouseEvent>
+#include <QtGui/QPainterPath>
+
 #include <QtWidgets/QLineEdit>
 
 #include "SIMPLib/SIMPLib.h"

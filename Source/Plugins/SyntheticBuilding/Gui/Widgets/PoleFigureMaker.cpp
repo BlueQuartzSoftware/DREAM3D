@@ -37,11 +37,12 @@
 
 #include <iostream>
 
+#include <QtCore/QDebug>
+
 #include <QtGui/QColor>
 #include <QtGui/QFont>
 #include <QtGui/QPainter>
-
-#include <QtCore/QDebug>
+#include <QtGui/QPainterPath>
 
 #include "SIMPLib/Math/SIMPLibMath.h"
 

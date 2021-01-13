@@ -36,9 +36,11 @@
 #include "PoleFigureImageUtilities.h"
 
 #include <QtCore/QDebug>
+
 #include <QtGui/QColor>
 #include <QtGui/QFont>
 #include <QtGui/QPainter>
+#include <QtGui/QPainterPath>
 
 #include "SIMPLib/Common/QtBackwardCompatibilityMacro.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
