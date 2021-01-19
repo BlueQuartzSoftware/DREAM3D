@@ -1048,7 +1048,11 @@ void StatsGenODFWidget::on_savePoleFigureImage_clicked()
   // Store the last used directory into the private instance variable
   m_OpenDialogLastFilePath = file;
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
   QImage image = m_PoleFigureLabel->pixmap()->toImage();
+#else
+  QImage image = m_PoleFigureLabel->pixmap(Qt::ReturnByValue).toImage();
+#endif
   image.save(file);
 }
 

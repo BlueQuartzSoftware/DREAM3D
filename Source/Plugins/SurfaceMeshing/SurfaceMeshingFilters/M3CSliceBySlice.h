@@ -438,7 +438,7 @@ private:
 
   float m_OriginX, m_OriginY, m_OriginZ;
 
-  void dataCheck();
+  void dataCheck() override;
 
 public:
   M3CSliceBySlice(const M3CSliceBySlice&) = delete;            // Copy Constructor Not Implemented
