@@ -86,7 +86,7 @@ constexpr int32_t k_AttributeParseError = -1107;
 class FindUniqueIdsImpl
 {
 public:
-  FindUniqueIdsImpl(SharedVertexList::Pointer vertex, std::vector<std::vector<size_t>> nodesInBin, int64_t* uniqueIds)
+  FindUniqueIdsImpl(SharedVertexList::Pointer vertex, const std::vector<std::vector<size_t>>& nodesInBin, int64_t* uniqueIds)
   : m_Vertex(vertex)
   , m_NodesInBin(nodesInBin)
   , m_UniqueIds(uniqueIds)
@@ -125,7 +125,7 @@ public:
 
 private:
   SharedVertexList::Pointer m_Vertex;
-  std::vector<std::vector<size_t>> m_NodesInBin;
+  const std::vector<std::vector<size_t>>& m_NodesInBin;
   int64_t* m_UniqueIds = nullptr;
 };
 
@@ -557,7 +557,7 @@ void ReadStlFile::eliminate_duplicate_nodes()
     uniqueIds[i] = static_cast<int64_t>(i);
   }
 
-// Parallel algorithm to find duplicate nodes
+  // Parallel algorithm to find duplicate nodes
   ParallelDataAlgorithm dataAlg;
   dataAlg.setRange(0ULL, static_cast<size_t>(100 * 100 * 100));
   dataAlg.execute(FindUniqueIdsImpl(triangleGeom->getVertices(), nodesInBin, uniqueIds));
