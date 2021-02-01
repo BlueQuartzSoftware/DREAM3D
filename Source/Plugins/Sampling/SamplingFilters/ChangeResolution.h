@@ -44,6 +44,8 @@
 
 #include "Sampling/SamplingDLLExport.h"
 
+class DataContainer;
+
 /**
  * @brief The ChangeResolution class. See [Filter documentation](@ref changeresolution) for details.
  */
@@ -56,7 +58,7 @@ class Sampling_EXPORT ChangeResolution : public AbstractFilter
   PYB11_FILTER()
   PYB11_SHARED_POINTERS(ChangeResolution)
   PYB11_FILTER_NEW_MACRO(ChangeResolution)
-  PYB11_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+  PYB11_PROPERTY(DataArrayPath NewDataContainerPath READ getNewDataContainerPath WRITE setNewDataContainerPath)
   PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
   PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
@@ -97,15 +99,15 @@ public:
   ~ChangeResolution() override;
 
   /**
-   * @brief Setter property for NewDataContainerName
+   * @brief Setter property for NewDataContainerPath
    */
-  void setNewDataContainerName(const DataArrayPath& value);
+  void setNewDataContainerPath(const DataArrayPath& value);
   /**
-   * @brief Getter property for NewDataContainerName
-   * @return Value of NewDataContainerName
+   * @brief Getter property for NewDataContainerPath
+   * @return Value of NewDataContainerPath
    */
-  DataArrayPath getNewDataContainerName() const;
-  Q_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+  DataArrayPath getNewDataContainerPath() const;
+  Q_PROPERTY(DataArrayPath NewDataContainerPath READ getNewDataContainerPath WRITE setNewDataContainerPath)
 
   /**
    * @brief Setter property for CellAttributeMatrixPath
@@ -250,13 +252,15 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
 
-  DataArrayPath m_NewDataContainerName = {};
-  DataArrayPath m_CellAttributeMatrixPath = {};
-  DataArrayPath m_CellFeatureAttributeMatrixPath = {};
-  FloatVec3Type m_Spacing = {};
-  bool m_RenumberFeatures = {};
-  bool m_SaveAsNewDataContainer = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_NewDataContainerPath = {".COPY_DATA_CONTAINER", "", ""};
+  DataArrayPath m_CellAttributeMatrixPath = {"", "", ""};
+  DataArrayPath m_CellFeatureAttributeMatrixPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""};
+  FloatVec3Type m_Spacing = {0.0F, 0.0F, 0.0F};
+  bool m_RenumberFeatures = {true};
+  bool m_SaveAsNewDataContainer = {false};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+
+  std::shared_ptr<DataContainer> m_PreviousDataContainer;
 
 public:
   ChangeResolution(const ChangeResolution&) = delete;            // Copy Constructor Not Implemented

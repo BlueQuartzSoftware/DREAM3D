@@ -55,18 +55,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ChangeResolution::ChangeResolution()
-: m_NewDataContainerName(SIMPL::Defaults::NewImageDataContainerName)
-, m_CellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
-, m_CellFeatureAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "")
-, m_RenumberFeatures(true)
-, m_SaveAsNewDataContainer(false)
-, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-{
-  m_Spacing[0] = 1.0f;
-  m_Spacing[1] = 1.0f;
-  m_Spacing[2] = 1.0f;
-}
+ChangeResolution::ChangeResolution() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -87,7 +76,7 @@ void ChangeResolution::setupFilterParameters()
               << "FeatureIdsArrayPath";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Renumber Features", RenumberFeatures, FilterParameter::Parameter, ChangeResolution, linkedProps));
   linkedProps.clear();
-  linkedProps << "NewDataContainerName";
+  linkedProps << "NewDataContainerPath";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Data Container", SaveAsNewDataContainer, FilterParameter::Parameter, ChangeResolution, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
@@ -103,7 +92,7 @@ void ChangeResolution::setupFilterParameters()
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixPath, FilterParameter::RequiredArray, ChangeResolution, req));
   }
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", NewDataContainerName, FilterParameter::CreatedArray, ChangeResolution));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", NewDataContainerPath, FilterParameter::CreatedArray, ChangeResolution));
   setFilterParameters(parameters);
 }
 
@@ -113,7 +102,7 @@ void ChangeResolution::setupFilterParameters()
 void ChangeResolution::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setNewDataContainerName(reader->readDataArrayPath("NewDataContainerName", getNewDataContainerName()));
+  setNewDataContainerPath(reader->readDataArrayPath("NewDataContainerPath", getNewDataContainerPath()));
   setCellAttributeMatrixPath(reader->readDataArrayPath("CellAttributeMatrixPath", getCellAttributeMatrixPath()));
   setCellFeatureAttributeMatrixPath(reader->readDataArrayPath("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath()));
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
@@ -138,126 +127,116 @@ void ChangeResolution::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  if(getSpacing()[0] <= 0)
+  DataContainerArray::Pointer dca = getDataContainerArray();
+
+  // MUST have the Required Cell AttributeMatrix that is going to get resampled
+  AttributeMatrix::Pointer origAM = dca->getPrereqAttributeMatrixFromPath(this, getCellAttributeMatrixPath(), -46500);
+  if(getErrorCode() < 0)
   {
-    QString ss = QObject::tr("The X spacing (%1) must be positive").arg(getSpacing()[0]);
+    return;
+  }
+
+  // Check the validity of the user supplied spacing values
+  FloatVec3Type spacing = getSpacing();
+  if(spacing[0] <= 0.0F)
+  {
+    QString ss = QObject::tr("The X spacing (%1) must be positive").arg(spacing[0]);
     setErrorCondition(-5555, ss);
   }
 
-  if(getSpacing()[1] <= 0)
+  if(spacing[1] <= 0.0F)
   {
-    QString ss = QObject::tr("The Y spacing (%1) must be positive").arg(getSpacing()[1]);
+    QString ss = QObject::tr("The Y spacing (%1) must be positive").arg(spacing[1]);
     setErrorCondition(-5556, ss);
   }
 
-  if(getSpacing()[2] <= 0)
+  if(spacing[2] <= 0.0F)
   {
-    QString ss = QObject::tr("The  spacing (%1) must be positive").arg(getSpacing()[2]);
+    QString ss = QObject::tr("The Z spacing (%1) must be positive").arg(spacing[2]);
     setErrorCondition(-5557, ss);
   }
 
-  if(!getSaveAsNewDataContainer())
+  if(getErrorCode() < 0)
   {
-    getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getCellAttributeMatrixPath().getDataContainerName());
+    return;
+  }
+
+  DataContainer::Pointer origDc = dca->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
+  ImageGeom::Pointer origImageGeom = origDc->getPrereqGeometry<ImageGeom>(this);
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
+  FloatVec3Type origSpacing = origImageGeom->getSpacing();
+  // If the spacing is the same between the origin and the new, then just bail out now because there is nothing to do.
+  if(origSpacing[0] == m_Spacing[0] && origSpacing[1] == m_Spacing[1] && origSpacing[2] == m_Spacing[2])
+  {
+    return;
+  }
+
+  // Now make the copy of the DataContainer and adjust the Image Geometry and adjust the Cell Attribute Matrix tuple count
+  DataContainer::Pointer copyDc = origDc->deepCopy(getInPreflight());
+
+  ImageGeom::Pointer copyImageGeom = copyDc->getGeometryAs<ImageGeom>();
+  // Adjust the Geometry values
+  FloatVec3Type copySpacing = copyImageGeom->getSpacing();
+  SizeVec3Type dims = copyImageGeom->getDimensions();
+
+  size_t m_XP = static_cast<size_t>(((copySpacing[0] * static_cast<float>(dims[0])) / m_Spacing[0]));
+  size_t m_YP = static_cast<size_t>(((copySpacing[1] * static_cast<float>(dims[1])) / m_Spacing[1]));
+  size_t m_ZP = static_cast<size_t>(((copySpacing[2] * static_cast<float>(dims[2])) / m_Spacing[2]));
+  if(m_XP == 0)
+  {
+    m_XP = 1;
+  }
+  if(m_YP == 0)
+  {
+    m_YP = 1;
+  }
+  if(m_ZP == 0)
+  {
+    m_ZP = 1;
+  }
+  // Update the ImageGeometry object
+  copyImageGeom->setDimensions(m_XP, m_YP, m_ZP);
+  copyImageGeom->setSpacing(m_Spacing);
+
+  // Resize the Cell Attribute Matrix Tuple dimensions (which will resize the contained Attribute Arrays)
+  size_t totalPoints = m_XP * m_YP * m_ZP;
+  AttributeMatrix::Pointer copyCellAM = AttributeMatrix::New({m_XP, m_YP, m_ZP}, origAM->getName(), origAM->getType());
+  copyDc->addOrReplaceAttributeMatrix(copyCellAM);
+  QList<QString> voxelArrayNames = origAM->getAttributeArrayNames();
+  for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  {
+    IDataArray::Pointer p = origAM->getAttributeArray(*iter);
+    IDataArray::Pointer data = p->createNewArray(totalPoints, p->getComponentDimensions(), p->getName(), !getInPreflight());
+    copyCellAM->insertOrAssign(data);
+  }
+
+  // If we are going an "In Place" resample then remove the original Data Container and just rename the new one with the updated
+  // ImageGeometry and Cell Attribute Matrix
+  m_PreviousDataContainer = origDc; // Save for later
+  if(getSaveAsNewDataContainer())
+  {
+    copyDc->setName(getNewDataContainerPath().getDataContainerName());
+    dca->addOrReplaceDataContainer(copyDc);
   }
   else
   {
-    getDataContainerArray()->duplicateDataContainer(getCellAttributeMatrixPath().getDataContainerName(), getNewDataContainerName().getDataContainerName());
-    getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getCellAttributeMatrixPath().getDataContainerName());
+    dca->addOrReplaceDataContainer(copyDc);
   }
 
-  getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, getCellAttributeMatrixPath(), -301);
-
+#if 0
   if(getRenumberFeatures())
   {
     std::vector<size_t> cDims(1, 1);
-    m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeatureIdsArrayPath(), cDims);
+    m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(this, getFeatureIdsArrayPath(), cDims);
     if(nullptr != m_FeatureIdsPtr.lock())
     {
       m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
-  }
-
-  if(getErrorCode() >= 0)
-  {
-    DataContainer::Pointer m;
-    if(!m_SaveAsNewDataContainer)
-    {
-      m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
-    }
-    else
-    {
-      m = getDataContainerArray()->getDataContainer(getNewDataContainerName());
-    }
-
-    ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
-    SizeVec3Type dims = image->getDimensions();
-
-    FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
-    spacing[0] *= static_cast<float>(dims[0]);
-    spacing[1] *= static_cast<float>(dims[1]);
-    spacing[2] *= static_cast<float>(dims[2]);
-
-    size_t m_XP = size_t(spacing[0] / m_Spacing[0]);
-    size_t m_YP = size_t(spacing[1] / m_Spacing[1]);
-    size_t m_ZP = size_t(spacing[2] / m_Spacing[2]);
-    if(m_XP == 0)
-    {
-      m_XP = 1;
-    }
-    if(m_YP == 0)
-    {
-      m_YP = 1;
-    }
-    if(m_ZP == 0)
-    {
-      m_ZP = 1;
-    }
-
-    image->setDimensions(std::make_tuple(m_XP, m_YP, m_ZP));
-    image->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
-
-    std::vector<size_t> tDims(3, 0);
-    tDims[0] = m_XP;
-    tDims[1] = m_YP;
-    tDims[2] = m_ZP;
-    // m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName())->setTupleDimensions(tDims);
-
-    AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-
-    size_t totalPoints = 1;
-    for(int i = 0; i < 3; i++)
-    {
-      if(tDims[i] != 0)
-      {
-        totalPoints *= tDims[i];
-      }
-    }
-    AttributeMatrix::Pointer newCellAttrMat = AttributeMatrix::New(tDims, cellAttrMat->getName(), cellAttrMat->getType());
-
-    QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNames();
-    for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-    {
-      IDataArray::Pointer p = cellAttrMat->getAttributeArray(*iter);
-      //
-      IDataArray::Pointer data = p->createNewArray(totalPoints, p->getComponentDimensions(), p->getName(), false);
-
-      cellAttrMat->removeAttributeArray(*iter);
-      newCellAttrMat->insertOrAssign(data);
-    }
-    m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-    m->addOrReplaceAttributeMatrix(newCellAttrMat);
-
-    if(m_RenumberFeatures)
-    {
-      AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-      if(nullptr != cellFeatureAttrMat.get())
-      {
-        QVector<bool> activeObjects(cellFeatureAttrMat->getNumberOfTuples(), true);
-        cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
-      }
     }
   }
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -265,41 +244,117 @@ void ChangeResolution::dataCheck()
 // -----------------------------------------------------------------------------
 void ChangeResolution::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {
     return;
   }
 
-  DataContainer::Pointer m;
-  if(!m_SaveAsNewDataContainer)
+  DataContainerArray::Pointer dca = getDataContainerArray();
+
+  DataContainer::Pointer origDc = m_PreviousDataContainer;
+  ImageGeom::Pointer origGeom = origDc->getGeometryAs<ImageGeom>();
+  AttributeMatrix::Pointer origCellAm = origDc->getAttributeMatrix(getCellAttributeMatrixPath());
+  SizeVec3Type origDims = origGeom->getDimensions();
+  FloatVec3Type origSpacing = origGeom->getSpacing();
+
+  // Get the resampled data container, by default it would have been inserted into the Data Container Array
+  DataContainer::Pointer copyDc = dca->getDataContainer(getCellAttributeMatrixPath());
+  // Unless the user selected to create a new one
+  if(getSaveAsNewDataContainer())
   {
-    m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
+    copyDc = dca->getDataContainer(getNewDataContainerPath());
+  }
+  AttributeMatrix::Pointer copyAM = copyDc->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
+
+  size_t origTotalPoints = origCellAm->getNumberOfTuples();
+
+  float x = 0.0F, y = 0.0F, z = 0.0F;
+  size_t col = 0, row = 0, plane = 0;
+  size_t index = 0;
+  size_t index_old = 0;
+  size_t progressInt = 0;
+  std::vector<size_t> newindicies(origTotalPoints);
+
+  for(size_t i = 0; i < origDims[2]; i++)
+  {
+    if(getCancel())
+    {
+      break;
+    }
+    progressInt = static_cast<size_t>((static_cast<float>(i) / origDims[2]) * 100.0f);
+    QString ss = QObject::tr("Changing Resolution || %1% Complete").arg(progressInt);
+    notifyStatusMessage(ss);
+    for(size_t j = 0; j < origDims[1]; j++)
+    {
+      for(size_t k = 0; k < origDims[0]; k++)
+      {
+        x = (k * m_Spacing[0]);
+        y = (j * m_Spacing[1]);
+        z = (i * m_Spacing[2]);
+        col = static_cast<size_t>(x / origSpacing[0]);
+        row = static_cast<size_t>(y / origSpacing[1]);
+        plane = static_cast<size_t>(z / origSpacing[2]);
+        index_old = (plane * origDims[1] * origDims[0]) + (row * origDims[0]) + col;
+        index = (i * origDims[0] * origDims[1]) + (j * origDims[0]) + k;
+        newindicies[index] = index_old;
+      }
+    }
+  }
+
+  QString ss = QObject::tr("Copying Data...");
+  notifyStatusMessage(ss);
+
+  QList<QString> voxelArrayNames = copyAM->getAttributeArrayNames();
+  for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  {
+    IDataArray::Pointer data = origCellAm->getAttributeArray(*iter);
+
+    IDataArray::Pointer p = copyAM->getAttributeArray(*iter);
+    // Make a copy of the 'p' array that has the same name. When placed into
+    // the data container this will over write the current array with
+    // the same name. At least in theory.
+
+    void* source = nullptr;
+    void* destination = nullptr;
+    size_t newIndicies_I = 0;
+    int32_t nComp = p->getNumberOfComponents();
+    for(size_t i = 0; i < static_cast<size_t>(origTotalPoints); i++)
+    {
+      newIndicies_I = newindicies[i];
+      source = p->getVoidPointer((nComp * newIndicies_I));
+      destination = data->getVoidPointer((data->getNumberOfComponents() * i));
+      ::memcpy(destination, source, p->getTypeSize() * data->getNumberOfComponents());
+    }
+  }
+
+#if 0
+  DataContainer::Pointer m;
+  if(m_SaveAsNewDataContainer)
+  {
+    m = getDataContainerArray()->getDataContainer(getNewDataContainerPath());
   }
   else
   {
-    m = getDataContainerArray()->getDataContainer(getNewDataContainerName());
+    m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
   }
-  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
-  if(spacing[0] == m_Spacing[0] && spacing[1] == m_Spacing[1] && spacing[2] == m_Spacing[2])
+  ImageGeom::Pointer imageGeomOrig = m->getGeometryAs<ImageGeom>();
+
+  FloatVec3Type spacingOrig = imageGeomOrig->getSpacing();
+
+  if(spacingOrig[0] == m_Spacing[0] && spacingOrig[1] == m_Spacing[1] && spacingOrig[2] == m_Spacing[2])
   {
     return;
   }
 
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
 
-  SizeVec3Type dims = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type dims = imageGeomOrig->getDimensions();
 
-  spacing[0] *= static_cast<float>(dims[0]);
-  spacing[1] *= static_cast<float>(dims[1]);
-  spacing[2] *= static_cast<float>(dims[2]);
-
-  size_t m_XP = size_t(spacing[0] / m_Spacing[0]);
-  size_t m_YP = size_t(spacing[1] / m_Spacing[1]);
-  size_t m_ZP = size_t(spacing[2] / m_Spacing[2]);
+  size_t m_XP = static_cast<size_t>(((spacingOrig[0] * static_cast<float>(dims[0])) / m_Spacing[0]));
+  size_t m_YP = static_cast<size_t>(((spacingOrig[1] * static_cast<float>(dims[1])) / m_Spacing[1]));
+  size_t m_ZP = static_cast<size_t>(((spacingOrig[2] * static_cast<float>(dims[2])) / m_Spacing[2]));
   if(m_XP == 0)
   {
     m_XP = 1;
@@ -320,7 +375,6 @@ void ChangeResolution::execute()
   size_t index_old = 0;
   size_t progressInt = 0;
   std::vector<size_t> newindicies(totalPoints);
-  FloatVec3Type res = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   for(size_t i = 0; i < m_ZP; i++)
   {
@@ -329,7 +383,7 @@ void ChangeResolution::execute()
       break;
     }
     progressInt = static_cast<size_t>((static_cast<float>(i) / m_ZP) * 100.0f);
-    QString ss = QObject::tr("Changing Spacing || %1% Complete").arg(progressInt);
+    QString ss = QObject::tr("Changing Resolution || %1% Complete").arg(progressInt);
     notifyStatusMessage(ss);
     for(size_t j = 0; j < m_YP; j++)
     {
@@ -338,9 +392,9 @@ void ChangeResolution::execute()
         x = (k * m_Spacing[0]);
         y = (j * m_Spacing[1]);
         z = (i * m_Spacing[2]);
-        col = size_t(x / res[0]);
-        row = size_t(y / res[1]);
-        plane = size_t(z / res[2]);
+        col = static_cast<size_t>(x / spacingOrig[0]);
+        row = static_cast<size_t>(y / spacingOrig[1]);
+        plane = static_cast<size_t>(z / spacingOrig[2]);
         index_old = (plane * dims[1] * dims[0]) + (row * dims[0]) + col;
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
         newindicies[index] = index_old;
@@ -378,12 +432,13 @@ void ChangeResolution::execute()
       ::memcpy(destination, source, p->getTypeSize() * data->getNumberOfComponents());
     }
     cellAttrMat->removeAttributeArray(*iter);
-    newCellAttrMat->insertOrAssign(data);
+    newCellAttrMat->addOrReplaceAttributeArray(data);
   }
-  m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
+
+  m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
   m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(m_XP, m_YP, m_ZP));
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-  m->addOrReplaceAttributeMatrix(newCellAttrMat);
+  m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
 
   // Feature Ids MUST already be renumbered.
   if(m_RenumberFeatures)
@@ -394,7 +449,7 @@ void ChangeResolution::execute()
     QVector<bool> activeObjects(totalFeatures, false);
     if(0 == totalFeatures)
     {
-      setErrorCondition(-600, "The number of Features is 0 and should be greater than 0");
+      notifyErrorMessage(getHumanLabel(), "The number of Features is 0 and should be greater than 0", -600);
       return;
     }
 
@@ -409,7 +464,9 @@ void ChangeResolution::execute()
       activeObjects[fIds[i]] = true;
     }
     cellFeatureAttrMat->removeInactiveObjects(activeObjects, featureIds.get());
+  
   }
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -513,15 +570,15 @@ QString ChangeResolution::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void ChangeResolution::setNewDataContainerName(const DataArrayPath& value)
+void ChangeResolution::setNewDataContainerPath(const DataArrayPath& value)
 {
-  m_NewDataContainerName = value;
+  m_NewDataContainerPath = value;
 }
 
 // -----------------------------------------------------------------------------
-DataArrayPath ChangeResolution::getNewDataContainerName() const
+DataArrayPath ChangeResolution::getNewDataContainerPath() const
 {
-  return m_NewDataContainerName;
+  return m_NewDataContainerPath;
 }
 
 // -----------------------------------------------------------------------------
