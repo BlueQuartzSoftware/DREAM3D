@@ -54,6 +54,7 @@
 #include "SIMPLib/Math/SIMPLibRandom.h"
 
 #include "Sampling/SamplingConstants.h"
+#include "Sampling/SamplingFilters/Utils/SamplingUtils.hpp"
 #include "Sampling/SamplingVersion.h"
 
 enum createdPathID : RenameDataPath::DataID_t
@@ -64,30 +65,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CropImageGeometry::CropImageGeometry()
-: m_NewDataContainerName(SIMPL::Defaults::NewImageDataContainerName)
-, m_CellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
-, m_CellFeatureAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "")
-, m_XMin(0)
-, m_YMin(0)
-, m_ZMin(0)
-, m_XMax(0)
-, m_YMax(0)
-, m_ZMax(0)
-, m_RenumberFeatures(false)
-, m_SaveAsNewDataContainer(false)
-, m_UpdateOrigin(true)
-, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-{
-  m_OldDimensions[0] = 0, m_OldDimensions[1] = 0;
-  m_OldDimensions[2] = 0;
-  m_OldResolution[0] = 0.0f;
-  m_OldResolution[1] = 0.0f;
-  m_OldResolution[2] = 0.0f;
-  m_OldOrigin[0] = 0.0f;
-  m_OldOrigin[1] = 0.0f;
-  m_OldOrigin[2] = 0.0f;
-}
+CropImageGeometry::CropImageGeometry() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -178,55 +156,8 @@ void CropImageGeometry::initialize()
 // -----------------------------------------------------------------------------
 void CropImageGeometry::dataCheck()
 {
-  if(getErrorCode() < 0)
-  {
-    return;
-  }
   clearErrorCode();
   clearWarningCode();
-
-  // Validate the incoming DataContainer, Geometry, and AttributeMatrix ; bail if any do not exist since we plan on using them later on in the dataCheck
-  // Error messages are handled by the getPrereq functions
-  DataContainer::Pointer srcCellDataContainer = getDataContainerArray()->getPrereqDataContainer(this, getCellAttributeMatrixPath().getDataContainerName());
-  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getCellAttributeMatrixPath().getDataContainerName());
-  AttributeMatrix::Pointer srcCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, getCellAttributeMatrixPath(), -301);
-  if(getErrorCode() < 0)
-  {
-    return;
-  }
-
-  m_OldDimensions = getCurrentVolumeDataContainerDimensions();
-  m_OldResolution = getCurrentVolumeDataContainerResolutions();
-  if(image)
-  {
-    m_OldOrigin = image->getOrigin();
-  }
-
-  DataContainer::Pointer destCellDataContainer = srcCellDataContainer;
-  AttributeMatrix::Pointer destCellAttrMat;
-
-  if(m_SaveAsNewDataContainer)
-  {
-    destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer(this, getNewDataContainerName(), DataContainerID);
-    if(nullptr == destCellDataContainer.get() || getErrorCode() < 0)
-    {
-      return;
-    }
-    IGeometry::Pointer imageCopy = image->deepCopy();
-    destCellDataContainer->setGeometry(imageCopy);
-
-    destCellAttrMat = srcCellAttrMat->deepCopy(getInPreflight());
-    destCellDataContainer->addOrReplaceAttributeMatrix(destCellAttrMat);
-  }
-  else
-  {
-    destCellAttrMat = srcCellAttrMat;
-  }
-
-  if(nullptr == destCellDataContainer.get() || nullptr == destCellAttrMat.get() || getErrorCode() < 0)
-  {
-    return;
-  }
 
   if(getXMax() < getXMin())
   {
@@ -257,6 +188,51 @@ void CropImageGeometry::dataCheck()
   {
     QString ss = QObject::tr("Z Min (%1) less than 0").arg(getZMin());
     setErrorCondition(-5550, ss);
+  }
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
+
+  DataContainerArray::Pointer dca = getDataContainerArray();
+
+  // Validate the incoming DataContainer, Geometry, and AttributeMatrix ; bail if any do not exist since we plan on using them later on in the dataCheck
+  // Error messages are handled by the getPrereq functions
+  DataContainer::Pointer srcCellDataContainer = dca->getPrereqDataContainer(this, getCellAttributeMatrixPath().getDataContainerName());
+  ImageGeom::Pointer image = dca->getPrereqGeometryFromDataContainer<ImageGeom>(this, getCellAttributeMatrixPath().getDataContainerName());
+  AttributeMatrix::Pointer srcCellAttrMat = dca->getPrereqAttributeMatrixFromPath(this, getCellAttributeMatrixPath(), -301);
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
+
+  m_OldDimensions = getCurrentVolumeDataContainerDimensions();
+  m_OldResolution = getCurrentVolumeDataContainerResolutions();
+  if(image)
+  {
+    m_OldOrigin = image->getOrigin();
+  }
+
+  DataContainer::Pointer destCellDataContainer = srcCellDataContainer;
+  AttributeMatrix::Pointer destCellAttrMat = srcCellAttrMat;
+
+  if(m_SaveAsNewDataContainer)
+  {
+    destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer(this, getNewDataContainerName(), DataContainerID);
+    if(getErrorCode() < 0)
+    {
+      return;
+    }
+    IGeometry::Pointer imageCopy = image->deepCopy();
+    destCellDataContainer->setGeometry(imageCopy);
+
+    destCellAttrMat = srcCellAttrMat->deepCopy(getInPreflight());
+    destCellDataContainer->addOrReplaceAttributeMatrix(destCellAttrMat);
+  }
+
+  if(nullptr == destCellDataContainer.get() || nullptr == destCellAttrMat.get() || getErrorCode() < 0)
+  {
+    return;
   }
 
   if(getXMax() > (static_cast<int64_t>(destCellDataContainer->getGeometryAs<ImageGeom>()->getXPoints()) - 1))
@@ -321,21 +297,13 @@ void CropImageGeometry::dataCheck()
     return;
   }
 
-  size_t totalPoints = 1;
-  for(int i = 0; i < 3; i++)
-  {
-    if(tDims[i] != 0)
-    {
-      totalPoints *= tDims[i];
-    }
-  }
+  size_t totalPoints = destCellDataContainer->getGeometryAs<ImageGeom>()->getNumberOfElements();
   AttributeMatrix::Pointer newCellAttrMat = AttributeMatrix::New(tDims, destCellAttrMat->getName(), destCellAttrMat->getType());
 
   QList<QString> voxelArrayNames = destCellAttrMat->getAttributeArrayNames();
   for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     IDataArray::Pointer p = destCellAttrMat->getAttributeArray(*iter);
-    //
     IDataArray::Pointer data = p->createNewArray(totalPoints, p->getComponentDimensions(), p->getName(), false);
 
     destCellAttrMat->removeAttributeArray(*iter);
@@ -344,9 +312,9 @@ void CropImageGeometry::dataCheck()
   destCellDataContainer->removeAttributeMatrix(destCellAttrMat->getName());
   destCellDataContainer->addOrReplaceAttributeMatrix(newCellAttrMat);
 
-  if(m_RenumberFeatures)
+  if(getRenumberFeatures())
   {
-    std::vector<size_t> cDims(1, 1);
+    std::vector<size_t> cDims = {1};
     m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(nullptr, getFeatureIdsArrayPath(), cDims);
     if(nullptr != m_FeatureIdsPtr.lock())
     {
@@ -515,62 +483,7 @@ void CropImageGeometry::execute()
 
   if(m_RenumberFeatures)
   {
-    totalPoints = destCellDataContainer->getGeometryAs<ImageGeom>()->getNumberOfElements();
-
-    // This just sanity checks to make sure there were existing features before the cropping
-    AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-    size_t totalFeatures = cellFeatureAttrMat->getNumberOfTuples();
-    QVector<bool> activeObjects(totalFeatures, false);
-    if(0 == totalFeatures)
-    {
-      setErrorCondition(-600, "The number of Features is 0 and should be greater than 0");
-      return;
-    }
-
-    // std::vector<size_t> cDims(1, 1);
-    DataArrayPath dap = getFeatureIdsArrayPath();
-    if(getSaveAsNewDataContainer())
-    {
-      dap.setDataContainerName(getNewDataContainerName().getDataContainerName());
-    }
-    m_FeatureIdsPtr = cellAttrMat->getAttributeArrayAs<Int32ArrayType>(dap.getDataArrayName());
-    if(nullptr != m_FeatureIdsPtr.lock())
-    {
-      m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
-    else
-    {
-      QString ss = QObject::tr("The FeatureIds array with name '%1' was not found in the destination DataContainer. The expected path was '%2'").arg(dap.getDataArrayName()).arg(dap.serialize("/"));
-      setErrorCondition(-601, ss);
-      return;
-    }
-
-    // Find the unique set of feature ids
-    for(int64_t i = 0; i < totalPoints; ++i)
-    {
-      if(getCancel())
-      {
-        break;
-      }
-
-      int32_t currentFeatureId = m_FeatureIds[i];
-      if(currentFeatureId < totalFeatures)
-      {
-        activeObjects[currentFeatureId] = true;
-      }
-      else
-      {
-        QString ss = QObject::tr("The total number of Features from %1 is %2, but a value of %3 was found in DataArray %4.")
-                         .arg(cellFeatureAttrMat->getName())
-                         .arg(totalFeatures)
-                         .arg(currentFeatureId)
-                         .arg(getFeatureIdsArrayPath().serialize("/"));
-        qDebug() << ss;
-        setErrorCondition(-601, ss);
-        return;
-      }
-    }
-    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
+    Sampling::RenumberFeatures(this, m_NewDataContainerName, m_CellAttributeMatrixPath, m_CellFeatureAttributeMatrixPath, m_FeatureIdsArrayPath, m_SaveAsNewDataContainer);
   }
 
   if(m_UpdateOrigin)
