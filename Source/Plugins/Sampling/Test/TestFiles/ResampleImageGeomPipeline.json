@@ -1,0 +1,233 @@
+{
+    "0": {
+        "CellAttributeMatrixName": "EBSD Scan Data",
+        "CellEnsembleAttributeMatrixName": "Phase Data",
+        "DataContainerName": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "FilterVersion": "6.6.195",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Import EDAX EBSD Data (.ang)",
+        "Filter_Name": "ReadAngData",
+        "Filter_Uuid": "{b8e128a8-c2a3-5e6c-a7ad-e4fb864e5d40}",
+        "InputFile": "Data/SmallIN100/Slice_1.ang"
+    },
+    "1": {
+        "CellAttributeMatrixPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "FilterVersion": "2.0.338",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Rotate Sample Reference Frame",
+        "Filter_Name": "RotateSampleRefFrame",
+        "Filter_Uuid": "{e25d9b4c-2b37-578c-b1de-cf7032b5ef19}",
+        "RotationAngle": 180,
+        "RotationAxis": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+        },
+        "RotationRepresentationChoice": 0,
+        "RotationTable": {
+            "Column Headers": [
+            ],
+            "DefaultColCount": 3,
+            "DefaultRowCount": 3,
+            "HasDynamicCols": false,
+            "HasDynamicRows": false,
+            "MinColCount": 3,
+            "MinRowCount": 3,
+            "Row Headers": [
+            ],
+            "Table Data": [
+                [
+                    1,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    1,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    1
+                ]
+            ]
+        }
+    },
+    "2": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "FilterVersion": "6.6.195",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Rotate Euler Reference Frame",
+        "Filter_Name": "RotateEulerRefFrame",
+        "Filter_Uuid": "{ef9420b2-8c46-55f3-8ae4-f53790639de4}",
+        "RotationAngle": 90,
+        "RotationAxis": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+        }
+    },
+    "3": {
+        "DestinationArrayName": "Mask",
+        "FilterVersion": "2.0.338",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Threshold Objects",
+        "Filter_Name": "MultiThresholdObjects",
+        "Filter_Uuid": "{014b7300-cf36-5ede-a751-5faf9b119dae}",
+        "SelectedThresholds": [
+            {
+                "Attribute Array Name": "Confidence Index",
+                "Attribute Matrix Name": "EBSD Scan Data",
+                "Comparison Operator": 1,
+                "Comparison Value": 0.10000000149011612,
+                "Data Container Name": "Small IN100 Slice 1"
+            },
+            {
+                "Attribute Array Name": "Image Quality",
+                "Attribute Matrix Name": "EBSD Scan Data",
+                "Comparison Operator": 1,
+                "Comparison Value": 120,
+                "Data Container Name": "Small IN100 Slice 1"
+            }
+        ]
+    },
+    "4": {
+        "FilterVersion": "6.6.195",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Convert Orientation Representation",
+        "Filter_Name": "ConvertOrientations",
+        "Filter_Uuid": "{e5629880-98c4-5656-82b8-c9fe2b9744de}",
+        "InputOrientationArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "InputType": 0,
+        "OutputOrientationArrayName": "Quats",
+        "OutputType": 2
+    },
+    "5": {
+        "FillHoles": 0,
+        "FilterVersion": "6.6.195",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Isolate Largest Feature (Identify Sample)",
+        "Filter_Name": "IdentifySample",
+        "Filter_Uuid": "{0e8c0818-a3fb-57d4-a5c8-7cb8ae54a40a}",
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "Mask",
+            "Data Container Name": "Small IN100 Slice 1"
+        }
+    },
+    "6": {
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "Phases",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "Phase Data",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "FilterVersion": "6.6.195",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Neighbor Orientation Comparison (Bad Data)",
+        "Filter_Name": "BadDataNeighborOrientationCheck",
+        "Filter_Uuid": "{f4a7c2df-e9b0-5da9-b745-a862666d6c99}",
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "Mask",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "MisorientationTolerance": 5,
+        "NumberOfNeighbors": 4,
+        "QuatsArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "Quats",
+            "Data Container Name": "Small IN100 Slice 1"
+        }
+    },
+    "7": {
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "Phases",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "ConfidenceIndexArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "Confidence Index",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "Phase Data",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "FilterVersion": "6.6.195",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Neighbor Orientation Correlation",
+        "Filter_Name": "NeighborOrientationCorrelation",
+        "Filter_Uuid": "{6427cd5e-0ad2-5a24-8847-29f8e0720f4f}",
+        "IgnoredDataArrayPaths": [
+        ],
+        "Level": 2,
+        "MinConfidence": 0.20000000298023224,
+        "MisorientationTolerance": 5,
+        "QuatsArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "Quats",
+            "Data Container Name": "Small IN100 Slice 1"
+        }
+    },
+    "8": {
+        "ActiveArrayName": "Active",
+        "CellFeatureAttributeMatrixName": "Grain Data",
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "Phases",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "Phase Data",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "FeatureIdsArrayName": "FeatureIds",
+        "FilterVersion": "6.6.195",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Segment Features (Misorientation)",
+        "Filter_Name": "EBSDSegmentFeatures",
+        "Filter_Uuid": "{7861c691-b821-537b-bd25-dc195578e0ea}",
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "Mask",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "MisorientationTolerance": 5,
+        "QuatsArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "Quats",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "UseGoodVoxels": 1
+    },
+    "PipelineBuilder": {
+        "Name": "ResampleImageGeomPipeline",
+        "Number_Filters": 9,
+        "Version": 6
+    }
+}
