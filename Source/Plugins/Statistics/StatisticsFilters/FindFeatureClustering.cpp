@@ -428,8 +428,6 @@ void FindFeatureClustering::find_clustering()
 // -----------------------------------------------------------------------------
 void FindFeatureClustering::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

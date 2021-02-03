@@ -335,8 +335,6 @@ void DxReader::dataCheck()
 // -----------------------------------------------------------------------------
 void DxReader::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

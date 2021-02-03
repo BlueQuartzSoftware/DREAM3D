@@ -422,8 +422,6 @@ void ReplaceElementAttributesWithNeighborValues::dataCheck()
 // -----------------------------------------------------------------------------
 void ReplaceElementAttributesWithNeighborValues::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -126,8 +126,6 @@ void AddOrientationNoise::dataCheck()
 // -----------------------------------------------------------------------------
 void AddOrientationNoise::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

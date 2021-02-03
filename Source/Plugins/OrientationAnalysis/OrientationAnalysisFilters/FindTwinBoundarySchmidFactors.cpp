@@ -426,6 +426,9 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
+
   dataCheckVoxel();
   dataCheckSurfaceMesh();
 }

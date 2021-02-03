@@ -254,6 +254,9 @@ void StatsGeneratorFilter::initialize()
 // -----------------------------------------------------------------------------
 void StatsGeneratorFilter::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
+
   if(nullptr != m_StatsDataArray)
   {
     getDataContainerArray()->createNonPrereqDataContainer(this, getStatsGeneratorDataContainerName(), DataContainerID);
@@ -302,8 +305,6 @@ void StatsGeneratorFilter::dataCheck()
 // -----------------------------------------------------------------------------
 void StatsGeneratorFilter::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

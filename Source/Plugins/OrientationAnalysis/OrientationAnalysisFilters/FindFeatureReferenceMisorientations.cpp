@@ -259,8 +259,6 @@ void FindFeatureReferenceMisorientations::dataCheck()
 // -----------------------------------------------------------------------------
 void FindFeatureReferenceMisorientations::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -158,8 +158,6 @@ void ErodeDilateBadData::dataCheck()
 // -----------------------------------------------------------------------------
 void ErodeDilateBadData::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

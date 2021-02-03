@@ -106,7 +106,7 @@
                                     "Component Dimensions": [
                                         1
                                     ],
-                                    "Flag": 0,
+                                    "Flag": 2,
                                     "Name": "X Position",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/Small IN100 Slice 1/EBSD Scan Data",
@@ -121,7 +121,7 @@
                                     "Component Dimensions": [
                                         1
                                     ],
-                                    "Flag": 0,
+                                    "Flag": 2,
                                     "Name": "Y Position",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/Small IN100 Slice 1/EBSD Scan Data",
@@ -206,18 +206,11 @@
                 "Comparison Operator": 1,
                 "Comparison Value": 0.10000000149011612,
                 "Data Container Name": "Small IN100 Slice 1"
-            },
-            {
-                "Attribute Array Name": "Image Quality",
-                "Attribute Matrix Name": "EBSD Scan Data",
-                "Comparison Operator": 1,
-                "Comparison Value": 120,
-                "Data Container Name": "Small IN100 Slice 1"
             }
         ]
     },
     "2": {
-        "FilterVersion": "6.6.197",
+        "FilterVersion": "6.6.199",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Convert Orientation Representation",
         "Filter_Name": "ConvertOrientations",
@@ -233,7 +226,7 @@
     },
     "3": {
         "FillHoles": 0,
-        "FilterVersion": "6.6.197",
+        "FilterVersion": "6.6.199",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Isolate Largest Feature (Identify Sample)",
         "Filter_Name": "IdentifySample",
@@ -255,7 +248,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Small IN100 Slice 1"
         },
-        "FilterVersion": "6.6.197",
+        "FilterVersion": "6.6.199",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Neighbor Orientation Comparison (Bad Data)",
         "Filter_Name": "BadDataNeighborOrientationCheck",
@@ -289,7 +282,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Small IN100 Slice 1"
         },
-        "FilterVersion": "6.6.197",
+        "FilterVersion": "6.6.199",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Neighbor Orientation Correlation",
         "Filter_Name": "NeighborOrientationCorrelation",
@@ -319,7 +312,7 @@
             "Data Container Name": "Small IN100 Slice 1"
         },
         "FeatureIdsArrayName": "FeatureIds",
-        "FilterVersion": "6.6.197",
+        "FilterVersion": "6.6.199",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Segment Features (Misorientation)",
         "Filter_Name": "EBSDSegmentFeatures",

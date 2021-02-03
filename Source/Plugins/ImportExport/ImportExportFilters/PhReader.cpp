@@ -325,8 +325,6 @@ void PhReader::dataCheck()
 // -----------------------------------------------------------------------------
 void PhReader::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

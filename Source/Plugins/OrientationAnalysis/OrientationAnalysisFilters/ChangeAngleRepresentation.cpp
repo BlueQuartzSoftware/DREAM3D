@@ -172,8 +172,6 @@ void ChangeAngleRepresentation::dataCheck()
 // -----------------------------------------------------------------------------
 void ChangeAngleRepresentation::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

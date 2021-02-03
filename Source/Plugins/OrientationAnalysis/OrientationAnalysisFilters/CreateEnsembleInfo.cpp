@@ -183,8 +183,6 @@ void CreateEnsembleInfo::dataCheck()
 // -----------------------------------------------------------------------------
 void CreateEnsembleInfo::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

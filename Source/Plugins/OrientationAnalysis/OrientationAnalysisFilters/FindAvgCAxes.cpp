@@ -165,8 +165,6 @@ void FindAvgCAxes::dataCheck()
 // -----------------------------------------------------------------------------
 void FindAvgCAxes::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

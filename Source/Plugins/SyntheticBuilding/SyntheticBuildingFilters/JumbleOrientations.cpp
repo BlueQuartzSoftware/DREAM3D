@@ -181,8 +181,6 @@ void JumbleOrientations::dataCheck()
 // -----------------------------------------------------------------------------
 void JumbleOrientations::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -179,9 +179,9 @@ void CAxisSegmentFeatures::initialize()
 // -----------------------------------------------------------------------------
 void CAxisSegmentFeatures::dataCheck()
 {
-  DataArrayPath tempPath;
   clearErrorCode();
   clearWarningCode();
+  DataArrayPath tempPath;
 
   // Set the DataContainerName for the Parent Class (SegmentFeatures) to Use
   setDataContainerName(m_QuatsArrayPath.getDataContainerName());
@@ -414,8 +414,6 @@ void CAxisSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin, 
 // -----------------------------------------------------------------------------
 void CAxisSegmentFeatures::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

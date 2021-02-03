@@ -224,8 +224,6 @@ void findHistogram(IDataArray::Pointer inputData, int32_t* ensembleArray, int32_
 // -----------------------------------------------------------------------------
 void FindFeatureHistogram::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

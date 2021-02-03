@@ -191,8 +191,6 @@ void findAverage(IDataArray::Pointer inDataPtr, FloatArrayType::Pointer averageA
 // -----------------------------------------------------------------------------
 void FindAvgScalarValueForFeatures::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

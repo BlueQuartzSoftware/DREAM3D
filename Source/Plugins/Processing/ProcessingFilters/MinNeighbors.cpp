@@ -206,8 +206,6 @@ void MinNeighbors::dataCheck()
 // -----------------------------------------------------------------------------
 void MinNeighbors::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

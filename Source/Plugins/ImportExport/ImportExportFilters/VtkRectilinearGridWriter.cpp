@@ -324,8 +324,6 @@ void VtkRectilinearGridWriter::dataCheck()
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

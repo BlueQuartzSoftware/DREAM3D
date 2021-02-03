@@ -831,8 +831,6 @@ void FindShapes::find_axiseulers2D()
 // -----------------------------------------------------------------------------
 void FindShapes::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

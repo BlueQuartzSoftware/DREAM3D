@@ -240,10 +240,10 @@ void ReadStlFile::initialize()
 // -----------------------------------------------------------------------------
 void ReadStlFile::dataCheck()
 {
-  initialize();
   clearErrorCode();
   clearWarningCode();
 
+  initialize();
   DataArrayPath tempPath;
 
   QFileInfo fi(getStlFilePath());
@@ -302,8 +302,6 @@ void ReadStlFile::dataCheck()
 // -----------------------------------------------------------------------------
 void ReadStlFile::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

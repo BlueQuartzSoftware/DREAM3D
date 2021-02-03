@@ -1533,8 +1533,6 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

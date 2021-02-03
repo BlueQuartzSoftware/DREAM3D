@@ -18,6 +18,7 @@
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/JsonFilterParametersWriter.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -228,9 +229,9 @@ public:
     FilterPipeline::Pointer pipeline = jsonReader->readPipelineFromFile(pipelineFile);
     std::cout << "Filter Count: " << pipeline->size() << std::endl;
     Observer obs; // Create an Observer to report errors/progress from the executing pipeline
-    // pipeline->addMessageReceiver(&obs);
+                  //    pipeline->addMessageReceiver(&obs);
 
-    DataContainerReader::Pointer reader = std::dynamic_pointer_cast<DataContainerReader>(pipeline->getFilterContainer().at(0));
+    DataContainerReader::Pointer reader = std::dynamic_pointer_cast<DataContainerReader>(pipeline->getFilterContainer()[0]);
     reader->setInputFile(UnitTest::SamplingSourceTestFilesDir + "/" + k_Dream3DInputFile);
 
     ResampleImageGeom::Pointer resample = ResampleImageGeom::New();

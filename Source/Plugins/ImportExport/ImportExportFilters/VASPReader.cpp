@@ -153,9 +153,9 @@ void VASPReader::initialize()
 // -----------------------------------------------------------------------------
 void VASPReader::dataCheck()
 {
-  DataArrayPath tempPath;
   clearErrorCode();
   clearWarningCode();
+  DataArrayPath tempPath;
   initialize();
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer(this, getVertexDataContainerName(), DataContainerID);

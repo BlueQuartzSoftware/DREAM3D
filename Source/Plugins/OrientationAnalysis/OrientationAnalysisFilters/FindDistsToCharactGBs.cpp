@@ -451,8 +451,6 @@ void FindDistsToCharactGBs::dataCheck()
 // -----------------------------------------------------------------------------
 void FindDistsToCharactGBs::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -193,8 +193,6 @@ void FindFeatureCentroids::find_centroids()
 // -----------------------------------------------------------------------------
 void FindFeatureCentroids::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

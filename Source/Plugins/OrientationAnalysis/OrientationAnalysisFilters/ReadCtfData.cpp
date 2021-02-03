@@ -205,11 +205,12 @@ void ReadCtfData::initialize()
 // -----------------------------------------------------------------------------
 void ReadCtfData::dataCheck()
 {
-  // Reset FileWasRead flag
-  m_FileWasRead = false;
 
   clearErrorCode();
   clearWarningCode();
+  // Reset FileWasRead flag
+  m_FileWasRead = false;
+
   DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer(this, getDataContainerName(), DataContainerID);
@@ -632,8 +633,6 @@ void ReadCtfData::copyRawEbsdData(CtfReader* reader, std::vector<size_t>& tDims,
 // -----------------------------------------------------------------------------
 void ReadCtfData::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

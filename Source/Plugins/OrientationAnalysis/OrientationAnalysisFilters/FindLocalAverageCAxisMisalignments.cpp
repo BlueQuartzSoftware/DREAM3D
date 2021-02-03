@@ -170,9 +170,9 @@ void FindLocalAverageCAxisMisalignments::initialize()
 // -----------------------------------------------------------------------------
 void FindLocalAverageCAxisMisalignments::dataCheck()
 {
-  DataArrayPath tempPath;
   clearErrorCode();
   clearWarningCode();
+  DataArrayPath tempPath;
 
   // Cell Data
   std::vector<size_t> dims(1, 1);

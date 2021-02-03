@@ -261,8 +261,6 @@ void generateRepresentation(ConvertOrientations* filter, typename DataArray<T>::
 // -----------------------------------------------------------------------------
 void ConvertOrientations::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -310,8 +310,6 @@ void EstablishMatrixPhase::dataCheck()
 // -----------------------------------------------------------------------------
 void EstablishMatrixPhase::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

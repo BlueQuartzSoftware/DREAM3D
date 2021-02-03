@@ -133,8 +133,6 @@ void FindNumFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 void FindNumFeatures::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

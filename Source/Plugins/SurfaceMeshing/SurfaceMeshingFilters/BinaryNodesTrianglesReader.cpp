@@ -141,6 +141,9 @@ void BinaryNodesTrianglesReader::initialize()
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
+
   if(getBinaryNodesFile().isEmpty())
   {
     QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
@@ -200,8 +203,6 @@ void BinaryNodesTrianglesReader::dataCheck()
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

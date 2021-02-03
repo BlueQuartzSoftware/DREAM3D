@@ -261,8 +261,6 @@ void fitData(IDataArray::Pointer inDataPtr, float* ensembleArray, int32_t* eIds,
 // -----------------------------------------------------------------------------
 void FitFeatureData::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -134,8 +134,6 @@ void FindVolFractions::dataCheck()
 // -----------------------------------------------------------------------------
 void FindVolFractions::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

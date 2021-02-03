@@ -165,8 +165,6 @@ void GenerateVectorColors::dataCheck()
 // -----------------------------------------------------------------------------
 void GenerateVectorColors::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -196,8 +196,6 @@ void FindKernelAvgMisorientations::dataCheck()
 // -----------------------------------------------------------------------------
 void FindKernelAvgMisorientations::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

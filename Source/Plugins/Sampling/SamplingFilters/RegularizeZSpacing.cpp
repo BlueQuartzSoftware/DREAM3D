@@ -161,8 +161,6 @@ void RegularizeZSpacing::dataCheck()
 // -----------------------------------------------------------------------------
 void RegularizeZSpacing::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

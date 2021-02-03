@@ -291,6 +291,9 @@ void GenerateFaceSchuhMisorientationColoring::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 void GenerateFaceSchuhMisorientationColoring::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
+
   dataCheckSurfaceMesh();
   dataCheckVoxel();
 }

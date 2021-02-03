@@ -248,6 +248,9 @@ void FindBoundaryStrengths::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 void FindBoundaryStrengths::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
+
   dataCheckVoxel();
   dataCheckSurfaceMesh();
 }

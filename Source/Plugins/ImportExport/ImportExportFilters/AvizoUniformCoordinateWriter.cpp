@@ -145,8 +145,6 @@ void AvizoUniformCoordinateWriter::dataCheck()
 // -----------------------------------------------------------------------------
 void AvizoUniformCoordinateWriter::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

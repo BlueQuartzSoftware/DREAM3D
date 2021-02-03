@@ -227,9 +227,9 @@ void YSChoiAbaqusReader::initialize()
 // -----------------------------------------------------------------------------
 void YSChoiAbaqusReader::dataCheck()
 {
-  DataArrayPath tempPath;
   clearErrorCode();
   clearWarningCode();
+  DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer(this, getDataContainerName(), DataContainerID);
   if(getErrorCode() < 0)

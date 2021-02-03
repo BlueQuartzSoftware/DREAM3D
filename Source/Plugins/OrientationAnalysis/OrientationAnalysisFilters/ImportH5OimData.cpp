@@ -262,14 +262,14 @@ void ImportH5OimData::initialize()
 // -----------------------------------------------------------------------------
 void ImportH5OimData::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
+
   // Clear the array map
   m_EbsdArrayMap.clear();
 
   // Reset FileWasRead flag
   m_FileWasRead = false;
-
-  clearErrorCode();
-  clearWarningCode();
 
   if(m_InputFile.isEmpty())
   {

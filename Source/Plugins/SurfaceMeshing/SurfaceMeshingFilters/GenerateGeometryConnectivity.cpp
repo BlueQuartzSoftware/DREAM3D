@@ -100,6 +100,9 @@ void GenerateGeometryConnectivity::initialize()
 // -----------------------------------------------------------------------------
 void GenerateGeometryConnectivity::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
+
   getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry>(this, getSurfaceDataContainerName());
 }
 
@@ -108,8 +111,6 @@ void GenerateGeometryConnectivity::dataCheck()
 // -----------------------------------------------------------------------------
 void GenerateGeometryConnectivity::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

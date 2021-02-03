@@ -142,8 +142,6 @@ void ImportH5EspritData::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ImportH5EspritData::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

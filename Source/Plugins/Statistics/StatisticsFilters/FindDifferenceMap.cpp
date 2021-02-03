@@ -283,8 +283,6 @@ void FindDifferenceMap::dataCheck()
 // -----------------------------------------------------------------------------
 void FindDifferenceMap::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -193,8 +193,6 @@ void TriangleNormalFilter::dataCheck()
 // -----------------------------------------------------------------------------
 void TriangleNormalFilter::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

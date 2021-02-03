@@ -143,8 +143,6 @@ void FindBasalLoadingFactor::dataCheck()
 // -----------------------------------------------------------------------------
 void FindBasalLoadingFactor::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

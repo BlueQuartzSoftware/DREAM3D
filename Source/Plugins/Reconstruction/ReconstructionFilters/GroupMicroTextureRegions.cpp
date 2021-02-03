@@ -485,8 +485,6 @@ void GroupMicroTextureRegions::initializeVoxelSeedGenerator(const int32_t rangeM
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

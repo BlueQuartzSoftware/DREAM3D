@@ -262,8 +262,6 @@ void EMsoftSO3Sampler::dataCheck()
 // -----------------------------------------------------------------------------
 void EMsoftSO3Sampler::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

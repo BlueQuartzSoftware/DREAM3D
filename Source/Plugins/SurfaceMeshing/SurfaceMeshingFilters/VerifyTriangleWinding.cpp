@@ -359,6 +359,8 @@ void VerifyTriangleWinding::initialize()
 // -----------------------------------------------------------------------------
 void VerifyTriangleWinding::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0)
   {
@@ -425,8 +427,6 @@ void VerifyTriangleWinding::preflight()
 // -----------------------------------------------------------------------------
 void VerifyTriangleWinding::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCondition() < 0)
   {

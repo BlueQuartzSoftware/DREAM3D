@@ -179,8 +179,6 @@ void TriangleCentroidFilter::dataCheck()
 // -----------------------------------------------------------------------------
 void TriangleCentroidFilter::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

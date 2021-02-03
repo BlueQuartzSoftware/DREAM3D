@@ -311,8 +311,6 @@ void FindProjectedImageStatistics::dataCheck()
 // -----------------------------------------------------------------------------
 void FindProjectedImageStatistics::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -137,8 +137,6 @@ void FindBoundaryCells::dataCheck()
 // -----------------------------------------------------------------------------
 void FindBoundaryCells::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {
