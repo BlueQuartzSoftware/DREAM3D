@@ -228,7 +228,7 @@ public:
     FilterPipeline::Pointer pipeline = jsonReader->readPipelineFromFile(pipelineFile);
     std::cout << "Filter Count: " << pipeline->size() << std::endl;
     Observer obs; // Create an Observer to report errors/progress from the executing pipeline
-    pipeline->addMessageReceiver(&obs);
+    // pipeline->addMessageReceiver(&obs);
 
     DataContainerReader::Pointer reader = std::dynamic_pointer_cast<DataContainerReader>(pipeline->getFilterContainer().at(0));
     reader->setInputFile(UnitTest::SamplingSourceTestFilesDir + "/" + k_Dream3DInputFile);
@@ -343,7 +343,7 @@ public:
     FilterPipeline::Pointer pipeline = jsonReader->readPipelineFromFile(pipelineFile);
     std::cout << "Filter Count: " << pipeline->size() << std::endl;
     Observer obs; // Create an Observer to report errors/progress from the executing pipeline
-    pipeline->addMessageReceiver(&obs);
+    // pipeline->addMessageReceiver(&obs);
 
     DataContainerReader::Pointer reader = std::dynamic_pointer_cast<DataContainerReader>(pipeline->getFilterContainer().at(0));
     reader->setInputFile(UnitTest::SamplingSourceTestFilesDir + "/" + k_Dream3DInputFile);
