@@ -10,6 +10,7 @@
 #include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/CoreFilters/DataContainerReader.h"
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/CoreFilters/RawBinaryReader.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
@@ -31,6 +32,7 @@ class ResampleImageGeomTest
 {
 
   const QString k_PipelineFile = {"ResampleImageGeomPipeline.json"};
+  const QString k_Dream3DInputFile = {"Small_IN100_Slice1.dream3d"};
 
   const QString k_SuperSample1 = {"SuperSample1.dream3d"};
   const QString k_SuperSample2 = {"SuperSample2.dream3d"};
@@ -228,6 +230,9 @@ public:
     Observer obs; // Create an Observer to report errors/progress from the executing pipeline
     pipeline->addMessageReceiver(&obs);
 
+    DataContainerReader::Pointer reader = std::dynamic_pointer_cast<DataContainerReader>(pipeline->getFilterContainer().at(0));
+    reader->setInputFile(UnitTest::SamplingSourceTestFilesDir + "/" + k_Dream3DInputFile);
+
     ResampleImageGeom::Pointer resample = ResampleImageGeom::New();
     resample->setNewDataContainerPath({"Resampled", "", ""});
     resample->setCellAttributeMatrixPath({"Small IN100 Slice 1", "EBSD Scan Data", ""});
@@ -339,6 +344,9 @@ public:
     std::cout << "Filter Count: " << pipeline->size() << std::endl;
     Observer obs; // Create an Observer to report errors/progress from the executing pipeline
     pipeline->addMessageReceiver(&obs);
+
+    DataContainerReader::Pointer reader = std::dynamic_pointer_cast<DataContainerReader>(pipeline->getFilterContainer().at(0));
+    reader->setInputFile(UnitTest::SamplingSourceTestFilesDir + "/" + k_Dream3DInputFile);
 
     ResampleImageGeom::Pointer resample = ResampleImageGeom::New();
     resample->setNewDataContainerPath({"Resampled", "", ""});
@@ -470,7 +478,7 @@ public:
     DREAM3D_REGISTER_TEST(SuperSamplingTest())
     DREAM3D_REGISTER_TEST(SubSamplingTest())
 
-    //  DREAM3D_REGISTER_TEST(RemoveTestFiles())
+    DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
 
 private:

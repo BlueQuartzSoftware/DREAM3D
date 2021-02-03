@@ -1,88 +1,200 @@
 {
     "0": {
-        "CellAttributeMatrixName": "EBSD Scan Data",
-        "CellEnsembleAttributeMatrixName": "Phase Data",
-        "DataContainerName": {
-            "Attribute Matrix Name": "",
-            "Data Array Name": "",
-            "Data Container Name": "Small IN100 Slice 1"
-        },
-        "FilterVersion": "6.6.195",
+        "FilterVersion": "2.0.339",
         "Filter_Enabled": true,
-        "Filter_Human_Label": "Import EDAX EBSD Data (.ang)",
-        "Filter_Name": "ReadAngData",
-        "Filter_Uuid": "{b8e128a8-c2a3-5e6c-a7ad-e4fb864e5d40}",
-        "InputFile": "Data/SmallIN100/Slice_1.ang"
+        "Filter_Human_Label": "Read DREAM.3D Data File",
+        "Filter_Name": "DataContainerReader",
+        "Filter_Uuid": "{043cbde5-3878-5718-958f-ae75714df0df}",
+        "InputFile": "DREAM3D/Source/Plugins/Sampling/Test/TestFiles/Small_IN100_Slice1.dream3d",
+        "InputFileDataContainerArrayProxy": {
+            "Data Containers": [
+                {
+                    "Attribute Matricies": [
+                        {
+                            "Data Arrays": [
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Confidence Index",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100 Slice 1/EBSD Scan Data",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        3
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "EulerAngles",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100 Slice 1/EBSD Scan Data",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Fit",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100 Slice 1/EBSD Scan Data",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Image Quality",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100 Slice 1/EBSD Scan Data",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Phases",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/Small IN100 Slice 1/EBSD Scan Data",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "SEM Signal",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100 Slice 1/EBSD Scan Data",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "X Position",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100 Slice 1/EBSD Scan Data",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "Y Position",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100 Slice 1/EBSD Scan Data",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                }
+                            ],
+                            "Flag": 2,
+                            "Name": "EBSD Scan Data",
+                            "Type": 3
+                        },
+                        {
+                            "Data Arrays": [
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "CrystalStructures",
+                                    "Object Type": "DataArray<uint32_t>",
+                                    "Path": "/DataContainers/Small IN100 Slice 1/Phase Data",
+                                    "Tuple Dimensions": [
+                                        2
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        6
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "LatticeConstants",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100 Slice 1/Phase Data",
+                                    "Tuple Dimensions": [
+                                        2
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "MaterialName",
+                                    "Object Type": "StringDataArray",
+                                    "Path": "/DataContainers/Small IN100 Slice 1/Phase Data",
+                                    "Tuple Dimensions": [
+                                        2
+                                    ],
+                                    "Version": 2
+                                }
+                            ],
+                            "Flag": 2,
+                            "Name": "Phase Data",
+                            "Type": 11
+                        }
+                    ],
+                    "Flag": 2,
+                    "Name": "Small IN100 Slice 1",
+                    "Type": 0
+                }
+            ]
+        },
+        "OverwriteExistingDataContainers": 0
     },
     "1": {
-        "CellAttributeMatrixPath": {
-            "Attribute Matrix Name": "EBSD Scan Data",
-            "Data Array Name": "",
-            "Data Container Name": "Small IN100 Slice 1"
-        },
-        "FilterVersion": "2.0.338",
-        "Filter_Enabled": true,
-        "Filter_Human_Label": "Rotate Sample Reference Frame",
-        "Filter_Name": "RotateSampleRefFrame",
-        "Filter_Uuid": "{e25d9b4c-2b37-578c-b1de-cf7032b5ef19}",
-        "RotationAngle": 180,
-        "RotationAxis": {
-            "x": 0,
-            "y": 1,
-            "z": 0
-        },
-        "RotationRepresentationChoice": 0,
-        "RotationTable": {
-            "Column Headers": [
-            ],
-            "DefaultColCount": 3,
-            "DefaultRowCount": 3,
-            "HasDynamicCols": false,
-            "HasDynamicRows": false,
-            "MinColCount": 3,
-            "MinRowCount": 3,
-            "Row Headers": [
-            ],
-            "Table Data": [
-                [
-                    1,
-                    0,
-                    0
-                ],
-                [
-                    0,
-                    1,
-                    0
-                ],
-                [
-                    0,
-                    0,
-                    1
-                ]
-            ]
-        }
-    },
-    "2": {
-        "CellEulerAnglesArrayPath": {
-            "Attribute Matrix Name": "EBSD Scan Data",
-            "Data Array Name": "EulerAngles",
-            "Data Container Name": "Small IN100 Slice 1"
-        },
-        "FilterVersion": "6.6.195",
-        "Filter_Enabled": true,
-        "Filter_Human_Label": "Rotate Euler Reference Frame",
-        "Filter_Name": "RotateEulerRefFrame",
-        "Filter_Uuid": "{ef9420b2-8c46-55f3-8ae4-f53790639de4}",
-        "RotationAngle": 90,
-        "RotationAxis": {
-            "x": 0,
-            "y": 0,
-            "z": 1
-        }
-    },
-    "3": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "2.0.338",
+        "FilterVersion": "2.0.339",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
@@ -104,8 +216,8 @@
             }
         ]
     },
-    "4": {
-        "FilterVersion": "6.6.195",
+    "2": {
+        "FilterVersion": "6.6.197",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Convert Orientation Representation",
         "Filter_Name": "ConvertOrientations",
@@ -119,9 +231,9 @@
         "OutputOrientationArrayName": "Quats",
         "OutputType": 2
     },
-    "5": {
+    "3": {
         "FillHoles": 0,
-        "FilterVersion": "6.6.195",
+        "FilterVersion": "6.6.197",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Isolate Largest Feature (Identify Sample)",
         "Filter_Name": "IdentifySample",
@@ -132,7 +244,7 @@
             "Data Container Name": "Small IN100 Slice 1"
         }
     },
-    "6": {
+    "4": {
         "CellPhasesArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Phases",
@@ -143,7 +255,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Small IN100 Slice 1"
         },
-        "FilterVersion": "6.6.195",
+        "FilterVersion": "6.6.197",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Neighbor Orientation Comparison (Bad Data)",
         "Filter_Name": "BadDataNeighborOrientationCheck",
@@ -161,7 +273,7 @@
             "Data Container Name": "Small IN100 Slice 1"
         }
     },
-    "7": {
+    "5": {
         "CellPhasesArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Phases",
@@ -177,7 +289,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Small IN100 Slice 1"
         },
-        "FilterVersion": "6.6.195",
+        "FilterVersion": "6.6.197",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Neighbor Orientation Correlation",
         "Filter_Name": "NeighborOrientationCorrelation",
@@ -193,7 +305,7 @@
             "Data Container Name": "Small IN100 Slice 1"
         }
     },
-    "8": {
+    "6": {
         "ActiveArrayName": "Active",
         "CellFeatureAttributeMatrixName": "Grain Data",
         "CellPhasesArrayPath": {
@@ -207,7 +319,7 @@
             "Data Container Name": "Small IN100 Slice 1"
         },
         "FeatureIdsArrayName": "FeatureIds",
-        "FilterVersion": "6.6.195",
+        "FilterVersion": "6.6.197",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Segment Features (Misorientation)",
         "Filter_Name": "EBSDSegmentFeatures",
@@ -227,7 +339,7 @@
     },
     "PipelineBuilder": {
         "Name": "ResampleImageGeomPipeline",
-        "Number_Filters": 9,
+        "Number_Filters": 7,
         "Version": 6
     }
 }
