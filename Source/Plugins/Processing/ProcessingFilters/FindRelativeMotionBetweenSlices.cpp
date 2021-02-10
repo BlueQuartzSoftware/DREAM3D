@@ -176,7 +176,7 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    QVector<QString> daTypes;
+    std::vector<QString> daTypes;
     daTypes.push_back(SIMPL::TypeNames::Int8);
     daTypes.push_back(SIMPL::TypeNames::Int16);
     daTypes.push_back(SIMPL::TypeNames::Int32);

@@ -203,13 +203,13 @@ void ScalarSegmentFeatures::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Any);
-    QVector<IGeometry::Type> geomTypes = {IGeometry::Type::Image, IGeometry::Type::RectGrid};
+    std::vector<IGeometry::Type> geomTypes = {IGeometry::Type::Image, IGeometry::Type::RectGrid};
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Scalar Array to Segment", ScalarArrayPath, FilterParameter::RequiredArray, ScalarSegmentFeatures, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    QVector<IGeometry::Type> geomTypes = {IGeometry::Type::Image, IGeometry::Type::RectGrid};
+    std::vector<IGeometry::Type> geomTypes = {IGeometry::Type::Image, IGeometry::Type::RectGrid};
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, ScalarSegmentFeatures, req));
   }
