@@ -53,11 +53,11 @@ namespace Sampling
  * @param featureIdsArrayPath
  * @param saveAsNewDataContainer
  */
-static void RenumberFeatures(AbstractFilter* filter, 
-              DataArrayPath newDataContainerPath, 
-              DataArrayPath cellAttributeMatrixPath, 
-              DataArrayPath cellFeatureAttributeMatrixPath,
-              DataArrayPath featureIdsArrayPath,
+void RenumberFeatures(AbstractFilter* filter, 
+              const DataArrayPath& newDataContainerPath, 
+              const DataArrayPath& cellAttributeMatrixPath, 
+              const DataArrayPath& cellFeatureAttributeMatrixPath,
+              const DataArrayPath& featureIdsArrayPath,
               bool saveAsNewDataContainer)
 /* clang-format on */
 {
