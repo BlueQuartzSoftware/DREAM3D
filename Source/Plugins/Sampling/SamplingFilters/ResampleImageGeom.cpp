@@ -81,11 +81,6 @@ public:
   // -----------------------------------------------------------------------------
   void compute(size_t zStart, size_t zEnd, size_t yStart, size_t yEnd, size_t xStart, size_t xEnd) const
   {
-    float x = 0.0F, y = 0.0F, z = 0.0F;
-    size_t col = 0, row = 0, plane = 0;
-    size_t index = 0;
-    size_t index_old = 0;
-
     for(size_t i = zStart; i < zEnd; i++)
     {
       for(size_t j = yStart; j < yEnd; j++)
@@ -97,14 +92,14 @@ public:
 
         for(size_t k = xStart; k < xEnd; k++)
         {
-          x = (k * m_Spacing[0]);
-          y = (j * m_Spacing[1]);
-          z = (i * m_Spacing[2]);
-          col = static_cast<size_t>(x / m_OrigSpacing[0]);
-          row = static_cast<size_t>(y / m_OrigSpacing[1]);
-          plane = static_cast<size_t>(z / m_OrigSpacing[2]);
-          index_old = (plane * m_OrigDims[1] * m_OrigDims[0]) + (row * m_OrigDims[0]) + col;
-          index = (i * m_CopyDims[0] * m_CopyDims[1]) + (j * m_CopyDims[0]) + k;
+          float x = (k * m_Spacing[0]);
+          float y = (j * m_Spacing[1]);
+          float z = (i * m_Spacing[2]);
+          size_t col = static_cast<size_t>(x / m_OrigSpacing[0]);
+          size_t row = static_cast<size_t>(y / m_OrigSpacing[1]);
+          size_t plane = static_cast<size_t>(z / m_OrigSpacing[2]);
+          size_t index_old = (plane * m_OrigDims[1] * m_OrigDims[0]) + (row * m_OrigDims[0]) + col;
+          size_t index = (i * m_CopyDims[0] * m_CopyDims[1]) + (j * m_CopyDims[0]) + k;
           m_NewIndices[index] = index_old;
         }
       }
