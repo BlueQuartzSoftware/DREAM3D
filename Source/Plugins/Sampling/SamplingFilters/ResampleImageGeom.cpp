@@ -149,17 +149,15 @@ public:
       return;
     }
 
-    void* source = nullptr;
-    void* destination = nullptr;
-    size_t newIndicies_I = 0;
     int32_t nComp = m_SourceData->getNumberOfComponents();
 
     for(size_t i = start; i < end; i++)
     {
-      newIndicies_I = m_NewIndices[i];
-      source = m_SourceData->getVoidPointer((nComp * newIndicies_I));
-      destination = m_DestinationData->getVoidPointer((m_DestinationData->getNumberOfComponents() * i));
-      ::memcpy(destination, source, m_SourceData->getTypeSize() * m_DestinationData->getNumberOfComponents());
+      size_t newIndicies_I = m_NewIndices[i];
+      const void* source = m_SourceData->getVoidPointer((nComp * newIndicies_I));
+      void* destination = m_DestinationData->getVoidPointer((m_DestinationData->getNumberOfComponents() * i));
+      std::memcpy(destination, source, m_SourceData->getTypeSize() * m_DestinationData->getNumberOfComponents());
+    }
     }
   }
 
