@@ -53,7 +53,7 @@ namespace Sampling
  * @param featureIdsArrayPath
  * @param saveAsNewDataContainer
  */
-void RenumberFeatures(AbstractFilter* filter, 
+static void RenumberFeatures(AbstractFilter* filter, 
               const DataArrayPath& newDataContainerPath, 
               const DataArrayPath& cellAttributeMatrixPath, 
               const DataArrayPath& cellFeatureAttributeMatrixPath,

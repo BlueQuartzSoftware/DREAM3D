@@ -153,7 +153,6 @@ public:
       void* destination = m_DestinationData->getVoidPointer((m_DestinationData->getNumberOfComponents() * i));
       std::memcpy(destination, source, m_SourceData->getTypeSize() * m_DestinationData->getNumberOfComponents());
     }
-    }
   }
 
   // -----------------------------------------------------------------------------
