@@ -185,8 +185,6 @@ void RotateEulerRefFrame::dataCheck()
 // -----------------------------------------------------------------------------
 void RotateEulerRefFrame::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

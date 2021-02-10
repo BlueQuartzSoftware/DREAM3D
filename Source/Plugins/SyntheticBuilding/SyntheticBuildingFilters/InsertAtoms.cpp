@@ -513,8 +513,6 @@ void InsertAtoms::assign_points(QVector<VertexGeom::Pointer> points, QVector<Boo
 // -----------------------------------------------------------------------------
 void InsertAtoms::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

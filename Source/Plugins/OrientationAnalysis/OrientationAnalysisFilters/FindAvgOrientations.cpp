@@ -205,8 +205,6 @@ void FindAvgOrientations::dataCheck()
 // -----------------------------------------------------------------------------
 void FindAvgOrientations::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

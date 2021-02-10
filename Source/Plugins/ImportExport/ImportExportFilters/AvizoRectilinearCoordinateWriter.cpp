@@ -147,8 +147,6 @@ void AvizoRectilinearCoordinateWriter::dataCheck()
 // -----------------------------------------------------------------------------
 void AvizoRectilinearCoordinateWriter::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

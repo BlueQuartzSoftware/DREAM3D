@@ -304,8 +304,6 @@ void FindRelativeMotionBetweenSlices::dataCheck()
 // -----------------------------------------------------------------------------
 void FindRelativeMotionBetweenSlices::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

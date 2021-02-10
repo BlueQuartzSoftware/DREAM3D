@@ -178,8 +178,6 @@ void FindFeaturePhasesBinary::dataCheck()
 // -----------------------------------------------------------------------------
 void FindFeaturePhasesBinary::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

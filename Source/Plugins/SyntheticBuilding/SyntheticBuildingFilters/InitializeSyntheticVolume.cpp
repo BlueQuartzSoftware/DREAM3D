@@ -266,8 +266,6 @@ void InitializeSyntheticVolume::dataCheck()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

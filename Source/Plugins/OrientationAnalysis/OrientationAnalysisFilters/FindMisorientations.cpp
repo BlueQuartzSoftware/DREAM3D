@@ -217,8 +217,6 @@ void FindMisorientations::dataCheck()
 // -----------------------------------------------------------------------------
 void FindMisorientations::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

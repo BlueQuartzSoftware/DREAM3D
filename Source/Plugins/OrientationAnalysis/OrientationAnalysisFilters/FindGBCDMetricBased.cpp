@@ -706,8 +706,6 @@ void FindGBCDMetricBased::dataCheck()
 // -----------------------------------------------------------------------------
 void FindGBCDMetricBased::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

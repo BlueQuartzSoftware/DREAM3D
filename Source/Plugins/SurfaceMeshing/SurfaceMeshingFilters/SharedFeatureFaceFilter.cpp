@@ -177,8 +177,6 @@ void SharedFeatureFaceFilter::dataCheck()
 // -----------------------------------------------------------------------------
 void SharedFeatureFaceFilter::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

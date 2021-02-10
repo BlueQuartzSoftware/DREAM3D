@@ -663,8 +663,6 @@ void FindTriangleGeomShapes::find_axiseulers()
 // -----------------------------------------------------------------------------
 void FindTriangleGeomShapes::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

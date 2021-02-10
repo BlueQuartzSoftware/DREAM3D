@@ -229,8 +229,6 @@ private:
 // -----------------------------------------------------------------------------
 void SurfaceMeshToVtk::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

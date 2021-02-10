@@ -177,8 +177,6 @@ void NearestPointFuseRegularGrids::dataCheck()
 // -----------------------------------------------------------------------------
 void NearestPointFuseRegularGrids::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

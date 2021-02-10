@@ -155,8 +155,6 @@ void WriteIPFStandardTriangle::dataCheck()
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

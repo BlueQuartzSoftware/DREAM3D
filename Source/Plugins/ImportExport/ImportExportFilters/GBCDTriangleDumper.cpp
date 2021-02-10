@@ -188,6 +188,9 @@ void GBCDTriangleDumper::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 void GBCDTriangleDumper::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
+
   dataCheckSurfaceMesh();
   dataCheckVoxel();
 }
@@ -197,8 +200,6 @@ void GBCDTriangleDumper::dataCheck()
 // -----------------------------------------------------------------------------
 void GBCDTriangleDumper::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -41,9 +41,9 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
 set(TEST_NAMES
-  #ResampleRectGridToImageGeomTest
-  CropVolumeTest
-  SampleSurfaceMeshSpecifiedPointsTest
+  #CropVolumeTest
+  ResampleImageGeomTest
+  #SampleSurfaceMeshSpecifiedPointsTest
 )
 
 
@@ -52,6 +52,7 @@ set(TEST_NAMES
 include(${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake)
 include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
 
+list(APPEND ${PLUGIN_NAME}_LINK_LIBS Qt5::Core SIMPLib)
 
 get_filename_component(${PLUGIN_NAME}_PARENT_SOURCE_DIR "${${PLUGIN_NAME}_SOURCE_DIR}" DIRECTORY)
 get_filename_component(${PLUGIN_NAME}_PARENT_BINARY_DIR "${${PLUGIN_NAME}_BINARY_DIR}" DIRECTORY)
@@ -59,7 +60,7 @@ get_filename_component(${PLUGIN_NAME}_PARENT_BINARY_DIR "${${PLUGIN_NAME}_BINARY
 SIMPL_GenerateUnitTestFile(PLUGIN_NAME ${PLUGIN_NAME}
                            TEST_DATA_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test/Data
                            SOURCES ${TEST_NAMES}
-                           LINK_LIBRARIES Qt5::Core Qt5::Gui SIMPLib
+                           LINK_LIBRARIES ${${PLUGIN_NAME}_LINK_LIBS} ${plug_target_name}
                            INCLUDE_DIRS ${${PLUGIN_NAME}_PARENT_SOURCE_DIR}
                                         ${${PLUGIN_NAME}Test_SOURCE_DIR}
                                         ${${PLUGIN_NAME}Test_BINARY_DIR}

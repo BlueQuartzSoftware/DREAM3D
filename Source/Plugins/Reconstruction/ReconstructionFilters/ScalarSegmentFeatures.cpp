@@ -450,8 +450,6 @@ void ScalarSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin,
 // -----------------------------------------------------------------------------
 void ScalarSegmentFeatures::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -184,9 +184,9 @@ void FindOrientationFieldCurl::initialize()
 // -----------------------------------------------------------------------------
 void FindOrientationFieldCurl::dataCheck()
 {
-  DataArrayPath tempPath;
   clearErrorCode();
   clearWarningCode();
+  DataArrayPath tempPath;
 
   std::vector<size_t> dims(1, 1);
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getCellPhasesArrayPath(), dims);
@@ -234,8 +234,6 @@ void FindOrientationFieldCurl::dataCheck()
 // -----------------------------------------------------------------------------
 void FindOrientationFieldCurl::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

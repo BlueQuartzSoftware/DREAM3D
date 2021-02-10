@@ -189,8 +189,6 @@ void VisualizeGBCDGMT::dataCheck()
 // -----------------------------------------------------------------------------
 void VisualizeGBCDGMT::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

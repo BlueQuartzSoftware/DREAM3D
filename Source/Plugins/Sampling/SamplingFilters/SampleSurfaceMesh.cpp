@@ -259,6 +259,9 @@ void SampleSurfaceMesh::initialize()
 // -----------------------------------------------------------------------------
 void SampleSurfaceMesh::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
+
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
   if(getErrorCode() < 0)
   {

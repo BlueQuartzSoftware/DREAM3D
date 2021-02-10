@@ -336,8 +336,6 @@ Int32ArrayType::Pointer binData(typename DataArray<T>::Pointer featureArray, int
 // -----------------------------------------------------------------------------
 void FitCorrelatedFeatureData::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

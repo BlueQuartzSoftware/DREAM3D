@@ -160,8 +160,6 @@ void FillBadData::dataCheck()
 // -----------------------------------------------------------------------------
 void FillBadData::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

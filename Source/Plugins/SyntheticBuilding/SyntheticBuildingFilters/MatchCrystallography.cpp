@@ -341,8 +341,6 @@ void MatchCrystallography::dataCheck()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

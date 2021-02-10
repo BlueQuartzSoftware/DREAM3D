@@ -304,8 +304,6 @@ void EMMPMFilter::dataCheck()
 // -----------------------------------------------------------------------------
 void EMMPMFilter::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

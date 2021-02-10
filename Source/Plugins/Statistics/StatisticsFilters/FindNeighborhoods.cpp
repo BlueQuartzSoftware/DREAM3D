@@ -303,8 +303,6 @@ void FindNeighborhoods::find_neighborhoods()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

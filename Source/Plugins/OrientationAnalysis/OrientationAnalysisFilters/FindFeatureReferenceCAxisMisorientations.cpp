@@ -215,8 +215,6 @@ void FindFeatureReferenceCAxisMisorientations::dataCheck()
 // -----------------------------------------------------------------------------
 void FindFeatureReferenceCAxisMisorientations::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

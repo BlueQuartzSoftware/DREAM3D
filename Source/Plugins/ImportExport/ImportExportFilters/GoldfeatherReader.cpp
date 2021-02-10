@@ -219,6 +219,9 @@ void GoldfeatherReader::initialize()
 // -----------------------------------------------------------------------------
 void GoldfeatherReader::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
+
   DataArrayPath tempPath;
 
   DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer(this, getSurfaceDataContainerName(), DataContainerID);

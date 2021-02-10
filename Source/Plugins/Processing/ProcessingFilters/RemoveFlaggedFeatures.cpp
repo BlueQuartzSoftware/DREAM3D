@@ -140,8 +140,6 @@ void RemoveFlaggedFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 void RemoveFlaggedFeatures::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

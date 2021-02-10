@@ -335,27 +335,27 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
 
-  DataArrayPath m_NewDataContainerName = {};
-  DataArrayPath m_CellAttributeMatrixPath = {};
-  DataArrayPath m_CellFeatureAttributeMatrixPath = {};
-  int m_XMin = {};
-  int m_YMin = {};
-  int m_ZMin = {};
-  int m_XMax = {};
-  int m_YMax = {};
-  int m_ZMax = {};
-  bool m_RenumberFeatures = {};
-  bool m_SaveAsNewDataContainer = {};
-  bool m_UpdateOrigin = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_NewDataContainerName = {SIMPL::Defaults::NewImageDataContainerName, "", ""};
+  DataArrayPath m_CellAttributeMatrixPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, ""};
+  DataArrayPath m_CellFeatureAttributeMatrixPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""};
+  int m_XMin = {0};
+  int m_YMin = {0};
+  int m_ZMin = {0};
+  int m_XMax = {0};
+  int m_YMax = {0};
+  int m_ZMax = {0};
+  bool m_RenumberFeatures = {false};
+  bool m_SaveAsNewDataContainer = {false};
+  bool m_UpdateOrigin = {true};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
 
-  IntVec3Type m_OldDimensions;
-  FloatVec3Type m_OldResolution;
-  FloatVec3Type m_OldOrigin;
+  IntVec3Type m_OldDimensions = {0, 0, 0};
+  FloatVec3Type m_OldResolution = {0.0F, 0.0F, 0.0F};
+  FloatVec3Type m_OldOrigin = {0.0F, 0.0F, 0.0F};
 
-  IntVec3Type m_NewDimensions;
-  FloatVec3Type m_NewResolution;
-  FloatVec3Type m_NewOrigin;
+  IntVec3Type m_NewDimensions = {0, 0, 0};
+  FloatVec3Type m_NewResolution = {0.0F, 0.0F, 0.0F};
+  FloatVec3Type m_NewOrigin = {0.0F, 0.0F, 0.0F};
 
 public:
   CropImageGeometry(const CropImageGeometry&) = delete;            // Copy Constructor Not Implemented

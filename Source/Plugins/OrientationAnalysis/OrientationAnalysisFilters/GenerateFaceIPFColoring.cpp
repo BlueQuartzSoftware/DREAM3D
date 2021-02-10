@@ -375,6 +375,9 @@ void GenerateFaceIPFColoring::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 void GenerateFaceIPFColoring::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
+
   dataCheckSurfaceMesh();
   dataCheckVoxel();
 }

@@ -130,8 +130,6 @@ void FindSaltykovSizes::dataCheck()
 // -----------------------------------------------------------------------------
 void FindSaltykovSizes::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

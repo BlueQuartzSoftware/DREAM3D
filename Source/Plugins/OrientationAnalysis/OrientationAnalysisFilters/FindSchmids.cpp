@@ -271,8 +271,6 @@ void FindSchmids::dataCheck()
 // -----------------------------------------------------------------------------
 void FindSchmids::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

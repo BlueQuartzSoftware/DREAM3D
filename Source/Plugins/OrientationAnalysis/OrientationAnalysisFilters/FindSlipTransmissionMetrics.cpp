@@ -217,8 +217,6 @@ void FindSlipTransmissionMetrics::dataCheck()
 // -----------------------------------------------------------------------------
 void FindSlipTransmissionMetrics::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

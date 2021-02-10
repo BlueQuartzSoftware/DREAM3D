@@ -171,6 +171,10 @@ void WarpRegularGrid::initialize()
 // -----------------------------------------------------------------------------
 void WarpRegularGrid::dataCheck()
 {
+
+  clearErrorCode();
+  clearWarningCode();
+
   getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, getCellAttributeMatrixPath(), -301);
 
   if(!m_SaveAsNewDataContainer)
@@ -206,8 +210,6 @@ void WarpRegularGrid::determine_warped_coordinates(float x, float y, float& newX
 // -----------------------------------------------------------------------------
 void WarpRegularGrid::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -244,8 +244,6 @@ void FindLargestCrossSections::find_crosssections()
 // -----------------------------------------------------------------------------
 void FindLargestCrossSections::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -618,8 +618,6 @@ void drawDiscreteInfoArea(HPDF_Page page, const PoleFigureConfiguration_t& confi
 // -----------------------------------------------------------------------------
 void WritePoleFigure::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -405,6 +405,9 @@ void FindTwinBoundaries::dataCheckSurfaceMesh()
 // -----------------------------------------------------------------------------
 void FindTwinBoundaries::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
+
   dataCheckVoxel();
   dataCheckSurfaceMesh();
 }

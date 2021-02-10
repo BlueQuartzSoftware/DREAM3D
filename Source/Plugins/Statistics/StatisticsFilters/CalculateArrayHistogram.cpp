@@ -305,8 +305,6 @@ void findHistogram(IDataArray::Pointer inDataPtr, int32_t numberOfBins, bool use
 // -----------------------------------------------------------------------------
 void CalculateArrayHistogram::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -173,8 +173,6 @@ void VisualizeGBCDPoleFigure::dataCheck()
 // -----------------------------------------------------------------------------
 void VisualizeGBCDPoleFigure::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

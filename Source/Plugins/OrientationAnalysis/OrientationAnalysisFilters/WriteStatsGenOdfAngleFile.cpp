@@ -218,8 +218,6 @@ void WriteStatsGenOdfAngleFile::dataCheck()
 // -----------------------------------------------------------------------------
 void WriteStatsGenOdfAngleFile::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

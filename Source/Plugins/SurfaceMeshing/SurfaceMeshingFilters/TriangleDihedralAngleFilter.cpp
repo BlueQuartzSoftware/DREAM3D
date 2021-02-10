@@ -213,8 +213,6 @@ void TriangleDihedralAngleFilter::dataCheck()
 // -----------------------------------------------------------------------------
 void TriangleDihedralAngleFilter::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

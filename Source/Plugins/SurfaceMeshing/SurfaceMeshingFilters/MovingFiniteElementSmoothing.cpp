@@ -266,8 +266,6 @@ void MovingFiniteElementSmoothing::preflight()
 // -----------------------------------------------------------------------------
 void MovingFiniteElementSmoothing::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCondition() < 0)
   {

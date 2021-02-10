@@ -1384,8 +1384,6 @@ int GenerateEnsembleStatistics::getPhaseCount()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

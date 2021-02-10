@@ -233,8 +233,6 @@ void UncertainRegularGridSampleSurfaceMesh::assign_points(Int32ArrayType::Pointe
 // -----------------------------------------------------------------------------
 void UncertainRegularGridSampleSurfaceMesh::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

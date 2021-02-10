@@ -193,8 +193,6 @@ void TriangleAreaFilter::dataCheck()
 // -----------------------------------------------------------------------------
 void TriangleAreaFilter::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

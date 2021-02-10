@@ -27,7 +27,7 @@ endforeach()
 
 set(_PublicFilters
   AppendImageGeometryZSlice
-  ChangeResolution
+  ResampleImageGeom
   CropImageGeometry
   ExtractFlaggedFeatures
   NearestPointFuseRegularGrids
@@ -67,6 +67,9 @@ foreach(f ${_PrivateFilters} )
                         ${_filterGroupName} ${f}
                         ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE)
 endforeach()
+
+ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} Utils/${PLUGIN_NAME}Utils.hpp)
+
 
 SIMPL_END_FILTER_GROUP(${Sampling_BINARY_DIR} "${_filterGroupName}" "SamplingFilters")
 

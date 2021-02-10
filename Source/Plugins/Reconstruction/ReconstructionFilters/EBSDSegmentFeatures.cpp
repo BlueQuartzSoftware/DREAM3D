@@ -381,8 +381,6 @@ void EBSDSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin, c
 // -----------------------------------------------------------------------------
 void EBSDSegmentFeatures::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

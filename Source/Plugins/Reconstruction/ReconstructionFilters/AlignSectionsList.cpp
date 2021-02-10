@@ -200,8 +200,6 @@ void AlignSectionsList::find_shifts(std::vector<int64_t>& xshifts, std::vector<i
 // -----------------------------------------------------------------------------
 void AlignSectionsList::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

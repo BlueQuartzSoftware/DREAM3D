@@ -437,8 +437,6 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
 // -----------------------------------------------------------------------------
 void FindBoundingBoxFeatures::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

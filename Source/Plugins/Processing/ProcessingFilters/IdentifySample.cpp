@@ -119,8 +119,6 @@ void IdentifySample::dataCheck()
 // -----------------------------------------------------------------------------
 void IdentifySample::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

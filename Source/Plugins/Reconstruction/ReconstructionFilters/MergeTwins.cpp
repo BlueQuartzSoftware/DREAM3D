@@ -358,8 +358,6 @@ void MergeTwins::characterize_twins()
 // -----------------------------------------------------------------------------
 void MergeTwins::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

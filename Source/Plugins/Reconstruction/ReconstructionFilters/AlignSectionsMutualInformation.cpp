@@ -589,8 +589,6 @@ void AlignSectionsMutualInformation::form_features_sections()
 // -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

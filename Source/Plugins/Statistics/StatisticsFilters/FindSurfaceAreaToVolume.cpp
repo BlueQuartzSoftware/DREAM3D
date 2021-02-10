@@ -172,8 +172,6 @@ void FindSurfaceAreaToVolume::dataCheck()
 // -----------------------------------------------------------------------------
 void FindSurfaceAreaToVolume::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -746,8 +746,6 @@ void FindEuclideanDistMap::findDistanceMap()
 // -----------------------------------------------------------------------------
 void FindEuclideanDistMap::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

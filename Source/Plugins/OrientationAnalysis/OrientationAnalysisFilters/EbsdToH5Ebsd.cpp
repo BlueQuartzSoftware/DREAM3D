@@ -200,8 +200,6 @@ void EbsdToH5Ebsd::dataCheck()
 // -----------------------------------------------------------------------------
 void EbsdToH5Ebsd::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

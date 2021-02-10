@@ -354,8 +354,6 @@ void FindSizes::findSizes(IGeometry::Pointer igeom)
 // -----------------------------------------------------------------------------
 void FindSizes::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

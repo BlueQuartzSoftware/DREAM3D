@@ -14,32 +14,36 @@
 
 namespace UnitTest
 {
-  namespace FeatureIdsTest
-  {
-    inline constexpr size_t XSize = 3;
-    inline constexpr size_t YSize = 4;
-    inline constexpr size_t ZSize = 5;
-    inline constexpr size_t Offset = 200;
-  }
+inline const QString DataDir("@DREAM3D_DATA_DIR@");
+inline const QString TestTempDir("@TEST_TEMP_DIR@");
+inline const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
+inline const QString SamplingSourceDir("@SamplingTest_SOURCE_DIR@");
+inline const QString SamplingSourceTestFilesDir("@SamplingTest_SOURCE_DIR@/TestFiles");
 
-  namespace CropVolumeTest
-  {
-    inline const QString CropVolumeTest_3("@TEST_TEMP_DIR@/CropVolumeTest_3.dream3d");
-    inline const QString CropVolumeTest_4("@TEST_TEMP_DIR@/CropVolumeTest_4.dream3d");
-  }
-
-  namespace SampleSurfaceMeshSpecifiedPointsTest
-  {
-    inline const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
-    inline const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
-  }
-}
-
-namespace UnitTest
+namespace FeatureIdsTest
 {
-  namespace RegularGridSampleRectilinearGridTest
-  {
-    inline const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
-    inline const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
-  }
-}
+inline constexpr size_t XSize = 3;
+inline constexpr size_t YSize = 4;
+inline constexpr size_t ZSize = 5;
+inline constexpr size_t Offset = 200;
+} // namespace FeatureIdsTest
+
+namespace CropVolumeTest
+{
+inline const QString CropVolumeTest_3("@TEST_TEMP_DIR@/CropVolumeTest_3.dream3d");
+inline const QString CropVolumeTest_4("@TEST_TEMP_DIR@/CropVolumeTest_4.dream3d");
+} // namespace CropVolumeTest
+
+namespace SampleSurfaceMeshSpecifiedPointsTest
+{
+inline const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+inline const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+
+} // namespace SampleSurfaceMeshSpecifiedPointsTest
+
+namespace RegularGridSampleRectilinearGridTest
+{
+inline const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+inline const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+} // namespace RegularGridSampleRectilinearGridTest
+} // namespace UnitTest

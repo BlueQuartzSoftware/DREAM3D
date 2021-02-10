@@ -656,8 +656,6 @@ void FindGBPDMetricBased::appendSamplPtsFixedAzimuth(QVector<float>* xVec, QVect
 // -----------------------------------------------------------------------------
 void FindGBPDMetricBased::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

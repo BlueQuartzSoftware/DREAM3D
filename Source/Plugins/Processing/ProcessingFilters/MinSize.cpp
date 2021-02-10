@@ -206,8 +206,6 @@ void MinSize::dataCheck()
 // -----------------------------------------------------------------------------
 void MinSize::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

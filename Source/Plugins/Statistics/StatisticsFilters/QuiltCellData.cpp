@@ -130,12 +130,12 @@ void QuiltCellData::initialize()
 // -----------------------------------------------------------------------------
 void QuiltCellData::dataCheck()
 {
-  DataArrayPath tempPath;
   clearErrorCode();
   clearWarningCode();
 
-  // First sanity check the inputs and output names. All must be filled in
+  DataArrayPath tempPath;
 
+  // First sanity check the inputs and output names. All must be filled in
   if(m_SelectedCellArrayPath.isEmpty())
   {
     QString ss = QObject::tr("The input array name is empty. Please select a name for the input array");

@@ -470,8 +470,6 @@ void IdentifyMicroTextureRegions::initializeVoxelSeedGenerator(const int32_t ran
 // -----------------------------------------------------------------------------
 void IdentifyMicroTextureRegions::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

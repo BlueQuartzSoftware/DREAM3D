@@ -562,6 +562,9 @@ void FindGBCD::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 void FindGBCD::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
+
   dataCheckVoxel();
   // order here matters...because we are going to use the size of the crystal structures out of the dataCheckVoxel to size the faceAttrMat in dataCheckSurfaceMesh
   if(getErrorCode() >= 0)
@@ -575,8 +578,6 @@ void FindGBCD::dataCheck()
 // -----------------------------------------------------------------------------
 void FindGBCD::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

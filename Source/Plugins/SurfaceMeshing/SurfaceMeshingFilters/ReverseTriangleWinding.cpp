@@ -143,6 +143,8 @@ void ReverseTriangleWinding::initialize()
 // -----------------------------------------------------------------------------
 void ReverseTriangleWinding::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom>(this, getSurfaceDataContainerName());
 }
 
@@ -151,8 +153,6 @@ void ReverseTriangleWinding::dataCheck()
 // -----------------------------------------------------------------------------
 void ReverseTriangleWinding::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

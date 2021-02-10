@@ -215,8 +215,6 @@ void SampleSurfaceMeshSpecifiedPoints::assign_points(Int32ArrayType::Pointer iAr
 // -----------------------------------------------------------------------------
 void SampleSurfaceMeshSpecifiedPoints::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

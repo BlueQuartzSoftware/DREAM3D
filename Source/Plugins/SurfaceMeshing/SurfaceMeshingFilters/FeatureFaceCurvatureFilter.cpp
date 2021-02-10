@@ -315,8 +315,6 @@ void FeatureFaceCurvatureFilter::dataCheck()
 // -----------------------------------------------------------------------------
 void FeatureFaceCurvatureFilter::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

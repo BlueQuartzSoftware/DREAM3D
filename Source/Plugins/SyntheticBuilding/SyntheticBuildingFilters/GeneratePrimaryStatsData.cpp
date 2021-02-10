@@ -222,9 +222,10 @@ void GeneratePrimaryStatsData::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void GeneratePrimaryStatsData::dataCheck()
 {
-  initialize();
   clearErrorCode();
   clearWarningCode();
+
+  initialize();
 
   FLOAT_RANGE_CHECK(Mu, 0.0001, 10.0, -95000);
   FLOAT_RANGE_CHECK(Sigma, 0.0, 5.0, -95001);

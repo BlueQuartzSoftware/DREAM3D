@@ -216,8 +216,6 @@ void FindNeighbors::dataCheck()
 // -----------------------------------------------------------------------------
 void FindNeighbors::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

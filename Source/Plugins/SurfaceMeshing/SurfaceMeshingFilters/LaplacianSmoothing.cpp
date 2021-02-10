@@ -142,6 +142,9 @@ void LaplacianSmoothing::initialize()
 // -----------------------------------------------------------------------------
 void LaplacianSmoothing::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
+
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
   QVector<IDataArray::Pointer> faceDataArrays;
@@ -186,8 +189,6 @@ void LaplacianSmoothing::dataCheck()
 // -----------------------------------------------------------------------------
 void LaplacianSmoothing::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

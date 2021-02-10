@@ -110,9 +110,9 @@ void FindMicroTextureRegions::initialize()
 // -----------------------------------------------------------------------------
 void FindMicroTextureRegions::dataCheck()
 {
-  DataArrayPath tempPath;
   clearErrorCode();
   clearWarningCode();
+  DataArrayPath tempPath;
 
   std::vector<size_t> dims(1, 1);
   // Cell Data
@@ -152,8 +152,6 @@ void FindMicroTextureRegions::dataCheck()
 // -----------------------------------------------------------------------------
 void FindMicroTextureRegions::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

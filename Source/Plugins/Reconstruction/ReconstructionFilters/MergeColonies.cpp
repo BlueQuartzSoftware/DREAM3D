@@ -589,8 +589,6 @@ void MergeColonies::identify_globAlpha()
 // -----------------------------------------------------------------------------
 void MergeColonies::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -313,8 +313,6 @@ void MultiEmmpmFilter::dataCheck()
 // -----------------------------------------------------------------------------
 void MultiEmmpmFilter::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

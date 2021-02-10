@@ -196,11 +196,12 @@ void ReadAngData::initialize()
 // -----------------------------------------------------------------------------
 void ReadAngData::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
+
   // Reset FileWasRead flag
   m_FileWasRead = false;
 
-  clearErrorCode();
-  clearWarningCode();
   DataArrayPath tempPath;
 
   QFileInfo fi(m_InputFile);
@@ -621,8 +622,6 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, std::vector<size_t>& tDims,
 // -----------------------------------------------------------------------------
 void ReadAngData::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

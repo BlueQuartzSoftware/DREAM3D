@@ -131,8 +131,6 @@ void FindCAxisLocations::dataCheck()
 // -----------------------------------------------------------------------------
 void FindCAxisLocations::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

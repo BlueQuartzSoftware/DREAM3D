@@ -136,8 +136,6 @@ void ErodeDilateCoordinationNumber::dataCheck()
 // -----------------------------------------------------------------------------
 void ErodeDilateCoordinationNumber::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

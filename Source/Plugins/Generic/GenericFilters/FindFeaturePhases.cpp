@@ -156,8 +156,6 @@ void FindFeaturePhases::dataCheck()
 // -----------------------------------------------------------------------------
 void FindFeaturePhases::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

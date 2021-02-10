@@ -247,8 +247,6 @@ void NeighborOrientationCorrelation::dataCheck()
 // -----------------------------------------------------------------------------
 void NeighborOrientationCorrelation::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

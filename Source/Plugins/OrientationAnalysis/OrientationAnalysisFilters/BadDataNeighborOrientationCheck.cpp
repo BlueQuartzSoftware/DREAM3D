@@ -182,8 +182,6 @@ void BadDataNeighborOrientationCheck::dataCheck()
 // -----------------------------------------------------------------------------
 void BadDataNeighborOrientationCheck::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

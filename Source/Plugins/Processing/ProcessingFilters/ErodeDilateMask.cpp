@@ -155,8 +155,6 @@ void ErodeDilateMask::dataCheck()
 // -----------------------------------------------------------------------------
 void ErodeDilateMask::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {
