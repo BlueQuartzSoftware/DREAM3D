@@ -293,12 +293,6 @@ public:
 //
 // -----------------------------------------------------------------------------
 InsertAtoms::InsertAtoms()
-: m_VertexDataContainerName(SIMPL::Defaults::VertexDataContainerName)
-, m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName)
-, m_Basis(0)
-, m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
-, m_AvgQuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats)
-, m_AtomFeatureLabelsArrayName(SIMPL::VertexData::AtomFeatureLabels)
 {
   m_LatticeConstants[0] = 1.0f;
   m_LatticeConstants[1] = 1.0f;

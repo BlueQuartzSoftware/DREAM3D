@@ -61,15 +61,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindSizes::FindSizes()
-: m_FeatureAttributeMatrixName("", "", "")
-, m_FeatureIdsArrayPath("", "", SIMPL::CellData::FeatureIds)
-, m_VolumesArrayName(SIMPL::FeatureData::Volumes)
-, m_EquivalentDiametersArrayName(SIMPL::FeatureData::EquivalentDiameters)
-, m_NumElementsArrayName(SIMPL::FeatureData::NumElements)
-, m_SaveElementSizes(false)
-{
-}
+FindSizes::FindSizes() = default;
 
 // -----------------------------------------------------------------------------
 //

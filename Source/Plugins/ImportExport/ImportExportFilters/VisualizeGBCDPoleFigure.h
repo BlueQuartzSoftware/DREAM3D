@@ -239,11 +239,11 @@ private:
   std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
   unsigned int* m_CrystalStructures = nullptr;
 
-  QString m_OutputFile = {};
-  int m_PhaseOfInterest = {};
-  AxisAngleInput m_MisorientationRotation = {};
-  DataArrayPath m_GBCDArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
+  QString m_OutputFile = {""};
+  int m_PhaseOfInterest = {1};
+  AxisAngleInput_t m_MisorientationRotation = {};
+  DataArrayPath m_GBCDArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceEnsembleAttributeMatrixName, SIMPL::EnsembleData::GBCD};
+  DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
 
   LaueOpsContainer m_OrientationOps;
   /**

@@ -266,14 +266,14 @@ private:
   std::weak_ptr<DataArray<float>> m_MotionDirectionPtr;
   float* m_MotionDirection = nullptr;
 
-  DataArrayPath m_SelectedArrayPath = {};
-  unsigned int m_Plane = {};
-  int m_PSize1 = {};
-  int m_PSize2 = {};
-  int m_SSize1 = {};
-  int m_SSize2 = {};
-  int m_SliceStep = {};
-  QString m_MotionDirectionArrayName = {};
+  DataArrayPath m_SelectedArrayPath = {"", "", ""};
+  unsigned int m_Plane = {0};
+  int m_PSize1 = {0};
+  int m_PSize2 = {0};
+  int m_SSize1 = {0};
+  int m_SSize2 = {0};
+  int m_SliceStep = {0};
+  QString m_MotionDirectionArrayName = {SIMPL::CellData::MotionDirection};
 
 public:
   FindRelativeMotionBetweenSlices(const FindRelativeMotionBetweenSlices&) = delete;            // Copy Constructor Not Implemented

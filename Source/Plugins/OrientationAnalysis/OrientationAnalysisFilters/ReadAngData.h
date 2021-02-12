@@ -341,14 +341,14 @@ private:
   std::weak_ptr<DataArray<float>> m_LatticeConstantsPtr;
   float* m_LatticeConstants = nullptr;
 
-  DataArrayPath m_DataContainerName = {};
-  QString m_CellEnsembleAttributeMatrixName = {};
-  QString m_CellAttributeMatrixName = {};
-  bool m_FileWasRead = {};
-  QString m_MaterialNameArrayName = {};
-  QString m_InputFile = {};
-  uint32_t m_RefFrameZDir = {};
-  EbsdLib::OEM m_Manufacturer = {};
+  DataArrayPath m_DataContainerName = {SIMPL::Defaults::ImageDataContainerName, "", ""};
+  QString m_CellEnsembleAttributeMatrixName = {SIMPL::Defaults::CellEnsembleAttributeMatrixName};
+  QString m_CellAttributeMatrixName = {SIMPL::Defaults::CellAttributeMatrixName};
+  bool m_FileWasRead = {false};
+  QString m_MaterialNameArrayName = {SIMPL::EnsembleData::MaterialName};
+  QString m_InputFile = {""};
+  uint32_t m_RefFrameZDir = {SIMPL::RefFrameZDir::UnknownRefFrameZDirection};
+  EbsdLib::OEM m_Manufacturer = {EbsdLib::OEM::Unknown};
 
   QScopedPointer<ReadAngDataPrivate> const d_ptr;
 

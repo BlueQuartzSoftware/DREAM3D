@@ -56,11 +56,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindNumFeatures::FindNumFeatures()
-: m_FeaturePhasesArrayPath("", "", "")
-, m_NumFeaturesArrayPath("", "", "")
-{
-}
+FindNumFeatures::FindNumFeatures() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -226,10 +226,10 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
 
-  DataArrayPath m_CellFeatureAttributeMatrixName = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  QString m_MicroTextureRegionNumCellsArrayName = {};
-  QString m_MicroTextureRegionFractionOccupiedArrayName = {};
+  DataArrayPath m_CellFeatureAttributeMatrixName = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  QString m_MicroTextureRegionNumCellsArrayName = {"MicroTextureRegionNumCells"};
+  QString m_MicroTextureRegionFractionOccupiedArrayName = {"MicroTextureRegionFractionOccupied"};
 
 public:
   FindMicroTextureRegions(const FindMicroTextureRegions&) = delete;            // Copy Constructor Not Implemented

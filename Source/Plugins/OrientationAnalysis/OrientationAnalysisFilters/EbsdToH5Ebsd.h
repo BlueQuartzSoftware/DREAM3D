@@ -41,6 +41,7 @@
 #include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
@@ -301,16 +302,16 @@ public:
   EbsdToH5Ebsd& operator=(EbsdToH5Ebsd&&) = delete;      // Move Assignment Not Implemented
 
 private:
-  QString m_OutputFile = {};
-  int64_t m_ZStartIndex = {};
-  int64_t m_ZEndIndex = {};
-  float m_ZResolution = {};
-  uint32_t m_RefFrameZDir = {};
-  QString m_InputPath = {};
-  QString m_FilePrefix = {};
-  QString m_FileSuffix = {};
-  QString m_FileExtension = {};
-  int m_PaddingDigits = {};
-  AxisAngleInput m_SampleTransformation = {};
-  AxisAngleInput m_EulerTransformation = {};
+  QString m_OutputFile = {""};
+  int64_t m_ZStartIndex = {0};
+  int64_t m_ZEndIndex = {0};
+  float m_ZResolution = {1.0f};
+  uint32_t m_RefFrameZDir = {SIMPL::RefFrameZDir::LowtoHigh};
+  QString m_InputPath = {""};
+  QString m_FilePrefix = {""};
+  QString m_FileSuffix = {""};
+  QString m_FileExtension = {"ang"};
+  int m_PaddingDigits = {4};
+  AxisAngleInput_t m_SampleTransformation = {};
+  AxisAngleInput_t m_EulerTransformation = {};
 };

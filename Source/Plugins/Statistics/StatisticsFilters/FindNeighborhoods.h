@@ -251,12 +251,12 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_NeighborhoodsPtr;
   int32_t* m_Neighborhoods = nullptr;
 
-  QString m_NeighborhoodListArrayName = {};
-  float m_MultiplesOfAverage = {};
-  DataArrayPath m_EquivalentDiametersArrayPath = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_CentroidsArrayPath = {};
-  QString m_NeighborhoodsArrayName = {};
+  QString m_NeighborhoodListArrayName = {SIMPL::FeatureData::NeighborhoodList};
+  float m_MultiplesOfAverage = {1.0f};
+  DataArrayPath m_EquivalentDiametersArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::EquivalentDiameters};
+  DataArrayPath m_FeaturePhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases};
+  DataArrayPath m_CentroidsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Centroids};
+  QString m_NeighborhoodsArrayName = {SIMPL::FeatureData::Neighborhoods};
 
   NeighborList<int32_t>::WeakPointer m_NeighborhoodList;
   std::vector<std::vector<int32_t>> m_LocalNeighborhoodList;

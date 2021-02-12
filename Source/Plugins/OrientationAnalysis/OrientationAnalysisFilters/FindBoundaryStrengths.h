@@ -288,14 +288,14 @@ private:
   float* m_SurfaceMeshmPrimes = nullptr;
 
   FloatVec3Type m_Loading = {};
-  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
-  DataArrayPath m_AvgQuatsArrayPath = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  QString m_SurfaceMeshF1sArrayName = {};
-  QString m_SurfaceMeshF1sptsArrayName = {};
-  QString m_SurfaceMeshF7sArrayName = {};
-  QString m_SurfaceMeshmPrimesArrayName = {};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
+  DataArrayPath m_AvgQuatsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats};
+  DataArrayPath m_FeaturePhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases};
+  DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
+  QString m_SurfaceMeshF1sArrayName = {SIMPL::FaceData::SurfaceMeshF1s};
+  QString m_SurfaceMeshF1sptsArrayName = {SIMPL::FaceData::SurfaceMeshF1spts};
+  QString m_SurfaceMeshF7sArrayName = {SIMPL::FaceData::SurfaceMeshF7s};
+  QString m_SurfaceMeshmPrimesArrayName = {SIMPL::FaceData::SurfaceMeshmPrimes};
 
   LaueOpsContainer m_OrientationOps;
   /**

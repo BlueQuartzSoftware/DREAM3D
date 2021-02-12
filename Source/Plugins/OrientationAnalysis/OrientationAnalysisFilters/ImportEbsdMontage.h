@@ -289,10 +289,13 @@ protected:
   void initialize();
 
 private:
-  QString m_MontageName = {"Montage"};
-  DataArrayPath m_DataContainerName = {"EBSD", "", ""};
-  QString m_CellEnsembleAttributeMatrixName = {"Phase Data"};
-  QString m_CellAttributeMatrixName = {"Scan Data"};
+  QString m_MontageName = {"Montage"
+                           "Montage"};
+  DataArrayPath m_DataContainerName = {"OIM Data Container", "EBSD", ""};
+  QString m_CellEnsembleAttributeMatrixName = {"Phase Data"
+                                               "Phase Data"};
+  QString m_CellAttributeMatrixName = {"Scan Data"
+                                       "Scan Data"};
 
   MontageFileListInfo m_InputFileListInfo = {};
   OverlapType m_DefineScanOverlap = OverlapType::None;

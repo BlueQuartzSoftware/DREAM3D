@@ -291,19 +291,7 @@ public:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindEuclideanDistMap::FindEuclideanDistMap()
-: m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_GBDistancesArrayName(SIMPL::CellData::GBManhattanDistances)
-, m_TJDistancesArrayName(SIMPL::CellData::TJManhattanDistances)
-, m_QPDistancesArrayName(SIMPL::CellData::QPManhattanDistances)
-, m_NearestNeighborsArrayName(SIMPL::CellData::NearestNeighbors)
-, m_DoBoundaries(true)
-, m_DoTripleLines(false)
-, m_DoQuadPoints(false)
-, m_SaveNearestNeighbors(false)
-, m_CalcManhattanDist(true)
-{
-}
+FindEuclideanDistMap::FindEuclideanDistMap() = default;
 
 // -----------------------------------------------------------------------------
 //

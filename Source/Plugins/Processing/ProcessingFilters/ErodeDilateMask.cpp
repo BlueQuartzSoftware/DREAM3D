@@ -53,16 +53,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ErodeDilateMask::ErodeDilateMask()
-: m_Direction(0)
-, m_NumIterations(1)
-, m_XDirOn(true)
-, m_YDirOn(true)
-, m_ZDirOn(true)
-, m_MaskArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
-, m_MaskCopy(nullptr)
-{
-}
+ErodeDilateMask::ErodeDilateMask() = default;
 
 // -----------------------------------------------------------------------------
 //

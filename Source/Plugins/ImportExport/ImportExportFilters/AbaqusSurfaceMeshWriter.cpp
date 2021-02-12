@@ -56,11 +56,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbaqusSurfaceMeshWriter::AbaqusSurfaceMeshWriter()
-: m_OutputFile("")
-, m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
-{
-}
+AbaqusSurfaceMeshWriter::AbaqusSurfaceMeshWriter() = default;
 
 // -----------------------------------------------------------------------------
 //

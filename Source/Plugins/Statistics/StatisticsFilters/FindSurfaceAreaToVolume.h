@@ -230,11 +230,11 @@ private:
   std::weak_ptr<DataArray<float>> m_SphericityPtr;
   float* m_Sphericity = nullptr;
 
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_NumCellsArrayPath = {};
-  QString m_SurfaceAreaVolumeRatioArrayName = {};
-  QString m_SphericityArrayName = {};
-  bool m_CalculateSphericity = {};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_NumCellsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NumElements};
+  QString m_SurfaceAreaVolumeRatioArrayName = {SIMPL::FeatureData::SurfaceAreaVol};
+  QString m_SphericityArrayName = {"Sphericity"};
+  bool m_CalculateSphericity = {true};
 
 public:
   FindSurfaceAreaToVolume(const FindSurfaceAreaToVolume&) = delete;            // Copy Constructor Not Implemented

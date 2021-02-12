@@ -252,12 +252,12 @@ private:
   std::weak_ptr<DataArray<uint8_t>> m_SurfaceMeshFaceIPFColorsPtr;
   uint8_t* m_SurfaceMeshFaceIPFColors = nullptr;
 
-  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
-  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {};
-  DataArrayPath m_FeatureEulerAnglesArrayPath = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  QString m_SurfaceMeshFaceIPFColorsArrayName = {};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
+  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals};
+  DataArrayPath m_FeatureEulerAnglesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::EulerAngles};
+  DataArrayPath m_FeaturePhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases};
+  DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
+  QString m_SurfaceMeshFaceIPFColorsArrayName = {SIMPL::FaceData::SurfaceMeshFaceIPFColors};
 
 public:
   GenerateFaceIPFColoring(const GenerateFaceIPFColoring&) = delete;            // Copy Constructor Not Implemented

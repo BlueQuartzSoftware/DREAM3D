@@ -302,16 +302,16 @@ private:
   std::weak_ptr<DataArray<double>> m_NewDataArrayPtr;
   double* m_NewDataArray = nullptr;
 
-  DataArrayPath m_SelectedArrayPath = {};
-  int m_NumberOfBins = {};
-  double m_MinRange = {};
-  double m_MaxRange = {};
-  bool m_UserDefinedRange = {};
-  bool m_Normalize = {};
-  QString m_NewAttributeMatrixName = {};
-  QString m_NewDataArrayName = {};
-  bool m_NewDataContainer = {};
-  DataArrayPath m_NewDataContainerName = {};
+  DataArrayPath m_SelectedArrayPath = {"", "", ""};
+  int m_NumberOfBins = {-1};
+  double m_MinRange = {0.0f};
+  double m_MaxRange = {1.0f};
+  bool m_UserDefinedRange = {false};
+  bool m_Normalize = {false};
+  QString m_NewAttributeMatrixName = {SIMPL::Defaults::NewAttributeMatrixName};
+  QString m_NewDataArrayName = {SIMPL::CellData::Histogram};
+  bool m_NewDataContainer = {false};
+  DataArrayPath m_NewDataContainerName = {SIMPL::Defaults::NewDataContainerName, "", ""};
 
 public:
   CalculateArrayHistogram(const CalculateArrayHistogram&) = delete;            // Copy Constructor Not Implemented

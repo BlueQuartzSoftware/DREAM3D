@@ -51,12 +51,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ExtractFlaggedFeatures::ExtractFlaggedFeatures()
-: m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_FlaggedFeaturesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Active)
-, m_FeatureBounds(nullptr)
-{
-}
+ExtractFlaggedFeatures::ExtractFlaggedFeatures() = default;
 
 // -----------------------------------------------------------------------------
 //

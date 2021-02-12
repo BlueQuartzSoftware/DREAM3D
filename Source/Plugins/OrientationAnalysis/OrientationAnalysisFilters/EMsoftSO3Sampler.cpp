@@ -69,14 +69,6 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 EMsoftSO3Sampler::EMsoftSO3Sampler()
-: m_sampleModeSelector(0)
-, m_PointGroup(32)
-, m_Numsp(5)
-, m_MisOr(3.0)
-, m_MisOrFull(3.0)
-, m_OffsetGrid(false)
-, m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
-, m_EMsoftAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 {
   m_RefOr[0] = 0.0;
   m_RefOr[1] = 0.0;

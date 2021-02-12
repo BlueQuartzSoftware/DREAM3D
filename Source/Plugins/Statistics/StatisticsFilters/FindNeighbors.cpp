@@ -64,15 +64,6 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 FindNeighbors::FindNeighbors()
-: m_CellFeatureAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "")
-, m_SharedSurfaceAreaListArrayName(SIMPL::FeatureData::SharedSurfaceAreaList)
-, m_NeighborListArrayName(SIMPL::FeatureData::NeighborList)
-, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_BoundaryCellsArrayName(SIMPL::CellData::BoundaryCells)
-, m_NumNeighborsArrayName(SIMPL::FeatureData::NumNeighbors)
-, m_SurfaceFeaturesArrayName(SIMPL::FeatureData::SurfaceFeatures)
-, m_StoreBoundaryCells(false)
-, m_StoreSurfaceFeatures(false)
 {
   m_NeighborList = NeighborList<int32_t>::NullPointer();
   m_SharedSurfaceAreaList = NeighborList<float>::NullPointer();

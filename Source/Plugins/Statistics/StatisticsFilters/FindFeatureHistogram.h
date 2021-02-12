@@ -258,12 +258,12 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
   int32_t* m_FeaturePhases = nullptr;
 
-  DataArrayPath m_SelectedFeatureArrayPath = {};
-  int m_NumberOfBins = {};
-  bool m_RemoveBiasedFeatures = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_BiasedFeaturesArrayPath = {};
-  DataArrayPath m_NewEnsembleArrayArrayPath = {};
+  DataArrayPath m_SelectedFeatureArrayPath = {"", "", ""};
+  int m_NumberOfBins = {1};
+  bool m_RemoveBiasedFeatures = {false};
+  DataArrayPath m_FeaturePhasesArrayPath = {"", "", ""};
+  DataArrayPath m_BiasedFeaturesArrayPath = {"", "", ""};
+  DataArrayPath m_NewEnsembleArrayArrayPath = {"", "", ""};
 
 public:
   FindFeatureHistogram(const FindFeatureHistogram&) = delete;            // Copy Constructor Not Implemented

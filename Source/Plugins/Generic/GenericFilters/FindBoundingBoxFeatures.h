@@ -230,11 +230,11 @@ private:
   std::weak_ptr<DataArray<bool>> m_BiasedFeaturesPtr;
   bool* m_BiasedFeatures = nullptr;
 
-  bool m_CalcByPhase = {};
-  DataArrayPath m_CentroidsArrayPath = {};
-  DataArrayPath m_PhasesArrayPath = {};
-  DataArrayPath m_SurfaceFeaturesArrayPath = {};
-  QString m_BiasedFeaturesArrayName = {};
+  bool m_CalcByPhase = {false};
+  DataArrayPath m_CentroidsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Centroids};
+  DataArrayPath m_PhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases};
+  DataArrayPath m_SurfaceFeaturesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::SurfaceFeatures};
+  QString m_BiasedFeaturesArrayName = {SIMPL::FeatureData::BiasedFeatures};
 
   /**
    * @brief find_boundingboxfeatures Determines which Features are biased by the outer surface of a 3D volume.

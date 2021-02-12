@@ -65,14 +65,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VASPReader::VASPReader()
-: m_VertexDataContainerName(SIMPL::Defaults::VertexDataContainerName)
-, m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName)
-, m_InputFile("")
-, m_AtomVelocitiesArrayName(SIMPL::VertexData::AtomVelocities)
-, m_AtomTypesArrayName(SIMPL::VertexData::AtomTypes)
-{
-}
+VASPReader::VASPReader() = default;
 
 // -----------------------------------------------------------------------------
 //

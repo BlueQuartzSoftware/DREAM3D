@@ -50,10 +50,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AppendImageGeometryZSlice::AppendImageGeometryZSlice()
-: m_CheckResolution(false)
-{
-}
+AppendImageGeometryZSlice::AppendImageGeometryZSlice() = default;
 
 // -----------------------------------------------------------------------------
 //

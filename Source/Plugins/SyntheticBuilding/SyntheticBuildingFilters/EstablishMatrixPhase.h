@@ -326,18 +326,18 @@ private:
   std::weak_ptr<DataArray<PhaseType::EnumType>> m_PhaseTypesPtr;
   PhaseType::EnumType* m_PhaseTypes = nullptr;
 
-  DataArrayPath m_OutputCellAttributeMatrixPath = {};
-  QString m_OutputCellFeatureAttributeMatrixName = {};
-  QString m_OutputCellEnsembleAttributeMatrixName = {};
-  QString m_FeatureIdsArrayName = {};
-  QString m_CellPhasesArrayName = {};
-  QString m_FeaturePhasesArrayName = {};
-  QString m_NumFeaturesArrayName = {};
-  DataArrayPath m_MaskArrayPath = {};
-  bool m_UseMask = {};
-  DataArrayPath m_InputStatsArrayPath = {};
-  DataArrayPath m_InputPhaseTypesArrayPath = {};
-  DataArrayPath m_InputPhaseNamesArrayPath = {};
+  DataArrayPath m_OutputCellAttributeMatrixPath = {SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, ""};
+  QString m_OutputCellFeatureAttributeMatrixName = {SIMPL::Defaults::CellFeatureAttributeMatrixName};
+  QString m_OutputCellEnsembleAttributeMatrixName = {SIMPL::Defaults::CellEnsembleAttributeMatrixName};
+  QString m_FeatureIdsArrayName = {SIMPL::CellData::FeatureIds};
+  QString m_CellPhasesArrayName = {SIMPL::CellData::Phases};
+  QString m_FeaturePhasesArrayName = {SIMPL::FeatureData::Phases};
+  QString m_NumFeaturesArrayName = {SIMPL::EnsembleData::NumFeatures};
+  DataArrayPath m_MaskArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask};
+  bool m_UseMask = {false};
+  DataArrayPath m_InputStatsArrayPath = {SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics};
+  DataArrayPath m_InputPhaseTypesArrayPath = {SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes};
+  DataArrayPath m_InputPhaseNamesArrayPath = {SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseName};
 
   size_t firstMatrixFeature;
   float sizex;

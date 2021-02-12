@@ -228,11 +228,11 @@ private:
   uint8_t* m_OutputImage = nullptr;
 
   QVector<DataArrayPath> m_InputDataArrayVector = {};
-  QString m_OutputAttributeMatrixName = {};
-  QString m_OutputArrayPrefix = {};
-  bool m_UsePreviousMuSigma = {};
+  QString m_OutputAttributeMatrixName = {"MultiArrayEMMPMOutput"};
+  QString m_OutputArrayPrefix = {"Segmented_"};
+  bool m_UsePreviousMuSigma = {true};
 
-  int m_ArrayCount;
+  int m_ArrayCount = 0;
   int m_CurrentArrayIndex = 1;
 
 public:

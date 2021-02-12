@@ -212,8 +212,8 @@ private:
   std::weak_ptr<DataArray<float>> m_LatticeConstantsPtr;
   float* m_LatticeConstants = nullptr;
 
-  bool m_CombineEulerAngles = {};
-  bool m_DegreesToRadians = {};
+  bool m_CombineEulerAngles = {true};
+  bool m_DegreesToRadians = {true};
 
   QScopedPointer<ImportH5EspritDataPrivate> const d_ptr;
 

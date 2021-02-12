@@ -245,10 +245,10 @@ private:
   std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
   unsigned int* m_CrystalStructures = nullptr;
 
-  DataArrayPath m_CellPhasesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  DataArrayPath m_QuatsArrayPath = {};
-  QString m_DislocationTensorsArrayName = {};
+  DataArrayPath m_CellPhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases};
+  DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
+  DataArrayPath m_QuatsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats};
+  QString m_DislocationTensorsArrayName = {SIMPL::CellData::DislocationTensors};
   IntVec3Type m_CurlSize = {};
 
   LaueOpsContainer m_OrientationOps;

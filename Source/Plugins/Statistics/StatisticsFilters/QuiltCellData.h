@@ -249,12 +249,12 @@ private:
   std::weak_ptr<DataArray<float>> m_OutputArrayPtr;
   float* m_OutputArray = nullptr;
 
-  DataArrayPath m_SelectedCellArrayPath = {};
+  DataArrayPath m_SelectedCellArrayPath = {"", "", ""};
   IntVec3Type m_QuiltStep = {};
   IntVec3Type m_PatchSize = {};
-  DataArrayPath m_OutputDataContainerName = {};
-  QString m_OutputAttributeMatrixName = {};
-  QString m_OutputArrayName = {};
+  DataArrayPath m_OutputDataContainerName = {SIMPL::Defaults::NewImageDataContainerName, "", ""};
+  QString m_OutputAttributeMatrixName = {SIMPL::Defaults::CellAttributeMatrixName};
+  QString m_OutputArrayName = {"Quilt_Data"};
 
 public:
   QuiltCellData(const QuiltCellData&) = delete;            // Copy Constructor Not Implemented

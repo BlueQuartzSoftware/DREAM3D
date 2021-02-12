@@ -87,22 +87,7 @@ void error_handler(HPDF_STATUS error_no, HPDF_STATUS detail_no, void* /* user_da
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WritePoleFigure::WritePoleFigure()
-: m_ImagePrefix("")
-, m_OutputPath("")
-, m_ImageFormat(0)
-, m_ImageSize(512)
-, m_LambertSize(64)
-, m_NumColors(32)
-, m_ImageLayout(SIMPL::Layout::Square)
-, m_CellEulerAnglesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::EulerAngles)
-, m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
-, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
-, m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
-, m_UseGoodVoxels(false)
-, m_GenerationAlgorithm(0)
-{
-}
+WritePoleFigure::WritePoleFigure() = default;
 
 // -----------------------------------------------------------------------------
 //

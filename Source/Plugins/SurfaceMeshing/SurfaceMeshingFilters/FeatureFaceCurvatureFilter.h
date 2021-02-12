@@ -384,22 +384,22 @@ private:
   std::weak_ptr<DataArray<double>> m_SurfaceMeshMeanCurvaturesPtr;
   double* m_SurfaceMeshMeanCurvatures = nullptr;
 
-  DataArrayPath m_FaceAttributeMatrixPath = {};
-  QString m_SurfaceMeshPrincipalCurvature1sArrayName = {};
-  QString m_SurfaceMeshPrincipalCurvature2sArrayName = {};
-  QString m_SurfaceMeshPrincipalDirection1sArrayName = {};
-  QString m_SurfaceMeshPrincipalDirection2sArrayName = {};
-  QString m_SurfaceMeshGaussianCurvaturesArrayName = {};
-  QString m_SurfaceMeshMeanCurvaturesArrayName = {};
-  int m_NRing = {};
-  bool m_ComputePrincipalDirectionVectors = {};
+  DataArrayPath m_FaceAttributeMatrixPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, ""};
+  QString m_SurfaceMeshPrincipalCurvature1sArrayName = {SIMPL::FaceData::SurfaceMeshPrincipalCurvature1};
+  QString m_SurfaceMeshPrincipalCurvature2sArrayName = {SIMPL::FaceData::SurfaceMeshPrincipalCurvature2};
+  QString m_SurfaceMeshPrincipalDirection1sArrayName = {SIMPL::FaceData::SurfaceMeshPrincipalDirection1};
+  QString m_SurfaceMeshPrincipalDirection2sArrayName = {SIMPL::FaceData::SurfaceMeshPrincipalDirection2};
+  QString m_SurfaceMeshGaussianCurvaturesArrayName = {SIMPL::FaceData::SurfaceMeshGaussianCurvatures};
+  QString m_SurfaceMeshMeanCurvaturesArrayName = {SIMPL::FaceData::SurfaceMeshMeanCurvatures};
+  int m_NRing = {3};
+  bool m_ComputePrincipalDirectionVectors = {true};
   bool m_ComputeMeanCurvature = {};
   bool m_ComputeGaussianCurvature = {};
-  bool m_UseNormalsForCurveFitting = {};
-  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
-  DataArrayPath m_SurfaceMeshFeatureFaceIdsArrayPath = {};
-  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {};
-  DataArrayPath m_SurfaceMeshTriangleCentroidsArrayPath = {};
+  bool m_UseNormalsForCurveFitting = {true};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
+  DataArrayPath m_SurfaceMeshFeatureFaceIdsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFeatureFaceId};
+  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals};
+  DataArrayPath m_SurfaceMeshTriangleCentroidsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceCentroids};
 
   DataArray<int32_t>::WeakPointer m_SurfaceMeshUniqueEdgesPtr;
 

@@ -190,8 +190,8 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_NumFeaturesPtr;
   int32_t* m_NumFeatures = nullptr;
 
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_NumFeaturesArrayPath = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {"", "", ""};
+  DataArrayPath m_NumFeaturesArrayPath = {"", "", ""};
 
 public:
   FindNumFeatures(const FindNumFeatures&) = delete;            // Copy Constructor Not Implemented

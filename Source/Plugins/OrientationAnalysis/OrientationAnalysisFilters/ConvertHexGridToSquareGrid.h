@@ -323,21 +323,21 @@ protected:
   void initialize();
 
 private:
-  int64_t m_ZStartIndex = {};
-  int64_t m_ZEndIndex = {};
-  float m_XResolution = {};
-  float m_YResolution = {};
-  QString m_InputPath = {};
-  QString m_OutputPath = {};
-  QString m_OutputPrefix = {};
-  QString m_FilePrefix = {};
-  QString m_FileSuffix = {};
-  QString m_FileExtension = {};
-  int m_PaddingDigits = {};
-  int m_NumCols = {};
-  int m_NumRows = {};
-  bool m_HeaderIsComplete = {};
-  int m_HexGridStack = {};
+  int64_t m_ZStartIndex = {0};
+  int64_t m_ZEndIndex = {0};
+  float m_XResolution = {1.0f};
+  float m_YResolution = {1.0f};
+  QString m_InputPath = {""};
+  QString m_OutputPath = {""};
+  QString m_OutputPrefix = {"Sqr_"};
+  QString m_FilePrefix = {""};
+  QString m_FileSuffix = {""};
+  QString m_FileExtension = {"ang"};
+  int m_PaddingDigits = {1};
+  int m_NumCols = {0};
+  int m_NumRows = {0};
+  bool m_HeaderIsComplete = {false};
+  int m_HexGridStack = {0};
 
   /**
    * @brief modifyAngHeaderLine Modifies a single line of the header section of the TSL .ang file if necessary

@@ -233,11 +233,11 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFeatureFaceNumTrianglesPtr;
   int32_t* m_SurfaceMeshFeatureFaceNumTriangles = nullptr;
 
-  QString m_FaceFeatureAttributeMatrixName = {};
-  QString m_SurfaceMeshFeatureFaceIdsArrayName = {};
-  QString m_SurfaceMeshFeatureFaceLabelsArrayName = {};
-  QString m_SurfaceMeshFeatureFaceNumTrianglesArrayName = {};
-  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+  QString m_FaceFeatureAttributeMatrixName = {SIMPL::Defaults::FaceFeatureAttributeMatrixName};
+  QString m_SurfaceMeshFeatureFaceIdsArrayName = {SIMPL::FaceData::SurfaceMeshFeatureFaceId};
+  QString m_SurfaceMeshFeatureFaceLabelsArrayName = {SIMPL::FaceData::SurfaceMeshFaceLabels};
+  QString m_SurfaceMeshFeatureFaceNumTrianglesArrayName = {"NumTriangles"};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
 
 public:
   SharedFeatureFaceFilter(const SharedFeatureFaceFilter&) = delete;            // Copy Constructor Not Implemented

@@ -214,10 +214,10 @@ private:
   std::weak_ptr<DataArray<int8_t>> m_BoundaryCellsPtr;
   int8_t* m_BoundaryCells = nullptr;
 
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  QString m_BoundaryCellsArrayName = {};
-  bool m_IgnoreFeatureZero = {};
-  bool m_IncludeVolumeBoundary = {};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  QString m_BoundaryCellsArrayName = {SIMPL::CellData::BoundaryCells};
+  bool m_IgnoreFeatureZero = {true};
+  bool m_IncludeVolumeBoundary = {false};
 
 public:
   FindBoundaryCells(const FindBoundaryCells&) = delete;            // Copy Constructor Not Implemented

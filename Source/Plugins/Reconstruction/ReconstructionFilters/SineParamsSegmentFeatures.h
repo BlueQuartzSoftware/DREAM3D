@@ -272,13 +272,13 @@ private:
   std::weak_ptr<DataArray<bool>> m_ActivePtr;
   bool* m_Active = nullptr;
 
-  QString m_CellFeatureAttributeMatrixName = {};
-  DataArrayPath m_SineParamsArrayPath = {};
-  bool m_RandomizeFeatureIds = {};
-  bool m_UseGoodVoxels = {};
-  DataArrayPath m_GoodVoxelsArrayPath = {};
-  QString m_FeatureIdsArrayName = {};
-  QString m_ActiveArrayName = {};
+  QString m_CellFeatureAttributeMatrixName = {SIMPL::Defaults::CellFeatureAttributeMatrixName};
+  DataArrayPath m_SineParamsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::SineParams};
+  bool m_RandomizeFeatureIds = {true};
+  bool m_UseGoodVoxels = {true};
+  DataArrayPath m_GoodVoxelsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::GoodVoxels};
+  QString m_FeatureIdsArrayName = {SIMPL::CellData::FeatureIds};
+  QString m_ActiveArrayName = {SIMPL::FeatureData::Active};
 
   IDataArrayShPtrType m_InputData;
 
@@ -286,7 +286,7 @@ private:
   std::mt19937_64 m_Generator;
   std::uniform_int_distribution<int64_t> m_Distribution;
 
-  float angleTolerance;
+  float angleTolerance = 0.0F;
 
   /**
    * @brief randomizeGrainIds

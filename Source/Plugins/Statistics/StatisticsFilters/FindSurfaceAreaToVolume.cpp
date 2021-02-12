@@ -61,14 +61,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindSurfaceAreaToVolume::FindSurfaceAreaToVolume()
-: m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_NumCellsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NumElements)
-, m_SurfaceAreaVolumeRatioArrayName(SIMPL::FeatureData::SurfaceAreaVol)
-, m_SphericityArrayName("Sphericity")
-, m_CalculateSphericity(true)
-{
-}
+FindSurfaceAreaToVolume::FindSurfaceAreaToVolume() = default;
 
 // -----------------------------------------------------------------------------
 //

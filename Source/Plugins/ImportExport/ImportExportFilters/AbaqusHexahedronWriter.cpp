@@ -56,14 +56,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbaqusHexahedronWriter::AbaqusHexahedronWriter()
-: m_OutputPath("")
-, m_FilePrefix("")
-, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_HourglassStiffness(250)
-, m_JobName("")
-{
-}
+AbaqusHexahedronWriter::AbaqusHexahedronWriter() = default;
 
 // -----------------------------------------------------------------------------
 //

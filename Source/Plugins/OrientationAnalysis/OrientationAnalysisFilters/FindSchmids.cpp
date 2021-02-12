@@ -71,16 +71,6 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 FindSchmids::FindSchmids()
-: m_FeaturePhasesArrayPath("", "", "")
-, m_CrystalStructuresArrayPath("", "", "")
-, m_AvgQuatsArrayPath("", "", "")
-, m_SchmidsArrayName(SIMPL::FeatureData::Schmids)
-, m_SlipSystemsArrayName(SIMPL::FeatureData::SlipSystems)
-, m_PolesArrayName(SIMPL::FeatureData::Poles)
-, m_PhisArrayName("SchmidPhis")
-, m_LambdasArrayName("SchmidLambdas")
-, m_StoreAngleComponents(false)
-, m_OverrideSystem(false)
 {
   m_LoadingDirection[0] = 1.0f;
   m_LoadingDirection[1] = 1.0f;

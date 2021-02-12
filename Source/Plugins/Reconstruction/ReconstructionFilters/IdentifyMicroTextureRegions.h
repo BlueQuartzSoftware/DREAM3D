@@ -302,16 +302,16 @@ private:
   std::weak_ptr<DataArray<bool>> m_PatchActivePtr;
   bool* m_PatchActive = nullptr;
 
-  QString m_NewCellFeatureAttributeMatrixName = {};
-  float m_CAxisTolerance = {};
-  float m_MinMTRSize = {};
-  float m_MinVolFrac = {};
-  bool m_RandomizeMTRIds = {};
-  DataArrayPath m_CAxisLocationsArrayPath = {};
-  DataArrayPath m_CellPhasesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  QString m_MTRIdsArrayName = {};
-  QString m_ActiveArrayName = {};
+  QString m_NewCellFeatureAttributeMatrixName = {SIMPL::Defaults::NewCellFeatureAttributeMatrixName};
+  float m_CAxisTolerance = {1.0f};
+  float m_MinMTRSize = {1.0f};
+  float m_MinVolFrac = {1.0f};
+  bool m_RandomizeMTRIds = {false};
+  DataArrayPath m_CAxisLocationsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::CAxisLocation};
+  DataArrayPath m_CellPhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases};
+  DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
+  QString m_MTRIdsArrayName = {SIMPL::CellData::ParentIds};
+  QString m_ActiveArrayName = {SIMPL::FeatureData::Active};
 
   std::random_device m_RandomDevice;
   std::mt19937_64 m_Generator;

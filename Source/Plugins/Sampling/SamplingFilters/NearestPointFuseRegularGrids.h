@@ -38,6 +38,7 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "Sampling/SamplingDLLExport.h"
@@ -190,6 +191,6 @@ public:
   NearestPointFuseRegularGrids& operator=(NearestPointFuseRegularGrids&&) = delete;      // Move Assignment Not Implemented
 
 private:
-  DataArrayPath m_ReferenceCellAttributeMatrixPath = {};
-  DataArrayPath m_SamplingCellAttributeMatrixPath = {};
+  DataArrayPath m_ReferenceCellAttributeMatrixPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, ""};
+  DataArrayPath m_SamplingCellAttributeMatrixPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, ""};
 };

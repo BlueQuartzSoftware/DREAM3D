@@ -246,14 +246,14 @@ private:
   std::weak_ptr<DataArray<PhaseType::EnumType>> m_PhaseTypesPtr;
   PhaseType::EnumType* m_PhaseTypes = nullptr;
 
-  DataArrayPath m_DataContainerName = {};
-  QString m_CellEnsembleAttributeMatrixName = {};
-  QString m_InputFile = {};
-  QString m_CrystalStructuresArrayName = {};
-  QString m_PhaseTypesArrayName = {};
+  DataArrayPath m_DataContainerName = {"", "", ""};
+  QString m_CellEnsembleAttributeMatrixName = {"EnsembleAttributeMatrix"};
+  QString m_InputFile = {""};
+  QString m_CrystalStructuresArrayName = {SIMPL::EnsembleData::CrystalStructures};
+  QString m_PhaseTypesArrayName = {SIMPL::EnsembleData::PhaseTypes};
 
-  PhaseType::Type m_ptype;
-  uint32_t m_crystruct;
+  PhaseType::Type m_ptype = {PhaseType::Type::Unknown};
+  uint32_t m_crystruct = {999};
 
 public:
   EnsembleInfoReader(const EnsembleInfoReader&) = delete;            // Copy Constructor Not Implemented

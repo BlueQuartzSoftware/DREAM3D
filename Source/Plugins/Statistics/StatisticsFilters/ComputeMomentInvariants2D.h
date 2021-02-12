@@ -221,13 +221,13 @@ private:
   std::weak_ptr<DataArray<float>> m_CentralMomentsPtr;
   float* m_CentralMoments = nullptr;
 
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_FeatureRectArrayPath = {};
-  bool m_NormalizeMomentInvariants = {};
-  DataArrayPath m_Omega1ArrayPath = {};
-  DataArrayPath m_Omega2ArrayPath = {};
-  bool m_SaveCentralMoments = {};
-  DataArrayPath m_CentralMomentsArrayPath = {};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_FeatureRectArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "FeatureRect"};
+  bool m_NormalizeMomentInvariants = {true};
+  DataArrayPath m_Omega1ArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "Omega1"};
+  DataArrayPath m_Omega2ArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "Omega2"};
+  bool m_SaveCentralMoments = {false};
+  DataArrayPath m_CentralMomentsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "CentralMoments"};
 
 public:
   ComputeMomentInvariants2D(const ComputeMomentInvariants2D&) = delete;            // Copy Constructor Not Implemented

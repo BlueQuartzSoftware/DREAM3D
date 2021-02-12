@@ -36,7 +36,6 @@
 
 #include <QtCore/QTextStream>
 
-#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -48,10 +47,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SegmentFeatures::SegmentFeatures()
-: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
-{
-}
+SegmentFeatures::SegmentFeatures() = default;
 
 // -----------------------------------------------------------------------------
 //

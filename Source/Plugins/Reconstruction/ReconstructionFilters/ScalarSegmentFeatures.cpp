@@ -173,17 +173,7 @@ private:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ScalarSegmentFeatures::ScalarSegmentFeatures()
-: m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
-, m_ScalarArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
-, m_ScalarTolerance(5.0f)
-, m_RandomizeFeatureIds(true)
-, m_UseGoodVoxels(true)
-, m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
-, m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
-, m_ActiveArrayName(SIMPL::FeatureData::Active)
-{
-}
+ScalarSegmentFeatures::ScalarSegmentFeatures() = default;
 
 // -----------------------------------------------------------------------------
 //

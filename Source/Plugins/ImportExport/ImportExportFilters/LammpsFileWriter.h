@@ -201,6 +201,6 @@ public:
   LammpsFileWriter& operator=(LammpsFileWriter&&) = delete;      // Move Assignment Not Implemented
 
 private:
-  DataArrayPath m_VertexDataContainerName = {};
-  QString m_LammpsFile = {};
+  DataArrayPath m_VertexDataContainerName = {SIMPL::Defaults::VertexDataContainerName, "", ""};
+  QString m_LammpsFile = {""};
 };

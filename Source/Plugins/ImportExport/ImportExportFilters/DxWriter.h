@@ -194,8 +194,8 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
 
-  bool m_AddSurfaceLayer = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
+  bool m_AddSurfaceLayer = {false};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
 
 public:
   DxWriter(const DxWriter&) = delete;            // Copy Constructor Not Implemented

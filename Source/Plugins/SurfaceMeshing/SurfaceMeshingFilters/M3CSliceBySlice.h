@@ -426,13 +426,13 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
 
-  DataArrayPath m_SurfaceDataContainerName = {};
-  QString m_VertexAttributeMatrixName = {};
-  QString m_FaceAttributeMatrixName = {};
-  QString m_FaceLabelsArrayName = {};
-  QString m_SurfaceMeshNodeTypesArrayName = {};
-  bool m_DeleteTempFiles = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_SurfaceDataContainerName = {SIMPL::Defaults::DataContainerName, "", ""};
+  QString m_VertexAttributeMatrixName = {SIMPL::Defaults::VertexAttributeMatrixName};
+  QString m_FaceAttributeMatrixName = {SIMPL::Defaults::FaceAttributeMatrixName};
+  QString m_FaceLabelsArrayName = {SIMPL::FaceData::SurfaceMeshFaceLabels};
+  QString m_SurfaceMeshNodeTypesArrayName = {SIMPL::VertexData::SurfaceMeshNodeType};
+  bool m_DeleteTempFiles = {true};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
 
   int numfeatures;
 

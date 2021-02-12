@@ -58,14 +58,6 @@
 //
 // -----------------------------------------------------------------------------
 FindBoundaryStrengths::FindBoundaryStrengths()
-: m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
-, m_AvgQuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats)
-, m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
-, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
-, m_SurfaceMeshF1sArrayName(SIMPL::FaceData::SurfaceMeshF1s)
-, m_SurfaceMeshF1sptsArrayName(SIMPL::FaceData::SurfaceMeshF1spts)
-, m_SurfaceMeshF7sArrayName(SIMPL::FaceData::SurfaceMeshF7s)
-, m_SurfaceMeshmPrimesArrayName(SIMPL::FaceData::SurfaceMeshmPrimes)
 {
   m_OrientationOps = LaueOps::GetAllOrientationOps();
 

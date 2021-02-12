@@ -132,7 +132,7 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
 
-  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_FeatureIdsArrayPath = {"", "", ""};
 
   /* Rule of 5: All special member functions should be defined if any are defined.
    * CppCoreGuidelines #c21 if you define or delete any default operation define or delete them all

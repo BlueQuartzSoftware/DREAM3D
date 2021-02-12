@@ -283,14 +283,14 @@ private:
   std::weak_ptr<DataArray<bool>> m_ActivePtr;
   bool* m_Active = nullptr;
 
-  QString m_CellFeatureAttributeMatrixName = {};
-  DataArrayPath m_ScalarArrayPath = {};
-  float m_ScalarTolerance = {};
-  bool m_RandomizeFeatureIds = {};
-  bool m_UseGoodVoxels = {};
-  DataArrayPath m_GoodVoxelsArrayPath = {};
-  QString m_FeatureIdsArrayName = {};
-  QString m_ActiveArrayName = {};
+  QString m_CellFeatureAttributeMatrixName = {SIMPL::Defaults::CellFeatureAttributeMatrixName};
+  DataArrayPath m_ScalarArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, ""};
+  float m_ScalarTolerance = {5.0f};
+  bool m_RandomizeFeatureIds = {true};
+  bool m_UseGoodVoxels = {true};
+  DataArrayPath m_GoodVoxelsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask};
+  QString m_FeatureIdsArrayName = {SIMPL::CellData::FeatureIds};
+  QString m_ActiveArrayName = {SIMPL::FeatureData::Active};
 
   std::shared_ptr<CompareFunctor> m_Compare;
 

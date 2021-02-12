@@ -222,10 +222,7 @@ void WriteDataArray(AbstractFilter* filter, FILE* f, IDataArray::Pointer iDataPt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VtkRectilinearGridWriter::VtkRectilinearGridWriter()
-: m_OutputFile("")
-{
-}
+VtkRectilinearGridWriter::VtkRectilinearGridWriter() = default;
 
 // -----------------------------------------------------------------------------
 //

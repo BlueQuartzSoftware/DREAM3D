@@ -58,14 +58,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SharedFeatureFaceFilter::SharedFeatureFaceFilter()
-: m_FaceFeatureAttributeMatrixName(SIMPL::Defaults::FaceFeatureAttributeMatrixName)
-, m_SurfaceMeshFeatureFaceIdsArrayName(SIMPL::FaceData::SurfaceMeshFeatureFaceId)
-, m_SurfaceMeshFeatureFaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels)
-, m_SurfaceMeshFeatureFaceNumTrianglesArrayName("NumTriangles")
-, m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
-{
-}
+SharedFeatureFaceFilter::SharedFeatureFaceFilter() = default;
 
 // -----------------------------------------------------------------------------
 //

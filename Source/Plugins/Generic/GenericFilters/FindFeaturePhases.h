@@ -205,9 +205,9 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
   int32_t* m_FeaturePhases = nullptr;
 
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_CellPhasesArrayPath = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_FeatureIdsArrayPath = {"", "", ""};
+  DataArrayPath m_CellPhasesArrayPath = {"", "", ""};
+  DataArrayPath m_FeaturePhasesArrayPath = {SIMPL::FeatureData::Phases, "", ""};
 
 public:
   FindFeaturePhases(const FindFeaturePhases&) = delete;            // Copy Constructor Not Implemented

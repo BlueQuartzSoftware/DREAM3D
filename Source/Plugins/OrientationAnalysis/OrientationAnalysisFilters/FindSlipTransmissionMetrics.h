@@ -269,14 +269,14 @@ private:
   std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
   uint32_t* m_CrystalStructures = nullptr;
 
-  DataArrayPath m_NeighborListArrayPath = {};
-  QString m_F1ListArrayName = {};
-  QString m_F1sptListArrayName = {};
-  QString m_F7ListArrayName = {};
-  QString m_mPrimeListArrayName = {};
-  DataArrayPath m_AvgQuatsArrayPath = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
+  DataArrayPath m_NeighborListArrayPath = {"", "", ""};
+  QString m_F1ListArrayName = {SIMPL::FeatureData::F1List};
+  QString m_F1sptListArrayName = {SIMPL::FeatureData::F1sptList};
+  QString m_F7ListArrayName = {SIMPL::FeatureData::F7List};
+  QString m_mPrimeListArrayName = {SIMPL::FeatureData::mPrimeList};
+  DataArrayPath m_AvgQuatsArrayPath = {"", "", ""};
+  DataArrayPath m_FeaturePhasesArrayPath = {"", "", ""};
+  DataArrayPath m_CrystalStructuresArrayPath = {"", "", ""};
 
   LaueOpsContainer m_OrientationOps;
   NeighborList<float>::WeakPointer m_F1List;

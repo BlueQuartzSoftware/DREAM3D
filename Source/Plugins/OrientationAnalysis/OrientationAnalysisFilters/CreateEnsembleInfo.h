@@ -240,12 +240,12 @@ private:
   std::weak_ptr<DataArray<PhaseType::EnumType>> m_PhaseTypesPtr;
   PhaseType::EnumType* m_PhaseTypes = nullptr;
 
-  DataArrayPath m_DataContainerName = {};
-  QString m_CellEnsembleAttributeMatrixName = {};
+  DataArrayPath m_DataContainerName = {"", "", ""};
+  QString m_CellEnsembleAttributeMatrixName = {"EnsembleAttributeMatrix"};
   EnsembleInfo m_Ensemble = {};
-  QString m_CrystalStructuresArrayName = {};
-  QString m_PhaseTypesArrayName = {};
-  QString m_PhaseNamesArrayName = {};
+  QString m_CrystalStructuresArrayName = {SIMPL::EnsembleData::CrystalStructures};
+  QString m_PhaseTypesArrayName = {SIMPL::EnsembleData::PhaseTypes};
+  QString m_PhaseNamesArrayName = {"PhaseNames"};
 
   StringDataArray::WeakPointer m_PhaseNamesPtr;
 

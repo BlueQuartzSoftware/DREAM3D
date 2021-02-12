@@ -194,8 +194,8 @@ private:
   std::weak_ptr<DataArray<float>> m_CAxisLocationsPtr;
   float* m_CAxisLocations = nullptr;
 
-  DataArrayPath m_QuatsArrayPath = {};
-  QString m_CAxisLocationsArrayName = {};
+  DataArrayPath m_QuatsArrayPath = {"", "", ""};
+  QString m_CAxisLocationsArrayName = {SIMPL::CellData::CAxisLocation};
 
   LaueOpsContainer m_OrientationOps;
 

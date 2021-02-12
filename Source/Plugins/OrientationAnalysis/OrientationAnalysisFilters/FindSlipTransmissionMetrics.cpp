@@ -66,14 +66,6 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 FindSlipTransmissionMetrics::FindSlipTransmissionMetrics()
-: m_NeighborListArrayPath("", "", "")
-, m_F1ListArrayName(SIMPL::FeatureData::F1List)
-, m_F1sptListArrayName(SIMPL::FeatureData::F1sptList)
-, m_F7ListArrayName(SIMPL::FeatureData::F7List)
-, m_mPrimeListArrayName(SIMPL::FeatureData::mPrimeList)
-, m_AvgQuatsArrayPath("", "", "")
-, m_FeaturePhasesArrayPath("", "", "")
-, m_CrystalStructuresArrayPath("", "", "")
 {
 
   m_F1List = NeighborList<float>::NullPointer();

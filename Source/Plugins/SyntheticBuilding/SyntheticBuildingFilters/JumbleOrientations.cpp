@@ -65,14 +65,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-JumbleOrientations::JumbleOrientations()
-: m_FeatureIdsArrayPath("", "", "")
-, m_CellEulerAnglesArrayName(SIMPL::CellData::EulerAngles)
-, m_FeaturePhasesArrayPath("", "", "")
-, m_FeatureEulerAnglesArrayPath("", "", "")
-, m_AvgQuatsArrayName(SIMPL::FeatureData::AvgQuats)
-{
-}
+JumbleOrientations::JumbleOrientations() = default;
 
 // -----------------------------------------------------------------------------
 //

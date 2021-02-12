@@ -432,20 +432,20 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_NumFeaturesPtr;
   int32_t* m_NumFeatures = nullptr;
 
-  DataArrayPath m_InputStatsArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  DataArrayPath m_PhaseTypesArrayPath = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_SurfaceFeaturesArrayPath = {};
-  DataArrayPath m_NeighborListArrayPath = {};
-  DataArrayPath m_SharedSurfaceAreaListArrayPath = {};
-  DataArrayPath m_NumFeaturesArrayPath = {};
-  QString m_CellEulerAnglesArrayName = {};
-  QString m_VolumesArrayName = {};
-  QString m_FeatureEulerAnglesArrayName = {};
-  QString m_AvgQuatsArrayName = {};
-  int m_MaxIterations = {};
+  DataArrayPath m_InputStatsArrayPath = {SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics};
+  DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
+  DataArrayPath m_PhaseTypesArrayPath = {SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_FeaturePhasesArrayPath = {SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases};
+  DataArrayPath m_SurfaceFeaturesArrayPath = {SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::SurfaceFeatures};
+  DataArrayPath m_NeighborListArrayPath = {SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NeighborList};
+  DataArrayPath m_SharedSurfaceAreaListArrayPath = {SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::SharedSurfaceAreaList};
+  DataArrayPath m_NumFeaturesArrayPath = {SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::NumFeatures};
+  QString m_CellEulerAnglesArrayName = {SIMPL::CellData::EulerAngles};
+  QString m_VolumesArrayName = {SIMPL::FeatureData::Volumes};
+  QString m_FeatureEulerAnglesArrayName = {SIMPL::FeatureData::EulerAngles};
+  QString m_AvgQuatsArrayName = {SIMPL::FeatureData::AvgQuats};
+  int m_MaxIterations = {1};
 
   // Cell Data
 

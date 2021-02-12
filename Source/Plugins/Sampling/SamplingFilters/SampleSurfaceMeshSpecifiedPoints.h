@@ -203,11 +203,11 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
 
-  QString m_InputFilePath = {};
-  QString m_OutputFilePath = {};
+  QString m_InputFilePath = {""};
+  QString m_OutputFilePath = {""};
 
   // number of specified points
-  int64_t m_NumPoints;
+  int64_t m_NumPoints = 0;
 
   /**
    * @brief updateVertexInstancePointers Updates raw Vertex pointers

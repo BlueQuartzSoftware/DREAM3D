@@ -246,12 +246,12 @@ private:
   std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
   uint32_t* m_CrystalStructures = nullptr;
 
-  float m_MisorientationTolerance = {};
-  int m_NumberOfNeighbors = {};
-  DataArrayPath m_GoodVoxelsArrayPath = {};
-  DataArrayPath m_CellPhasesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  DataArrayPath m_QuatsArrayPath = {};
+  float m_MisorientationTolerance = {5.0f};
+  int m_NumberOfNeighbors = {6};
+  DataArrayPath m_GoodVoxelsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask};
+  DataArrayPath m_CellPhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases};
+  DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
+  DataArrayPath m_QuatsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats};
 
   LaueOpsContainer m_OrientationOps;
 

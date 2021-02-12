@@ -335,18 +335,18 @@ protected:
   virtual int32_t edgeBasedSmoothing();
 
 private:
-  DataArrayPath m_SurfaceDataContainerName = {};
-  DataArrayPath m_SurfaceMeshNodeTypeArrayPath = {};
-  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
-  int m_IterationSteps = {};
-  float m_Lambda = {};
-  float m_SurfacePointLambda = {};
-  float m_TripleLineLambda = {};
-  float m_QuadPointLambda = {};
-  float m_SurfaceTripleLineLambda = {};
-  float m_SurfaceQuadPointLambda = {};
-  bool m_UseTaubinSmoothing = {};
-  float m_MuFactor = {};
+  DataArrayPath m_SurfaceDataContainerName = {SIMPL::Defaults::TriangleDataContainerName, "", ""};
+  DataArrayPath m_SurfaceMeshNodeTypeArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
+  int m_IterationSteps = {1};
+  float m_Lambda = {0.1f};
+  float m_SurfacePointLambda = {0.0f};
+  float m_TripleLineLambda = {0.0f};
+  float m_QuadPointLambda = {0.0f};
+  float m_SurfaceTripleLineLambda = {0.0f};
+  float m_SurfaceQuadPointLambda = {0.0f};
+  bool m_UseTaubinSmoothing = {false};
+  float m_MuFactor = {-1.03f};
   DataArray<float>::Pointer m_LambdaArray = {};
   std::weak_ptr<DataArray<int8_t>> m_SurfaceMeshNodeTypePtr;
   int8_t* m_SurfaceMeshNodeType = nullptr;

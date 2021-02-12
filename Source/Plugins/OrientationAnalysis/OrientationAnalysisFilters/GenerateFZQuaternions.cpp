@@ -122,11 +122,6 @@ private:
 //
 // -----------------------------------------------------------------------------
 GenerateFZQuaternions::GenerateFZQuaternions()
-: m_CellPhasesArrayPath("", "", "")
-, m_QuatsArrayPath("", "", "")
-, m_CrystalStructuresArrayPath("", "", "")
-, m_UseGoodVoxels(false)
-, m_GoodVoxelsArrayPath("", "", "")
 {
   initialize();
   m_OrientationOps = LaueOps::GetAllOrientationOps();

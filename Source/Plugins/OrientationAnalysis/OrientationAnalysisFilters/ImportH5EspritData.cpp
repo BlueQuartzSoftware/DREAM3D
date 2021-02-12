@@ -91,9 +91,7 @@ ImportH5EspritDataPrivate::ImportH5EspritDataPrivate(ImportH5EspritData* ptr)
 
 // -----------------------------------------------------------------------------
 ImportH5EspritData::ImportH5EspritData()
-: m_CombineEulerAngles(true)
-, m_DegreesToRadians(true)
-, d_ptr(new ImportH5EspritDataPrivate(this))
+: d_ptr(new ImportH5EspritDataPrivate(this))
 {
 }
 

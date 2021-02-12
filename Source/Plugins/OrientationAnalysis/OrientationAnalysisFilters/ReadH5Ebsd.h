@@ -522,26 +522,26 @@ private:
   std::weak_ptr<DataArray<float>> m_LatticeConstantsPtr;
   float* m_LatticeConstants = nullptr;
 
-  DataArrayPath m_DataContainerName = {};
-  QString m_CellEnsembleAttributeMatrixName = {};
-  QString m_CellAttributeMatrixName = {};
-  QString m_PhaseNameArrayName = {};
-  QString m_MaterialNameArrayName = {};
-  QString m_InputFile = {};
-  int m_ZStartIndex = {};
-  int m_ZEndIndex = {};
-  bool m_UseTransformations = {};
+  DataArrayPath m_DataContainerName = {SIMPL::Defaults::ImageDataContainerName, "", ""};
+  QString m_CellEnsembleAttributeMatrixName = {SIMPL::Defaults::CellEnsembleAttributeMatrixName};
+  QString m_CellAttributeMatrixName = {SIMPL::Defaults::CellAttributeMatrixName};
+  QString m_PhaseNameArrayName = {""};
+  QString m_MaterialNameArrayName = {SIMPL::EnsembleData::MaterialName};
+  QString m_InputFile = {""};
+  int m_ZStartIndex = {0};
+  int m_ZEndIndex = {0};
+  bool m_UseTransformations = {true};
   QSet<QString> m_SelectedArrayNames = {};
   QSet<QString> m_DataArrayNames = {};
-  int m_AngleRepresentation = {};
-  uint32_t m_RefFrameZDir = {};
-  EbsdLib::OEM m_Manufacturer = {};
-  AxisAngleInput m_SampleTransformation = {};
-  AxisAngleInput m_EulerTransformation = {};
-  QString m_CrystalStructuresArrayName = {};
-  QString m_LatticeConstantsArrayName = {};
-  QString m_CellPhasesArrayName = {};
-  QString m_CellEulerAnglesArrayName = {};
+  int m_AngleRepresentation = {EbsdLib::AngleRepresentation::Radians};
+  uint32_t m_RefFrameZDir = {SIMPL::RefFrameZDir::UnknownRefFrameZDirection};
+  EbsdLib::OEM m_Manufacturer = {EbsdLib::OEM::Unknown};
+  AxisAngleInput_t m_SampleTransformation = {};
+  AxisAngleInput_t m_EulerTransformation = {};
+  QString m_CrystalStructuresArrayName = {SIMPL::EnsembleData::CrystalStructures};
+  QString m_LatticeConstantsArrayName = {SIMPL::EnsembleData::LatticeConstants};
+  QString m_CellPhasesArrayName = {SIMPL::CellData::Phases};
+  QString m_CellEulerAnglesArrayName = {SIMPL::CellData::EulerAngles};
 
   StringDataArray::WeakPointer m_MaterialNamesPtr;
 

@@ -180,7 +180,7 @@ private:
 
   DataArrayPath m_RodriguesDataArrayPath = {};
   DataArrayPath m_OutputDataArrayPath = {};
-  bool m_DeleteOriginalData = {};
+  bool m_DeleteOriginalData = {true};
 
 public:
   /* Rule of 5: All special member functions should be defined if any are defined.

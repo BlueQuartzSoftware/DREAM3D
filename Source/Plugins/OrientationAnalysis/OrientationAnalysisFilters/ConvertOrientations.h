@@ -216,8 +216,8 @@ public:
   ConvertOrientations& operator=(ConvertOrientations&&) = delete;      // Move Assignment Not Implemented
 
 private:
-  int m_InputType = {};
-  int m_OutputType = {};
+  int m_InputType = {0};
+  int m_OutputType = {1};
   DataArrayPath m_InputOrientationArrayPath = {};
   QString m_OutputOrientationArrayName = {};
 };

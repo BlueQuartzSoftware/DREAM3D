@@ -345,19 +345,19 @@ private:
   std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
   unsigned int* m_CrystalStructures = nullptr;
 
-  DataArrayPath m_NewCellFeatureAttributeMatrixName = {};
-  bool m_CalcUnbiasedAvg = {};
-  bool m_CalcBiasedAvg = {};
-  DataArrayPath m_NeighborListArrayPath = {};
-  DataArrayPath m_CAxisMisalignmentListArrayPath = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_CellParentIdsArrayPath = {};
-  DataArrayPath m_AvgCAxisMisalignmentsArrayPath = {};
-  DataArrayPath m_FeatureParentIdsArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  QString m_UnbiasedLocalCAxisMisalignmentsArrayName = {};
+  DataArrayPath m_NewCellFeatureAttributeMatrixName = {"", "", ""};
+  bool m_CalcUnbiasedAvg = {false};
+  bool m_CalcBiasedAvg = {false};
+  DataArrayPath m_NeighborListArrayPath = {"", "", ""};
+  DataArrayPath m_CAxisMisalignmentListArrayPath = {"", "", ""};
+  DataArrayPath m_FeatureIdsArrayPath = {"", "", ""};
+  DataArrayPath m_CellParentIdsArrayPath = {"", "", ""};
+  DataArrayPath m_AvgCAxisMisalignmentsArrayPath = {"", "", ""};
+  DataArrayPath m_FeatureParentIdsArrayPath = {"", "", ""};
+  DataArrayPath m_CrystalStructuresArrayPath = {"", "", ""};
+  QString m_UnbiasedLocalCAxisMisalignmentsArrayName = {SIMPL::FeatureData::UnbiasedLocalCAxisMisalignments};
   QString m_LocalCAxisMisalignmentsArrayName = {};
-  QString m_NumFeaturesPerParentArrayName = {};
+  QString m_NumFeaturesPerParentArrayName = {SIMPL::FeatureData::NumFeaturesPerParent};
 
   LaueOpsContainer m_OrientationOps;
   NeighborList<int>::WeakPointer m_NeighborList;

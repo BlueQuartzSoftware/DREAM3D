@@ -209,9 +209,9 @@ private:
   std::weak_ptr<DataArray<float>> m_VolumesPtr;
   float* m_Volumes = nullptr;
 
-  DataArrayPath m_FaceLabelsArrayPath = {};
-  DataArrayPath m_FeatureAttributeMatrixName = {};
-  QString m_VolumesArrayName = {};
+  DataArrayPath m_FaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
+  DataArrayPath m_FeatureAttributeMatrixName = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceFeatureAttributeMatrixName, ""};
+  QString m_VolumesArrayName = {SIMPL::FeatureData::Volumes};
 
 public:
   FindTriangleGeomSizes(const FindTriangleGeomSizes&) = delete;            // Copy Constructor Not Implemented

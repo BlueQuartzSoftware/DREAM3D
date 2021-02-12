@@ -236,11 +236,11 @@ protected:
   int writeASCIIPointData(const QString& NodesFile, FILE* vtkFile, int nNodes);
 
 private:
-  QString m_NodesFile = {};
-  QString m_TrianglesFile = {};
-  QString m_OutputVtkFile = {};
-  bool m_WriteBinaryFile = {};
-  bool m_WriteConformalMesh = {};
+  QString m_NodesFile = {""};
+  QString m_TrianglesFile = {""};
+  QString m_OutputVtkFile = {""};
+  bool m_WriteBinaryFile = {false};
+  bool m_WriteConformalMesh = {true};
 
   int8_t* m_NodeKind;
 

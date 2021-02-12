@@ -50,20 +50,6 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 GeneratePrimaryStatsData::GeneratePrimaryStatsData()
-: m_PhaseName("Primary Phase")
-, m_PhaseIndex(-1)
-, m_CrystalSymmetry(1)
-, m_MicroPresetModel(0)
-, m_PhaseFraction(1.0)
-, m_Mu(4.0)
-, m_Sigma(0.1)
-, m_MinCutOff(5)
-, m_MaxCutOff(5)
-, m_BinStepSize(10.5)
-, m_CreateEnsembleAttributeMatrix(true)
-, m_DataContainerName(SIMPL::Defaults::StatsGenerator)
-, m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
-, m_AppendToExistingAttributeMatrix(false)
 {
   initialize();
 }

@@ -79,7 +79,6 @@ private:
 //
 // -----------------------------------------------------------------------------
 GenerateOrientationMatrixTranspose::GenerateOrientationMatrixTranspose()
-: m_DeleteOriginalData(true)
 {
   initialize();
 }

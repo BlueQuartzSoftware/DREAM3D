@@ -211,12 +211,12 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
 
-  bool m_Loop = {};
-  int m_CoordinationNumber = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
+  bool m_Loop = {false};
+  int m_CoordinationNumber = {6};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
   QVector<DataArrayPath> m_IgnoredDataArrayPaths = {};
 
-  int32_t* m_Neighbors;
+  int32_t* m_Neighbors = nullptr;
 
 public:
   ErodeDilateCoordinationNumber(const ErodeDilateCoordinationNumber&) = delete;            // Copy Constructor Not Implemented

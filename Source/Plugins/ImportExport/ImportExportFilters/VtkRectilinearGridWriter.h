@@ -276,7 +276,7 @@ protected:
   void initialize();
 
 private:
-  QString m_OutputFile = {};
+  QString m_OutputFile = {""};
   bool m_WriteBinaryFile = {};
   QVector<DataArrayPath> m_SelectedDataArrayPaths = {};
 

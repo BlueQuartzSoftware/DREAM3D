@@ -55,12 +55,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AlignSectionsFeatureCentroid::AlignSectionsFeatureCentroid()
-: m_ReferenceSlice(0)
-, m_UseReferenceSlice(false)
-, m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
-{
-}
+AlignSectionsFeatureCentroid::AlignSectionsFeatureCentroid() = default;
 
 // -----------------------------------------------------------------------------
 //

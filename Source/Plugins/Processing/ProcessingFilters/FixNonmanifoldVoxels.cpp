@@ -19,7 +19,6 @@
 //
 // -----------------------------------------------------------------------------
 FixNonmanifoldVoxels::FixNonmanifoldVoxels()
-: m_FeatureIdsArrayPath("", "", "")
 {
   initialize();
 }

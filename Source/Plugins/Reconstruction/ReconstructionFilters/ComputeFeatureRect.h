@@ -165,8 +165,8 @@ private:
   std::weak_ptr<DataArray<uint32_t>> m_FeatureRectPtr;
   uint32_t* m_FeatureRect = nullptr;
 
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_FeatureRectArrayPath = {};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_FeatureRectArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "FeatureRect"};
 
 public:
   ComputeFeatureRect(const ComputeFeatureRect&) = delete;            // Copy Constructor Not Implemented

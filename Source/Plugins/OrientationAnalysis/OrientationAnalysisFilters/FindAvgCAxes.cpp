@@ -63,12 +63,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindAvgCAxes::FindAvgCAxes()
-: m_QuatsArrayPath("", "", "")
-, m_FeatureIdsArrayPath("", "", "")
-, m_AvgCAxesArrayPath("", "", "")
-{
-}
+FindAvgCAxes::FindAvgCAxes() = default;
 
 // -----------------------------------------------------------------------------
 //

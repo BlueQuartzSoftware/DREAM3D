@@ -40,10 +40,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EnsembleInfoFilterParameter::EnsembleInfoFilterParameter()
-: m_ShowOperators(true)
-{
-}
+EnsembleInfoFilterParameter::EnsembleInfoFilterParameter() = default;
 
 // -----------------------------------------------------------------------------
 //

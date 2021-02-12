@@ -164,12 +164,12 @@ protected:
   FindNRingNeighbors();
 
 private:
-  int64_t m_TriangleId = {};
-  int32_t m_RegionId0 = {};
-  int32_t m_RegionId1 = {};
-  int64_t m_Ring = {};
-  bool m_WriteBinaryFile = {};
-  bool m_WriteConformalMesh = {};
+  int64_t m_TriangleId = {-1};
+  int32_t m_RegionId0 = {0};
+  int32_t m_RegionId1 = {0};
+  int64_t m_Ring = {2};
+  bool m_WriteBinaryFile = {false};
+  bool m_WriteConformalMesh = {true};
 
   UniqueFaceIds_t m_NRingTriangles;
 

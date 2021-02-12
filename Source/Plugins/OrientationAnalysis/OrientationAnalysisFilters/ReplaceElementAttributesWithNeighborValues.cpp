@@ -329,12 +329,7 @@ void ExecuteTemplate(ReplaceElementAttributesWithNeighborValues* filter, IDataAr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReplaceElementAttributesWithNeighborValues::ReplaceElementAttributesWithNeighborValues()
-: m_MinConfidence(0.1f)
-, m_ConfidenceIndexArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ConfidenceIndex)
-, m_SelectedComparison(Detail::LessThan)
-{
-}
+ReplaceElementAttributesWithNeighborValues::ReplaceElementAttributesWithNeighborValues() = default;
 
 // -----------------------------------------------------------------------------
 //

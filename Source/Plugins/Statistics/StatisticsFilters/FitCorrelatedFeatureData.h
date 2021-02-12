@@ -281,14 +281,14 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
   int32_t* m_FeaturePhases = nullptr;
 
-  DataArrayPath m_SelectedFeatureArrayPath = {};
-  DataArrayPath m_CorrelatedFeatureArrayPath = {};
-  unsigned int m_DistributionType = {};
-  int m_NumberOfCorrelatedBins = {};
-  bool m_RemoveBiasedFeatures = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_BiasedFeaturesArrayPath = {};
-  DataArrayPath m_NewEnsembleArrayArrayPath = {};
+  DataArrayPath m_SelectedFeatureArrayPath = {"", "", ""};
+  DataArrayPath m_CorrelatedFeatureArrayPath = {"", "", ""};
+  unsigned int m_DistributionType = {SIMPL::DistributionType::UnknownDistributionType};
+  int m_NumberOfCorrelatedBins = {1};
+  bool m_RemoveBiasedFeatures = {false};
+  DataArrayPath m_FeaturePhasesArrayPath = {"", "", ""};
+  DataArrayPath m_BiasedFeaturesArrayPath = {"", "", ""};
+  DataArrayPath m_NewEnsembleArrayArrayPath = {"", "", ""};
 
 public:
   FitCorrelatedFeatureData(const FitCorrelatedFeatureData&) = delete;            // Copy Constructor Not Implemented

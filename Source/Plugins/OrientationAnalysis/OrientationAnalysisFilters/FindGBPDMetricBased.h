@@ -368,21 +368,21 @@ private:
   std::weak_ptr<DataArray<int8_t>> m_NodeTypesPtr;
   int8_t* m_NodeTypes = nullptr;
 
-  int m_PhaseOfInterest = {};
-  float m_LimitDist = {};
-  int m_NumSamplPts = {};
-  bool m_ExcludeTripleLines = {};
-  QString m_DistOutputFile = {};
-  QString m_ErrOutputFile = {};
-  bool m_SaveRelativeErr = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  DataArrayPath m_FeatureEulerAnglesArrayPath = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
-  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {};
-  DataArrayPath m_SurfaceMeshFaceAreasArrayPath = {};
-  DataArrayPath m_SurfaceMeshFeatureFaceLabelsArrayPath = {};
-  DataArrayPath m_NodeTypesArrayPath = {};
+  int m_PhaseOfInterest = {1};
+  float m_LimitDist = {7.0f};
+  int m_NumSamplPts = {3000};
+  bool m_ExcludeTripleLines = {false};
+  QString m_DistOutputFile = {""};
+  QString m_ErrOutputFile = {""};
+  bool m_SaveRelativeErr = {false};
+  DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
+  DataArrayPath m_FeatureEulerAnglesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgEulerAngles};
+  DataArrayPath m_FeaturePhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
+  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals};
+  DataArrayPath m_SurfaceMeshFaceAreasArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceAreas};
+  DataArrayPath m_SurfaceMeshFeatureFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceFeatureAttributeMatrixName, "FaceLabels"};
+  DataArrayPath m_NodeTypesArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType};
 
   void appendSamplPtsFixedZenith(QVector<float>* xVec, QVector<float>* yVec, QVector<float>* zVec, double theta, double minPhi, double maxPhi, double step);
 

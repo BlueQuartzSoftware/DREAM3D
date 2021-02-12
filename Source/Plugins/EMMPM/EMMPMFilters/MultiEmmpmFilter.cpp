@@ -125,12 +125,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MultiEmmpmFilter::MultiEmmpmFilter()
-: m_OutputAttributeMatrixName("MultiArrayEMMPMOutput")
-, m_OutputArrayPrefix("Segmented_")
-, m_UsePreviousMuSigma(true)
-{
-}
+MultiEmmpmFilter::MultiEmmpmFilter() = default;
 
 // -----------------------------------------------------------------------------
 //

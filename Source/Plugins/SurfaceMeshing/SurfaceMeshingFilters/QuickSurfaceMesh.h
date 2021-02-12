@@ -276,15 +276,15 @@ private:
   std::weak_ptr<DataArray<int8_t>> m_NodeTypesPtr;
   int8_t* m_NodeTypes = nullptr;
 
-  QVector<DataArrayPath> m_SelectedDataArrayPaths = {};
-  DataArrayPath m_SurfaceDataContainerName = {};
-  DataArrayPath m_TripleLineDataContainerName = {};
-  QString m_VertexAttributeMatrixName = {};
-  QString m_FaceAttributeMatrixName = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  QString m_FaceLabelsArrayName = {};
-  QString m_NodeTypesArrayName = {};
-  QString m_FeatureAttributeMatrixName = {};
+  QVector<DataArrayPath> m_SelectedDataArrayPaths = {QVector<DataArrayPath>()};
+  DataArrayPath m_SurfaceDataContainerName = {SIMPL::Defaults::TriangleDataContainerName, "", ""};
+  DataArrayPath m_TripleLineDataContainerName = {"TripleLines", "", ""};
+  QString m_VertexAttributeMatrixName = {SIMPL::Defaults::VertexAttributeMatrixName};
+  QString m_FaceAttributeMatrixName = {SIMPL::Defaults::FaceAttributeMatrixName};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  QString m_FaceLabelsArrayName = {SIMPL::FaceData::SurfaceMeshFaceLabels};
+  QString m_NodeTypesArrayName = {SIMPL::VertexData::SurfaceMeshNodeType};
+  QString m_FeatureAttributeMatrixName = {SIMPL::Defaults::FaceFeatureAttributeMatrixName};
 
   std::vector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
   std::vector<IDataArray::WeakPointer> m_CreatedWeakPtrVector;

@@ -56,11 +56,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindCAxisLocations::FindCAxisLocations()
-: m_QuatsArrayPath("", "", "")
-, m_CAxisLocationsArrayName(SIMPL::CellData::CAxisLocation)
-{
-}
+FindCAxisLocations::FindCAxisLocations() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -76,7 +76,6 @@ private:
 //
 // -----------------------------------------------------------------------------
 GenerateQuaternionConjugate::GenerateQuaternionConjugate()
-: m_DeleteOriginalData(true)
 {
   initialize();
 }

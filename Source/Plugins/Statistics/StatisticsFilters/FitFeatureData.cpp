@@ -55,15 +55,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FitFeatureData::FitFeatureData()
-: m_SelectedFeatureArrayPath("", "", "")
-, m_DistributionType(SIMPL::DistributionType::UnknownDistributionType)
-, m_RemoveBiasedFeatures(false)
-, m_FeaturePhasesArrayPath("", "", "")
-, m_BiasedFeaturesArrayPath("", "", "")
-, m_NewEnsembleArrayArray("", "", "")
-{
-}
+FitFeatureData::FitFeatureData() = default;
 
 // -----------------------------------------------------------------------------
 //

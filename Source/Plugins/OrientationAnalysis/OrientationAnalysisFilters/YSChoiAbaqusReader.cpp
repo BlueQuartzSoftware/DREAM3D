@@ -90,22 +90,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-YSChoiAbaqusReader::YSChoiAbaqusReader()
-: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
-, m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
-, m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
-, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_InputFile("")
-, m_InputFeatureInfoFile("")
-, m_CellEulerAnglesArrayName(SIMPL::CellData::EulerAngles)
-, m_QuatsArrayName(SIMPL::CellData::Quats)
-, m_AvgQuatsArrayName(SIMPL::FeatureData::AvgQuats)
-, m_CellPhasesArrayName(SIMPL::CellData::Phases)
-, m_SurfaceFeaturesArrayName(SIMPL::FeatureData::SurfaceFeatures)
-, m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
-, m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures)
-{
-}
+YSChoiAbaqusReader::YSChoiAbaqusReader() = default;
 
 // -----------------------------------------------------------------------------
 //

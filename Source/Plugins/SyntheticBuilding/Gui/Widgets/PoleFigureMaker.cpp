@@ -50,9 +50,7 @@
 //
 // -----------------------------------------------------------------------------
 PoleFigureMaker::PoleFigureMaker()
-: m_KernelWeightsInited(false)
-{
-}
+: m_KernelWeightsInited(false) = default;
 
 // -----------------------------------------------------------------------------
 //

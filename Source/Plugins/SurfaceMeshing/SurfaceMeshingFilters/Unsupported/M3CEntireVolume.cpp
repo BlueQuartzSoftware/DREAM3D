@@ -45,16 +45,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-M3CEntireVolume::M3CEntireVolume()
-: m_SurfaceMeshEdgesArrayName(SIMPL::CellData::SurfaceMeshEdges)
-, m_SurfaceMeshInternalEdgesArrayName(SIMPL::CellData::SurfaceMeshInternalEdges)
-, m_AddSurfaceLayer(true)
-, m_GrainIdsArrayName(SIMPL::CellData::GrainIds)
-, m_GrainIds(nullptr)
-, m_SurfaceMeshNodeTypeArrayName(SIMPL::CellData::SurfaceMeshNodeType)
-, m_SurfaceMeshNodeType(nullptr)
-{
-}
+M3CEntireVolume::M3CEntireVolume(), m_GrainIdsArrayName(SIMPL::CellData::GrainIds), m_GrainIds(nullptr), m_SurfaceMeshNodeTypeArrayName(SIMPL::CellData::SurfaceMeshNodeType),
+    m_SurfaceMeshNodeType(nullptr) = default;
 
 // -----------------------------------------------------------------------------
 //

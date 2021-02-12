@@ -296,16 +296,16 @@ private:
   std::weak_ptr<DataArray<float>> m_SurfaceMeshTwinBoundaryIncoherencePtr;
   float* m_SurfaceMeshTwinBoundaryIncoherence = nullptr;
 
-  float m_AxisTolerance = {};
-  float m_AngleTolerance = {};
-  bool m_FindCoherence = {};
-  DataArrayPath m_AvgQuatsArrayPath = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
-  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {};
-  QString m_SurfaceMeshTwinBoundaryArrayName = {};
-  QString m_SurfaceMeshTwinBoundaryIncoherenceArrayName = {};
+  float m_AxisTolerance = {0.0f};
+  float m_AngleTolerance = {0.0f};
+  bool m_FindCoherence = {true};
+  DataArrayPath m_AvgQuatsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats};
+  DataArrayPath m_FeaturePhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases};
+  DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
+  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals};
+  QString m_SurfaceMeshTwinBoundaryArrayName = {SIMPL::FaceData::SurfaceMeshTwinBoundary};
+  QString m_SurfaceMeshTwinBoundaryIncoherenceArrayName = {SIMPL::FaceData::SurfaceMeshTwinBoundaryIncoherence};
 
   LaueOpsContainer m_OrientationOps;
   /**

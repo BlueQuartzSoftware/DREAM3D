@@ -55,14 +55,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteStlFile::WriteStlFile()
-: m_OutputStlDirectory("")
-, m_OutputStlPrefix("")
-, m_GroupByPhase(false)
-, m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
-, m_SurfaceMeshFacePhasesArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFacePhases)
-{
-}
+WriteStlFile::WriteStlFile() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -62,10 +62,6 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 FindTriangleGeomNeighbors::FindTriangleGeomNeighbors()
-: m_FeatureAttributeMatrixPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceFeatureAttributeMatrixName, "")
-, m_NeighborListArrayName(SIMPL::FeatureData::NeighborList)
-, m_FaceLabelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_NumNeighborsArrayName(SIMPL::FeatureData::NumNeighbors)
 {
   m_NeighborList = NeighborList<int32_t>::NullPointer();
 }

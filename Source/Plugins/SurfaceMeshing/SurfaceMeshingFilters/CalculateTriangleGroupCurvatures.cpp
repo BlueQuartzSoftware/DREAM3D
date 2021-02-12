@@ -70,7 +70,6 @@ CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int64_t nring
 , m_ParentFilter(parent)
 {
 }
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

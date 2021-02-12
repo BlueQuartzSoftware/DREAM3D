@@ -123,7 +123,7 @@ private:
   StatsDelegate* m_StatsDelegate = nullptr;
 
   EMMPM_Data::Pointer m_Data = {};
-  int m_ErrorCode = {};
+  int m_ErrorCode = {0};
 
   void calcLoop(int rowStart, int rowEnd, int colStart, int colEnd, real_t* yk);
 

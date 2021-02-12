@@ -313,9 +313,7 @@ VerifyTriangleWinding::VerifyTriangleWinding()
 , m_SurfaceMeshNodeFacesArrayName(SIMPL::VertexData::SurfaceMeshNodeFaces)
 , m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
 , m_SurfaceMeshFaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels)
-, m_SurfaceMeshFaceLabels(nullptr)
-{
-}
+, m_SurfaceMeshFaceLabels(nullptr) = default;
 
 // -----------------------------------------------------------------------------
 //

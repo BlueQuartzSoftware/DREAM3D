@@ -223,10 +223,10 @@ protected:
   int writeASCIIPointData(const QString& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
 
 private:
-  QString m_NodesFile = {};
-  QString m_TrianglesFile = {};
-  QString m_OutputStlDirectory = {};
-  QString m_OutputStlPrefix = {};
+  QString m_NodesFile = {""};
+  QString m_TrianglesFile = {""};
+  QString m_OutputStlDirectory = {""};
+  QString m_OutputStlPrefix = {""};
 
   int writeHeader(FILE* f, const QString& header, int triCount);
   int writeNumTrianglesToFile(const QString& filename, int triCount);

@@ -345,17 +345,17 @@ private:
   std::weak_ptr<DataArray<float>> m_EulerAnglesPtr;
   float* m_EulerAngles = nullptr;
 
-  int m_sampleModeSelector = {};
-  int m_PointGroup = {};
-  int m_Numsp = {};
-  double m_MisOr = {};
+  int m_sampleModeSelector = {0};
+  int m_PointGroup = {32};
+  int m_Numsp = {5};
+  double m_MisOr = {3.0};
   FloatVec3Type m_RefOr = {};
-  double m_MisOrFull = {};
+  double m_MisOrFull = {3.0};
   FloatVec3Type m_RefOrFull = {};
-  bool m_OffsetGrid = {};
+  bool m_OffsetGrid = {false};
   QString m_EulerAnglesArrayName = {};
-  DataArrayPath m_DataContainerName = {};
-  QString m_EMsoftAttributeMatrixName = {};
+  DataArrayPath m_DataContainerName = {SIMPL::Defaults::ImageDataContainerName, "", ""};
+  QString m_EMsoftAttributeMatrixName = {SIMPL::Defaults::CellAttributeMatrixName};
 
 public:
   EMsoftSO3Sampler(const EMsoftSO3Sampler&) = delete;            // Copy Constructor Not Implemented

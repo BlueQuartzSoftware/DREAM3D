@@ -202,7 +202,7 @@ public:
   GenerateGeometryConnectivity& operator=(GenerateGeometryConnectivity&&) = delete;      // Move assignment Not Implemented
 
 private:
-  DataArrayPath m_SurfaceDataContainerName = {};
-  bool m_GenerateVertexTriangleLists = {};
-  bool m_GenerateTriangleNeighbors = {};
+  DataArrayPath m_SurfaceDataContainerName = {"", "", ""};
+  bool m_GenerateVertexTriangleLists = {true};
+  bool m_GenerateTriangleNeighbors = {true};
 };

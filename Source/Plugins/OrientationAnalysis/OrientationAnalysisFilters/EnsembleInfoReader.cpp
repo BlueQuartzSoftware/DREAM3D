@@ -66,16 +66,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EnsembleInfoReader::EnsembleInfoReader()
-: m_DataContainerName("")
-, m_CellEnsembleAttributeMatrixName("EnsembleAttributeMatrix")
-, m_InputFile("")
-, m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures)
-, m_PhaseTypesArrayName(SIMPL::EnsembleData::PhaseTypes)
-, m_ptype(PhaseType::Type::Unknown)
-, m_crystruct(999)
-{
-}
+EnsembleInfoReader::EnsembleInfoReader() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -195,11 +195,11 @@ private:
   std::weak_ptr<DataArray<bool>> m_FlaggedFeaturesPtr;
   bool* m_FlaggedFeatures = nullptr;
 
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_FlaggedFeaturesArrayPath = {};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_FlaggedFeaturesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Active};
 
   Int32ArrayType::Pointer m_BoundsPtr;
-  int32_t* m_FeatureBounds;
+  int32_t* m_FeatureBounds = nullptr;
 
 public:
   ExtractFlaggedFeatures(const ExtractFlaggedFeatures&) = delete;            // Copy Constructor Not Implemented

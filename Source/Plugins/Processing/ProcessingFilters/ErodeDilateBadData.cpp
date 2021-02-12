@@ -54,16 +54,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ErodeDilateBadData::ErodeDilateBadData()
-: m_Direction(0)
-, m_NumIterations(1)
-, m_XDirOn(true)
-, m_YDirOn(true)
-, m_ZDirOn(true)
-, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_Neighbors(nullptr)
-{
-}
+ErodeDilateBadData::ErodeDilateBadData() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -202,8 +202,8 @@ private:
   float* m_CellEulerAngles = nullptr;
 
   FloatVec3Type m_RotationAxis = {};
-  float m_RotationAngle = {};
-  DataArrayPath m_CellEulerAnglesArrayPath = {};
+  float m_RotationAngle = {0.0f};
+  DataArrayPath m_CellEulerAnglesArrayPath = {"", "", ""};
 
 public:
   RotateEulerRefFrame(const RotateEulerRefFrame&) = delete;            // Copy Constructor Not Implemented

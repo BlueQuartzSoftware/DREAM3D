@@ -232,11 +232,11 @@ private:
   std::weak_ptr<DataArray<float>> m_AvgQuatsPtr;
   float* m_AvgQuats = nullptr;
 
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  QString m_CellEulerAnglesArrayName = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_FeatureEulerAnglesArrayPath = {};
-  QString m_AvgQuatsArrayName = {};
+  DataArrayPath m_FeatureIdsArrayPath = {"", "", ""};
+  QString m_CellEulerAnglesArrayName = {SIMPL::CellData::EulerAngles};
+  DataArrayPath m_FeaturePhasesArrayPath = {"", "", ""};
+  DataArrayPath m_FeatureEulerAnglesArrayPath = {"", "", ""};
+  QString m_AvgQuatsArrayName = {SIMPL::FeatureData::AvgQuats};
 
 public:
   JumbleOrientations(const JumbleOrientations&) = delete;            // Copy Constructor Not Implemented

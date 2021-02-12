@@ -67,14 +67,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CreateEnsembleInfo::CreateEnsembleInfo()
-: m_DataContainerName("")
-, m_CellEnsembleAttributeMatrixName("EnsembleAttributeMatrix")
-, m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures)
-, m_PhaseTypesArrayName(SIMPL::EnsembleData::PhaseTypes)
-, m_PhaseNamesArrayName("PhaseNames")
-{
-}
+CreateEnsembleInfo::CreateEnsembleInfo() = default;
 
 // -----------------------------------------------------------------------------
 //

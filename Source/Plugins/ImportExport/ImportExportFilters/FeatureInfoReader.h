@@ -317,17 +317,17 @@ private:
   std::weak_ptr<DataArray<float>> m_FeatureEulerAnglesPtr;
   float* m_FeatureEulerAngles = nullptr;
 
-  DataArrayPath m_CellAttributeMatrixName = {};
-  QString m_CellFeatureAttributeMatrixName = {};
-  QString m_InputFile = {};
-  bool m_CreateCellLevelArrays = {};
-  bool m_RenumberFeatures = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  QString m_CellPhasesArrayName = {};
-  QString m_CellEulerAnglesArrayName = {};
-  QString m_FeaturePhasesArrayName = {};
-  QString m_FeatureEulerAnglesArrayName = {};
-  int m_Delimiter = {};
+  DataArrayPath m_CellAttributeMatrixName = {"", "", ""};
+  QString m_CellFeatureAttributeMatrixName = {"FeatureAttributeMatrix"};
+  QString m_InputFile = {""};
+  bool m_CreateCellLevelArrays = {true};
+  bool m_RenumberFeatures = {true};
+  DataArrayPath m_FeatureIdsArrayPath = {"", "", ""};
+  QString m_CellPhasesArrayName = {SIMPL::CellData::Phases};
+  QString m_CellEulerAnglesArrayName = {SIMPL::CellData::EulerAngles};
+  QString m_FeaturePhasesArrayName = {SIMPL::FeatureData::Phases};
+  QString m_FeatureEulerAnglesArrayName = {SIMPL::FeatureData::EulerAngles};
+  int m_Delimiter = {0};
 
 public:
   FeatureInfoReader(const FeatureInfoReader&) = delete;            // Copy Constructor Not Implemented

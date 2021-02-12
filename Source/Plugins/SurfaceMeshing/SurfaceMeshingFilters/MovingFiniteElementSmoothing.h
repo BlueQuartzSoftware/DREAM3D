@@ -218,12 +218,12 @@ private:
   std::weak_ptr<DataArray<int8_t>> m_SurfaceMeshNodeTypePtr;
   int8_t* m_SurfaceMeshNodeType = nullptr;
 
-  int m_IterationSteps = {};
-  bool m_NodeConstraints = {};
-  bool m_ConstrainSurfaceNodes = {};
-  bool m_ConstrainQuadPoints = {};
-  bool m_SmoothTripleLines = {};
-  DataArrayPath m_SurfaceMeshNodeTypeArrayPath = {};
+  int m_IterationSteps = {1};
+  bool m_NodeConstraints = {true};
+  bool m_ConstrainSurfaceNodes = {true};
+  bool m_ConstrainQuadPoints = {true};
+  bool m_SmoothTripleLines = {true};
+  DataArrayPath m_SurfaceMeshNodeTypeArrayPath = {SIMPL::Defaults::DataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType};
 
 public:
   MovingFiniteElementSmoothing(const MovingFiniteElementSmoothing&) = delete;            // Copy Constructor Not Implemented

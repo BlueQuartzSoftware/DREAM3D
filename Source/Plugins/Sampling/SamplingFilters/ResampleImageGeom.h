@@ -269,8 +269,13 @@ private:
   QString m_CurrentGeomInfo = {};
   QString m_NewGeomInfo = {};
 
-  QString generateCurrentGeomInfo() const;
-  QString generateNewGeomInfo() const;
+  DataArrayPath m_NewDataContainerName = {SIMPL::Defaults::NewImageDataContainerName, "", ""};
+  DataArrayPath m_CellAttributeMatrixPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, ""};
+  DataArrayPath m_CellFeatureAttributeMatrixPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""};
+  FloatVec3Type m_Spacing = {};
+  bool m_RenumberFeatures = {true};
+  bool m_SaveAsNewDataContainer = {false};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
 
 public:
   ResampleImageGeom(const ResampleImageGeom&) = delete;            // Copy Constructor Not Implemented

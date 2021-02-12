@@ -38,6 +38,7 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/FourthOrderPolynomialFilterParameter.h"
 #include "SIMPLib/FilterParameters/SecondOrderPolynomialFilterParameter.h"
 #include "SIMPLib/FilterParameters/ThirdOrderPolynomialFilterParameter.h"
@@ -298,14 +299,14 @@ public:
   WarpRegularGrid& operator=(WarpRegularGrid&&) = delete;      // Move Assignment Not Implemented
 
 private:
-  DataArrayPath m_NewDataContainerName = {};
-  DataArrayPath m_CellAttributeMatrixPath = {};
-  int m_PolyOrder = {};
-  Float2ndOrderPolynomial m_SecondOrderACoeff = {};
-  Float2ndOrderPolynomial m_SecondOrderBCoeff = {};
+  DataArrayPath m_NewDataContainerName = {SIMPL::Defaults::NewImageDataContainerName, "", ""};
+  DataArrayPath m_CellAttributeMatrixPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, ""};
+  int m_PolyOrder = {0};
+  Float2ndOrderPoly_t m_SecondOrderACoeff = {};
+  Float2ndOrderPoly_t m_SecondOrderBCoeff = {};
   Float3rdOrderPoly_t m_ThirdOrderACoeff = {};
   Float3rdOrderPoly_t m_ThirdOrderBCoeff = {};
-  Float4thOrderPolynomial m_FourthOrderACoeff = {};
-  Float4thOrderPolynomial m_FourthOrderBCoeff = {};
-  bool m_SaveAsNewDataContainer = {};
+  Float4thOrderPoly_t m_FourthOrderACoeff = {};
+  Float4thOrderPoly_t m_FourthOrderBCoeff = {};
+  bool m_SaveAsNewDataContainer = {false};
 };

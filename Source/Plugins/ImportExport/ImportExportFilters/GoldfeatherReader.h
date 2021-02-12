@@ -311,17 +311,17 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
   int32_t* m_SurfaceMeshFaceLabels = nullptr;
 
-  DataArrayPath m_SurfaceDataContainerName = {};
-  QString m_VertexAttributeMatrixName = {};
-  QString m_FaceAttributeMatrixName = {};
-  QString m_SurfaceMeshPrincipalCurvature1sArrayName = {};
-  QString m_SurfaceMeshPrincipalCurvature2sArrayName = {};
-  QString m_SurfaceMeshPrincipalDirection1sArrayName = {};
-  QString m_SurfaceMeshPrincipalDirection2sArrayName = {};
-  QString m_SurfaceMeshNodeNormalsArrayName = {};
-  QString m_SurfaceMeshFaceLabelsArrayName = {};
-  QString m_SurfaceMeshFaceNormalsArrayName = {};
-  QString m_InputFile = {};
+  DataArrayPath m_SurfaceDataContainerName = {SIMPL::Defaults::TriangleDataContainerName, "", ""};
+  QString m_VertexAttributeMatrixName = {SIMPL::Defaults::VertexAttributeMatrixName};
+  QString m_FaceAttributeMatrixName = {SIMPL::Defaults::FaceAttributeMatrixName};
+  QString m_SurfaceMeshPrincipalCurvature1sArrayName = {SIMPL::FaceData::SurfaceMeshPrincipalCurvature1};
+  QString m_SurfaceMeshPrincipalCurvature2sArrayName = {SIMPL::FaceData::SurfaceMeshPrincipalCurvature2};
+  QString m_SurfaceMeshPrincipalDirection1sArrayName = {SIMPL::FaceData::SurfaceMeshPrincipalDirection1};
+  QString m_SurfaceMeshPrincipalDirection2sArrayName = {SIMPL::FaceData::SurfaceMeshPrincipalDirection2};
+  QString m_SurfaceMeshNodeNormalsArrayName = {SIMPL::VertexData::SurfaceMeshNodeNormals};
+  QString m_SurfaceMeshFaceLabelsArrayName = {SIMPL::FaceData::SurfaceMeshFaceLabels};
+  QString m_SurfaceMeshFaceNormalsArrayName = {SIMPL::FaceData::SurfaceMeshFaceNormals};
+  QString m_InputFile = {""};
 
 public:
   GoldfeatherReader(const GoldfeatherReader&) = delete;            // Copy Constructor Not Implemented

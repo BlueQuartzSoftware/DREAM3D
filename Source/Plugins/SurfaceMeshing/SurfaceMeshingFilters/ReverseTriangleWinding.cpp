@@ -97,10 +97,7 @@ public:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReverseTriangleWinding::ReverseTriangleWinding()
-: m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
-{
-}
+ReverseTriangleWinding::ReverseTriangleWinding() = default;
 
 // -----------------------------------------------------------------------------
 //

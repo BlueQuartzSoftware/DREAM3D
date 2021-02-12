@@ -263,12 +263,12 @@ private:
   uint8_t* m_CellIPFColors = nullptr;
 
   FloatVec3Type m_ReferenceDir = {};
-  DataArrayPath m_CellPhasesArrayPath = {};
-  DataArrayPath m_CellEulerAnglesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  bool m_UseGoodVoxels = {};
-  DataArrayPath m_GoodVoxelsArrayPath = {};
-  QString m_CellIPFColorsArrayName = {};
+  DataArrayPath m_CellPhasesArrayPath = {"", "", ""};
+  DataArrayPath m_CellEulerAnglesArrayPath = {"", "", ""};
+  DataArrayPath m_CrystalStructuresArrayPath = {"", "", ""};
+  bool m_UseGoodVoxels = {false};
+  DataArrayPath m_GoodVoxelsArrayPath = {"", "", ""};
+  QString m_CellIPFColorsArrayName = {SIMPL::CellData::IPFColor};
 
   int32_t m_PhaseWarningCount = 0;
 

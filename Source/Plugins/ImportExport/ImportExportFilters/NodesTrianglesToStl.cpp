@@ -54,13 +54,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-NodesTrianglesToStl::NodesTrianglesToStl()
-: m_NodesFile("")
-, m_TrianglesFile("")
-, m_OutputStlDirectory("")
-, m_OutputStlPrefix("")
-{
-}
+NodesTrianglesToStl::NodesTrianglesToStl() = default;
 
 // -----------------------------------------------------------------------------
 //

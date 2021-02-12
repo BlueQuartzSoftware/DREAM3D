@@ -238,11 +238,11 @@ private:
   std::weak_ptr<DataArray<float>> m_SurfaceMeshFaceMisorientationColorsPtr;
   float* m_SurfaceMeshFaceMisorientationColors = nullptr;
 
-  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
-  DataArrayPath m_AvgQuatsArrayPath = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  QString m_SurfaceMeshFaceMisorientationColorsArrayName = {};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
+  DataArrayPath m_AvgQuatsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats};
+  DataArrayPath m_FeaturePhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases};
+  DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
+  QString m_SurfaceMeshFaceMisorientationColorsArrayName = {SIMPL::FaceData::SurfaceMeshFaceMisorientationColors};
 
 public:
   GenerateFaceMisorientationColoring(const GenerateFaceMisorientationColoring&) = delete;            // Copy Constructor Not Implemented

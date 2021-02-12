@@ -264,13 +264,13 @@ private:
   std::weak_ptr<DataArray<float>> m_FeatureStdevCAxisMisorientationsPtr;
   float* m_FeatureStdevCAxisMisorientations = nullptr;
 
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_CellPhasesArrayPath = {};
-  DataArrayPath m_AvgCAxesArrayPath = {};
-  DataArrayPath m_QuatsArrayPath = {};
-  QString m_FeatureAvgCAxisMisorientationsArrayName = {};
-  QString m_FeatureStdevCAxisMisorientationsArrayName = {};
-  QString m_FeatureReferenceCAxisMisorientationsArrayName = {};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_CellPhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases};
+  DataArrayPath m_AvgCAxesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgCAxes};
+  DataArrayPath m_QuatsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats};
+  QString m_FeatureAvgCAxisMisorientationsArrayName = {SIMPL::FeatureData::FeatureAvgCAxisMisorientations};
+  QString m_FeatureStdevCAxisMisorientationsArrayName = {SIMPL::FeatureData::FeatureStdevCAxisMisorientations};
+  QString m_FeatureReferenceCAxisMisorientationsArrayName = {SIMPL::CellData::FeatureReferenceCAxisMisorientations};
 
   LaueOpsContainer m_OrientationOps;
 

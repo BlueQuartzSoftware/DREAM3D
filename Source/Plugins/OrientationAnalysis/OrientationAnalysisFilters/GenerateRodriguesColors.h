@@ -251,12 +251,12 @@ private:
   std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
   bool* m_GoodVoxels = nullptr;
 
-  DataArrayPath m_CellPhasesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  DataArrayPath m_CellEulerAnglesArrayPath = {};
-  DataArrayPath m_GoodVoxelsArrayPath = {};
-  QString m_CellRodriguesColorsArrayName = {};
-  bool m_UseGoodVoxels = {};
+  DataArrayPath m_CellPhasesArrayPath = {"", "", ""};
+  DataArrayPath m_CrystalStructuresArrayPath = {"", "", ""};
+  DataArrayPath m_CellEulerAnglesArrayPath = {"", "", ""};
+  DataArrayPath m_GoodVoxelsArrayPath = {"", "", ""};
+  QString m_CellRodriguesColorsArrayName = {SIMPL::CellData::RodriguesColor};
+  bool m_UseGoodVoxels = {false};
 
 public:
   GenerateRodriguesColors(const GenerateRodriguesColors&) = delete;            // Copy Constructor Not Implemented

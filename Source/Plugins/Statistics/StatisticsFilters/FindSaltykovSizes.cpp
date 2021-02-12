@@ -58,11 +58,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindSaltykovSizes::FindSaltykovSizes()
-: m_EquivalentDiametersArrayPath(SIMPL::FeatureData::EquivalentDiameters)
-, m_SaltykovEquivalentDiametersArrayPath(SIMPL::FeatureData::SaltykovEquivalentDiameters)
-{
-}
+FindSaltykovSizes::FindSaltykovSizes() = default;
 
 // -----------------------------------------------------------------------------
 //

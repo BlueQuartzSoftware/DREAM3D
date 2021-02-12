@@ -176,7 +176,7 @@ private:
   std::weak_ptr<DataArray<double>> m_SurfaceMeshTriangleDihedralAnglesPtr;
   double* m_SurfaceMeshTriangleDihedralAngles = nullptr;
 
-  DataArrayPath m_SurfaceMeshTriangleDihedralAnglesArrayPath = {};
+  DataArrayPath m_SurfaceMeshTriangleDihedralAnglesArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceDihedralAngles};
 
 public:
   TriangleDihedralAngleFilter(const TriangleDihedralAngleFilter&) = delete;            // Copy Constructor Not Implemented

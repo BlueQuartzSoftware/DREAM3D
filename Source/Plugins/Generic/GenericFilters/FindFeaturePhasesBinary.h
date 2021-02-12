@@ -216,10 +216,10 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
   int32_t* m_FeaturePhases = nullptr;
 
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_GoodVoxelsArrayPath = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  QString m_CellEnsembleAttributeMatrixName = {};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_GoodVoxelsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask};
+  DataArrayPath m_FeaturePhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases};
+  QString m_CellEnsembleAttributeMatrixName = {SIMPL::Defaults::CellEnsembleAttributeMatrixName};
 
 public:
   FindFeaturePhasesBinary(const FindFeaturePhasesBinary&) = delete;            // Copy Constructor Not Implemented

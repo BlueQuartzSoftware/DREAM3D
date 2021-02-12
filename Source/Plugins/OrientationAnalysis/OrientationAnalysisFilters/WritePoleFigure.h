@@ -401,19 +401,19 @@ private:
   std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
   bool* m_GoodVoxels = nullptr;
 
-  QString m_ImagePrefix = {};
-  QString m_OutputPath = {};
-  int m_ImageFormat = {};
-  int m_ImageSize = {};
-  int m_LambertSize = {};
-  int m_NumColors = {};
-  int m_ImageLayout = {};
-  DataArrayPath m_CellEulerAnglesArrayPath = {};
-  DataArrayPath m_CellPhasesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  DataArrayPath m_GoodVoxelsArrayPath = {};
-  bool m_UseGoodVoxels = {};
-  int m_GenerationAlgorithm = {};
+  QString m_ImagePrefix = {""};
+  QString m_OutputPath = {""};
+  int m_ImageFormat = {0};
+  int m_ImageSize = {512};
+  int m_LambertSize = {64};
+  int m_NumColors = {32};
+  int m_ImageLayout = {SIMPL::Layout::Square};
+  DataArrayPath m_CellEulerAnglesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::EulerAngles};
+  DataArrayPath m_CellPhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases};
+  DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
+  DataArrayPath m_GoodVoxelsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask};
+  bool m_UseGoodVoxels = {false};
+  int m_GenerationAlgorithm = {0};
   QString m_Title = {};
   DataArrayPath m_MaterialNameArrayPath = {};
 

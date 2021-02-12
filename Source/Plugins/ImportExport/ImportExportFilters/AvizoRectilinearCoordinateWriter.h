@@ -251,11 +251,11 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
 
-  QString m_OutputFile = {};
-  bool m_WriteBinaryFile = {};
-  QString m_Units = {};
-  bool m_WriteFeatureIds = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
+  QString m_OutputFile = {""};
+  bool m_WriteBinaryFile = {false};
+  QString m_Units = {"microns"};
+  bool m_WriteFeatureIds = {true};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
 
 public:
   AvizoRectilinearCoordinateWriter(const AvizoRectilinearCoordinateWriter&) = delete;            // Copy Constructor Not Implemented

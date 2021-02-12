@@ -190,8 +190,8 @@ private:
   std::weak_ptr<DataArray<float>> m_VolFractionsPtr;
   float* m_VolFractions = nullptr;
 
-  DataArrayPath m_CellPhasesArrayPath = {};
-  DataArrayPath m_VolFractionsArrayPath = {};
+  DataArrayPath m_CellPhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases};
+  DataArrayPath m_VolFractionsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::VolFractions};
 
 public:
   FindVolFractions(const FindVolFractions&) = delete;            // Copy Constructor Not Implemented

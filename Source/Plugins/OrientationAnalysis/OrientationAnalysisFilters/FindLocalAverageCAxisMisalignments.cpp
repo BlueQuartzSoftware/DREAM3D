@@ -59,18 +59,6 @@
 //
 // -----------------------------------------------------------------------------
 FindLocalAverageCAxisMisalignments::FindLocalAverageCAxisMisalignments()
-: m_NewCellFeatureAttributeMatrixName("", "", "")
-, m_CalcUnbiasedAvg(false)
-, m_CalcBiasedAvg(false)
-, m_NeighborListArrayPath("", "", "")
-, m_CAxisMisalignmentListArrayPath("", "", "")
-, m_FeatureIdsArrayPath("", "", "")
-, m_CellParentIdsArrayPath("", "", "")
-, m_AvgCAxisMisalignmentsArrayPath("", "", "")
-, m_FeatureParentIdsArrayPath("", "", "")
-, m_CrystalStructuresArrayPath("", "", "")
-, m_UnbiasedLocalCAxisMisalignmentsArrayName(SIMPL::FeatureData::UnbiasedLocalCAxisMisalignments)
-, m_NumFeaturesPerParentArrayName(SIMPL::FeatureData::NumFeaturesPerParent)
 {
   m_OrientationOps = LaueOps::GetAllOrientationOps();
 }

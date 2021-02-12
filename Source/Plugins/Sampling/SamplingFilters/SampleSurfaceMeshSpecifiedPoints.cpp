@@ -60,12 +60,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SampleSurfaceMeshSpecifiedPoints::SampleSurfaceMeshSpecifiedPoints()
-: m_InputFilePath("")
-, m_OutputFilePath("")
-, m_NumPoints(0)
-{
-}
+SampleSurfaceMeshSpecifiedPoints::SampleSurfaceMeshSpecifiedPoints() = default;
 
 // -----------------------------------------------------------------------------
 //

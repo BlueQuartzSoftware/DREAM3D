@@ -158,7 +158,7 @@ protected:
   void initialize();
 
 private:
-  QString m_SurfaceMeshUniqueEdgesArrayName = {};
+  QString m_SurfaceMeshUniqueEdgesArrayName = {SIMPL::CellData::SurfaceMeshUniqueEdges};
 
   //   int32_t* m_SurfaceMeshUniqueEdges;
   DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshTriangleEdges)
