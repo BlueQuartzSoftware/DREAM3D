@@ -91,32 +91,32 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     choices.push_back("LogNormal");
     choices.push_back("Power Law");
     parameter->setChoices(choices);
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number Of Bins For Correlated Array", NumberOfCorrelatedBins, FilterParameter::Parameter, FitCorrelatedFeatureData));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number Of Bins For Correlated Array", NumberOfCorrelatedBins, FilterParameter::Category::Parameter, FitCorrelatedFeatureData));
   QStringList linkedProps("BiasedFeaturesArrayPath");
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Remove Biased Features", RemoveBiasedFeatures, FilterParameter::Parameter, FitCorrelatedFeatureData, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Remove Biased Features", RemoveBiasedFeatures, FilterParameter::Category::Parameter, FitCorrelatedFeatureData, linkedProps));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Array To Fit", SelectedFeatureArrayPath, FilterParameter::RequiredArray, FitCorrelatedFeatureData, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Array To Fit", SelectedFeatureArrayPath, FilterParameter::Category::RequiredArray, FitCorrelatedFeatureData, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Array To Correlate With", CorrelatedFeatureArrayPath, FilterParameter::RequiredArray, FitCorrelatedFeatureData, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Array To Correlate With", CorrelatedFeatureArrayPath, FilterParameter::Category::RequiredArray, FitCorrelatedFeatureData, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeaturePhases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FitCorrelatedFeatureData, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeaturePhases", FeaturePhasesArrayPath, FilterParameter::Category::RequiredArray, FitCorrelatedFeatureData, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("BiasedFeatures", BiasedFeaturesArrayPath, FilterParameter::RequiredArray, FitCorrelatedFeatureData, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("BiasedFeatures", BiasedFeaturesArrayPath, FilterParameter::Category::RequiredArray, FitCorrelatedFeatureData, req));
   }
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(AttributeMatrix::Category::Ensemble);
-    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("New Ensemble Array", NewEnsembleArrayArrayPath, FilterParameter::CreatedArray, FitCorrelatedFeatureData, req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("New Ensemble Array", NewEnsembleArrayArrayPath, FilterParameter::Category::CreatedArray, FitCorrelatedFeatureData, req));
   }
 
   setFilterParameters(parameters);

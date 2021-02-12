@@ -134,15 +134,15 @@ void FindDifferenceMap::setupFilterParameters()
   FilterParameterVectorType parameters;
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("First Attribute Array", FirstInputArrayPath, FilterParameter::RequiredArray, FindDifferenceMap, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("First Attribute Array", FirstInputArrayPath, FilterParameter::Category::RequiredArray, FindDifferenceMap, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Second Attribute Array", SecondInputArrayPath, FilterParameter::RequiredArray, FindDifferenceMap, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Second Attribute Array", SecondInputArrayPath, FilterParameter::Category::RequiredArray, FindDifferenceMap, req));
   }
   {
     DataArrayCreationFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Difference Map", DifferenceMapArrayPath, FilterParameter::CreatedArray, FindDifferenceMap, req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Difference Map", DifferenceMapArrayPath, FilterParameter::Category::CreatedArray, FindDifferenceMap, req));
   }
   setFilterParameters(parameters);
 }

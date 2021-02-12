@@ -89,23 +89,23 @@ CalculateArrayHistogram::~CalculateArrayHistogram() = default;
 void CalculateArrayHistogram::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Bins", NumberOfBins, FilterParameter::Parameter, CalculateArrayHistogram));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Bins", NumberOfBins, FilterParameter::Category::Parameter, CalculateArrayHistogram));
   QStringList linkedProps;
   linkedProps << "MinRange"
               << "MaxRange";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Min & Max Range", UserDefinedRange, FilterParameter::Parameter, CalculateArrayHistogram, linkedProps));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Min Value", MinRange, FilterParameter::Parameter, CalculateArrayHistogram));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Max Value", MaxRange, FilterParameter::Parameter, CalculateArrayHistogram));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Min & Max Range", UserDefinedRange, FilterParameter::Category::Parameter, CalculateArrayHistogram, linkedProps));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Min Value", MinRange, FilterParameter::Category::Parameter, CalculateArrayHistogram));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Max Value", MaxRange, FilterParameter::Category::Parameter, CalculateArrayHistogram));
   linkedProps.clear();
   linkedProps << "NewDataContainerName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("New Data Container", NewDataContainer, FilterParameter::Parameter, CalculateArrayHistogram, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("New Data Container", NewDataContainer, FilterParameter::Category::Parameter, CalculateArrayHistogram, linkedProps));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Category::Any);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Histogram", SelectedArrayPath, FilterParameter::RequiredArray, CalculateArrayHistogram, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Histogram", SelectedArrayPath, FilterParameter::Category::RequiredArray, CalculateArrayHistogram, req));
   }
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container ", NewDataContainerName, FilterParameter::CreatedArray, CalculateArrayHistogram));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Attribute Matrix", NewAttributeMatrixName, NewDataContainerName, FilterParameter::CreatedArray, CalculateArrayHistogram));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Histogram", NewDataArrayName, NewDataContainerName, NewAttributeMatrixName, FilterParameter::CreatedArray, CalculateArrayHistogram));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container ", NewDataContainerName, FilterParameter::Category::CreatedArray, CalculateArrayHistogram));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Attribute Matrix", NewAttributeMatrixName, NewDataContainerName, FilterParameter::Category::CreatedArray, CalculateArrayHistogram));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Histogram", NewDataArrayName, NewDataContainerName, NewAttributeMatrixName, FilterParameter::Category::CreatedArray, CalculateArrayHistogram));
   setFilterParameters(parameters);
 }
 

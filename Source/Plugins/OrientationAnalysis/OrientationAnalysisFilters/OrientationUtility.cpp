@@ -31,7 +31,7 @@ void OrientationUtility::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(OrientationUtilityFilterParameter::New("", "", "", FilterParameter::Parameter));
+  parameters.push_back(OrientationUtilityFilterParameter::Create("", "", "", FilterParameter::Category::Parameter));
 
   setFilterParameters(parameters);
 }

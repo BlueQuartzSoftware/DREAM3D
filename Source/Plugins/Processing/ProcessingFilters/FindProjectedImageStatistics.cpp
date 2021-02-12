@@ -182,10 +182,10 @@ void FindProjectedImageStatistics::setupFilterParameters()
     choices.push_back("XZ");
     choices.push_back("YZ");
     parameter->setChoices(choices);
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
@@ -201,19 +201,19 @@ void FindProjectedImageStatistics::setupFilterParameters()
     daTypes.push_back(SIMPL::TypeNames::Float);
     daTypes.push_back(SIMPL::TypeNames::Double);
     req.daTypes = daTypes;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Quantify", SelectedArrayPath, FilterParameter::RequiredArray, FindProjectedImageStatistics, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Quantify", SelectedArrayPath, FilterParameter::Category::RequiredArray, FindProjectedImageStatistics, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Min", ProjectedImageMinArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Min", ProjectedImageMinArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::Category::CreatedArray, FindProjectedImageStatistics));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Max", ProjectedImageMaxArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Max", ProjectedImageMaxArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::Category::CreatedArray, FindProjectedImageStatistics));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Avg", ProjectedImageAvgArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Avg", ProjectedImageAvgArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::Category::CreatedArray, FindProjectedImageStatistics));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Std", ProjectedImageStdArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Std", ProjectedImageStdArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::Category::CreatedArray, FindProjectedImageStatistics));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Var", ProjectedImageVarArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Var", ProjectedImageVarArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::Category::CreatedArray, FindProjectedImageStatistics));
   setFilterParameters(parameters);
 }
 

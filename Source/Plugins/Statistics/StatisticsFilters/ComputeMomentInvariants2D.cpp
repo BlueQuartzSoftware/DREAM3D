@@ -72,27 +72,27 @@ void ComputeMomentInvariants2D::setupFilterParameters()
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Any, IGeometry::Type::Any);
     AttributeMatrix::Types amTypes = {AttributeMatrix::Type::Cell};
     req.amTypes = amTypes;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, ComputeMomentInvariants2D, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::Category::RequiredArray, ComputeMomentInvariants2D, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 6, AttributeMatrix::Type::Any, IGeometry::Type::Any);
     AttributeMatrix::Types amTypes = {AttributeMatrix::Type::CellFeature};
     req.amTypes = amTypes;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Rect", FeatureRectArrayPath, FilterParameter::RequiredArray, ComputeMomentInvariants2D, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Rect", FeatureRectArrayPath, FilterParameter::Category::RequiredArray, ComputeMomentInvariants2D, req));
   }
 
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Normalize Moment Invariants", NormalizeMomentInvariants, FilterParameter::Parameter, ComputeMomentInvariants2D));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Normalize Moment Invariants", NormalizeMomentInvariants, FilterParameter::Category::Parameter, ComputeMomentInvariants2D));
 
-  parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Feature Data", FilterParameter::Category::CreatedArray));
   DataArrayCreationFilterParameter::RequirementType dacReq;
   dacReq.amTypes = {AttributeMatrix::Type::CellFeature};
-  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Omega 1", Omega1ArrayPath, FilterParameter::CreatedArray, ComputeMomentInvariants2D, dacReq));
-  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Omega 2", Omega2ArrayPath, FilterParameter::CreatedArray, ComputeMomentInvariants2D, dacReq));
+  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Omega 1", Omega1ArrayPath, FilterParameter::Category::CreatedArray, ComputeMomentInvariants2D, dacReq));
+  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Omega 2", Omega2ArrayPath, FilterParameter::Category::CreatedArray, ComputeMomentInvariants2D, dacReq));
 
   QStringList linkedProps;
   linkedProps << "CentralMomentsArrayPath";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save Central Moments", SaveCentralMoments, FilterParameter::Parameter, ComputeMomentInvariants2D, linkedProps));
-  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Central Moments", CentralMomentsArrayPath, FilterParameter::CreatedArray, ComputeMomentInvariants2D, dacReq));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save Central Moments", SaveCentralMoments, FilterParameter::Category::Parameter, ComputeMomentInvariants2D, linkedProps));
+  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Central Moments", CentralMomentsArrayPath, FilterParameter::Category::CreatedArray, ComputeMomentInvariants2D, dacReq));
 
   setFilterParameters(parameters);
 }

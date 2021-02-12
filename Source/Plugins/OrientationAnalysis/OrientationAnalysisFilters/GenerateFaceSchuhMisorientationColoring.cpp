@@ -192,23 +192,23 @@ void GenerateFaceSchuhMisorientationColoring::setupFilterParameters()
   FilterParameterVectorType parameters;
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("SurfaceMeshFaceLabels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, GenerateFaceSchuhMisorientationColoring, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("SurfaceMeshFaceLabels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::Category::RequiredArray, GenerateFaceSchuhMisorientationColoring, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("AvgQuats", AvgQuatsArrayPath, FilterParameter::RequiredArray, GenerateFaceSchuhMisorientationColoring, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("AvgQuats", AvgQuatsArrayPath, FilterParameter::Category::RequiredArray, GenerateFaceSchuhMisorientationColoring, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeaturePhases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, GenerateFaceSchuhMisorientationColoring, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeaturePhases", FeaturePhasesArrayPath, FilterParameter::Category::RequiredArray, GenerateFaceSchuhMisorientationColoring, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("CrystalStructures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, GenerateFaceSchuhMisorientationColoring, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("CrystalStructures", CrystalStructuresArrayPath, FilterParameter::Category::RequiredArray, GenerateFaceSchuhMisorientationColoring, req));
   }
 
-  parameters.push_back(
-      SIMPL_NEW_STRING_FP("SurfaceMeshFaceSchuhMisorientationColors", SurfaceMeshFaceSchuhMisorientationColorsArrayName, FilterParameter::CreatedArray, GenerateFaceSchuhMisorientationColoring));
+  parameters.push_back(SIMPL_NEW_STRING_FP("SurfaceMeshFaceSchuhMisorientationColors", SurfaceMeshFaceSchuhMisorientationColorsArrayName, FilterParameter::Category::CreatedArray,
+                                           GenerateFaceSchuhMisorientationColoring));
 
   setFilterParameters(parameters);
 }

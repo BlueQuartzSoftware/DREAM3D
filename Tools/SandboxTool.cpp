@@ -44,7 +44,7 @@
 #include <QtCore/QString>
 
 #include "DREAM3DToolsConfiguration.h"
-#include "SandboxTool/UpdateMDHeader.hpp"
+#include "SandboxTool/RemoveSetupFilterParameters.hpp"
 
 /**
  * @brief findPath
@@ -156,15 +156,15 @@ int main(int argc, char* argv[])
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPL/Source/"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPLView/Source"));
 
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPLView/Source"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPLVtkLib"));
+  //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPLView/Source"));
+  //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPLVtkLib"));
 
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Source"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Test"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Tools"));
+  //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Source"));
+  //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Test"));
+  //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Tools"));
 
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../EbsdLib"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../H5Support"));
+  //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../EbsdLib"));
+  //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../H5Support"));
 
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/AFRLDistributionC/"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/CRADA3DSystems/"));
@@ -186,11 +186,11 @@ int main(int argc, char* argv[])
 #endif
 
   QStringList filters;
-  filters.append("*.md");
+  filters.append("*.h");
 
   for(auto const& dir : dirs)
   {
-    RecursiveFileSearch<UpdateMDHeader>(dir, filters);
+    RecursiveFileSearch<RemoveSetupFilterParameters>(dir, filters);
   }
 
   return 0;

@@ -97,29 +97,32 @@ FindShapes::~FindShapes() = default;
 void FindShapes::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindShapes, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::Category::RequiredArray, FindShapes, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Feature Data", FilterParameter::Category::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, FilterParameter::RequiredArray, FindShapes, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, FilterParameter::Category::RequiredArray, FindShapes, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindShapes, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::Category::RequiredArray, FindShapes, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Omega3s", Omega3sArrayName, CellFeatureAttributeMatrixName, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FindShapes));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Axis Lengths", AxisLengthsArrayName, CellFeatureAttributeMatrixName, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FindShapes));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Feature Data", FilterParameter::Category::CreatedArray));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Axis Euler Angles", AxisEulerAnglesArrayName, CellFeatureAttributeMatrixName, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FindShapes));
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Omega3s", Omega3sArrayName, CellFeatureAttributeMatrixName, CellFeatureAttributeMatrixName, FilterParameter::Category::CreatedArray, FindShapes));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Aspect Ratios", AspectRatiosArrayName, CellFeatureAttributeMatrixName, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FindShapes));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Volumes", VolumesArrayName, CellFeatureAttributeMatrixName, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FindShapes));
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Axis Lengths", AxisLengthsArrayName, CellFeatureAttributeMatrixName, CellFeatureAttributeMatrixName, FilterParameter::Category::CreatedArray, FindShapes));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Axis Euler Angles", AxisEulerAnglesArrayName, CellFeatureAttributeMatrixName, CellFeatureAttributeMatrixName,
+                                                      FilterParameter::Category::CreatedArray, FindShapes));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Aspect Ratios", AspectRatiosArrayName, CellFeatureAttributeMatrixName, CellFeatureAttributeMatrixName, FilterParameter::Category::CreatedArray, FindShapes));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Volumes", VolumesArrayName, CellFeatureAttributeMatrixName, CellFeatureAttributeMatrixName, FilterParameter::Category::CreatedArray, FindShapes));
   setFilterParameters(parameters);
 }
 

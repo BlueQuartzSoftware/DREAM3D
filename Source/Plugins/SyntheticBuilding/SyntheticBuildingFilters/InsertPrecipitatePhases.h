@@ -134,7 +134,7 @@ public:
 
   ~InsertPrecipitatePhases() override;
 
-  using EnumType = unsigned int;
+  using EnumType = uint32_t;
 
   enum class SaveMethod : EnumType
   {

@@ -105,8 +105,8 @@ public:
    * @param groupIndex Integer that specifies the group that this filter parameter will be placed in.
    * @return
    */
-  static Pointer New(const QString& humanLabel, const QString& propertyName, EnsembleInfo defaultValue, Category category, const SetterCallbackType& setterCallback,
-                     const GetterCallbackType& getterCallback, QVector<QString> choices, bool showOperators, int groupIndex = -1);
+  static Pointer Create(const QString& humanLabel, const QString& propertyName, EnsembleInfo defaultValue, Category category, const SetterCallbackType& setterCallback,
+                        const GetterCallbackType& getterCallback, QVector<QString> choices, bool showOperators, int groupIndex = -1);
 
   virtual ~EnsembleInfoFilterParameter();
 

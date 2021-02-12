@@ -73,13 +73,13 @@ FindCAxisLocations::~FindCAxisLocations() = default;
 void FindCAxisLocations::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Element Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, AttributeMatrix::Category::Element);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, FindCAxisLocations, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::Category::RequiredArray, FindCAxisLocations, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("C-Axis Locations", CAxisLocationsArrayName, QuatsArrayPath, QuatsArrayPath, FilterParameter::CreatedArray, FindCAxisLocations));
+  parameters.push_back(SeparatorFilterParameter::Create("Element Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("C-Axis Locations", CAxisLocationsArrayName, QuatsArrayPath, QuatsArrayPath, FilterParameter::Category::CreatedArray, FindCAxisLocations));
   setFilterParameters(parameters);
 }
 

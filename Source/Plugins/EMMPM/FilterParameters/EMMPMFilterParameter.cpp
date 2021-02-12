@@ -50,7 +50,8 @@ EMMPMFilterParameter::~EMMPMFilterParameter() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EMMPMFilterParameter::Pointer EMMPMFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QString& defaultValue, Category category, EMMPMFilter* filter, int groupIndex)
+EMMPMFilterParameter::Pointer EMMPMFilterParameter::Create(const QString& humanLabel, const QString& propertyName, const QString& defaultValue, Category category,
+                                                           const SetterCallbackType& setterCallback, const GetterCallbackType& getterCallback, int groupIndex)
 {
   EMMPMFilterParameter::Pointer ptr = EMMPMFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -58,7 +59,8 @@ EMMPMFilterParameter::Pointer EMMPMFilterParameter::New(const QString& humanLabe
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
   ptr->setGroupIndex(groupIndex);
-  ptr->setFilter(filter);
+  ptr->setSetterCallback(setterCallback);
+  ptr->setGetterCallback(getterCallback);
 
   return ptr;
 }
@@ -76,6 +78,10 @@ QString EMMPMFilterParameter::getWidgetType() const
 // -----------------------------------------------------------------------------
 void EMMPMFilterParameter::readJson(const QJsonObject& json)
 {
+  if(nullptr == m_Filter)
+  {
+    return;
+  }
   m_Filter->setNumClasses(json["NumClasses"].toInt());
   m_Filter->setExchangeEnergy(static_cast<float>(json["ExchangeEnergy"].toDouble()));
   m_Filter->setHistogramLoops(json["HistogramLoops"].toInt());
@@ -116,6 +122,10 @@ void EMMPMFilterParameter::readJson(const QJsonObject& json)
 // -----------------------------------------------------------------------------
 void EMMPMFilterParameter::writeJson(QJsonObject& json)
 {
+  if(nullptr == m_Filter)
+  {
+    return;
+  }
   json["NumClasses"] = m_Filter->getNumClasses();
   json["ExchangeEnergy"] = static_cast<double>(m_Filter->getExchangeEnergy());
   json["HistogramLoops"] = m_Filter->getHistogramLoops();
@@ -186,4 +196,28 @@ void EMMPMFilterParameter::setFilter(EMMPMFilter* value)
 EMMPMFilter* EMMPMFilterParameter::getFilter() const
 {
   return m_Filter;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilterParameter::setSetterCallback(const EMMPMFilterParameter::SetterCallbackType& value)
+{
+  m_SetterCallback = value;
+}
+
+// -----------------------------------------------------------------------------
+EMMPMFilterParameter::SetterCallbackType EMMPMFilterParameter::getSetterCallback() const
+{
+  return m_SetterCallback;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilterParameter::setGetterCallback(const EMMPMFilterParameter::GetterCallbackType& value)
+{
+  m_GetterCallback = value;
+}
+
+// -----------------------------------------------------------------------------
+EMMPMFilterParameter::GetterCallbackType EMMPMFilterParameter::getGetterCallback() const
+{
+  return m_GetterCallback;
 }

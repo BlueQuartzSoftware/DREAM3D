@@ -132,10 +132,10 @@ TriangleNormalFilter::~TriangleNormalFilter() = default;
 void TriangleNormalFilter::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Face Data", FilterParameter::Category::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Face Normals", SurfaceMeshTriangleNormalsArrayPath, FilterParameter::CreatedArray, TriangleNormalFilter, req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Face Normals", SurfaceMeshTriangleNormalsArrayPath, FilterParameter::Category::CreatedArray, TriangleNormalFilter, req));
   }
   setFilterParameters(parameters);
 }

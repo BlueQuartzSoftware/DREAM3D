@@ -52,9 +52,9 @@ ConvertHexGridToSquareGridFilterParameter::~ConvertHexGridToSquareGridFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ConvertHexGridToSquareGridFilterParameter::Pointer ConvertHexGridToSquareGridFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue,
-                                                                                                  Category category, ConvertHexGridToSquareGrid* filter, const QString& fileExtension,
-                                                                                                  const QString& fileType, int groupIndex)
+ConvertHexGridToSquareGridFilterParameter::Pointer ConvertHexGridToSquareGridFilterParameter::Create(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue,
+                                                                                                     Category category, ConvertHexGridToSquareGrid* filter, const QString& fileExtension,
+                                                                                                     const QString& fileType, int groupIndex)
 {
   ConvertHexGridToSquareGridFilterParameter::Pointer ptr = ConvertHexGridToSquareGridFilterParameter::New();
   ptr->setHumanLabel(humanLabel);

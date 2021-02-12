@@ -73,16 +73,16 @@ FindNumFeatures::~FindNumFeatures() = default;
 void FindNumFeatures::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Feature Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Category::Feature);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FindNumFeatures, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::Category::RequiredArray, FindNumFeatures, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Ensemble Data", FilterParameter::Category::CreatedArray));
 
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(AttributeMatrix::Category::Ensemble);
-    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Number of Features", NumFeaturesArrayPath, FilterParameter::CreatedArray, FindNumFeatures, req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Number of Features", NumFeaturesArrayPath, FilterParameter::Category::CreatedArray, FindNumFeatures, req));
   }
 
   setFilterParameters(parameters);

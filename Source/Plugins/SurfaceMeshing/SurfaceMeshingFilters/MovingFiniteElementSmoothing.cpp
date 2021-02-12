@@ -162,15 +162,15 @@ void MovingFiniteElementSmoothing::setupFilterParameters()
 {
   SurfaceMeshFilter::setupFilterParameters();
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Iteration Steps", IterationSteps, FilterParameter::Uncategorized, MovingFiniteElementSmoothing));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Apply Node Contraints", NodeConstraints, FilterParameter::Uncategorized, MovingFiniteElementSmoothing));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Constrain Surface Nodes", ConstrainSurfaceNodes, FilterParameter::Uncategorized, MovingFiniteElementSmoothing));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Constrain Quad Points", ConstrainQuadPoints, FilterParameter::Uncategorized, MovingFiniteElementSmoothing));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Smooth Triple Lines", SmoothTripleLines, FilterParameter::Uncategorized, MovingFiniteElementSmoothing));
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::Uncategorized,
-                                                              SIMPL_BIND_SETTER(MovingFiniteElementSmoothing, this, SurfaceMeshNodeTypeArrayPath),
-                                                              SIMPL_BIND_GETTER(MovingFiniteElementSmoothing, this, SurfaceMeshNodeTypeArrayPath)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Iteration Steps", IterationSteps, FilterParameter::Category::Uncategorized, MovingFiniteElementSmoothing));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Apply Node Contraints", NodeConstraints, FilterParameter::Category::Uncategorized, MovingFiniteElementSmoothing));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Constrain Surface Nodes", ConstrainSurfaceNodes, FilterParameter::Category::Uncategorized, MovingFiniteElementSmoothing));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Constrain Quad Points", ConstrainQuadPoints, FilterParameter::Category::Uncategorized, MovingFiniteElementSmoothing));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Smooth Triple Lines", SmoothTripleLines, FilterParameter::Category::Uncategorized, MovingFiniteElementSmoothing));
+  parameters.push_back(SeparatorFilterParameter::Create("Required Information", FilterParameter::Category::Uncategorized));
+  parameters.push_back(DataArraySelectionFilterParameter::Create("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::Category::Uncategorized,
+                                                                 SIMPL_BIND_SETTER(MovingFiniteElementSmoothing, this, SurfaceMeshNodeTypeArrayPath),
+                                                                 SIMPL_BIND_GETTER(MovingFiniteElementSmoothing, this, SurfaceMeshNodeTypeArrayPath)));
   setFilterParameters(parameters);
 }
 

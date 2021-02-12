@@ -48,8 +48,8 @@ OrientationUtilityFilterParameter::~OrientationUtilityFilterParameter() = defaul
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationUtilityFilterParameter::Pointer OrientationUtilityFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category,
-                                                                                  int groupIndex)
+OrientationUtilityFilterParameter::Pointer OrientationUtilityFilterParameter::Create(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category,
+                                                                                     int groupIndex)
 {
   OrientationUtilityFilterParameter::Pointer ptr = OrientationUtilityFilterParameter::New();
   ptr->setHumanLabel(humanLabel);

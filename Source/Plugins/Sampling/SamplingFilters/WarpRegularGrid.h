@@ -64,8 +64,8 @@ class Sampling_EXPORT WarpRegularGrid : public AbstractFilter
   PYB11_PROPERTY(Float2ndOrderPoly_t SecondOrderBCoeff READ getSecondOrderBCoeff WRITE setSecondOrderBCoeff)
   PYB11_PROPERTY(Float3rdOrderPoly_t ThirdOrderACoeff READ getThirdOrderACoeff WRITE setThirdOrderACoeff)
   PYB11_PROPERTY(Float3rdOrderPoly_t ThirdOrderBCoeff READ getThirdOrderBCoeff WRITE setThirdOrderBCoeff)
-  PYB11_PROPERTY(Float4thOrderPoly_t FourthOrderACoeff READ getFourthOrderACoeff WRITE setFourthOrderACoeff)
-  PYB11_PROPERTY(Float4thOrderPoly_t FourthOrderBCoeff READ getFourthOrderBCoeff WRITE setFourthOrderBCoeff)
+  PYB11_PROPERTY(Float4thOrderPolynomial FourthOrderACoeff READ getFourthOrderACoeff WRITE setFourthOrderACoeff)
+  PYB11_PROPERTY(Float4thOrderPolynomial FourthOrderBCoeff READ getFourthOrderBCoeff WRITE setFourthOrderBCoeff)
   PYB11_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
@@ -180,24 +180,24 @@ public:
   /**
    * @brief Setter property for FourthOrderACoeff
    */
-  void setFourthOrderACoeff(const Float4thOrderPoly_t& value);
+  void setFourthOrderACoeff(const Float4thOrderPolynomial& value);
   /**
    * @brief Getter property for FourthOrderACoeff
    * @return Value of FourthOrderACoeff
    */
-  Float4thOrderPoly_t getFourthOrderACoeff() const;
-  Q_PROPERTY(Float4thOrderPoly_t FourthOrderACoeff READ getFourthOrderACoeff WRITE setFourthOrderACoeff)
+  Float4thOrderPolynomial getFourthOrderACoeff() const;
+  Q_PROPERTY(Float4thOrderPolynomial FourthOrderACoeff READ getFourthOrderACoeff WRITE setFourthOrderACoeff)
 
   /**
    * @brief Setter property for FourthOrderBCoeff
    */
-  void setFourthOrderBCoeff(const Float4thOrderPoly_t& value);
+  void setFourthOrderBCoeff(const Float4thOrderPolynomial& value);
   /**
    * @brief Getter property for FourthOrderBCoeff
    * @return Value of FourthOrderBCoeff
    */
-  Float4thOrderPoly_t getFourthOrderBCoeff() const;
-  Q_PROPERTY(Float4thOrderPoly_t FourthOrderBCoeff READ getFourthOrderBCoeff WRITE setFourthOrderBCoeff)
+  Float4thOrderPolynomial getFourthOrderBCoeff() const;
+  Q_PROPERTY(Float4thOrderPolynomial FourthOrderBCoeff READ getFourthOrderBCoeff WRITE setFourthOrderBCoeff)
 
   /**
    * @brief Setter property for SaveAsNewDataContainer
@@ -305,7 +305,7 @@ private:
   Float2ndOrderPoly_t m_SecondOrderBCoeff = {};
   Float3rdOrderPoly_t m_ThirdOrderACoeff = {};
   Float3rdOrderPoly_t m_ThirdOrderBCoeff = {};
-  Float4thOrderPoly_t m_FourthOrderACoeff = {};
-  Float4thOrderPoly_t m_FourthOrderBCoeff = {};
+  Float4thOrderPolynomial m_FourthOrderACoeff = {};
+  Float4thOrderPolynomial m_FourthOrderBCoeff = {};
   bool m_SaveAsNewDataContainer = {};
 };

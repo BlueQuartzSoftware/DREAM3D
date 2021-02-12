@@ -118,19 +118,19 @@ void YSChoiAbaqusReader::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, YSChoiAbaqusReader));
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input Feature Orientation File", InputFeatureInfoFile, FilterParameter::Parameter, YSChoiAbaqusReader));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Category::Parameter, YSChoiAbaqusReader));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input Feature Orientation File", InputFeatureInfoFile, FilterParameter::Category::Parameter, YSChoiAbaqusReader));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Name", CellEulerAnglesArrayName, FilterParameter::CreatedArray, YSChoiAbaqusReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::CreatedArray, YSChoiAbaqusReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Attribute Matrix Name", CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, YSChoiAbaqusReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix Name", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, YSChoiAbaqusReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Quats", QuatsArrayName, FilterParameter::CreatedArray, YSChoiAbaqusReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("AvgQuats", AvgQuatsArrayName, FilterParameter::CreatedArray, YSChoiAbaqusReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Phases", CellPhasesArrayName, FilterParameter::CreatedArray, YSChoiAbaqusReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("SurfaceFeatures", SurfaceFeaturesArrayName, FilterParameter::CreatedArray, YSChoiAbaqusReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("FeatureIds", FeatureIdsArrayName, FilterParameter::CreatedArray, YSChoiAbaqusReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Crystal Structures", CrystalStructuresArrayName, FilterParameter::CreatedArray, YSChoiAbaqusReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Name", CellEulerAnglesArrayName, FilterParameter::Category::CreatedArray, YSChoiAbaqusReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::Category::CreatedArray, YSChoiAbaqusReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Attribute Matrix Name", CellFeatureAttributeMatrixName, FilterParameter::Category::CreatedArray, YSChoiAbaqusReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix Name", CellEnsembleAttributeMatrixName, FilterParameter::Category::CreatedArray, YSChoiAbaqusReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Quats", QuatsArrayName, FilterParameter::Category::CreatedArray, YSChoiAbaqusReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("AvgQuats", AvgQuatsArrayName, FilterParameter::Category::CreatedArray, YSChoiAbaqusReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Phases", CellPhasesArrayName, FilterParameter::Category::CreatedArray, YSChoiAbaqusReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("SurfaceFeatures", SurfaceFeaturesArrayName, FilterParameter::Category::CreatedArray, YSChoiAbaqusReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("FeatureIds", FeatureIdsArrayName, FilterParameter::Category::CreatedArray, YSChoiAbaqusReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Crystal Structures", CrystalStructuresArrayName, FilterParameter::Category::CreatedArray, YSChoiAbaqusReader));
 
   setFilterParameters(parameters);
 }

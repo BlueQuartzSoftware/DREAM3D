@@ -164,15 +164,15 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
     choices.push_back("XZ");
     choices.push_back("YZ");
     parameter->setChoices(choices);
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Patch Size 1", PSize1, FilterParameter::Parameter, FindRelativeMotionBetweenSlices));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Patch Size 2", PSize2, FilterParameter::Parameter, FindRelativeMotionBetweenSlices));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Search Distance 1", SSize1, FilterParameter::Parameter, FindRelativeMotionBetweenSlices));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Search Distance 2", SSize2, FilterParameter::Parameter, FindRelativeMotionBetweenSlices));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Slice Step", SliceStep, FilterParameter::Parameter, FindRelativeMotionBetweenSlices));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Patch Size 1", PSize1, FilterParameter::Category::Parameter, FindRelativeMotionBetweenSlices));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Patch Size 2", PSize2, FilterParameter::Category::Parameter, FindRelativeMotionBetweenSlices));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Search Distance 1", SSize1, FilterParameter::Category::Parameter, FindRelativeMotionBetweenSlices));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Search Distance 2", SSize2, FilterParameter::Category::Parameter, FindRelativeMotionBetweenSlices));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Slice Step", SliceStep, FilterParameter::Category::Parameter, FindRelativeMotionBetweenSlices));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
@@ -188,11 +188,11 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
     daTypes.push_back(SIMPL::TypeNames::Float);
     daTypes.push_back(SIMPL::TypeNames::Double);
     req.daTypes = daTypes;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Track Motion", SelectedArrayPath, FilterParameter::RequiredArray, FindRelativeMotionBetweenSlices, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Track Motion", SelectedArrayPath, FilterParameter::Category::RequiredArray, FindRelativeMotionBetweenSlices, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Motion Direction", MotionDirectionArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindRelativeMotionBetweenSlices));
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Motion Direction", MotionDirectionArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::Category::CreatedArray, FindRelativeMotionBetweenSlices));
   setFilterParameters(parameters);
 }
 

@@ -97,26 +97,26 @@ StatsGeneratorFilter::~StatsGeneratorFilter() = default;
 void StatsGeneratorFilter::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(StatsGeneratorFilterParameter::New("StatsGenerator", "StatsGenerator", "", FilterParameter::Parameter));
+  parameters.push_back(StatsGeneratorFilterParameter::Create("StatsGenerator", "StatsGenerator", "", FilterParameter::Category::Parameter));
 
-  parameters.push_back(SeparatorFilterParameter::New("Created Data Container", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Statistics Data Container Name", StatsGeneratorDataContainerName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SeparatorFilterParameter::Create("Created Data Container", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Statistics Data Container Name", StatsGeneratorDataContainerName, FilterParameter::Category::CreatedArray, StatsGeneratorFilter));
 
-  parameters.push_back(SeparatorFilterParameter::New("Created Ensemble AttributeMatrix", FilterParameter::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Created Ensemble AttributeMatrix", FilterParameter::Category::CreatedArray));
 
-  parameters.push_back(
-      SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix Name", CellEnsembleAttributeMatrixName, StatsGeneratorDataContainerName, FilterParameter::CreatedArray, StatsGeneratorFilter));
-
-  parameters.push_back(SeparatorFilterParameter::New("Created Ensemble Arrays", FilterParameter::CreatedArray));
-
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Statistics Array Name", StatsDataArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray,
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix Name", CellEnsembleAttributeMatrixName, StatsGeneratorDataContainerName, FilterParameter::Category::CreatedArray,
                                                       StatsGeneratorFilter));
+
+  parameters.push_back(SeparatorFilterParameter::Create("Created Ensemble Arrays", FilterParameter::Category::CreatedArray));
+
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Statistics Array Name", StatsDataArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName,
+                                                      FilterParameter::Category::CreatedArray, StatsGeneratorFilter));
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Crystal Structures Array Name", CrystalStructuresArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName,
-                                                      FilterParameter::CreatedArray, StatsGeneratorFilter));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phase Types Array Name", PhaseTypesArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray,
-                                                      StatsGeneratorFilter));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phase Names Array Name", PhaseNamesArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray,
-                                                      StatsGeneratorFilter));
+                                                      FilterParameter::Category::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phase Types Array Name", PhaseTypesArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName,
+                                                      FilterParameter::Category::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phase Names Array Name", PhaseNamesArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName,
+                                                      FilterParameter::Category::CreatedArray, StatsGeneratorFilter));
 
   setFilterParameters(parameters);
 }

@@ -88,17 +88,17 @@ void QuiltCellData::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Quilt Step (Voxels)", QuiltStep, FilterParameter::Parameter, QuiltCellData));
-  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Patch Size (Voxels)", PatchSize, FilterParameter::Parameter, QuiltCellData));
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Quilt Step (Voxels)", QuiltStep, FilterParameter::Category::Parameter, QuiltCellData));
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Patch Size (Voxels)", PatchSize, FilterParameter::Category::Parameter, QuiltCellData));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Cell Array To Quilt", SelectedCellArrayPath, FilterParameter::RequiredArray, QuiltCellData, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Cell Array To Quilt", SelectedCellArrayPath, FilterParameter::Category::RequiredArray, QuiltCellData, req));
   }
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output DataContainer Name", OutputDataContainerName, FilterParameter::CreatedArray, QuiltCellData));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Output AttributeMatrix Name", OutputAttributeMatrixName, FilterParameter::CreatedArray, QuiltCellData));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Output Data Array Name", OutputArrayName, FilterParameter::CreatedArray, QuiltCellData));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output DataContainer Name", OutputDataContainerName, FilterParameter::Category::CreatedArray, QuiltCellData));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Output AttributeMatrix Name", OutputAttributeMatrixName, FilterParameter::Category::CreatedArray, QuiltCellData));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Output Data Array Name", OutputArrayName, FilterParameter::Category::CreatedArray, QuiltCellData));
 
   setFilterParameters(parameters);
 }

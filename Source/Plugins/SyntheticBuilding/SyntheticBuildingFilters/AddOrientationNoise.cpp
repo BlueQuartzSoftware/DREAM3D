@@ -75,11 +75,11 @@ AddOrientationNoise::~AddOrientationNoise() = default;
 void AddOrientationNoise::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Magnitude of Orientation Noise (Degrees)", Magnitude, FilterParameter::Parameter, AddOrientationNoise));
-  parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Magnitude of Orientation Noise (Degrees)", Magnitude, FilterParameter::Category::Parameter, AddOrientationNoise));
+  parameters.push_back(SeparatorFilterParameter::Create("Element Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Category::Element);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Euler Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, AddOrientationNoise, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Euler Angles", CellEulerAnglesArrayPath, FilterParameter::Category::RequiredArray, AddOrientationNoise, req));
   }
   setFilterParameters(parameters);
 }

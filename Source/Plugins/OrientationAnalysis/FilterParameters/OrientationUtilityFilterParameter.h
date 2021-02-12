@@ -60,7 +60,7 @@ public:
    */
   static QString ClassName();
 
-  static Pointer New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, int groupIndex = -1);
+  static Pointer Create(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, int groupIndex = -1);
 
   virtual ~OrientationUtilityFilterParameter();
 

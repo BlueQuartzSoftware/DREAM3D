@@ -84,16 +84,16 @@ void FindBasalLoadingFactor::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Loading Direction", LoadingDirection, FilterParameter::Parameter, FindBasalLoadingFactor));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Loading Direction", LoadingDirection, FilterParameter::Category::Parameter, FindBasalLoadingFactor));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("AvgQuats", AvgQuatsArrayPath, FilterParameter::RequiredArray, FindBasalLoadingFactor, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("AvgQuats", AvgQuatsArrayPath, FilterParameter::Category::RequiredArray, FindBasalLoadingFactor, req));
   }
 
   {
     DataArrayCreationFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Basal Loading Factor", BasalLoadingFactorArrayPath, FilterParameter::CreatedArray, FindBasalLoadingFactor, req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Basal Loading Factor", BasalLoadingFactorArrayPath, FilterParameter::Category::CreatedArray, FindBasalLoadingFactor, req));
   }
 
   setFilterParameters(parameters);

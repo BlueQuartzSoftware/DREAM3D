@@ -187,11 +187,12 @@ void ReadStlFile::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("STL File", StlFilePath, FilterParameter::Parameter, ReadStlFile, "*.stl", "STL File"));
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", SurfaceMeshDataContainerName, FilterParameter::CreatedArray, ReadStlFile));
-  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Face Attribute Matrix", FaceAttributeMatrixName, SurfaceMeshDataContainerName, FilterParameter::CreatedArray, ReadStlFile));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Face Normals", FaceNormalsArrayName, SurfaceMeshDataContainerName, FaceAttributeMatrixName, FilterParameter::CreatedArray, ReadStlFile));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("STL File", StlFilePath, FilterParameter::Category::Parameter, ReadStlFile, "*.stl", "STL File"));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", SurfaceMeshDataContainerName, FilterParameter::Category::CreatedArray, ReadStlFile));
+  parameters.push_back(SeparatorFilterParameter::Create("Face Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Face Attribute Matrix", FaceAttributeMatrixName, SurfaceMeshDataContainerName, FilterParameter::Category::CreatedArray, ReadStlFile));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Face Normals", FaceNormalsArrayName, SurfaceMeshDataContainerName, FaceAttributeMatrixName, FilterParameter::Category::CreatedArray, ReadStlFile));
   setFilterParameters(parameters);
 }
 

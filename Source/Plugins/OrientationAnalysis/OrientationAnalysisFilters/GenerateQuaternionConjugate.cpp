@@ -107,10 +107,10 @@ void GenerateQuaternionConjugate::setupFilterParameters()
   comp.push_back(std::vector<size_t>(1, 4));
   dasReq.componentDimensions = comp;
   dasReq.daTypes = {SIMPL::TypeNames::Float};
-  parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternion Array", QuaternionDataArrayPath, FilterParameter::Parameter, GenerateQuaternionConjugate, dasReq));
+  parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternion Array", QuaternionDataArrayPath, FilterParameter::Category::Parameter, GenerateQuaternionConjugate, dasReq));
   DataArrayCreationFilterParameter::RequirementType dacReq;
-  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Output Data Array Path", OutputDataArrayPath, FilterParameter::CreatedArray, GenerateQuaternionConjugate, dacReq));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Delete Original Data", DeleteOriginalData, FilterParameter::Parameter, GenerateQuaternionConjugate));
+  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Output Data Array Path", OutputDataArrayPath, FilterParameter::Category::CreatedArray, GenerateQuaternionConjugate, dacReq));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Delete Original Data", DeleteOriginalData, FilterParameter::Category::Parameter, GenerateQuaternionConjugate));
   setFilterParameters(parameters);
 }
 

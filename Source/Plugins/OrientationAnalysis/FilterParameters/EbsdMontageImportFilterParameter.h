@@ -102,8 +102,8 @@ public:
   * that this FilterParameter subclass represents.
    * @return
    */
-  static Pointer New(const QString& humanLabel, const QString& propertyName, const MontageFileListInfo& defaultValue, Category category, SetterCallbackType setterCallback,
-                     GetterCallbackType getterCallback);
+  static Pointer Create(const QString& humanLabel, const QString& propertyName, const MontageFileListInfo& defaultValue, Category category, SetterCallbackType setterCallback,
+                        GetterCallbackType getterCallback);
 
   ~EbsdMontageImportFilterParameter() override;
 

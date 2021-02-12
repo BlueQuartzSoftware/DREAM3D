@@ -51,9 +51,9 @@ OEMEbsdScanSelectionFilterParameter::~OEMEbsdScanSelectionFilterParameter() = de
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OEMEbsdScanSelectionFilterParameter::Pointer OEMEbsdScanSelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, const QString& listProperty,
-                                                                                      Category category, const SetterCallbackType& setterCallback, const GetterCallbackType& getterCallback,
-                                                                                      int groupIndex)
+OEMEbsdScanSelectionFilterParameter::Pointer OEMEbsdScanSelectionFilterParameter::Create(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue,
+                                                                                         const QString& listProperty, Category category, const SetterCallbackType& setterCallback,
+                                                                                         const GetterCallbackType& getterCallback, int groupIndex)
 {
   OEMEbsdScanSelectionFilterParameter::Pointer ptr = OEMEbsdScanSelectionFilterParameter::New();
   ptr->setHumanLabel(humanLabel);

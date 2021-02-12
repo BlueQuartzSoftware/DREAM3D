@@ -75,16 +75,16 @@ WriteStlFile::~WriteStlFile() = default;
 void WriteStlFile::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output STL Directory", OutputStlDirectory, FilterParameter::Parameter, WriteStlFile));
-  parameters.push_back(SIMPL_NEW_STRING_FP("STL File Prefix", OutputStlPrefix, FilterParameter::Parameter, WriteStlFile));
+  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output STL Directory", OutputStlDirectory, FilterParameter::Category::Parameter, WriteStlFile));
+  parameters.push_back(SIMPL_NEW_STRING_FP("STL File Prefix", OutputStlPrefix, FilterParameter::Category::Parameter, WriteStlFile));
   // QStringList linkedProps("SurfaceMeshFacePhasesArrayPath");
-  // parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Group Files by Ensemble", GroupByPhase, FilterParameter::Parameter, WriteStlFile, linkedProps));
-  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
+  // parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Group Files by Ensemble", GroupByPhase, FilterParameter::Category::Parameter, WriteStlFile, linkedProps));
+  parameters.push_back(SeparatorFilterParameter::Create("Face Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, WriteStlFile, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::Category::RequiredArray, WriteStlFile, req));
   }
-  // parameters.push_back(DataArraySelectionFilterParameter::New("Face Phases", "SurfaceMeshFacePhasesArrayPath", getSurfaceMeshFacePhasesArrayPath(), FilterParameter::RequiredArray,
+  // parameters.push_back(DataArraySelectionFilterParameter::Create("Face Phases", "SurfaceMeshFacePhasesArrayPath", getSurfaceMeshFacePhasesArrayPath(), FilterParameter::Category::RequiredArray,
   // SIMPL_BIND_SETTER(WriteStlFile, this, SurfaceMeshFacePhasesArrayPath), SIMPL_BIND_GETTER(WriteStlFile, this, SurfaceMeshFacePhasesArrayPath)));
   setFilterParameters(parameters);
 }

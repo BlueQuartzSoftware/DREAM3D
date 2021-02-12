@@ -58,14 +58,14 @@ void ComputeFeatureRect::setupFilterParameters()
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Any, IGeometry::Type::Any);
     AttributeMatrix::Types amTypes = {AttributeMatrix::Type::Cell};
     req.amTypes = amTypes;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, ComputeFeatureRect, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::Category::RequiredArray, ComputeFeatureRect, req));
   }
 
-  parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Feature Data", FilterParameter::Category::CreatedArray));
 
   DataArrayCreationFilterParameter::RequirementType dacReq;
   dacReq.amTypes = {AttributeMatrix::Type::CellFeature};
-  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Feature Rect", FeatureRectArrayPath, FilterParameter::CreatedArray, ComputeFeatureRect, dacReq));
+  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Feature Rect", FeatureRectArrayPath, FilterParameter::Category::CreatedArray, ComputeFeatureRect, dacReq));
   setFilterParameters(parameters);
 }
 

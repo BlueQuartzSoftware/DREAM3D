@@ -185,39 +185,39 @@ void ResampleImageGeom::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Current Image Geometry", CurrentGeomtryInfo, FilterParameter::Parameter, ResampleImageGeom);
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Current Image Geometry", CurrentGeomtryInfo, FilterParameter::Category::Parameter, ResampleImageGeom);
   param->setReadOnly(true);
   parameters.push_back(param);
 
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ResampleImageGeom));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Category::Parameter, ResampleImageGeom));
   parameters.back()->setLegacyPropertyName("Resolution");
 
-  param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Created/Updated Image Geometry", NewGeomtryInfo, FilterParameter::Parameter, ResampleImageGeom);
+  param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Created/Updated Image Geometry", NewGeomtryInfo, FilterParameter::Category::Parameter, ResampleImageGeom);
   param->setReadOnly(true);
   parameters.push_back(param);
 
   QStringList linkedProps;
   linkedProps << "CellFeatureAttributeMatrixPath"
               << "FeatureIdsArrayPath";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Renumber Features", RenumberFeatures, FilterParameter::Parameter, ResampleImageGeom, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Renumber Features", RenumberFeatures, FilterParameter::Category::Parameter, ResampleImageGeom, linkedProps));
   linkedProps.clear();
   linkedProps << "NewDataContainerPath";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Data Container", SaveAsNewDataContainer, FilterParameter::Parameter, ResampleImageGeom, linkedProps));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Data Container", SaveAsNewDataContainer, FilterParameter::Category::Parameter, ResampleImageGeom, linkedProps));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", CellAttributeMatrixPath, FilterParameter::RequiredArray, ResampleImageGeom, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", CellAttributeMatrixPath, FilterParameter::Category::RequiredArray, ResampleImageGeom, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, ResampleImageGeom, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::Category::RequiredArray, ResampleImageGeom, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Feature Data", FilterParameter::Category::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixPath, FilterParameter::RequiredArray, ResampleImageGeom, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixPath, FilterParameter::Category::RequiredArray, ResampleImageGeom, req));
   }
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", NewDataContainerPath, FilterParameter::CreatedArray, ResampleImageGeom));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", NewDataContainerPath, FilterParameter::Category::CreatedArray, ResampleImageGeom));
   setFilterParameters(parameters);
 }
 

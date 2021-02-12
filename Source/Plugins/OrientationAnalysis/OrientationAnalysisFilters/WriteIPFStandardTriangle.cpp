@@ -91,10 +91,10 @@ void WriteIPFStandardTriangle::setupFilterParameters()
 
   choices.pop_back(); // Remove the last name because we don't need it.
 
-  parameters.push_back(SIMPL_NEW_CHOICE_FP("Select Laue Class", LaueClass, FilterParameter::Parameter, WriteIPFStandardTriangle, choices, false));
+  parameters.push_back(SIMPL_NEW_CHOICE_FP("Select Laue Class", LaueClass, FilterParameter::Category::Parameter, WriteIPFStandardTriangle, choices, false));
 
-  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, WriteIPFStandardTriangle, "*.tif, *.bmp, *.png", "Image"));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Image Size (Square Pixels)", ImageSize, FilterParameter::Parameter, WriteIPFStandardTriangle));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Category::Parameter, WriteIPFStandardTriangle, "*.tif, *.bmp, *.png", "Image"));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Image Size (Square Pixels)", ImageSize, FilterParameter::Category::Parameter, WriteIPFStandardTriangle));
   setFilterParameters(parameters);
 }
 

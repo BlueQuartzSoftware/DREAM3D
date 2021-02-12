@@ -74,13 +74,13 @@ void AlignSectionsList::setupFilterParameters()
   // getting the current parameters that were set by the parent and adding to it before resetting it
   AlignSections::setupFilterParameters();
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, AlignSectionsList, "*.txt"));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("DREAM3D Alignment File Format", DREAM3DAlignmentFile, FilterParameter::Parameter, AlignSectionsList));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Category::Parameter, AlignSectionsList, "*.txt"));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("DREAM3D Alignment File Format", DREAM3DAlignmentFile, FilterParameter::Category::Parameter, AlignSectionsList));
 
   AttributeMatrixSelectionFilterParameter::RequirementType req;
   req.dcGeometryTypes = {IGeometry::Type::Image};
   req.amTypes = {AttributeMatrix::Type::Cell};
-  parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", CellAttributeMatrixPath, FilterParameter::Parameter, AlignSectionsList, req));
+  parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", CellAttributeMatrixPath, FilterParameter::Category::Parameter, AlignSectionsList, req));
 
   setFilterParameters(parameters);
 }

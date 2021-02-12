@@ -177,28 +177,28 @@ FindNeighborhoods::~FindNeighborhoods() = default;
 void FindNeighborhoods::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Multiples of Average Diameter", MultiplesOfAverage, FilterParameter::Parameter, FindNeighborhoods));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Multiples of Average Diameter", MultiplesOfAverage, FilterParameter::Category::Parameter, FindNeighborhoods));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Feature Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 1, AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Equivalent Diameters", EquivalentDiametersArrayPath, FilterParameter::RequiredArray, FindNeighborhoods, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Equivalent Diameters", EquivalentDiametersArrayPath, FilterParameter::Category::RequiredArray, FindNeighborhoods, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FindNeighborhoods, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::Category::RequiredArray, FindNeighborhoods, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindNeighborhoods, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::Category::RequiredArray, FindNeighborhoods, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Feature Data", FilterParameter::Category::CreatedArray));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Neighborhoods", NeighborhoodsArrayName, EquivalentDiametersArrayPath, EquivalentDiametersArrayPath, FilterParameter::CreatedArray, FindNeighborhoods));
-  parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Neighborhood List", NeighborhoodListArrayName, EquivalentDiametersArrayPath, EquivalentDiametersArrayPath, FilterParameter::CreatedArray, FindNeighborhoods));
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Neighborhoods", NeighborhoodsArrayName, EquivalentDiametersArrayPath, EquivalentDiametersArrayPath, FilterParameter::Category::CreatedArray, FindNeighborhoods));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Neighborhood List", NeighborhoodListArrayName, EquivalentDiametersArrayPath, EquivalentDiametersArrayPath,
+                                                      FilterParameter::Category::CreatedArray, FindNeighborhoods));
   setFilterParameters(parameters);
 }
 

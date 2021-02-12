@@ -97,21 +97,22 @@ void UncertainRegularGridSampleSurfaceMesh::setupFilterParameters()
 {
   SampleSurfaceMesh::setupFilterParameters();
   FilterParameterVectorType parameters = getFilterParameters();
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("X Points", XPoints, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Points", YPoints, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Points", ZPoints, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("X Points", XPoints, FilterParameter::Category::Parameter, UncertainRegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Points", YPoints, FilterParameter::Category::Parameter, UncertainRegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Points", ZPoints, FilterParameter::Category::Parameter, UncertainRegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Category::Parameter, UncertainRegularGridSampleSurfaceMesh));
   parameters.back()->setLegacyPropertyName("Resolution");
 
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Category::Parameter, UncertainRegularGridSampleSurfaceMesh));
 
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Uncertainty", Uncertainty, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Uncertainty", Uncertainty, FilterParameter::Category::Parameter, UncertainRegularGridSampleSurfaceMesh));
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, UncertainRegularGridSampleSurfaceMesh));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, UncertainRegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::Category::CreatedArray, UncertainRegularGridSampleSurfaceMesh));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Feature Ids", FeatureIdsArrayName, DataContainerName, CellAttributeMatrixName, FilterParameter::CreatedArray, UncertainRegularGridSampleSurfaceMesh));
+      SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, UncertainRegularGridSampleSurfaceMesh));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Feature Ids", FeatureIdsArrayName, DataContainerName, CellAttributeMatrixName, FilterParameter::Category::CreatedArray, UncertainRegularGridSampleSurfaceMesh));
   setFilterParameters(parameters);
 }
 

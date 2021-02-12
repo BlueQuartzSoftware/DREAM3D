@@ -152,10 +152,10 @@ TriangleDihedralAngleFilter::~TriangleDihedralAngleFilter() = default;
 void TriangleDihedralAngleFilter::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Face Data", FilterParameter::Category::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Face Dihedral Angles", SurfaceMeshTriangleDihedralAnglesArrayPath, FilterParameter::CreatedArray, TriangleDihedralAngleFilter, req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Face Dihedral Angles", SurfaceMeshTriangleDihedralAnglesArrayPath, FilterParameter::Category::CreatedArray, TriangleDihedralAngleFilter, req));
   }
   setFilterParameters(parameters);
 }

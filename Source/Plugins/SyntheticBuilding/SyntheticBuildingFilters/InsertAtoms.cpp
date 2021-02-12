@@ -316,7 +316,7 @@ InsertAtoms::~InsertAtoms() = default;
 void InsertAtoms::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Lattice Constants (Angstroms)", LatticeConstants, FilterParameter::Parameter, InsertAtoms));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Lattice Constants (Angstroms)", LatticeConstants, FilterParameter::Category::Parameter, InsertAtoms));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Crystal Basis");
@@ -330,25 +330,25 @@ void InsertAtoms::setupFilterParameters()
     choices.push_back("Face Centered Cubic");
     choices.push_back("Cubic Diamond");
     parameter->setChoices(choices);
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Face Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, InsertAtoms, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::Category::RequiredArray, InsertAtoms, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Feature Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Quaternions", AvgQuatsArrayPath, FilterParameter::RequiredArray, InsertAtoms, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Quaternions", AvgQuatsArrayPath, FilterParameter::Category::RequiredArray, InsertAtoms, req));
   }
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", VertexDataContainerName, FilterParameter::CreatedArray, InsertAtoms));
-  parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, VertexDataContainerName, FilterParameter::CreatedArray, InsertAtoms));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", VertexDataContainerName, FilterParameter::Category::CreatedArray, InsertAtoms));
+  parameters.push_back(SeparatorFilterParameter::Create("Vertex Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, VertexDataContainerName, FilterParameter::Category::CreatedArray, InsertAtoms));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Atom Feature Labels", AtomFeatureLabelsArrayName, VertexDataContainerName, VertexAttributeMatrixName, FilterParameter::CreatedArray, InsertAtoms));
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Atom Feature Labels", AtomFeatureLabelsArrayName, VertexDataContainerName, VertexAttributeMatrixName, FilterParameter::Category::CreatedArray, InsertAtoms));
   setFilterParameters(parameters);
 }
 

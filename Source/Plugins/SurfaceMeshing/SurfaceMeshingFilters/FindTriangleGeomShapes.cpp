@@ -95,34 +95,35 @@ FindTriangleGeomShapes::~FindTriangleGeomShapes() = default;
 void FindTriangleGeomShapes::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Face Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", FaceLabelsArrayPath, FilterParameter::RequiredArray, FindTriangleGeomShapes, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", FaceLabelsArrayPath, FilterParameter::Category::RequiredArray, FindTriangleGeomShapes, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Face Feature Data", FilterParameter::Category::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::FaceFeature, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Face Feature Attribute Matrix", FeatureAttributeMatrixName, FilterParameter::RequiredArray, FindTriangleGeomShapes, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Face Feature Attribute Matrix", FeatureAttributeMatrixName, FilterParameter::Category::RequiredArray, FindTriangleGeomShapes, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Type::FaceFeature, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindTriangleGeomShapes, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::Category::RequiredArray, FindTriangleGeomShapes, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 1, AttributeMatrix::Type::FaceFeature, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Volumes", VolumesArrayPath, FilterParameter::RequiredArray, FindTriangleGeomShapes, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Volumes", VolumesArrayPath, FilterParameter::Category::RequiredArray, FindTriangleGeomShapes, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Omega3s", Omega3sArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
+  parameters.push_back(SeparatorFilterParameter::Create("Face Feature Data", FilterParameter::Category::CreatedArray));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Axis Lengths", AxisLengthsArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Omega3s", Omega3sArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::Category::CreatedArray, FindTriangleGeomShapes));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Axis Euler Angles", AxisEulerAnglesArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Axis Lengths", AxisLengthsArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::Category::CreatedArray, FindTriangleGeomShapes));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Axis Euler Angles", AxisEulerAnglesArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::Category::CreatedArray,
+                                                      FindTriangleGeomShapes));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Aspect Ratios", AspectRatiosArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Aspect Ratios", AspectRatiosArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::Category::CreatedArray, FindTriangleGeomShapes));
   setFilterParameters(parameters);
 }
 

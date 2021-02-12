@@ -111,10 +111,10 @@ void GenerateOrientationMatrixTranspose::setupFilterParameters()
   dasReq.componentDimensions = comp;
   dasReq.daTypes = {SIMPL::TypeNames::Float};
 
-  parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternion Array", OrientationMatrixDataArrayPath, FilterParameter::Parameter, GenerateOrientationMatrixTranspose, dasReq));
+  parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternion Array", OrientationMatrixDataArrayPath, FilterParameter::Category::Parameter, GenerateOrientationMatrixTranspose, dasReq));
   DataArrayCreationFilterParameter::RequirementType dacReq;
-  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Output Data Array Path", OutputDataArrayPath, FilterParameter::CreatedArray, GenerateOrientationMatrixTranspose, dacReq));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Delete Original Data", DeleteOriginalData, FilterParameter::Parameter, GenerateOrientationMatrixTranspose));
+  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Output Data Array Path", OutputDataArrayPath, FilterParameter::Category::CreatedArray, GenerateOrientationMatrixTranspose, dacReq));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Delete Original Data", DeleteOriginalData, FilterParameter::Category::Parameter, GenerateOrientationMatrixTranspose));
   setFilterParameters(parameters);
 }
 

@@ -76,12 +76,12 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
   // getting the current parameters that were set by the parent and adding to it before resetting it
   FilterParameterVectorType parameters = getFilterParameters();
   QStringList linkedProps("ReferenceSlice");
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Reference Slice", UseReferenceSlice, FilterParameter::Parameter, AlignSectionsFeatureCentroid, linkedProps));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Reference Slice", ReferenceSlice, FilterParameter::Parameter, AlignSectionsFeatureCentroid));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Reference Slice", UseReferenceSlice, FilterParameter::Category::Parameter, AlignSectionsFeatureCentroid, linkedProps));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Reference Slice", ReferenceSlice, FilterParameter::Category::Parameter, AlignSectionsFeatureCentroid));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, AlignSectionsFeatureCentroid, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::Category::RequiredArray, AlignSectionsFeatureCentroid, req));
   }
   setFilterParameters(parameters);
 }

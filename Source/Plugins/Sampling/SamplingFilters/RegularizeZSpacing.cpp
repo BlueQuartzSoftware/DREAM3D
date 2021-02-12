@@ -72,12 +72,12 @@ RegularizeZSpacing::~RegularizeZSpacing() = default;
 void RegularizeZSpacing::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Current Z Positions File", InputFile, FilterParameter::Parameter, RegularizeZSpacing, "*.txt"));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("New Z Spacing", NewZRes, FilterParameter::Parameter, RegularizeZSpacing));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Current Z Positions File", InputFile, FilterParameter::Category::Parameter, RegularizeZSpacing, "*.txt"));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("New Z Spacing", NewZRes, FilterParameter::Category::Parameter, RegularizeZSpacing));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", CellAttributeMatrixPath, FilterParameter::RequiredArray, RegularizeZSpacing, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", CellAttributeMatrixPath, FilterParameter::Category::RequiredArray, RegularizeZSpacing, req));
   }
   setFilterParameters(parameters);
 }

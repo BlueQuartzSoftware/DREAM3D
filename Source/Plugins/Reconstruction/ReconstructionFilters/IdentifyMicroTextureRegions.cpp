@@ -265,26 +265,26 @@ void IdentifyMicroTextureRegions::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("C-Axis Alignment Tolerance (Degrees)", CAxisTolerance, FilterParameter::Parameter, IdentifyMicroTextureRegions));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Minimum MicroTextured Region Size (Diameter)", MinMTRSize, FilterParameter::Parameter, IdentifyMicroTextureRegions));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Minimum Volume Fraction in MTR", MinVolFrac, FilterParameter::Parameter, IdentifyMicroTextureRegions));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("C-Axis Alignment Tolerance (Degrees)", CAxisTolerance, FilterParameter::Category::Parameter, IdentifyMicroTextureRegions));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Minimum MicroTextured Region Size (Diameter)", MinMTRSize, FilterParameter::Category::Parameter, IdentifyMicroTextureRegions));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Minimum Volume Fraction in MTR", MinVolFrac, FilterParameter::Category::Parameter, IdentifyMicroTextureRegions));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("C-Axis Locations", CAxisLocationsArrayPath, FilterParameter::RequiredArray, IdentifyMicroTextureRegions, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("C-Axis Locations", CAxisLocationsArrayPath, FilterParameter::Category::RequiredArray, IdentifyMicroTextureRegions, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Cell Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, IdentifyMicroTextureRegions, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Cell Phases", CellPhasesArrayPath, FilterParameter::Category::RequiredArray, IdentifyMicroTextureRegions, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, IdentifyMicroTextureRegions, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::Category::RequiredArray, IdentifyMicroTextureRegions, req));
   }
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("MTR Ids", MTRIdsArrayName, FilterParameter::CreatedArray, IdentifyMicroTextureRegions));
-  parameters.push_back(SIMPL_NEW_STRING_FP("New Cell Feature Attribute Matrix Name", NewCellFeatureAttributeMatrixName, FilterParameter::CreatedArray, IdentifyMicroTextureRegions));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, IdentifyMicroTextureRegions));
+  parameters.push_back(SIMPL_NEW_STRING_FP("MTR Ids", MTRIdsArrayName, FilterParameter::Category::CreatedArray, IdentifyMicroTextureRegions));
+  parameters.push_back(SIMPL_NEW_STRING_FP("New Cell Feature Attribute Matrix Name", NewCellFeatureAttributeMatrixName, FilterParameter::Category::CreatedArray, IdentifyMicroTextureRegions));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::Category::CreatedArray, IdentifyMicroTextureRegions));
 
   setFilterParameters(parameters);
 }

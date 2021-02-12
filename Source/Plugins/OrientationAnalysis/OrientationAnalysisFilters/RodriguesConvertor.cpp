@@ -133,10 +133,10 @@ void RodriguesConvertor::setupFilterParameters()
   comp.push_back(std::vector<size_t>(1, 3));
   dasReq.componentDimensions = comp;
   dasReq.daTypes = {SIMPL::TypeNames::Float};
-  parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Rodrigues Array", RodriguesDataArrayPath, FilterParameter::Parameter, RodriguesConvertor, dasReq));
+  parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Rodrigues Array", RodriguesDataArrayPath, FilterParameter::Category::Parameter, RodriguesConvertor, dasReq));
   DataArrayCreationFilterParameter::RequirementType dacReq;
-  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Output Data Array Path", OutputDataArrayPath, FilterParameter::CreatedArray, RodriguesConvertor, dacReq));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Delete Original Data", DeleteOriginalData, FilterParameter::Parameter, RodriguesConvertor));
+  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Output Data Array Path", OutputDataArrayPath, FilterParameter::Category::CreatedArray, RodriguesConvertor, dacReq));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Delete Original Data", DeleteOriginalData, FilterParameter::Category::Parameter, RodriguesConvertor));
   setFilterParameters(parameters);
 }
 

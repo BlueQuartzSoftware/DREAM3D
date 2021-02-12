@@ -89,7 +89,7 @@ void CreateEnsembleInfo::setupFilterParameters()
   FilterParameterVectorType parameters;
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Data Container", DataContainerName, FilterParameter::RequiredArray, CreateEnsembleInfo, req));
+    parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Data Container", DataContainerName, FilterParameter::Category::RequiredArray, CreateEnsembleInfo, req));
   }
   {
     EnsembleInfoFilterParameter::Pointer parameter = EnsembleInfoFilterParameter::New();
@@ -97,16 +97,18 @@ void CreateEnsembleInfo::setupFilterParameters()
     parameter->setPropertyName("Ensemble");
 
     parameter->setShowOperators(true);
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameter->setSetterCallback(SIMPL_BIND_SETTER(CreateEnsembleInfo, this, Ensemble));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(CreateEnsembleInfo, this, Ensemble));
     parameters.push_back(parameter);
   }
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, CreateEnsembleInfo));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, CreateEnsembleInfo));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Crystal Structures", CrystalStructuresArrayName, DataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::Category::CreatedArray,
+                                                      CreateEnsembleInfo));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Crystal Structures", CrystalStructuresArrayName, DataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, CreateEnsembleInfo));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phase Types", PhaseTypesArrayName, DataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, CreateEnsembleInfo));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phase Names", PhaseNamesArrayName, DataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, CreateEnsembleInfo));
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phase Types", PhaseTypesArrayName, DataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::Category::CreatedArray, CreateEnsembleInfo));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phase Names", PhaseNamesArrayName, DataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::Category::CreatedArray, CreateEnsembleInfo));
   setFilterParameters(parameters);
 }
 

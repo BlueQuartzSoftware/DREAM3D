@@ -88,18 +88,18 @@ VisualizeGBCDGMT::~VisualizeGBCDGMT() = default;
 void VisualizeGBCDGMT::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase of Interest", PhaseOfInterest, FilterParameter::Parameter, VisualizeGBCDGMT));
-  parameters.push_back(SIMPL_NEW_AXISANGLE_FP("Misorientation Axis-Angle", MisorientationRotation, FilterParameter::Parameter, VisualizeGBCDGMT));
-  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output GMT File", OutputFile, FilterParameter::Parameter, VisualizeGBCDGMT, "*.dat", "DAT File"));
-  parameters.push_back(SeparatorFilterParameter::New("Face Ensemble Data", FilterParameter::RequiredArray));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase of Interest", PhaseOfInterest, FilterParameter::Category::Parameter, VisualizeGBCDGMT));
+  parameters.push_back(SIMPL_NEW_AXISANGLE_FP("Misorientation Axis-Angle", MisorientationRotation, FilterParameter::Category::Parameter, VisualizeGBCDGMT));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output GMT File", OutputFile, FilterParameter::Category::Parameter, VisualizeGBCDGMT, "*.dat", "DAT File"));
+  parameters.push_back(SeparatorFilterParameter::Create("Face Ensemble Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::FaceEnsemble, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("GBCD", GBCDArrayPath, FilterParameter::RequiredArray, VisualizeGBCDGMT, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("GBCD", GBCDArrayPath, FilterParameter::Category::RequiredArray, VisualizeGBCDGMT, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, VisualizeGBCDGMT, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::Category::RequiredArray, VisualizeGBCDGMT, req));
   }
   setFilterParameters(parameters);
 }

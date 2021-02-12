@@ -122,29 +122,29 @@ void EMsoftSO3Sampler::setupFilterParameters()
 
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameters.push_back(parameter);
 
     /* standard sampling method */
-    parameters.push_back(SIMPL_NEW_INTEGER_FP("Point group number (see documentation for list)", PointGroup, FilterParameter::Parameter, EMsoftSO3Sampler, 0));
-    parameters.push_back(BooleanFilterParameter::New("Offset sampling grid from origin?", "OffsetGrid", getOffsetGrid(), FilterParameter::Parameter,
-                                                     SIMPL_BIND_SETTER(EMsoftSO3Sampler, this, OffsetGrid), SIMPL_BIND_GETTER(EMsoftSO3Sampler, this, OffsetGrid), 0));
+    parameters.push_back(SIMPL_NEW_INTEGER_FP("Point group number (see documentation for list)", PointGroup, FilterParameter::Category::Parameter, EMsoftSO3Sampler, 0));
+    parameters.push_back(BooleanFilterParameter::Create("Offset sampling grid from origin?", "OffsetGrid", getOffsetGrid(), FilterParameter::Category::Parameter,
+                                                        SIMPL_BIND_SETTER(EMsoftSO3Sampler, this, OffsetGrid), SIMPL_BIND_GETTER(EMsoftSO3Sampler, this, OffsetGrid), 0));
 
     /* equal misorientation sampling method */
-    parameters.push_back(SIMPL_NEW_DOUBLE_FP("Misorientation angle (degree)", MisOr, FilterParameter::Parameter, EMsoftSO3Sampler, 1));
-    parameters.push_back(FloatVec3FilterParameter::New("Reference orientation (Euler, °)", "RefOr", getRefOr(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMsoftSO3Sampler, this, RefOr),
-                                                       SIMPL_BIND_GETTER(EMsoftSO3Sampler, this, RefOr), 1));
+    parameters.push_back(SIMPL_NEW_DOUBLE_FP("Misorientation angle (degree)", MisOr, FilterParameter::Category::Parameter, EMsoftSO3Sampler, 1));
+    parameters.push_back(FloatVec3FilterParameter::Create("Reference orientation (Euler, °)", "RefOr", getRefOr(), FilterParameter::Category::Parameter,
+                                                          SIMPL_BIND_SETTER(EMsoftSO3Sampler, this, RefOr), SIMPL_BIND_GETTER(EMsoftSO3Sampler, this, RefOr), 1));
 
     /* maximum misorientation sampling method */
-    parameters.push_back(SIMPL_NEW_DOUBLE_FP("Misorientation angle (degree)", MisOrFull, FilterParameter::Parameter, EMsoftSO3Sampler, 2));
-    parameters.push_back(FloatVec3FilterParameter::New("Reference orientation (Euler, °)", "RefOrFull", getRefOrFull(), FilterParameter::Parameter,
-                                                       SIMPL_BIND_SETTER(EMsoftSO3Sampler, this, RefOrFull), SIMPL_BIND_GETTER(EMsoftSO3Sampler, this, RefOrFull), 2));
+    parameters.push_back(SIMPL_NEW_DOUBLE_FP("Misorientation angle (degree)", MisOrFull, FilterParameter::Category::Parameter, EMsoftSO3Sampler, 2));
+    parameters.push_back(FloatVec3FilterParameter::Create("Reference orientation (Euler, °)", "RefOrFull", getRefOrFull(), FilterParameter::Category::Parameter,
+                                                          SIMPL_BIND_SETTER(EMsoftSO3Sampler, this, RefOrFull), SIMPL_BIND_GETTER(EMsoftSO3Sampler, this, RefOrFull), 2));
   }
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of sampling points along cube semi-axis", Numsp, FilterParameter::Parameter, EMsoftSO3Sampler));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of sampling points along cube semi-axis", Numsp, FilterParameter::Category::Parameter, EMsoftSO3Sampler));
 
-  parameters.push_back(SeparatorFilterParameter::New("Output Data", FilterParameter::Parameter));
+  parameters.push_back(SeparatorFilterParameter::Create("Output Data", FilterParameter::Category::Parameter));
 
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Euler Angles", EulerAnglesArrayName, DataContainerName, EMsoftAttributeMatrixName, FilterParameter::CreatedArray, EMsoftSO3Sampler));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Euler Angles", EulerAnglesArrayName, DataContainerName, EMsoftAttributeMatrixName, FilterParameter::Category::CreatedArray, EMsoftSO3Sampler));
 
   setFilterParameters(parameters);
 }

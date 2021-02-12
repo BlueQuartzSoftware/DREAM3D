@@ -85,27 +85,27 @@ void LaplacianSmoothing::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Iteration Steps", IterationSteps, FilterParameter::Parameter, LaplacianSmoothing));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Default Lambda", Lambda, FilterParameter::Parameter, LaplacianSmoothing));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Iteration Steps", IterationSteps, FilterParameter::Category::Parameter, LaplacianSmoothing));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Default Lambda", Lambda, FilterParameter::Category::Parameter, LaplacianSmoothing));
 
   QStringList linkedProps;
   linkedProps << "MuFactor";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Taubin Smoothing", UseTaubinSmoothing, FilterParameter::Parameter, LaplacianSmoothing, linkedProps));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Mu Factor", MuFactor, FilterParameter::Parameter, LaplacianSmoothing));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Triple Line Lambda", TripleLineLambda, FilterParameter::Parameter, LaplacianSmoothing));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Quadruple Points Lambda", QuadPointLambda, FilterParameter::Parameter, LaplacianSmoothing));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Outer Points Lambda", SurfacePointLambda, FilterParameter::Parameter, LaplacianSmoothing));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Outer Triple Line Lambda", SurfaceTripleLineLambda, FilterParameter::Parameter, LaplacianSmoothing));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Outer Quadruple Points Lambda", SurfaceQuadPointLambda, FilterParameter::Parameter, LaplacianSmoothing));
-  parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Taubin Smoothing", UseTaubinSmoothing, FilterParameter::Category::Parameter, LaplacianSmoothing, linkedProps));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Mu Factor", MuFactor, FilterParameter::Category::Parameter, LaplacianSmoothing));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Triple Line Lambda", TripleLineLambda, FilterParameter::Category::Parameter, LaplacianSmoothing));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Quadruple Points Lambda", QuadPointLambda, FilterParameter::Category::Parameter, LaplacianSmoothing));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Outer Points Lambda", SurfacePointLambda, FilterParameter::Category::Parameter, LaplacianSmoothing));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Outer Triple Line Lambda", SurfaceTripleLineLambda, FilterParameter::Category::Parameter, LaplacianSmoothing));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Outer Quadruple Points Lambda", SurfaceQuadPointLambda, FilterParameter::Category::Parameter, LaplacianSmoothing));
+  parameters.push_back(SeparatorFilterParameter::Create("Vertex Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, AttributeMatrix::Type::Vertex, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Node Type", SurfaceMeshNodeTypeArrayPath, FilterParameter::RequiredArray, LaplacianSmoothing, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Node Type", SurfaceMeshNodeTypeArrayPath, FilterParameter::Category::RequiredArray, LaplacianSmoothing, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Face Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, LaplacianSmoothing, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::Category::RequiredArray, LaplacianSmoothing, req));
   }
   setFilterParameters(parameters);
 }

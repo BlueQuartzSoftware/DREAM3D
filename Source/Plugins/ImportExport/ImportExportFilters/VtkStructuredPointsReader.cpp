@@ -94,20 +94,22 @@ VtkStructuredPointsReader::~VtkStructuredPointsReader() = default;
 void VtkStructuredPointsReader::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input VTK File", InputFile, FilterParameter::Parameter, VtkStructuredPointsReader));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input VTK File", InputFile, FilterParameter::Category::Parameter, VtkStructuredPointsReader));
   QStringList linkedProps;
   linkedProps << "VertexDataContainerName"
               << "VertexAttributeMatrixName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Read Point Data", ReadPointData, FilterParameter::Parameter, VtkStructuredPointsReader, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Read Point Data", ReadPointData, FilterParameter::Category::Parameter, VtkStructuredPointsReader, linkedProps));
   linkedProps.clear();
   linkedProps << "VolumeDataContainerName"
               << "CellAttributeMatrixName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Read Cell Data", ReadCellData, FilterParameter::Parameter, VtkStructuredPointsReader, linkedProps));
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Point Data Data Container", VertexDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Cell Data Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Point Data Attribute Matrix", VertexAttributeMatrixName, VertexDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Data Attribute Matrix", CellAttributeMatrixName, VolumeDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Read Cell Data", ReadCellData, FilterParameter::Category::Parameter, VtkStructuredPointsReader, linkedProps));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Point Data Data Container", VertexDataContainerName, FilterParameter::Category::CreatedArray, VtkStructuredPointsReader));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Cell Data Data Container", VolumeDataContainerName, FilterParameter::Category::CreatedArray, VtkStructuredPointsReader));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(
+      SIMPL_NEW_AM_WITH_LINKED_DC_FP("Point Data Attribute Matrix", VertexAttributeMatrixName, VertexDataContainerName, FilterParameter::Category::CreatedArray, VtkStructuredPointsReader));
+  parameters.push_back(
+      SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Data Attribute Matrix", CellAttributeMatrixName, VolumeDataContainerName, FilterParameter::Category::CreatedArray, VtkStructuredPointsReader));
   setFilterParameters(parameters);
 }
 

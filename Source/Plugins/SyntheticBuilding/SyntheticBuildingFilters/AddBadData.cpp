@@ -74,16 +74,16 @@ void AddBadData::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
   QStringList linkedProps("PoissonVolFraction");
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Add Random Noise", PoissonNoise, FilterParameter::Parameter, AddBadData, linkedProps));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Volume Fraction of Random Noise", PoissonVolFraction, FilterParameter::Parameter, AddBadData));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Add Random Noise", PoissonNoise, FilterParameter::Category::Parameter, AddBadData, linkedProps));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Volume Fraction of Random Noise", PoissonVolFraction, FilterParameter::Category::Parameter, AddBadData));
   linkedProps.clear();
   linkedProps << "BoundaryVolFraction";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Add Boundary Noise", BoundaryNoise, FilterParameter::Parameter, AddBadData, linkedProps));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Volume Fraction of Boundary Noise", BoundaryVolFraction, FilterParameter::Parameter, AddBadData));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Add Boundary Noise", BoundaryNoise, FilterParameter::Category::Parameter, AddBadData, linkedProps));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Volume Fraction of Boundary Noise", BoundaryVolFraction, FilterParameter::Category::Parameter, AddBadData));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Boundary Euclidean Distances", GBEuclideanDistancesArrayPath, FilterParameter::RequiredArray, AddBadData, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Boundary Euclidean Distances", GBEuclideanDistancesArrayPath, FilterParameter::Category::RequiredArray, AddBadData, req));
   }
   setFilterParameters(parameters);
 }

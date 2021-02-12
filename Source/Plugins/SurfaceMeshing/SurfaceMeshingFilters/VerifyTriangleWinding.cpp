@@ -330,10 +330,10 @@ void VerifyTriangleWinding::setupFilterParameters()
   SurfaceMeshFilter::setupFilterParameters();
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::Uncategorized,
-                                                              SIMPL_BIND_SETTER(VerifyTriangleWinding, this, SurfaceMeshFaceLabelsArrayPath),
-                                                              SIMPL_BIND_GETTER(VerifyTriangleWinding, this, SurfaceMeshFaceLabelsArrayPath)));
+  parameters.push_back(SeparatorFilterParameter::Create("Required Information", FilterParameter::Category::Uncategorized));
+  parameters.push_back(DataArraySelectionFilterParameter::Create("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(),
+                                                                 FilterParameter::Category::Uncategorized, SIMPL_BIND_SETTER(VerifyTriangleWinding, this, SurfaceMeshFaceLabelsArrayPath),
+                                                                 SIMPL_BIND_GETTER(VerifyTriangleWinding, this, SurfaceMeshFaceLabelsArrayPath)));
   setFilterParameters(parameters);
 }
 

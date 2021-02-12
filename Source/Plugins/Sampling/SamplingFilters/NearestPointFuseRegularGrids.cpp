@@ -68,14 +68,14 @@ NearestPointFuseRegularGrids::~NearestPointFuseRegularGrids() = default;
 void NearestPointFuseRegularGrids::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Reference Cell Attribute Matrix", ReferenceCellAttributeMatrixPath, FilterParameter::RequiredArray, NearestPointFuseRegularGrids, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Reference Cell Attribute Matrix", ReferenceCellAttributeMatrixPath, FilterParameter::Category::RequiredArray, NearestPointFuseRegularGrids, req));
   }
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Sampling Cell Attribute Matrix", SamplingCellAttributeMatrixPath, FilterParameter::RequiredArray, NearestPointFuseRegularGrids, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Sampling Cell Attribute Matrix", SamplingCellAttributeMatrixPath, FilterParameter::Category::RequiredArray, NearestPointFuseRegularGrids, req));
   }
   setFilterParameters(parameters);
 }
