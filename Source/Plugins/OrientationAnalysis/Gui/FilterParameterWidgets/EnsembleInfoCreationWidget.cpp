@@ -121,7 +121,7 @@ void EnsembleInfoCreationWidget::setupGui()
   m_EnsembleInfoTableModel = createEnsembleInfoModel();
 
   // Set the data into the TableModel
-  EnsembleInfo info = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<EnsembleInfo>();
+  EnsembleInfo info = m_FilterParameter->getGetterCallback()();
   m_EnsembleInfoTableModel->setTableData(info);
 
 #if 0
@@ -321,15 +321,8 @@ void EnsembleInfoCreationWidget::setEnsembleInput(EnsembleInfo info)
 void EnsembleInfoCreationWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   QVariant var;
-  EnsembleInfo comps = getEnsembleInfo();
-  var.setValue(comps);
-  bool ok = false;
-  // Set the value into the Filter
-  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, var);
-  if(!ok)
-  {
-    getFilter()->notifyMissingProperty(getFilterParameter());
-  }
+  EnsembleInfo data = getEnsembleInfo();
+  m_FilterParameter->getSetterCallback()(data);
 }
 
 // -----------------------------------------------------------------------------

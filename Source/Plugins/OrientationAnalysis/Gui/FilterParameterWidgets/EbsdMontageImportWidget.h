@@ -40,7 +40,7 @@
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 #include "SVWidgetsLib/QtSupport/QtSPluginFrame.h"
 
-#include "OrientationAnalysis/FilterParameters/EbsdMontageImportFilterParameter.h"
+class EbsdMontageImportFilterParameter;
 
 namespace Ui
 {
@@ -138,6 +138,7 @@ private:
   QString m_CurrentText = "";
   bool m_DidCausePreflight = false;
   QPixmap m_Icon = QPixmap(QLatin1String(":/SIMPL/icons/images/caret-bottom.png"));
+  EbsdMontageImportFilterParameter* m_FilterParameter = nullptr;
 
   /**
    * @brief connectSignalsSlots
