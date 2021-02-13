@@ -35,7 +35,7 @@ def image_segmentation():
     attr_matrix_name = 'Optical Data'
 
     # Import Image Stack [ITK]
-    file_list_info = simpl.FileListInfo(2, 0, 11, 174, 1, sd.GetBuildDirectory() + '/Data/Image',
+    file_list_info = simpl.StackFileListInfo(2, 0, 11, 174, 1, sd.GetBuildDirectory() + '/Data/Image',
                                         'slice_', '', 'tif')
     err = itkimageprocessingpy.itk_import_image_stack(dca, data_container_name, attr_matrix_name,
                                                       simpl.FloatVec3([0, 0, 0]), simpl.FloatVec3([1, 1, 1]),
