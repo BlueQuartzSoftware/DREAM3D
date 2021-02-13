@@ -151,8 +151,8 @@ private:
   ReadH5Ebsd* m_Filter = nullptr;
   ReadH5EbsdFilterParameter* m_FilterParameter = nullptr;
   QList<QWidget*> m_WidgetList;
-  AxisAngleInput_t m_SampleTransformation;
-  AxisAngleInput_t m_EulerTransformation;
+  AxisAngleInput m_SampleTransformation;
+  AxisAngleInput m_EulerTransformation;
 
   QAction* m_ShowFileAction = nullptr;
   QString m_CurrentText = "";

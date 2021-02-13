@@ -262,22 +262,22 @@ public:
   /**
    * @brief Setter property for SampleTransformation
    */
-  void setSampleTransformation(const AxisAngleInput_t& value);
+  void setSampleTransformation(const AxisAngleInput& value);
   /**
    * @brief Getter property for SampleTransformation
    * @return Value of SampleTransformation
    */
-  AxisAngleInput_t getSampleTransformation() const;
+  AxisAngleInput getSampleTransformation() const;
 
   /**
    * @brief Setter property for EulerTransformation
    */
-  void setEulerTransformation(const AxisAngleInput_t& value);
+  void setEulerTransformation(const AxisAngleInput& value);
   /**
    * @brief Getter property for EulerTransformation
    * @return Value of EulerTransformation
    */
-  AxisAngleInput_t getEulerTransformation() const;
+  AxisAngleInput getEulerTransformation() const;
 
   //-------------------------------------------------------
 
@@ -536,8 +536,8 @@ private:
   int m_AngleRepresentation = {};
   uint32_t m_RefFrameZDir = {};
   EbsdLib::OEM m_Manufacturer = {};
-  AxisAngleInput_t m_SampleTransformation = {};
-  AxisAngleInput_t m_EulerTransformation = {};
+  AxisAngleInput m_SampleTransformation = {};
+  AxisAngleInput m_EulerTransformation = {};
   QString m_CrystalStructuresArrayName = {};
   QString m_LatticeConstantsArrayName = {};
   QString m_CellPhasesArrayName = {};

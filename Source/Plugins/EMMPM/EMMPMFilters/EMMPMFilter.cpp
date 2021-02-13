@@ -193,7 +193,7 @@ void EMMPMFilter::setupFilterParameters()
     linkedProps << "GradientBetaE";
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Gradient Penalty", UseGradientPenalty, FilterParameter::Category::Parameter, EMMPMFilter, linkedProps));
   }
-  parameters.push_back(SIMPL_NEW_CONSTRAINED_DOUBLE_FP("Beta E", GradientBetaE, FilterParameter::Category::Parameter, EMMPMFilter));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Beta E", GradientBetaE, FilterParameter::Category::Parameter, EMMPMFilter));
   {
     QStringList linkedProps;
     linkedProps << "CurvatureBetaC"
@@ -201,9 +201,9 @@ void EMMPMFilter::setupFilterParameters()
                 << "CurvatureEMLoopDelay";
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Curvature Penalty", UseCurvaturePenalty, FilterParameter::Category::Parameter, EMMPMFilter, linkedProps));
   }
-  parameters.push_back(SIMPL_NEW_CONSTRAINED_DOUBLE_FP("Beta C", CurvatureBetaC, FilterParameter::Category::Parameter, EMMPMFilter));
-  parameters.push_back(SIMPL_NEW_CONSTRAINED_DOUBLE_FP("R Max", CurvatureRMax, FilterParameter::Category::Parameter, EMMPMFilter));
-  parameters.push_back(SIMPL_NEW_CONSTRAINED_INT_FP("EM Loop Delay", CurvatureEMLoopDelay, FilterParameter::Category::Parameter, EMMPMFilter));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Beta C", CurvatureBetaC, FilterParameter::Category::Parameter, EMMPMFilter));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("R Max", CurvatureRMax, FilterParameter::Category::Parameter, EMMPMFilter));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("EM Loop Delay", CurvatureEMLoopDelay, FilterParameter::Category::Parameter, EMMPMFilter));
 
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {

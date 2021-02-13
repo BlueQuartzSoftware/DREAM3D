@@ -1310,25 +1310,25 @@ EbsdLib::OEM ReadH5Ebsd::getManufacturer() const
 }
 
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setSampleTransformation(const AxisAngleInput_t& value)
+void ReadH5Ebsd::setSampleTransformation(const AxisAngleInput& value)
 {
   m_SampleTransformation = value;
 }
 
 // -----------------------------------------------------------------------------
-AxisAngleInput_t ReadH5Ebsd::getSampleTransformation() const
+AxisAngleInput ReadH5Ebsd::getSampleTransformation() const
 {
   return m_SampleTransformation;
 }
 
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setEulerTransformation(const AxisAngleInput_t& value)
+void ReadH5Ebsd::setEulerTransformation(const AxisAngleInput& value)
 {
   m_EulerTransformation = value;
 }
 
 // -----------------------------------------------------------------------------
-AxisAngleInput_t ReadH5Ebsd::getEulerTransformation() const
+AxisAngleInput ReadH5Ebsd::getEulerTransformation() const
 {
   return m_EulerTransformation;
 }

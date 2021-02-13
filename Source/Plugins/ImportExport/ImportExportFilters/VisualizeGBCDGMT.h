@@ -62,7 +62,7 @@ class ImportExport_EXPORT VisualizeGBCDGMT : public AbstractFilter
   PYB11_FILTER_NEW_MACRO(VisualizeGBCDGMT)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   PYB11_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
-  PYB11_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
+  PYB11_PROPERTY(AxisAngleInput MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
   PYB11_PROPERTY(DataArrayPath GBCDArrayPath READ getGBCDArrayPath WRITE setGBCDArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
   PYB11_END_BINDINGS()
@@ -123,13 +123,13 @@ public:
   /**
    * @brief Setter property for MisorientationRotation
    */
-  void setMisorientationRotation(const AxisAngleInput_t& value);
+  void setMisorientationRotation(const AxisAngleInput& value);
   /**
    * @brief Getter property for MisorientationRotation
    * @return Value of MisorientationRotation
    */
-  AxisAngleInput_t getMisorientationRotation() const;
-  Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
+  AxisAngleInput getMisorientationRotation() const;
+  Q_PROPERTY(AxisAngleInput MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
 
   /**
    * @brief Setter property for GBCDArrayPath
@@ -241,7 +241,7 @@ private:
 
   QString m_OutputFile = {};
   int m_PhaseOfInterest = {};
-  AxisAngleInput_t m_MisorientationRotation = {};
+  AxisAngleInput m_MisorientationRotation = {};
   DataArrayPath m_GBCDArrayPath = {};
   DataArrayPath m_CrystalStructuresArrayPath = {};
 

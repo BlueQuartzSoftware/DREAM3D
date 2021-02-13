@@ -646,13 +646,13 @@ int VisualizeGBCDPoleFigure::getPhaseOfInterest() const
 }
 
 // -----------------------------------------------------------------------------
-void VisualizeGBCDPoleFigure::setMisorientationRotation(const AxisAngleInput_t& value)
+void VisualizeGBCDPoleFigure::setMisorientationRotation(const AxisAngleInput& value)
 {
   m_MisorientationRotation = value;
 }
 
 // -----------------------------------------------------------------------------
-AxisAngleInput_t VisualizeGBCDPoleFigure::getMisorientationRotation() const
+AxisAngleInput VisualizeGBCDPoleFigure::getMisorientationRotation() const
 {
   return m_MisorientationRotation;
 }

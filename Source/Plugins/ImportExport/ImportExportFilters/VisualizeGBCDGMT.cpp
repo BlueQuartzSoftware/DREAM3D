@@ -589,13 +589,13 @@ int VisualizeGBCDGMT::getPhaseOfInterest() const
 }
 
 // -----------------------------------------------------------------------------
-void VisualizeGBCDGMT::setMisorientationRotation(const AxisAngleInput_t& value)
+void VisualizeGBCDGMT::setMisorientationRotation(const AxisAngleInput& value)
 {
   m_MisorientationRotation = value;
 }
 
 // -----------------------------------------------------------------------------
-AxisAngleInput_t VisualizeGBCDGMT::getMisorientationRotation() const
+AxisAngleInput VisualizeGBCDGMT::getMisorientationRotation() const
 {
   return m_MisorientationRotation;
 }

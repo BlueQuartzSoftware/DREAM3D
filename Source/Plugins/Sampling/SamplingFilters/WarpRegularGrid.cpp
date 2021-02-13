@@ -446,25 +446,25 @@ int WarpRegularGrid::getPolyOrder() const
 }
 
 // -----------------------------------------------------------------------------
-void WarpRegularGrid::setSecondOrderACoeff(const Float2ndOrderPoly_t& value)
+void WarpRegularGrid::setSecondOrderACoeff(const Float2ndOrderPolynomial& value)
 {
   m_SecondOrderACoeff = value;
 }
 
 // -----------------------------------------------------------------------------
-Float2ndOrderPoly_t WarpRegularGrid::getSecondOrderACoeff() const
+Float2ndOrderPolynomial WarpRegularGrid::getSecondOrderACoeff() const
 {
   return m_SecondOrderACoeff;
 }
 
 // -----------------------------------------------------------------------------
-void WarpRegularGrid::setSecondOrderBCoeff(const Float2ndOrderPoly_t& value)
+void WarpRegularGrid::setSecondOrderBCoeff(const Float2ndOrderPolynomial& value)
 {
   m_SecondOrderBCoeff = value;
 }
 
 // -----------------------------------------------------------------------------
-Float2ndOrderPoly_t WarpRegularGrid::getSecondOrderBCoeff() const
+Float2ndOrderPolynomial WarpRegularGrid::getSecondOrderBCoeff() const
 {
   return m_SecondOrderBCoeff;
 }

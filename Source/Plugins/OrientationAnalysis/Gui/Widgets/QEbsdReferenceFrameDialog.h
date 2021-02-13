@@ -87,8 +87,8 @@ public:
   bool getHKLchecked();
   bool getHEDMchecked();
   bool getNoTranschecked();
-  void getSampleTranformation(AxisAngleInput_t& input);
-  void getEulerTranformation(AxisAngleInput_t& input);
+  void getSampleTranformation(AxisAngleInput& input);
+  void getEulerTranformation(AxisAngleInput& input);
 
 protected slots:
   void originChanged(bool checked);

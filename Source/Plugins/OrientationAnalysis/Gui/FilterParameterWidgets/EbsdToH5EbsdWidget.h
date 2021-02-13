@@ -190,8 +190,8 @@ private:
   bool m_HKLchecked;
   bool m_HEDMchecked;
   bool m_NoTranschecked;
-  AxisAngleInput_t m_SampleTransformation;
-  AxisAngleInput_t m_EulerTransformation;
+  AxisAngleInput m_SampleTransformation;
+  AxisAngleInput m_EulerTransformation;
   QAction* m_ShowFileAction = nullptr;
   QString m_CurrentText = "";
   bool m_DidCausePreflight = false;

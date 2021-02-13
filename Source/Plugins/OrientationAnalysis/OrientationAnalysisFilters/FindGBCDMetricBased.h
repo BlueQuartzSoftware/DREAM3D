@@ -70,7 +70,7 @@ class OrientationAnalysis_EXPORT FindGBCDMetricBased : public AbstractFilter
   PYB11_SHARED_POINTERS(FindGBCDMetricBased)
   PYB11_FILTER_NEW_MACRO(FindGBCDMetricBased)
   PYB11_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
-  PYB11_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
+  PYB11_PROPERTY(AxisAngleInput MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
   PYB11_PROPERTY(int ChosenLimitDists READ getChosenLimitDists WRITE setChosenLimitDists)
   PYB11_PROPERTY(int NumSamplPts READ getNumSamplPts WRITE setNumSamplPts)
   PYB11_PROPERTY(bool ExcludeTripleLines READ getExcludeTripleLines WRITE setExcludeTripleLines)
@@ -132,13 +132,13 @@ public:
   /**
    * @brief Setter property for MisorientationRotation
    */
-  void setMisorientationRotation(const AxisAngleInput_t& value);
+  void setMisorientationRotation(const AxisAngleInput& value);
   /**
    * @brief Getter property for MisorientationRotation
    * @return Value of MisorientationRotation
    */
-  AxisAngleInput_t getMisorientationRotation() const;
-  Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
+  AxisAngleInput getMisorientationRotation() const;
+  Q_PROPERTY(AxisAngleInput MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
 
   /**
    * @brief Setter property for ChosenLimitDists
@@ -386,7 +386,7 @@ private:
   int8_t* m_NodeTypes = nullptr;
 
   int m_PhaseOfInterest = {};
-  AxisAngleInput_t m_MisorientationRotation = {};
+  AxisAngleInput m_MisorientationRotation = {};
   int m_ChosenLimitDists = {};
   int m_NumSamplPts = {};
   bool m_ExcludeTripleLines = {};

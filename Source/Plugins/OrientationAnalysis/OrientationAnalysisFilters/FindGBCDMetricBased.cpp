@@ -1129,13 +1129,13 @@ int FindGBCDMetricBased::getPhaseOfInterest() const
 }
 
 // -----------------------------------------------------------------------------
-void FindGBCDMetricBased::setMisorientationRotation(const AxisAngleInput_t& value)
+void FindGBCDMetricBased::setMisorientationRotation(const AxisAngleInput& value)
 {
   m_MisorientationRotation = value;
 }
 
 // -----------------------------------------------------------------------------
-AxisAngleInput_t FindGBCDMetricBased::getMisorientationRotation() const
+AxisAngleInput FindGBCDMetricBased::getMisorientationRotation() const
 {
   return m_MisorientationRotation;
 }
