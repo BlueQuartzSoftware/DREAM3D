@@ -39,7 +39,9 @@
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
-class OrientationUtilityFilterParameter : public FilterParameter
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class OrientationAnalysis_EXPORT OrientationUtilityFilterParameter : public FilterParameter
 {
 public:
   using Self = OrientationUtilityFilterParameter;

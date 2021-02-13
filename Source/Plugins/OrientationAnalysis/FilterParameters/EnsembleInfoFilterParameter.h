@@ -44,6 +44,8 @@
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/Geometry/IGeometry.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief SIMPL_NEW_COMP_SEL_FP This macro is a short-form way of instantiating an instance of
  * EnsembleInfoFilterParameter. There are 6 required parameters and 1 optional parameter
@@ -63,7 +65,7 @@
  * @brief The EnsembleInfoFilterParameter class is used by filters to instantiate an ComparisonSelectionWidget.  By instantiating an instance of
  * this class in a filter's setupFilterParameters() method, a ComparisonSelectionWidget will appear in the filter's "filter input" section in the DREAM3D GUI.
  */
-class EnsembleInfoFilterParameter : public FilterParameter
+class OrientationAnalysis_EXPORT EnsembleInfoFilterParameter : public FilterParameter
 {
 public:
   using Self = EnsembleInfoFilterParameter;

@@ -39,9 +39,10 @@
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/EbsdToH5Ebsd.h"
 
-class EbsdToH5EbsdFilterParameter : public FilterParameter
+class OrientationAnalysis_EXPORT EbsdToH5EbsdFilterParameter : public FilterParameter
 {
 public:
   using Self = EbsdToH5EbsdFilterParameter;

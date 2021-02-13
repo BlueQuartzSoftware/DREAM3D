@@ -44,6 +44,8 @@
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/FilterParameters/MontageFileListInfo.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief SIMPL_NEW_EbsdMontageListInfo_FP This macro is a short-form way of instantiating an instance of
  * EbsdMontageImportFilterParameter. There are 4 required parameters that are always passed to this macro
@@ -62,7 +64,7 @@
  * @brief The EbsdMontageImportFilterParameter class is used by filters to instantiate an EbsdMontageListInfoWidget.  By instantiating an instance of
  * this class in a filter's setupFilterParameters() method, a EbsdMontageListInfoWidget will appear in the filter's "filter input" section in the DREAM3D GUI.
  */
-class EbsdMontageImportFilterParameter : public FilterParameter
+class OrientationAnalysis_EXPORT EbsdMontageImportFilterParameter : public FilterParameter
 {
 public:
   using Self = EbsdMontageImportFilterParameter;
