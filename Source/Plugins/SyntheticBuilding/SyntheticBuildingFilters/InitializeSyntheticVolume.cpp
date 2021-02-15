@@ -98,23 +98,23 @@ void InitializeSyntheticVolume::setupFilterParameters()
   FilterParameterVectorType parameters;
   QStringList linkedProps("EstimatedPrimaryFeatures");
   linkedProps << "InputPhaseTypesArrayPath";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Estimate Number of Features", EstimateNumberOfFeatures, FilterParameter::Parameter, InitializeSyntheticVolume, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Estimate Number of Features", EstimateNumberOfFeatures, FilterParameter::Category::Parameter, InitializeSyntheticVolume, linkedProps));
 
   PreflightUpdatedValueFilterParameter::Pointer param =
-      SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Estimated Primary Features", EstimatedPrimaryFeatures, FilterParameter::Parameter, InitializeSyntheticVolume);
+      SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Estimated Primary Features", EstimatedPrimaryFeatures, FilterParameter::Category::Parameter, InitializeSyntheticVolume);
   param->setReadOnly(true);
   parameters.push_back(param);
 
   {
-    parameters.push_back(SeparatorFilterParameter::New("Geometry Selection", FilterParameter::RequiredArray));
+    parameters.push_back(SeparatorFilterParameter::Create("Geometry Selection", FilterParameter::Category::RequiredArray));
     parameters.back()->setGroupIndex(1);
     parameters.back()->setPropertyName("Geometry Selection");
     DataContainerSelectionFilterParameter::RequirementType req;
     req.dcGeometryTypes = {IGeometry::Type::Image};
-    parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Existing Geometry", GeometryDataContainer, FilterParameter::RequiredArray, InitializeSyntheticVolume, req, 1));
+    parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Existing Geometry", GeometryDataContainer, FilterParameter::Category::RequiredArray, InitializeSyntheticVolume, req, 1));
   }
 
-  parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Ensemble Data", FilterParameter::Category::RequiredArray));
 
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -123,7 +123,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
     geomTypes.push_back(IGeometry::Type::Image);
     geomTypes.push_back(IGeometry::Type::Unknown);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Statistics", InputStatsArrayPath, FilterParameter::RequiredArray, InitializeSyntheticVolume, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Statistics", InputStatsArrayPath, FilterParameter::Category::RequiredArray, InitializeSyntheticVolume, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -132,12 +132,12 @@ void InitializeSyntheticVolume::setupFilterParameters()
     geomTypes.push_back(IGeometry::Type::Image);
     geomTypes.push_back(IGeometry::Type::Unknown);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Types", InputPhaseTypesArrayPath, FilterParameter::RequiredArray, InitializeSyntheticVolume, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Types", InputPhaseTypesArrayPath, FilterParameter::Category::RequiredArray, InitializeSyntheticVolume, req));
   }
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Synthetic Volume Data Container", DataContainerName, FilterParameter::CreatedArray, InitializeSyntheticVolume, 0));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, InitializeSyntheticVolume, 0));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Synthetic Volume Data Container", DataContainerName, FilterParameter::Category::CreatedArray, InitializeSyntheticVolume, 0));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, InitializeSyntheticVolume, 0));
 
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
@@ -162,19 +162,19 @@ void InitializeSyntheticVolume::setupFilterParameters()
                 << "Geometry Selection";
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions (Voxels)", Dimensions, FilterParameter::Parameter, InitializeSyntheticVolume, 0));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, InitializeSyntheticVolume, 0));
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions (Voxels)", Dimensions, FilterParameter::Category::Parameter, InitializeSyntheticVolume, 0));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Category::Parameter, InitializeSyntheticVolume, 0));
   parameters.back()->setLegacyPropertyName("Resolution");
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, InitializeSyntheticVolume, 0));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Category::Parameter, InitializeSyntheticVolume, 0));
 
   QVector<QString> choices = IGeometry::GetAllLengthUnitStrings();
-  parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Units (For Description Only)", LengthUnit, FilterParameter::Parameter, InitializeSyntheticVolume, choices, false, 0));
+  parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Units (For Description Only)", LengthUnit, FilterParameter::Category::Parameter, InitializeSyntheticVolume, choices, false, 0));
 
-  param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Box Size in Length Units", BoxDimensions, FilterParameter::Parameter, InitializeSyntheticVolume);
+  param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Box Size in Length Units", BoxDimensions, FilterParameter::Category::Parameter, InitializeSyntheticVolume);
   param->setReadOnly(true);
   parameters.push_back(param);
 

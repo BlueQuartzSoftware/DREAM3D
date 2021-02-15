@@ -44,6 +44,8 @@
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/Geometry/IGeometry.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief SIMPL_NEW_COMP_SEL_FP This macro is a short-form way of instantiating an instance of
  * EnsembleInfoFilterParameter. There are 6 required parameters and 1 optional parameter
@@ -54,7 +56,7 @@
  * SIMPL_NEW_COMP_SEL_FP("HumanLabel", PropertyName, Category, FilterName, Choices, ShowOperators, GroupIndex)
  *
  * Example 1 (instantiated within a filter called [GenericExample](@ref genericexample), without optional GroupIndex parameter):
- * SIMPL_NEW_COMP_SEL_FP("Select Arrays to Threshold", SelectedThresholds, FilterParameter::Parameter, GenericExample, choices, true);
+ * SIMPL_NEW_COMP_SEL_FP("Select Arrays to Threshold", SelectedThresholds, FilterParameter::Category::Parameter, GenericExample, choices, true);
  */
 #define SIMPL_NEW_ENS_INFO_FP(...)                                                                                                                                                                     \
   SIMPL_EXPAND(_FP_GET_OVERRIDE(__VA_ARGS__, SIMPL_NEW_FP_9, SIMPL_NEW_FP_8, SIMPL_NEW_FP_7, SIMPL_NEW_FP_6, SIMPL_NEW_FP_5, SIMPL_NEW_FP_4)(EnsembleInfoFilterParameter, __VA_ARGS__))
@@ -63,7 +65,7 @@
  * @brief The EnsembleInfoFilterParameter class is used by filters to instantiate an ComparisonSelectionWidget.  By instantiating an instance of
  * this class in a filter's setupFilterParameters() method, a ComparisonSelectionWidget will appear in the filter's "filter input" section in the DREAM3D GUI.
  */
-class EnsembleInfoFilterParameter : public FilterParameter
+class OrientationAnalysis_EXPORT EnsembleInfoFilterParameter : public FilterParameter
 {
 public:
   using Self = EnsembleInfoFilterParameter;
@@ -105,8 +107,8 @@ public:
    * @param groupIndex Integer that specifies the group that this filter parameter will be placed in.
    * @return
    */
-  static Pointer New(const QString& humanLabel, const QString& propertyName, EnsembleInfo defaultValue, Category category, const SetterCallbackType& setterCallback,
-                     const GetterCallbackType& getterCallback, QVector<QString> choices, bool showOperators, int groupIndex = -1);
+  static Pointer Create(const QString& humanLabel, const QString& propertyName, EnsembleInfo defaultValue, Category category, const SetterCallbackType& setterCallback,
+                        const GetterCallbackType& getterCallback, QVector<QString> choices, bool showOperators, int groupIndex = -1);
 
   virtual ~EnsembleInfoFilterParameter();
 

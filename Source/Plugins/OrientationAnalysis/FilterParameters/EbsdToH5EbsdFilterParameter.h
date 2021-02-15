@@ -39,9 +39,10 @@
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/EbsdToH5Ebsd.h"
 
-class EbsdToH5EbsdFilterParameter : public FilterParameter
+class OrientationAnalysis_EXPORT EbsdToH5EbsdFilterParameter : public FilterParameter
 {
 public:
   using Self = EbsdToH5EbsdFilterParameter;
@@ -62,8 +63,8 @@ public:
    */
   static QString ClassName();
 
-  static Pointer New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, EbsdToH5Ebsd* filter, const QString& fileExtension = QString(""),
-                     const QString& fileType = QString(""), int groupIndex = -1);
+  static Pointer Create(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, EbsdToH5Ebsd* filter, const QString& fileExtension = QString(""),
+                        const QString& fileType = QString(""), int groupIndex = -1);
 
   virtual ~EbsdToH5EbsdFilterParameter();
 

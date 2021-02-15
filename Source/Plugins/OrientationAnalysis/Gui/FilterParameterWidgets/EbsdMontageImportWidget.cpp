@@ -276,7 +276,7 @@ void EbsdMontageImportWidget::getGuiParametersFromFilter()
 {
   blockSignals(true);
 
-  MontageFileListInfo data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<MontageFileListInfo>();
+  MontageFileListInfo data = m_FilterParameter->getGetterCallback()();
 
   m_Ui->inputDir->setText(data.InputPath);
   setValidFilePath(data.InputPath);
@@ -448,13 +448,7 @@ void EbsdMontageImportWidget::filterNeedsInputParameters(AbstractFilter* filter)
   data.Ordering = 0; // By Default we use RowColumn ordering
   data.PaddingDigits = m_Ui->totalDigits->value();
 
-  QVariant v;
-  v.setValue(data);
-  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
-  if(!ok)
-  {
-    getFilter()->notifyMissingProperty(getFilterParameter());
-  }
+  m_FilterParameter->getSetterCallback()(data);
 }
 
 // -----------------------------------------------------------------------------

@@ -69,14 +69,14 @@ void AppendImageGeometryZSlice::setupFilterParameters()
 
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Input Cell Data", InputAttributeMatrix, FilterParameter::RequiredArray, AppendImageGeometryZSlice, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Input Cell Data", InputAttributeMatrix, FilterParameter::Category::RequiredArray, AppendImageGeometryZSlice, req));
   }
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Destination Cell Data", DestinationAttributeMatrix, FilterParameter::RequiredArray, AppendImageGeometryZSlice, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Destination Cell Data", DestinationAttributeMatrix, FilterParameter::Category::RequiredArray, AppendImageGeometryZSlice, req));
   }
 
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Check Spacing", CheckResolution, FilterParameter::Parameter, AppendImageGeometryZSlice));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Check Spacing", CheckResolution, FilterParameter::Category::Parameter, AppendImageGeometryZSlice));
 
   setFilterParameters(parameters);
 }

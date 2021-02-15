@@ -16,7 +16,7 @@ public:
     QString contents;
     QFileInfo fi(hFile);
 
-    //    if(fi.baseName().compare("FixNonmanifoldVoxels") != 0)
+    //    if(fi.baseName().compare("AttributeMatrixSelectionFilterParameter") != 0)
     //    {
     //      return;
     //    }
@@ -37,20 +37,65 @@ public:
     QStringListIterator sourceLines(list);
 
     QString baseName = fi.baseName();
-    QString ctrStart = QString("%1::%1()").arg(baseName);
+    QString pySearchMacro = "PYB11_STATIC_CREATION(Create)";
+    int32_t index = 0;
+    int32_t pySearchMacroIndex = 0;
 
+    QString createSearch = "static Pointer Create(const QString& humanLabel, const QString& propertyName,";
     while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
-      if(line.contains(ctrStart))
+      if(line.contains(pySearchMacro))
       {
         outLines.push_back(line);
-        checkConstructorForSetupFilterParameters(sourceLines, outLines, &didReplace);
+        pySearchMacroIndex = index;
       }
+      else if(line.trimmed().startsWith(createSearch))
+      {
+        outLines.push_back(line);
+        if(!line.trimmed().endsWith(";"))
+        {
+
+          QString nextLine = sourceLines.next();
+          outLines.push_back(nextLine);
+          // Append the next line
+          line = line + nextLine;
+        }
+        line = line.replace("const", "");
+        line = line.replace("&", "");
+        line = line.replace("int groupIndex = -1", "int groupIndex");
+        line = line.replace("static Pointer Create(", "");
+        line = line.replace(");", "");
+        line = line.trimmed(); // remove front and trailing spaces
+        QStringList tokens = line.split(",");
+        QString outLine;
+        QTextStream out(&outLine);
+        out << "  PYB11_STATIC_CREATION(Create ARGS ";
+        for(const auto& token : tokens)
+        {
+          QString stuff = token.trimmed().split(" ").at(0).trimmed();
+          if(stuff == "SetterCallbackType" || stuff == "GetterCallbackType" || stuff == "RequirementType")
+          {
+            stuff = fi.baseName() + "::" + stuff;
+          }
+          if(stuff == "Category")
+          {
+            stuff = "FilterParameter::" + stuff;
+          }
+
+          out << stuff << " ";
+        }
+        out << ")";
+        outLines[pySearchMacroIndex] = outLine;
+        didReplace = true;
+      }
+
       else
       {
         outLines.push_back(line);
       }
+
+      index++;
     }
 
     writeOutput(didReplace, outLines, hFile);

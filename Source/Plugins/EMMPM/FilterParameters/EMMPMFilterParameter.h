@@ -50,6 +50,15 @@
  */
 class EMMPMFilterParameter : public FilterParameter
 {
+  // Start Python bindings declarations
+  // clang-format off
+  PYB11_BEGIN_BINDINGS(EMMPMFilterParameter)
+  PYB11_SHARED_POINTERS(EMMPMFilterParameter)
+  PYB11_STATIC_CREATION(Create ARGS QString QString QString FilterParameter::Category EMMPMFilterParameter::SetterCallbackType EMMPMFilterParameter::GetterCallbackType int )
+  PYB11_END_BINDINGS()
+  // clang-format on
+  // End Python bindings declarations
+
 public:
   using Self = EMMPMFilterParameter;
   using Pointer = std::shared_ptr<Self>;
@@ -69,6 +78,9 @@ public:
    */
   static QString ClassName();
 
+  using SetterCallbackType = std::function<void(QString)>;
+  using GetterCallbackType = std::function<QString(void)>;
+
   /**
    * @brief New This function instantiates an instance of the DataContainerCreationFilterParameter.
    * @param humanLabel The name that the users of DREAM.3D see for this filter parameter
@@ -80,7 +92,8 @@ public:
    * @param groupIndex Integer that specifies the group that this filter parameter will be placed in.
    * @return
    */
-  static Pointer New(const QString& humanLabel, const QString& propertyName, const QString& defaultValue, Category category, EMMPMFilter* filter, int groupIndex = -1);
+  static Pointer Create(const QString& humanLabel, const QString& propertyName, const QString& defaultValue, Category category, const SetterCallbackType& setterCallback,
+                        const GetterCallbackType& getterCallback, int groupIndex = -1);
 
   virtual ~EMMPMFilterParameter();
 
@@ -112,6 +125,35 @@ public:
    * @param json The QJsonObject that the filter parameter writes to.
    */
   void writeJson(QJsonObject& json) override;
+  /**
+   * @param SetterCallback The method in the AbstractFilter subclass that <i>sets</i> the value of the property
+   * that this FilterParameter subclass represents.
+   * from the filter parameter.
+   */
+  /**
+   * @brief Setter property for SetterCallback
+   */
+  void setSetterCallback(const EMMPMFilterParameter::SetterCallbackType& value);
+  /**
+   * @brief Getter property for SetterCallback
+   * @return Value of SetterCallback
+   */
+  EMMPMFilterParameter::SetterCallbackType getSetterCallback() const;
+
+  /**
+   * @param GetterCallback The method in the AbstractFilter subclass that <i>gets</i> the value of the property
+   * that this FilterParameter subclass represents.
+   * @return The GetterCallback
+   */
+  /**
+   * @brief Setter property for GetterCallback
+   */
+  void setGetterCallback(const EMMPMFilterParameter::GetterCallbackType& value);
+  /**
+   * @brief Getter property for GetterCallback
+   * @return Value of GetterCallback
+   */
+  EMMPMFilterParameter::GetterCallbackType getGetterCallback() const;
 
 protected:
   /**
@@ -128,4 +170,6 @@ public:
 
 private:
   EMMPMFilter* m_Filter = nullptr;
+  EMMPMFilterParameter::SetterCallbackType m_SetterCallback = {};
+  EMMPMFilterParameter::GetterCallbackType m_GetterCallback = {};
 };

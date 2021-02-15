@@ -81,21 +81,21 @@ FindTriangleGeomNeighbors::~FindTriangleGeomNeighbors() = default;
 void FindTriangleGeomNeighbors::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Face Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", FaceLabelsArrayPath, FilterParameter::RequiredArray, FindTriangleGeomNeighbors, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", FaceLabelsArrayPath, FilterParameter::Category::RequiredArray, FindTriangleGeomNeighbors, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Face Feature Data", FilterParameter::Category::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::FaceFeature, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Face Feature Attribute Matrix", FeatureAttributeMatrixPath, FilterParameter::RequiredArray, FindTriangleGeomNeighbors, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Face Feature Attribute Matrix", FeatureAttributeMatrixPath, FilterParameter::Category::RequiredArray, FindTriangleGeomNeighbors, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Number of Neighbors", NumNeighborsArrayName, FeatureAttributeMatrixPath, FeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindTriangleGeomNeighbors));
-  parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Neighbor List", NeighborListArrayName, FeatureAttributeMatrixPath, FeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindTriangleGeomNeighbors));
+  parameters.push_back(SeparatorFilterParameter::Create("Face Feature Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Number of Neighbors", NumNeighborsArrayName, FeatureAttributeMatrixPath, FeatureAttributeMatrixPath, FilterParameter::Category::CreatedArray,
+                                                      FindTriangleGeomNeighbors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Neighbor List", NeighborListArrayName, FeatureAttributeMatrixPath, FeatureAttributeMatrixPath, FilterParameter::Category::CreatedArray,
+                                                      FindTriangleGeomNeighbors));
   setFilterParameters(parameters);
 }
 

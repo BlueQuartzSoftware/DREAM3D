@@ -121,13 +121,13 @@ void ChangeAngleRepresentation::setupFilterParameters()
     choices.push_back("Degrees to Radians");
     choices.push_back("Radians to Degrees");
     parameter->setChoices(choices);
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameters.push_back(parameter);
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Category::Any);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, ChangeAngleRepresentation, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Angles", CellEulerAnglesArrayPath, FilterParameter::Category::RequiredArray, ChangeAngleRepresentation, req));
   }
 
   setFilterParameters(parameters);

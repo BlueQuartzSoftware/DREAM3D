@@ -38,6 +38,7 @@
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/CoreFilters/RotateSampleRefFrame.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -137,12 +138,12 @@ ReadH5Ebsd::~ReadH5Ebsd() = default;
 void ReadH5Ebsd::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(ReadH5EbsdFilterParameter::New("Import H5Ebsd File", "ReadH5Ebsd", "__NULL__", FilterParameter::Parameter, this, "h5ebsd", "H5Ebsd"));
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ReadH5Ebsd));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, ReadH5Ebsd));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, ReadH5Ebsd));
+  parameters.push_back(ReadH5EbsdFilterParameter::Create("Import H5Ebsd File", "ReadH5Ebsd", "__NULL__", FilterParameter::Category::Parameter, this, "h5ebsd", "H5Ebsd"));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::Category::CreatedArray, ReadH5Ebsd));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, ReadH5Ebsd));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Ensemble Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, ReadH5Ebsd));
   setFilterParameters(parameters);
 }
 
@@ -615,70 +616,24 @@ void ReadH5Ebsd::execute()
       sampleAxis[0] = m_SampleTransformation.h;
       sampleAxis[1] = m_SampleTransformation.k;
       sampleAxis[2] = m_SampleTransformation.l;
-      QString filtName = "RotateSampleRefFrame";
-      FilterManager* fm = FilterManager::Instance();
-      IFilterFactory::Pointer rotSampleFactory = fm->getFactoryFromClassName(filtName);
-      if(nullptr != rotSampleFactory.get())
-      {
-        // If we get this far, the Factory is good so creating the filter should not fail unless something has
-        // horribly gone wrong in which case the system is going to come down quickly after this.
-        AbstractFilter::Pointer rot_Sample = rotSampleFactory->create();
 
-        // Connect up the Error/Warning/Progress object so the filter can report those things
-        connect(rot_Sample.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
-        rot_Sample->setDataContainerArray(getDataContainerArray()); // AbstractFilter implements this so no problem
-        // Now set the filter parameters for the filter using QProperty System since we can not directly
-        // instantiate the filter since it resides in a plugin. These calls are SLOW. DO NOT EVER do this in a
-        // tight loop. Your filter will slow down by 10X.
-        bool propWasSet = rot_Sample->setProperty("RotationAngle", m_SampleTransformation.angle);
-        if(!propWasSet)
-        {
-          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed "
-                                   "with a Q_PROPERTY macro. Please notify the developers")
-                           .arg("RotationAngle")
-                           .arg(filtName);
-          setErrorCondition(-109874, ss);
-        }
-        QVariant v;
-        v.setValue(sampleAxis);
-        propWasSet = rot_Sample->setProperty("RotationAxis", v);
-        if(!propWasSet)
-        {
-          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed "
-                                   "with a Q_PROPERTY macro. Please notify the developers")
-                           .arg("RotationAxis")
-                           .arg(filtName);
-          setErrorCondition(-109883, ss);
-        }
-        v.setValue(true);
-        propWasSet = rot_Sample->setProperty("SliceBySlice", v);
-        if(!propWasSet)
-        {
-          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed "
-                                   "with a Q_PROPERTY macro. Please notify the developers")
-                           .arg("SliceBySlice")
-                           .arg(filtName);
-          setErrorCondition(-109882, ss);
-        }
-        DataArrayPath tempPath;
-        tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), "");
-        v.setValue(tempPath);
-        propWasSet = rot_Sample->setProperty("CellAttributeMatrixPath", v);
-        if(!propWasSet)
-        {
-          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed "
-                                   "with a Q_PROPERTY macro. Please notify the developers")
-                           .arg("CellAttributeMatrixName")
-                           .arg(filtName);
-          setErrorCondition(-109871, ss);
-        }
-        rot_Sample->execute();
-      }
-      else
-      {
-        QString ss = QObject::tr("Error creating filter '%1' which is a subfilter called by ReadH5Ebsd. Filter was not created/executed. Please notify the developers").arg(filtName);
-        setErrorCondition(-109870, ss);
-      }
+      RotateSampleRefFrame::Pointer rot_Sample = RotateSampleRefFrame::New();
+
+      // Connect up the Error/Warning/Progress object so the filter can report those things
+      connect(rot_Sample.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
+      rot_Sample->setDataContainerArray(getDataContainerArray()); // AbstractFilter implements this so no problem
+      // Now set the filter parameters for the filter using QProperty System since we can not directly
+      // instantiate the filter since it resides in a plugin. These calls are SLOW. DO NOT EVER do this in a
+      // tight loop. Your filter will slow down by 10X.
+      rot_Sample->setRotationAngle(m_SampleTransformation.angle);
+      rot_Sample->setRotationAxis(sampleAxis);
+      rot_Sample->setSliceBySlice(true);
+
+      DataArrayPath tempPath;
+      tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), "");
+      rot_Sample->setCellAttributeMatrixPath(tempPath);
+
+      rot_Sample->execute();
     }
 
     if(m_EulerTransformation.angle > 0)
@@ -1310,25 +1265,25 @@ EbsdLib::OEM ReadH5Ebsd::getManufacturer() const
 }
 
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setSampleTransformation(const AxisAngleInput_t& value)
+void ReadH5Ebsd::setSampleTransformation(const AxisAngleInput& value)
 {
   m_SampleTransformation = value;
 }
 
 // -----------------------------------------------------------------------------
-AxisAngleInput_t ReadH5Ebsd::getSampleTransformation() const
+AxisAngleInput ReadH5Ebsd::getSampleTransformation() const
 {
   return m_SampleTransformation;
 }
 
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setEulerTransformation(const AxisAngleInput_t& value)
+void ReadH5Ebsd::setEulerTransformation(const AxisAngleInput& value)
 {
   m_EulerTransformation = value;
 }
 
 // -----------------------------------------------------------------------------
-AxisAngleInput_t ReadH5Ebsd::getEulerTransformation() const
+AxisAngleInput ReadH5Ebsd::getEulerTransformation() const
 {
   return m_EulerTransformation;
 }

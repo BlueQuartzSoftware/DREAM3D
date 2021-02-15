@@ -67,8 +67,8 @@ class OrientationAnalysis_EXPORT EbsdToH5Ebsd : public AbstractFilter
   PYB11_PROPERTY(int64_t ZStartIndex READ getZStartIndex WRITE setZStartIndex)
   PYB11_PROPERTY(int64_t ZEndIndex READ getZEndIndex WRITE setZEndIndex)
   PYB11_PROPERTY(float ZResolution READ getZResolution WRITE setZResolution)
-  PYB11_PROPERTY(AxisAngleInput_t SampleTransformation READ getSampleTransformation WRITE setSampleTransformation)
-  PYB11_PROPERTY(AxisAngleInput_t EulerTransformation READ getEulerTransformation WRITE setEulerTransformation)
+  PYB11_PROPERTY(AxisAngleInput SampleTransformation READ getSampleTransformation WRITE setSampleTransformation)
+  PYB11_PROPERTY(AxisAngleInput EulerTransformation READ getEulerTransformation WRITE setEulerTransformation)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
 
@@ -205,22 +205,22 @@ public:
   /**
    * @brief Setter property for SampleTransformation
    */
-  void setSampleTransformation(const AxisAngleInput_t& value);
+  void setSampleTransformation(const AxisAngleInput& value);
   /**
    * @brief Getter property for SampleTransformation
    * @return Value of SampleTransformation
    */
-  AxisAngleInput_t getSampleTransformation() const;
+  AxisAngleInput getSampleTransformation() const;
 
   /**
    * @brief Setter property for EulerTransformation
    */
-  void setEulerTransformation(const AxisAngleInput_t& value);
+  void setEulerTransformation(const AxisAngleInput& value);
   /**
    * @brief Getter property for EulerTransformation
    * @return Value of EulerTransformation
    */
-  AxisAngleInput_t getEulerTransformation() const;
+  AxisAngleInput getEulerTransformation() const;
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -311,6 +311,6 @@ private:
   QString m_FileSuffix = {};
   QString m_FileExtension = {};
   int m_PaddingDigits = {};
-  AxisAngleInput_t m_SampleTransformation = {};
-  AxisAngleInput_t m_EulerTransformation = {};
+  AxisAngleInput m_SampleTransformation = {};
+  AxisAngleInput m_EulerTransformation = {};
 };

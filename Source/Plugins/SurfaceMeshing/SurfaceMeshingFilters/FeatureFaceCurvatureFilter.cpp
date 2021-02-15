@@ -88,57 +88,58 @@ void FeatureFaceCurvatureFilter::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Neighborhood Ring Count", NRing, FilterParameter::Parameter, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Neighborhood Ring Count", NRing, FilterParameter::Category::Parameter, FeatureFaceCurvatureFilter));
   QStringList linkedProps;
   linkedProps << "SurfaceMeshPrincipalCurvature1sArrayName"
               << "SurfaceMeshPrincipalCurvature2sArrayName";
   linkedProps << "SurfaceMeshPrincipalDirection1sArrayName"
               << "SurfaceMeshPrincipalDirection2sArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Compute Principal Direction Vectors", ComputePrincipalDirectionVectors, FilterParameter::Parameter, FeatureFaceCurvatureFilter, linkedProps));
+  parameters.push_back(
+      SIMPL_NEW_LINKED_BOOL_FP("Compute Principal Direction Vectors", ComputePrincipalDirectionVectors, FilterParameter::Category::Parameter, FeatureFaceCurvatureFilter, linkedProps));
   linkedProps.clear();
   linkedProps << "SurfaceMeshGaussianCurvaturesArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Compute Gaussian Curvature", ComputeGaussianCurvature, FilterParameter::Parameter, FeatureFaceCurvatureFilter, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Compute Gaussian Curvature", ComputeGaussianCurvature, FilterParameter::Category::Parameter, FeatureFaceCurvatureFilter, linkedProps));
   linkedProps.clear();
   linkedProps << "SurfaceMeshMeanCurvaturesArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Compute Mean Curvature", ComputeMeanCurvature, FilterParameter::Parameter, FeatureFaceCurvatureFilter, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Compute Mean Curvature", ComputeMeanCurvature, FilterParameter::Category::Parameter, FeatureFaceCurvatureFilter, linkedProps));
   linkedProps.clear();
   linkedProps << "SurfaceMeshFaceNormalsArrayPath";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Face Normals for Curve Fitting", UseNormalsForCurveFitting, FilterParameter::Parameter, FeatureFaceCurvatureFilter, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Face Normals for Curve Fitting", UseNormalsForCurveFitting, FilterParameter::Category::Parameter, FeatureFaceCurvatureFilter, linkedProps));
 
-  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Face Data", FilterParameter::Category::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Face Attribute Matrix", FaceAttributeMatrixPath, FilterParameter::RequiredArray, FeatureFaceCurvatureFilter, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Face Attribute Matrix", FaceAttributeMatrixPath, FilterParameter::Category::RequiredArray, FeatureFaceCurvatureFilter, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, FeatureFaceCurvatureFilter, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::Category::RequiredArray, FeatureFaceCurvatureFilter, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Face Ids", SurfaceMeshFeatureFaceIdsArrayPath, FilterParameter::RequiredArray, FeatureFaceCurvatureFilter, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Face Ids", SurfaceMeshFeatureFaceIdsArrayPath, FilterParameter::Category::RequiredArray, FeatureFaceCurvatureFilter, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 3, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Normals", SurfaceMeshFaceNormalsArrayPath, FilterParameter::RequiredArray, FeatureFaceCurvatureFilter, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Normals", SurfaceMeshFaceNormalsArrayPath, FilterParameter::Category::RequiredArray, FeatureFaceCurvatureFilter, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 3, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Centroids", SurfaceMeshTriangleCentroidsArrayPath, FilterParameter::RequiredArray, FeatureFaceCurvatureFilter, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Centroids", SurfaceMeshTriangleCentroidsArrayPath, FilterParameter::Category::RequiredArray, FeatureFaceCurvatureFilter, req));
   }
 
-  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Face Data", FilterParameter::Category::CreatedArray));
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Principal Curvature 1", SurfaceMeshPrincipalCurvature1sArrayName, FaceAttributeMatrixPath, FaceAttributeMatrixPath,
-                                                      FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+                                                      FilterParameter::Category::CreatedArray, FeatureFaceCurvatureFilter));
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Principal Curvature 2", SurfaceMeshPrincipalCurvature2sArrayName, FaceAttributeMatrixPath, FaceAttributeMatrixPath,
-                                                      FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+                                                      FilterParameter::Category::CreatedArray, FeatureFaceCurvatureFilter));
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Principal Direction 1", SurfaceMeshPrincipalDirection1sArrayName, FaceAttributeMatrixPath, FaceAttributeMatrixPath,
-                                                      FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+                                                      FilterParameter::Category::CreatedArray, FeatureFaceCurvatureFilter));
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Principal Direction 2", SurfaceMeshPrincipalDirection2sArrayName, FaceAttributeMatrixPath, FaceAttributeMatrixPath,
-                                                      FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Gaussian Curvature", SurfaceMeshGaussianCurvaturesArrayName, FaceAttributeMatrixPath, FaceAttributeMatrixPath, FilterParameter::CreatedArray,
-                                                      FeatureFaceCurvatureFilter));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Mean Curvature", SurfaceMeshMeanCurvaturesArrayName, FaceAttributeMatrixPath, FaceAttributeMatrixPath, FilterParameter::CreatedArray,
+                                                      FilterParameter::Category::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Gaussian Curvature", SurfaceMeshGaussianCurvaturesArrayName, FaceAttributeMatrixPath, FaceAttributeMatrixPath,
+                                                      FilterParameter::Category::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Mean Curvature", SurfaceMeshMeanCurvaturesArrayName, FaceAttributeMatrixPath, FaceAttributeMatrixPath, FilterParameter::Category::CreatedArray,
                                                       FeatureFaceCurvatureFilter));
   setFilterParameters(parameters);
 }

@@ -198,26 +198,27 @@ void ScalarSegmentFeatures::setupFilterParameters()
   SegmentFeatures::setupFilterParameters();
   FilterParameterVectorType parameters;
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Scalar Tolerance", ScalarTolerance, FilterParameter::Parameter, ScalarSegmentFeatures));
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, ScalarSegmentFeatures, linkedProps));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Scalar Tolerance", ScalarTolerance, FilterParameter::Category::Parameter, ScalarSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Category::Parameter, ScalarSegmentFeatures, linkedProps));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Any);
     std::vector<IGeometry::Type> geomTypes = {IGeometry::Type::Image, IGeometry::Type::RectGrid};
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Scalar Array to Segment", ScalarArrayPath, FilterParameter::RequiredArray, ScalarSegmentFeatures, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Scalar Array to Segment", ScalarArrayPath, FilterParameter::Category::RequiredArray, ScalarSegmentFeatures, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     std::vector<IGeometry::Type> geomTypes = {IGeometry::Type::Image, IGeometry::Type::RectGrid};
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, ScalarSegmentFeatures, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::Category::RequiredArray, ScalarSegmentFeatures, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Feature Ids", FeatureIdsArrayName, ScalarArrayPath, ScalarArrayPath, FilterParameter::CreatedArray, ScalarSegmentFeatures));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, ScalarArrayPath, FilterParameter::CreatedArray, ScalarSegmentFeatures));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Active", ActiveArrayName, ScalarArrayPath, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, ScalarSegmentFeatures));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Feature Ids", FeatureIdsArrayName, ScalarArrayPath, ScalarArrayPath, FilterParameter::Category::CreatedArray, ScalarSegmentFeatures));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Feature Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(
+      SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, ScalarArrayPath, FilterParameter::Category::CreatedArray, ScalarSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Active", ActiveArrayName, ScalarArrayPath, CellFeatureAttributeMatrixName, FilterParameter::Category::CreatedArray, ScalarSegmentFeatures));
   setFilterParameters(parameters);
 }
 

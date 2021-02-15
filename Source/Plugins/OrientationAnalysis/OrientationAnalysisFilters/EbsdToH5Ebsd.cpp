@@ -90,7 +90,7 @@ void EbsdToH5Ebsd::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(EbsdToH5EbsdFilterParameter::New("Import Orientation Data", "OrientationData", getOutputFile(), FilterParameter::Parameter, this));
+  parameters.push_back(EbsdToH5EbsdFilterParameter::Create("Import Orientation Data", "OrientationData", getOutputFile(), FilterParameter::Category::Parameter, this));
 
   setFilterParameters(parameters);
 }
@@ -716,25 +716,25 @@ int EbsdToH5Ebsd::getPaddingDigits() const
 }
 
 // -----------------------------------------------------------------------------
-void EbsdToH5Ebsd::setSampleTransformation(const AxisAngleInput_t& value)
+void EbsdToH5Ebsd::setSampleTransformation(const AxisAngleInput& value)
 {
   m_SampleTransformation = value;
 }
 
 // -----------------------------------------------------------------------------
-AxisAngleInput_t EbsdToH5Ebsd::getSampleTransformation() const
+AxisAngleInput EbsdToH5Ebsd::getSampleTransformation() const
 {
   return m_SampleTransformation;
 }
 
 // -----------------------------------------------------------------------------
-void EbsdToH5Ebsd::setEulerTransformation(const AxisAngleInput_t& value)
+void EbsdToH5Ebsd::setEulerTransformation(const AxisAngleInput& value)
 {
   m_EulerTransformation = value;
 }
 
 // -----------------------------------------------------------------------------
-AxisAngleInput_t EbsdToH5Ebsd::getEulerTransformation() const
+AxisAngleInput EbsdToH5Ebsd::getEulerTransformation() const
 {
   return m_EulerTransformation;
 }

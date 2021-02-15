@@ -104,7 +104,7 @@ void GeneratePrecipitateStatsData::initialize()
 void GeneratePrecipitateStatsData::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_STRING_FP("Phase Name", PhaseName, FilterParameter::Parameter, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phase Name", PhaseName, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Crystal Symmetry");
@@ -124,7 +124,7 @@ void GeneratePrecipitateStatsData::setupFilterParameters()
             << "Trigonal (High)";
 
     parameter->setChoices(choices);
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameter->setSetterCallback(SIMPL_BIND_SETTER(GeneratePrecipitateStatsData, this, CrystalSymmetry));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(GeneratePrecipitateStatsData, this, CrystalSymmetry));
     parameters.push_back(parameter);
@@ -140,25 +140,25 @@ void GeneratePrecipitateStatsData::setupFilterParameters()
             << "Precipitate Rolled";
 
     parameter->setChoices(choices);
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameter->setSetterCallback(SIMPL_BIND_SETTER(GeneratePrecipitateStatsData, this, MicroPresetModel));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(GeneratePrecipitateStatsData, this, MicroPresetModel));
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Phase Fraction", PhaseFraction, FilterParameter::Parameter, GeneratePrecipitateStatsData));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Mu", Mu, FilterParameter::Parameter, GeneratePrecipitateStatsData));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Sigma", Sigma, FilterParameter::Parameter, GeneratePrecipitateStatsData));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Min.Cut Off", MinCutOff, FilterParameter::Parameter, GeneratePrecipitateStatsData));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Max Cut Off", MaxCutOff, FilterParameter::Parameter, GeneratePrecipitateStatsData));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Bin Step Size", BinStepSize, FilterParameter::Parameter, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Phase Fraction", PhaseFraction, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Mu", Mu, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Sigma", Sigma, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Min.Cut Off", MinCutOff, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Max Cut Off", MaxCutOff, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Bin Step Size", BinStepSize, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData));
 
   //---------------------------
-  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Bins Created:", NumberOfBins, FilterParameter::Parameter, GeneratePrecipitateStatsData);
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Bins Created:", NumberOfBins, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData);
   param->setReadOnly(true);
   parameters.push_back(param);
 
-  PreflightUpdatedValueFilterParameter::Pointer param2 = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Feature ESD:", FeatureESD, FilterParameter::Parameter, GeneratePrecipitateStatsData);
+  PreflightUpdatedValueFilterParameter::Pointer param2 = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Feature ESD:", FeatureESD, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData);
   param2->setReadOnly(true);
   parameters.push_back(param2);
   //---------------------------
@@ -175,7 +175,7 @@ void GeneratePrecipitateStatsData::setupFilterParameters()
     m_OdfData.setColHeaders(cHeaders);
     m_OdfData.setTableData(defaultTable);
     m_OdfData.setDynamicRows(true);
-    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("ODF", OdfData, FilterParameter::Parameter, GeneratePrecipitateStatsData, false));
+    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("ODF", OdfData, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData, false));
   }
   {
     QStringList cHeaders;
@@ -188,7 +188,7 @@ void GeneratePrecipitateStatsData::setupFilterParameters()
     m_MdfData.setColHeaders(cHeaders);
     m_MdfData.setTableData(defaultTable);
     m_MdfData.setDynamicRows(true);
-    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("MDF", MdfData, FilterParameter::Parameter, GeneratePrecipitateStatsData, false));
+    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("MDF", MdfData, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData, false));
   }
   {
     QStringList cHeaders;
@@ -201,28 +201,29 @@ void GeneratePrecipitateStatsData::setupFilterParameters()
     m_AxisOdfData.setColHeaders(cHeaders);
     m_AxisOdfData.setTableData(defaultTable);
     m_AxisOdfData.setDynamicRows(true);
-    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("Axis ODF", AxisOdfData, FilterParameter::Parameter, GeneratePrecipitateStatsData, false));
+    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("Axis ODF", AxisOdfData, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData, false));
   }
 
   // Insert Parameters for RDF to be calculated.
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC2_FP("[RDF] Min/Max Distance", RdfMinMaxDistance, FilterParameter::Parameter, GeneratePrecipitateStatsData));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("[RDF] Number of Bins", RdfNumBins, FilterParameter::Parameter, GeneratePrecipitateStatsData));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("[RDF] Box Size (X, Y, Z)", RdfBoxSize, FilterParameter::Parameter, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC2_FP("[RDF] Min/Max Distance", RdfMinMaxDistance, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("[RDF] Number of Bins", RdfNumBins, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("[RDF] Box Size (X, Y, Z)", RdfBoxSize, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData));
 
   QStringList linkedProps("DataContainerName");
   linkedProps << "CellEnsembleAttributeMatrixName";
   parameters.push_back(
-      SIMPL_NEW_LINKED_BOOL_FP("Create Data Container & Ensemble AttributeMatrix", CreateEnsembleAttributeMatrix, FilterParameter::Parameter, GeneratePrecipitateStatsData, linkedProps));
+      SIMPL_NEW_LINKED_BOOL_FP("Create Data Container & Ensemble AttributeMatrix", CreateEnsembleAttributeMatrix, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData, linkedProps));
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::Category::CreatedArray, GeneratePrecipitateStatsData));
   parameters.push_back(
-      SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, GeneratePrecipitateStatsData));
+      SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, GeneratePrecipitateStatsData));
 
   linkedProps.clear();
   linkedProps << "SelectedEnsembleAttributeMatrix";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Append To Existing AttributeMatrix", AppendToExistingAttributeMatrix, FilterParameter::Parameter, GeneratePrecipitateStatsData, linkedProps));
+  parameters.push_back(
+      SIMPL_NEW_LINKED_BOOL_FP("Append To Existing AttributeMatrix", AppendToExistingAttributeMatrix, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData, linkedProps));
   AttributeMatrixSelectionFilterParameter::RequirementType amReq2;
-  parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Selected Ensemble AttributeMatrix", SelectedEnsembleAttributeMatrix, FilterParameter::Parameter, GeneratePrecipitateStatsData, amReq2));
+  parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Selected Ensemble AttributeMatrix", SelectedEnsembleAttributeMatrix, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData, amReq2));
   setFilterParameters(parameters);
 }
 

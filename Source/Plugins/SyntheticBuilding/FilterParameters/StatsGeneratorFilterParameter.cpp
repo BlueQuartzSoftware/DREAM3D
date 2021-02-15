@@ -46,7 +46,7 @@ StatsGeneratorFilterParameter::~StatsGeneratorFilterParameter() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGeneratorFilterParameter::Pointer StatsGeneratorFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QString& defaultValue, Category category, int groupIndex)
+StatsGeneratorFilterParameter::Pointer StatsGeneratorFilterParameter::Create(const QString& humanLabel, const QString& propertyName, const QString& defaultValue, Category category, int groupIndex)
 {
 
   StatsGeneratorFilterParameter::Pointer ptr = StatsGeneratorFilterParameter::New();

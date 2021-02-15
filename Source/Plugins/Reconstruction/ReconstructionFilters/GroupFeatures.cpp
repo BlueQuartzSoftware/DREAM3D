@@ -70,15 +70,15 @@ void GroupFeatures::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
   QStringList linkedProps("NonContiguousNeighborListArrayPath");
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Non-Contiguous Neighbors", UseNonContiguousNeighbors, FilterParameter::Parameter, GroupFeatures, linkedProps));
-  parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Non-Contiguous Neighbors", UseNonContiguousNeighbors, FilterParameter::Category::Parameter, GroupFeatures, linkedProps));
+  parameters.push_back(SeparatorFilterParameter::Create("Feature Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, AttributeMatrix::Category::Feature);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Non-Contiguous Neighbor List", NonContiguousNeighborListArrayPath, FilterParameter::RequiredArray, GroupFeatures, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Non-Contiguous Neighbor List", NonContiguousNeighborListArrayPath, FilterParameter::Category::RequiredArray, GroupFeatures, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, AttributeMatrix::Category::Feature);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Contiguous Neighbor List", ContiguousNeighborListArrayPath, FilterParameter::RequiredArray, GroupFeatures, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Contiguous Neighbor List", ContiguousNeighborListArrayPath, FilterParameter::Category::RequiredArray, GroupFeatures, req));
   }
   setFilterParameters(parameters);
 }

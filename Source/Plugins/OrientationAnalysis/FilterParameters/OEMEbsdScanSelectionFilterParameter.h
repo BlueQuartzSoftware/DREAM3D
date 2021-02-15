@@ -65,8 +65,8 @@ public:
   using SetterCallbackType = std::function<void(QStringList)>;
   using GetterCallbackType = std::function<QStringList(void)>;
 
-  static Pointer New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, const QString& listProperty, Category category, const SetterCallbackType& setterCallback,
-                     const GetterCallbackType& getterCallback, int groupIndex = -1);
+  static Pointer Create(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, const QString& listProperty, Category category, const SetterCallbackType& setterCallback,
+                        const GetterCallbackType& getterCallback, int groupIndex = -1);
 
   ~OEMEbsdScanSelectionFilterParameter() override;
 

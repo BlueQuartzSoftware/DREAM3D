@@ -570,12 +570,12 @@ void QEbsdReferenceFrameDialog::originChanged(bool checked)
   }
 
   // Initialize to "No Transform"
-  AxisAngleInput_t sampleTrans;
+  AxisAngleInput sampleTrans;
   sampleTrans.angle = 0.0f;
   sampleTrans.h = 0.0f;
   sampleTrans.k = 0.0f;
   sampleTrans.l = 1.0f;
-  AxisAngleInput_t eulerTrans;
+  AxisAngleInput eulerTrans;
   eulerTrans.angle = 0.0f;
   eulerTrans.h = 0.0f;
   eulerTrans.k = 0.0f;
@@ -593,7 +593,7 @@ void QEbsdReferenceFrameDialog::originChanged(bool checked)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QEbsdReferenceFrameDialog::getSampleTranformation(AxisAngleInput_t& input)
+void QEbsdReferenceFrameDialog::getSampleTranformation(AxisAngleInput& input)
 {
   // Initialize to "No Transform"
   input.angle = 0.0f;
@@ -627,7 +627,7 @@ void QEbsdReferenceFrameDialog::getSampleTranformation(AxisAngleInput_t& input)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QEbsdReferenceFrameDialog::getEulerTranformation(AxisAngleInput_t& input)
+void QEbsdReferenceFrameDialog::getEulerTranformation(AxisAngleInput& input)
 {
   input.angle = 0.0f;
   input.h = 0.0f;

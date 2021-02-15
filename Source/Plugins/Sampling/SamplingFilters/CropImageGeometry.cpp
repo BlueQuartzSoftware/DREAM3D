@@ -78,46 +78,46 @@ CropImageGeometry::~CropImageGeometry() = default;
 void CropImageGeometry::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("X Min Voxel (Column) ", XMin, FilterParameter::Parameter, CropImageGeometry));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Min Voxel (Row)", YMin, FilterParameter::Parameter, CropImageGeometry));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Min Voxel (Plane)", ZMin, FilterParameter::Parameter, CropImageGeometry));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("X Max Voxel (Column) [Inclusive]", XMax, FilterParameter::Parameter, CropImageGeometry));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Max Voxel (Row) [Inclusive]", YMax, FilterParameter::Parameter, CropImageGeometry));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Max Voxel (Plane) [Inclusive]", ZMax, FilterParameter::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("X Min Voxel (Column) ", XMin, FilterParameter::Category::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Min Voxel (Row)", YMin, FilterParameter::Category::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Min Voxel (Plane)", ZMin, FilterParameter::Category::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("X Max Voxel (Column) [Inclusive]", XMax, FilterParameter::Category::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Max Voxel (Row) [Inclusive]", YMax, FilterParameter::Category::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Max Voxel (Plane) [Inclusive]", ZMax, FilterParameter::Category::Parameter, CropImageGeometry));
 
-  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Old Box Size in Length Units", OldBoxDimensions, FilterParameter::Parameter, CropImageGeometry);
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Old Box Size in Length Units", OldBoxDimensions, FilterParameter::Category::Parameter, CropImageGeometry);
   param->setReadOnly(true);
   parameters.push_back(param);
 
-  param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("New Box Size in Length Units", NewBoxDimensions, FilterParameter::Parameter, CropImageGeometry);
+  param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("New Box Size in Length Units", NewBoxDimensions, FilterParameter::Category::Parameter, CropImageGeometry);
   param->setReadOnly(true);
   parameters.push_back(param);
 
   QStringList linkedProps;
   linkedProps << "NewDataContainerName";
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Update Origin", UpdateOrigin, FilterParameter::Parameter, CropImageGeometry));
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save As New Data Container", SaveAsNewDataContainer, FilterParameter::Parameter, CropImageGeometry, linkedProps));
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", NewDataContainerName, FilterParameter::CreatedArray, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Update Origin", UpdateOrigin, FilterParameter::Category::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save As New Data Container", SaveAsNewDataContainer, FilterParameter::Category::Parameter, CropImageGeometry, linkedProps));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", NewDataContainerName, FilterParameter::Category::CreatedArray, CropImageGeometry));
 
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", CellAttributeMatrixPath, FilterParameter::RequiredArray, CropImageGeometry, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", CellAttributeMatrixPath, FilterParameter::Category::RequiredArray, CropImageGeometry, req));
   }
 
-  parameters.push_back(SeparatorFilterParameter::New("Renumber Features Parameters", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Renumber Features Parameters", FilterParameter::Category::RequiredArray));
   linkedProps.clear();
   linkedProps << "CellFeatureAttributeMatrixPath"
               << "FeatureIdsArrayPath";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Renumber Features", RenumberFeatures, FilterParameter::Parameter, CropImageGeometry, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Renumber Features", RenumberFeatures, FilterParameter::Category::Parameter, CropImageGeometry, linkedProps));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, CropImageGeometry, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::Category::RequiredArray, CropImageGeometry, req));
   }
-  // parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
+  // parameters.push_back(SeparatorFilterParameter::Create("Cell Feature Data", FilterParameter::Category::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixPath, FilterParameter::RequiredArray, CropImageGeometry, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixPath, FilterParameter::Category::RequiredArray, CropImageGeometry, req));
   }
   setFilterParameters(parameters);
 }

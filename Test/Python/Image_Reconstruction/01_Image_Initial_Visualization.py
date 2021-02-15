@@ -17,7 +17,7 @@ def image_initial_visualization():
     image_writer.registerImageIOFactories()
 
     # Import Image Stack [ITK]
-    file_list_info = simpl.FileListInfo(2, 0, 11, 174, 1, sd.GetDataDirectory() + '/Data/Image',
+    file_list_info = simpl.StackFileListInfo(2, 0, 11, 174, 1, sd.GetDataDirectory() + '/Data/Image',
                                         'slice_', '', 'tif')
     err = itkimageprocessingpy.itk_import_image_stack(dca, 'RoboMet.3D Image Stack', 'Optical Data',
                                                       simpl.FloatVec3([0, 0, 0]), simpl.FloatVec3([1, 1, 1]),

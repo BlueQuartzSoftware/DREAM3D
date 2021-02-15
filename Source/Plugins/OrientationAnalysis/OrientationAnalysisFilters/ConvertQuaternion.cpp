@@ -127,12 +127,12 @@ void ConvertQuaternion::setupFilterParameters()
   comp.push_back(std::vector<size_t>(1, 4));
   dasReq.componentDimensions = comp;
   dasReq.daTypes = {SIMPL::TypeNames::Float};
-  parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternion Array", QuaternionDataArrayPath, FilterParameter::Parameter, ConvertQuaternion, dasReq, DataArrayID30));
+  parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternion Array", QuaternionDataArrayPath, FilterParameter::Category::Parameter, ConvertQuaternion, dasReq, DataArrayID30));
   DataArrayCreationFilterParameter::RequirementType dacReq;
-  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Output Data Array Path", OutputDataArrayPath, FilterParameter::CreatedArray, ConvertQuaternion, dacReq, DataArrayID31));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Delete Original Data", DeleteOriginalData, FilterParameter::Parameter, ConvertQuaternion));
+  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Output Data Array Path", OutputDataArrayPath, FilterParameter::Category::CreatedArray, ConvertQuaternion, dacReq, DataArrayID31));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Delete Original Data", DeleteOriginalData, FilterParameter::Category::Parameter, ConvertQuaternion));
   QVector<QString> choices = {"To Scalar Vector ( w, [x, y, z] )", "To Vector Scalar ( [x, y, z], w )"};
-  parameters.push_back(SIMPL_NEW_CHOICE_FP("Conversion Type", ConversionType, FilterParameter::Parameter, ConvertQuaternion, choices, false));
+  parameters.push_back(SIMPL_NEW_CHOICE_FP("Conversion Type", ConversionType, FilterParameter::Category::Parameter, ConvertQuaternion, choices, false));
 
   setFilterParameters(parameters);
 }

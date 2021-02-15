@@ -94,7 +94,7 @@ void GeneratePrimaryStatsData::initialize()
 void GeneratePrimaryStatsData::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_STRING_FP("Phase Name", PhaseName, FilterParameter::Parameter, GeneratePrimaryStatsData));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phase Name", PhaseName, FilterParameter::Category::Parameter, GeneratePrimaryStatsData));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Crystal Symmetry");
@@ -114,7 +114,7 @@ void GeneratePrimaryStatsData::setupFilterParameters()
             << "Trigonal (High)";
 
     parameter->setChoices(choices);
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameter->setSetterCallback(SIMPL_BIND_SETTER(GeneratePrimaryStatsData, this, CrystalSymmetry));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(GeneratePrimaryStatsData, this, CrystalSymmetry));
     parameters.push_back(parameter);
@@ -131,26 +131,26 @@ void GeneratePrimaryStatsData::setupFilterParameters()
             << "Primary Recrystallized";
 
     parameter->setChoices(choices);
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameter->setSetterCallback(SIMPL_BIND_SETTER(GeneratePrimaryStatsData, this, MicroPresetModel));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(GeneratePrimaryStatsData, this, MicroPresetModel));
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Phase Fraction", PhaseFraction, FilterParameter::Parameter, GeneratePrimaryStatsData));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Mu", Mu, FilterParameter::Parameter, GeneratePrimaryStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Phase Fraction", PhaseFraction, FilterParameter::Category::Parameter, GeneratePrimaryStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Mu", Mu, FilterParameter::Category::Parameter, GeneratePrimaryStatsData));
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Sigma", Sigma, FilterParameter::Parameter, GeneratePrimaryStatsData));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Min.Cut Off", MinCutOff, FilterParameter::Parameter, GeneratePrimaryStatsData));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Max Cut Off", MaxCutOff, FilterParameter::Parameter, GeneratePrimaryStatsData));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Bin Step Size", BinStepSize, FilterParameter::Parameter, GeneratePrimaryStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Sigma", Sigma, FilterParameter::Category::Parameter, GeneratePrimaryStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Min.Cut Off", MinCutOff, FilterParameter::Category::Parameter, GeneratePrimaryStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Max Cut Off", MaxCutOff, FilterParameter::Category::Parameter, GeneratePrimaryStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Bin Step Size", BinStepSize, FilterParameter::Category::Parameter, GeneratePrimaryStatsData));
 
   //---------------------------
-  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Bins Created:", NumberOfBins, FilterParameter::Parameter, GeneratePrimaryStatsData);
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Bins Created:", NumberOfBins, FilterParameter::Category::Parameter, GeneratePrimaryStatsData);
   param->setReadOnly(true);
   parameters.push_back(param);
 
-  PreflightUpdatedValueFilterParameter::Pointer param2 = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Feature ESD:", FeatureESD, FilterParameter::Parameter, GeneratePrimaryStatsData);
+  PreflightUpdatedValueFilterParameter::Pointer param2 = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Feature ESD:", FeatureESD, FilterParameter::Category::Parameter, GeneratePrimaryStatsData);
   param2->setReadOnly(true);
   parameters.push_back(param2);
   //---------------------------
@@ -167,7 +167,7 @@ void GeneratePrimaryStatsData::setupFilterParameters()
     m_OdfData.setColHeaders(cHeaders);
     m_OdfData.setTableData(defaultTable);
     m_OdfData.setDynamicRows(true);
-    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("ODF", OdfData, FilterParameter::Parameter, GeneratePrimaryStatsData, false));
+    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("ODF", OdfData, FilterParameter::Category::Parameter, GeneratePrimaryStatsData, false));
   }
   {
     QStringList cHeaders;
@@ -180,7 +180,7 @@ void GeneratePrimaryStatsData::setupFilterParameters()
     m_MdfData.setColHeaders(cHeaders);
     m_MdfData.setTableData(defaultTable);
     m_MdfData.setDynamicRows(true);
-    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("MDF", MdfData, FilterParameter::Parameter, GeneratePrimaryStatsData, false));
+    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("MDF", MdfData, FilterParameter::Category::Parameter, GeneratePrimaryStatsData, false));
   }
   {
     QStringList cHeaders;
@@ -193,21 +193,23 @@ void GeneratePrimaryStatsData::setupFilterParameters()
     m_AxisOdfData.setColHeaders(cHeaders);
     m_AxisOdfData.setTableData(defaultTable);
     m_AxisOdfData.setDynamicRows(true);
-    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("Axis ODF", AxisOdfData, FilterParameter::Parameter, GeneratePrimaryStatsData, false));
+    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("Axis ODF", AxisOdfData, FilterParameter::Category::Parameter, GeneratePrimaryStatsData, false));
   }
 
   QStringList linkedProps("DataContainerName");
   linkedProps << "CellEnsembleAttributeMatrixName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Data Container & Ensemble AttributeMatrix", CreateEnsembleAttributeMatrix, FilterParameter::Parameter, GeneratePrimaryStatsData, linkedProps));
+  parameters.push_back(
+      SIMPL_NEW_LINKED_BOOL_FP("Create Data Container & Ensemble AttributeMatrix", CreateEnsembleAttributeMatrix, FilterParameter::Category::Parameter, GeneratePrimaryStatsData, linkedProps));
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, GeneratePrimaryStatsData));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, GeneratePrimaryStatsData));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::Category::CreatedArray, GeneratePrimaryStatsData));
+  parameters.push_back(
+      SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, GeneratePrimaryStatsData));
 
   linkedProps.clear();
   linkedProps << "SelectedEnsembleAttributeMatrix";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Append To Existing AttributeMatrix", AppendToExistingAttributeMatrix, FilterParameter::Parameter, GeneratePrimaryStatsData, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Append To Existing AttributeMatrix", AppendToExistingAttributeMatrix, FilterParameter::Category::Parameter, GeneratePrimaryStatsData, linkedProps));
   AttributeMatrixSelectionFilterParameter::RequirementType amReq2;
-  parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Selected Ensemble AttributeMatrix", SelectedEnsembleAttributeMatrix, FilterParameter::Parameter, GeneratePrimaryStatsData, amReq2));
+  parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Selected Ensemble AttributeMatrix", SelectedEnsembleAttributeMatrix, FilterParameter::Category::Parameter, GeneratePrimaryStatsData, amReq2));
   setFilterParameters(parameters);
 }
 

@@ -472,7 +472,7 @@ void TestUncategorizedFilterParameters()
         FilterParameterVectorType parameters = filter->getFilterParameters();
         foreach(FilterParameter::Pointer fp, parameters)
         {
-          if(fp->getCategory() == FilterParameter::Uncategorized)
+          if(fp->getCategory() == FilterParameter::Category::Uncategorized)
           {
             qDebug() << "[]" << filter->getCompiledLibraryName() << "  Filter: " << filter->getNameOfClass() << " Filter Parameter: " << fp->getPropertyName() << " IS NOT Categorized.";
           }

@@ -76,14 +76,14 @@ AbaqusHexahedronWriter::~AbaqusHexahedronWriter() = default;
 void AbaqusHexahedronWriter::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Hourglass Stiffness", HourglassStiffness, FilterParameter::Parameter, AbaqusHexahedronWriter, 0));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Job Name", JobName, FilterParameter::Parameter, AbaqusHexahedronWriter));
-  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Parameter, AbaqusHexahedronWriter));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Output File Prefix", FilePrefix, FilterParameter::Parameter, AbaqusHexahedronWriter));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Hourglass Stiffness", HourglassStiffness, FilterParameter::Category::Parameter, AbaqusHexahedronWriter, 0));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Job Name", JobName, FilterParameter::Category::Parameter, AbaqusHexahedronWriter));
+  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Category::Parameter, AbaqusHexahedronWriter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Output File Prefix", FilePrefix, FilterParameter::Category::Parameter, AbaqusHexahedronWriter));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, AbaqusHexahedronWriter, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::Category::RequiredArray, AbaqusHexahedronWriter, req));
   }
   setFilterParameters(parameters);
 }

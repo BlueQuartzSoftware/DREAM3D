@@ -79,13 +79,13 @@ void AvizoUniformCoordinateWriter::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, AvizoUniformCoordinateWriter, "*.am", "Amira Mesh"));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Write Binary File", WriteBinaryFile, FilterParameter::Parameter, AvizoUniformCoordinateWriter));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Category::Parameter, AvizoUniformCoordinateWriter, "*.am", "Amira Mesh"));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Write Binary File", WriteBinaryFile, FilterParameter::Category::Parameter, AvizoUniformCoordinateWriter));
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeatureIds", FeatureIdsArrayPath, FilterParameter::RequiredArray, AvizoUniformCoordinateWriter, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeatureIds", FeatureIdsArrayPath, FilterParameter::Category::RequiredArray, AvizoUniformCoordinateWriter, req));
   }
-  parameters.push_back(SIMPL_NEW_STRING_FP("Units", Units, FilterParameter::Parameter, AvizoUniformCoordinateWriter, 0));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Units", Units, FilterParameter::Category::Parameter, AvizoUniformCoordinateWriter, 0));
 
   setFilterParameters(parameters);
 }

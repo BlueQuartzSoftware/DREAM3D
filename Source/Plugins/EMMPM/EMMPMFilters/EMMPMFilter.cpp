@@ -181,39 +181,39 @@ void EMMPMFilter::setupFilterParameters()
     EMMPMFilterParameter::Pointer parameter = EMMPMFilterParameter::New();
     parameter->setHumanLabel("EMMPM Widget");
     parameter->setPropertyName("NumClasses");
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameter->setFilter(this);
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Use 1-Based Values", UseOneBasedValues, FilterParameter::Parameter, EMMPMFilter));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Use 1-Based Values", UseOneBasedValues, FilterParameter::Category::Parameter, EMMPMFilter));
 
   {
     QStringList linkedProps;
     linkedProps << "GradientBetaE";
-    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Gradient Penalty", UseGradientPenalty, FilterParameter::Parameter, EMMPMFilter, linkedProps));
+    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Gradient Penalty", UseGradientPenalty, FilterParameter::Category::Parameter, EMMPMFilter, linkedProps));
   }
-  parameters.push_back(SIMPL_NEW_CONSTRAINED_DOUBLE_FP("Beta E", GradientBetaE, FilterParameter::Parameter, EMMPMFilter));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Beta E", GradientBetaE, FilterParameter::Category::Parameter, EMMPMFilter));
   {
     QStringList linkedProps;
     linkedProps << "CurvatureBetaC"
                 << "CurvatureRMax"
                 << "CurvatureEMLoopDelay";
-    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Curvature Penalty", UseCurvaturePenalty, FilterParameter::Parameter, EMMPMFilter, linkedProps));
+    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Curvature Penalty", UseCurvaturePenalty, FilterParameter::Category::Parameter, EMMPMFilter, linkedProps));
   }
-  parameters.push_back(SIMPL_NEW_CONSTRAINED_DOUBLE_FP("Beta C", CurvatureBetaC, FilterParameter::Parameter, EMMPMFilter));
-  parameters.push_back(SIMPL_NEW_CONSTRAINED_DOUBLE_FP("R Max", CurvatureRMax, FilterParameter::Parameter, EMMPMFilter));
-  parameters.push_back(SIMPL_NEW_CONSTRAINED_INT_FP("EM Loop Delay", CurvatureEMLoopDelay, FilterParameter::Parameter, EMMPMFilter));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Beta C", CurvatureBetaC, FilterParameter::Category::Parameter, EMMPMFilter));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("R Max", CurvatureRMax, FilterParameter::Category::Parameter, EMMPMFilter));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("EM Loop Delay", CurvatureEMLoopDelay, FilterParameter::Category::Parameter, EMMPMFilter));
 
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Input Attribute Array", InputDataArrayPath, FilterParameter::RequiredArray, EMMPMFilter, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Input Attribute Array", InputDataArrayPath, FilterParameter::Category::RequiredArray, EMMPMFilter, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Output Attribute Array", OutputDataArrayPath, FilterParameter::CreatedArray, EMMPMFilter, req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Output Attribute Array", OutputDataArrayPath, FilterParameter::Category::CreatedArray, EMMPMFilter, req));
   }
   setFilterParameters(parameters);
 }

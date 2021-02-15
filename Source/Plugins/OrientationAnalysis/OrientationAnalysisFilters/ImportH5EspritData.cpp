@@ -134,8 +134,9 @@ void ImportH5EspritData::setupFilterParameters()
   ImportH5OimData::setupFilterParameters();
   FilterParameterVectorType parameters = getFilterParameters();
 
-  parameters.insert(parameters.begin() + 4, SIMPL_NEW_BOOL_FP("Combine phi1, PHI, phi2 into Single Euler Angles Attribute Array", CombineEulerAngles, FilterParameter::Parameter, ImportH5EspritData));
-  parameters.insert(parameters.begin() + 5, SIMPL_NEW_BOOL_FP("Convert Euler Angles to Radians", DegreesToRadians, FilterParameter::Parameter, ImportH5EspritData));
+  parameters.insert(parameters.begin() + 4,
+                    SIMPL_NEW_BOOL_FP("Combine phi1, PHI, phi2 into Single Euler Angles Attribute Array", CombineEulerAngles, FilterParameter::Category::Parameter, ImportH5EspritData));
+  parameters.insert(parameters.begin() + 5, SIMPL_NEW_BOOL_FP("Convert Euler Angles to Radians", DegreesToRadians, FilterParameter::Category::Parameter, ImportH5EspritData));
   setFilterParameters(parameters);
 }
 

@@ -141,29 +141,32 @@ QuickSurfaceMesh::~QuickSurfaceMesh() = default;
 void QuickSurfaceMesh::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Any);
     IGeometry::Types geomTypes = {IGeometry::Type::Image, IGeometry::Type::RectGrid};
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, QuickSurfaceMesh, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::Category::RequiredArray, QuickSurfaceMesh, req));
   }
   {
     MultiDataArraySelectionFilterParameter::RequirementType req =
         MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Any);
     IGeometry::Types geomTypes = {IGeometry::Type::Image, IGeometry::Type::RectGrid};
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Transfer", SelectedDataArrayPaths, FilterParameter::RequiredArray, QuickSurfaceMesh, req));
+    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Transfer", SelectedDataArrayPaths, FilterParameter::Category::RequiredArray, QuickSurfaceMesh, req));
   }
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", SurfaceDataContainerName, FilterParameter::CreatedArray, QuickSurfaceMesh));
-  parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, SurfaceDataContainerName, FilterParameter::CreatedArray, QuickSurfaceMesh));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Node Types", NodeTypesArrayName, SurfaceDataContainerName, VertexAttributeMatrixName, FilterParameter::CreatedArray, QuickSurfaceMesh));
-  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Face Attribute Matrix", FaceAttributeMatrixName, SurfaceDataContainerName, FilterParameter::CreatedArray, QuickSurfaceMesh));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Face Labels", FaceLabelsArrayName, SurfaceDataContainerName, VertexAttributeMatrixName, FilterParameter::CreatedArray, QuickSurfaceMesh));
-  parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Face Feature Attribute Matrix", FeatureAttributeMatrixName, SurfaceDataContainerName, FilterParameter::CreatedArray, QuickSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", SurfaceDataContainerName, FilterParameter::Category::CreatedArray, QuickSurfaceMesh));
+  parameters.push_back(SeparatorFilterParameter::Create("Vertex Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, SurfaceDataContainerName, FilterParameter::Category::CreatedArray, QuickSurfaceMesh));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Node Types", NodeTypesArrayName, SurfaceDataContainerName, VertexAttributeMatrixName, FilterParameter::Category::CreatedArray, QuickSurfaceMesh));
+  parameters.push_back(SeparatorFilterParameter::Create("Face Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Face Attribute Matrix", FaceAttributeMatrixName, SurfaceDataContainerName, FilterParameter::Category::CreatedArray, QuickSurfaceMesh));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Face Labels", FaceLabelsArrayName, SurfaceDataContainerName, VertexAttributeMatrixName, FilterParameter::Category::CreatedArray, QuickSurfaceMesh));
+  parameters.push_back(SeparatorFilterParameter::Create("Face Feature Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(
+      SIMPL_NEW_AM_WITH_LINKED_DC_FP("Face Feature Attribute Matrix", FeatureAttributeMatrixName, SurfaceDataContainerName, FilterParameter::Category::CreatedArray, QuickSurfaceMesh));
   setFilterParameters(parameters);
 }
 

@@ -44,6 +44,8 @@
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/FilterParameters/MontageFileListInfo.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief SIMPL_NEW_EbsdMontageListInfo_FP This macro is a short-form way of instantiating an instance of
  * EbsdMontageImportFilterParameter. There are 4 required parameters that are always passed to this macro
@@ -53,7 +55,7 @@
  * SIMPL_NEW_EbsdMontageListInfo_FP("HumanLabel", PropertyName, Category, FilterName)
  *
  * Example 1 (instantiated within a filter called [GenericExample](@ref genericexample)):
- * SIMPL_NEW_EbsdMontageListInfo_FP("Input File List", InputEbsdMontageListInfo, FilterParameter::Parameter, GenericExample);
+ * SIMPL_NEW_EbsdMontageListInfo_FP("Input File List", InputEbsdMontageListInfo, FilterParameter::Category::Parameter, GenericExample);
  */
 #define SIMPL_NEW_EbsdMontageListInfo_FP(...)                                                                                                                                                          \
   SIMPL_EXPAND(_FP_GET_OVERRIDE(__VA_ARGS__, SIMPL_NEW_FP_9, SIMPL_NEW_FP_8, SIMPL_NEW_FP_7, SIMPL_NEW_FP_6, SIMPL_NEW_FP_5, SIMPL_NEW_FP_4)(EbsdMontageImportFilterParameter, __VA_ARGS__))
@@ -62,7 +64,7 @@
  * @brief The EbsdMontageImportFilterParameter class is used by filters to instantiate an EbsdMontageListInfoWidget.  By instantiating an instance of
  * this class in a filter's setupFilterParameters() method, a EbsdMontageListInfoWidget will appear in the filter's "filter input" section in the DREAM3D GUI.
  */
-class EbsdMontageImportFilterParameter : public FilterParameter
+class OrientationAnalysis_EXPORT EbsdMontageImportFilterParameter : public FilterParameter
 {
 public:
   using Self = EbsdMontageImportFilterParameter;
@@ -102,8 +104,8 @@ public:
   * that this FilterParameter subclass represents.
    * @return
    */
-  static Pointer New(const QString& humanLabel, const QString& propertyName, const MontageFileListInfo& defaultValue, Category category, SetterCallbackType setterCallback,
-                     GetterCallbackType getterCallback);
+  static Pointer Create(const QString& humanLabel, const QString& propertyName, const MontageFileListInfo& defaultValue, Category category, SetterCallbackType setterCallback,
+                        GetterCallbackType getterCallback);
 
   ~EbsdMontageImportFilterParameter() override;
 

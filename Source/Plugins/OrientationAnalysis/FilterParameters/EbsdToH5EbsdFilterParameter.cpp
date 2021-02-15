@@ -48,8 +48,8 @@ EbsdToH5EbsdFilterParameter::~EbsdToH5EbsdFilterParameter() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EbsdToH5EbsdFilterParameter::Pointer EbsdToH5EbsdFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, EbsdToH5Ebsd* filter,
-                                                                      const QString& fileExtension, const QString& fileType, int groupIndex)
+EbsdToH5EbsdFilterParameter::Pointer EbsdToH5EbsdFilterParameter::Create(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, EbsdToH5Ebsd* filter,
+                                                                         const QString& fileExtension, const QString& fileType, int groupIndex)
 {
   EbsdToH5EbsdFilterParameter::Pointer ptr = EbsdToH5EbsdFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -89,12 +89,12 @@ void EbsdToH5EbsdFilterParameter::readJson(const QJsonObject& json)
   m_Filter->setPaddingDigits(json["PaddingDigits"].toInt());
 
   QJsonObject sampleTransObj = json["SampleTransformation"].toObject();
-  AxisAngleInput_t sampleTrans;
+  AxisAngleInput sampleTrans;
   sampleTrans.readJson(sampleTransObj);
   m_Filter->setSampleTransformation(sampleTrans);
 
   QJsonObject eulerObj = json["EulerTransformation"].toObject();
-  AxisAngleInput_t euler;
+  AxisAngleInput euler;
   euler.readJson(eulerObj);
   m_Filter->setEulerTransformation(euler);
 }
@@ -116,12 +116,12 @@ void EbsdToH5EbsdFilterParameter::writeJson(QJsonObject& json)
   json["PaddingDigits"] = m_Filter->getPaddingDigits();
 
   QJsonObject sampleTransObj;
-  AxisAngleInput_t sampleTrans = m_Filter->getSampleTransformation();
+  AxisAngleInput sampleTrans = m_Filter->getSampleTransformation();
   sampleTrans.writeJson(sampleTransObj);
   json["SampleTransformation"] = sampleTransObj;
 
   QJsonObject eulerObj;
-  AxisAngleInput_t euler = m_Filter->getEulerTransformation();
+  AxisAngleInput euler = m_Filter->getEulerTransformation();
   euler.writeJson(eulerObj);
   json["EulerTransformation"] = eulerObj;
 }

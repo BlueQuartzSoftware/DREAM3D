@@ -215,21 +215,21 @@ QDateTime ImportH5OimData::getTimeStamp_Cache() const
 void ImportH5OimData::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, ImportH5OimData, "*.h5 *.hdf5"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Category::Parameter, ImportH5OimData, "*.h5 *.hdf5"));
 
-  // parameters.push_back(DynamicChoiceFilterParameter::New("Scan Name", "ScanName", getScanName(), "FileScanNames", FilterParameter::Parameter));
-  parameters.push_back(OEMEbsdScanSelectionFilterParameter::New("Scan Names", "SelectedScanNames", getSelectedScanNames(), "FileScanNames", FilterParameter::Parameter,
-                                                                SIMPL_BIND_SETTER(ImportH5OimData, this, SelectedScanNames), SIMPL_BIND_GETTER(ImportH5OimData, this, SelectedScanNames)));
+  // parameters.push_back(DynamicChoiceFilterParameter::Create("Scan Name", "ScanName", getScanName(), "FileScanNames", FilterParameter::Category::Parameter));
+  parameters.push_back(OEMEbsdScanSelectionFilterParameter::Create("Scan Names", "SelectedScanNames", getSelectedScanNames(), "FileScanNames", FilterParameter::Category::Parameter,
+                                                                   SIMPL_BIND_SETTER(ImportH5OimData, this, SelectedScanNames), SIMPL_BIND_GETTER(ImportH5OimData, this, SelectedScanNames)));
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Z Spacing (Microns)", ZSpacing, FilterParameter::Parameter, ImportH5OimData));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin (XYZ)", Origin, FilterParameter::Parameter, ImportH5OimData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Z Spacing (Microns)", ZSpacing, FilterParameter::Category::Parameter, ImportH5OimData));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin (XYZ)", Origin, FilterParameter::Category::Parameter, ImportH5OimData));
 
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Import Pattern Data", ReadPatternData, FilterParameter::Parameter, ImportH5OimData));
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ImportH5OimData));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, ImportH5OimData));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, ImportH5OimData));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Import Pattern Data", ReadPatternData, FilterParameter::Category::Parameter, ImportH5OimData));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::Category::CreatedArray, ImportH5OimData));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, ImportH5OimData));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Ensemble Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, ImportH5OimData));
   setFilterParameters(parameters);
 }
 

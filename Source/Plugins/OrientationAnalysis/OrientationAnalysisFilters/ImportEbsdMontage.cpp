@@ -99,28 +99,28 @@ void ImportEbsdMontage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_EbsdMontageListInfo_FP("Input File List", InputFileListInfo, FilterParameter::Parameter, ImportEbsdMontage));
-  // parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ImportEbsdMontage));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Name of Created Montage", MontageName, FilterParameter::CreatedArray, ImportEbsdMontage));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::CreatedArray, ImportEbsdMontage));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix Name", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, ImportEbsdMontage));
+  parameters.push_back(SIMPL_NEW_EbsdMontageListInfo_FP("Input File List", InputFileListInfo, FilterParameter::Category::Parameter, ImportEbsdMontage));
+  // parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::Category::CreatedArray, ImportEbsdMontage));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Name of Created Montage", MontageName, FilterParameter::Category::CreatedArray, ImportEbsdMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::Category::CreatedArray, ImportEbsdMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix Name", CellEnsembleAttributeMatrixName, FilterParameter::Category::CreatedArray, ImportEbsdMontage));
   {
     QVector<QString> choices = {"None", "Pixel Overlap", "Percent Overlap"};
     QStringList linkedProps = {"ScanOverlapPixel", "ScanOverlapPercent"};
     LinkedChoicesFilterParameter::Pointer linkedChoices =
-        LinkedChoicesFilterParameter::New("Define Type of Scan Overlap", "DefineScanOverlap", 0, FilterParameter::Parameter, SIMPL_BIND_SETTER(ImportEbsdMontage, this, DefineScanOverlap),
-                                          SIMPL_BIND_GETTER(ImportEbsdMontage, this, DefineScanOverlap), choices, linkedProps);
+        LinkedChoicesFilterParameter::Create("Define Type of Scan Overlap", "DefineScanOverlap", 0, FilterParameter::Category::Parameter, SIMPL_BIND_SETTER(ImportEbsdMontage, this, DefineScanOverlap),
+                                             SIMPL_BIND_GETTER(ImportEbsdMontage, this, DefineScanOverlap), choices, linkedProps);
     parameters.push_back(linkedChoices);
 
-    parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Pixel Overlap Value (X, Y)", ScanOverlapPixel, FilterParameter::Parameter, ImportEbsdMontage, 1));
-    parameters.push_back(SIMPL_NEW_FLOAT_VEC2_FP("Percent Overlap Value (X, Y)", ScanOverlapPercent, FilterParameter::Parameter, ImportEbsdMontage, 2));
+    parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Pixel Overlap Value (X, Y)", ScanOverlapPixel, FilterParameter::Category::Parameter, ImportEbsdMontage, 1));
+    parameters.push_back(SIMPL_NEW_FLOAT_VEC2_FP("Percent Overlap Value (X, Y)", ScanOverlapPercent, FilterParameter::Category::Parameter, ImportEbsdMontage, 2));
   }
 
   {
     QStringList linkedProps("CellIPFColorsArrayName");
-    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Generate IPF Color Map", GenerateIPFColorMap, FilterParameter::Parameter, ImportEbsdMontage, linkedProps));
-    parameters.push_back(SIMPL_NEW_STRING_FP("IPF Colors", CellIPFColorsArrayName, FilterParameter::CreatedArray, ImportEbsdMontage));
+    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Generate IPF Color Map", GenerateIPFColorMap, FilterParameter::Category::Parameter, ImportEbsdMontage, linkedProps));
+    parameters.push_back(SIMPL_NEW_STRING_FP("IPF Colors", CellIPFColorsArrayName, FilterParameter::Category::CreatedArray, ImportEbsdMontage));
   }
   setFilterParameters(parameters);
 }

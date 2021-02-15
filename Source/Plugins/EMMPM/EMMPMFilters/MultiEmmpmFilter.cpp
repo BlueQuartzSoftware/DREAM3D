@@ -145,8 +145,8 @@ void MultiEmmpmFilter::setupFilterParameters()
   EMMPMFilter::setupFilterParameters();
   FilterParameterVectorType parameters = getFilterParameters();
 
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Use Mu/Sigma from Previous Image as Initialization for Current Image", UsePreviousMuSigma, FilterParameter::Parameter, MultiEmmpmFilter));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Output Array Prefix", OutputArrayPrefix, FilterParameter::Parameter, MultiEmmpmFilter));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Use Mu/Sigma from Previous Image as Initialization for Current Image", UsePreviousMuSigma, FilterParameter::Category::Parameter, MultiEmmpmFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Output Array Prefix", OutputArrayPrefix, FilterParameter::Category::Parameter, MultiEmmpmFilter));
 
   for(qint32 i = 0; i < parameters.size(); i++)
   {
@@ -156,7 +156,7 @@ void MultiEmmpmFilter::setupFilterParameters()
       {
         MultiDataArraySelectionFilterParameter::RequirementType req =
             MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-        parameters[i] = SIMPL_NEW_MDA_SELECTION_FP("Input Attribute Arrays", InputDataArrayVector, FilterParameter::RequiredArray, MultiEmmpmFilter, req);
+        parameters[i] = SIMPL_NEW_MDA_SELECTION_FP("Input Attribute Arrays", InputDataArrayVector, FilterParameter::Category::RequiredArray, MultiEmmpmFilter, req);
       }
     }
   }
@@ -167,7 +167,7 @@ void MultiEmmpmFilter::setupFilterParameters()
     FilterParameter::Pointer& p = parameters[i];
     if(p->getPropertyName().compare("OutputDataArrayPath") == 0)
     {
-      parameters[i] = SIMPL_NEW_STRING_FP("Output Cell Attribute Matrix", OutputAttributeMatrixName, FilterParameter::CreatedArray, MultiEmmpmFilter);
+      parameters[i] = SIMPL_NEW_STRING_FP("Output Cell Attribute Matrix", OutputAttributeMatrixName, FilterParameter::Category::CreatedArray, MultiEmmpmFilter);
     }
   }
 

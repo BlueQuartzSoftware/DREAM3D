@@ -316,32 +316,35 @@ FindEuclideanDistMap::~FindEuclideanDistMap() = default;
 void FindEuclideanDistMap::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Calculate Manhattan Distance", CalcManhattanDist, FilterParameter::Parameter, FindEuclideanDistMap));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Calculate Manhattan Distance", CalcManhattanDist, FilterParameter::Category::Parameter, FindEuclideanDistMap));
   QStringList linkedProps("GBDistancesArrayName");
 
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Distance to Boundaries", DoBoundaries, FilterParameter::Parameter, FindEuclideanDistMap, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Distance to Boundaries", DoBoundaries, FilterParameter::Category::Parameter, FindEuclideanDistMap, linkedProps));
   linkedProps.clear();
   linkedProps << "TJDistancesArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Distance to Triple Lines", DoTripleLines, FilterParameter::Parameter, FindEuclideanDistMap, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Distance to Triple Lines", DoTripleLines, FilterParameter::Category::Parameter, FindEuclideanDistMap, linkedProps));
   linkedProps.clear();
   linkedProps << "QPDistancesArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Distance to Quadruple Points", DoQuadPoints, FilterParameter::Parameter, FindEuclideanDistMap, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Distance to Quadruple Points", DoQuadPoints, FilterParameter::Category::Parameter, FindEuclideanDistMap, linkedProps));
   linkedProps.clear();
   linkedProps << "NearestNeighborsArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Store the Nearest Boundary Cells", SaveNearestNeighbors, FilterParameter::Parameter, FindEuclideanDistMap, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Store the Nearest Boundary Cells", SaveNearestNeighbors, FilterParameter::Category::Parameter, FindEuclideanDistMap, linkedProps));
 
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindEuclideanDistMap, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::Category::RequiredArray, FindEuclideanDistMap, req));
   }
 
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Boundary Distances", GBDistancesArrayName, FeatureIdsArrayPath, FeatureIdsArrayPath, FilterParameter::CreatedArray, FindEuclideanDistMap));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Triple Line Distances", TJDistancesArrayName, FeatureIdsArrayPath, FeatureIdsArrayPath, FilterParameter::CreatedArray, FindEuclideanDistMap));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Quadruple Point Distances", QPDistancesArrayName, FeatureIdsArrayPath, FeatureIdsArrayPath, FilterParameter::CreatedArray, FindEuclideanDistMap));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Nearest Neighbors", NearestNeighborsArrayName, FeatureIdsArrayPath, FeatureIdsArrayPath, FilterParameter::CreatedArray, FindEuclideanDistMap));
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Boundary Distances", GBDistancesArrayName, FeatureIdsArrayPath, FeatureIdsArrayPath, FilterParameter::Category::CreatedArray, FindEuclideanDistMap));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Triple Line Distances", TJDistancesArrayName, FeatureIdsArrayPath, FeatureIdsArrayPath, FilterParameter::Category::CreatedArray, FindEuclideanDistMap));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Quadruple Point Distances", QPDistancesArrayName, FeatureIdsArrayPath, FeatureIdsArrayPath, FilterParameter::Category::CreatedArray, FindEuclideanDistMap));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Nearest Neighbors", NearestNeighborsArrayName, FeatureIdsArrayPath, FeatureIdsArrayPath, FilterParameter::Category::CreatedArray, FindEuclideanDistMap));
 
   setFilterParameters(parameters);
 }

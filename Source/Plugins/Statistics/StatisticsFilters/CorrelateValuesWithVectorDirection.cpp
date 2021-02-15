@@ -73,11 +73,11 @@ void CorrelateValuesWithVectorDirection::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("VectorData", VectorDataArrayPath, FilterParameter::RequiredArray, CorrelateValuesWithVectorDirection, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("VectorData", VectorDataArrayPath, FilterParameter::Category::RequiredArray, CorrelateValuesWithVectorDirection, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("CorrelatedData", CorrelatedDataArrayPath, FilterParameter::RequiredArray, CorrelateValuesWithVectorDirection, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("CorrelatedData", CorrelatedDataArrayPath, FilterParameter::Category::RequiredArray, CorrelateValuesWithVectorDirection, req));
   }
 
   setFilterParameters(parameters);

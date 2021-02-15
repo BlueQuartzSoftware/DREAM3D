@@ -82,7 +82,7 @@ void ConvertHexGridToSquareGrid::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(ConvertHexGridToSquareGridFilterParameter::New("Convert Hex Grid ANG Files", "HexGridStack", getHexGridStack(), FilterParameter::Parameter, this));
+  parameters.push_back(ConvertHexGridToSquareGridFilterParameter::Create("Convert Hex Grid ANG Files", "HexGridStack", getHexGridStack(), FilterParameter::Category::Parameter, this));
 
   setFilterParameters(parameters);
 }

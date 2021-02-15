@@ -120,23 +120,23 @@ void WarpRegularGrid::setupFilterParameters()
                 << "FourthOrderBCoeff";
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(SIMPL_NEW_SecondO_POLY_FP("Second Order A Coefficients", SecondOrderACoeff, FilterParameter::Parameter, WarpRegularGrid, 0));
-  parameters.push_back(SIMPL_NEW_SecondO_POLY_FP("Second Order B Coefficients", SecondOrderBCoeff, FilterParameter::Parameter, WarpRegularGrid, 0));
-  parameters.push_back(SIMPL_NEW_ThirdO_POLY_FP("Third Order A Coefficients", ThirdOrderACoeff, FilterParameter::Parameter, WarpRegularGrid, 1));
-  parameters.push_back(SIMPL_NEW_ThirdO_POLY_FP("Third Order B Coefficients", ThirdOrderBCoeff, FilterParameter::Parameter, WarpRegularGrid, 1));
-  parameters.push_back(SIMPL_NEW_FourthO_POLY_FP("Fourth Order A Coefficients", FourthOrderACoeff, FilterParameter::Parameter, WarpRegularGrid, 2));
-  parameters.push_back(SIMPL_NEW_FourthO_POLY_FP("Fourth Order B Coefficients", FourthOrderBCoeff, FilterParameter::Parameter, WarpRegularGrid, 2));
+  parameters.push_back(SIMPL_NEW_SecondO_POLY_FP("Second Order A Coefficients", SecondOrderACoeff, FilterParameter::Category::Parameter, WarpRegularGrid, 0));
+  parameters.push_back(SIMPL_NEW_SecondO_POLY_FP("Second Order B Coefficients", SecondOrderBCoeff, FilterParameter::Category::Parameter, WarpRegularGrid, 0));
+  parameters.push_back(SIMPL_NEW_ThirdO_POLY_FP("Third Order A Coefficients", ThirdOrderACoeff, FilterParameter::Category::Parameter, WarpRegularGrid, 1));
+  parameters.push_back(SIMPL_NEW_ThirdO_POLY_FP("Third Order B Coefficients", ThirdOrderBCoeff, FilterParameter::Category::Parameter, WarpRegularGrid, 1));
+  parameters.push_back(SIMPL_NEW_FourthO_POLY_FP("Fourth Order A Coefficients", FourthOrderACoeff, FilterParameter::Category::Parameter, WarpRegularGrid, 2));
+  parameters.push_back(SIMPL_NEW_FourthO_POLY_FP("Fourth Order B Coefficients", FourthOrderBCoeff, FilterParameter::Category::Parameter, WarpRegularGrid, 2));
   QStringList linkedProps;
   linkedProps << "NewDataContainerName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Data Container", SaveAsNewDataContainer, FilterParameter::Parameter, WarpRegularGrid, linkedProps));
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", NewDataContainerName, FilterParameter::CreatedArray, WarpRegularGrid));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Data Container", SaveAsNewDataContainer, FilterParameter::Category::Parameter, WarpRegularGrid, linkedProps));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", NewDataContainerName, FilterParameter::Category::CreatedArray, WarpRegularGrid));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", CellAttributeMatrixPath, FilterParameter::RequiredArray, WarpRegularGrid, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", CellAttributeMatrixPath, FilterParameter::Category::RequiredArray, WarpRegularGrid, req));
   }
   setFilterParameters(parameters);
 }
@@ -446,25 +446,25 @@ int WarpRegularGrid::getPolyOrder() const
 }
 
 // -----------------------------------------------------------------------------
-void WarpRegularGrid::setSecondOrderACoeff(const Float2ndOrderPoly_t& value)
+void WarpRegularGrid::setSecondOrderACoeff(const Float2ndOrderPolynomial& value)
 {
   m_SecondOrderACoeff = value;
 }
 
 // -----------------------------------------------------------------------------
-Float2ndOrderPoly_t WarpRegularGrid::getSecondOrderACoeff() const
+Float2ndOrderPolynomial WarpRegularGrid::getSecondOrderACoeff() const
 {
   return m_SecondOrderACoeff;
 }
 
 // -----------------------------------------------------------------------------
-void WarpRegularGrid::setSecondOrderBCoeff(const Float2ndOrderPoly_t& value)
+void WarpRegularGrid::setSecondOrderBCoeff(const Float2ndOrderPolynomial& value)
 {
   m_SecondOrderBCoeff = value;
 }
 
 // -----------------------------------------------------------------------------
-Float2ndOrderPoly_t WarpRegularGrid::getSecondOrderBCoeff() const
+Float2ndOrderPolynomial WarpRegularGrid::getSecondOrderBCoeff() const
 {
   return m_SecondOrderBCoeff;
 }
@@ -494,25 +494,25 @@ Float3rdOrderPoly_t WarpRegularGrid::getThirdOrderBCoeff() const
 }
 
 // -----------------------------------------------------------------------------
-void WarpRegularGrid::setFourthOrderACoeff(const Float4thOrderPoly_t& value)
+void WarpRegularGrid::setFourthOrderACoeff(const Float4thOrderPolynomial& value)
 {
   m_FourthOrderACoeff = value;
 }
 
 // -----------------------------------------------------------------------------
-Float4thOrderPoly_t WarpRegularGrid::getFourthOrderACoeff() const
+Float4thOrderPolynomial WarpRegularGrid::getFourthOrderACoeff() const
 {
   return m_FourthOrderACoeff;
 }
 
 // -----------------------------------------------------------------------------
-void WarpRegularGrid::setFourthOrderBCoeff(const Float4thOrderPoly_t& value)
+void WarpRegularGrid::setFourthOrderBCoeff(const Float4thOrderPolynomial& value)
 {
   m_FourthOrderBCoeff = value;
 }
 
 // -----------------------------------------------------------------------------
-Float4thOrderPoly_t WarpRegularGrid::getFourthOrderBCoeff() const
+Float4thOrderPolynomial WarpRegularGrid::getFourthOrderBCoeff() const
 {
   return m_FourthOrderBCoeff;
 }

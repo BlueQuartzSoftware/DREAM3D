@@ -74,19 +74,19 @@ FindBoundaryElementFractions::~FindBoundaryElementFractions() = default;
 void FindBoundaryElementFractions::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Element Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Category::Element);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindBoundaryElementFractions, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::Category::RequiredArray, FindBoundaryElementFractions, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int8, 1, AttributeMatrix::Category::Element);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Surface Elements", BoundaryCellsArrayPath, FilterParameter::RequiredArray, FindBoundaryElementFractions, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Surface Elements", BoundaryCellsArrayPath, FilterParameter::Category::RequiredArray, FindBoundaryElementFractions, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Feature Data", FilterParameter::Category::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(AttributeMatrix::Category::Feature);
-    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Surface Element Fractions", BoundaryCellFractionsArrayPath, FilterParameter::CreatedArray, FindBoundaryElementFractions, req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Surface Element Fractions", BoundaryCellFractionsArrayPath, FilterParameter::Category::CreatedArray, FindBoundaryElementFractions, req));
   }
   setFilterParameters(parameters);
 }

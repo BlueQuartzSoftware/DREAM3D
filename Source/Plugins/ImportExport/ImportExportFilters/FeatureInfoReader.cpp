@@ -98,13 +98,13 @@ void FeatureInfoReader::setupFilterParameters()
 {
   FileReader::setupFilterParameters();
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input Feature Info File", InputFile, FilterParameter::Parameter, FeatureInfoReader, "*.txt"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input Feature Info File", InputFile, FilterParameter::Category::Parameter, FeatureInfoReader, "*.txt"));
   QStringList linkedProps;
   linkedProps << "CellPhasesArrayName"
               << "CellEulerAnglesArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Element Level Arrays", CreateCellLevelArrays, FilterParameter::Parameter, FeatureInfoReader, linkedProps));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Renumber Features", RenumberFeatures, FilterParameter::Parameter, FeatureInfoReader));
-  parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Element Level Arrays", CreateCellLevelArrays, FilterParameter::Category::Parameter, FeatureInfoReader, linkedProps));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Renumber Features", RenumberFeatures, FilterParameter::Category::Parameter, FeatureInfoReader));
+  parameters.push_back(SeparatorFilterParameter::Create("Element Data", FilterParameter::Category::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req;
     AttributeMatrix::Types amTypes;
@@ -112,20 +112,21 @@ void FeatureInfoReader::setupFilterParameters()
     amTypes.push_back(AttributeMatrix::Type::Edge);
     amTypes.push_back(AttributeMatrix::Type::Face);
     amTypes.push_back(AttributeMatrix::Type::Vertex);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Element Attribute Matrix", CellAttributeMatrixName, FilterParameter::RequiredArray, FeatureInfoReader, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Element Attribute Matrix", CellAttributeMatrixName, FilterParameter::Category::RequiredArray, FeatureInfoReader, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Category::Element);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FeatureInfoReader, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::Category::RequiredArray, FeatureInfoReader, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phases", CellPhasesArrayName, FeatureIdsArrayPath, FeatureIdsArrayPath, FilterParameter::CreatedArray, FeatureInfoReader));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Euler Angles", CellEulerAnglesArrayName, FeatureIdsArrayPath, FeatureIdsArrayPath, FilterParameter::CreatedArray, FeatureInfoReader));
-  parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Feature Attribute Matrix", CellFeatureAttributeMatrixName, FeatureIdsArrayPath, FilterParameter::CreatedArray, FeatureInfoReader));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phases", FeaturePhasesArrayName, FeatureIdsArrayPath, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FeatureInfoReader));
+  parameters.push_back(SeparatorFilterParameter::Create("Element Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phases", CellPhasesArrayName, FeatureIdsArrayPath, FeatureIdsArrayPath, FilterParameter::Category::CreatedArray, FeatureInfoReader));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Euler Angles", CellEulerAnglesArrayName, FeatureIdsArrayPath, FeatureIdsArrayPath, FilterParameter::Category::CreatedArray, FeatureInfoReader));
+  parameters.push_back(SeparatorFilterParameter::Create("Feature Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Feature Attribute Matrix", CellFeatureAttributeMatrixName, FeatureIdsArrayPath, FilterParameter::Category::CreatedArray, FeatureInfoReader));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Euler Angles", FeatureEulerAnglesArrayName, FeatureIdsArrayPath, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FeatureInfoReader));
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phases", FeaturePhasesArrayName, FeatureIdsArrayPath, CellFeatureAttributeMatrixName, FilterParameter::Category::CreatedArray, FeatureInfoReader));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Euler Angles", FeatureEulerAnglesArrayName, FeatureIdsArrayPath, CellFeatureAttributeMatrixName, FilterParameter::Category::CreatedArray, FeatureInfoReader));
 
   {
     QVector<QString> choices;
@@ -135,7 +136,7 @@ void FeatureInfoReader::setupFilterParameters()
     choices.push_back("Tab");
     choices.push_back("Space");
     // Create the Choice Filter Parameter and add it to the list of parameters
-    parameters.push_back(SIMPL_NEW_CHOICE_FP("Delimiter", Delimiter, FilterParameter::Parameter, FeatureInfoReader, choices, false));
+    parameters.push_back(SIMPL_NEW_CHOICE_FP("Delimiter", Delimiter, FilterParameter::Category::Parameter, FeatureInfoReader, choices, false));
   }
 
   setFilterParameters(parameters);

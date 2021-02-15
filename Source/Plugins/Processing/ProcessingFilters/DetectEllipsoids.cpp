@@ -144,51 +144,51 @@ void DetectEllipsoids::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Min Fiber Axis Length", MinFiberAxisLength, FilterParameter::Parameter, DetectEllipsoids));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Max Fiber Axis Length", MaxFiberAxisLength, FilterParameter::Parameter, DetectEllipsoids));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Threshold for Hough Transform", HoughTransformThreshold, FilterParameter::Parameter, DetectEllipsoids));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Minimum Aspect Ratio", MinAspectRatio, FilterParameter::Parameter, DetectEllipsoids));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Length of Image Scale Bar", ImageScaleBarLength, FilterParameter::Parameter, DetectEllipsoids));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Min Fiber Axis Length", MinFiberAxisLength, FilterParameter::Category::Parameter, DetectEllipsoids));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Max Fiber Axis Length", MaxFiberAxisLength, FilterParameter::Category::Parameter, DetectEllipsoids));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Threshold for Hough Transform", HoughTransformThreshold, FilterParameter::Category::Parameter, DetectEllipsoids));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Minimum Aspect Ratio", MinAspectRatio, FilterParameter::Category::Parameter, DetectEllipsoids));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Length of Image Scale Bar", ImageScaleBarLength, FilterParameter::Category::Parameter, DetectEllipsoids));
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, DetectEllipsoids, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::Category::RequiredArray, DetectEllipsoids, req));
   }
 
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Feature Attribute Matrix", FeatureAttributeMatrixPath, FilterParameter::RequiredArray, DetectEllipsoids, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Feature Attribute Matrix", FeatureAttributeMatrixPath, FilterParameter::Category::RequiredArray, DetectEllipsoids, req));
   }
 
   {
     AttributeMatrixCreationFilterParameter::RequirementType req;
     req.dcGeometryTypes = IGeometry::Types(1, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_AM_CREATION_FP("Ellipsoid Feature Attribute Matrix", EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids, req));
+    parameters.push_back(SIMPL_NEW_AM_CREATION_FP("Ellipsoid Feature Attribute Matrix", EllipseFeatureAttributeMatrixPath, FilterParameter::Category::CreatedArray, DetectEllipsoids, req));
   }
 
   {
     parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Center Coordinates", CenterCoordinatesArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath,
-                                                        FilterParameter::CreatedArray, DetectEllipsoids));
+                                                        FilterParameter::Category::CreatedArray, DetectEllipsoids));
   }
 
   {
     parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Major Axis Lengths", MajorAxisLengthArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath,
-                                                        FilterParameter::CreatedArray, DetectEllipsoids));
+                                                        FilterParameter::Category::CreatedArray, DetectEllipsoids));
   }
 
   {
     parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Minor Axis Lengths", MinorAxisLengthArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath,
-                                                        FilterParameter::CreatedArray, DetectEllipsoids));
+                                                        FilterParameter::Category::CreatedArray, DetectEllipsoids));
   }
 
   {
     parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Rotational Angles", RotationalAnglesArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath,
-                                                        FilterParameter::CreatedArray, DetectEllipsoids));
+                                                        FilterParameter::Category::CreatedArray, DetectEllipsoids));
   }
 
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Detected Ellipsoids Feature Ids", DetectedEllipsoidsFeatureIdsArrayPath, FilterParameter::CreatedArray, DetectEllipsoids, req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Detected Ellipsoids Feature Ids", DetectedEllipsoidsFeatureIdsArrayPath, FilterParameter::Category::CreatedArray, DetectEllipsoids, req));
   }
 
   setFilterParameters(parameters);

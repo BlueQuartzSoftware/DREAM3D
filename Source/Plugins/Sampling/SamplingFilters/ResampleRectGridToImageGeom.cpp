@@ -114,27 +114,28 @@ void ResampleRectGridToImageGeom::setupFilterParameters()
 
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Input Rectilinear Grid", RectilinearGridPath, FilterParameter::Parameter, ResampleRectGridToImageGeom, req));
+    parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Input Rectilinear Grid", RectilinearGridPath, FilterParameter::Category::Parameter, ResampleRectGridToImageGeom, req));
   }
   {
     MultiDataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Copy", SelectedDataArrayPaths, FilterParameter::RequiredArray, ResampleRectGridToImageGeom, req));
+    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Copy", SelectedDataArrayPaths, FilterParameter::Category::RequiredArray, ResampleRectGridToImageGeom, req));
   }
 
-  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Rect Grid Geom Info.", RectGridGeometryDesc, FilterParameter::Parameter, ResampleRectGridToImageGeom);
+  PreflightUpdatedValueFilterParameter::Pointer param =
+      SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Rect Grid Geom Info.", RectGridGeometryDesc, FilterParameter::Category::Parameter, ResampleRectGridToImageGeom);
   param->setReadOnly(true);
   parameters.push_back(param);
 
-  parameters.push_back(SeparatorFilterParameter::New("Output Image Geometry Parameters", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions (Voxels)", Dimensions, FilterParameter::Parameter, ResampleRectGridToImageGeom));
+  parameters.push_back(SeparatorFilterParameter::Create("Output Image Geometry Parameters", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions (Voxels)", Dimensions, FilterParameter::Category::Parameter, ResampleRectGridToImageGeom));
 
-  param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Created Volume Info.", CreatedGeometryDescription, FilterParameter::Parameter, ResampleRectGridToImageGeom);
+  param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Created Volume Info.", CreatedGeometryDescription, FilterParameter::Category::Parameter, ResampleRectGridToImageGeom);
   param->setReadOnly(true);
   parameters.push_back(param);
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", ImageGeometryPath, FilterParameter::CreatedArray, ResampleRectGridToImageGeom));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", ImageGeomCellAttributeMatrix, ImageGeometryPath, FilterParameter::CreatedArray, ResampleRectGridToImageGeom));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", ImageGeometryPath, FilterParameter::Category::CreatedArray, ResampleRectGridToImageGeom));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", ImageGeomCellAttributeMatrix, ImageGeometryPath, FilterParameter::Category::CreatedArray, ResampleRectGridToImageGeom));
 
   setFilterParameters(parameters);
 }

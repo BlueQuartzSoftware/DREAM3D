@@ -87,12 +87,12 @@ void VASPReader::setupFilterParameters()
   FileReader::setupFilterParameters();
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, VASPReader, "*"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Category::Parameter, VASPReader, "*"));
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Vertex Data Container", VertexDataContainerName, FilterParameter::CreatedArray, VASPReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, FilterParameter::CreatedArray, VASPReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("AtomVelocities", AtomVelocitiesArrayName, FilterParameter::CreatedArray, VASPReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("AtomTypes", AtomTypesArrayName, FilterParameter::CreatedArray, VASPReader));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Vertex Data Container", VertexDataContainerName, FilterParameter::Category::CreatedArray, VASPReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, FilterParameter::Category::CreatedArray, VASPReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("AtomVelocities", AtomVelocitiesArrayName, FilterParameter::Category::CreatedArray, VASPReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("AtomTypes", AtomTypesArrayName, FilterParameter::Category::CreatedArray, VASPReader));
 
   setFilterParameters(parameters);
 }

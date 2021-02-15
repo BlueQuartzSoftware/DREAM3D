@@ -51,8 +51,8 @@ EbsdMontageImportFilterParameter::~EbsdMontageImportFilterParameter() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EbsdMontageImportFilterParameter::Pointer EbsdMontageImportFilterParameter::New(const QString& humanLabel, const QString& propertyName, const MontageFileListInfo& defaultValue,
-                                                                                FilterParameter::Category category, SetterCallbackType setterCallback, GetterCallbackType getterCallback)
+EbsdMontageImportFilterParameter::Pointer EbsdMontageImportFilterParameter::Create(const QString& humanLabel, const QString& propertyName, const MontageFileListInfo& defaultValue,
+                                                                                   FilterParameter::Category category, SetterCallbackType setterCallback, GetterCallbackType getterCallback)
 {
 
   EbsdMontageImportFilterParameter::Pointer ptr = EbsdMontageImportFilterParameter::New();

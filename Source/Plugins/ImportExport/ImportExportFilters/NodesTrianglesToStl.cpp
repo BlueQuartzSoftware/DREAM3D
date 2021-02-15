@@ -74,10 +74,10 @@ void NodesTrianglesToStl::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Nodes File", NodesFile, FilterParameter::Parameter, NodesTrianglesToStl));
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Triangles File", TrianglesFile, FilterParameter::Parameter, NodesTrianglesToStl));
-  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output STL Directory", OutputStlDirectory, FilterParameter::Parameter, NodesTrianglesToStl));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Stl File Prefix", OutputStlPrefix, FilterParameter::Parameter, NodesTrianglesToStl));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Nodes File", NodesFile, FilterParameter::Category::Parameter, NodesTrianglesToStl));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Triangles File", TrianglesFile, FilterParameter::Category::Parameter, NodesTrianglesToStl));
+  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output STL Directory", OutputStlDirectory, FilterParameter::Category::Parameter, NodesTrianglesToStl));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Stl File Prefix", OutputStlPrefix, FilterParameter::Category::Parameter, NodesTrianglesToStl));
 
   setFilterParameters(parameters);
 }

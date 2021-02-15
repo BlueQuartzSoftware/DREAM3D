@@ -97,9 +97,9 @@ void WriteStatsGenOdfAngleFile::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   /* For String input use this code */
-  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, WriteStatsGenOdfAngleFile));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Default Weight", Weight, FilterParameter::Parameter, WriteStatsGenOdfAngleFile));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Default Sigma", Sigma, FilterParameter::Parameter, WriteStatsGenOdfAngleFile));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Category::Parameter, WriteStatsGenOdfAngleFile));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Default Weight", Weight, FilterParameter::Category::Parameter, WriteStatsGenOdfAngleFile));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Default Sigma", Sigma, FilterParameter::Category::Parameter, WriteStatsGenOdfAngleFile));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New(); // Delimiter choice
     parameter->setHumanLabel("Delimiter");
@@ -114,25 +114,25 @@ void WriteStatsGenOdfAngleFile::setupFilterParameters()
     choices.push_back(": (colon)");
     choices.push_back("\\t (Tab)");
     parameter->setChoices(choices);
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Convert to Degrees", ConvertToDegrees, FilterParameter::Parameter, WriteStatsGenOdfAngleFile));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Convert to Degrees", ConvertToDegrees, FilterParameter::Category::Parameter, WriteStatsGenOdfAngleFile));
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Only Write Good Elements", UseGoodVoxels, FilterParameter::Parameter, WriteStatsGenOdfAngleFile, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Only Write Good Elements", UseGoodVoxels, FilterParameter::Category::Parameter, WriteStatsGenOdfAngleFile, linkedProps));
 
-  parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Element Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Category::Any);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Euler Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, WriteStatsGenOdfAngleFile, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Euler Angles", CellEulerAnglesArrayPath, FilterParameter::Category::RequiredArray, WriteStatsGenOdfAngleFile, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Category::Any);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, WriteStatsGenOdfAngleFile, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::Category::RequiredArray, WriteStatsGenOdfAngleFile, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Category::Any);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, WriteStatsGenOdfAngleFile, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::Category::RequiredArray, WriteStatsGenOdfAngleFile, req));
   }
 
   setFilterParameters(parameters);

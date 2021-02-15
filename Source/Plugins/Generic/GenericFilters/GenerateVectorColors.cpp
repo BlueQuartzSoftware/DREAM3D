@@ -71,19 +71,19 @@ void GenerateVectorColors::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply to Good Voxels Only (Bad Voxels Will Be Black)", UseGoodVoxels, FilterParameter::Parameter, GenerateVectorColors, linkedProps));
-  parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply to Good Voxels Only (Bad Voxels Will Be Black)", UseGoodVoxels, FilterParameter::Category::Parameter, GenerateVectorColors, linkedProps));
+  parameters.push_back(SeparatorFilterParameter::Create("Element Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Category::Any);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Vector Attribute Array", VectorsArrayPath, FilterParameter::RequiredArray, GenerateVectorColors, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Vector Attribute Array", VectorsArrayPath, FilterParameter::Category::RequiredArray, GenerateVectorColors, req));
   }
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Category::Any);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, GenerateVectorColors, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::Category::RequiredArray, GenerateVectorColors, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Vector Colors", CellVectorColorsArrayName, VectorsArrayPath, VectorsArrayPath, FilterParameter::CreatedArray, GenerateVectorColors));
+  parameters.push_back(SeparatorFilterParameter::Create("Element Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Vector Colors", CellVectorColorsArrayName, VectorsArrayPath, VectorsArrayPath, FilterParameter::Category::CreatedArray, GenerateVectorColors));
   setFilterParameters(parameters);
 }
 

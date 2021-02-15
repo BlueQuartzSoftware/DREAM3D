@@ -92,20 +92,20 @@ void SineParamsSegmentFeatures::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Good Voxels Array", UseGoodVoxels, FilterParameter::Parameter, SineParamsSegmentFeatures, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Good Voxels Array", UseGoodVoxels, FilterParameter::Category::Parameter, SineParamsSegmentFeatures, linkedProps));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Sine Parameters", SineParamsArrayPath, FilterParameter::RequiredArray, SineParamsSegmentFeatures, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Sine Parameters", SineParamsArrayPath, FilterParameter::Category::RequiredArray, SineParamsSegmentFeatures, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("GoodVoxels", GoodVoxelsArrayPath, FilterParameter::RequiredArray, SineParamsSegmentFeatures, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("GoodVoxels", GoodVoxelsArrayPath, FilterParameter::Category::RequiredArray, SineParamsSegmentFeatures, req));
   }
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("FeatureIds", FeatureIdsArrayName, FilterParameter::CreatedArray, SineParamsSegmentFeatures));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Attribute Matrix Name", CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, SineParamsSegmentFeatures));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, SineParamsSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_STRING_FP("FeatureIds", FeatureIdsArrayName, FilterParameter::Category::CreatedArray, SineParamsSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Attribute Matrix Name", CellFeatureAttributeMatrixName, FilterParameter::Category::CreatedArray, SineParamsSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::Category::CreatedArray, SineParamsSegmentFeatures));
 
   setFilterParameters(parameters);
 }

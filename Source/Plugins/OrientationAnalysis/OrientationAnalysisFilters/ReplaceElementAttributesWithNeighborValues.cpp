@@ -347,7 +347,7 @@ ReplaceElementAttributesWithNeighborValues::~ReplaceElementAttributesWithNeighbo
 void ReplaceElementAttributesWithNeighborValues::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Threshold Value", MinConfidence, FilterParameter::Parameter, ReplaceElementAttributesWithNeighborValues));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Threshold Value", MinConfidence, FilterParameter::Category::Parameter, ReplaceElementAttributesWithNeighborValues));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Comparison Operator");
@@ -359,16 +359,16 @@ void ReplaceElementAttributesWithNeighborValues::setupFilterParameters()
     choices.push_back("<");
     choices.push_back(">");
     parameter->setChoices(choices);
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Loop Until Gone", Loop, FilterParameter::Parameter, ReplaceElementAttributesWithNeighborValues));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Loop Until Gone", Loop, FilterParameter::Category::Parameter, ReplaceElementAttributesWithNeighborValues));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Category::Any);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Comparison Array", ConfidenceIndexArrayPath, FilterParameter::RequiredArray, ReplaceElementAttributesWithNeighborValues, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Comparison Array", ConfidenceIndexArrayPath, FilterParameter::Category::RequiredArray, ReplaceElementAttributesWithNeighborValues, req));
   }
   setFilterParameters(parameters);
 }
