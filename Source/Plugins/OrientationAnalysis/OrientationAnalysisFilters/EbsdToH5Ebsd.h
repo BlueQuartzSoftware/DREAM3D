@@ -312,6 +312,6 @@ private:
   QString m_FileSuffix = {""};
   QString m_FileExtension = {"ang"};
   int m_PaddingDigits = {4};
-  AxisAngleInput_t m_SampleTransformation = {};
-  AxisAngleInput_t m_EulerTransformation = {};
+  AxisAngleInput m_SampleTransformation = {};
+  AxisAngleInput m_EulerTransformation = {};
 };

@@ -302,11 +302,11 @@ private:
   DataArrayPath m_NewDataContainerName = {SIMPL::Defaults::NewImageDataContainerName, "", ""};
   DataArrayPath m_CellAttributeMatrixPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, ""};
   int m_PolyOrder = {0};
-  Float2ndOrderPoly_t m_SecondOrderACoeff = {};
-  Float2ndOrderPoly_t m_SecondOrderBCoeff = {};
+  Float2ndOrderPolynomial m_SecondOrderACoeff = {};
+  Float2ndOrderPolynomial m_SecondOrderBCoeff = {};
   Float3rdOrderPoly_t m_ThirdOrderACoeff = {};
   Float3rdOrderPoly_t m_ThirdOrderBCoeff = {};
-  Float4thOrderPoly_t m_FourthOrderACoeff = {};
-  Float4thOrderPoly_t m_FourthOrderBCoeff = {};
+  Float4thOrderPolynomial m_FourthOrderACoeff = {};
+  Float4thOrderPolynomial m_FourthOrderBCoeff = {};
   bool m_SaveAsNewDataContainer = {false};
 };

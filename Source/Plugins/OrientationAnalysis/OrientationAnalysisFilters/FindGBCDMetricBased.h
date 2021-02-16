@@ -386,7 +386,7 @@ private:
   int8_t* m_NodeTypes = nullptr;
 
   int m_PhaseOfInterest = {1};
-  AxisAngleInput_t m_MisorientationRotation = {};
+  AxisAngleInput m_MisorientationRotation = {};
   int m_ChosenLimitDists = {FindGBCDMetricBased::k_DefaultResolutionChoice};
   int m_NumSamplPts = {3000};
   bool m_ExcludeTripleLines = {false};

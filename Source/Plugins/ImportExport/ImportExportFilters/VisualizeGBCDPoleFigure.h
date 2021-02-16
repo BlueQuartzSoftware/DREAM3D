@@ -241,7 +241,7 @@ private:
 
   QString m_OutputFile = {""};
   int m_PhaseOfInterest = {1};
-  AxisAngleInput_t m_MisorientationRotation = {};
+  AxisAngleInput m_MisorientationRotation = {};
   DataArrayPath m_GBCDArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceEnsembleAttributeMatrixName, SIMPL::EnsembleData::GBCD};
   DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
 

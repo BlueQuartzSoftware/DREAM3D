@@ -536,8 +536,8 @@ private:
   int m_AngleRepresentation = {EbsdLib::AngleRepresentation::Radians};
   uint32_t m_RefFrameZDir = {SIMPL::RefFrameZDir::UnknownRefFrameZDirection};
   EbsdLib::OEM m_Manufacturer = {EbsdLib::OEM::Unknown};
-  AxisAngleInput_t m_SampleTransformation = {};
-  AxisAngleInput_t m_EulerTransformation = {};
+  AxisAngleInput m_SampleTransformation = {};
+  AxisAngleInput m_EulerTransformation = {};
   QString m_CrystalStructuresArrayName = {SIMPL::EnsembleData::CrystalStructures};
   QString m_LatticeConstantsArrayName = {SIMPL::EnsembleData::LatticeConstants};
   QString m_CellPhasesArrayName = {SIMPL::CellData::Phases};
