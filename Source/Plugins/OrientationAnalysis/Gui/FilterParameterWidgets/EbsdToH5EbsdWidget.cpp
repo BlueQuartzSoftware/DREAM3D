@@ -60,9 +60,9 @@
 #include "SVWidgetsLib/QtSupport/QtSMacros.h"
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 
-#include "OrientationAnalysis/OrientationAnalysisFilters/EbsdToH5Ebsd.h"
-
 #include "OrientationAnalysis/Gui/Widgets/QEbsdReferenceFrameDialog.h"
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisFilters/EbsdToH5Ebsd.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -85,7 +85,10 @@ EbsdToH5EbsdWidget::EbsdToH5EbsdWidget(FilterParameter* parameter, AbstractFilte
   m_EulerTransformation.l = 0.0f;
 
   m_Filter = qobject_cast<EbsdToH5Ebsd*>(filter);
+
   Q_ASSERT_X(nullptr != m_Filter, "EbsdToH5EbsdWidget can ONLY be used with EbsdToH5Ebsd filter", __FILE__);
+
+  FILTER_COMPATIBILITY_CHECK(EbsdToH5Ebsd, EbsdToH5EbsdWidget)
 
   setupUi(this);
   setupGui();

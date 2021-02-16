@@ -57,6 +57,7 @@
 #include "FilterParameterWidgetsDialogs.h"
 
 #include "OrientationAnalysis/FilterParameters/EbsdMontageImportFilterParameter.h"
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 #include "ui_EbsdMontageImportWidget.h"
 
@@ -70,16 +71,9 @@ EbsdMontageImportWidget::EbsdMontageImportWidget(FilterParameter* parameter, Abs
 : FilterParameterWidget(parameter, filter, parent)
 , m_Ui(new Ui::EbsdMontageImportWidget)
 {
-  auto fli = dynamic_cast<EbsdMontageImportFilterParameter*>(parameter);
-  if(nullptr == fli)
-  {
-    QString msg;
-    QTextStream ss(&msg);
-    ss << "EbsdMontageImportWidget can ONLY be used with EbsdMontageImportFilterParameter objects. The programmer of the filter has a bug.";
-    ss << " The name of the filter was " << filter->getHumanLabel() << " and the name of the Filter Parameter was " << parameter->getHumanLabel();
-    ss << " and is trying to get the propery " << parameter->getPropertyName() << " in the filter";
-    Q_ASSERT_X(nullptr != fli, msg.toLatin1().constData(), __FILE__);
-  }
+
+  FILTER_PARAMETER_COMPATIBILITY_CHECK(filter, EbsdMontageImportFilterParameter, EbsdMontageImportWidget)
+
   m_Ui->setupUi(this);
   setupGui();
   if(m_Ui->inputDir->text().isEmpty())
@@ -153,16 +147,6 @@ void EbsdMontageImportWidget::setupGui()
   m_WidgetList << m_Ui->filePrefix << m_Ui->totalSlices << m_Ui->rowStart << m_Ui->rowEnd << m_Ui->colStart << m_Ui->colEnd;
 
   m_Ui->errorMessage->setVisible(false);
-
-  // Update the widget when the data directory changes
-  //  SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
-  //  connect(validator, &SIMPLDataPathValidator::dataDirectoryChanged, [=] {
-  //    blockSignals(true);
-  //    inputDir_textChanged(m_Ui->inputDir->text());
-  //    blockSignals(false);
-
-  //    emit parametersChanged();
-  //  });
 
   getGuiParametersFromFilter();
 }
@@ -430,7 +414,6 @@ void EbsdMontageImportWidget::filterNeedsInputParameters(AbstractFilter* filter)
     emit errorSettingFilterParameter(ss);
     return;
   }
-  bool ok = false;
 
   SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
   QString inputPath = validator->convertToAbsolutePath(m_Ui->inputDir->text());

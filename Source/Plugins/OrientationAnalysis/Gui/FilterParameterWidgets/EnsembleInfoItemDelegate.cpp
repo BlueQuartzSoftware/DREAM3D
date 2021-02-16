@@ -54,7 +54,6 @@ EnsembleInfoItemDelegate::EnsembleInfoItemDelegate(int numPhases, QObject* paren
 : QStyledItemDelegate(parent)
 , m_CrystalStructureList(EnsembleInfo::CrystalStructureStrings())
 , m_NumberOfPhases(numPhases)
-
 {
   PhaseType::getPhaseTypeStrings(m_PhaseTypeList);
   m_PhaseTypeList.pop_back(); // Pop "Unknown" PhaseType

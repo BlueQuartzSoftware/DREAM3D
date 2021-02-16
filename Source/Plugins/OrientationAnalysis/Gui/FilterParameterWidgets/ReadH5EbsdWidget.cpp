@@ -59,6 +59,7 @@
 #include "SVWidgetsLib/QtSupport/QtSMacros.h"
 
 #include "OrientationAnalysis/FilterParameters/ReadH5EbsdFilterParameter.h"
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadH5Ebsd.h"
 
 // -----------------------------------------------------------------------------
@@ -69,6 +70,8 @@ ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* f
 , m_NewFileLoaded(false)
 , m_Version4Warning(false)
 {
+  FILTER_COMPATIBILITY_CHECK(ReadH5Ebsd, ReadH5EbsdWidget)
+
   m_FilterParameter = dynamic_cast<ReadH5EbsdFilterParameter*>(parameter);
 
   m_SampleTransformation.angle = 0.0f;
@@ -80,8 +83,6 @@ ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* f
   m_EulerTransformation.h = 0.0f;
   m_EulerTransformation.k = 0.0f;
   m_EulerTransformation.l = 1.0f;
-  m_Filter = qobject_cast<ReadH5Ebsd*>(filter);
-  Q_ASSERT_X(nullptr != m_Filter, "ReadH5EbsdWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
 
   qRegisterMetaType<QSet<QString>>("QSet<QString>");
 
@@ -478,7 +479,6 @@ void ReadH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
   }
 
   ReadH5Ebsd* readEbsd = qobject_cast<ReadH5Ebsd*>(filter);
-  Q_ASSERT_X(nullptr != readEbsd, "ReadH5EbsdWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
 
   bool ok = false;
 
@@ -493,9 +493,8 @@ void ReadH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
   int index = m_AngleRepresentationCB->currentIndex();
   readEbsd->setAngleRepresentation(index);
   readEbsd->setSelectedArrayNames(getSelectedArrayNames());
-
-  //  m_Filter->setSelectedEnsembleNames(getSelectedEnsembleNames());
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -1,6 +1,33 @@
 #pragma once
 
+#include <sstream>
+#include <stdexcept>
+#include <string>
+
 #include <QtCore/QString>
+
+#define FILTER_PARAMETER_COMPATIBILITY_CHECK(FILTER_PTR, FP_CLASS, WIDGET_CLASS)                                                                                                                       \
+  FP_CLASS* filter_parameter_check = dynamic_cast<FP_CLASS*>(parameter);                                                                                                                               \
+  if(nullptr == filter_parameter_check)                                                                                                                                                                \
+  {                                                                                                                                                                                                    \
+    std::stringstream ss;                                                                                                                                                                              \
+    ss << #WIDGET_CLASS << " can ONLY be used with " << #FP_CLASS << " objects. The programmer of the filter has a bug.";                                                                              \
+    ss << " The name of the filter was " << FILTER_PTR->getHumanLabel().toStdString() << " and the name of the Filter Parameter was " << parameter->getHumanLabel().toStdString();                     \
+    ss << " and is trying to get the propery " << parameter->getPropertyName().toStdString() << " in the filter";                                                                                      \
+    throw std::invalid_argument(ss.str());                                                                                                                                                             \
+  }
+
+#define FILTER_COMPATIBILITY_CHECK(FILTER_CLASS, WIDGET_CLASS)                                                                                                                                         \
+  FILTER_CLASS* filter_check = dynamic_cast<FILTER_CLASS*>(filter);                                                                                                                                    \
+  if(nullptr == filter_check)                                                                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    std::stringstream ss;                                                                                                                                                                              \
+    ss << #WIDGET_CLASS << " can ONLY be used with " << #FILTER_CLASS << " objects. The programmer of the filter has a bug.";                                                                          \
+    ss << " The name of the filter was " << filter->getHumanLabel().toStdString() << " and the name of the Filter Parameter was " << parameter->getHumanLabel().toStdString();                         \
+    ss << " and is trying to get the propery " << parameter->getPropertyName().toStdString() << " in the filter";                                                                                      \
+    throw std::invalid_argument(ss.str());                                                                                                                                                             \
+  }
+
 /**
  * @namespace OrientationAnalysis
  * @brief These are strings that the plugin uses for display in error and other information messages.

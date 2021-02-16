@@ -45,6 +45,8 @@
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidgetsDialogs.h"
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -54,8 +56,7 @@ EnsembleInfoCreationWidget::EnsembleInfoCreationWidget(FilterParameter* paramete
 , m_DidCausePreflight(false)
 , m_EnsembleInfoTableModel(nullptr)
 {
-  m_FilterParameter = dynamic_cast<EnsembleInfoFilterParameter*>(parameter);
-  Q_ASSERT_X(m_FilterParameter != nullptr, "NULL Pointer", "EnsembleInfoCreationWidget can ONLY be used with a EnsembleInfoFilterParameter object");
+  FILTER_PARAMETER_COMPATIBILITY_CHECK(filter, EnsembleInfoFilterParameter, EnsembleInfoCreationWidget)
 
   setupUi(this);
   setupGui();

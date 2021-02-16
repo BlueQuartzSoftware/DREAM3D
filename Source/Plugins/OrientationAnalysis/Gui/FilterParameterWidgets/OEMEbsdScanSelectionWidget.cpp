@@ -44,6 +44,7 @@
 #include "SVWidgetsLib/QtSupport/QtSMacros.h"
 
 #include "OrientationAnalysis/FilterParameters/OEMEbsdScanSelectionFilterParameter.h"
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/ImportH5OimData.h"
 
 // -----------------------------------------------------------------------------
@@ -52,10 +53,9 @@
 OEMEbsdScanSelectionWidget::OEMEbsdScanSelectionWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent)
 : FilterParameterWidget(parameter, filter, parent)
 {
-  m_FilterParameter = dynamic_cast<OEMEbsdScanSelectionFilterParameter*>(parameter);
+  FILTER_COMPATIBILITY_CHECK(ImportH5OimData, OEMEbsdScanSelectionWidget)
 
-  m_Filter = qobject_cast<ImportH5OimData*>(filter);
-  Q_ASSERT_X(nullptr != m_Filter, "OEMEbsdScanSelectionWidget can ONLY be used with ImportH5OimData filter", __FILE__);
+  m_FilterParameter = dynamic_cast<OEMEbsdScanSelectionFilterParameter*>(parameter);
 
   setupUi(this);
   setupGui();

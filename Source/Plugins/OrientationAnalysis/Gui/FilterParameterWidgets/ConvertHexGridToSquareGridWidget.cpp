@@ -47,6 +47,7 @@
 #include "SVWidgetsLib/QtSupport/QtSFileUtils.h"
 
 #include "OrientationAnalysis/FilterParameters/ConvertHexGridToSquareGridFilterParameter.h"
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/ConvertHexGridToSquareGrid.h"
 
 // -----------------------------------------------------------------------------
@@ -57,8 +58,9 @@ ConvertHexGridToSquareGridWidget::ConvertHexGridToSquareGridWidget(FilterParamet
 , m_StackingGroup(nullptr)
 , m_DidCausePreflight(false)
 {
-  m_Filter = qobject_cast<ConvertHexGridToSquareGrid*>(filter);
-  Q_ASSERT_X(nullptr != m_Filter, "ConvertHexGridToSquareGridWidget can ONLY be used with ConvertHexGridToSquareGridWidget filter", __FILE__);
+  FILTER_PARAMETER_COMPATIBILITY_CHECK(filter, ConvertHexGridToSquareGridFilterParameter, ConvertHexGridToSquareGridWidget)
+
+  FILTER_COMPATIBILITY_CHECK(ConvertHexGridToSquareGrid, ConvertHexGridToSquareGridWidget)
 
   m_FilterParameter = dynamic_cast<ConvertHexGridToSquareGridFilterParameter*>(parameter);
 

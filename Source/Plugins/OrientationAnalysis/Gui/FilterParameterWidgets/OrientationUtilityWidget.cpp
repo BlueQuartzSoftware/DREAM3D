@@ -37,6 +37,9 @@
 
 #include "OrientationUtilityCalculator.h"
 
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisFilters/OrientationUtility.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -44,6 +47,8 @@ OrientationUtilityWidget::OrientationUtilityWidget(FilterParameter* parameter, A
 : FilterParameterWidget(parameter, filter, parent)
 , m_Calculator(new OrientationUtilityCalculator(this))
 {
+  FILTER_COMPATIBILITY_CHECK(OrientationUtility, OrientationUtilityWidget)
+
   setupUi(this);
 
   setupGui();
