@@ -47,6 +47,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/Utilities/FilterCompatibility.hpp"
 #include "SIMPLib/Utilities/SIMPLDataPathValidator.h"
 #include "SIMPLib/Utilities/StringOperations.h"
 
@@ -71,8 +72,7 @@ EbsdMontageImportWidget::EbsdMontageImportWidget(FilterParameter* parameter, Abs
 : FilterParameterWidget(parameter, filter, parent)
 , m_Ui(new Ui::EbsdMontageImportWidget)
 {
-
-  FILTER_PARAMETER_COMPATIBILITY_CHECK(filter, EbsdMontageImportFilterParameter, EbsdMontageImportWidget)
+  m_FilterParameter = SIMPL_FILTER_PARAMETER_COMPATIBILITY_CHECK(filter, parameter, EbsdMontageImportWidget, EbsdMontageImportFilterParameter);
 
   m_Ui->setupUi(this);
   setupGui();

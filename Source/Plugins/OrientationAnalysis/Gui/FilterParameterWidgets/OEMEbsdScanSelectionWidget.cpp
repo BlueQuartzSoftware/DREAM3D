@@ -38,6 +38,7 @@
 #include <QtCore/QDebug>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Utilities/FilterCompatibility.hpp"
 
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
 #include "SVWidgetsLib/QtSupport/QtSHelpUrlGenerator.h"
@@ -53,9 +54,8 @@
 OEMEbsdScanSelectionWidget::OEMEbsdScanSelectionWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent)
 : FilterParameterWidget(parameter, filter, parent)
 {
-  FILTER_COMPATIBILITY_CHECK(ImportH5OimData, OEMEbsdScanSelectionWidget)
-
-  m_FilterParameter = dynamic_cast<OEMEbsdScanSelectionFilterParameter*>(parameter);
+  m_Filter = SIMPL_FILTER_COMPATIBILITY_CHECK(filter, parameter, OEMEbsdScanSelectionWidget, ImportH5OimData);
+  m_FilterParameter = SIMPL_FILTER_PARAMETER_COMPATIBILITY_CHECK(filter, parameter, OEMEbsdScanSelectionWidget, OEMEbsdScanSelectionFilterParameter);
 
   setupUi(this);
   setupGui();

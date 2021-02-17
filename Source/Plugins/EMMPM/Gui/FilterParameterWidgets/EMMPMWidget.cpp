@@ -37,6 +37,8 @@
 
 #include <cassert>
 
+#include "SIMPLib/Utilities/FilterCompatibility.hpp"
+
 #include "EMMPM/EMMPMFilters/EMMPMFilter.h"
 #include "EMMPM/FilterParameters/EMMPMFilterParameter.h"
 #include "EMMPMLib/Core/EMMPM_Data.h"
@@ -50,11 +52,8 @@ EMMPMWidget::EMMPMWidget(FilterParameter* parameter, AbstractFilter* filter, QWi
 : FilterParameterWidget(parameter, filter, parent)
 , m_DidCausePreflight(false)
 {
-  m_FilterParameter = dynamic_cast<EMMPMFilterParameter*>(parameter);
-  Q_ASSERT_X(m_FilterParameter != nullptr, "NULL Pointer", "EMMPMWidget can ONLY be used with a EMMPMFilterParameter object");
-  m_Filter = dynamic_cast<EMMPMFilter*>(filter);
-  Q_ASSERT_X(getFilter() != nullptr, "NULL Pointer", "EMMPMWidget can ONLY be used with a EMMPMFilter object");
-
+  m_FilterParameter = SIMPL_FILTER_PARAMETER_COMPATIBILITY_CHECK(filter, parameter, EMMPMWidget, EMMPMFilterParameter);
+  m_Filter = SIMPL_FILTER_COMPATIBILITY_CHECK(filter, parameter, EMMPMWidget, EMMPMFilter);
   setupUi(this);
   setupGui();
 }

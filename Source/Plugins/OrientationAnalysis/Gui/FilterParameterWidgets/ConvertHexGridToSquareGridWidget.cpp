@@ -42,6 +42,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/Utilities/FilterCompatibility.hpp"
 
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
 #include "SVWidgetsLib/QtSupport/QtSFileUtils.h"
@@ -58,11 +59,8 @@ ConvertHexGridToSquareGridWidget::ConvertHexGridToSquareGridWidget(FilterParamet
 , m_StackingGroup(nullptr)
 , m_DidCausePreflight(false)
 {
-  FILTER_PARAMETER_COMPATIBILITY_CHECK(filter, ConvertHexGridToSquareGridFilterParameter, ConvertHexGridToSquareGridWidget)
-
-  FILTER_COMPATIBILITY_CHECK(ConvertHexGridToSquareGrid, ConvertHexGridToSquareGridWidget)
-
-  m_FilterParameter = dynamic_cast<ConvertHexGridToSquareGridFilterParameter*>(parameter);
+  m_Filter = SIMPL_FILTER_COMPATIBILITY_CHECK(filter, parameter, ConvertHexGridToSquareGridWidget, ConvertHexGridToSquareGrid);
+  m_FilterParameter = SIMPL_FILTER_PARAMETER_COMPATIBILITY_CHECK(filter, parameter, ConvertHexGridToSquareGridWidget, ConvertHexGridToSquareGridFilterParameter);
 
   setupUi(this);
   setupGui();

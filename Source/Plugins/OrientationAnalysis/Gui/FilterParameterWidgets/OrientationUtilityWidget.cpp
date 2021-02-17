@@ -35,6 +35,8 @@
 
 #include "OrientationUtilityWidget.h"
 
+#include "SIMPLib/Utilities/FilterCompatibility.hpp"
+
 #include "OrientationUtilityCalculator.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
@@ -47,7 +49,7 @@ OrientationUtilityWidget::OrientationUtilityWidget(FilterParameter* parameter, A
 : FilterParameterWidget(parameter, filter, parent)
 , m_Calculator(new OrientationUtilityCalculator(this))
 {
-  FILTER_COMPATIBILITY_CHECK(OrientationUtility, OrientationUtilityWidget)
+  SIMPL_FILTER_COMPATIBILITY_CHECK(filter, parameter, OrientationUtilityWidget, OrientationUtility);
 
   setupUi(this);
 

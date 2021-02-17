@@ -51,6 +51,7 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/Utilities/FilterCompatibility.hpp"
 #include "SIMPLib/Utilities/SIMPLDataPathValidator.h"
 
 #include "SVWidgetsLib/QtSupport/QtSCheckboxDialog.h"
@@ -73,22 +74,10 @@ EbsdToH5EbsdWidget::EbsdToH5EbsdWidget(FilterParameter* parameter, AbstractFilte
 , m_HKLchecked(false)
 , m_HEDMchecked(false)
 , m_NoTranschecked(true)
+, m_SampleTransformation(0.0f, 0.0f, 0.0f, 0.0f)
+, m_EulerTransformation(0.0f, 0.0f, 0.0f, 0.0f)
 {
-  m_SampleTransformation.angle = 0.0f;
-  m_SampleTransformation.h = 0.0f;
-  m_SampleTransformation.k = 0.0f;
-  m_SampleTransformation.l = 0.0f;
-
-  m_EulerTransformation.angle = 0.0f;
-  m_EulerTransformation.h = 0.0f;
-  m_EulerTransformation.k = 0.0f;
-  m_EulerTransformation.l = 0.0f;
-
-  m_Filter = qobject_cast<EbsdToH5Ebsd*>(filter);
-
-  Q_ASSERT_X(nullptr != m_Filter, "EbsdToH5EbsdWidget can ONLY be used with EbsdToH5Ebsd filter", __FILE__);
-
-  FILTER_COMPATIBILITY_CHECK(EbsdToH5Ebsd, EbsdToH5EbsdWidget)
+  m_Filter = SIMPL_FILTER_COMPATIBILITY_CHECK(filter, parameter, EbsdToH5EbsdWidget, EbsdToH5Ebsd);
 
   setupUi(this);
   setupGui();

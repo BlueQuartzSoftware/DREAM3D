@@ -1,6 +1,4 @@
 /* ============================================================================
-
-
  * Copyright (c) 2009-2016 BlueQuartz Software, LLC
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -41,6 +39,7 @@
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 
 #include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/Utilities/FilterCompatibility.hpp"
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidgetUtils.hpp"
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidgetsDialogs.h"
 #include "SVWidgetsLib/Widgets/SVStyle.h"
@@ -56,7 +55,7 @@ EnsembleInfoCreationWidget::EnsembleInfoCreationWidget(FilterParameter* paramete
 , m_DidCausePreflight(false)
 , m_EnsembleInfoTableModel(nullptr)
 {
-  FILTER_PARAMETER_COMPATIBILITY_CHECK(filter, EnsembleInfoFilterParameter, EnsembleInfoCreationWidget)
+  m_FilterParameter = SIMPL_FILTER_PARAMETER_COMPATIBILITY_CHECK(filter, parameter, EnsembleInfoCreationWidget, EnsembleInfoFilterParameter);
 
   setupUi(this);
   setupGui();

@@ -63,6 +63,7 @@
 #include "SIMPLib/Messages/FilterWarningMessage.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/StatsData.h"
+#include "SIMPLib/Utilities/FilterCompatibility.hpp"
 
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
 #include "SVWidgetsLib/QtSupport/QtSFileUtils.h"
@@ -110,9 +111,7 @@ InitializeSyntheticVolumeWidget::InitializeSyntheticVolumeWidget(FilterParameter
 , m_DidCausePreflight(false)
 , m_NewFileLoaded(false)
 {
-
-  m_Filter = qobject_cast<InitializeSyntheticVolume*>(filter);
-  Q_ASSERT_X(nullptr != m_Filter, "InitializeSyntheticVolumeWidget can ONLY be used with InitializeSyntheticVolume filter", __FILE__);
+  m_Filter = SIMPL_FILTER_COMPATIBILITY_CHECK(filter, parameter, InitializeSyntheticVolumeWidget, InitializeSyntheticVolume);
 
   setupUi(this);
   setupGui();

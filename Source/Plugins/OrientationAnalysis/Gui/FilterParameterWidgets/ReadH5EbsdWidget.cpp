@@ -51,6 +51,7 @@
 #include "EbsdLib/IO/TSL/H5AngVolumeReader.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Utilities/FilterCompatibility.hpp"
 #include "SIMPLib/Utilities/SIMPLDataPathValidator.h"
 
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
@@ -69,20 +70,11 @@ ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* f
 : FilterParameterWidget(parameter, filter, parent)
 , m_NewFileLoaded(false)
 , m_Version4Warning(false)
+, m_SampleTransformation(0.0f, 0.0f, 1.0f, 0.0f)
+, m_EulerTransformation(0.0f, 0.0f, 1.0f, 0.0f)
 {
-  FILTER_COMPATIBILITY_CHECK(ReadH5Ebsd, ReadH5EbsdWidget)
-
-  m_FilterParameter = dynamic_cast<ReadH5EbsdFilterParameter*>(parameter);
-
-  m_SampleTransformation.angle = 0.0f;
-  m_SampleTransformation.h = 0.0f;
-  m_SampleTransformation.k = 0.0f;
-  m_SampleTransformation.l = 1.0f;
-
-  m_EulerTransformation.angle = 0.0f;
-  m_EulerTransformation.h = 0.0f;
-  m_EulerTransformation.k = 0.0f;
-  m_EulerTransformation.l = 1.0f;
+  m_Filter = SIMPL_FILTER_COMPATIBILITY_CHECK(filter, parameter, ReadH5EbsdWidget, ReadH5Ebsd);
+  m_FilterParameter = SIMPL_FILTER_PARAMETER_COMPATIBILITY_CHECK(filter, parameter, ReadH5EbsdWidget, ReadH5EbsdFilterParameter);
 
   qRegisterMetaType<QSet<QString>>("QSet<QString>");
 
