@@ -129,17 +129,7 @@ private:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindRelativeMotionBetweenSlices::FindRelativeMotionBetweenSlices()
-: m_SelectedArrayPath("", "", "")
-, m_Plane(0)
-, m_PSize1(0)
-, m_PSize2(0)
-, m_SSize1(0)
-, m_SSize2(0)
-, m_SliceStep(0)
-, m_MotionDirectionArrayName(SIMPL::CellData::MotionDirection)
-{
-}
+FindRelativeMotionBetweenSlices::FindRelativeMotionBetweenSlices() = default;
 
 // -----------------------------------------------------------------------------
 //

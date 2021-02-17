@@ -5,10 +5,6 @@
 
 PreflightVerify::PreflightVerify(QObject* parent)
 : QObject(parent)
-, m_widgetChanged(false)
-, m_beforePreflight(false)
-, m_afterPreflight(false)
-, m_filterNeedsInputParameters(false)
 {
 }
 PreflightVerify::~PreflightVerify() = default;

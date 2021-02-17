@@ -53,13 +53,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ErodeDilateCoordinationNumber::ErodeDilateCoordinationNumber()
-: m_Loop(false)
-, m_CoordinationNumber(6)
-, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_Neighbors(nullptr)
-{
-}
+ErodeDilateCoordinationNumber::ErodeDilateCoordinationNumber() = default;
 
 // -----------------------------------------------------------------------------
 //

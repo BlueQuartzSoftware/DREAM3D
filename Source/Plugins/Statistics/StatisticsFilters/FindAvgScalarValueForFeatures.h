@@ -213,9 +213,9 @@ private:
   std::weak_ptr<DataArray<float>> m_NewFeatureArrayPtr;
   float* m_NewFeatureArray = nullptr;
 
-  DataArrayPath m_SelectedCellArrayPath = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_NewFeatureArrayArrayPath = {};
+  DataArrayPath m_SelectedCellArrayPath = {"", "", ""};
+  DataArrayPath m_FeatureIdsArrayPath = {"", "", ""};
+  DataArrayPath m_NewFeatureArrayArrayPath = {"", "", ""};
 
 public:
   FindAvgScalarValueForFeatures(const FindAvgScalarValueForFeatures&) = delete;            // Copy Constructor Not Implemented

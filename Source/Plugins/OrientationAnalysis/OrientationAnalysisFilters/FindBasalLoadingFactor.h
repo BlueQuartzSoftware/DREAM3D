@@ -212,8 +212,8 @@ private:
   std::weak_ptr<DataArray<float>> m_AvgQuatsPtr;
   float* m_AvgQuats = nullptr;
 
-  DataArrayPath m_AvgQuatsArrayPath = {};
-  DataArrayPath m_BasalLoadingFactorArrayPath = {};
+  DataArrayPath m_AvgQuatsArrayPath = {"", "", ""};
+  DataArrayPath m_BasalLoadingFactorArrayPath = {"", "", ""};
   FloatVec3Type m_LoadingDirection = {};
 
 public:

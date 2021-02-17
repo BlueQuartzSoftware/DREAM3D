@@ -96,18 +96,7 @@ ReadCtfDataPrivate::ReadCtfDataPrivate(ReadCtfData* ptr)
 //
 // -----------------------------------------------------------------------------
 ReadCtfData::ReadCtfData()
-: m_DegreesToRadians(true)
-, m_EdaxHexagonalAlignment(true)
-, m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
-, m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
-, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_FileWasRead(false)
-, m_PhaseNameArrayName("")
-, m_MaterialNameArrayName(SIMPL::EnsembleData::MaterialName)
-, m_InputFile("")
-, m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
-, m_Manufacturer(EbsdLib::OEM::Unknown)
-, d_ptr(new ReadCtfDataPrivate(this))
+: d_ptr(new ReadCtfDataPrivate(this))
 {
 }
 

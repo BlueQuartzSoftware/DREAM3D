@@ -37,7 +37,6 @@
 #include <QtCore/QDebug>
 #include <QtCore/QTextStream>
 
-#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -49,15 +48,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CorrelateValuesWithVectorDirection::CorrelateValuesWithVectorDirection()
-: m_CorrelatedDataArrayPath("", "", "")
-, m_VectorDataArrayPath("", "", "")
-, m_Logfile("CorrelateValuesWithVectorDirection.log")
-, m_MaxCoord(sqrt(SIMPLib::Constants::k_2PiD) / 2.0)
-, m_Dimension(72)
-, m_StepSize(sqrt(SIMPLib::Constants::k_2PiD) / 72.0)
-{
-}
+CorrelateValuesWithVectorDirection::CorrelateValuesWithVectorDirection() = default;
 
 // -----------------------------------------------------------------------------
 //

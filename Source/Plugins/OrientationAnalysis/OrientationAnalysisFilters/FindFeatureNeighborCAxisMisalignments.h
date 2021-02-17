@@ -259,13 +259,13 @@ private:
   std::weak_ptr<DataArray<float>> m_AvgCAxisMisalignmentsPtr;
   float* m_AvgCAxisMisalignments = nullptr;
 
-  bool m_FindAvgMisals = {};
-  DataArrayPath m_NeighborListArrayPath = {};
-  QString m_CAxisMisalignmentListArrayName = {};
-  DataArrayPath m_AvgQuatsArrayPath = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  QString m_AvgCAxisMisalignmentsArrayName = {};
+  bool m_FindAvgMisals = {false};
+  DataArrayPath m_NeighborListArrayPath = {"", "", ""};
+  QString m_CAxisMisalignmentListArrayName = {SIMPL::FeatureData::CAxisMisalignmentList};
+  DataArrayPath m_AvgQuatsArrayPath = {"", "", ""};
+  DataArrayPath m_FeaturePhasesArrayPath = {"", "", ""};
+  DataArrayPath m_CrystalStructuresArrayPath = {"", "", ""};
+  QString m_AvgCAxisMisalignmentsArrayName = {SIMPL::FeatureData::AvgCAxisMisalignments};
 
   LaueOpsContainer m_OrientationOps;
   NeighborList<int32_t>::WeakPointer m_NeighborList;

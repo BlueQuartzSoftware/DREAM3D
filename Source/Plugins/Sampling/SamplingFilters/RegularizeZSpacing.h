@@ -38,6 +38,7 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "Sampling/SamplingDLLExport.h"
@@ -202,7 +203,7 @@ public:
   RegularizeZSpacing& operator=(RegularizeZSpacing&&) = delete;      // Move Assignment Not Implemented
 
 private:
-  DataArrayPath m_CellAttributeMatrixPath = {};
-  QString m_InputFile = {};
-  float m_NewZRes = {};
+  DataArrayPath m_CellAttributeMatrixPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, ""};
+  QString m_InputFile = {""};
+  float m_NewZRes = {1.0f};
 };

@@ -313,15 +313,15 @@ private:
   std::weak_ptr<DataArray<double>> m_GBCDPtr;
   double* m_GBCD = nullptr;
 
-  QString m_FaceEnsembleAttributeMatrixName = {};
-  float m_GBCDRes = {};
-  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
-  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {};
-  DataArrayPath m_SurfaceMeshFaceAreasArrayPath = {};
-  DataArrayPath m_FeatureEulerAnglesArrayPath = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  QString m_GBCDArrayName = {};
+  QString m_FaceEnsembleAttributeMatrixName = {SIMPL::Defaults::FaceEnsembleAttributeMatrixName};
+  float m_GBCDRes = {9.0f};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
+  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals};
+  DataArrayPath m_SurfaceMeshFaceAreasArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceAreas};
+  DataArrayPath m_FeatureEulerAnglesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::EulerAngles};
+  DataArrayPath m_FeaturePhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases};
+  DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
+  QString m_GBCDArrayName = {SIMPL::EnsembleData::GBCD};
   QVector<ComparisonInput_t> m_GBCDArrayNames = {};
 
   FloatArrayType::Pointer m_GbcdDeltasArray;

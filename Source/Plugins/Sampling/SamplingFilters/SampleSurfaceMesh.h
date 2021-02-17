@@ -197,7 +197,7 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
   int32_t* m_SurfaceMeshFaceLabels = nullptr;
 
-  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
 
   size_t m_NumCompleted = 0;
   qint64 m_StartMillis = 0;

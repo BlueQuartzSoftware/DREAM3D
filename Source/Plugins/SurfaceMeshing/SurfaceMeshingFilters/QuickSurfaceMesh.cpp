@@ -117,18 +117,7 @@ using EdgeMap = std::unordered_map<Edge, MeshIndexType, EdgeHasher>;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QuickSurfaceMesh::QuickSurfaceMesh()
-: m_SelectedDataArrayPaths(QVector<DataArrayPath>())
-, m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
-, m_TripleLineDataContainerName("TripleLines")
-, m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName)
-, m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName)
-, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_FaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels)
-, m_NodeTypesArrayName(SIMPL::VertexData::SurfaceMeshNodeType)
-, m_FeatureAttributeMatrixName(SIMPL::Defaults::FaceFeatureAttributeMatrixName)
-{
-}
+QuickSurfaceMesh::QuickSurfaceMesh() = default;
 
 // -----------------------------------------------------------------------------
 //

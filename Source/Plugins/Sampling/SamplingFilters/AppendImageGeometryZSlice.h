@@ -205,5 +205,5 @@ public:
 private:
   DataArrayPath m_InputAttributeMatrix = {};
   DataArrayPath m_DestinationAttributeMatrix = {};
-  bool m_CheckResolution = {};
+  bool m_CheckResolution = {false};
 };

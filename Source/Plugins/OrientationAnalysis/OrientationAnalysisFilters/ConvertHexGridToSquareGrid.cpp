@@ -51,24 +51,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ConvertHexGridToSquareGrid::ConvertHexGridToSquareGrid()
-: m_ZStartIndex(0)
-, m_ZEndIndex(0)
-, m_XResolution(1.0f)
-, m_YResolution(1.0f)
-, m_InputPath("")
-, m_OutputPath("")
-, m_OutputPrefix("Sqr_")
-, m_FilePrefix("")
-, m_FileSuffix("")
-, m_FileExtension("ang")
-, m_PaddingDigits(1)
-, m_NumCols(0)
-, m_NumRows(0)
-, m_HeaderIsComplete(false)
-, m_HexGridStack(0) // this is just a dummy variable
-{
-}
+ConvertHexGridToSquareGrid::ConvertHexGridToSquareGrid() = default;
 
 // -----------------------------------------------------------------------------
 //

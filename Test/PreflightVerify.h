@@ -12,10 +12,10 @@ public:
   PreflightVerify(QObject* parent = nullptr);
   virtual ~PreflightVerify();
 
-  bool m_widgetChanged;
-  bool m_beforePreflight;
-  bool m_afterPreflight;
-  bool m_filterNeedsInputParameters;
+  bool m_widgetChanged = {false};
+  bool m_beforePreflight = {false};
+  bool m_afterPreflight = {false};
+  bool m_filterNeedsInputParameters = {false};
 
 public slots:
   void widgetChanged(const QString& msg);

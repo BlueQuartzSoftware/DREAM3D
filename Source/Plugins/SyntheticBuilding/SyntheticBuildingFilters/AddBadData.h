@@ -230,11 +230,11 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_GBEuclideanDistancesPtr;
   int32_t* m_GBEuclideanDistances = nullptr;
 
-  DataArrayPath m_GBEuclideanDistancesArrayPath = {};
-  bool m_PoissonNoise = {};
-  float m_PoissonVolFraction = {};
-  bool m_BoundaryNoise = {};
-  float m_BoundaryVolFraction = {};
+  DataArrayPath m_GBEuclideanDistancesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::ElementAttributeMatrixName, SIMPL::CellData::GBEuclideanDistances};
+  bool m_PoissonNoise = {true};
+  float m_PoissonVolFraction = {0.0f};
+  bool m_BoundaryNoise = {false};
+  float m_BoundaryVolFraction = {0.0f};
 
 public:
   AddBadData(const AddBadData&) = delete;            // Copy Constructor Not Implemented

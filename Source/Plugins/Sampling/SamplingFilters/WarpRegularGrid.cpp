@@ -58,10 +58,6 @@
 //
 // -----------------------------------------------------------------------------
 WarpRegularGrid::WarpRegularGrid()
-: m_NewDataContainerName(SIMPL::Defaults::NewImageDataContainerName)
-, m_CellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
-, m_PolyOrder(0)
-, m_SaveAsNewDataContainer(false)
 {
   m_SecondOrderACoeff.c20 = 0.0f, m_SecondOrderACoeff.c02 = 0.0f, m_SecondOrderACoeff.c11 = 0.0f;
   m_SecondOrderACoeff.c10 = 1.0f, m_SecondOrderACoeff.c01 = 1.0f, m_SecondOrderACoeff.c00 = 0.0f;

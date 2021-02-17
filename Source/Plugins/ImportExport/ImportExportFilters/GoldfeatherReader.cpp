@@ -89,20 +89,7 @@ private:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GoldfeatherReader::GoldfeatherReader()
-: m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
-, m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName)
-, m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName)
-, m_SurfaceMeshPrincipalCurvature1sArrayName(SIMPL::FaceData::SurfaceMeshPrincipalCurvature1)
-, m_SurfaceMeshPrincipalCurvature2sArrayName(SIMPL::FaceData::SurfaceMeshPrincipalCurvature2)
-, m_SurfaceMeshPrincipalDirection1sArrayName(SIMPL::FaceData::SurfaceMeshPrincipalDirection1)
-, m_SurfaceMeshPrincipalDirection2sArrayName(SIMPL::FaceData::SurfaceMeshPrincipalDirection2)
-, m_SurfaceMeshNodeNormalsArrayName(SIMPL::VertexData::SurfaceMeshNodeNormals)
-, m_SurfaceMeshFaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels)
-, m_SurfaceMeshFaceNormalsArrayName(SIMPL::FaceData::SurfaceMeshFaceNormals)
-, m_InputFile("")
-{
-}
+GoldfeatherReader::GoldfeatherReader() = default;
 
 // -----------------------------------------------------------------------------
 //

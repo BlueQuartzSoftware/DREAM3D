@@ -53,15 +53,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindFeatureHistogram::FindFeatureHistogram()
-: m_SelectedFeatureArrayPath("", "", "")
-, m_NumberOfBins(1)
-, m_RemoveBiasedFeatures(false)
-, m_FeaturePhasesArrayPath("", "", "")
-, m_BiasedFeaturesArrayPath("", "", "")
-, m_NewEnsembleArrayArrayPath("", "", "")
-{
-}
+FindFeatureHistogram::FindFeatureHistogram() = default;
 
 // -----------------------------------------------------------------------------
 //

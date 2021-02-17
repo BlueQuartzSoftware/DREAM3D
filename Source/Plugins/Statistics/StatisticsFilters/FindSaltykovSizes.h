@@ -231,8 +231,8 @@ private:
   std::weak_ptr<DataArray<float>> m_SaltykovEquivalentDiametersPtr;
   float* m_SaltykovEquivalentDiameters = nullptr;
 
-  DataArrayPath m_EquivalentDiametersArrayPath = {};
-  DataArrayPath m_SaltykovEquivalentDiametersArrayPath = {};
+  DataArrayPath m_EquivalentDiametersArrayPath = {SIMPL::FeatureData::EquivalentDiameters, "", ""};
+  DataArrayPath m_SaltykovEquivalentDiametersArrayPath = {SIMPL::FeatureData::SaltykovEquivalentDiameters, "", ""};
 
 public:
   FindSaltykovSizes(const FindSaltykovSizes&) = delete;            // Copy Constructor Not Implemented

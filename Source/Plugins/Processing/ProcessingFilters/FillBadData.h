@@ -225,10 +225,10 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
   int32_t* m_CellPhases = nullptr;
 
-  bool m_StoreAsNewPhase = {};
-  int m_MinAllowedDefectSize = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_CellPhasesArrayPath = {};
+  bool m_StoreAsNewPhase = {false};
+  int m_MinAllowedDefectSize = {1};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_CellPhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases};
   QVector<DataArrayPath> m_IgnoredDataArrayPaths = {};
 
   bool* m_AlreadyChecked;

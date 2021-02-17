@@ -84,7 +84,7 @@ public:
 
 private:
   QVector<qint32> m_KernelWeights;
-  bool m_KernelWeightsInited;
+  bool m_KernelWeightsInited = {false};
 
 public:
   PoleFigureImageUtilities(const PoleFigureImageUtilities&) = delete;            // Copy Constructor Not Implemented

@@ -49,12 +49,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateGeometryConnectivity::GenerateGeometryConnectivity()
-: m_SurfaceDataContainerName("")
-, m_GenerateVertexTriangleLists(true)
-, m_GenerateTriangleNeighbors(true)
-{
-}
+GenerateGeometryConnectivity::GenerateGeometryConnectivity() = default;
 
 // -----------------------------------------------------------------------------
 //

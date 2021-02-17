@@ -146,12 +146,6 @@ private:
 //
 // -----------------------------------------------------------------------------
 GenerateIPFColors::GenerateIPFColors()
-: m_CellPhasesArrayPath("", "", "")
-, m_CellEulerAnglesArrayPath("", "", "")
-, m_CrystalStructuresArrayPath("", "", "")
-, m_UseGoodVoxels(false)
-, m_GoodVoxelsArrayPath("", "", "")
-, m_CellIPFColorsArrayName(SIMPL::CellData::IPFColor)
 {
   m_ReferenceDir[0] = 0.0f;
   m_ReferenceDir[1] = 0.0f;

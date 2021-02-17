@@ -188,8 +188,8 @@ private:
   std::weak_ptr<DataArray<float>> m_CellCoordinatesPtr;
   float* m_CellCoordinates = nullptr;
 
-  DataArrayPath m_QuatsArrayPath = {};
-  QString m_CoordinatesArrayName = {};
+  DataArrayPath m_QuatsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats};
+  QString m_CoordinatesArrayName = {"Coordinates"};
 
 public:
   Stereographic3D(const Stereographic3D&) = delete;            // Copy Constructor Not Implemented

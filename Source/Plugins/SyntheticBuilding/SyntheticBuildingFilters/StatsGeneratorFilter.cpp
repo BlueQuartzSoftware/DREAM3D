@@ -76,15 +76,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGeneratorFilter::StatsGeneratorFilter()
-: m_StatsGeneratorDataContainerName(SIMPL::Defaults::StatsGenerator)
-, m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
-, m_StatsDataArrayName(SIMPL::EnsembleData::Statistics)
-, m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures)
-, m_PhaseTypesArrayName(SIMPL::EnsembleData::PhaseTypes)
-, m_PhaseNamesArrayName(SIMPL::EnsembleData::PhaseName)
-{
-}
+StatsGeneratorFilter::StatsGeneratorFilter() = default;
 
 // -----------------------------------------------------------------------------
 //

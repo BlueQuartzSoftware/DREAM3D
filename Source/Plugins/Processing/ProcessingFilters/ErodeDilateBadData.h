@@ -251,12 +251,12 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
 
-  unsigned int m_Direction = {};
-  int m_NumIterations = {};
-  bool m_XDirOn = {};
-  bool m_YDirOn = {};
-  bool m_ZDirOn = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
+  unsigned int m_Direction = {0};
+  int m_NumIterations = {1};
+  bool m_XDirOn = {true};
+  bool m_YDirOn = {true};
+  bool m_ZDirOn = {true};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
   QVector<DataArrayPath> m_IgnoredDataArrayPaths = {};
 
   int32_t* m_Neighbors;

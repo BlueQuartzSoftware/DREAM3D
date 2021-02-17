@@ -208,9 +208,9 @@ private:
   std::weak_ptr<DataArray<float>> m_AvgCAxesPtr;
   float* m_AvgCAxes = nullptr;
 
-  DataArrayPath m_QuatsArrayPath = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_AvgCAxesArrayPath = {};
+  DataArrayPath m_QuatsArrayPath = {"", "", ""};
+  DataArrayPath m_FeatureIdsArrayPath = {"", "", ""};
+  DataArrayPath m_AvgCAxesArrayPath = {"", "", ""};
 
   LaueOpsContainer m_OrientationOps;
 

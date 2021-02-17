@@ -62,10 +62,6 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 QuiltCellData::QuiltCellData()
-: m_SelectedCellArrayPath("", "", "")
-, m_OutputDataContainerName(SIMPL::Defaults::NewImageDataContainerName)
-, m_OutputAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_OutputArrayName("Quilt_Data")
 {
   m_QuiltStep[0] = 2;
   m_QuiltStep[1] = 2;

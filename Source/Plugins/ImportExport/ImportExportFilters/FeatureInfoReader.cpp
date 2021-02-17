@@ -71,20 +71,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FeatureInfoReader::FeatureInfoReader()
-: m_CellAttributeMatrixName("", "", "")
-, m_CellFeatureAttributeMatrixName("FeatureAttributeMatrix")
-, m_InputFile("")
-, m_CreateCellLevelArrays(true)
-, m_RenumberFeatures(true)
-, m_FeatureIdsArrayPath("", "", "")
-, m_CellPhasesArrayName(SIMPL::CellData::Phases)
-, m_CellEulerAnglesArrayName(SIMPL::CellData::EulerAngles)
-, m_FeaturePhasesArrayName(SIMPL::FeatureData::Phases)
-, m_FeatureEulerAnglesArrayName(SIMPL::FeatureData::EulerAngles)
-, m_Delimiter(0)
-{
-}
+FeatureInfoReader::FeatureInfoReader() = default;
 
 // -----------------------------------------------------------------------------
 //

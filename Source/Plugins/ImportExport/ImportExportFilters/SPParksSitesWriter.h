@@ -183,7 +183,7 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
 
-  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
 
 public:
   SPParksSitesWriter(const SPParksSitesWriter&) = delete;            // Copy Constructor Not Implemented

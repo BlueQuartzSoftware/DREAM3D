@@ -186,9 +186,9 @@ protected:
   void initialize();
 
 private:
-  QString m_SurfaceMeshEdgesArrayName = {};
-  QString m_SurfaceMeshInternalEdgesArrayName = {};
-  bool m_AddSurfaceLayer = {};
+  QString m_SurfaceMeshEdgesArrayName = {SIMPL::CellData::SurfaceMeshEdges};
+  QString m_SurfaceMeshInternalEdgesArrayName = {SIMPL::CellData::SurfaceMeshInternalEdges};
+  bool m_AddSurfaceLayer = {true};
 
   DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, GrainIds)
   DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceMeshNodeType)

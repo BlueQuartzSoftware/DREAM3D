@@ -207,9 +207,9 @@ private:
   std::weak_ptr<DataArray<float>> m_LargestCrossSectionsPtr;
   float* m_LargestCrossSections = nullptr;
 
-  unsigned int m_Plane = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_LargestCrossSectionsArrayPath = {};
+  unsigned int m_Plane = {0};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_LargestCrossSectionsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::LargestCrossSections};
 
 public:
   FindLargestCrossSections(const FindLargestCrossSections&) = delete;            // Copy Constructor Not Implemented

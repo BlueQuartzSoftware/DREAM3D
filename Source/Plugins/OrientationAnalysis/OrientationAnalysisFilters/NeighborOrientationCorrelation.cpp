@@ -114,13 +114,6 @@ private:
 //
 // -----------------------------------------------------------------------------
 NeighborOrientationCorrelation::NeighborOrientationCorrelation()
-: m_MisorientationTolerance(5.0f)
-, m_MinConfidence(0.1f)
-, m_Level(6)
-, m_ConfidenceIndexArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ConfidenceIndex)
-, m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
-, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
-, m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
 {
   m_OrientationOps = LaueOps::GetAllOrientationOps();
 }

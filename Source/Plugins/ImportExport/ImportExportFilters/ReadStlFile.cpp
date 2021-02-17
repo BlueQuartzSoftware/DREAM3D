@@ -161,19 +161,7 @@ int32_t getStlFileType(const std::string& path)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadStlFile::ReadStlFile()
-: m_SurfaceMeshDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
-, m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName)
-, m_StlFilePath("")
-, m_FaceNormalsArrayName(SIMPL::FaceData::SurfaceMeshFaceNormals)
-, m_minXcoord(std::numeric_limits<float>::max())
-, m_maxXcoord(-std::numeric_limits<float>::max())
-, m_minYcoord(std::numeric_limits<float>::max())
-, m_maxYcoord(-std::numeric_limits<float>::max())
-, m_minZcoord(std::numeric_limits<float>::max())
-, m_maxZcoord(-std::numeric_limits<float>::max())
-{
-}
+ReadStlFile::ReadStlFile() = default;
 
 // -----------------------------------------------------------------------------
 //

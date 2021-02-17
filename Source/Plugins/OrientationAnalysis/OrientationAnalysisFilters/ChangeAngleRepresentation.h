@@ -188,8 +188,8 @@ private:
   std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
   float* m_CellEulerAngles = nullptr;
 
-  int m_ConversionType = {};
-  DataArrayPath m_CellEulerAnglesArrayPath = {};
+  int m_ConversionType = {SIMPL::EulerAngleConversionType::DegreesToRadians};
+  DataArrayPath m_CellEulerAnglesArrayPath = {"", "", ""};
 
 public:
   ChangeAngleRepresentation(const ChangeAngleRepresentation&) = delete;            // Copy Constructor Not Implemented

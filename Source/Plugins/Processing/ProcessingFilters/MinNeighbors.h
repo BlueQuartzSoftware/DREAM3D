@@ -268,12 +268,12 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_NumNeighborsPtr;
   int32_t* m_NumNeighbors = nullptr;
 
-  int m_MinNumNeighbors = {};
-  bool m_ApplyToSinglePhase = {};
-  int m_PhaseNumber = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_NumNeighborsArrayPath = {};
+  int m_MinNumNeighbors = {1};
+  bool m_ApplyToSinglePhase = {false};
+  int m_PhaseNumber = {0};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_FeaturePhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases};
+  DataArrayPath m_NumNeighborsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NumNeighbors};
   QVector<DataArrayPath> m_IgnoredDataArrayPaths = {};
 
   int32_t* m_Neighbors = nullptr;

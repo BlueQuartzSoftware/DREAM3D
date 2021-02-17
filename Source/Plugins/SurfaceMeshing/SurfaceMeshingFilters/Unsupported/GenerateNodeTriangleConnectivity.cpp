@@ -39,12 +39,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateNodeTriangleConnectivity::GenerateNodeTriangleConnectivity()
-: m_SurfaceMeshUniqueEdgesArrayName(SIMPL::CellData::SurfaceMeshUniqueEdges)
-, m_SurfaceMeshTriangleEdgesArrayName(SIMPL::CellData::SurfaceMeshTriangleEdges)
-, m_SurfaceMeshTriangleEdges(nullptr)
-{
-}
+GenerateNodeTriangleConnectivity::GenerateNodeTriangleConnectivity(), m_SurfaceMeshTriangleEdgesArrayName(SIMPL::CellData::SurfaceMeshTriangleEdges), m_SurfaceMeshTriangleEdges(nullptr) = default;
 
 // -----------------------------------------------------------------------------
 //

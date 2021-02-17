@@ -243,10 +243,10 @@ protected:
   virtual bool growGrouping(int32_t referenceFeature, int32_t neighborFeature, int32_t newFid);
 
 private:
-  DataArrayPath m_ContiguousNeighborListArrayPath = {};
-  DataArrayPath m_NonContiguousNeighborListArrayPath = {};
-  bool m_UseNonContiguousNeighbors = {};
-  bool m_PatchGrouping = {};
+  DataArrayPath m_ContiguousNeighborListArrayPath = {"", "", ""};
+  DataArrayPath m_NonContiguousNeighborListArrayPath = {"", "", ""};
+  bool m_UseNonContiguousNeighbors = {false};
+  bool m_PatchGrouping = {false};
 
   NeighborList<int32_t>::WeakPointer m_ContiguousNeighborList;
   NeighborList<int32_t>::WeakPointer m_NonContiguousNeighborList;

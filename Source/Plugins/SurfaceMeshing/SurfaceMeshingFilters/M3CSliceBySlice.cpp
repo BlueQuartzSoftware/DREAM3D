@@ -358,18 +358,7 @@ private:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-M3CSliceBySlice::M3CSliceBySlice()
-: m_SurfaceDataContainerName(SIMPL::Defaults::DataContainerName)
-, m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName)
-, m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName)
-, m_FaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels)
-, m_SurfaceMeshNodeTypesArrayName(SIMPL::VertexData::SurfaceMeshNodeType)
-, m_DeleteTempFiles(true)
-, m_FeatureIdsArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
-, m_FeatureIds(nullptr)
-{
-}
+M3CSliceBySlice::M3CSliceBySlice(), m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds), m_FeatureIds(nullptr) = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -93,10 +93,6 @@ private:
 //
 // -----------------------------------------------------------------------------
 ConvertQuaternion::ConvertQuaternion()
-: m_QuaternionDataArrayPath("", "", "")
-, m_OutputDataArrayPath("", "", "OutQuats")
-, m_DeleteOriginalData(false)
-, m_ConversionType(k_ToScalarVector)
 {
   initialize();
 }

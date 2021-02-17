@@ -142,8 +142,7 @@ public:
 
 private:
   StatsDelegate* m_StatsDelegate = nullptr;
-
   EMMPM_Data::Pointer m_Data = {};
   InitializationFunction::Pointer m_InitializationFunction = {};
-  int m_ErrorCode = {};
+  int m_ErrorCode = {0};
 };

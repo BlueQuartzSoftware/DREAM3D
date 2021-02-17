@@ -64,11 +64,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteIPFStandardTriangle::WriteIPFStandardTriangle()
-: m_OutputFile("")
-, m_ImageSize(512)
-{
-}
+WriteIPFStandardTriangle::WriteIPFStandardTriangle() = default;
 
 // -----------------------------------------------------------------------------
 //

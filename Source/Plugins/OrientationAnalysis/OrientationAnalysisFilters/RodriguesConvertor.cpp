@@ -102,7 +102,6 @@ private:
 //
 // -----------------------------------------------------------------------------
 RodriguesConvertor::RodriguesConvertor()
-: m_DeleteOriginalData(true)
 {
   initialize();
 }

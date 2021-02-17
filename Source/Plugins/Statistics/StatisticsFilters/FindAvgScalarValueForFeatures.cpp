@@ -57,12 +57,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindAvgScalarValueForFeatures::FindAvgScalarValueForFeatures()
-: m_SelectedCellArrayPath("", "", "")
-, m_FeatureIdsArrayPath("", "", "")
-, m_NewFeatureArrayArrayPath("", "", "")
-{
-}
+FindAvgScalarValueForFeatures::FindAvgScalarValueForFeatures() = default;
 
 // -----------------------------------------------------------------------------
 //

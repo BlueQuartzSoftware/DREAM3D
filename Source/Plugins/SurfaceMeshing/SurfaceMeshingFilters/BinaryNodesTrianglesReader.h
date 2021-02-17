@@ -189,13 +189,13 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FaceLabelsPtr;
   int32_t* m_FaceLabels = nullptr;
 
-  QString m_SurfaceDataContainerName = {};
-  QString m_VertexAttributeMatrixName = {};
-  QString m_FaceAttributeMatrixName = {};
-  QString m_FaceLabelsArrayName = {};
-  QString m_SurfaceMeshNodeTypesArrayName = {};
-  QString m_BinaryNodesFile = {};
-  QString m_BinaryTrianglesFile = {};
+  QString m_SurfaceDataContainerName = {SIMPL::Defaults::TriangleDataContainerName};
+  QString m_VertexAttributeMatrixName = {SIMPL::Defaults::VertexAttributeMatrixName};
+  QString m_FaceAttributeMatrixName = {SIMPL::Defaults::FaceAttributeMatrixName};
+  QString m_FaceLabelsArrayName = {SIMPL::FaceData::SurfaceMeshFaceLabels};
+  QString m_SurfaceMeshNodeTypesArrayName = {SIMPL::VertexData::SurfaceMeshNodeType};
+  QString m_BinaryNodesFile = {""};
+  QString m_BinaryTrianglesFile = {""};
 
 public:
   BinaryNodesTrianglesReader(const BinaryNodesTrianglesReader&) = delete;            // Copy Constructor Not Implemented

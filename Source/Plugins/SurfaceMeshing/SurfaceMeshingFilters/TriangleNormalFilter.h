@@ -176,7 +176,7 @@ private:
   std::weak_ptr<DataArray<double>> m_SurfaceMeshTriangleNormalsPtr;
   double* m_SurfaceMeshTriangleNormals = nullptr;
 
-  DataArrayPath m_SurfaceMeshTriangleNormalsArrayPath = {};
+  DataArrayPath m_SurfaceMeshTriangleNormalsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals};
 
 public:
   TriangleNormalFilter(const TriangleNormalFilter&) = delete;            // Copy Constructor Not Implemented

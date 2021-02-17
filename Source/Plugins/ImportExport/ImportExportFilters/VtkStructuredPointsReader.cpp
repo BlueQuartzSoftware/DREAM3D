@@ -69,19 +69,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VtkStructuredPointsReader::VtkStructuredPointsReader()
-: m_ReadCellData(true)
-, m_VolumeDataContainerName("ImageDataContainer_CellData")
-, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_ReadPointData(true)
-, m_VertexDataContainerName("ImageDataContainer_PointData")
-, m_VertexAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_InputFile("")
-, m_Comment("")
-, m_DatasetType("")
-, m_FileIsBinary(true)
-{
-}
+VtkStructuredPointsReader::VtkStructuredPointsReader() = default;
 
 // -----------------------------------------------------------------------------
 //

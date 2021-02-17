@@ -38,6 +38,7 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
@@ -178,5 +179,5 @@ public:
   ReverseTriangleWinding& operator=(ReverseTriangleWinding&&) = delete;      //        // Move assignment Not Implemented
 
 private:
-  DataArrayPath m_SurfaceDataContainerName = {};
+  DataArrayPath m_SurfaceDataContainerName = {SIMPL::Defaults::TriangleDataContainerName, "", ""};
 };

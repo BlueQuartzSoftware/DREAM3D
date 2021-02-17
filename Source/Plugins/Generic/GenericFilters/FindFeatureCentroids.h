@@ -195,8 +195,8 @@ private:
   std::weak_ptr<DataArray<float>> m_CentroidsPtr;
   float* m_Centroids = nullptr;
 
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_CentroidsArrayPath = {};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_CentroidsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Centroids};
 
 public:
   FindFeatureCentroids(const FindFeatureCentroids&) = delete;            // Copy Constructor Not Implemented

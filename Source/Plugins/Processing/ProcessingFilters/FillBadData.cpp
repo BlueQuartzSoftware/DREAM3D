@@ -54,13 +54,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FillBadData::FillBadData()
-: m_StoreAsNewPhase(false)
-, m_MinAllowedDefectSize(1)
-, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
-{
-}
+FillBadData::FillBadData() = default;
 
 // -----------------------------------------------------------------------------
 //

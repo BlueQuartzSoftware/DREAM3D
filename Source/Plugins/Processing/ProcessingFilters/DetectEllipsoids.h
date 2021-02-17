@@ -359,16 +359,16 @@ private:
   DataArrayPath m_FeatureIdsArrayPath = {};
   DataArrayPath m_DetectedEllipsoidsFeatureIdsArrayPath = {};
   DataArrayPath m_FeatureAttributeMatrixPath = {};
-  DataArrayPath m_EllipseFeatureAttributeMatrixPath = {};
-  QString m_CenterCoordinatesArrayName = {};
-  QString m_MajorAxisLengthArrayName = {};
-  QString m_MinorAxisLengthArrayName = {};
-  QString m_RotationalAnglesArrayName = {};
-  int m_MinFiberAxisLength = {};
-  int m_MaxFiberAxisLength = {};
-  float m_HoughTransformThreshold = {};
-  float m_MinAspectRatio = {};
-  int m_ImageScaleBarLength = {};
+  DataArrayPath m_EllipseFeatureAttributeMatrixPath = {"", "", ""};
+  QString m_CenterCoordinatesArrayName = {"EllipsoidsCenterCoords"};
+  QString m_MajorAxisLengthArrayName = {"EllipsoidsMajorAxisLength"};
+  QString m_MinorAxisLengthArrayName = {"EllipsoidsMinorAxisLength"};
+  QString m_RotationalAnglesArrayName = {"EllipsoidsRotationalAngles"};
+  int m_MinFiberAxisLength = {4};
+  int m_MaxFiberAxisLength = {18};
+  float m_HoughTransformThreshold = {0.5f};
+  float m_MinAspectRatio = {0.4f};
+  int m_ImageScaleBarLength = {100};
 
   static double m_img_scale_length;
   int32_t m_MaxFeatureId = 0;

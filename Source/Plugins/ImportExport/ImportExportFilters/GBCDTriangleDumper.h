@@ -229,11 +229,11 @@ private:
   std::weak_ptr<DataArray<float>> m_FeatureEulerAnglesPtr;
   float* m_FeatureEulerAngles = nullptr;
 
-  QString m_OutputFile = {};
-  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
-  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {};
-  DataArrayPath m_SurfaceMeshFaceAreasArrayPath = {};
-  DataArrayPath m_FeatureEulerAnglesArrayPath = {};
+  QString m_OutputFile = {""};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
+  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals};
+  DataArrayPath m_SurfaceMeshFaceAreasArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceAreas};
+  DataArrayPath m_FeatureEulerAnglesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgEulerAngles};
 
 public:
   GBCDTriangleDumper(const GBCDTriangleDumper&) = delete;            // Copy Constructor Not Implemented

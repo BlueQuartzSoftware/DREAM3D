@@ -35,22 +35,25 @@
 
 #pragma once
 
+#include <cmath>
 #include <memory>
-
-#include <QtCore/QString>
 #include <vector>
 
+#include <QtCore/QString>
+
 #include "SIMPLib/SIMPLib.h"
-#include "EbsdLib/LaueOps/LaueOps.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
 
-#include "Statistics/StatisticsDLLExport.h"
+#include "EbsdLib/LaueOps/LaueOps.h"
 
 #include "Statistics/StatisticsConstants.h"
+#include "Statistics/StatisticsDLLExport.h"
 #include "Statistics/StatisticsVersion.h"
 /**
  * @class CorrelateValuesWithVectorDirection CorrelateValuesWithVectorDirection.h DREAM3DLib/GenericFilters/CorrelateValuesWithVectorDirection.h
@@ -217,15 +220,15 @@ private:
   std::weak_ptr<DataArray<float>> m_VectorDataPtr;
   float* m_VectorData = nullptr;
 
-  DataArrayPath m_CorrelatedDataArrayPath = {};
-  DataArrayPath m_VectorDataArrayPath = {};
-  QString m_Logfile = {};
+  DataArrayPath m_CorrelatedDataArrayPath = {"", "", ""};
+  DataArrayPath m_VectorDataArrayPath = {"", "", ""};
+  QString m_Logfile = {"CorrelateValuesWithVectorDirection.log"};
 
   DoubleArrayType::Pointer m_LambertProj;
 
-  float m_MaxCoord;
-  int m_Dimension;
-  float m_StepSize;
+  float m_MaxCoord = {std::sqrt(SIMPLib::Constants::k_2PiF) / 2.0F};
+  int m_Dimension = {72};
+  float m_StepSize = {std::sqrt(SIMPLib::Constants::k_2PiF) / 72.0F};
 
   /**
    * @brief This function writes a set of Axis coordinates to that are needed

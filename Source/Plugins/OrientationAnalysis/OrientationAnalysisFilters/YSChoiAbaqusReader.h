@@ -336,19 +336,19 @@ private:
   std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
   unsigned int* m_CrystalStructures = nullptr;
 
-  DataArrayPath m_DataContainerName = {};
-  QString m_CellEnsembleAttributeMatrixName = {};
-  QString m_CellFeatureAttributeMatrixName = {};
-  QString m_CellAttributeMatrixName = {};
-  QString m_InputFile = {};
-  QString m_InputFeatureInfoFile = {};
-  QString m_CellEulerAnglesArrayName = {};
-  QString m_QuatsArrayName = {};
-  QString m_AvgQuatsArrayName = {};
-  QString m_CellPhasesArrayName = {};
-  QString m_SurfaceFeaturesArrayName = {};
-  QString m_FeatureIdsArrayName = {};
-  QString m_CrystalStructuresArrayName = {};
+  DataArrayPath m_DataContainerName = {SIMPL::Defaults::ImageDataContainerName, "", ""};
+  QString m_CellEnsembleAttributeMatrixName = {SIMPL::Defaults::CellEnsembleAttributeMatrixName};
+  QString m_CellFeatureAttributeMatrixName = {SIMPL::Defaults::CellFeatureAttributeMatrixName};
+  QString m_CellAttributeMatrixName = {SIMPL::Defaults::CellAttributeMatrixName};
+  QString m_InputFile = {""};
+  QString m_InputFeatureInfoFile = {""};
+  QString m_CellEulerAnglesArrayName = {SIMPL::CellData::EulerAngles};
+  QString m_QuatsArrayName = {SIMPL::CellData::Quats};
+  QString m_AvgQuatsArrayName = {SIMPL::FeatureData::AvgQuats};
+  QString m_CellPhasesArrayName = {SIMPL::CellData::Phases};
+  QString m_SurfaceFeaturesArrayName = {SIMPL::FeatureData::SurfaceFeatures};
+  QString m_FeatureIdsArrayName = {SIMPL::CellData::FeatureIds};
+  QString m_CrystalStructuresArrayName = {SIMPL::EnsembleData::CrystalStructures};
 
   void updateCellInstancePointers();
 

@@ -64,19 +64,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CalculateArrayHistogram::CalculateArrayHistogram()
-: m_SelectedArrayPath("", "", "")
-, m_NumberOfBins(-1)
-, m_MinRange(0.0f)
-, m_MaxRange(1.0f)
-, m_UserDefinedRange(false)
-, m_Normalize(false)
-, m_NewAttributeMatrixName(SIMPL::Defaults::NewAttributeMatrixName)
-, m_NewDataArrayName(SIMPL::CellData::Histogram)
-, m_NewDataContainer(false)
-, m_NewDataContainerName(SIMPL::Defaults::NewDataContainerName)
-{
-}
+CalculateArrayHistogram::CalculateArrayHistogram() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -209,9 +209,9 @@ private:
   std::weak_ptr<DataArray<float>> m_BoundaryCellFractionsPtr;
   float* m_BoundaryCellFractions = nullptr;
 
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_BoundaryCellsArrayPath = {};
-  DataArrayPath m_BoundaryCellFractionsArrayPath = {};
+  DataArrayPath m_FeatureIdsArrayPath = {"", "", ""};
+  DataArrayPath m_BoundaryCellsArrayPath = {"", "", ""};
+  DataArrayPath m_BoundaryCellFractionsArrayPath = {"", "", ""};
 
 public:
   FindBoundaryElementFractions(const FindBoundaryElementFractions&) = delete;            // Copy Constructor Not Implemented

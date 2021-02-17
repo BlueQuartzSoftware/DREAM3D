@@ -236,14 +236,14 @@ private:
   std::weak_ptr<DataArray<bool>> m_MaskPtr;
   bool* m_Mask = nullptr;
 
-  unsigned int m_Direction = {};
-  int m_NumIterations = {};
-  bool m_XDirOn = {};
-  bool m_YDirOn = {};
-  bool m_ZDirOn = {};
-  DataArrayPath m_MaskArrayPath = {};
+  unsigned int m_Direction = {0};
+  int m_NumIterations = {1};
+  bool m_XDirOn = {true};
+  bool m_YDirOn = {true};
+  bool m_ZDirOn = {true};
+  DataArrayPath m_MaskArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask};
 
-  bool* m_MaskCopy;
+  bool* m_MaskCopy = {nullptr};
 
 public:
   ErodeDilateMask(const ErodeDilateMask&) = delete;            // Copy Constructor Not Implemented

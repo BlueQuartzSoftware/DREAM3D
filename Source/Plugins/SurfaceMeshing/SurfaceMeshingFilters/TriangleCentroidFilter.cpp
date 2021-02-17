@@ -102,10 +102,7 @@ public:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TriangleCentroidFilter::TriangleCentroidFilter()
-: m_SurfaceMeshTriangleCentroidsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceCentroids)
-{
-}
+TriangleCentroidFilter::TriangleCentroidFilter() = default;
 
 // -----------------------------------------------------------------------------
 //

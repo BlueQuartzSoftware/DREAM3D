@@ -239,11 +239,11 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFacePhasesPtr;
   int32_t* m_SurfaceMeshFacePhases = nullptr;
 
-  QString m_OutputStlDirectory = {};
-  QString m_OutputStlPrefix = {};
-  bool m_GroupByPhase = {};
-  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
-  DataArrayPath m_SurfaceMeshFacePhasesArrayPath = {};
+  QString m_OutputStlDirectory = {""};
+  QString m_OutputStlPrefix = {""};
+  bool m_GroupByPhase = {false};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
+  DataArrayPath m_SurfaceMeshFacePhasesArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFacePhases};
 
   /**
    * @brief writeHeader Writes the header of the STL file

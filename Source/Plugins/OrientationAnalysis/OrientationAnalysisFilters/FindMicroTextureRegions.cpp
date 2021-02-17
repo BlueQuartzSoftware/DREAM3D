@@ -53,13 +53,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindMicroTextureRegions::FindMicroTextureRegions()
-: m_CellFeatureAttributeMatrixName(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "")
-, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_MicroTextureRegionNumCellsArrayName("MicroTextureRegionNumCells")
-, m_MicroTextureRegionFractionOccupiedArrayName("MicroTextureRegionFractionOccupied")
-{
-}
+FindMicroTextureRegions::FindMicroTextureRegions() = default;
 
 // -----------------------------------------------------------------------------
 //

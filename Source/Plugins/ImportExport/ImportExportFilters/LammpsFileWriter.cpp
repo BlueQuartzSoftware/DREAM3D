@@ -51,11 +51,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LammpsFileWriter::LammpsFileWriter()
-: m_VertexDataContainerName(SIMPL::Defaults::VertexDataContainerName)
-, m_LammpsFile("")
-{
-}
+LammpsFileWriter::LammpsFileWriter() = default;
 
 // -----------------------------------------------------------------------------
 //

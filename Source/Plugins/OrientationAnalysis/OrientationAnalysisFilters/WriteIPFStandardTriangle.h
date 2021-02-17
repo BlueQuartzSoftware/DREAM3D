@@ -224,6 +224,6 @@ public:
 
 private:
   int m_LaueClass = {};
-  QString m_OutputFile = {};
-  int m_ImageSize = {};
+  QString m_OutputFile = {""};
+  int m_ImageSize = {512};
 };

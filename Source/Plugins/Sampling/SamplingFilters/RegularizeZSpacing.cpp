@@ -54,12 +54,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RegularizeZSpacing::RegularizeZSpacing()
-: m_CellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
-, m_InputFile("")
-, m_NewZRes(1.0f)
-{
-}
+RegularizeZSpacing::RegularizeZSpacing() = default;
 
 // -----------------------------------------------------------------------------
 //

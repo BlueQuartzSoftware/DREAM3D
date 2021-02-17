@@ -116,8 +116,8 @@ public:
   PrecipitateRolledPreset& operator=(PrecipitateRolledPreset&&) = delete;      // Move Assignment Not Implemented
 
 private:
-  float m_AspectRatio1 = {};
-  float m_AspectRatio2 = {};
+  float m_AspectRatio1 = {1.0};
+  float m_AspectRatio2 = {1.0};
 };
 
 DECLARE_FACTORY_CLASS(PrecipitateRolledPresetFactory, PrecipitateRolledPreset, "Precipitate Rolled")

@@ -226,9 +226,9 @@ private:
   std::weak_ptr<DataArray<bool>> m_FlaggedFeaturesPtr;
   bool* m_FlaggedFeatures = nullptr;
 
-  bool m_FillRemovedFeatures = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_FlaggedFeaturesArrayPath = {};
+  bool m_FillRemovedFeatures = {true};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_FlaggedFeaturesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Active};
   QVector<DataArrayPath> m_IgnoredDataArrayPaths = {};
 
   int32_t* m_Neighbors;

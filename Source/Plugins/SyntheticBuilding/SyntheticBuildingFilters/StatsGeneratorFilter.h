@@ -320,12 +320,12 @@ public:
   StatsGeneratorFilter& operator=(StatsGeneratorFilter&&) = delete;      // Move Assignment Not Implemented
 
 private:
-  DataArrayPath m_StatsGeneratorDataContainerName = {};
-  QString m_CellEnsembleAttributeMatrixName = {};
-  QString m_StatsDataArrayName = {};
-  QString m_CrystalStructuresArrayName = {};
-  QString m_PhaseTypesArrayName = {};
-  QString m_PhaseNamesArrayName = {};
+  DataArrayPath m_StatsGeneratorDataContainerName = {SIMPL::Defaults::StatsGenerator, "", ""};
+  QString m_CellEnsembleAttributeMatrixName = {SIMPL::Defaults::CellEnsembleAttributeMatrixName};
+  QString m_StatsDataArrayName = {SIMPL::EnsembleData::Statistics};
+  QString m_CrystalStructuresArrayName = {SIMPL::EnsembleData::CrystalStructures};
+  QString m_PhaseTypesArrayName = {SIMPL::EnsembleData::PhaseTypes};
+  QString m_PhaseNamesArrayName = {SIMPL::EnsembleData::PhaseName};
   StatsDataArray::Pointer m_StatsDataArray = {};
   UInt32ArrayType::Pointer m_CrystalStructures = {};
   UInt32ArrayType::Pointer m_PhaseTypes = {};

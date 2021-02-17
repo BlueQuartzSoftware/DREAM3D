@@ -69,10 +69,6 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 ImportEbsdMontage::ImportEbsdMontage()
-: m_MontageName("Montage")
-, m_DataContainerName("OIM Data Container")
-, m_CellEnsembleAttributeMatrixName("Phase Data")
-, m_CellAttributeMatrixName("Scan Data")
 {
   initialize();
 }

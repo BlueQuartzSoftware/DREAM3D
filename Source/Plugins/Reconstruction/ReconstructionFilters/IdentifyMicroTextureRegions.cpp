@@ -239,16 +239,6 @@ private:
 //
 // -----------------------------------------------------------------------------
 IdentifyMicroTextureRegions::IdentifyMicroTextureRegions()
-: m_NewCellFeatureAttributeMatrixName(SIMPL::Defaults::NewCellFeatureAttributeMatrixName)
-, m_CAxisTolerance(1.0f)
-, m_MinMTRSize(1.0f)
-, m_MinVolFrac(1.0f)
-, m_RandomizeMTRIds(false)
-, m_CAxisLocationsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::CAxisLocation)
-, m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
-, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
-, m_MTRIdsArrayName(SIMPL::CellData::ParentIds)
-, m_ActiveArrayName(SIMPL::FeatureData::Active)
 {
   m_CAxisToleranceRad = 0.0f;
 }

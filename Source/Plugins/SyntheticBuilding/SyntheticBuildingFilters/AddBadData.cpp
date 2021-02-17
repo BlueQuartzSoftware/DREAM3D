@@ -53,14 +53,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AddBadData::AddBadData()
-: m_GBEuclideanDistancesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::ElementAttributeMatrixName, SIMPL::CellData::GBEuclideanDistances)
-, m_PoissonNoise(true)
-, m_PoissonVolFraction(0.0f)
-, m_BoundaryNoise(false)
-, m_BoundaryVolFraction(0.0f)
-{
-}
+AddBadData::AddBadData() = default;
 
 // -----------------------------------------------------------------------------
 //

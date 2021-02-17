@@ -193,9 +193,9 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
   int32_t* m_SurfaceMeshFaceLabels = nullptr;
 
-  QString m_SurfaceDataContainerName = {};
-  QString m_SurfaceMeshNodeFacesArrayName = {};
-  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+  QString m_SurfaceDataContainerName = {SIMPL::Defaults::DataContainerName};
+  QString m_SurfaceMeshNodeFacesArrayName = {SIMPL::VertexData::SurfaceMeshNodeFaces};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::DataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
 
   bool m_DoNodeFaceConnectivityFilter;
 

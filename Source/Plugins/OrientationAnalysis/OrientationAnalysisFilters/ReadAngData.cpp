@@ -94,15 +94,7 @@ ReadAngDataPrivate::ReadAngDataPrivate(ReadAngData* ptr)
 //
 // -----------------------------------------------------------------------------
 ReadAngData::ReadAngData()
-: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
-, m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
-, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_FileWasRead(false)
-, m_MaterialNameArrayName(SIMPL::EnsembleData::MaterialName)
-, m_InputFile("")
-, m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
-, m_Manufacturer(EbsdLib::OEM::Unknown)
-, d_ptr(new ReadAngDataPrivate(this))
+: d_ptr(new ReadAngDataPrivate(this))
 {
 }
 

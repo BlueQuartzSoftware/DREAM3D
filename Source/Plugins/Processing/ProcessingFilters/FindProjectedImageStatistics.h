@@ -262,13 +262,13 @@ private:
   std::weak_ptr<DataArray<float>> m_ProjectedImageVarPtr;
   float* m_ProjectedImageVar = nullptr;
 
-  DataArrayPath m_SelectedArrayPath = {};
-  unsigned int m_Plane = {};
-  QString m_ProjectedImageMinArrayName = {};
-  QString m_ProjectedImageMaxArrayName = {};
-  QString m_ProjectedImageAvgArrayName = {};
-  QString m_ProjectedImageStdArrayName = {};
-  QString m_ProjectedImageVarArrayName = {};
+  DataArrayPath m_SelectedArrayPath = {"", "", ""};
+  unsigned int m_Plane = {0};
+  QString m_ProjectedImageMinArrayName = {SIMPL::CellData::ProjectedImageMin};
+  QString m_ProjectedImageMaxArrayName = {SIMPL::CellData::ProjectedImageMax};
+  QString m_ProjectedImageAvgArrayName = {SIMPL::CellData::ProjectedImageAvg};
+  QString m_ProjectedImageStdArrayName = {SIMPL::CellData::ProjectedImageStd};
+  QString m_ProjectedImageVarArrayName = {SIMPL::CellData::ProjectedImageVar};
 
 public:
   FindProjectedImageStatistics(const FindProjectedImageStatistics&) = delete;            // Copy Constructor Not Implemented

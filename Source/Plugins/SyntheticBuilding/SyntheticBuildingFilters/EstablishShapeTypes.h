@@ -206,8 +206,8 @@ private:
   std::weak_ptr<DataArray<ShapeType::EnumType>> m_ShapeTypesPtr;
   ShapeType::EnumType* m_ShapeTypes = nullptr;
 
-  DataArrayPath m_InputPhaseTypesArrayPath = {};
-  QString m_ShapeTypesArrayName = {};
+  DataArrayPath m_InputPhaseTypesArrayPath = {SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes};
+  QString m_ShapeTypesArrayName = {SIMPL::EnsembleData::ShapeTypes};
   ShapeType::Types m_ShapeTypeData = {};
 
 public:

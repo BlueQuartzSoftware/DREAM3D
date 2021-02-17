@@ -56,12 +56,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindBoundaryElementFractions::FindBoundaryElementFractions()
-: m_FeatureIdsArrayPath("", "", "")
-, m_BoundaryCellsArrayPath("", "", "")
-, m_BoundaryCellFractionsArrayPath("", "", "")
-{
-}
+FindBoundaryElementFractions::FindBoundaryElementFractions() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -245,11 +245,11 @@ private:
   std::weak_ptr<DataArray<float>> m_KernelAverageMisorientationsPtr;
   float* m_KernelAverageMisorientations = nullptr;
 
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_CellPhasesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  DataArrayPath m_QuatsArrayPath = {};
-  QString m_KernelAverageMisorientationsArrayName = {};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_CellPhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases};
+  DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
+  DataArrayPath m_QuatsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats};
+  QString m_KernelAverageMisorientationsArrayName = {SIMPL::CellData::KernelAverageMisorientations};
   IntVec3Type m_KernelSize = {};
 
 public:

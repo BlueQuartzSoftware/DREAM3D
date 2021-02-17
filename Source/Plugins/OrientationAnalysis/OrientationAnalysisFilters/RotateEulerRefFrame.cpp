@@ -117,8 +117,6 @@ public:
 //
 // -----------------------------------------------------------------------------
 RotateEulerRefFrame::RotateEulerRefFrame()
-: m_RotationAngle(0.0f)
-, m_CellEulerAnglesArrayPath("", "", "")
 {
   m_RotationAxis[0] = 0.0f;
   m_RotationAxis[1] = 0.0f;

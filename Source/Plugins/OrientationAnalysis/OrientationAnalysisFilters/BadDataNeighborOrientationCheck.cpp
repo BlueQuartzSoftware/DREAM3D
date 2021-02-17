@@ -57,12 +57,6 @@
 //
 // -----------------------------------------------------------------------------
 BadDataNeighborOrientationCheck::BadDataNeighborOrientationCheck()
-: m_MisorientationTolerance(5.0f)
-, m_NumberOfNeighbors(6)
-, m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
-, m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
-, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
-, m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
 {
   m_OrientationOps = LaueOps::GetAllOrientationOps();
 }

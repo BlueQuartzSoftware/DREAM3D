@@ -297,16 +297,16 @@ private:
   std::weak_ptr<DataArray<float>> m_SurfaceMeshTwinBoundarySchmidFactorsPtr;
   float* m_SurfaceMeshTwinBoundarySchmidFactors = nullptr;
 
-  bool m_WriteFile = {};
-  QString m_TwinBoundarySchmidFactorsFile = {};
+  bool m_WriteFile = {false};
+  QString m_TwinBoundarySchmidFactorsFile = {""};
   FloatVec3Type m_LoadingDir = {};
-  DataArrayPath m_AvgQuatsArrayPath = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
-  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {};
-  DataArrayPath m_SurfaceMeshTwinBoundaryArrayPath = {};
-  QString m_SurfaceMeshTwinBoundarySchmidFactorsArrayName = {};
+  DataArrayPath m_AvgQuatsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats};
+  DataArrayPath m_FeaturePhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases};
+  DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
+  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals};
+  DataArrayPath m_SurfaceMeshTwinBoundaryArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshTwinBoundary};
+  QString m_SurfaceMeshTwinBoundarySchmidFactorsArrayName = {SIMPL::FaceData::SurfaceMeshTwinBoundarySchmidFactors};
 
   LaueOpsContainer m_OrientationOps;
   /**

@@ -53,14 +53,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-NodesTrianglesToVtk::NodesTrianglesToVtk()
-: m_NodesFile("")
-, m_TrianglesFile("")
-, m_OutputVtkFile("")
-, m_WriteBinaryFile(false)
-, m_WriteConformalMesh(true)
-{
-}
+NodesTrianglesToVtk::NodesTrianglesToVtk() = default;
 
 // -----------------------------------------------------------------------------
 //

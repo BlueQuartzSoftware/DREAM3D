@@ -322,18 +322,18 @@ private:
   std::weak_ptr<DataArray<bool>> m_BiasedFeaturesPtr;
   bool* m_BiasedFeatures = nullptr;
 
-  QString m_ErrorOutputFile = {};
-  int m_NumberOfBins = {};
-  int m_PhaseNumber = {};
-  DataArrayPath m_CellEnsembleAttributeMatrixName = {};
-  bool m_RemoveBiasedFeatures = {};
+  QString m_ErrorOutputFile = {""};
+  int m_NumberOfBins = {1};
+  int m_PhaseNumber = {1};
+  DataArrayPath m_CellEnsembleAttributeMatrixName = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, ""};
+  bool m_RemoveBiasedFeatures = {false};
   DataArrayPath m_BiasedFeaturesArrayPath = {};
-  DataArrayPath m_EquivalentDiametersArrayPath = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_CentroidsArrayPath = {};
-  QString m_ClusteringListArrayName = {};
-  QString m_NewEnsembleArrayArrayName = {};
-  QString m_MaxMinArrayName = {};
+  DataArrayPath m_EquivalentDiametersArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::EquivalentDiameters};
+  DataArrayPath m_FeaturePhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases};
+  DataArrayPath m_CentroidsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Centroids};
+  QString m_ClusteringListArrayName = {SIMPL::FeatureData::ClusteringList};
+  QString m_NewEnsembleArrayArrayName = {"RDF"};
+  QString m_MaxMinArrayName = {"RDFMaxMinDistances"};
 
   NeighborList<float>::WeakPointer m_ClusteringList;
   std::vector<float> m_RandomCentroids;

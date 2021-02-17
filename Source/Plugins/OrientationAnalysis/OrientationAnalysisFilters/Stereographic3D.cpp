@@ -125,8 +125,6 @@ private:
 //
 // -----------------------------------------------------------------------------
 Stereographic3D::Stereographic3D()
-: m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
-, m_CoordinatesArrayName("Coordinates")
 {
   initialize();
 }

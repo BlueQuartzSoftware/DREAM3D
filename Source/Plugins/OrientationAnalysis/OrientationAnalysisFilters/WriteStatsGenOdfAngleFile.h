@@ -290,15 +290,15 @@ private:
   std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
   bool* m_GoodVoxels = nullptr;
 
-  QString m_OutputFile = {};
-  float m_Weight = {};
-  int m_Sigma = {};
-  int m_Delimiter = {};
-  DataArrayPath m_CellPhasesArrayPath = {};
-  DataArrayPath m_CellEulerAnglesArrayPath = {};
-  DataArrayPath m_GoodVoxelsArrayPath = {};
-  bool m_ConvertToDegrees = {};
-  bool m_UseGoodVoxels = {};
+  QString m_OutputFile = {""};
+  float m_Weight = {1.0f};
+  int m_Sigma = {1};
+  int m_Delimiter = {2};
+  DataArrayPath m_CellPhasesArrayPath = {"", "", ""};
+  DataArrayPath m_CellEulerAnglesArrayPath = {"", "", ""};
+  DataArrayPath m_GoodVoxelsArrayPath = {"", "", ""};
+  bool m_ConvertToDegrees = {false};
+  bool m_UseGoodVoxels = {false};
 
 public:
   WriteStatsGenOdfAngleFile(const WriteStatsGenOdfAngleFile&) = delete;            // Copy Constructor Not Implemented

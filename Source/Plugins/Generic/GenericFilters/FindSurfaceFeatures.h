@@ -200,8 +200,8 @@ private:
   std::weak_ptr<DataArray<bool>> m_SurfaceFeaturesPtr;
   bool* m_SurfaceFeatures = nullptr;
 
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_SurfaceFeaturesArrayPath = {};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_SurfaceFeaturesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::SurfaceFeatures};
 
 public:
   FindSurfaceFeatures(const FindSurfaceFeatures&) = delete;            // Copy Constructor Not Implemented

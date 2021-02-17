@@ -218,11 +218,11 @@ private:
   std::weak_ptr<DataArray<float>> m_FZQuatsPtr;
   float* m_FZQuats = nullptr;
 
-  DataArrayPath m_CellPhasesArrayPath = {};
-  DataArrayPath m_QuatsArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  bool m_UseGoodVoxels = {};
-  DataArrayPath m_GoodVoxelsArrayPath = {};
+  DataArrayPath m_CellPhasesArrayPath = {"", "", ""};
+  DataArrayPath m_QuatsArrayPath = {"", "", ""};
+  DataArrayPath m_CrystalStructuresArrayPath = {"", "", ""};
+  bool m_UseGoodVoxels = {false};
+  DataArrayPath m_GoodVoxelsArrayPath = {"", "", ""};
   DataArrayPath m_FZQuatsArrayPath = {};
 
   LaueOpsContainer m_OrientationOps;

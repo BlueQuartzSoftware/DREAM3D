@@ -318,16 +318,16 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_QPManhattanDistancesPtr;
   int32_t* m_QPManhattanDistances = nullptr;
 
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  QString m_GBDistancesArrayName = {};
-  QString m_TJDistancesArrayName = {};
-  QString m_QPDistancesArrayName = {};
-  QString m_NearestNeighborsArrayName = {};
-  bool m_DoBoundaries = {};
-  bool m_DoTripleLines = {};
-  bool m_DoQuadPoints = {};
-  bool m_SaveNearestNeighbors = {};
-  bool m_CalcManhattanDist = {};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  QString m_GBDistancesArrayName = {SIMPL::CellData::GBManhattanDistances};
+  QString m_TJDistancesArrayName = {SIMPL::CellData::TJManhattanDistances};
+  QString m_QPDistancesArrayName = {SIMPL::CellData::QPManhattanDistances};
+  QString m_NearestNeighborsArrayName = {SIMPL::CellData::NearestNeighbors};
+  bool m_DoBoundaries = {true};
+  bool m_DoTripleLines = {false};
+  bool m_DoQuadPoints = {false};
+  bool m_SaveNearestNeighbors = {false};
+  bool m_CalcManhattanDist = {true};
 
   // Full Euclidean Distance Arrays
 

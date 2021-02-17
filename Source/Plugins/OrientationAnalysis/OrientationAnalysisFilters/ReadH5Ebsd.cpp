@@ -99,20 +99,6 @@ QSet<QString> convertToQt(std::set<std::string>& in)
 //
 // -----------------------------------------------------------------------------
 ReadH5Ebsd::ReadH5Ebsd()
-: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
-, m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
-, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_PhaseNameArrayName("")
-, m_MaterialNameArrayName(SIMPL::EnsembleData::MaterialName)
-, m_InputFile("")
-, m_UseTransformations(true)
-, m_AngleRepresentation(EbsdLib::AngleRepresentation::Radians)
-, m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
-, m_Manufacturer(EbsdLib::OEM::Unknown)
-, m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures)
-, m_LatticeConstantsArrayName(SIMPL::EnsembleData::LatticeConstants)
-, m_CellPhasesArrayName(SIMPL::CellData::Phases)
-, m_CellEulerAnglesArrayName(SIMPL::CellData::EulerAngles)
 {
   m_SampleTransformation.angle = 0.0f;
   m_SampleTransformation.h = 0.0f;

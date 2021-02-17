@@ -41,15 +41,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindNRingNeighbors::FindNRingNeighbors()
-: m_TriangleId(-1)
-, m_RegionId0(0)
-, m_RegionId1(0)
-, m_Ring(2)
-, m_WriteBinaryFile(false)
-, m_WriteConformalMesh(true)
-{
-}
+FindNRingNeighbors::FindNRingNeighbors() = default;
 
 // -----------------------------------------------------------------------------
 //

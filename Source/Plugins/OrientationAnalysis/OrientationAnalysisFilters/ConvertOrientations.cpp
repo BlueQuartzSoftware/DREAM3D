@@ -62,11 +62,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ConvertOrientations::ConvertOrientations()
-: m_InputType(0)
-, m_OutputType(1)
-{
-}
+ConvertOrientations::ConvertOrientations() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -140,5 +140,5 @@ private:
   StatsDelegate* m_StatsDelegate = nullptr;
 
   EMMPM_Data::Pointer m_Data = {};
-  int m_ErrorCode = {};
+  int m_ErrorCode = {0};
 };

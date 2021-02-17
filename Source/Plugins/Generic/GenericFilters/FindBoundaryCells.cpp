@@ -53,13 +53,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindBoundaryCells::FindBoundaryCells()
-: m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_BoundaryCellsArrayName(SIMPL::CellData::BoundaryCells)
-, m_IgnoreFeatureZero(true)
-, m_IncludeVolumeBoundary(false)
-{
-}
+FindBoundaryCells::FindBoundaryCells() = default;
 
 // -----------------------------------------------------------------------------
 //

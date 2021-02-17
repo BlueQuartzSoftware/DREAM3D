@@ -175,9 +175,9 @@ private:
   IDataArrayWkPtrType m_DifferenceMapPtr;
   void* m_DifferenceMap = nullptr;
 
-  DataArrayPath m_FirstInputArrayPath = {};
-  DataArrayPath m_SecondInputArrayPath = {};
-  DataArrayPath m_DifferenceMapArrayPath = {};
+  DataArrayPath m_FirstInputArrayPath = {"", "", ""};
+  DataArrayPath m_SecondInputArrayPath = {"", "", ""};
+  DataArrayPath m_DifferenceMapArrayPath = {"", "", "DifferenceMap"};
 
 public:
   FindDifferenceMap(const FindDifferenceMap&) = delete;            // Copy Constructor Not Implemented

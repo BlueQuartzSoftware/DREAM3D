@@ -76,23 +76,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CreateLambertSphere::CreateLambertSphere()
-: m_Hemisphere(0)
-, m_ImageDataArrayPath(DataArrayPath())
-, m_QuadDataContainerName(SIMPL::Defaults::QuadDataContainerName)
-, m_TriangleDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
-, m_EdgeDataContainerName(SIMPL::Defaults::EdgeDataContainerName)
-, m_VertexDataContainerName(SIMPL::Defaults::VertexDataContainerName)
-, m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName)
-, m_EdgeAttributeMatrixName(SIMPL::Defaults::EdgeAttributeMatrixName)
-, m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName)
-, m_CreateVertexGeometry(true)
-, m_CreateEdgeGeometry(true)
-, m_CreateTriangleGeometry(true)
-, m_CreateQuadGeometry(true)
-, m_UseExistingImage(true)
-{
-}
+CreateLambertSphere::CreateLambertSphere() = default;
 
 // -----------------------------------------------------------------------------
 //

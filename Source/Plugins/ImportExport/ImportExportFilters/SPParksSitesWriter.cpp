@@ -55,10 +55,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SPParksSitesWriter::SPParksSitesWriter()
-: m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-{
-}
+SPParksSitesWriter::SPParksSitesWriter() = default;
 
 // -----------------------------------------------------------------------------
 //

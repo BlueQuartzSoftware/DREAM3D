@@ -58,11 +58,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindSurfaceFeatures::FindSurfaceFeatures()
-: m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_SurfaceFeaturesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::SurfaceFeatures)
-{
-}
+FindSurfaceFeatures::FindSurfaceFeatures() = default;
 
 // -----------------------------------------------------------------------------
 //

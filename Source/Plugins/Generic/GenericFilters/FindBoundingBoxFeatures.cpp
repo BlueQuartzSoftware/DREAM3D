@@ -60,14 +60,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindBoundingBoxFeatures::FindBoundingBoxFeatures()
-: m_CalcByPhase(false)
-, m_CentroidsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Centroids)
-, m_PhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
-, m_SurfaceFeaturesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::SurfaceFeatures)
-, m_BiasedFeaturesArrayName(SIMPL::FeatureData::BiasedFeatures)
-{
-}
+FindBoundingBoxFeatures::FindBoundingBoxFeatures() = default;
 
 // -----------------------------------------------------------------------------
 //

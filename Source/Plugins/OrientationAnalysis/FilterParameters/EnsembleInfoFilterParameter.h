@@ -216,7 +216,7 @@ public:
 
 private:
   QVector<QString> m_Choices = {};
-  bool m_ShowOperators = {};
+  bool m_ShowOperators = {true};
   IGeometry::Types m_DefaultGeometryTypes = {};
   AttributeMatrix::Types m_DefaultAttributeMatrixTypes = {};
   EnsembleInfoFilterParameter::SetterCallbackType m_SetterCallback = {};

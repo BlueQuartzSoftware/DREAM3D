@@ -67,20 +67,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindFeatureClustering::FindFeatureClustering()
-: m_ErrorOutputFile("")
-, m_NumberOfBins(1)
-, m_PhaseNumber(1)
-, m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, "")
-, m_RemoveBiasedFeatures(false)
-, m_EquivalentDiametersArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::EquivalentDiameters)
-, m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
-, m_CentroidsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Centroids)
-, m_ClusteringListArrayName(SIMPL::FeatureData::ClusteringList)
-, m_NewEnsembleArrayArrayName("RDF")
-, m_MaxMinArrayName("RDFMaxMinDistances")
-{
-}
+FindFeatureClustering::FindFeatureClustering() = default;
 
 // -----------------------------------------------------------------------------
 //

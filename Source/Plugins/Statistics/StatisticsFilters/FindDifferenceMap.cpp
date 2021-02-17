@@ -114,12 +114,7 @@ public:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindDifferenceMap::FindDifferenceMap()
-: m_FirstInputArrayPath("", "", "")
-, m_SecondInputArrayPath("", "", "")
-, m_DifferenceMapArrayPath("", "", "DifferenceMap")
-{
-}
+FindDifferenceMap::FindDifferenceMap() = default;
 
 // -----------------------------------------------------------------------------
 //

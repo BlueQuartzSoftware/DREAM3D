@@ -273,11 +273,11 @@ private:
   std::weak_ptr<DataArray<int8_t>> m_SurfaceMeshNodeTypePtr;
   int8_t* m_SurfaceMeshNodeType = nullptr;
 
-  QString m_OutputVtkFile = {};
-  bool m_WriteBinaryFile = {};
-  bool m_WriteConformalMesh = {};
-  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
-  DataArrayPath m_SurfaceMeshNodeTypeArrayPath = {};
+  QString m_OutputVtkFile = {""};
+  bool m_WriteBinaryFile = {false};
+  bool m_WriteConformalMesh = {true};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
+  DataArrayPath m_SurfaceMeshNodeTypeArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType};
   QVector<DataArrayPath> m_SelectedFaceArrays = {};
   QVector<DataArrayPath> m_SelectedVertexArrays = {};
 

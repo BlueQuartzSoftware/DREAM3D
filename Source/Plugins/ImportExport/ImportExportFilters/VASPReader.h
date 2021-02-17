@@ -249,11 +249,11 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_AtomTypesPtr;
   int32_t* m_AtomTypes = nullptr;
 
-  DataArrayPath m_VertexDataContainerName = {};
-  QString m_VertexAttributeMatrixName = {};
-  QString m_InputFile = {};
-  QString m_AtomVelocitiesArrayName = {};
-  QString m_AtomTypesArrayName = {};
+  DataArrayPath m_VertexDataContainerName = {SIMPL::Defaults::VertexDataContainerName, "", ""};
+  QString m_VertexAttributeMatrixName = {SIMPL::Defaults::VertexAttributeMatrixName};
+  QString m_InputFile = {""};
+  QString m_AtomVelocitiesArrayName = {SIMPL::VertexData::AtomVelocities};
+  QString m_AtomTypesArrayName = {SIMPL::VertexData::AtomTypes};
 
   QFile m_InStream;
 

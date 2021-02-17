@@ -188,8 +188,8 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
   int32_t* m_SurfaceMeshFaceLabels = nullptr;
 
-  QString m_OutputFile = {};
-  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+  QString m_OutputFile = {""};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
 
   /**
    * @brief writeHeader Writes the header of the .inp file

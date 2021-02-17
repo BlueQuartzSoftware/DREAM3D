@@ -57,14 +57,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMeshToVtk::SurfaceMeshToVtk()
-: m_OutputVtkFile("")
-, m_WriteBinaryFile(false)
-, m_WriteConformalMesh(true)
-, m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
-, m_SurfaceMeshNodeTypeArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType)
-{
-}
+SurfaceMeshToVtk::SurfaceMeshToVtk() = default;
 
 // -----------------------------------------------------------------------------
 //

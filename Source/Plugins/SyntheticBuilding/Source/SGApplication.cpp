@@ -45,9 +45,7 @@
 //
 // -----------------------------------------------------------------------------
 SGApplication::SGApplication(int& argc, char** argv)
-: QApplication(argc, argv)
-{
-}
+: QApplication(argc, argv) = default;
 
 // -----------------------------------------------------------------------------
 //

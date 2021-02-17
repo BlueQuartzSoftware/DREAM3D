@@ -61,11 +61,6 @@
 //
 // -----------------------------------------------------------------------------
 FindKernelAvgMisorientations::FindKernelAvgMisorientations()
-: m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
-, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
-, m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
-, m_KernelAverageMisorientationsArrayName(SIMPL::CellData::KernelAverageMisorientations)
 {
   m_KernelSize[0] = 1;
   m_KernelSize[1] = 1;

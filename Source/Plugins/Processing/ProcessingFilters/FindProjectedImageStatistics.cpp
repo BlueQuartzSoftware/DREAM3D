@@ -148,16 +148,7 @@ private:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindProjectedImageStatistics::FindProjectedImageStatistics()
-: m_SelectedArrayPath("", "", "")
-, m_Plane(0)
-, m_ProjectedImageMinArrayName(SIMPL::CellData::ProjectedImageMin)
-, m_ProjectedImageMaxArrayName(SIMPL::CellData::ProjectedImageMax)
-, m_ProjectedImageAvgArrayName(SIMPL::CellData::ProjectedImageAvg)
-, m_ProjectedImageStdArrayName(SIMPL::CellData::ProjectedImageStd)
-, m_ProjectedImageVarArrayName(SIMPL::CellData::ProjectedImageVar)
-{
-}
+FindProjectedImageStatistics::FindProjectedImageStatistics() = default;
 
 // -----------------------------------------------------------------------------
 //

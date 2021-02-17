@@ -250,12 +250,12 @@ private:
   std::weak_ptr<DataArray<float>> m_AvgQuatsPtr;
   float* m_AvgQuats = nullptr;
 
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_CellPhasesArrayPath = {};
-  DataArrayPath m_QuatsArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  DataArrayPath m_AvgQuatsArrayPath = {};
-  DataArrayPath m_AvgEulerAnglesArrayPath = {};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_CellPhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases};
+  DataArrayPath m_QuatsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats};
+  DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
+  DataArrayPath m_AvgQuatsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats};
+  DataArrayPath m_AvgEulerAnglesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::CellData::EulerAngles};
 
   LaueOpsContainer m_OrientationOps;
 

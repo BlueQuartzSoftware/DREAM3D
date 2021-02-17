@@ -41,6 +41,10 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/PhaseType.h"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
+
+// Needed for AxisAngle_t and Crystal Symmetry constants
+#include "EbsdLib/Core/EbsdLibConstants.h"
+
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/AbstractMicrostructurePreset.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/MicrostructurePresetManager.h"
 
@@ -202,14 +206,14 @@ public:
   StatsGenWidget& operator=(StatsGenWidget&&) = delete;      // Move Assignment Not Implemented
 
 private:
-  PhaseType::Type m_PhaseType = {};
-  unsigned int m_CrystalStructure = {};
-  int m_PhaseIndex = {};
-  float m_PhaseFraction = {};
-  float m_TotalPhaseFraction = {};
-  bool m_DataHasBeenGenerated = {};
-  bool m_BulkLoadFailure = {};
-  QString m_TabTitle = {};
-  QString m_PhaseName = {};
+  PhaseType::Type m_PhaseType = {PhaseType::Type::Primary};
+  unsigned int m_CrystalStructure = {EbsdLib::CrystalStructure::Cubic_High};
+  int m_PhaseIndex = {0};
+  float m_PhaseFraction = {1.0};
+  float m_TotalPhaseFraction = {1.0};
+  bool m_DataHasBeenGenerated = {false};
+  bool m_BulkLoadFailure = {false};
+  QString m_TabTitle = {"Unknown Phase"};
+  QString m_PhaseName = {"Unknown Phase"};
   AbstractMicrostructurePreset::Pointer m_MicroPreset = {};
 };

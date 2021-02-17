@@ -57,21 +57,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LaplacianSmoothing::LaplacianSmoothing()
-: m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
-, m_SurfaceMeshNodeTypeArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType)
-, m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
-, m_IterationSteps(1)
-, m_Lambda(0.1f)
-, m_SurfacePointLambda(0.0f)
-, m_TripleLineLambda(0.0f)
-, m_QuadPointLambda(0.0f)
-, m_SurfaceTripleLineLambda(0.0f)
-, m_SurfaceQuadPointLambda(0.0f)
-, m_UseTaubinSmoothing(false)
-, m_MuFactor(-1.03f)
-{
-}
+LaplacianSmoothing::LaplacianSmoothing() = default;
 
 // -----------------------------------------------------------------------------
 //

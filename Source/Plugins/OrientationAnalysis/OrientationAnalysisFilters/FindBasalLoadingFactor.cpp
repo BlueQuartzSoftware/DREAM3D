@@ -64,8 +64,6 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 FindBasalLoadingFactor::FindBasalLoadingFactor()
-: m_AvgQuatsArrayPath("", "", "")
-, m_BasalLoadingFactorArrayPath("", "", "")
 {
   m_LoadingDirection[0] = 1.0f;
   m_LoadingDirection[1] = 1.0f;

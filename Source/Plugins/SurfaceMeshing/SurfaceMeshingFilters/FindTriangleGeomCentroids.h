@@ -198,9 +198,9 @@ private:
   std::weak_ptr<DataArray<float>> m_CentroidsPtr;
   float* m_Centroids = nullptr;
 
-  DataArrayPath m_FeatureAttributeMatrixName = {};
-  DataArrayPath m_FaceLabelsArrayPath = {};
-  QString m_CentroidsArrayName = {};
+  DataArrayPath m_FeatureAttributeMatrixName = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceFeatureAttributeMatrixName, ""};
+  DataArrayPath m_FaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
+  QString m_CentroidsArrayName = {SIMPL::FeatureData::Centroids};
 
 public:
   FindTriangleGeomCentroids(const FindTriangleGeomCentroids&) = delete;            // Copy Constructor Not Implemented

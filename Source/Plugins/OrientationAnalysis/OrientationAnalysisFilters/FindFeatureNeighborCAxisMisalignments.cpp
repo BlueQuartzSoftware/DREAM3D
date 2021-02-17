@@ -71,13 +71,6 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 FindFeatureNeighborCAxisMisalignments::FindFeatureNeighborCAxisMisalignments()
-: m_FindAvgMisals(false)
-, m_NeighborListArrayPath("", "", "")
-, m_CAxisMisalignmentListArrayName(SIMPL::FeatureData::CAxisMisalignmentList)
-, m_AvgQuatsArrayPath("", "", "")
-, m_FeaturePhasesArrayPath("", "", "")
-, m_CrystalStructuresArrayPath("", "", "")
-, m_AvgCAxisMisalignmentsArrayName(SIMPL::FeatureData::AvgCAxisMisalignments)
 {
   m_NeighborList = NeighborList<int32_t>::NullPointer();
   m_CAxisMisalignmentList = NeighborList<float>::NullPointer();

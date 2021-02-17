@@ -355,20 +355,20 @@ protected:
   void normalizePhaseFractions(StatsDataArray* statsDataArray);
 
 private:
-  QString m_PhaseName = {};
-  int m_PhaseIndex = {};
-  int m_CrystalSymmetry = {};
-  int m_MicroPresetModel = {};
-  double m_PhaseFraction = {};
-  double m_Mu = {};
-  double m_Sigma = {};
-  double m_MinCutOff = {};
-  double m_MaxCutOff = {};
-  double m_BinStepSize = {};
-  bool m_CreateEnsembleAttributeMatrix = {};
-  DataArrayPath m_DataContainerName = {};
-  QString m_CellEnsembleAttributeMatrixName = {};
-  bool m_AppendToExistingAttributeMatrix = {};
+  QString m_PhaseName = {"Primary Phase"};
+  int m_PhaseIndex = {-1};
+  int m_CrystalSymmetry = {1};
+  int m_MicroPresetModel = {0};
+  double m_PhaseFraction = {1.0};
+  double m_Mu = {4.0};
+  double m_Sigma = {0.1};
+  double m_MinCutOff = {5};
+  double m_MaxCutOff = {5};
+  double m_BinStepSize = {10.5};
+  bool m_CreateEnsembleAttributeMatrix = {true};
+  DataArrayPath m_DataContainerName = {SIMPL::Defaults::StatsGenerator, "", ""};
+  QString m_CellEnsembleAttributeMatrixName = {SIMPL::Defaults::CellEnsembleAttributeMatrixName};
+  bool m_AppendToExistingAttributeMatrix = {false};
   DataArrayPath m_SelectedEnsembleAttributeMatrix = {};
   DynamicTableData m_OdfData = {};
   DynamicTableData m_MdfData = {};

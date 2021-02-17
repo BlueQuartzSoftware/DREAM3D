@@ -38,6 +38,7 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "Reconstruction/ReconstructionDLLExport.h"
@@ -228,10 +229,10 @@ protected:
   virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
 
 private:
-  DataArrayPath m_DataContainerName = {};
-  QString m_CellAttributeMatrixName = {};
-  bool m_WriteAlignmentShifts = {};
-  QString m_AlignmentShiftFileName = {};
+  DataArrayPath m_DataContainerName = {SIMPL::Defaults::ImageDataContainerName, "", ""};
+  QString m_CellAttributeMatrixName = {SIMPL::Defaults::CellAttributeMatrixName};
+  bool m_WriteAlignmentShifts = {false};
+  QString m_AlignmentShiftFileName = {""};
   QVector<DataArrayPath> m_IgnoredDataArrayPaths = {};
 
   size_t m_Progress = 0;

@@ -66,18 +66,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VectorSegmentFeatures::VectorSegmentFeatures()
-: m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
-, m_SelectedVectorArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::VectorData)
-, m_AngleTolerance(5.0f)
-, m_RandomizeFeatureIds(true)
-, m_UseGoodVoxels(true)
-, m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
-, m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
-, m_ActiveArrayName(SIMPL::FeatureData::Active)
-, m_AngleToleranceRad(0.0f)
-{
-}
+VectorSegmentFeatures::VectorSegmentFeatures() = default;
 
 // -----------------------------------------------------------------------------
 //

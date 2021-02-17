@@ -54,17 +54,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FitCorrelatedFeatureData::FitCorrelatedFeatureData()
-: m_SelectedFeatureArrayPath("", "", "")
-, m_CorrelatedFeatureArrayPath("", "", "")
-, m_DistributionType(SIMPL::DistributionType::UnknownDistributionType)
-, m_NumberOfCorrelatedBins(1)
-, m_RemoveBiasedFeatures(false)
-, m_FeaturePhasesArrayPath("", "", "")
-, m_BiasedFeaturesArrayPath("", "", "")
-, m_NewEnsembleArrayArrayPath("", "", "")
-{
-}
+FitCorrelatedFeatureData::FitCorrelatedFeatureData() = default;
 
 // -----------------------------------------------------------------------------
 //

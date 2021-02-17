@@ -246,12 +246,12 @@ private:
   std::weak_ptr<DataArray<float>> m_NewEnsembleArrayPtr;
   float* m_NewEnsembleArray = nullptr;
 
-  DataArrayPath m_SelectedFeatureArrayPath = {};
-  unsigned int m_DistributionType = {};
-  bool m_RemoveBiasedFeatures = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_BiasedFeaturesArrayPath = {};
-  DataArrayPath m_NewEnsembleArrayArray = {};
+  DataArrayPath m_SelectedFeatureArrayPath = {"", "", ""};
+  unsigned int m_DistributionType = {SIMPL::DistributionType::UnknownDistributionType};
+  bool m_RemoveBiasedFeatures = {false};
+  DataArrayPath m_FeaturePhasesArrayPath = {"", "", ""};
+  DataArrayPath m_BiasedFeaturesArrayPath = {"", "", ""};
+  DataArrayPath m_NewEnsembleArrayArray = {"", "", ""};
 
   IDataArray::WeakPointer m_InDataArrayPtr;
 

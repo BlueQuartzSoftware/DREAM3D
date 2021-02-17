@@ -182,10 +182,10 @@ private:
   std::weak_ptr<DataArray<float>> m_OutputQuaternionsPtr;
   float* m_OutputQuaternions = nullptr;
 
-  DataArrayPath m_QuaternionDataArrayPath = {};
-  DataArrayPath m_OutputDataArrayPath = {};
-  bool m_DeleteOriginalData = {};
-  int32_t m_ConversionType = {};
+  DataArrayPath m_QuaternionDataArrayPath = {"", "", ""};
+  DataArrayPath m_OutputDataArrayPath = {"", "", "OutQuats"};
+  bool m_DeleteOriginalData = {false};
+  int32_t m_ConversionType = {k_ToScalarVector};
 
 public:
   /* Rule of 5: All special member functions should be defined if any are defined.

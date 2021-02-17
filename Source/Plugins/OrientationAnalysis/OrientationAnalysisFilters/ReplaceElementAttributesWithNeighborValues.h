@@ -37,6 +37,7 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 class IDataArray;
@@ -224,9 +225,9 @@ private:
   IDataArrayWkPtrType m_InArrayPtr;
   void* m_InArray = nullptr;
 
-  float m_MinConfidence = {};
+  float m_MinConfidence = {0.1f};
   bool m_Loop = {};
-  DataArrayPath m_ConfidenceIndexArrayPath = {};
+  DataArrayPath m_ConfidenceIndexArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ConfidenceIndex};
   int m_SelectedComparison = {};
   QVector<DataArrayPath> m_IgnoredDataArrayPaths = {};
 

@@ -67,15 +67,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateRodriguesColors::GenerateRodriguesColors()
-: m_CellPhasesArrayPath("", "", "")
-, m_CrystalStructuresArrayPath("", "", "")
-, m_CellEulerAnglesArrayPath("", "", "")
-, m_GoodVoxelsArrayPath("", "", "")
-, m_CellRodriguesColorsArrayName(SIMPL::CellData::RodriguesColor)
-, m_UseGoodVoxels(false)
-{
-}
+GenerateRodriguesColors::GenerateRodriguesColors() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -62,16 +62,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BinaryNodesTrianglesReader::BinaryNodesTrianglesReader()
-: m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
-, m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName)
-, m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName)
-, m_FaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels)
-, m_SurfaceMeshNodeTypesArrayName(SIMPL::VertexData::SurfaceMeshNodeType)
-, m_BinaryNodesFile("")
-, m_BinaryTrianglesFile("")
-{
-}
+BinaryNodesTrianglesReader::BinaryNodesTrianglesReader() = default;
 
 // -----------------------------------------------------------------------------
 //

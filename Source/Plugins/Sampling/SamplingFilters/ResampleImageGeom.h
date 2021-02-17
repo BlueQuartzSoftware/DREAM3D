@@ -256,8 +256,8 @@ protected:
 private:
   std::weak_ptr<Int32ArrayType> m_FeatureIdsPtr;
 
-  DataArrayPath m_NewDataContainerPath = {".DATA_CONTAINER_COPY", "", ""};
-  DataArrayPath m_CellAttributeMatrixPath = {"", "", ""};
+  DataArrayPath m_NewDataContainerPath = {SIMPL::Defaults::NewImageDataContainerName, "", ""};
+  DataArrayPath m_CellAttributeMatrixPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, ""};
   DataArrayPath m_CellFeatureAttributeMatrixPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""};
   FloatVec3Type m_Spacing = {0.0F, 0.0F, 0.0F};
   bool m_RenumberFeatures = {false};
@@ -269,7 +269,16 @@ private:
   QString m_CurrentGeomInfo = {};
   QString m_NewGeomInfo = {};
 
+  /**
+   * @brief generateCurrentGeomInfo
+   * @return
+   */
   QString generateCurrentGeomInfo() const;
+
+  /**
+   * @brief generateNewGeomInfo
+   * @return
+   */
   QString generateNewGeomInfo() const;
 
 public:

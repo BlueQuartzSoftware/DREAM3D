@@ -335,17 +335,17 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_SlipSystemsPtr;
   int32_t* m_SlipSystems = nullptr;
 
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  DataArrayPath m_AvgQuatsArrayPath = {};
-  QString m_SchmidsArrayName = {};
-  QString m_SlipSystemsArrayName = {};
-  QString m_PolesArrayName = {};
-  QString m_PhisArrayName = {};
-  QString m_LambdasArrayName = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {"", "", ""};
+  DataArrayPath m_CrystalStructuresArrayPath = {"", "", ""};
+  DataArrayPath m_AvgQuatsArrayPath = {"", "", ""};
+  QString m_SchmidsArrayName = {SIMPL::FeatureData::Schmids};
+  QString m_SlipSystemsArrayName = {SIMPL::FeatureData::SlipSystems};
+  QString m_PolesArrayName = {SIMPL::FeatureData::Poles};
+  QString m_PhisArrayName = {"SchmidPhis"};
+  QString m_LambdasArrayName = {"SchmidLambdas"};
   FloatVec3Type m_LoadingDirection = {};
-  bool m_StoreAngleComponents = {};
-  bool m_OverrideSystem = {};
+  bool m_StoreAngleComponents = {false};
+  bool m_OverrideSystem = {false};
   FloatVec3Type m_SlipPlane = {};
   FloatVec3Type m_SlipDirection = {};
 

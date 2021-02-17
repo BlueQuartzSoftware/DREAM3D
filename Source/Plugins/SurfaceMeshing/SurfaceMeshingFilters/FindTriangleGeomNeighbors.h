@@ -210,10 +210,10 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_NumNeighborsPtr;
   int32_t* m_NumNeighbors = nullptr;
 
-  DataArrayPath m_FeatureAttributeMatrixPath = {};
-  QString m_NeighborListArrayName = {};
-  DataArrayPath m_FaceLabelsArrayPath = {};
-  QString m_NumNeighborsArrayName = {};
+  DataArrayPath m_FeatureAttributeMatrixPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceFeatureAttributeMatrixName, ""};
+  QString m_NeighborListArrayName = {SIMPL::FeatureData::NeighborList};
+  DataArrayPath m_FaceLabelsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  QString m_NumNeighborsArrayName = {SIMPL::FeatureData::NumNeighbors};
 
   NeighborList<int32_t>::WeakPointer m_NeighborList;
 

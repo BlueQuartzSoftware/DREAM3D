@@ -176,7 +176,7 @@ private:
   std::weak_ptr<DataArray<double>> m_SurfaceMeshTriangleCentroidsPtr;
   double* m_SurfaceMeshTriangleCentroids = nullptr;
 
-  DataArrayPath m_SurfaceMeshTriangleCentroidsArrayPath = {};
+  DataArrayPath m_SurfaceMeshTriangleCentroidsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceCentroids};
 
 public:
   TriangleCentroidFilter(const TriangleCentroidFilter&) = delete;            // Copy Constructor Not Implemented

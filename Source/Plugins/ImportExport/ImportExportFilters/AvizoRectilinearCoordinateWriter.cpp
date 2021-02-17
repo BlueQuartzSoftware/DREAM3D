@@ -59,14 +59,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AvizoRectilinearCoordinateWriter::AvizoRectilinearCoordinateWriter()
-: m_OutputFile("")
-, m_WriteBinaryFile(false)
-, m_Units("microns")
-, m_WriteFeatureIds(true)
-, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-{
-}
+AvizoRectilinearCoordinateWriter::AvizoRectilinearCoordinateWriter() = default;
 
 // -----------------------------------------------------------------------------
 //

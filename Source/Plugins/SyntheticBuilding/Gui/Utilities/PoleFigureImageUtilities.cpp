@@ -49,10 +49,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PoleFigureImageUtilities::PoleFigureImageUtilities()
-: m_KernelWeightsInited(false)
-{
-}
+PoleFigureImageUtilities::PoleFigureImageUtilities() = default;
 
 // -----------------------------------------------------------------------------
 //

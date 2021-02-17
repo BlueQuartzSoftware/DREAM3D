@@ -207,9 +207,9 @@ private:
   std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
   bool* m_GoodVoxels = nullptr;
 
-  int m_ReferenceSlice = {};
-  bool m_UseReferenceSlice = {};
-  DataArrayPath m_GoodVoxelsArrayPath = {};
+  int m_ReferenceSlice = {0};
+  bool m_UseReferenceSlice = {false};
+  DataArrayPath m_GoodVoxelsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask};
 
 public:
   AlignSectionsFeatureCentroid(const AlignSectionsFeatureCentroid&) = delete;            // Copy Constructor Not Implemented

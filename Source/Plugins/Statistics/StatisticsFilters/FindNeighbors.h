@@ -279,15 +279,15 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_NumNeighborsPtr;
   int32_t* m_NumNeighbors = nullptr;
 
-  DataArrayPath m_CellFeatureAttributeMatrixPath = {};
-  QString m_SharedSurfaceAreaListArrayName = {};
-  QString m_NeighborListArrayName = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  QString m_BoundaryCellsArrayName = {};
-  QString m_NumNeighborsArrayName = {};
-  QString m_SurfaceFeaturesArrayName = {};
-  bool m_StoreBoundaryCells = {};
-  bool m_StoreSurfaceFeatures = {};
+  DataArrayPath m_CellFeatureAttributeMatrixPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""};
+  QString m_SharedSurfaceAreaListArrayName = {SIMPL::FeatureData::SharedSurfaceAreaList};
+  QString m_NeighborListArrayName = {SIMPL::FeatureData::NeighborList};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  QString m_BoundaryCellsArrayName = {SIMPL::CellData::BoundaryCells};
+  QString m_NumNeighborsArrayName = {SIMPL::FeatureData::NumNeighbors};
+  QString m_SurfaceFeaturesArrayName = {SIMPL::FeatureData::SurfaceFeatures};
+  bool m_StoreBoundaryCells = {false};
+  bool m_StoreSurfaceFeatures = {false};
 
   NeighborList<int32_t>::WeakPointer m_NeighborList;
   NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;

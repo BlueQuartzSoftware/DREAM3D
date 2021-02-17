@@ -230,15 +230,6 @@ public:
 //
 // -----------------------------------------------------------------------------
 FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors()
-: m_WriteFile(false)
-, m_TwinBoundarySchmidFactorsFile("")
-, m_AvgQuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats)
-, m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
-, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
-, m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
-, m_SurfaceMeshFaceNormalsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals)
-, m_SurfaceMeshTwinBoundaryArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshTwinBoundary)
-, m_SurfaceMeshTwinBoundarySchmidFactorsArrayName(SIMPL::FaceData::SurfaceMeshTwinBoundarySchmidFactors)
 {
   m_LoadingDir[0] = 1.0f;
   m_LoadingDir[1] = 1.0f;

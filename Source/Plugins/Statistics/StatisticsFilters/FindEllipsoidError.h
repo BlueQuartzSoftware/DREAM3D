@@ -297,17 +297,17 @@ private:
   std::weak_ptr<DataArray<float>> m_EllipsoidErrorPtr;
   float* m_EllipsoidError = nullptr;
 
-  DataArrayPath m_CellFeatureAttributeMatrixName = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_CentroidsArrayPath = {};
-  DataArrayPath m_NumCellsArrayPath = {};
-  DataArrayPath m_AxisLengthsArrayPath = {};
-  DataArrayPath m_AxisEulerAnglesArrayPath = {};
-  QString m_IdealFeatureIdsArrayName = {};
-  QString m_EllipsoidErrorArrayName = {};
-  bool m_WriteIdealEllipseFeatureIds = {};
+  DataArrayPath m_CellFeatureAttributeMatrixName = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_CentroidsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Centroids};
+  DataArrayPath m_NumCellsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NumCells};
+  DataArrayPath m_AxisLengthsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AxisLengths};
+  DataArrayPath m_AxisEulerAnglesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AxisEulerAngles};
+  QString m_IdealFeatureIdsArrayName = {"IdealFeatureIds"};
+  QString m_EllipsoidErrorArrayName = {"EllipsoidError"};
+  bool m_WriteIdealEllipseFeatureIds = {true};
 
-  double m_ScaleFator;
+  double m_ScaleFator = {1.0F};
 
 public:
   FindEllipsoidError(const FindEllipsoidError&) = delete;            // Copy Constructor Not Implemented

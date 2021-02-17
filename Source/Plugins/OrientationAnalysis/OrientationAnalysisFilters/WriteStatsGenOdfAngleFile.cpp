@@ -71,18 +71,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteStatsGenOdfAngleFile::WriteStatsGenOdfAngleFile()
-: m_OutputFile("")
-, m_Weight(1.0f)
-, m_Sigma(1)
-, m_Delimiter(2)
-, m_CellPhasesArrayPath("", "", "")
-, m_CellEulerAnglesArrayPath("", "", "")
-, m_GoodVoxelsArrayPath("", "", "")
-, m_ConvertToDegrees(false)
-, m_UseGoodVoxels(false)
-{
-}
+WriteStatsGenOdfAngleFile::WriteStatsGenOdfAngleFile() = default;
 
 // -----------------------------------------------------------------------------
 //

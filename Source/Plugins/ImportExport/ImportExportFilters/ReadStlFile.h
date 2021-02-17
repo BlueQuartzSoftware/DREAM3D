@@ -212,17 +212,17 @@ private:
   std::weak_ptr<DataArray<double>> m_FaceNormalsPtr;
   double* m_FaceNormals = nullptr;
 
-  DataArrayPath m_SurfaceMeshDataContainerName = {};
-  QString m_FaceAttributeMatrixName = {};
-  QString m_StlFilePath = {};
-  QString m_FaceNormalsArrayName = {};
+  DataArrayPath m_SurfaceMeshDataContainerName = {SIMPL::Defaults::TriangleDataContainerName, "", ""};
+  QString m_FaceAttributeMatrixName = {SIMPL::Defaults::FaceAttributeMatrixName};
+  QString m_StlFilePath = {""};
+  QString m_FaceNormalsArrayName = {SIMPL::FaceData::SurfaceMeshFaceNormals};
 
-  float m_minXcoord;
-  float m_maxXcoord;
-  float m_minYcoord;
-  float m_maxYcoord;
-  float m_minZcoord;
-  float m_maxZcoord;
+  float m_minXcoord = {std::numeric_limits<float>::max()};
+  float m_maxXcoord = {-std::numeric_limits<float>::max()};
+  float m_minYcoord = {std::numeric_limits<float>::max()};
+  float m_maxYcoord = {-std::numeric_limits<float>::max()};
+  float m_minZcoord = {std::numeric_limits<float>::max()};
+  float m_maxZcoord = {-std::numeric_limits<float>::max()};
 
   /**
    * @brief updateFaceInstancePointers Updates raw Face pointers

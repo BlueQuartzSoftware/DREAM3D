@@ -366,20 +366,20 @@ private:
   std::weak_ptr<DataArray<uint8_t>> m_QuadFaceDataPtr;
   uint8_t* m_QuadFaceData = nullptr;
 
-  int m_Hemisphere = {};
-  DataArrayPath m_ImageDataArrayPath = {};
-  DataArrayPath m_QuadDataContainerName = {};
-  DataArrayPath m_TriangleDataContainerName = {};
-  DataArrayPath m_EdgeDataContainerName = {};
-  DataArrayPath m_VertexDataContainerName = {};
-  QString m_VertexAttributeMatrixName = {};
-  QString m_EdgeAttributeMatrixName = {};
-  QString m_FaceAttributeMatrixName = {};
-  bool m_CreateVertexGeometry = {};
-  bool m_CreateEdgeGeometry = {};
-  bool m_CreateTriangleGeometry = {};
-  bool m_CreateQuadGeometry = {};
-  bool m_UseExistingImage = {};
+  int m_Hemisphere = {0};
+  DataArrayPath m_ImageDataArrayPath = {"", "", ""};
+  DataArrayPath m_QuadDataContainerName = {SIMPL::Defaults::QuadDataContainerName, "", ""};
+  DataArrayPath m_TriangleDataContainerName = {SIMPL::Defaults::TriangleDataContainerName, "", ""};
+  DataArrayPath m_EdgeDataContainerName = {SIMPL::Defaults::EdgeDataContainerName, "", ""};
+  DataArrayPath m_VertexDataContainerName = {SIMPL::Defaults::VertexDataContainerName, "", ""};
+  QString m_VertexAttributeMatrixName = {SIMPL::Defaults::VertexAttributeMatrixName};
+  QString m_EdgeAttributeMatrixName = {SIMPL::Defaults::EdgeAttributeMatrixName};
+  QString m_FaceAttributeMatrixName = {SIMPL::Defaults::FaceAttributeMatrixName};
+  bool m_CreateVertexGeometry = {true};
+  bool m_CreateEdgeGeometry = {true};
+  bool m_CreateTriangleGeometry = {true};
+  bool m_CreateQuadGeometry = {true};
+  bool m_UseExistingImage = {true};
 
   // DEFINE_DATAARRAY_VARIABLE(uint8_t, VertexData)
 

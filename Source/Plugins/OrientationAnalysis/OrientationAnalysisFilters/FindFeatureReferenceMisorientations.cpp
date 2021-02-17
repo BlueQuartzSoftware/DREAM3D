@@ -59,18 +59,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindFeatureReferenceMisorientations::FindFeatureReferenceMisorientations()
-: m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
-, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
-, m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
-, m_AvgQuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats)
-, m_GBEuclideanDistancesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::GBEuclideanDistances)
-, m_FeatureAvgMisorientationsArrayName(SIMPL::FeatureData::FeatureAvgMisorientations)
-, m_FeatureReferenceMisorientationsArrayName(SIMPL::CellData::FeatureReferenceMisorientations)
-, m_ReferenceOrientation(0)
-{
-}
+FindFeatureReferenceMisorientations::FindFeatureReferenceMisorientations() = default;
 
 // -----------------------------------------------------------------------------
 //

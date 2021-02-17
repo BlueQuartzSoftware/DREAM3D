@@ -51,11 +51,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-NearestPointFuseRegularGrids::NearestPointFuseRegularGrids()
-: m_ReferenceCellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
-, m_SamplingCellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
-{
-}
+NearestPointFuseRegularGrids::NearestPointFuseRegularGrids() = default;
 
 // -----------------------------------------------------------------------------
 //

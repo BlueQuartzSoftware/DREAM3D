@@ -55,15 +55,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateEulerColors::GenerateEulerColors()
-: m_CellPhasesArrayPath("", "", "")
-, m_CrystalStructuresArrayPath("", "", "")
-, m_CellEulerAnglesArrayPath("", "", "")
-, m_GoodVoxelsArrayPath("", "", "")
-, m_CellEulerColorsArrayName(SIMPL::CellData::EulerColor)
-, m_UseGoodVoxels(false)
-{
-}
+GenerateEulerColors::GenerateEulerColors() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -146,9 +146,7 @@ MovingFiniteElementSmoothing::MovingFiniteElementSmoothing()
 , m_SmoothTripleLines(true)
 , m_SurfaceMeshNodeTypeArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType)
 , m_SurfaceMeshNodeTypeArrayName(SIMPL::VertexData::SurfaceMeshNodeType)
-, m_SurfaceMeshNodeType(nullptr)
-{
-}
+, m_SurfaceMeshNodeType(nullptr) = default;
 
 // -----------------------------------------------------------------------------
 //

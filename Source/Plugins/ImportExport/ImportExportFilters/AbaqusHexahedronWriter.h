@@ -225,11 +225,11 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
 
-  QString m_OutputPath = {};
-  QString m_FilePrefix = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  int m_HourglassStiffness = {};
-  QString m_JobName = {};
+  QString m_OutputPath = {""};
+  QString m_FilePrefix = {""};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  int m_HourglassStiffness = {250};
+  QString m_JobName = {""};
 
   /**
    * @brief writeNodes Writes the _nodes.inp file

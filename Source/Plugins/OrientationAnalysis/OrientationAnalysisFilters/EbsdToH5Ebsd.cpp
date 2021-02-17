@@ -56,16 +56,6 @@
 //
 // -----------------------------------------------------------------------------
 EbsdToH5Ebsd::EbsdToH5Ebsd()
-: m_OutputFile("")
-, m_ZStartIndex(0)
-, m_ZEndIndex(0)
-, m_ZResolution(1.0f)
-, m_RefFrameZDir(SIMPL::RefFrameZDir::LowtoHigh)
-, m_InputPath("")
-, m_FilePrefix("")
-, m_FileSuffix("")
-, m_FileExtension("ang")
-, m_PaddingDigits(4)
 {
   m_SampleTransformation.angle = 0.0f;
   m_SampleTransformation.h = 0.0f;

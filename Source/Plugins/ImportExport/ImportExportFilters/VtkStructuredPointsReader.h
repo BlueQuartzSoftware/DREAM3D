@@ -370,16 +370,16 @@ protected:
   int32_t DecodeString(char* resname, const char* name);
 
 private:
-  bool m_ReadCellData = {};
-  DataArrayPath m_VolumeDataContainerName = {};
-  QString m_CellAttributeMatrixName = {};
-  bool m_ReadPointData = {};
-  DataArrayPath m_VertexDataContainerName = {};
-  QString m_VertexAttributeMatrixName = {};
-  QString m_InputFile = {};
-  QString m_Comment = {};
-  QString m_DatasetType = {};
-  bool m_FileIsBinary = {};
+  bool m_ReadCellData = {true};
+  DataArrayPath m_VolumeDataContainerName = {"ImageDataContainer_CellData", "", ""};
+  QString m_CellAttributeMatrixName = {SIMPL::Defaults::CellAttributeMatrixName};
+  bool m_ReadPointData = {true};
+  DataArrayPath m_VertexDataContainerName = {"ImageDataContainer_PointData", "", ""};
+  QString m_VertexAttributeMatrixName = {SIMPL::Defaults::CellAttributeMatrixName};
+  QString m_InputFile = {""};
+  QString m_Comment = {""};
+  QString m_DatasetType = {""};
+  bool m_FileIsBinary = {true};
 
   AttributeMatrix::Pointer m_CurrentAttrMat;
 

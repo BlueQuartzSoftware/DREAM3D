@@ -38,11 +38,11 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
-
 #include "Reconstruction/ReconstructionDLLExport.h"
 
 /**
@@ -195,5 +195,5 @@ public:
   SegmentFeatures& operator=(SegmentFeatures&&) = delete;      // Move Assignment Not Implemented
 
 private:
-  QString m_DataContainerName = {};
+  QString m_DataContainerName = {SIMPL::Defaults::ImageDataContainerName};
 };

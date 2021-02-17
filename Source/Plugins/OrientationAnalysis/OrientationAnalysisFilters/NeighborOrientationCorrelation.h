@@ -271,13 +271,13 @@ private:
   std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
   uint32_t* m_CrystalStructures = nullptr;
 
-  float m_MisorientationTolerance = {};
-  float m_MinConfidence = {};
-  int m_Level = {};
-  DataArrayPath m_ConfidenceIndexArrayPath = {};
-  DataArrayPath m_CellPhasesArrayPath = {};
-  DataArrayPath m_CrystalStructuresArrayPath = {};
-  DataArrayPath m_QuatsArrayPath = {};
+  float m_MisorientationTolerance = {5.0f};
+  float m_MinConfidence = {0.1f};
+  int m_Level = {6};
+  DataArrayPath m_ConfidenceIndexArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ConfidenceIndex};
+  DataArrayPath m_CellPhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases};
+  DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
+  DataArrayPath m_QuatsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats};
   QVector<DataArrayPath> m_IgnoredDataArrayPaths = {};
 
   size_t m_Progress = 0;

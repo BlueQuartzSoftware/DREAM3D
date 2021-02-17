@@ -92,11 +92,7 @@ private:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ChangeAngleRepresentation::ChangeAngleRepresentation()
-: m_ConversionType(SIMPL::EulerAngleConversionType::DegreesToRadians)
-, m_CellEulerAnglesArrayPath("", "", "")
-{
-}
+ChangeAngleRepresentation::ChangeAngleRepresentation() = default;
 
 // -----------------------------------------------------------------------------
 //

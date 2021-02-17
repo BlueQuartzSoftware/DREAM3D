@@ -66,13 +66,6 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 FindMisorientations::FindMisorientations()
-: m_NeighborListArrayPath("", "", "")
-, m_MisorientationListArrayName(SIMPL::FeatureData::MisorientationList)
-, m_AvgQuatsArrayPath("", "", "")
-, m_FeaturePhasesArrayPath("", "", "")
-, m_CrystalStructuresArrayPath("", "", "")
-, m_AvgMisorientationsArrayName(SIMPL::FeatureData::AvgMisorientations)
-, m_FindAvgMisors(false)
 {
   m_OrientationOps = LaueOps::GetAllOrientationOps();
 

@@ -266,13 +266,13 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_AtomFeatureLabelsPtr;
   int32_t* m_AtomFeatureLabels = nullptr;
 
-  DataArrayPath m_VertexDataContainerName = {};
-  QString m_VertexAttributeMatrixName = {};
+  DataArrayPath m_VertexDataContainerName = {SIMPL::Defaults::VertexDataContainerName, "", ""};
+  QString m_VertexAttributeMatrixName = {SIMPL::Defaults::VertexAttributeMatrixName};
   FloatVec3Type m_LatticeConstants = {};
-  int m_Basis = {};
-  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
-  DataArrayPath m_AvgQuatsArrayPath = {};
-  QString m_AtomFeatureLabelsArrayName = {};
+  int m_Basis = {0};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
+  DataArrayPath m_AvgQuatsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats};
+  QString m_AtomFeatureLabelsArrayName = {SIMPL::VertexData::AtomFeatureLabels};
 
 public:
   InsertAtoms(const InsertAtoms&) = delete;            // Copy Constructor Not Implemented

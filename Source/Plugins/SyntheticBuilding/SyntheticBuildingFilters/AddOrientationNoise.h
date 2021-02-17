@@ -194,8 +194,8 @@ private:
   std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
   float* m_CellEulerAngles = nullptr;
 
-  float m_Magnitude = {};
-  DataArrayPath m_CellEulerAnglesArrayPath = {};
+  float m_Magnitude = {1.0f};
+  DataArrayPath m_CellEulerAnglesArrayPath = {"", "", ""};
 
 public:
   AddOrientationNoise(const AddOrientationNoise&) = delete;            // Copy Constructor Not Implemented

@@ -262,12 +262,12 @@ private:
   std::weak_ptr<DataArray<int32_t>> m_NumElementsPtr;
   int32_t* m_NumElements = nullptr;
 
-  DataArrayPath m_FeatureAttributeMatrixName = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  QString m_VolumesArrayName = {};
-  QString m_EquivalentDiametersArrayName = {};
-  QString m_NumElementsArrayName = {};
-  bool m_SaveElementSizes = {};
+  DataArrayPath m_FeatureAttributeMatrixName = {"", "", ""};
+  DataArrayPath m_FeatureIdsArrayPath = {"", "", SIMPL::CellData::FeatureIds};
+  QString m_VolumesArrayName = {SIMPL::FeatureData::Volumes};
+  QString m_EquivalentDiametersArrayName = {SIMPL::FeatureData::EquivalentDiameters};
+  QString m_NumElementsArrayName = {SIMPL::FeatureData::NumElements};
+  bool m_SaveElementSizes = {false};
 
 public:
   FindSizes(const FindSizes&) = delete;            // Copy Constructor Not Implemented
