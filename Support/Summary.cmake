@@ -1,65 +1,58 @@
 function(OSInformation)
-
   if(APPLE)
-    EXEC_PROGRAM(uname ARGS -v  OUTPUT_VARIABLE DARWIN_VERSION)
-    STRING(REGEX MATCH "[0-9]+" DARWIN_VERSION ${DARWIN_VERSION})
+    exec_program(uname ARGS -v  OUTPUT_VARIABLE DARWIN_VERSION)
+    string(REGEX MATCH "[0-9]+" DARWIN_VERSION ${DARWIN_VERSION})
     #message(STATUS "DARWIN_VERSION: ${DARWIN_VERSION}")
-    if (DARWIN_VERSION EQUAL 14) # macOS 10.10 Yosemite
+    if(DARWIN_VERSION EQUAL 14) # macOS 10.10 Yosemite
       # message(STATUS "Found macOS 10.10 Yosemite as the host. Darwin Version:${DARWIN_VERSION}")
       set(CMAKE_MACOS_NAME "Yosemite")
       set(CMAKE_MACOS_VERSION "10.10")
-    endif ()
+    endif()
 
-    if (DARWIN_VERSION EQUAL 15) # macOS 10.11 El Capitan
+    if(DARWIN_VERSION EQUAL 15) # macOS 10.11 El Capitan
       # message(STATUS "Found macOS 10.11 El Capitan as the host. Darwin Version:${DARWIN_VERSION}")
       set(CMAKE_MACOS_NAME "El Capitan")
       set(CMAKE_MACOS_VERSION "10.11")
-    endif ()
+    endif()
 
-    if (DARWIN_VERSION EQUAL 16) # macOS 10.12 Sierra (Xcode 8.x or Xcode 9.x)
+    if(DARWIN_VERSION EQUAL 16) # macOS 10.12 Sierra (Xcode 8.x or Xcode 9.x)
       # message(STATUS "Found macOS 10.12 Sierra as the host. Darwin Version:${DARWIN_VERSION}")
       set(CMAKE_MACOS_NAME "Sierra")
       set(CMAKE_MACOS_VERSION "10.12")
-    endif ()
+    endif()
     
-    if (DARWIN_VERSION EQUAL 17) # macOS 10.13 High Sierra (Xcode 9.x)
+    if(DARWIN_VERSION EQUAL 17) # macOS 10.13 High Sierra (Xcode 9.x)
       # message(STATUS "Found macOS 10.13 High Sierra as the host. Darwin Version:${DARWIN_VERSION}")  
       set(CMAKE_MACOS_NAME "High Sierra")
       set(CMAKE_MACOS_VERSION "10.13")
-    endif ()
+    endif()
 
-    if (DARWIN_VERSION EQUAL 18) # macOS 10.14 Mojave (Xcode 10.x)
+    if(DARWIN_VERSION EQUAL 18) # macOS 10.14 Mojave (Xcode 10.x)
       # message(STATUS "Found macOS 10.14 Mojave as the host. Darwin Version:${DARWIN_VERSION}")
       set(CMAKE_MACOS_NAME "Mojave")
       set(CMAKE_MACOS_VERSION "10.14")
-    endif ()
+    endif()
 
-    if (DARWIN_VERSION EQUAL 19) # macOS 10.15 Catalina (Xcode 11.x or Xcode 12.x)
+    if(DARWIN_VERSION EQUAL 19) # macOS 10.15 Catalina (Xcode 11.x or Xcode 12.x)
       # message(STATUS "Found macOS 10.15 Catalina as the host. Darwin Version:${DARWIN_VERSION}")
       set(CMAKE_MACOS_NAME "Catalina")
       set(CMAKE_MACOS_VERSION "10.15")
-    endif ()
+    endif()
 
-    if (DARWIN_VERSION EQUAL 20) # macOS 11.00 Big Sur (Xcode 12.x)
+    if(DARWIN_VERSION EQUAL 20) # macOS 11.00 Big Sur (Xcode 12.x)
       # message(STATUS "Found macOS 11.00 Big Sur as the host. Darwin Version:${DARWIN_VERSION}")
       set(CMAKE_MACOS_NAME "Big Sur")
       set(CMAKE_MACOS_VERSION "11.00")
-    endif ()
+    endif()
 
     message(STATUS "* System: MacOS ${CMAKE_MACOS_NAME}")
     message(STATUS "* Version: ${CMAKE_MACOS_VERSION}")
-
   else()
-
     message(STATUS "* System: ${CMAKE_SYSTEM_NAME}")
     message(STATUS "* Version: ${CMAKE_SYSTEM_VERSION}")
-
   endif()
   message(STATUS "* Processor: ${CMAKE_SYSTEM_PROCESSOR}")
-
 endfunction()
-
-
 
 #------------------------------------------------------------------------------------
 # Print out a Summary Section:
@@ -95,7 +88,7 @@ foreach(proj ${ALL_PROJECTS})
   cmpGitRevisionString(PROJECT_NAME ${proj})
   get_property(githash GLOBAL PROPERTY ${proj}_GIT_HASH)
   message(STATUS "*   ${proj}: ${${proj}_SOURCE_DIR}  Git Hash: ${githash}")
-endforeach(proj )
+endforeach()
 message(STATUS "* -------------- Plugins ------------------------------------------------------")
 foreach(d3dPlugin ${DREAM3D_ALL_PLUGINS})
   get_property(PluginNumFilters GLOBAL PROPERTY ${d3dPlugin}_NumFilters)
@@ -104,7 +97,3 @@ foreach(d3dPlugin ${DREAM3D_ALL_PLUGINS})
   message(STATUS "*   ${d3dPlugin}: [${DREAM3D_ENABLE_${d3dPlugin}}] ${PluginNumFilters} Filters  Git:${PluginGitHash} ${PluginCommitDate}")
 endforeach()
 message(STATUS "*******************************************************************************")
-
-
-
-
