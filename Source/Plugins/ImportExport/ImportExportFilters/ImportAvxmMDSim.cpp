@@ -56,7 +56,7 @@ void ImportAvxmMDSim::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_FILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Category::Parameter, ImportAvxmMDSim));
 
-  QVector<QString> choices;
+  std::vector<QString> choices;
   choices.push_back("Tab");
   choices.push_back("Space");
   parameters.push_back(SIMPL_NEW_CHOICE_FP("Separator", SeparatorChoice, FilterParameter::Category::Parameter, ImportAvxmMDSim, choices, false));

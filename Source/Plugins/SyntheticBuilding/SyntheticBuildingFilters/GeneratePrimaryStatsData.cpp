@@ -86,18 +86,18 @@ void GeneratePrimaryStatsData::setupFilterParameters()
     parameter->setHumanLabel("Crystal Symmetry");
     parameter->setPropertyName("CrystalSymmetry");
 
-    QVector<QString> choices; // Please add choices to the choices QVector to finish this widget
-    choices << "Hexagonal (High)"
-            << "Cubic (High)"
-            << "Hexagonal (Low)"
-            << "Cubic (Low)"
-            << "Triclinic"
-            << "Monoclinic"
-            << "OrthoRhombic"
-            << "Tetragonal (Low)"
-            << "Tetragonal (High)"
-            << "Trigonal (Low)"
-            << "Trigonal (High)";
+    std::vector<QString> choices; // Please add choices to the choices QVector to finish this widget
+    choices.push_back("Hexagonal (High)");
+    choices.push_back("Cubic (High)");
+    choices.push_back("Hexagonal (Low)");
+    choices.push_back("Cubic (Low)");
+    choices.push_back("Triclinic");
+    choices.push_back("Monoclinic");
+    choices.push_back("OrthoRhombic");
+    choices.push_back("Tetragonal (Low)");
+    choices.push_back("Tetragonal (High)");
+    choices.push_back("Trigonal (Low)");
+    choices.push_back("Trigonal (High)");
 
     parameter->setChoices(choices);
     parameter->setCategory(FilterParameter::Category::Parameter);
@@ -111,10 +111,10 @@ void GeneratePrimaryStatsData::setupFilterParameters()
     parameter->setHumanLabel("Microstructure Preset Model");
     parameter->setPropertyName("MicroPresetModel");
 
-    QVector<QString> choices; // Please add choices to the choices QVector to finish this widget
-    choices << "Primary Equiaxed"
-            << "Primary Rolled"
-            << "Primary Recrystallized";
+    std::vector<QString> choices; // Please add choices to the choices QVector to finish this widget
+    choices.push_back("Primary Equiaxed");
+    choices.push_back("Primary Rolled");
+    choices.push_back("Primary Recrystallized");
 
     parameter->setChoices(choices);
     parameter->setCategory(FilterParameter::Category::Parameter);
@@ -182,8 +182,8 @@ void GeneratePrimaryStatsData::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("Axis ODF", AxisOdfData, FilterParameter::Category::Parameter, GeneratePrimaryStatsData, false));
   }
 
-  QStringList linkedProps("DataContainerName");
-  linkedProps << "CellEnsembleAttributeMatrixName";
+  std::vector<QString> linkedProps = {"DataContainerName"};
+  linkedProps.push_back("CellEnsembleAttributeMatrixName");
   parameters.push_back(
       SIMPL_NEW_LINKED_BOOL_FP("Create Data Container & Ensemble AttributeMatrix", CreateEnsembleAttributeMatrix, FilterParameter::Category::Parameter, GeneratePrimaryStatsData, linkedProps));
 
@@ -192,7 +192,7 @@ void GeneratePrimaryStatsData::setupFilterParameters()
       SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, GeneratePrimaryStatsData));
 
   linkedProps.clear();
-  linkedProps << "SelectedEnsembleAttributeMatrix";
+  linkedProps.push_back("SelectedEnsembleAttributeMatrix");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Append To Existing AttributeMatrix", AppendToExistingAttributeMatrix, FilterParameter::Category::Parameter, GeneratePrimaryStatsData, linkedProps));
   AttributeMatrixSelectionFilterParameter::RequirementType amReq2;
   parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Selected Ensemble AttributeMatrix", SelectedEnsembleAttributeMatrix, FilterParameter::Category::Parameter, GeneratePrimaryStatsData, amReq2));

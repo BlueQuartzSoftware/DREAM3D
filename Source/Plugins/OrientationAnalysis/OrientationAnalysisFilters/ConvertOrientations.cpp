@@ -83,7 +83,7 @@ void ConvertOrientations::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ConvertOrientations, this, InputType));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ConvertOrientations, this, InputType));
 
-    parameter->setChoices(OrientationConverter<FloatArrayType, float>::GetOrientationTypeStrings<QVector<QString>>());
+    parameter->setChoices(OrientationConverter<FloatArrayType, float>::GetOrientationTypeStrings<std::vector<QString>>());
     parameter->setCategory(FilterParameter::Category::Parameter);
     parameters.push_back(parameter);
   }
@@ -95,7 +95,7 @@ void ConvertOrientations::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ConvertOrientations, this, OutputType));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ConvertOrientations, this, OutputType));
 
-    parameter->setChoices(OrientationConverter<FloatArrayType, float>::GetOrientationTypeStrings<QVector<QString>>());
+    parameter->setChoices(OrientationConverter<FloatArrayType, float>::GetOrientationTypeStrings<std::vector<QString>>());
     parameter->setCategory(FilterParameter::Category::Parameter);
     parameters.push_back(parameter);
   }

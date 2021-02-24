@@ -196,12 +196,12 @@ void ResampleImageGeom::setupFilterParameters()
   param->setReadOnly(true);
   parameters.push_back(param);
 
-  QStringList linkedProps;
-  linkedProps << "CellFeatureAttributeMatrixPath"
-              << "FeatureIdsArrayPath";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("CellFeatureAttributeMatrixPath");
+  linkedProps.push_back("FeatureIdsArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Renumber Features", RenumberFeatures, FilterParameter::Category::Parameter, ResampleImageGeom, linkedProps));
   linkedProps.clear();
-  linkedProps << "NewDataContainerPath";
+  linkedProps.push_back("NewDataContainerPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Data Container", SaveAsNewDataContainer, FilterParameter::Category::Parameter, ResampleImageGeom, linkedProps));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {

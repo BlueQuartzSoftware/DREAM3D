@@ -94,7 +94,7 @@ void CreateLambertSphere::setupFilterParameters()
   parameter->setPropertyName("Hemisphere");
   parameter->setSetterCallback(SIMPL_BIND_SETTER(CreateLambertSphere, this, Hemisphere));
   parameter->setGetterCallback(SIMPL_BIND_GETTER(CreateLambertSphere, this, Hemisphere));
-  QVector<QString> choices;
+  std::vector<QString> choices;
   choices.push_back("Northern");
   choices.push_back("Southern");
   // choices.push_back("Both");
@@ -103,27 +103,27 @@ void CreateLambertSphere::setupFilterParameters()
   parameters.push_back(parameter);
 
   {
-    QStringList linkedProperties = {"VertexDataContainerName", "VertexAttributeMatrixName"};
+    std::vector<QString> linkedProperties = {"VertexDataContainerName", "VertexAttributeMatrixName"};
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Vertex Geometry", CreateVertexGeometry, FilterParameter::Category::Parameter, CreateLambertSphere, linkedProperties));
     parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Vertex DataContainer Name", VertexDataContainerName, FilterParameter::Category::Parameter, CreateLambertSphere));
     //    parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, FilterParameter::Category::Parameter, CreateLambertSphere));
   }
 
   {
-    QStringList linkedProperties = {"EdgeDataContainerName", "EdgeAttributeMatrixName"};
+    std::vector<QString> linkedProperties = {"EdgeDataContainerName", "EdgeAttributeMatrixName"};
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Edge Geometry", CreateEdgeGeometry, FilterParameter::Category::Parameter, CreateLambertSphere, linkedProperties));
     parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Edge DataContainer Name", EdgeDataContainerName, FilterParameter::Category::Parameter, CreateLambertSphere));
     //    parameters.push_back(SIMPL_NEW_STRING_FP("Edge Attribute Matrix", EdgeAttributeMatrixName, FilterParameter::Category::Parameter, CreateLambertSphere));
   }
 
   {
-    QStringList linkedProperties = {"TriangleDataContainerName"};
+    std::vector<QString> linkedProperties = {"TriangleDataContainerName"};
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Triangle Geometry", CreateTriangleGeometry, FilterParameter::Category::Parameter, CreateLambertSphere, linkedProperties));
     parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Triangle DataContainer Name", TriangleDataContainerName, FilterParameter::Category::Parameter, CreateLambertSphere));
   }
 
   {
-    QStringList linkedProperties = {"QuadDataContainerName", "FaceAttributeMatrixName", "ImageFaceDataArrayName"};
+    std::vector<QString> linkedProperties = {"QuadDataContainerName", "FaceAttributeMatrixName", "ImageFaceDataArrayName"};
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Quad Geometry", CreateQuadGeometry, FilterParameter::Category::Parameter, CreateLambertSphere, linkedProperties));
     parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Quad DataContainer Name", QuadDataContainerName, FilterParameter::Category::Parameter, CreateLambertSphere));
     //    parameters.push_back(SIMPL_NEW_STRING_FP("Quad Attribute Matrix", FaceAttributeMatrixName, FilterParameter::Category::Parameter, CreateLambertSphere));

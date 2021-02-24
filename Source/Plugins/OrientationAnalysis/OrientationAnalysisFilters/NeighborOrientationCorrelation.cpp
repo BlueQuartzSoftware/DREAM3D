@@ -162,22 +162,6 @@ void NeighborOrientationCorrelation::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NeighborOrientationCorrelation::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath()));
-  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath()));
-  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath()));
-  setConfidenceIndexArrayPath(reader->readDataArrayPath("ConfidenceIndexArrayPath", getConfidenceIndexArrayPath()));
-  setMinConfidence(reader->readValue("MinConfidence", getMinConfidence()));
-  setMisorientationTolerance(reader->readValue("MisorientationTolerance", getMisorientationTolerance()));
-  setLevel(reader->readValue("Level", getLevel()));
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void NeighborOrientationCorrelation::initialize()
 {
 }
@@ -719,13 +703,13 @@ DataArrayPath NeighborOrientationCorrelation::getQuatsArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void NeighborOrientationCorrelation::setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value)
+void NeighborOrientationCorrelation::setIgnoredDataArrayPaths(const std::vector<DataArrayPath>& value)
 {
   m_IgnoredDataArrayPaths = value;
 }
 
 // -----------------------------------------------------------------------------
-QVector<DataArrayPath> NeighborOrientationCorrelation::getIgnoredDataArrayPaths() const
+std::vector<DataArrayPath> NeighborOrientationCorrelation::getIgnoredDataArrayPaths() const
 {
   return m_IgnoredDataArrayPaths;
 }

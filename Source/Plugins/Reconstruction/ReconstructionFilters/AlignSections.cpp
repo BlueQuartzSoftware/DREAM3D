@@ -175,7 +175,7 @@ AlignSections::~AlignSections() = default;
 void AlignSections::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  QStringList linkedProps("AlignmentShiftFileName");
+  std::vector<QString> linkedProps = {"AlignmentShiftFileName"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Alignment Shift File", WriteAlignmentShifts, FilterParameter::Category::Parameter, AlignSections, linkedProps));
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Alignment File", AlignmentShiftFileName, FilterParameter::Category::Parameter, AlignSections, "", "*.txt"));
   setFilterParameters(parameters);

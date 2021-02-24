@@ -251,7 +251,7 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Loading Direction", LoadingDir, FilterParameter::Category::Parameter, FindTwinBoundarySchmidFactors));
 
-  QStringList linkedProps("TwinBoundarySchmidFactorsFile");
+  std::vector<QString> linkedProps = {"TwinBoundarySchmidFactorsFile"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Twin Boundary Info File", WriteFile, FilterParameter::Category::Parameter, FindTwinBoundarySchmidFactors, linkedProps));
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Twin Boundary Info File", TwinBoundarySchmidFactorsFile, FilterParameter::Category::Parameter, FindTwinBoundarySchmidFactors));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Feature Data", FilterParameter::Category::RequiredArray));

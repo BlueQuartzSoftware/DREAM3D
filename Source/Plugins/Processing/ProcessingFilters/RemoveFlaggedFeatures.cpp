@@ -88,18 +88,6 @@ void RemoveFlaggedFeatures::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RemoveFlaggedFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  setFillRemovedFeatures(reader->readValue("FillRemovedFeatures", getFillRemovedFeatures()));
-  setFlaggedFeaturesArrayPath(reader->readDataArrayPath("FlaggedFeaturesArrayPath", getFlaggedFeaturesArrayPath()));
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void RemoveFlaggedFeatures::initialize()
 {
   m_Neighbors = nullptr;
@@ -504,13 +492,13 @@ DataArrayPath RemoveFlaggedFeatures::getFlaggedFeaturesArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void RemoveFlaggedFeatures::setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value)
+void RemoveFlaggedFeatures::setIgnoredDataArrayPaths(const std::vector<DataArrayPath>& value)
 {
   m_IgnoredDataArrayPaths = value;
 }
 
 // -----------------------------------------------------------------------------
-QVector<DataArrayPath> RemoveFlaggedFeatures::getIgnoredDataArrayPaths() const
+std::vector<DataArrayPath> RemoveFlaggedFeatures::getIgnoredDataArrayPaths() const
 {
   return m_IgnoredDataArrayPaths;
 }

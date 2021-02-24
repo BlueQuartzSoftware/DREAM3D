@@ -104,7 +104,7 @@ void CAxisSegmentFeatures::setupFilterParameters()
   SegmentFeatures::setupFilterParameters();
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_FP("C-Axis Misorientation Tolerance (Degrees)", MisorientationTolerance, FilterParameter::Category::Parameter, CAxisSegmentFeatures));
-  QStringList linkedProps("GoodVoxelsArrayPath");
+  std::vector<QString> linkedProps = {"GoodVoxelsArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Category::Parameter, CAxisSegmentFeatures, linkedProps));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {

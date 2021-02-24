@@ -96,8 +96,8 @@ InitializeSyntheticVolume::~InitializeSyntheticVolume() = default;
 void InitializeSyntheticVolume::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  QStringList linkedProps("EstimatedPrimaryFeatures");
-  linkedProps << "InputPhaseTypesArrayPath";
+  std::vector<QString> linkedProps = {"EstimatedPrimaryFeatures"};
+  linkedProps.push_back("InputPhaseTypesArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Estimate Number of Features", EstimateNumberOfFeatures, FilterParameter::Category::Parameter, InitializeSyntheticVolume, linkedProps));
 
   PreflightUpdatedValueFilterParameter::Pointer param =
@@ -148,18 +148,18 @@ void InitializeSyntheticVolume::setupFilterParameters()
 
     parameter->setDefaultValue(0);
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Create Geometry");
     choices.push_back("Copy Geometry");
 
     parameter->setChoices(choices);
     linkedProps.clear();
-    linkedProps << "Dimensions"
-                << "Spacing"
-                << "Origin"
-                << "LengthUnit"
-                << "GeometryDataContainer"
-                << "Geometry Selection";
+    linkedProps.push_back("Dimensions");
+    linkedProps.push_back("Spacing");
+    linkedProps.push_back("Origin");
+    linkedProps.push_back("LengthUnit");
+    linkedProps.push_back("GeometryDataContainer");
+    linkedProps.push_back("Geometry Selection");
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
     parameter->setCategory(FilterParameter::Category::Parameter);
@@ -171,7 +171,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
   parameters.back()->setLegacyPropertyName("Resolution");
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Category::Parameter, InitializeSyntheticVolume, 0));
 
-  QVector<QString> choices = IGeometry::GetAllLengthUnitStrings();
+  std::vector<QString> choices = IGeometry::GetAllLengthUnitStrings();
   parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Units (For Description Only)", LengthUnit, FilterParameter::Category::Parameter, InitializeSyntheticVolume, choices, false, 0));
 
   param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Box Size in Length Units", BoxDimensions, FilterParameter::Category::Parameter, InitializeSyntheticVolume);

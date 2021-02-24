@@ -187,7 +187,7 @@ void ScalarSegmentFeatures::setupFilterParameters()
 {
   SegmentFeatures::setupFilterParameters();
   FilterParameterVectorType parameters;
-  QStringList linkedProps("GoodVoxelsArrayPath");
+  std::vector<QString> linkedProps = {"GoodVoxelsArrayPath"};
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Scalar Tolerance", ScalarTolerance, FilterParameter::Category::Parameter, ScalarSegmentFeatures));
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Category::Parameter, ScalarSegmentFeatures, linkedProps));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));

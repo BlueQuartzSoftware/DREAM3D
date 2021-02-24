@@ -107,12 +107,12 @@ GenerateEnsembleStatistics::~GenerateEnsembleStatistics() = default;
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::setupFilterParameters()
 {
-  QVector<QString> choices;
+  std::vector<QString> choices;
   choices.push_back("Beta");
   choices.push_back("Lognormal");
   choices.push_back("Power");
   FilterParameterVectorType parameters;
-  QStringList phaseTypeStrings;
+  std::vector<QString> phaseTypeStrings;
   PhaseType::getPhaseTypeStrings(phaseTypeStrings);
   PhaseTypeSelectionFilterParameter::Pointer phaseType_parameter = PhaseTypeSelectionFilterParameter::Create(
       "Phase Types", "PhaseTypeData", getCellEnsembleAttributeMatrixPath(), FilterParameter::Category::Parameter, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, PhaseTypeData),
@@ -129,19 +129,19 @@ void GenerateEnsembleStatistics::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Neighbor List", NeighborListArrayPath, FilterParameter::Category::RequiredArray, GenerateEnsembleStatistics, req));
   }
 
-  QStringList linkedProps;
+  std::vector<QString> linkedProps;
 
   linkedProps.clear();
-  linkedProps << "SizeDistributionFitType"
-              << "BiasedFeaturesArrayPath"
-              << "EquivalentDiametersArrayPath";
-  linkedProps << "AspectRatioDistributionFitType"
-              << "AspectRatiosArrayPath";
-  linkedProps << "Omega3DistributionFitType"
-              << "Omega3sArrayPath";
-  linkedProps << "NeighborhoodDistributionFitType"
-              << "NeighborhoodsArrayPath";
-  linkedProps << "AxisEulerAnglesArrayPath";
+  linkedProps.push_back("SizeDistributionFitType");
+  linkedProps.push_back("BiasedFeaturesArrayPath");
+  linkedProps.push_back("EquivalentDiametersArrayPath");
+  linkedProps.push_back("AspectRatioDistributionFitType");
+  linkedProps.push_back("AspectRatiosArrayPath");
+  linkedProps.push_back("Omega3DistributionFitType");
+  linkedProps.push_back("Omega3sArrayPath");
+  linkedProps.push_back("NeighborhoodDistributionFitType");
+  linkedProps.push_back("NeighborhoodsArrayPath");
+  linkedProps.push_back("AxisEulerAnglesArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Morphological Statistics", CalculateMorphologicalStats, FilterParameter::Category::Parameter, GenerateEnsembleStatistics, linkedProps));
   parameters.push_back(SIMPL_NEW_CHOICE_FP("Size Distribution Fit Type", SizeDistributionFitType, FilterParameter::Category::Parameter, GenerateEnsembleStatistics, choices, false));
   {
@@ -173,13 +173,13 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   }
 
   linkedProps.clear();
-  linkedProps << "CrystalStructuresArrayPath"
-              << "SurfaceFeaturesArrayPath";
-  linkedProps << "VolumesArrayPath"
-              << "FeatureEulerAnglesArrayPath"
-              << "AvgQuatsArrayPath";
-  linkedProps << "SharedSurfaceAreaListArrayPath"
-              << "CrystalStructuresArrayPath";
+  linkedProps.push_back("CrystalStructuresArrayPath");
+  linkedProps.push_back("SurfaceFeaturesArrayPath");
+  linkedProps.push_back("VolumesArrayPath");
+  linkedProps.push_back("FeatureEulerAnglesArrayPath");
+  linkedProps.push_back("AvgQuatsArrayPath");
+  linkedProps.push_back("SharedSurfaceAreaListArrayPath");
+  linkedProps.push_back("CrystalStructuresArrayPath");
   parameters.push_back(
       SIMPL_NEW_LINKED_BOOL_FP("Calculate Crystallographic Statistics", CalculateCrystallographicStats, FilterParameter::Category::Parameter, GenerateEnsembleStatistics, linkedProps));
   {
@@ -216,8 +216,8 @@ void GenerateEnsembleStatistics::setupFilterParameters()
                                                       GenerateEnsembleStatistics));
 
   linkedProps.clear();
-  linkedProps << "RDFArrayPath"
-              << "MaxMinRDFArrayPath";
+  linkedProps.push_back("RDFArrayPath");
+  linkedProps.push_back("MaxMinRDFArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Include Radial Distribution Function", IncludeRadialDistFunc, FilterParameter::Category::Parameter, GenerateEnsembleStatistics, linkedProps));
   {
     DataArraySelectionFilterParameter::RequirementType req =

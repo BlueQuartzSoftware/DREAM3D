@@ -89,7 +89,7 @@ EstablishMatrixPhase::~EstablishMatrixPhase() = default;
 void EstablishMatrixPhase::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  QStringList linkedProps("MaskArrayPath");
+  std::vector<QString> linkedProps = {"MaskArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask", UseMask, FilterParameter::Category::Parameter, EstablishMatrixPhase, linkedProps));
 
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));

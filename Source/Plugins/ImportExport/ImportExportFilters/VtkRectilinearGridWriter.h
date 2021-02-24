@@ -71,7 +71,7 @@ class ImportExport_EXPORT VtkRectilinearGridWriter : public AbstractFilter
   PYB11_FILTER_NEW_MACRO(VtkRectilinearGridWriter)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   PYB11_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
-  PYB11_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
+  PYB11_PROPERTY(std::vector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
 
@@ -130,13 +130,13 @@ public:
   /**
    * @brief Setter property for SelectedDataArrayPaths
    */
-  void setSelectedDataArrayPaths(const QVector<DataArrayPath>& value);
+  void setSelectedDataArrayPaths(const std::vector<DataArrayPath>& value);
   /**
    * @brief Getter property for SelectedDataArrayPaths
    * @return Value of SelectedDataArrayPaths
    */
-  QVector<DataArrayPath> getSelectedDataArrayPaths() const;
-  Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
+  std::vector<DataArrayPath> getSelectedDataArrayPaths() const;
+  Q_PROPERTY(DataArrayPathVec SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -187,11 +187,6 @@ public:
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
    */
   void setupFilterParameters() override;
-
-  /**
-   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
   /**
    * @brief execute Reimplemented from @see AbstractFilter class
@@ -278,7 +273,7 @@ protected:
 private:
   QString m_OutputFile = {""};
   bool m_WriteBinaryFile = {};
-  QVector<DataArrayPath> m_SelectedDataArrayPaths = {};
+  std::vector<DataArrayPath> m_SelectedDataArrayPaths = {};
 
   QVector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
 

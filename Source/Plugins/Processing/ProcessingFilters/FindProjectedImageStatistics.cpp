@@ -168,7 +168,7 @@ void FindProjectedImageStatistics::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(FindProjectedImageStatistics, this, Plane));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(FindProjectedImageStatistics, this, Plane));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("XY");
     choices.push_back("XZ");
     choices.push_back("YZ");

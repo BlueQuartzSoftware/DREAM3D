@@ -83,18 +83,6 @@ void ErodeDilateCoordinationNumber::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ErodeDilateCoordinationNumber::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
-  setCoordinationNumber(reader->readValue("CoordinationNumber", getCoordinationNumber()));
-  setLoop(reader->readValue("Loop", getLoop()));
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ErodeDilateCoordinationNumber::initialize()
 {
   m_Neighbors = nullptr;
@@ -461,13 +449,13 @@ DataArrayPath ErodeDilateCoordinationNumber::getFeatureIdsArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void ErodeDilateCoordinationNumber::setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value)
+void ErodeDilateCoordinationNumber::setIgnoredDataArrayPaths(const std::vector<DataArrayPath>& value)
 {
   m_IgnoredDataArrayPaths = value;
 }
 
 // -----------------------------------------------------------------------------
-QVector<DataArrayPath> ErodeDilateCoordinationNumber::getIgnoredDataArrayPaths() const
+std::vector<DataArrayPath> ErodeDilateCoordinationNumber::getIgnoredDataArrayPaths() const
 {
   return m_IgnoredDataArrayPaths;
 }

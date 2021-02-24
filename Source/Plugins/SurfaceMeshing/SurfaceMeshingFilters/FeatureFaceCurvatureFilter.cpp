@@ -73,21 +73,21 @@ void FeatureFaceCurvatureFilter::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Neighborhood Ring Count", NRing, FilterParameter::Category::Parameter, FeatureFaceCurvatureFilter));
-  QStringList linkedProps;
-  linkedProps << "SurfaceMeshPrincipalCurvature1sArrayName"
-              << "SurfaceMeshPrincipalCurvature2sArrayName";
-  linkedProps << "SurfaceMeshPrincipalDirection1sArrayName"
-              << "SurfaceMeshPrincipalDirection2sArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("SurfaceMeshPrincipalCurvature1sArrayName");
+  linkedProps.push_back("SurfaceMeshPrincipalCurvature2sArrayName");
+  linkedProps.push_back("SurfaceMeshPrincipalDirection1sArrayName");
+  linkedProps.push_back("SurfaceMeshPrincipalDirection2sArrayName");
   parameters.push_back(
       SIMPL_NEW_LINKED_BOOL_FP("Compute Principal Direction Vectors", ComputePrincipalDirectionVectors, FilterParameter::Category::Parameter, FeatureFaceCurvatureFilter, linkedProps));
   linkedProps.clear();
-  linkedProps << "SurfaceMeshGaussianCurvaturesArrayName";
+  linkedProps.push_back("SurfaceMeshGaussianCurvaturesArrayName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Compute Gaussian Curvature", ComputeGaussianCurvature, FilterParameter::Category::Parameter, FeatureFaceCurvatureFilter, linkedProps));
   linkedProps.clear();
-  linkedProps << "SurfaceMeshMeanCurvaturesArrayName";
+  linkedProps.push_back("SurfaceMeshMeanCurvaturesArrayName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Compute Mean Curvature", ComputeMeanCurvature, FilterParameter::Category::Parameter, FeatureFaceCurvatureFilter, linkedProps));
   linkedProps.clear();
-  linkedProps << "SurfaceMeshFaceNormalsArrayPath";
+  linkedProps.push_back("SurfaceMeshFaceNormalsArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Face Normals for Curve Fitting", UseNormalsForCurveFitting, FilterParameter::Category::Parameter, FeatureFaceCurvatureFilter, linkedProps));
 
   parameters.push_back(SeparatorFilterParameter::Create("Face Data", FilterParameter::Category::RequiredArray));

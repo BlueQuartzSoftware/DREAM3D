@@ -146,7 +146,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_BOOL_FP("Periodic Boundaries", PeriodicBoundaries, FilterParameter::Category::Parameter, InsertPrecipitatePhases));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Match Radial Distribution Function", MatchRDF, FilterParameter::Category::Parameter, InsertPrecipitatePhases));
-  QStringList linkedProps("MaskArrayPath");
+  std::vector<QString> linkedProps = {"MaskArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask", UseMask, FilterParameter::Category::Parameter, InsertPrecipitatePhases, linkedProps));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
@@ -212,13 +212,13 @@ void InsertPrecipitatePhases::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, FeatureGeneration));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, FeatureGeneration));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Generate Precipitates");
     choices.push_back("Already Have Precipitates");
     parameter->setChoices(choices);
-    QStringList linkedProps;
-    linkedProps << "InputStatsArrayPath"
-                << "PrecipInputFile";
+    std::vector<QString> linkedProps;
+    linkedProps.push_back("InputStatsArrayPath");
+    linkedProps.push_back("PrecipInputFile");
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
     parameter->setCategory(FilterParameter::Category::Parameter);
@@ -226,8 +226,8 @@ void InsertPrecipitatePhases::setupFilterParameters()
   }
 
   linkedProps.clear();
-  linkedProps << "PrecipInputFile"
-              << "InputStatsArrayPath";
+  linkedProps.push_back("PrecipInputFile");
+  linkedProps.push_back("InputStatsArrayPath");
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Precipitates Input File", PrecipInputFile, FilterParameter::Category::Parameter, InsertPrecipitatePhases, "*.txt", "Text File", 1));
   linkedProps.clear();
 
@@ -238,14 +238,14 @@ void InsertPrecipitatePhases::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, SaveGeometricDescriptions));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, SaveGeometricDescriptions));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Do Not Save");
     choices.push_back("Save To New Attribute Matrix");
     choices.push_back("Append To Existing Attribute Matrix");
     parameter->setChoices(choices);
-    QStringList linkedProps;
-    linkedProps << "NewAttributeMatrixPath"
-                << "SelectedAttributeMatrixPath";
+    std::vector<QString> linkedProps;
+    linkedProps.push_back("NewAttributeMatrixPath");
+    linkedProps.push_back("SelectedAttributeMatrixPath");
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
     parameter->setCategory(FilterParameter::Category::Parameter);

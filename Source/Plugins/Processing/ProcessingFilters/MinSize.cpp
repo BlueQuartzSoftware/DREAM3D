@@ -67,9 +67,9 @@ void MinSize::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Minimum Allowed Feature Size", MinAllowedFeatureSize, FilterParameter::Category::Parameter, MinSize));
-  QStringList linkedProps;
-  linkedProps << "PhaseNumber"
-              << "FeaturePhasesArrayPath";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("PhaseNumber");
+  linkedProps.push_back("FeaturePhasesArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply to Single Phase Only", ApplyToSinglePhase, FilterParameter::Category::Parameter, MinSize, linkedProps));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase Index", PhaseNumber, FilterParameter::Category::Parameter, MinSize));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
@@ -93,21 +93,6 @@ void MinSize::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Ignore", IgnoredDataArrayPaths, FilterParameter::Category::Parameter, MinSize, req));
   }
   setFilterParameters(parameters);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MinSize::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath()));
-  setNumCellsArrayPath(reader->readDataArrayPath("NumCellsArrayPath", getNumCellsArrayPath()));
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
-  setMinAllowedFeatureSize(reader->readValue("MinAllowedFeatureSize", getMinAllowedFeatureSize()));
-  setApplyToSinglePhase(reader->readValue("ApplyToSinglePhase", getApplyToSinglePhase()));
-  setPhaseNumber(reader->readValue("PhaseNumber", getPhaseNumber()));
-  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -635,13 +620,13 @@ DataArrayPath MinSize::getNumCellsArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void MinSize::setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value)
+void MinSize::setIgnoredDataArrayPaths(const std::vector<DataArrayPath>& value)
 {
   m_IgnoredDataArrayPaths = value;
 }
 
 // -----------------------------------------------------------------------------
-QVector<DataArrayPath> MinSize::getIgnoredDataArrayPaths() const
+std::vector<DataArrayPath> MinSize::getIgnoredDataArrayPaths() const
 {
   return m_IgnoredDataArrayPaths;
 }

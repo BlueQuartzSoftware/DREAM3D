@@ -80,10 +80,10 @@ FindNeighbors::~FindNeighbors() = default;
 void FindNeighbors::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  QStringList linkedProps("BoundaryCellsArrayName");
+  std::vector<QString> linkedProps = {"BoundaryCellsArrayName"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Store Boundary Cells Array", StoreBoundaryCells, FilterParameter::Category::Parameter, FindNeighbors, linkedProps));
   linkedProps.clear();
-  linkedProps << "SurfaceFeaturesArrayName";
+  linkedProps.push_back("SurfaceFeaturesArrayName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Store Surface Features Array", StoreSurfaceFeatures, FilterParameter::Category::Parameter, FindNeighbors, linkedProps));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {

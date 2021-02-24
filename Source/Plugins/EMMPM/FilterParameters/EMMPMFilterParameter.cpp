@@ -99,7 +99,7 @@ void EMMPMFilterParameter::readJson(const QJsonObject& json)
   {
     {
       QJsonArray arrayObj = json["InputDataArrayVector"].toArray();
-      QVector<DataArrayPath> pathVector;
+      std::vector<DataArrayPath> pathVector;
       for(int i = 0; i < arrayObj.size(); i++)
       {
         QJsonObject obj = arrayObj.at(i).toObject();
@@ -142,7 +142,7 @@ void EMMPMFilterParameter::writeJson(QJsonObject& json)
   if(multiFilter != nullptr)
   {
     {
-      QVector<DataArrayPath> pathVector = multiFilter->getInputDataArrayVector();
+      std::vector<DataArrayPath> pathVector = multiFilter->getInputDataArrayVector();
       QJsonArray arrayObj;
 
       for(int i = 0; i < pathVector.size(); i++)

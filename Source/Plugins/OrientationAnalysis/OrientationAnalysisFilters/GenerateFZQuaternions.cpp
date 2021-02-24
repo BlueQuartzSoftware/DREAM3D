@@ -149,7 +149,7 @@ void GenerateFZQuaternions::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
   std::vector<std::string> names = LaueOps::GetLaueNames();
-  QVector<QString> choices;
+  std::vector<QString> choices;
   for(const auto& name : names)
   {
     choices.push_back(QString::fromStdString(name));
@@ -157,7 +157,7 @@ void GenerateFZQuaternions::setupFilterParameters()
 
   choices.pop_back(); // Remove the last name because we don't need it.
 
-  QStringList linkedProps("GoodVoxelsArrayPath");
+  std::vector<QString> linkedProps = {"GoodVoxelsArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply to Good Elements Only (Bad Elements Will Be Black)", UseGoodVoxels, FilterParameter::Category::Parameter, GenerateFZQuaternions, linkedProps));
   parameters.push_back(SeparatorFilterParameter::Create("Element Data", FilterParameter::Category::RequiredArray));
 

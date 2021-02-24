@@ -84,7 +84,7 @@ FindMisorientations::~FindMisorientations() = default;
 void FindMisorientations::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  QStringList linkedProps("AvgMisorientationsArrayName");
+  std::vector<QString> linkedProps = {"AvgMisorientationsArrayName"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Find Average Misorientation Per Feature", FindAvgMisors, FilterParameter::Category::Parameter, FindMisorientations, linkedProps));
   parameters.push_back(SeparatorFilterParameter::Create("Feature Data", FilterParameter::Category::RequiredArray));
   {

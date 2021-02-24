@@ -83,13 +83,13 @@ void VtkStructuredPointsReader::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input VTK File", InputFile, FilterParameter::Category::Parameter, VtkStructuredPointsReader));
-  QStringList linkedProps;
-  linkedProps << "VertexDataContainerName"
-              << "VertexAttributeMatrixName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("VertexDataContainerName");
+  linkedProps.push_back("VertexAttributeMatrixName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Read Point Data", ReadPointData, FilterParameter::Category::Parameter, VtkStructuredPointsReader, linkedProps));
   linkedProps.clear();
-  linkedProps << "VolumeDataContainerName"
-              << "CellAttributeMatrixName";
+  linkedProps.push_back("VolumeDataContainerName");
+  linkedProps.push_back("CellAttributeMatrixName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Read Cell Data", ReadCellData, FilterParameter::Category::Parameter, VtkStructuredPointsReader, linkedProps));
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Point Data Data Container", VertexDataContainerName, FilterParameter::Category::CreatedArray, VtkStructuredPointsReader));
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Cell Data Data Container", VolumeDataContainerName, FilterParameter::Category::CreatedArray, VtkStructuredPointsReader));

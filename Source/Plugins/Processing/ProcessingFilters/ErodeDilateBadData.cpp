@@ -74,7 +74,7 @@ void ErodeDilateBadData::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ErodeDilateBadData, this, Direction));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ErodeDilateBadData, this, Direction));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Dilate");
     choices.push_back("Erode");
     parameter->setChoices(choices);
@@ -95,21 +95,6 @@ void ErodeDilateBadData::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Ignore", IgnoredDataArrayPaths, FilterParameter::Category::Parameter, ErodeDilateBadData, req));
   }
   setFilterParameters(parameters);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ErodeDilateBadData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
-  setDirection(reader->readValue("Direction", getDirection()));
-  setNumIterations(reader->readValue("NumIterations", getNumIterations()));
-  setXDirOn(reader->readValue("XDirOn", getXDirOn()));
-  setYDirOn(reader->readValue("YDirOn", getYDirOn()));
-  setZDirOn(reader->readValue("ZDirOn", getZDirOn()));
-  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -502,13 +487,13 @@ DataArrayPath ErodeDilateBadData::getFeatureIdsArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void ErodeDilateBadData::setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value)
+void ErodeDilateBadData::setIgnoredDataArrayPaths(const std::vector<DataArrayPath>& value)
 {
   m_IgnoredDataArrayPaths = value;
 }
 
 // -----------------------------------------------------------------------------
-QVector<DataArrayPath> ErodeDilateBadData::getIgnoredDataArrayPaths() const
+std::vector<DataArrayPath> ErodeDilateBadData::getIgnoredDataArrayPaths() const
 {
   return m_IgnoredDataArrayPaths;
 }

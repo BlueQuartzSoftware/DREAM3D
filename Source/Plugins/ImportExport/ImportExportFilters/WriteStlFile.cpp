@@ -70,7 +70,7 @@ void WriteStlFile::setupFilterParameters()
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output STL Directory", OutputStlDirectory, FilterParameter::Category::Parameter, WriteStlFile));
   parameters.push_back(SIMPL_NEW_STRING_FP("STL File Prefix", OutputStlPrefix, FilterParameter::Category::Parameter, WriteStlFile));
-  // QStringList linkedProps("SurfaceMeshFacePhasesArrayPath");
+  // std::vector<QString> linkedProps = {"SurfaceMeshFacePhasesArrayPath"};
   // parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Group Files by Ensemble", GroupByPhase, FilterParameter::Category::Parameter, WriteStlFile, linkedProps));
   parameters.push_back(SeparatorFilterParameter::Create("Face Data", FilterParameter::Category::RequiredArray));
   {

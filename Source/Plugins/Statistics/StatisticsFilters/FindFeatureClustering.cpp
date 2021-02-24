@@ -82,7 +82,7 @@ void FindFeatureClustering::setupFilterParameters()
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Bins for RDF", NumberOfBins, FilterParameter::Category::Parameter, FindFeatureClustering));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase Index", PhaseNumber, FilterParameter::Category::Parameter, FindFeatureClustering));
-  QStringList linkedProps("BiasedFeaturesArrayPath");
+  std::vector<QString> linkedProps = {"BiasedFeaturesArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Remove Biased Features", RemoveBiasedFeatures, FilterParameter::Category::Parameter, FindFeatureClustering, linkedProps));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Feature Data", FilterParameter::Category::RequiredArray));
   {

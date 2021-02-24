@@ -87,7 +87,7 @@ void AlignSectionsMisorientation::setupFilterParameters()
   AlignSections::setupFilterParameters();
   FilterParameterVectorType parameters = getFilterParameters();
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Misorientation Tolerance (Degrees)", MisorientationTolerance, FilterParameter::Category::Parameter, AlignSectionsMisorientation));
-  QStringList linkedProps("GoodVoxelsArrayPath");
+  std::vector<QString> linkedProps = {"GoodVoxelsArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Category::Parameter, AlignSectionsMisorientation, linkedProps));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {

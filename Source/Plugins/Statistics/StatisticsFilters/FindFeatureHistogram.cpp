@@ -76,7 +76,7 @@ void FindFeatureHistogram::setupFilterParameters()
 
     parameters.push_back(parameter);
   }
-  QStringList linkedProps("BiasedFeaturesArrayPath");
+  std::vector<QString> linkedProps = {"BiasedFeaturesArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Remove Biased Features", RemoveBiasedFeatures, FilterParameter::Category::Parameter, FindFeatureHistogram, linkedProps));
   {
     DataArraySelectionFilterParameter::RequirementType req;

@@ -74,7 +74,7 @@ void ErodeDilateMask::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ErodeDilateMask, this, Direction));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ErodeDilateMask, this, Direction));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Dilate");
     choices.push_back("Erode");
     parameter->setChoices(choices);

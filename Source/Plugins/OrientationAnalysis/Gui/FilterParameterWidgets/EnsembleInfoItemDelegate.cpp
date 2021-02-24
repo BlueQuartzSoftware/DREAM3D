@@ -55,7 +55,12 @@ EnsembleInfoItemDelegate::EnsembleInfoItemDelegate(int numPhases, QObject* paren
 , m_CrystalStructureList(EnsembleInfo::CrystalStructureStrings())
 , m_NumberOfPhases(numPhases)
 {
-  PhaseType::getPhaseTypeStrings(m_PhaseTypeList);
+  std::vector<QString> phaseTypeList;
+  PhaseType::getPhaseTypeStrings(phaseTypeList);
+  for(const QString& type : phaseTypeList)
+  {
+    m_PhaseTypeList.push_back(type);
+  }
   m_PhaseTypeList.pop_back(); // Pop "Unknown" PhaseType
 }
 

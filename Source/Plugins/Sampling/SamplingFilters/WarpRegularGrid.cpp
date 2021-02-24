@@ -102,18 +102,18 @@ void WarpRegularGrid::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(WarpRegularGrid, this, PolyOrder));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(WarpRegularGrid, this, PolyOrder));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("2nd");
     choices.push_back("3rd");
     choices.push_back("4th");
     parameter->setChoices(choices);
-    QStringList linkedProps;
-    linkedProps << "SecondOrderACoeff"
-                << "ThirdOrderACoeff"
-                << "FourthOrderACoeff";
-    linkedProps << "SecondOrderBCoeff"
-                << "ThirdOrderBCoeff"
-                << "FourthOrderBCoeff";
+    std::vector<QString> linkedProps;
+    linkedProps.push_back("SecondOrderACoeff");
+    linkedProps.push_back("ThirdOrderACoeff");
+    linkedProps.push_back("FourthOrderACoeff");
+    linkedProps.push_back("SecondOrderBCoeff");
+    linkedProps.push_back("ThirdOrderBCoeff");
+    linkedProps.push_back("FourthOrderBCoeff");
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
     parameter->setCategory(FilterParameter::Category::Parameter);
@@ -125,8 +125,8 @@ void WarpRegularGrid::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_ThirdO_POLY_FP("Third Order B Coefficients", ThirdOrderBCoeff, FilterParameter::Category::Parameter, WarpRegularGrid, 1));
   parameters.push_back(SIMPL_NEW_FourthO_POLY_FP("Fourth Order A Coefficients", FourthOrderACoeff, FilterParameter::Category::Parameter, WarpRegularGrid, 2));
   parameters.push_back(SIMPL_NEW_FourthO_POLY_FP("Fourth Order B Coefficients", FourthOrderBCoeff, FilterParameter::Category::Parameter, WarpRegularGrid, 2));
-  QStringList linkedProps;
-  linkedProps << "NewDataContainerName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewDataContainerName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Data Container", SaveAsNewDataContainer, FilterParameter::Category::Parameter, WarpRegularGrid, linkedProps));
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", NewDataContainerName, FilterParameter::Category::CreatedArray, WarpRegularGrid));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));

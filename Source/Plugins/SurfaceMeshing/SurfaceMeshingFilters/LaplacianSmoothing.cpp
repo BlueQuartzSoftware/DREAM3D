@@ -74,8 +74,8 @@ void LaplacianSmoothing::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Iteration Steps", IterationSteps, FilterParameter::Category::Parameter, LaplacianSmoothing));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Default Lambda", Lambda, FilterParameter::Category::Parameter, LaplacianSmoothing));
 
-  QStringList linkedProps;
-  linkedProps << "MuFactor";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("MuFactor");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Taubin Smoothing", UseTaubinSmoothing, FilterParameter::Category::Parameter, LaplacianSmoothing, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Mu Factor", MuFactor, FilterParameter::Category::Parameter, LaplacianSmoothing));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Triple Line Lambda", TripleLineLambda, FilterParameter::Category::Parameter, LaplacianSmoothing));

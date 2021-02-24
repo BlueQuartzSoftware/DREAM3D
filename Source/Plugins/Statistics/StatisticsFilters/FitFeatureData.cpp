@@ -75,7 +75,7 @@ void FitFeatureData::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(FitFeatureData, this, DistributionType));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(FitFeatureData, this, DistributionType));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Beta");
     choices.push_back("Log-Normal");
     choices.push_back("Power Law");
@@ -83,7 +83,7 @@ void FitFeatureData::setupFilterParameters()
     parameter->setCategory(FilterParameter::Category::Parameter);
     parameters.push_back(parameter);
   }
-  QStringList linkedProps("BiasedFeaturesArrayPath");
+  std::vector<QString> linkedProps = {"BiasedFeaturesArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Remove Biased Features", RemoveBiasedFeatures, FilterParameter::Category::Parameter, FitFeatureData, linkedProps));
   parameters.push_back(SeparatorFilterParameter::Create("Feature Data", FilterParameter::Category::RequiredArray));
   {

@@ -68,8 +68,8 @@ class ImportExport_EXPORT SurfaceMeshToVtk : public AbstractFilter
   PYB11_PROPERTY(bool WriteConformalMesh READ getWriteConformalMesh WRITE setWriteConformalMesh)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
-  PYB11_PROPERTY(QVector<DataArrayPath> SelectedFaceArrays READ getSelectedFaceArrays WRITE setSelectedFaceArrays)
-  PYB11_PROPERTY(QVector<DataArrayPath> SelectedVertexArrays READ getSelectedVertexArrays WRITE setSelectedVertexArrays)
+  PYB11_PROPERTY(std::vector<DataArrayPath> SelectedFaceArrays READ getSelectedFaceArrays WRITE setSelectedFaceArrays)
+  PYB11_PROPERTY(std::vector<DataArrayPath> SelectedVertexArrays READ getSelectedVertexArrays WRITE setSelectedVertexArrays)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
 
@@ -161,24 +161,24 @@ public:
   /**
    * @brief Setter property for SelectedFaceArrays
    */
-  void setSelectedFaceArrays(const QVector<DataArrayPath>& value);
+  void setSelectedFaceArrays(const std::vector<DataArrayPath>& value);
   /**
    * @brief Getter property for SelectedFaceArrays
    * @return Value of SelectedFaceArrays
    */
-  QVector<DataArrayPath> getSelectedFaceArrays() const;
-  Q_PROPERTY(QVector<DataArrayPath> SelectedFaceArrays READ getSelectedFaceArrays WRITE setSelectedFaceArrays)
+  std::vector<DataArrayPath> getSelectedFaceArrays() const;
+  Q_PROPERTY(DataArrayPathVec SelectedFaceArrays READ getSelectedFaceArrays WRITE setSelectedFaceArrays)
 
   /**
    * @brief Setter property for SelectedVertexArrays
    */
-  void setSelectedVertexArrays(const QVector<DataArrayPath>& value);
+  void setSelectedVertexArrays(const std::vector<DataArrayPath>& value);
   /**
    * @brief Getter property for SelectedVertexArrays
    * @return Value of SelectedVertexArrays
    */
-  QVector<DataArrayPath> getSelectedVertexArrays() const;
-  Q_PROPERTY(QVector<DataArrayPath> SelectedVertexArrays READ getSelectedVertexArrays WRITE setSelectedVertexArrays)
+  std::vector<DataArrayPath> getSelectedVertexArrays() const;
+  Q_PROPERTY(DataArrayPathVec SelectedVertexArrays READ getSelectedVertexArrays WRITE setSelectedVertexArrays)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -231,11 +231,6 @@ public:
   void setupFilterParameters() override;
 
   /**
-   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
-
-  /**
    * @brief execute Reimplemented from @see AbstractFilter class
    */
   void execute() override;
@@ -278,8 +273,8 @@ private:
   bool m_WriteConformalMesh = {true};
   DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
   DataArrayPath m_SurfaceMeshNodeTypeArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType};
-  QVector<DataArrayPath> m_SelectedFaceArrays = {};
-  QVector<DataArrayPath> m_SelectedVertexArrays = {};
+  std::vector<DataArrayPath> m_SelectedFaceArrays = {};
+  std::vector<DataArrayPath> m_SelectedVertexArrays = {};
 
 public:
   SurfaceMeshToVtk(const SurfaceMeshToVtk&) = delete;            // Copy Constructor Not Implemented

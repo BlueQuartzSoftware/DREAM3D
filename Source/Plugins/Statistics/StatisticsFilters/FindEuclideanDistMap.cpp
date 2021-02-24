@@ -305,17 +305,17 @@ void FindEuclideanDistMap::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_BOOL_FP("Calculate Manhattan Distance", CalcManhattanDist, FilterParameter::Category::Parameter, FindEuclideanDistMap));
-  QStringList linkedProps("GBDistancesArrayName");
+  std::vector<QString> linkedProps = {"GBDistancesArrayName"};
 
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Distance to Boundaries", DoBoundaries, FilterParameter::Category::Parameter, FindEuclideanDistMap, linkedProps));
   linkedProps.clear();
-  linkedProps << "TJDistancesArrayName";
+  linkedProps.push_back("TJDistancesArrayName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Distance to Triple Lines", DoTripleLines, FilterParameter::Category::Parameter, FindEuclideanDistMap, linkedProps));
   linkedProps.clear();
-  linkedProps << "QPDistancesArrayName";
+  linkedProps.push_back("QPDistancesArrayName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Distance to Quadruple Points", DoQuadPoints, FilterParameter::Category::Parameter, FindEuclideanDistMap, linkedProps));
   linkedProps.clear();
-  linkedProps << "NearestNeighborsArrayName";
+  linkedProps.push_back("NearestNeighborsArrayName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Store the Nearest Boundary Cells", SaveNearestNeighbors, FilterParameter::Category::Parameter, FindEuclideanDistMap, linkedProps));
 
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));

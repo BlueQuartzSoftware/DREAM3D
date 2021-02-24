@@ -162,23 +162,6 @@ void QuickSurfaceMesh::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuickSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  setSelectedDataArrayPaths(reader->readDataArrayPathVector("SelectedDataArrayPaths", getSelectedDataArrayPaths()));
-  setSurfaceDataContainerName(reader->readDataArrayPath("SurfaceDataContainerName", getSurfaceDataContainerName()));
-  setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName()));
-  setFaceAttributeMatrixName(reader->readString("FaceAttributeMatrixName", getFaceAttributeMatrixName()));
-  setNodeTypesArrayName(reader->readString("NodeTypesArrayName", getNodeTypesArrayName()));
-  setFaceLabelsArrayName(reader->readString("FaceLabelsArrayName", getFaceLabelsArrayName()));
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
-  setFeatureAttributeMatrixName(reader->readString("FeatureAttributeMatrixName", getFeatureAttributeMatrixName()));
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void QuickSurfaceMesh::updateVertexInstancePointers()
 {
   clearErrorCode();
@@ -261,7 +244,7 @@ void QuickSurfaceMesh::dataCheck()
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 
-  QVector<DataArrayPath> paths = getSelectedDataArrayPaths();
+  std::vector<DataArrayPath> paths = getSelectedDataArrayPaths();
 
   if(!DataArrayPath::ValidateVector(paths))
   {
@@ -1940,13 +1923,13 @@ QString QuickSurfaceMesh::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void QuickSurfaceMesh::setSelectedDataArrayPaths(const QVector<DataArrayPath>& value)
+void QuickSurfaceMesh::setSelectedDataArrayPaths(const std::vector<DataArrayPath>& value)
 {
   m_SelectedDataArrayPaths = value;
 }
 
 // -----------------------------------------------------------------------------
-QVector<DataArrayPath> QuickSurfaceMesh::getSelectedDataArrayPaths() const
+std::vector<DataArrayPath> QuickSurfaceMesh::getSelectedDataArrayPaths() const
 {
   return m_SelectedDataArrayPaths;
 }

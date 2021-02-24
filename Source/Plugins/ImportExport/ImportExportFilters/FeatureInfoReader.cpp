@@ -86,9 +86,9 @@ void FeatureInfoReader::setupFilterParameters()
   FileReader::setupFilterParameters();
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input Feature Info File", InputFile, FilterParameter::Category::Parameter, FeatureInfoReader, "*.txt"));
-  QStringList linkedProps;
-  linkedProps << "CellPhasesArrayName"
-              << "CellEulerAnglesArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("CellPhasesArrayName");
+  linkedProps.push_back("CellEulerAnglesArrayName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Element Level Arrays", CreateCellLevelArrays, FilterParameter::Category::Parameter, FeatureInfoReader, linkedProps));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Renumber Features", RenumberFeatures, FilterParameter::Category::Parameter, FeatureInfoReader));
   parameters.push_back(SeparatorFilterParameter::Create("Element Data", FilterParameter::Category::RequiredArray));
@@ -116,7 +116,7 @@ void FeatureInfoReader::setupFilterParameters()
       SIMPL_NEW_DA_WITH_LINKED_AM_FP("Euler Angles", FeatureEulerAnglesArrayName, FeatureIdsArrayPath, CellFeatureAttributeMatrixName, FilterParameter::Category::CreatedArray, FeatureInfoReader));
 
   {
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back(",");
     choices.push_back(";");
     choices.push_back(":");

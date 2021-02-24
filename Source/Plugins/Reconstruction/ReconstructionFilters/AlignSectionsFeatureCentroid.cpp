@@ -70,7 +70,7 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
   AlignSections::setupFilterParameters();
   // getting the current parameters that were set by the parent and adding to it before resetting it
   FilterParameterVectorType parameters = getFilterParameters();
-  QStringList linkedProps("ReferenceSlice");
+  std::vector<QString> linkedProps = {"ReferenceSlice"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Reference Slice", UseReferenceSlice, FilterParameter::Category::Parameter, AlignSectionsFeatureCentroid, linkedProps));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Reference Slice", ReferenceSlice, FilterParameter::Category::Parameter, AlignSectionsFeatureCentroid));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));

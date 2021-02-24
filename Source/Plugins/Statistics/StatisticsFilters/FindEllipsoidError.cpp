@@ -64,7 +64,7 @@ void FindEllipsoidError::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  QStringList linkedProps("IdealFeatureIdsArrayName");
+  std::vector<QString> linkedProps = {"IdealFeatureIdsArrayName"};
   parameters.push_back(
       SIMPL_NEW_LINKED_BOOL_FP("Write Ideal Ellipse Feature Ids (Caution LONG calculation)", WriteIdealEllipseFeatureIds, FilterParameter::Category::Parameter, FindEllipsoidError, linkedProps));
 

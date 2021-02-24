@@ -127,7 +127,7 @@ void ConvertQuaternion::setupFilterParameters()
   DataArrayCreationFilterParameter::RequirementType dacReq;
   parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Output Data Array Path", OutputDataArrayPath, FilterParameter::Category::CreatedArray, ConvertQuaternion, dacReq, DataArrayID31));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Delete Original Data", DeleteOriginalData, FilterParameter::Category::Parameter, ConvertQuaternion));
-  QVector<QString> choices = {"To Scalar Vector ( w, [x, y, z] )", "To Vector Scalar ( [x, y, z], w )"};
+  std::vector<QString> choices = {"To Scalar Vector ( w, [x, y, z] )", "To Vector Scalar ( [x, y, z], w )"};
   parameters.push_back(SIMPL_NEW_CHOICE_FP("Conversion Type", ConversionType, FilterParameter::Category::Parameter, ConvertQuaternion, choices, false));
 
   setFilterParameters(parameters);

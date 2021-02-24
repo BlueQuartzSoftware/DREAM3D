@@ -318,7 +318,7 @@ void InsertAtoms::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(InsertAtoms, this, Basis));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(InsertAtoms, this, Basis));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Simple Cubic");
     choices.push_back("Body Centered Cubic");
     choices.push_back("Face Centered Cubic");

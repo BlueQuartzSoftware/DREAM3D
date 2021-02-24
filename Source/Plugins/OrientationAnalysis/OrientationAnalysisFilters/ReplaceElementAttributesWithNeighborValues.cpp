@@ -350,7 +350,7 @@ void ReplaceElementAttributesWithNeighborValues::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ReplaceElementAttributesWithNeighborValues, this, SelectedComparison));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ReplaceElementAttributesWithNeighborValues, this, SelectedComparison));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("<");
     choices.push_back(">");
     parameter->setChoices(choices);

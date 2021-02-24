@@ -75,10 +75,10 @@ void FindLocalAverageCAxisMisalignments::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  QStringList linkedProps("LocalCAxisMisalignmentsArrayName");
+  std::vector<QString> linkedProps = {"LocalCAxisMisalignmentsArrayName"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Local C-Axis Misalignments", CalcBiasedAvg, FilterParameter::Category::Parameter, FindLocalAverageCAxisMisalignments, linkedProps));
   linkedProps.clear();
-  linkedProps << "UnbiasedLocalCAxisMisalignmentsArrayName";
+  linkedProps.push_back("UnbiasedLocalCAxisMisalignmentsArrayName");
   parameters.push_back(
       SIMPL_NEW_LINKED_BOOL_FP("Calculate Unbiased Local C-Axis Misalignments", CalcUnbiasedAvg, FilterParameter::Category::Parameter, FindLocalAverageCAxisMisalignments, linkedProps));
 

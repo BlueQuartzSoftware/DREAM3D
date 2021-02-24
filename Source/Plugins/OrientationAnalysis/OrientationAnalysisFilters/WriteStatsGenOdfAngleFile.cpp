@@ -96,7 +96,7 @@ void WriteStatsGenOdfAngleFile::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(WriteStatsGenOdfAngleFile, this, Delimiter));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(WriteStatsGenOdfAngleFile, this, Delimiter));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back(", (comma)");
     choices.push_back("; (semicolon)");
     choices.push_back("  (space)");
@@ -107,7 +107,7 @@ void WriteStatsGenOdfAngleFile::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(SIMPL_NEW_BOOL_FP("Convert to Degrees", ConvertToDegrees, FilterParameter::Category::Parameter, WriteStatsGenOdfAngleFile));
-  QStringList linkedProps("GoodVoxelsArrayPath");
+  std::vector<QString> linkedProps = {"GoodVoxelsArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Only Write Good Elements", UseGoodVoxels, FilterParameter::Category::Parameter, WriteStatsGenOdfAngleFile, linkedProps));
 
   parameters.push_back(SeparatorFilterParameter::Create("Element Data", FilterParameter::Category::RequiredArray));

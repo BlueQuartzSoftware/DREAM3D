@@ -436,7 +436,7 @@ void FindGBCDMetricBased::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(FindGBCDMetricBased, this, ChosenLimitDists));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(FindGBCDMetricBased, this, ChosenLimitDists));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
 
     for(int choiceIdx = 0; choiceIdx < FindGBCDMetricBased::k_NumberResolutionChoices; choiceIdx++)
     {

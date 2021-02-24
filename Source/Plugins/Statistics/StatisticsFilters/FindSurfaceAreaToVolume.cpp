@@ -90,7 +90,7 @@ void FindSurfaceAreaToVolume::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Surface Area to Volume Ratio", SurfaceAreaVolumeRatioArrayName, NumCellsArrayPath, NumCellsArrayPath, FilterParameter::Category::CreatedArray,
                                                       FindSurfaceAreaToVolume));
 
-  QStringList linkedProps("SphericityArrayName");
+  std::vector<QString> linkedProps = {"SphericityArrayName"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Sphericity", CalculateSphericity, FilterParameter::Category::Parameter, FindSurfaceAreaToVolume, linkedProps));
   parameters.push_back(
       SIMPL_NEW_DA_WITH_LINKED_AM_FP("Sphericity Array Name", SphericityArrayName, NumCellsArrayPath, NumCellsArrayPath, FilterParameter::Category::CreatedArray, FindSurfaceAreaToVolume));

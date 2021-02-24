@@ -59,7 +59,7 @@ class EMMPM_EXPORT MultiEmmpmFilter : public EMMPMFilter
   PYB11_FILTER()
   PYB11_SHARED_POINTERS(MultiEmmpmFilter)
   PYB11_FILTER_NEW_MACRO(MultiEmmpmFilter)
-  PYB11_PROPERTY(QVector<DataArrayPath> InputDataArrayVector READ getInputDataArrayVector WRITE setInputDataArrayVector)
+  PYB11_PROPERTY(std::vector<DataArrayPath> InputDataArrayVector READ getInputDataArrayVector WRITE setInputDataArrayVector)
   PYB11_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
   PYB11_PROPERTY(QString OutputArrayPrefix READ getOutputArrayPrefix WRITE setOutputArrayPrefix)
   PYB11_PROPERTY(bool UsePreviousMuSigma READ getUsePreviousMuSigma WRITE setUsePreviousMuSigma)
@@ -101,13 +101,13 @@ public:
   /**
    * @brief Setter property for InputDataArrayVector
    */
-  void setInputDataArrayVector(const QVector<DataArrayPath>& value);
+  void setInputDataArrayVector(const std::vector<DataArrayPath>& value);
   /**
    * @brief Getter property for InputDataArrayVector
    * @return Value of InputDataArrayVector
    */
-  QVector<DataArrayPath> getInputDataArrayVector() const;
-  Q_PROPERTY(QVector<DataArrayPath> InputDataArrayVector READ getInputDataArrayVector WRITE setInputDataArrayVector)
+  std::vector<DataArrayPath> getInputDataArrayVector() const;
+  Q_PROPERTY(DataArrayPathVec InputDataArrayVector READ getInputDataArrayVector WRITE setInputDataArrayVector)
 
   /**
    * @brief Setter property for OutputAttributeMatrixName
@@ -193,11 +193,6 @@ public:
   void setupFilterParameters() override;
 
   /**
-   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
-
-  /**
    * @brief execute Reimplemented from @see AbstractFilter class
    */
   void execute() override;
@@ -227,7 +222,7 @@ private:
   std::weak_ptr<DataArray<uint8_t>> m_OutputImagePtr;
   uint8_t* m_OutputImage = nullptr;
 
-  QVector<DataArrayPath> m_InputDataArrayVector = {};
+  std::vector<DataArrayPath> m_InputDataArrayVector = {};
   QString m_OutputAttributeMatrixName = {"MultiArrayEMMPMOutput"};
   QString m_OutputArrayPrefix = {"Segmented_"};
   bool m_UsePreviousMuSigma = {true};

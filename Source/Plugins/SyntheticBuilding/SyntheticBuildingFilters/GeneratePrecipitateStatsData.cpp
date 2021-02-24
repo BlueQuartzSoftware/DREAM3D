@@ -110,18 +110,18 @@ void GeneratePrecipitateStatsData::setupFilterParameters()
     parameter->setHumanLabel("Crystal Symmetry");
     parameter->setPropertyName("CrystalSymmetry");
 
-    QVector<QString> choices; // Please add choices to the choices QVector to finish this widget
-    choices << "Hexagonal (High)"
-            << "Cubic (High)"
-            << "Hexagonal (Low)"
-            << "Cubic (Low)"
-            << "Triclinic"
-            << "Monoclinic"
-            << "OrthoRhombic"
-            << "Tetragonal (Low)"
-            << "Tetragonal (High)"
-            << "Trigonal (Low)"
-            << "Trigonal (High)";
+    std::vector<QString> choices; // Please add choices to the choices QVector to finish this widget
+    choices.push_back("Hexagonal (High)");
+    choices.push_back("Cubic (High)");
+    choices.push_back("Hexagonal (Low)");
+    choices.push_back("Cubic (Low)");
+    choices.push_back("Triclinic");
+    choices.push_back("Monoclinic");
+    choices.push_back("OrthoRhombic");
+    choices.push_back("Tetragonal (Low)");
+    choices.push_back("Tetragonal (High)");
+    choices.push_back("Trigonal (Low)");
+    choices.push_back("Trigonal (High)");
 
     parameter->setChoices(choices);
     parameter->setCategory(FilterParameter::Category::Parameter);
@@ -135,9 +135,9 @@ void GeneratePrecipitateStatsData::setupFilterParameters()
     parameter->setHumanLabel("Microstructure Preset Model");
     parameter->setPropertyName("MicroPresetModel");
 
-    QVector<QString> choices; // Please add choices to the choices QVector to finish this widget
-    choices << "Precipitate Equiaxed"
-            << "Precipitate Rolled";
+    std::vector<QString> choices; // Please add choices to the choices QVector to finish this widget
+    choices.push_back("Precipitate Equiaxed");
+    choices.push_back("Precipitate Rolled");
 
     parameter->setChoices(choices);
     parameter->setCategory(FilterParameter::Category::Parameter);
@@ -209,8 +209,8 @@ void GeneratePrecipitateStatsData::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("[RDF] Number of Bins", RdfNumBins, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("[RDF] Box Size (X, Y, Z)", RdfBoxSize, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData));
 
-  QStringList linkedProps("DataContainerName");
-  linkedProps << "CellEnsembleAttributeMatrixName";
+  std::vector<QString> linkedProps = {"DataContainerName"};
+  linkedProps.push_back("CellEnsembleAttributeMatrixName");
   parameters.push_back(
       SIMPL_NEW_LINKED_BOOL_FP("Create Data Container & Ensemble AttributeMatrix", CreateEnsembleAttributeMatrix, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData, linkedProps));
 
@@ -219,7 +219,7 @@ void GeneratePrecipitateStatsData::setupFilterParameters()
       SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, GeneratePrecipitateStatsData));
 
   linkedProps.clear();
-  linkedProps << "SelectedEnsembleAttributeMatrix";
+  linkedProps.push_back("SelectedEnsembleAttributeMatrix");
   parameters.push_back(
       SIMPL_NEW_LINKED_BOOL_FP("Append To Existing AttributeMatrix", AppendToExistingAttributeMatrix, FilterParameter::Category::Parameter, GeneratePrecipitateStatsData, linkedProps));
   AttributeMatrixSelectionFilterParameter::RequirementType amReq2;

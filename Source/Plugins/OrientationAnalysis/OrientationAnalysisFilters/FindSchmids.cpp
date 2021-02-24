@@ -99,13 +99,13 @@ void FindSchmids::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Loading Direction", LoadingDirection, FilterParameter::Category::Parameter, FindSchmids));
 
-  QStringList linkedProps;
-  linkedProps << "PhisArrayName"
-              << "LambdasArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("PhisArrayName");
+  linkedProps.push_back("LambdasArrayName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Store Angle Components of Schmid Factor", StoreAngleComponents, FilterParameter::Category::Parameter, FindSchmids, linkedProps));
-  QStringList linkedProps2;
-  linkedProps2 << "SlipPlane"
-               << "SlipDirection";
+  std::vector<QString> linkedProps2;
+  linkedProps2.push_back("SlipPlane");
+  linkedProps2.push_back("SlipDirection");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Override Default Slip System", OverrideSystem, FilterParameter::Category::Parameter, FindSchmids, linkedProps2));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Slip Plane", SlipPlane, FilterParameter::Category::Parameter, FindSchmids));
 

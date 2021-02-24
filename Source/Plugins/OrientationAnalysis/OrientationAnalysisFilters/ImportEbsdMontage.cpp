@@ -102,8 +102,8 @@ void ImportEbsdMontage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::Category::CreatedArray, ImportEbsdMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix Name", CellEnsembleAttributeMatrixName, FilterParameter::Category::CreatedArray, ImportEbsdMontage));
   {
-    QVector<QString> choices = {"None", "Pixel Overlap", "Percent Overlap"};
-    QStringList linkedProps = {"ScanOverlapPixel", "ScanOverlapPercent"};
+    std::vector<QString> choices = {"None", "Pixel Overlap", "Percent Overlap"};
+    std::vector<QString> linkedProps = {"ScanOverlapPixel", "ScanOverlapPercent"};
     LinkedChoicesFilterParameter::Pointer linkedChoices =
         LinkedChoicesFilterParameter::Create("Define Type of Scan Overlap", "DefineScanOverlap", 0, FilterParameter::Category::Parameter, SIMPL_BIND_SETTER(ImportEbsdMontage, this, DefineScanOverlap),
                                              SIMPL_BIND_GETTER(ImportEbsdMontage, this, DefineScanOverlap), choices, linkedProps);
@@ -114,7 +114,7 @@ void ImportEbsdMontage::setupFilterParameters()
   }
 
   {
-    QStringList linkedProps("CellIPFColorsArrayName");
+    std::vector<QString> linkedProps = {"CellIPFColorsArrayName"};
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Generate IPF Color Map", GenerateIPFColorMap, FilterParameter::Category::Parameter, ImportEbsdMontage, linkedProps));
     parameters.push_back(SIMPL_NEW_STRING_FP("IPF Colors", CellIPFColorsArrayName, FilterParameter::Category::CreatedArray, ImportEbsdMontage));
   }

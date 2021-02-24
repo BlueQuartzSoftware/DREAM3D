@@ -80,13 +80,13 @@ void FindFeatureReferenceMisorientations::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(FindFeatureReferenceMisorientations, this, ReferenceOrientation));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(FindFeatureReferenceMisorientations, this, ReferenceOrientation));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Average Orientation");
     choices.push_back("Orientation at Feature Centroid");
     parameter->setChoices(choices);
-    QStringList linkedProps;
-    linkedProps << "GBEuclideanDistancesArrayPath"
-                << "AvgQuatsArrayPath";
+    std::vector<QString> linkedProps;
+    linkedProps.push_back("GBEuclideanDistancesArrayPath");
+    linkedProps.push_back("AvgQuatsArrayPath");
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
     parameter->setCategory(FilterParameter::Category::Parameter);

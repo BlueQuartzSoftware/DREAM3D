@@ -167,14 +167,14 @@ void ResampleRectGridToImageGeom::dataCheck()
   FloatArrayType::Pointer rgYCoords = m_InputRectGridGeometry->getYBounds();
   FloatArrayType::Pointer rgZCoords = m_InputRectGridGeometry->getZBounds();
 
-  if(m_SelectedDataArrayPaths.isEmpty())
+  if(m_SelectedDataArrayPaths.empty())
   {
     QString ss = QObject::tr("At least one Attribute Array must be selected");
     setErrorCondition(k_NotEnoughAttributeArrays, ss);
     return;
   }
 
-  QVector<DataArrayPath> paths = getSelectedDataArrayPaths();
+  std::vector<DataArrayPath> paths = getSelectedDataArrayPaths();
   if(!DataArrayPath::ValidateVector(paths))
   {
     QString ss = QObject::tr("There are Attribute Arrays selected that are not contained in the same Attribute Matrix. All selected Attribute Arrays must belong to the same Attribute Matrix");
@@ -350,7 +350,7 @@ void ResampleRectGridToImageGeom::execute()
     return;
   }
 
-  if(!m_SelectedDataArrayPaths.isEmpty())
+  if(!m_SelectedDataArrayPaths.empty())
   {
 
     AttributeMatrix::Pointer rectGridCellAM = inputDC->getAttributeMatrix(m_SelectedDataArrayPaths[0].getAttributeMatrixName());
@@ -611,13 +611,13 @@ QString ResampleRectGridToImageGeom::getCreatedGeometryDescription()
 }
 
 // -----------------------------------------------------------------------------
-void ResampleRectGridToImageGeom::setSelectedDataArrayPaths(const QVector<DataArrayPath>& value)
+void ResampleRectGridToImageGeom::setSelectedDataArrayPaths(const std::vector<DataArrayPath>& value)
 {
   m_SelectedDataArrayPaths = value;
 }
 
 // -----------------------------------------------------------------------------
-QVector<DataArrayPath> ResampleRectGridToImageGeom::getSelectedDataArrayPaths() const
+std::vector<DataArrayPath> ResampleRectGridToImageGeom::getSelectedDataArrayPaths() const
 {
   return m_SelectedDataArrayPaths;
 }

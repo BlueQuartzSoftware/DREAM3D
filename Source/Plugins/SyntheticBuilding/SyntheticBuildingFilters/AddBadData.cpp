@@ -66,11 +66,11 @@ AddBadData::~AddBadData() = default;
 void AddBadData::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  QStringList linkedProps("PoissonVolFraction");
+  std::vector<QString> linkedProps = {"PoissonVolFraction"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Add Random Noise", PoissonNoise, FilterParameter::Category::Parameter, AddBadData, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Volume Fraction of Random Noise", PoissonVolFraction, FilterParameter::Category::Parameter, AddBadData));
   linkedProps.clear();
-  linkedProps << "BoundaryVolFraction";
+  linkedProps.push_back("BoundaryVolFraction");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Add Boundary Noise", BoundaryNoise, FilterParameter::Category::Parameter, AddBadData, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Volume Fraction of Boundary Noise", BoundaryVolFraction, FilterParameter::Category::Parameter, AddBadData));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));

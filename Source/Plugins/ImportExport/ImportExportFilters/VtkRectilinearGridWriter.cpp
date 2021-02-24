@@ -248,16 +248,6 @@ void VtkRectilinearGridWriter::setupFilterParameters()
 }
 
 // -----------------------------------------------------------------------------
-void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  setOutputFile(reader->readString("OutputFile", getOutputFile()));
-  setSelectedDataArrayPaths(reader->readDataArrayPathVector("SelectedDataArrayPaths", getSelectedDataArrayPaths()));
-  setWriteBinaryFile(reader->readValue("WriteBinaryFile", false));
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::initialize()
@@ -284,14 +274,14 @@ void VtkRectilinearGridWriter::dataCheck()
     setErrorCondition(-1012, ss);
   }
 
-  if(m_SelectedDataArrayPaths.isEmpty())
+  if(m_SelectedDataArrayPaths.empty())
   {
     QString ss = QObject::tr("At least one Attribute Array must be selected");
     setErrorCondition(-11001, ss);
     return;
   }
 
-  QVector<DataArrayPath> paths = getSelectedDataArrayPaths();
+  std::vector<DataArrayPath> paths = getSelectedDataArrayPaths();
 
   if(!DataArrayPath::ValidateVector(paths))
   {
@@ -300,7 +290,7 @@ void VtkRectilinearGridWriter::dataCheck()
     return;
   }
 
-  for(int32_t i = 0; i < paths.count(); i++)
+  for(size_t i = 0; i < paths.size(); i++)
   {
     DataArrayPath path = paths.at(i);
     IDataArray::WeakPointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, path);
@@ -388,8 +378,8 @@ void VtkRectilinearGridWriter::execute()
   int64_t totalCells = image->getXPoints() * image->getYPoints() * image->getZPoints();
   fprintf(f, "CELL_DATA %d\n", (int)totalCells);
 
-  QVector<DataArrayPath> dataPaths = getSelectedDataArrayPaths();
-  foreach(const DataArrayPath arrayPath, dataPaths)
+  std::vector<DataArrayPath> dataPaths = getSelectedDataArrayPaths();
+  for(const DataArrayPath& arrayPath : dataPaths)
   {
     IDataArray::Pointer iDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, arrayPath);
 
@@ -551,13 +541,13 @@ bool VtkRectilinearGridWriter::getWriteBinaryFile() const
 }
 
 // -----------------------------------------------------------------------------
-void VtkRectilinearGridWriter::setSelectedDataArrayPaths(const QVector<DataArrayPath>& value)
+void VtkRectilinearGridWriter::setSelectedDataArrayPaths(const std::vector<DataArrayPath>& value)
 {
   m_SelectedDataArrayPaths = value;
 }
 
 // -----------------------------------------------------------------------------
-QVector<DataArrayPath> VtkRectilinearGridWriter::getSelectedDataArrayPaths() const
+std::vector<DataArrayPath> VtkRectilinearGridWriter::getSelectedDataArrayPaths() const
 {
   return m_SelectedDataArrayPaths;
 }

@@ -234,9 +234,9 @@ void FindTwinBoundaries::setupFilterParameters()
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Axis Tolerance (Degrees)", AxisTolerance, FilterParameter::Category::Parameter, FindTwinBoundaries));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Angle Tolerance (Degrees)", AngleTolerance, FilterParameter::Category::Parameter, FindTwinBoundaries));
-  QStringList linkedProps;
-  linkedProps << "SurfaceMeshFaceNormalsArrayPath"
-              << "SurfaceMeshTwinBoundaryIncoherenceArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("SurfaceMeshFaceNormalsArrayPath");
+  linkedProps.push_back("SurfaceMeshTwinBoundaryIncoherenceArrayName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Compute Coherence", FindCoherence, FilterParameter::Category::Parameter, FindTwinBoundaries, linkedProps));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Feature Data", FilterParameter::Category::RequiredArray));
   {

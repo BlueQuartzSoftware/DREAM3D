@@ -142,7 +142,7 @@ void MergeColonies::setupFilterParameters()
   FilterParameterVectorType parameters = getFilterParameters();
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Axis Tolerance (Degrees)", AxisTolerance, FilterParameter::Category::Parameter, MergeColonies));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Angle Tolerance (Degrees)", AngleTolerance, FilterParameter::Category::Parameter, MergeColonies));
-  QStringList linkedProps("GlobAlphaArrayName");
+  std::vector<QString> linkedProps = {"GlobAlphaArrayName"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Identify Glob Alpha", IdentifyGlobAlpha, FilterParameter::Category::Parameter, MergeColonies, linkedProps));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Category::Feature);

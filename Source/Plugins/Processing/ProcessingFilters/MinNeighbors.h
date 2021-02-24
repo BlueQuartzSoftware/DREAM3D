@@ -166,13 +166,13 @@ public:
   /**
    * @brief Setter property for IgnoredDataArrayPaths
    */
-  void setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value);
+  void setIgnoredDataArrayPaths(const std::vector<DataArrayPath>& value);
   /**
    * @brief Getter property for IgnoredDataArrayPaths
    * @return Value of IgnoredDataArrayPaths
    */
-  QVector<DataArrayPath> getIgnoredDataArrayPaths() const;
-  Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
+  std::vector<DataArrayPath> getIgnoredDataArrayPaths() const;
+  Q_PROPERTY(DataArrayPathVec IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -225,11 +225,6 @@ public:
   void setupFilterParameters() override;
 
   /**
-   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
-
-  /**
    * @brief execute Reimplemented from @see AbstractFilter class
    */
   void execute() override;
@@ -274,7 +269,7 @@ private:
   DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
   DataArrayPath m_FeaturePhasesArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases};
   DataArrayPath m_NumNeighborsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NumNeighbors};
-  QVector<DataArrayPath> m_IgnoredDataArrayPaths = {};
+  std::vector<DataArrayPath> m_IgnoredDataArrayPaths = {};
 
   int32_t* m_Neighbors = nullptr;
 

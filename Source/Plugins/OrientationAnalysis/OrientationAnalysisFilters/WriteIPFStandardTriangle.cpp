@@ -79,7 +79,7 @@ void WriteIPFStandardTriangle::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   std::vector<std::string> names = LaueOps::GetLaueNames();
-  QVector<QString> choices;
+  std::vector<QString> choices;
   for(const auto& name : names)
   {
     choices.push_back(QString::fromStdString(name));

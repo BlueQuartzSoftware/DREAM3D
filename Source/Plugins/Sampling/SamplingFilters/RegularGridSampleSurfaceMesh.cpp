@@ -97,7 +97,7 @@ void RegularGridSampleSurfaceMesh::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Category::Parameter, RegularGridSampleSurfaceMesh));
 
-  QVector<QString> choices = IGeometry::GetAllLengthUnitStrings();
+  std::vector<QString> choices = IGeometry::GetAllLengthUnitStrings();
   parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Units (For Description Only)", LengthUnit, FilterParameter::Category::Parameter, RegularGridSampleSurfaceMesh, choices, false));
   PreflightUpdatedValueFilterParameter::Pointer param =
       SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Box Size in Length Units", BoxDimensions, FilterParameter::Category::Parameter, RegularGridSampleSurfaceMesh);

@@ -65,7 +65,7 @@ GroupFeatures::~GroupFeatures() = default;
 void GroupFeatures::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  QStringList linkedProps("NonContiguousNeighborListArrayPath");
+  std::vector<QString> linkedProps = {"NonContiguousNeighborListArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Non-Contiguous Neighbors", UseNonContiguousNeighbors, FilterParameter::Category::Parameter, GroupFeatures, linkedProps));
   parameters.push_back(SeparatorFilterParameter::Create("Feature Data", FilterParameter::Category::RequiredArray));
   {

@@ -104,20 +104,6 @@ void SurfaceMeshToVtk::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToVtk::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  setSurfaceMeshNodeTypeArrayPath(reader->readDataArrayPath("SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath()));
-  setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath()));
-  setOutputVtkFile(reader->readString("OutputVtkFile", getOutputVtkFile()));
-  setWriteBinaryFile(reader->readValue("WriteBinaryFile", getWriteBinaryFile()));
-  setWriteConformalMesh(reader->readValue("WriteConformalMesh", getWriteConformalMesh()));
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void SurfaceMeshToVtk::initialize()
 {
 }
@@ -966,25 +952,25 @@ DataArrayPath SurfaceMeshToVtk::getSurfaceMeshNodeTypeArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void SurfaceMeshToVtk::setSelectedFaceArrays(const QVector<DataArrayPath>& value)
+void SurfaceMeshToVtk::setSelectedFaceArrays(const std::vector<DataArrayPath>& value)
 {
   m_SelectedFaceArrays = value;
 }
 
 // -----------------------------------------------------------------------------
-QVector<DataArrayPath> SurfaceMeshToVtk::getSelectedFaceArrays() const
+std::vector<DataArrayPath> SurfaceMeshToVtk::getSelectedFaceArrays() const
 {
   return m_SelectedFaceArrays;
 }
 
 // -----------------------------------------------------------------------------
-void SurfaceMeshToVtk::setSelectedVertexArrays(const QVector<DataArrayPath>& value)
+void SurfaceMeshToVtk::setSelectedVertexArrays(const std::vector<DataArrayPath>& value)
 {
   m_SelectedVertexArrays = value;
 }
 
 // -----------------------------------------------------------------------------
-QVector<DataArrayPath> SurfaceMeshToVtk::getSelectedVertexArrays() const
+std::vector<DataArrayPath> SurfaceMeshToVtk::getSelectedVertexArrays() const
 {
   return m_SelectedVertexArrays;
 }

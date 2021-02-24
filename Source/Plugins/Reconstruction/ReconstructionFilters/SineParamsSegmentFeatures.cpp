@@ -81,7 +81,7 @@ void SineParamsSegmentFeatures::setupFilterParameters()
   SegmentFeatures::setupFilterParameters();
   FilterParameterVectorType parameters;
 
-  QStringList linkedProps("GoodVoxelsArrayPath");
+  std::vector<QString> linkedProps = {"GoodVoxelsArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Good Voxels Array", UseGoodVoxels, FilterParameter::Category::Parameter, SineParamsSegmentFeatures, linkedProps));
 
   {

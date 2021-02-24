@@ -371,7 +371,7 @@ void PackPrimaryPhases::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_BOOL_FP("Periodic Boundaries", PeriodicBoundaries, FilterParameter::Category::Parameter, PackPrimaryPhases));
-  QStringList linkedProps("MaskArrayPath");
+  std::vector<QString> linkedProps = {"MaskArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask", UseMask, FilterParameter::Category::Parameter, PackPrimaryPhases, linkedProps));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
@@ -446,13 +446,13 @@ void PackPrimaryPhases::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(PackPrimaryPhases, this, FeatureGeneration));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(PackPrimaryPhases, this, FeatureGeneration));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Generate Features");
     choices.push_back("Already Have Features");
     parameter->setChoices(choices);
-    QStringList linkedProps;
-    linkedProps << "InputStatsArrayPath"
-                << "FeatureInputFile";
+    std::vector<QString> linkedProps;
+    linkedProps.push_back("InputStatsArrayPath");
+    linkedProps.push_back("FeatureInputFile");
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
     parameter->setCategory(FilterParameter::Category::Parameter);
@@ -460,12 +460,12 @@ void PackPrimaryPhases::setupFilterParameters()
   }
 
   linkedProps.clear();
-  linkedProps << "FeatureInputFile"
-              << "InputStatsArrayPath";
+  linkedProps.push_back("FeatureInputFile");
+  linkedProps.push_back("InputStatsArrayPath");
   // parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Already Have Features", HaveFeatures, FilterParameter::Category::Parameter, PackPrimaryPhases, linkedProps));
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Feature Input File", FeatureInputFile, FilterParameter::Category::Parameter, PackPrimaryPhases, "*.txt", "Text File", 1));
   linkedProps.clear();
-  //  linkedProps << "CsvOutputFile";
+  //  linkedProps.push_back("CsvOutputFile");
   //  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Category::Parameter, PackPrimaryPhases, linkedProps));
   //  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Goal Attribute CSV File", CsvOutputFile, FilterParameter::Category::Parameter, PackPrimaryPhases, "*.csv", "Comma Separated Data"));
 
@@ -476,14 +476,14 @@ void PackPrimaryPhases::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(PackPrimaryPhases, this, SaveGeometricDescriptions));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(PackPrimaryPhases, this, SaveGeometricDescriptions));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Do Not Save");
     choices.push_back("Save To New Attribute Matrix");
     choices.push_back("Append To Existing Attribute Matrix");
     parameter->setChoices(choices);
-    QStringList linkedProps;
-    linkedProps << "NewAttributeMatrixPath"
-                << "SelectedAttributeMatrixPath";
+    std::vector<QString> linkedProps;
+    linkedProps.push_back("NewAttributeMatrixPath");
+    linkedProps.push_back("SelectedAttributeMatrixPath");
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
     parameter->setCategory(FilterParameter::Category::Parameter);

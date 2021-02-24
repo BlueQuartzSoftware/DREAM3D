@@ -82,7 +82,7 @@ void VectorSegmentFeatures::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Angle Tolerance", AngleTolerance, FilterParameter::Category::Parameter, VectorSegmentFeatures));
-  QStringList linkedProps("GoodVoxelsArrayPath");
+  std::vector<QString> linkedProps = {"GoodVoxelsArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Category::Parameter, VectorSegmentFeatures, linkedProps));
 
   {

@@ -67,9 +67,9 @@ void MinNeighbors::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Minimum Number Neighbors", MinNumNeighbors, FilterParameter::Category::Parameter, MinNeighbors));
-  QStringList linkedProps;
-  linkedProps << "PhaseNumber"
-              << "FeaturePhasesArrayPath";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("PhaseNumber");
+  linkedProps.push_back("FeaturePhasesArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply to Single Phase Only", ApplyToSinglePhase, FilterParameter::Category::Parameter, MinNeighbors, linkedProps));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase Index", PhaseNumber, FilterParameter::Category::Parameter, MinNeighbors));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
@@ -93,21 +93,6 @@ void MinNeighbors::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Ignore", IgnoredDataArrayPaths, FilterParameter::Category::Parameter, MinNeighbors, req));
   }
   setFilterParameters(parameters);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MinNeighbors::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath()));
-  setNumNeighborsArrayPath(reader->readDataArrayPath("NumNeighborsArrayPath", getNumNeighborsArrayPath()));
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
-  setApplyToSinglePhase(reader->readValue("ApplyToSinglePhase", getApplyToSinglePhase()));
-  setPhaseNumber(reader->readValue("PhaseNumber", getPhaseNumber()));
-  setMinNumNeighbors(reader->readValue("MinNumNeighbors", getMinNumNeighbors()));
-  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -637,13 +622,13 @@ DataArrayPath MinNeighbors::getNumNeighborsArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void MinNeighbors::setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value)
+void MinNeighbors::setIgnoredDataArrayPaths(const std::vector<DataArrayPath>& value)
 {
   m_IgnoredDataArrayPaths = value;
 }
 
 // -----------------------------------------------------------------------------
-QVector<DataArrayPath> MinNeighbors::getIgnoredDataArrayPaths() const
+std::vector<DataArrayPath> MinNeighbors::getIgnoredDataArrayPaths() const
 {
   return m_IgnoredDataArrayPaths;
 }

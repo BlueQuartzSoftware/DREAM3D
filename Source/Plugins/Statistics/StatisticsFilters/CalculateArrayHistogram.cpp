@@ -78,14 +78,14 @@ void CalculateArrayHistogram::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Bins", NumberOfBins, FilterParameter::Category::Parameter, CalculateArrayHistogram));
-  QStringList linkedProps;
-  linkedProps << "MinRange"
-              << "MaxRange";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("MinRange");
+  linkedProps.push_back("MaxRange");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Min & Max Range", UserDefinedRange, FilterParameter::Category::Parameter, CalculateArrayHistogram, linkedProps));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Min Value", MinRange, FilterParameter::Category::Parameter, CalculateArrayHistogram));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Max Value", MaxRange, FilterParameter::Category::Parameter, CalculateArrayHistogram));
   linkedProps.clear();
-  linkedProps << "NewDataContainerName";
+  linkedProps.push_back("NewDataContainerName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("New Data Container", NewDataContainer, FilterParameter::Category::Parameter, CalculateArrayHistogram, linkedProps));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Category::Any);

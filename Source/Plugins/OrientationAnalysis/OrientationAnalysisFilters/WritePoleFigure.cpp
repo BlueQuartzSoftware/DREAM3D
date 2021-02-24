@@ -112,14 +112,14 @@ void WritePoleFigure::setupFilterParameters()
 
     parameter->setDefaultValue(0);
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Lambert Square");
     choices.push_back("Discrete");
 
     parameter->setChoices(choices);
-    QStringList linkedProps;
-    linkedProps << "LambertSize"
-                << "NumColors";
+    std::vector<QString> linkedProps;
+    linkedProps.push_back("LambertSize");
+    linkedProps.push_back("NumColors");
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
     parameter->setCategory(FilterParameter::Category::Parameter);
@@ -138,7 +138,7 @@ void WritePoleFigure::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(WritePoleFigure, this, ImageFormat));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(WritePoleFigure, this, ImageFormat));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     //    choices.push_back("tif");
     //    choices.push_back("bmp");
     //    choices.push_back("png");
@@ -154,7 +154,7 @@ void WritePoleFigure::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(WritePoleFigure, this, ImageLayout));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(WritePoleFigure, this, ImageLayout));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Horizontal");
     choices.push_back("Vertical");
     choices.push_back("Square");
@@ -167,7 +167,7 @@ void WritePoleFigure::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Image Prefix", ImagePrefix, FilterParameter::Category::Parameter, WritePoleFigure));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Image Size (Square Pixels)", ImageSize, FilterParameter::Category::Parameter, WritePoleFigure));
 
-  QStringList linkedProps("GoodVoxelsArrayPath");
+  std::vector<QString> linkedProps = {"GoodVoxelsArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Category::Parameter, WritePoleFigure, linkedProps));
 
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));

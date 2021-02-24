@@ -93,8 +93,8 @@ void CropImageGeometry::setupFilterParameters()
   param->setReadOnly(true);
   parameters.push_back(param);
 
-  QStringList linkedProps;
-  linkedProps << "NewDataContainerName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewDataContainerName");
   parameters.push_back(SIMPL_NEW_BOOL_FP("Update Origin", UpdateOrigin, FilterParameter::Category::Parameter, CropImageGeometry));
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save As New Data Container", SaveAsNewDataContainer, FilterParameter::Category::Parameter, CropImageGeometry, linkedProps));
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", NewDataContainerName, FilterParameter::Category::CreatedArray, CropImageGeometry));
@@ -107,8 +107,8 @@ void CropImageGeometry::setupFilterParameters()
 
   parameters.push_back(SeparatorFilterParameter::Create("Renumber Features Parameters", FilterParameter::Category::RequiredArray));
   linkedProps.clear();
-  linkedProps << "CellFeatureAttributeMatrixPath"
-              << "FeatureIdsArrayPath";
+  linkedProps.push_back("CellFeatureAttributeMatrixPath");
+  linkedProps.push_back("FeatureIdsArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Renumber Features", RenumberFeatures, FilterParameter::Category::Parameter, CropImageGeometry, linkedProps));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);

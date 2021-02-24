@@ -189,16 +189,16 @@ void EMMPMFilter::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("Use 1-Based Values", UseOneBasedValues, FilterParameter::Category::Parameter, EMMPMFilter));
 
   {
-    QStringList linkedProps;
-    linkedProps << "GradientBetaE";
+    std::vector<QString> linkedProps;
+    linkedProps.push_back("GradientBetaE");
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Gradient Penalty", UseGradientPenalty, FilterParameter::Category::Parameter, EMMPMFilter, linkedProps));
   }
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Beta E", GradientBetaE, FilterParameter::Category::Parameter, EMMPMFilter));
   {
-    QStringList linkedProps;
-    linkedProps << "CurvatureBetaC"
-                << "CurvatureRMax"
-                << "CurvatureEMLoopDelay";
+    std::vector<QString> linkedProps;
+    linkedProps.push_back("CurvatureBetaC");
+    linkedProps.push_back("CurvatureRMax");
+    linkedProps.push_back("CurvatureEMLoopDelay");
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Curvature Penalty", UseCurvaturePenalty, FilterParameter::Category::Parameter, EMMPMFilter, linkedProps));
   }
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Beta C", CurvatureBetaC, FilterParameter::Category::Parameter, EMMPMFilter));

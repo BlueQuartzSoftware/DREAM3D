@@ -113,7 +113,7 @@ void ChangeAngleRepresentation::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ChangeAngleRepresentation, this, ConversionType));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ChangeAngleRepresentation, this, ConversionType));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Degrees to Radians");
     choices.push_back("Radians to Degrees");
     parameter->setChoices(choices);

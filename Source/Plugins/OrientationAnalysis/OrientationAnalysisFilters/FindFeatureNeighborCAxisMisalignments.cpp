@@ -87,7 +87,7 @@ FindFeatureNeighborCAxisMisalignments::~FindFeatureNeighborCAxisMisalignments() 
 void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  QStringList linkedProps("AvgCAxisMisalignmentsArrayName");
+  std::vector<QString> linkedProps = {"AvgCAxisMisalignmentsArrayName"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Find Average Misalignment Per Feature", FindAvgMisals, FilterParameter::Category::Parameter, FindFeatureNeighborCAxisMisalignments, linkedProps));
   parameters.push_back(SeparatorFilterParameter::Create("Feature Data", FilterParameter::Category::RequiredArray));
   {

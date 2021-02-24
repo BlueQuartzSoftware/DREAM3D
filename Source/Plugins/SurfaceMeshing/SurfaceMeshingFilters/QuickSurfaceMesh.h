@@ -56,7 +56,7 @@ class SurfaceMeshing_EXPORT QuickSurfaceMesh : public AbstractFilter
   PYB11_FILTER()
   PYB11_SHARED_POINTERS(QuickSurfaceMesh)
   PYB11_FILTER_NEW_MACRO(QuickSurfaceMesh)
-  PYB11_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
+  PYB11_PROPERTY(std::vector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
   PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
   PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
   PYB11_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
@@ -100,13 +100,13 @@ public:
   /**
    * @brief Setter property for SelectedDataArrayPaths
    */
-  void setSelectedDataArrayPaths(const QVector<DataArrayPath>& value);
+  void setSelectedDataArrayPaths(const std::vector<DataArrayPath>& value);
   /**
    * @brief Getter property for SelectedDataArrayPaths
    * @return Value of SelectedDataArrayPaths
    */
-  QVector<DataArrayPath> getSelectedDataArrayPaths() const;
-  Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
+  std::vector<DataArrayPath> getSelectedDataArrayPaths() const;
+  Q_PROPERTY(DataArrayPathVec SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
 
   /**
    * @brief Setter property for SurfaceDataContainerName
@@ -247,11 +247,6 @@ public:
   void setupFilterParameters() override;
 
   /**
-   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
-
-  /**
    * @brief execute Reimplemented from @see AbstractFilter class
    */
   void execute() override;
@@ -276,7 +271,7 @@ private:
   std::weak_ptr<DataArray<int8_t>> m_NodeTypesPtr;
   int8_t* m_NodeTypes = nullptr;
 
-  QVector<DataArrayPath> m_SelectedDataArrayPaths = {QVector<DataArrayPath>()};
+  std::vector<DataArrayPath> m_SelectedDataArrayPaths = {};
   DataArrayPath m_SurfaceDataContainerName = {SIMPL::Defaults::TriangleDataContainerName, "", ""};
   DataArrayPath m_TripleLineDataContainerName = {"TripleLines", "", ""};
   QString m_VertexAttributeMatrixName = {SIMPL::Defaults::VertexAttributeMatrixName};

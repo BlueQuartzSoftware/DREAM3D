@@ -82,8 +82,8 @@ void ComputeMomentInvariants2D::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Omega 1", Omega1ArrayPath, FilterParameter::Category::CreatedArray, ComputeMomentInvariants2D, dacReq));
   parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Omega 2", Omega2ArrayPath, FilterParameter::Category::CreatedArray, ComputeMomentInvariants2D, dacReq));
 
-  QStringList linkedProps;
-  linkedProps << "CentralMomentsArrayPath";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("CentralMomentsArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save Central Moments", SaveCentralMoments, FilterParameter::Category::Parameter, ComputeMomentInvariants2D, linkedProps));
   parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Central Moments", CentralMomentsArrayPath, FilterParameter::Category::CreatedArray, ComputeMomentInvariants2D, dacReq));
 

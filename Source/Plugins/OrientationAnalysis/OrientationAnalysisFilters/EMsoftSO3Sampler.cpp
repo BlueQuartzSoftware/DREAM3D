@@ -98,19 +98,19 @@ void EMsoftSO3Sampler::setupFilterParameters()
     parameter->setGetterCallback(SIMPL_BIND_GETTER(EMsoftSO3Sampler, this, sampleModeSelector));
     parameter->setDefaultValue(0); // Always start with the standard sampling mode
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("- Rodrigues fundamental zone    ");
     choices.push_back("- Constant misorientation       ");
     choices.push_back("- Less than given misorientation");
     parameter->setChoices(choices);
     parameter->setChoices(choices);
-    QStringList linkedProps;
-    linkedProps << "PointGroup"
-                << "OffsetGrid"
-                << "MisOr"
-                << "RefOr"
-                << "MisOrFull"
-                << "RefOrFull";
+    std::vector<QString> linkedProps;
+    linkedProps.push_back("PointGroup");
+    linkedProps.push_back("OffsetGrid");
+    linkedProps.push_back("MisOr");
+    linkedProps.push_back("RefOr");
+    linkedProps.push_back("MisOrFull");
+    linkedProps.push_back("RefOrFull");
 
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);

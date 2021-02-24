@@ -76,7 +76,7 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     parameter->setGetterCallback(SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, DistributionType));
 
     // parameter->setValueType("unsigned int");
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Beta");
     choices.push_back("LogNormal");
     choices.push_back("Power Law");
@@ -85,7 +85,7 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Number Of Bins For Correlated Array", NumberOfCorrelatedBins, FilterParameter::Category::Parameter, FitCorrelatedFeatureData));
-  QStringList linkedProps("BiasedFeaturesArrayPath");
+  std::vector<QString> linkedProps = {"BiasedFeaturesArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Remove Biased Features", RemoveBiasedFeatures, FilterParameter::Category::Parameter, FitCorrelatedFeatureData, linkedProps));
 
   {

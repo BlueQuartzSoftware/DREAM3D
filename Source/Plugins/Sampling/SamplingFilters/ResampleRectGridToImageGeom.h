@@ -58,7 +58,7 @@ class Sampling_EXPORT ResampleRectGridToImageGeom : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath RectilinearGridPath READ getRectilinearGridPath WRITE setRectilinearGridPath)
   // PYB11_PROPERTY(DataArrayPath RectGridCellAttributeMatrix READ getRectGridCellAttributeMatrix WRITE setRectGridCellAttributeMatrix)
   PYB11_PROPERTY(QString RectGridGeometryDesc READ getRectGridGeometryDesc)
-  PYB11_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
+  PYB11_PROPERTY(std::vector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
   PYB11_PROPERTY(DataArrayPath ImageGeometryPath READ getImageGeometryPath WRITE setImageGeometryPath)
   PYB11_PROPERTY(QString ImageGeomCellAttributeMatrix READ getImageGeomCellAttributeMatrix WRITE setImageGeomCellAttributeMatrix)
   PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
@@ -102,13 +102,13 @@ public:
   /**
    * @brief Setter property for SelectedDataArrayPaths
    */
-  void setSelectedDataArrayPaths(const QVector<DataArrayPath>& value);
+  void setSelectedDataArrayPaths(const std::vector<DataArrayPath>& value);
   /**
    * @brief Getter property for SelectedDataArrayPaths
    * @return Value of SelectedDataArrayPaths
    */
-  QVector<DataArrayPath> getSelectedDataArrayPaths() const;
-  Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
+  std::vector<DataArrayPath> getSelectedDataArrayPaths() const;
+  Q_PROPERTY(DataArrayPathVec SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
 
   /**
    * @brief Setter property for ImageGeometryPath
@@ -243,7 +243,7 @@ private:
   QString m_ImageGeomCellAttributeMatrix = {};
   int32_t m_LengthUnit = {6}; //  Micrometers default
   IntVec3Type m_Dimensions = {128, 128, 128};
-  QVector<DataArrayPath> m_SelectedDataArrayPaths = {};
+  std::vector<DataArrayPath> m_SelectedDataArrayPaths = {};
   QVector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
 
   RectGridGeom::Pointer m_InputRectGridGeometry;

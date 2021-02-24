@@ -173,30 +173,6 @@ void MultiEmmpmFilter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MultiEmmpmFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  setInputDataArrayVector(reader->readDataArrayPathVector("InputDataArrayVector", getInputDataArrayVector()));
-  setNumClasses(reader->readValue("NumClasses", getNumClasses()));
-  setExchangeEnergy(reader->readValue("ExchangeEnergy", getExchangeEnergy()));
-  setHistogramLoops(reader->readValue("HistogramLoops", getHistogramLoops()));
-  setSegmentationLoops(reader->readValue("SegmentationLoops", getSegmentationLoops()));
-  setUseSimulatedAnnealing(reader->readValue("UseSimulatedAnnealing", getUseSimulatedAnnealing()));
-  setUseGradientPenalty(reader->readValue("UseGradientPenalty", getUseGradientPenalty()));
-  setGradientBetaE(reader->readValue("GradientPenalty", getGradientBetaE()));
-  setUseCurvaturePenalty(reader->readValue("UseCurvaturePenalty", getUseCurvaturePenalty()));
-  setCurvatureBetaC(reader->readValue("CurvaturePenalty", getCurvatureBetaC()));
-  setCurvatureRMax(reader->readValue("RMax", getCurvatureRMax()));
-  setCurvatureEMLoopDelay(reader->readValue("EMLoopDelay", getCurvatureEMLoopDelay()));
-  setOutputAttributeMatrixName(reader->readString("OutputAttributeMatrixName", getOutputAttributeMatrixName()));
-  setUsePreviousMuSigma(reader->readValue("UsePreviousMuSigma", getUsePreviousMuSigma()));
-  setOutputArrayPrefix(reader->readString("OutputArrayPrefix", getOutputArrayPrefix()));
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void MultiEmmpmFilter::initialize()
 {
   EMMPMFilter::initialize();
@@ -246,7 +222,7 @@ void MultiEmmpmFilter::dataCheck()
     setErrorCondition(-89002, message);
   }
 
-  if(getInputDataArrayVector().isEmpty())
+  if(getInputDataArrayVector().empty())
   {
     QString message = QObject::tr("At least one Attribute Array must be selected");
     setErrorCondition(-89003, message);
@@ -272,7 +248,7 @@ void MultiEmmpmFilter::dataCheck()
   }
 
   // Get the list of checked array names from the input m_Data arrays list
-  QList<QString> arrayNames = DataArrayPath::GetDataArrayNames(getInputDataArrayVector());
+  std::vector<QString> arrayNames = DataArrayPath::GetDataArrayNames(getInputDataArrayVector());
 
   for(int32_t i = 0; i < arrayNames.size(); i++)
   {
@@ -317,16 +293,14 @@ void MultiEmmpmFilter::execute()
 
   DataArrayPath inputAMPath = DataArrayPath::GetAttributeMatrixPath(getInputDataArrayVector());
 
-  QList<QString> arrayNames = DataArrayPath::GetDataArrayNames(getInputDataArrayVector());
-  QListIterator<QString> iter(arrayNames);
+  std::vector<QString> arrayNames = DataArrayPath::GetDataArrayNames(getInputDataArrayVector());
 
   m_ArrayCount = arrayNames.size();
 
   // This is the routine that sets up the EM/MPM to segment the image
-  while(iter.hasNext())
+  for(const QString& name : arrayNames)
   {
     DataArrayPath arrayPath = inputAMPath;
-    QString name = iter.next();
 
     arrayPath.setDataArrayName(name);
     setInputDataArrayPath(arrayPath);
@@ -491,13 +465,13 @@ QString MultiEmmpmFilter::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void MultiEmmpmFilter::setInputDataArrayVector(const QVector<DataArrayPath>& value)
+void MultiEmmpmFilter::setInputDataArrayVector(const std::vector<DataArrayPath>& value)
 {
   m_InputDataArrayVector = value;
 }
 
 // -----------------------------------------------------------------------------
-QVector<DataArrayPath> MultiEmmpmFilter::getInputDataArrayVector() const
+std::vector<DataArrayPath> MultiEmmpmFilter::getInputDataArrayVector() const
 {
   return m_InputDataArrayVector;
 }

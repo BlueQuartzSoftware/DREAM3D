@@ -68,8 +68,8 @@ void FillBadData::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Minimum Allowed Defect Size", MinAllowedDefectSize, FilterParameter::Category::Parameter, FillBadData));
-  QStringList linkedProps;
-  linkedProps << "CellPhasesArrayPath";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("CellPhasesArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Store Defects as New Phase", StoreAsNewPhase, FilterParameter::Category::Parameter, FillBadData, linkedProps));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
@@ -85,19 +85,6 @@ void FillBadData::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Ignore", IgnoredDataArrayPaths, FilterParameter::Category::Parameter, FillBadData, req));
   }
   setFilterParameters(parameters);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FillBadData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
-  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath()));
-  setMinAllowedDefectSize(reader->readValue("MinAllowedDefectSize", getMinAllowedDefectSize()));
-  setStoreAsNewPhase(reader->readValue("StoreAsNewPhase", getStoreAsNewPhase()));
-  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -567,13 +554,13 @@ DataArrayPath FillBadData::getCellPhasesArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void FillBadData::setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value)
+void FillBadData::setIgnoredDataArrayPaths(const std::vector<DataArrayPath>& value)
 {
   m_IgnoredDataArrayPaths = value;
 }
 
 // -----------------------------------------------------------------------------
-QVector<DataArrayPath> FillBadData::getIgnoredDataArrayPaths() const
+std::vector<DataArrayPath> FillBadData::getIgnoredDataArrayPaths() const
 {
   return m_IgnoredDataArrayPaths;
 }
