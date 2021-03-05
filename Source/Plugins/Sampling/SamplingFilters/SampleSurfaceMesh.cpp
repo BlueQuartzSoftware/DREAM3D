@@ -60,7 +60,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/tbb_machine.h>
 #endif
 
 class SampleSurfaceMeshImplByPoints
