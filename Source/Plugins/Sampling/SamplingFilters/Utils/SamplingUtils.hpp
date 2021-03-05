@@ -65,21 +65,24 @@ static void RenumberFeatures(AbstractFilter* filter,
 
   // Get the resampled data container, by default it would have been inserted into the Data Container Array
   DataContainer::Pointer destCellDataContainer = dca->getDataContainer(cellAttributeMatrixPath);
+  // This just sanity checks to make sure there were existing features before the cropping
+  AttributeMatrix::Pointer destCellFeatureAttrMat = destCellDataContainer->getAttributeMatrix(cellFeatureAttributeMatrixPath.getAttributeMatrixName());
+
   // Unless the user selected to create a new one
   if(saveAsNewDataContainer)
   {
     destCellDataContainer = dca->getDataContainer(newDataContainerPath);
+    destCellFeatureAttrMat = destCellDataContainer->getAttributeMatrix(cellFeatureAttributeMatrixPath.getAttributeMatrixName());
   }
 
-  size_t totalPoints = destCellDataContainer->getGeometryAs<ImageGeom>()->getNumberOfElements();
-
-  // This just sanity checks to make sure there were existing features before the cropping
-  AttributeMatrix::Pointer destCellFeatureAttrMat = destCellDataContainer->getAttributeMatrix(cellFeatureAttributeMatrixPath.getAttributeMatrixName());
   if(nullptr == destCellFeatureAttrMat)
   {
     filter->setErrorCondition(-610, QString("The Cell Feature Attribute Matrix '%1' was not found.").arg(cellFeatureAttributeMatrixPath.serialize("/")));
     return;
   }
+
+  size_t totalPoints = destCellDataContainer->getGeometryAs<ImageGeom>()->getNumberOfElements();
+
   size_t totalFeatures = destCellFeatureAttrMat->getNumberOfTuples();
   QVector<bool> activeObjects(totalFeatures, false);
   if(0 == totalFeatures)

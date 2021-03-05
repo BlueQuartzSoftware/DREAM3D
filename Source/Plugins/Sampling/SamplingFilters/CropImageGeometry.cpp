@@ -61,7 +61,7 @@ enum createdPathID : RenameDataPath::DataID_t
 {
   DataContainerID = 1
 };
-
+//asd/fasdfasdf
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -334,9 +334,15 @@ void CropImageGeometry::dataCheck()
       setErrorCondition(-55501, ss);
       return;
     }
-
     QVector<bool> activeObjects(cellFeatureAttrMat->getNumberOfTuples(), true);
     cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
+
+    // If we are saving as a new Data Container, then we need a copy of the Cell Feature Data Attribute Matrix
+    if(getRenumberFeatures())
+    {
+      AttributeMatrix::Pointer cfAm = cellFeatureAttrMat->deepCopy(getInPreflight());
+      destCellDataContainer->addOrReplaceAttributeMatrix(cfAm);
+    }
   }
 }
 
@@ -360,7 +366,7 @@ void CropImageGeometry::execute()
   AttributeMatrix::Pointer cellAttrMat = srcCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   DataContainer::Pointer destCellDataContainer = srcCellDataContainer;
 
-  if(m_SaveAsNewDataContainer)
+  if(getSaveAsNewDataContainer())
   {
     FloatVec3Type o = srcCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin();
     FloatVec3Type r = srcCellDataContainer->getGeometryAs<ImageGeom>()->getSpacing();
@@ -369,12 +375,21 @@ void CropImageGeometry::execute()
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
     destCellDataContainer->setGeometry(image);
 
-    destCellDataContainer->getGeometryAs<ImageGeom>()->setOrigin(o);
-    destCellDataContainer->getGeometryAs<ImageGeom>()->setSpacing(r);
+    image->setOrigin(o);
+    image->setSpacing(r);
 
+    // Copy the cell data
     AttributeMatrix::Pointer cellAttrMatCopy = cellAttrMat->deepCopy(false);
     destCellDataContainer->addOrReplaceAttributeMatrix(cellAttrMatCopy);
     cellAttrMat = destCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
+  }
+
+  // If we are renumbering grains and creating a new Data Container, then copy the Cell Feature Attribute Matrix into the destination
+  if(getRenumberFeatures() && getSaveAsNewDataContainer())
+  {
+    AttributeMatrix::Pointer srcCellFeatureAttrMat = srcCellDataContainer->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
+    AttributeMatrix::Pointer destCellFeatureAttrMat = srcCellFeatureAttrMat->deepCopy(false);
+    destCellDataContainer->addOrReplaceAttributeMatrix(destCellFeatureAttrMat);
   }
 
   if(nullptr == destCellDataContainer.get() || nullptr == cellAttrMat.get() || getErrorCode() < 0)
@@ -483,7 +498,13 @@ void CropImageGeometry::execute()
 
   if(m_RenumberFeatures)
   {
-    Sampling::RenumberFeatures(this, m_NewDataContainerName, m_CellAttributeMatrixPath, m_CellFeatureAttributeMatrixPath, m_FeatureIdsArrayPath, m_SaveAsNewDataContainer);
+    DataArrayPath dap = getCellFeatureAttributeMatrixPath();
+    dap.setDataContainerName(destCellDataContainer->getName());
+    Sampling::RenumberFeatures(this, m_NewDataContainerName, m_CellAttributeMatrixPath, dap, m_FeatureIdsArrayPath, m_SaveAsNewDataContainer);
+    if(getErrorCode() < 0)
+    {
+      return;
+    }
   }
 
   if(m_UpdateOrigin)

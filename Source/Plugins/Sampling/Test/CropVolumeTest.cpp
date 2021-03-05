@@ -51,6 +51,7 @@
 
 #include "UnitTestSupport.hpp"
 
+#include "Sampling/SamplingFilters/CropImageGeometry.h"
 #include "SamplingTestFileLocations.h"
 
 static const QString k_DataArrayName("Data");
@@ -119,25 +120,26 @@ private:
   int m_Min;
 };
 
-static NumPackage s_OriginalX = NumPackage(0, 5);
-static NumPackage s_OriginalY = NumPackage(0, 10);
-static NumPackage s_OriginalZ = NumPackage(0, 2);
-
-static NumPackage s_CroppedX = NumPackage(0, 3);
-static NumPackage s_CroppedY = NumPackage(1, 2);
-static NumPackage s_CroppedZ = NumPackage(0, 1);
-
-static float originalRes[3] = {0.25, 0.25, 0.25};
-static float originalOrigin[3] = {0, 0, 0};
-
+/**
+ * @brief The CropVolumeTest class
+ */
 class CropVolumeTest
 {
+  NumPackage s_OriginalX = NumPackage(0, 5);
+  NumPackage s_OriginalY = NumPackage(0, 10);
+  NumPackage s_OriginalZ = NumPackage(0, 2);
+
+  NumPackage s_CroppedX = NumPackage(0, 3);
+  NumPackage s_CroppedY = NumPackage(1, 2);
+  NumPackage s_CroppedZ = NumPackage(0, 1);
+
+  float originalRes[3] = {0.25, 0.25, 0.25};
+  float originalOrigin[3] = {0, 0, 0};
+
 public:
   CropVolumeTest() = default;
   virtual ~CropVolumeTest() = default;
 
-  // -----------------------------------------------------------------------------
-  //
   // -----------------------------------------------------------------------------
   AbstractFilter::Pointer CreateDataContainerWriter(const QString& outputFile)
   {
@@ -155,19 +157,17 @@ public:
 
       QVariant var;
       var.setValue(outputFile);
-      bool propWasSet = filter->setProperty("OutputFile", var);
+      filter->setProperty("OutputFile(xxx);
       require_equal<bool, bool>(propWasSet, "OutputFile", true, "true");
 
       var.setValue(false);
-      propWasSet = filter->setProperty("WriteXdmfFile", var);
+      filter->setProperty("WriteXdmfFile(xxx);
       require_equal<bool, bool>(propWasSet, "WriteXdmfFile", true, "true");
     }
 
     return filter;
   }
 
-  // -----------------------------------------------------------------------------
-  //
   // -----------------------------------------------------------------------------
   DataContainerArray::Pointer CreateDataContainerArrayTestStructure(NumPackage X, NumPackage Y, NumPackage Z, int numComponents)
   {
@@ -265,8 +265,6 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
   void resetTest(AbstractFilter::Pointer cropVolume, NumPackage X, NumPackage Y, NumPackage Z, int numComponents)
   {
     cropVolume->clearErrorCode();
@@ -275,8 +273,6 @@ public:
     cropVolume->setDataContainerArray(dca);
   }
 
-  // -----------------------------------------------------------------------------
-  //
   // -----------------------------------------------------------------------------
   template <typename T, typename K>
   void checkCrop(typename DataArray<T>::Pointer data, NumPackage& X, NumPackage& Y, NumPackage& Z)
@@ -323,8 +319,7 @@ public:
       }
     }
   }
-  // -----------------------------------------------------------------------------
-  //
+
   // -----------------------------------------------------------------------------
   template <typename T, typename K>
   void checkFeatureIdsCrop(typename DataArray<T>::Pointer data, NumPackage& X, NumPackage& Y, NumPackage& Z)
@@ -434,18 +429,14 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  void preflightTests(AbstractFilter::Pointer cropVolume)
+  void preflightTests(CropImageGeometry::Pointer cropVolume)
   {
-    QVariant var;
-    var.setValue(false);
-    bool propWasSet = cropVolume->setProperty("RenumberFeatures", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+
+    cropVolume->setRenumberFeatures(false);
 
     // Test Source Data Container Does Not Exist
     DataArrayPath path("This Should Not Exist", "This Should Not Exist", "");
-    var.setValue(path);
-    propWasSet = cropVolume->setProperty("CellAttributeMatrixPath", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    cropVolume->setCellAttributeMatrixPath(path);
     cropVolume->preflight();
     // Fails because getPrereqGeometryFromDataContainer catches the nullptr DataContainer
     // Error code should be -999
@@ -454,9 +445,7 @@ public:
 
     // Test Source Attribute Matrix Does Not Exist
     path.setDataContainerName(SIMPL::Defaults::ImageDataContainerName);
-    var.setValue(path);
-    propWasSet = cropVolume->setProperty("CellAttributeMatrixPath", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    cropVolume->setCellAttributeMatrixPath(path);
     cropVolume->preflight();
     // Fails because getPrereqAttributeMatrixFromPath catches the nullptr AttributeMatrix
     // Error code should be -301 * 1020 = -307020
@@ -464,172 +453,81 @@ public:
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
 
     path.setAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName);
-    var.setValue(path);
-    propWasSet = cropVolume->setProperty("CellAttributeMatrixPath", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
+    cropVolume->setCellAttributeMatrixPath(path);
     // Testing New Data Container
-    var.setValue(true);
-    propWasSet = cropVolume->setProperty("SaveAsNewDataContainer", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
+    cropVolume->setSaveAsNewDataContainer(true);
     // Test Cropping Bounds
-    var.setValue(s_CroppedX.getMax() + 1);
-    propWasSet = cropVolume->setProperty("XMin", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    cropVolume->setXMin(s_CroppedX.getMax() + 1);
     cropVolume->preflight();
     DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
-    var.setValue(s_CroppedX.getMin());
-    propWasSet = cropVolume->setProperty("XMin", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    var.setValue(s_CroppedY.getMax() + 1);
-    propWasSet = cropVolume->setProperty("YMin", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    cropVolume->setXMin(s_CroppedX.getMin());
+    cropVolume->setYMin(s_CroppedY.getMax() + 1);
     cropVolume->preflight();
     DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
-    var.setValue(s_CroppedY.getMin());
-    propWasSet = cropVolume->setProperty("YMin", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    var.setValue(s_CroppedZ.getMax() + 1);
-    propWasSet = cropVolume->setProperty("ZMin", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    cropVolume->setYMin(s_CroppedY.getMin());
+    cropVolume->setZMin(s_CroppedZ.getMax() + 1);
     cropVolume->preflight();
     DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
-    var.setValue(s_CroppedZ.getMin());
-    propWasSet = cropVolume->setProperty("ZMin", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    var.setValue(-1);
-    propWasSet = cropVolume->setProperty("XMin", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    cropVolume->setZMin(s_CroppedZ.getMin());
+    cropVolume->setXMin(-1);
     cropVolume->preflight();
     DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
-    var.setValue(s_CroppedX.getMin());
-    propWasSet = cropVolume->setProperty("XMin", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    var.setValue(-1);
-    propWasSet = cropVolume->setProperty("YMin", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    cropVolume->setXMin(s_CroppedX.getMin());
+    cropVolume->setYMin(-1);
     cropVolume->preflight();
     DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
-    var.setValue(s_CroppedY.getMin());
-    propWasSet = cropVolume->setProperty("YMin", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    var.setValue(-1);
-    propWasSet = cropVolume->setProperty("ZMin", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    cropVolume->setYMin(s_CroppedY.getMin());
+    cropVolume->setZMin(-1);
     cropVolume->preflight();
     DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
-    var.setValue(s_CroppedZ.getMin());
-    propWasSet = cropVolume->setProperty("ZMin", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    var.setValue(s_OriginalX.getMax() + 1);
-    propWasSet = cropVolume->setProperty("XMax", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    cropVolume->setZMin(s_CroppedZ.getMin());
+    cropVolume->setXMax(s_OriginalX.getMax() + 1);
     cropVolume->preflight();
     DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
-    var.setValue(s_CroppedX.getMax());
-    propWasSet = cropVolume->setProperty("XMax", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    var.setValue(s_OriginalY.getMax() + 1);
-    propWasSet = cropVolume->setProperty("YMax", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    cropVolume->setXMax(s_CroppedX.getMax());
+    cropVolume->setYMax(s_OriginalY.getMax() + 1);
     cropVolume->preflight();
     DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
-    var.setValue(s_CroppedY.getMax());
-    propWasSet = cropVolume->setProperty("YMax", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    var.setValue(s_OriginalZ.getMax() + 1);
-    propWasSet = cropVolume->setProperty("ZMax", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    cropVolume->setYMax(s_CroppedY.getMax());
+    cropVolume->setZMax(s_OriginalZ.getMax() + 1);
     cropVolume->preflight();
     DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
-    var.setValue(s_CroppedZ.getMax());
-    propWasSet = cropVolume->setProperty("ZMax", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    cropVolume->setZMax(s_CroppedZ.getMax());
   }
 
   // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
-  AbstractFilter::Pointer CreateCropVolumeFilter(NumPackage x, NumPackage y, NumPackage z, bool renumberGrains, bool createNewDC)
+  CropImageGeometry::Pointer CreateCropVolumeFilter(NumPackage x, NumPackage y, NumPackage z, bool renumberGrains, bool createNewDC)
   {
-    AbstractFilter::Pointer cropVolume = AbstractFilter::NullPointer();
+    CropImageGeometry::Pointer cropVolume = CropImageGeometry::New();
 
-    QString filtName = "CropImageGeometry";
-    FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
-    if(nullptr != filterFactory.get())
+    DataContainerArray::Pointer dca = CreateDataContainerArrayTestStructure(s_OriginalX, s_OriginalY, s_OriginalZ, 1);
+
+    cropVolume->setDataContainerArray(dca);
+    cropVolume->connect(cropVolume.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
+
+    cropVolume->setXMax(x.getMax());
+    cropVolume->setYMax(y.getMax());
+    cropVolume->setZMax(z.getMax());
+    cropVolume->setXMin(x.getMin());
+    cropVolume->setYMin(y.getMin());
+    cropVolume->setZMin(z.getMin());
+    cropVolume->setSaveAsNewDataContainer(createNewDC);
+
+    if(createNewDC)
     {
-      // If we get this far, the Factory is good so creating the filter should not fail unless something has
-      // horribly gone wrong in which case the system is going to come down quickly after this.
-      DataContainerArray::Pointer dca = CreateDataContainerArrayTestStructure(s_OriginalX, s_OriginalY, s_OriginalZ, 1);
-
-      cropVolume = filterFactory->create();
-      cropVolume->setDataContainerArray(dca);
-      cropVolume->connect(cropVolume.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
-
-      QVariant var;
-      var.setValue(x.getMax());
-      bool propWasSet = cropVolume->setProperty("XMax", var);
-      require_equal<bool, bool>(propWasSet, "propWasSet", true, "true");
-
-      var.setValue(y.getMax());
-      propWasSet = cropVolume->setProperty("YMax", var);
-      require_equal<bool, bool>(propWasSet, "propWasSet", true, "true");
-
-      var.setValue(z.getMax());
-      propWasSet = cropVolume->setProperty("ZMax", var);
-      require_equal<bool, bool>(propWasSet, "propWasSet", true, "true");
-
-      var.setValue(x.getMin());
-      propWasSet = cropVolume->setProperty("XMin", var);
-      require_equal<bool, bool>(propWasSet, "propWasSet", true, "true");
-
-      var.setValue(y.getMin());
-      propWasSet = cropVolume->setProperty("YMin", var);
-      require_equal<bool, bool>(propWasSet, "propWasSet", true, "true");
-
-      var.setValue(z.getMin());
-      propWasSet = cropVolume->setProperty("ZMin", var);
-      require_equal<bool, bool>(propWasSet, "propWasSet", true, "true");
-
-      var.setValue(createNewDC);
-      propWasSet = cropVolume->setProperty("SaveAsNewDataContainer", var);
-      require_equal<bool, bool>(propWasSet, "propWasSet", true, "true");
-
-      if(createNewDC)
-      {
-        var.setValue(DataArrayPath(k_NewDataContainerName, "", ""));
-        propWasSet = cropVolume->setProperty("NewDataContainerName", var);
-        require_equal<bool, bool>(propWasSet, "propWasSet", true, "true");
-      }
-
-      var.setValue(renumberGrains);
-      propWasSet = cropVolume->setProperty("RenumberFeatures", var);
-      require_equal<bool, bool>(propWasSet, "propWasSet", true, "true");
+      cropVolume->setNewDataContainerName(DataArrayPath(k_NewDataContainerName, "", ""));
     }
-    else
-    {
-      QString ss = QObject::tr("CropVolumeTest creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
-      DREAM3D_REQUIRE_EQUAL(0, 1)
-    }
+    cropVolume->setRenumberFeatures(renumberGrains);
+
     return cropVolume;
   }
 
@@ -642,7 +540,7 @@ public:
     // Setup Data Structure
     bool renumberGrains = false;
     bool createNewDataContainer = true;
-    AbstractFilter::Pointer cropVolume = CreateCropVolumeFilter(s_CroppedX, s_CroppedY, s_CroppedZ, renumberGrains, createNewDataContainer);
+    CropImageGeometry::Pointer cropVolume = CreateCropVolumeFilter(s_CroppedX, s_CroppedY, s_CroppedZ, renumberGrains, createNewDataContainer);
     preflightTests(cropVolume);
   }
 
@@ -978,9 +876,7 @@ public:
     checkRenumber<int32_t, int32_t>(data, s_CroppedX, s_CroppedY, s_CroppedZ);
   }
 
-  /**
-   * @brief
-   */
+  // -----------------------------------------------------------------------------
   void operator()()
   {
     int err = EXIT_SUCCESS;
