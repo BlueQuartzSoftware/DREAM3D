@@ -252,7 +252,7 @@ void StatsGenMDFWidget::updatePlots()
 
   updateMDFPlot(odf);
 
-  emit dataChanged();
+  Q_EMIT dataChanged();
 }
 
 // -----------------------------------------------------------------------------

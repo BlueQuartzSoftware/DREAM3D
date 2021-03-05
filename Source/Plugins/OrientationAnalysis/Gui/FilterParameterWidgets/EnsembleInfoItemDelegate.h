@@ -73,7 +73,7 @@ public:
 
   void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const;
 
-public slots:
+public Q_SLOTS:
   void crystalStructureChangedData(int i);
   void phaseTypeChangedData(int i);
   void phaseNameChangedData(const QString& text);

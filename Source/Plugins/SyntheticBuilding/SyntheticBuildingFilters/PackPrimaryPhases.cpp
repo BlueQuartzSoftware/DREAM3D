@@ -830,10 +830,10 @@ void PackPrimaryPhases::dataCheck()
 void PackPrimaryPhases::preflight()
 {
   setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
+  Q_EMIT preflightAboutToExecute();
+  Q_EMIT updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
+  Q_EMIT preflightExecuted();
 
   DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath());
   if(dc == nullptr)
@@ -3477,7 +3477,7 @@ void PackPrimaryPhases::moveShapeDescriptions()
   std::vector<size_t> tDims(1, 0);
 
   QList<IDataArray::Pointer> attrArrays;
-  foreach(const QString name, names)
+  for(const QString name : names)
   {
     IDataArray::Pointer arrayPtr = cellFeatureAttrMat->removeAttributeArray(name);
     if(arrayPtr != IDataArray::NullPointer())
@@ -3500,7 +3500,7 @@ void PackPrimaryPhases::moveShapeDescriptions()
         newAM->resizeAttributeArrays(tDims);
       }
 
-      foreach(IDataArray::Pointer incomingArray, attrArrays)
+      for(IDataArray::Pointer incomingArray : attrArrays)
       {
         newAM->insertOrAssign(incomingArray);
       }
@@ -3519,7 +3519,7 @@ void PackPrimaryPhases::moveShapeDescriptions()
         existingAM->resizeAttributeArrays(tDims);
       }
 
-      foreach(IDataArray::Pointer incomingArray, attrArrays)
+      for(IDataArray::Pointer incomingArray : attrArrays)
       {
         int err = 0;
         IDataArray::Pointer existingArray = existingAM->getPrereqIDataArray(this, incomingArray->getName(), err);

@@ -289,7 +289,7 @@ public:
   Ang_Private_Data getData() const;
   Q_PROPERTY(Ang_Private_Data Data READ getData WRITE setData)
 
-public slots:
+public Q_SLOTS:
   /**
    * @brief flushCache Resets the cache file state
    */

@@ -125,16 +125,16 @@ void EulerWidget::valuesUpdated(const QString& text)
   int errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
 
-  emit clearErrorTable();
+  Q_EMIT clearErrorTable();
 
   if(errorCode >= 0)
   {
-    emit valuesChanged(values, OrientationRepresentation::Type::Euler, false);
+    Q_EMIT valuesChanged(values, OrientationRepresentation::Type::Euler, false);
   }
   else
   {
-    emit valuesChanged(QVector<double>(), OrientationRepresentation::Type::Euler, true);
-    emit invalidValues(errorCode, errorMsg);
+    Q_EMIT valuesChanged(QVector<double>(), OrientationRepresentation::Type::Euler, true);
+    Q_EMIT invalidValues(errorCode, errorMsg);
   }
 }
 

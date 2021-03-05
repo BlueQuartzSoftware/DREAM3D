@@ -276,7 +276,7 @@ bool EnsembleInfoTableModel::setData(const QModelIndex& index, const QVariant& v
     Q_ASSERT(false);
   }
 
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -296,7 +296,7 @@ bool EnsembleInfoTableModel::insertRows(int row, int count, const QModelIndex& i
     m_RowCount = m_EnsembleInfo.size();
   }
   endInsertRows();
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -316,7 +316,7 @@ bool EnsembleInfoTableModel::removeRows(int row, int count, const QModelIndex& i
     m_RowCount = m_EnsembleInfo.size();
   }
   endRemoveRows();
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -349,7 +349,7 @@ void EnsembleInfoTableModel::setTableData(QVector<int> crystalStructures, QVecto
   endInsertRows();
   QModelIndex topLeft = createIndex(0, 0);
   QModelIndex botRight = createIndex(count - 1, ColumnCount);
-  emit dataChanged(topLeft, botRight);
+  Q_EMIT dataChanged(topLeft, botRight);
 }
 
 // -----------------------------------------------------------------------------
@@ -375,7 +375,7 @@ void EnsembleInfoTableModel::setTableData(EnsembleInfo& ensemble)
   endInsertRows();
   QModelIndex topLeft = createIndex(0, 0);
   QModelIndex botRight = createIndex(count - 1, ColumnCount);
-  emit dataChanged(topLeft, botRight);
+  Q_EMIT dataChanged(topLeft, botRight);
 }
 
 // -----------------------------------------------------------------------------

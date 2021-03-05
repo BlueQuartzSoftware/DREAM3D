@@ -79,7 +79,7 @@ public:
    */
   void processMessage(const GenericProgressMessage* msg) const override
   {
-    emit m_Filter->notifyProgressMessage(msg->getProgressValue(), msg->getMessageText());
+    Q_EMIT m_Filter->notifyProgressMessage(msg->getProgressValue(), msg->getMessageText());
   }
 
   /**
@@ -89,7 +89,7 @@ public:
   void processMessage(const GenericStatusMessage* msg) const override
   {
     QString prefix = QObject::tr("(Array %2 of %3)").arg(m_Filter->m_CurrentArrayIndex + 1).arg(m_Filter->m_ArrayCount);
-    emit m_Filter->notifyStatusMessageWithPrefix(prefix, msg->getMessageText());
+    Q_EMIT m_Filter->notifyStatusMessageWithPrefix(prefix, msg->getMessageText());
   }
 
   /**
@@ -97,7 +97,7 @@ public:
    */
   void processMessage(const GenericErrorMessage* msg) const override
   {
-    emit m_Filter->setErrorCondition(msg->getCode(), msg->getMessageText());
+    Q_EMIT m_Filter->setErrorCondition(msg->getCode(), msg->getMessageText());
   }
 
   /**
@@ -105,7 +105,7 @@ public:
    */
   void processMessage(const GenericWarningMessage* msg) const override
   {
-    emit m_Filter->setWarningCondition(msg->getCode(), msg->getMessageText());
+    Q_EMIT m_Filter->setWarningCondition(msg->getCode(), msg->getMessageText());
   }
 
 private:

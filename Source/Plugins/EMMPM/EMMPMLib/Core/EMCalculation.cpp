@@ -78,7 +78,7 @@ public:
    */
   void processMessage(const GenericProgressMessage* msg) const override
   {
-    emit m_CalculationObject->notifyProgressMessage(msg->getProgressValue(), msg->getMessageText());
+    Q_EMIT m_CalculationObject->notifyProgressMessage(msg->getProgressValue(), msg->getMessageText());
   }
 
   /**
@@ -89,7 +89,7 @@ public:
   {
     EMMPM_Data* data = m_CalculationObject->m_Data.get();
     QString prefix = QObject::tr("EM Loop %1").arg(data->currentEMLoop);
-    emit m_CalculationObject->notifyStatusMessageWithPrefix(prefix, msg->getMessageText());
+    Q_EMIT m_CalculationObject->notifyStatusMessageWithPrefix(prefix, msg->getMessageText());
   }
 
   /**
@@ -97,7 +97,7 @@ public:
    */
   void processMessage(const GenericErrorMessage* msg) const override
   {
-    emit m_CalculationObject->setErrorCondition(msg->getCode(), msg->getMessageText());
+    Q_EMIT m_CalculationObject->setErrorCondition(msg->getCode(), msg->getMessageText());
   }
 
   /**
@@ -105,7 +105,7 @@ public:
    */
   void processMessage(const GenericWarningMessage* msg) const override
   {
-    emit m_CalculationObject->setWarningCondition(msg->getCode(), msg->getMessageText());
+    Q_EMIT m_CalculationObject->setWarningCondition(msg->getCode(), msg->getMessageText());
   }
 
 private:

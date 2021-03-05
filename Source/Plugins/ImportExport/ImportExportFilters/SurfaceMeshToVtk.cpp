@@ -127,7 +127,7 @@ void SurfaceMeshToVtk::dataCheck()
     dcName = m_SelectedVertexArrays[0].getDataContainerName();
   }
 
-  foreach(DataArrayPath dap, m_SelectedFaceArrays)
+  for(DataArrayPath dap : m_SelectedFaceArrays)
   {
     if(dap.getDataContainerName().compare(dcName) != 0)
     {
@@ -135,7 +135,7 @@ void SurfaceMeshToVtk::dataCheck()
       return;
     }
   }
-  foreach(DataArrayPath dap, m_SelectedVertexArrays)
+  for(DataArrayPath dap : m_SelectedVertexArrays)
   {
     if(dap.getDataContainerName().compare(dcName) != 0)
     {

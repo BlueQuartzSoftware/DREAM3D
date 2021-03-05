@@ -126,17 +126,17 @@ void QuatWidget::valuesUpdated(const QString& text)
   int errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
 
-  emit clearErrorTable();
+  Q_EMIT clearErrorTable();
 
   if(errorCode >= 0)
   {
     QVECTOR_FROM_STD_VECTOR(QVector<double>, qvec, values)
-    emit valuesChanged(qvec, OrientationRepresentation::Type::Quaternion, false);
+    Q_EMIT valuesChanged(qvec, OrientationRepresentation::Type::Quaternion, false);
   }
   else
   {
-    emit valuesChanged(QVector<double>(), OrientationRepresentation::Type::Quaternion, true);
-    emit invalidValues(errorCode, errorMsg);
+    Q_EMIT valuesChanged(QVector<double>(), OrientationRepresentation::Type::Quaternion, true);
+    Q_EMIT invalidValues(errorCode, errorMsg);
   }
 }
 

@@ -68,7 +68,7 @@ public:
    */
   void processMessage(const GenericProgressMessage* msg) const override
   {
-    emit m_EmmpmObject->notifyProgressMessage(msg->getProgressValue(), msg->getMessageText());
+    Q_EMIT m_EmmpmObject->notifyProgressMessage(msg->getProgressValue(), msg->getMessageText());
   }
 
   /**
@@ -76,7 +76,7 @@ public:
    */
   void processMessage(const GenericStatusMessage* msg) const override
   {
-    emit m_EmmpmObject->notifyStatusMessage(msg->getMessageText());
+    Q_EMIT m_EmmpmObject->notifyStatusMessage(msg->getMessageText());
   }
 
   /**
@@ -84,7 +84,7 @@ public:
    */
   void processMessage(const GenericErrorMessage* msg) const override
   {
-    emit m_EmmpmObject->setErrorCondition(msg->getCode(), msg->getMessageText());
+    Q_EMIT m_EmmpmObject->setErrorCondition(msg->getCode(), msg->getMessageText());
   }
 
   /**
@@ -92,7 +92,7 @@ public:
    */
   void processMessage(const GenericWarningMessage* msg) const override
   {
-    emit m_EmmpmObject->setWarningCondition(msg->getCode(), msg->getMessageText());
+    Q_EMIT m_EmmpmObject->setWarningCondition(msg->getCode(), msg->getMessageText());
   }
 
 private:

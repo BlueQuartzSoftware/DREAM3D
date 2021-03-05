@@ -263,7 +263,7 @@ bool SGPowerLawTableModel::setData(const QModelIndex& index, const QVariant& val
     Q_ASSERT(false);
   }
 
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -289,7 +289,7 @@ bool SGPowerLawTableModel::insertRows(int row, int count, const QModelIndex& ind
     m_RowCount = m_BinNumbers.count();
   }
   endInsertRows();
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -313,7 +313,7 @@ bool SGPowerLawTableModel::removeRows(int row, int count, const QModelIndex& ind
     m_RowCount = m_BinNumbers.count();
   }
   endRemoveRows();
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -426,7 +426,7 @@ void SGPowerLawTableModel::setTableData(QVector<float> bins, QVector<QVector<flo
       offset = 0;
     }
     QModelIndex botRight = createIndex(offset, ColumnCount);
-    emit dataChanged(topLeft, botRight);
+    Q_EMIT dataChanged(topLeft, botRight);
   }
 }
 

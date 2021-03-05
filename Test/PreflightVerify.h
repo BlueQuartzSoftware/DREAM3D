@@ -17,7 +17,7 @@ public:
   bool m_afterPreflight = {false};
   bool m_filterNeedsInputParameters = {false};
 
-public slots:
+public Q_SLOTS:
   void widgetChanged(const QString& msg);
   void beforePreflight();
   void afterPreflight();

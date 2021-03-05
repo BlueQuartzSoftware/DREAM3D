@@ -252,14 +252,14 @@ public:
     QFileInfoList dirList = currentDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
     if(dirList.size() > 0)
     {
-      foreach(QFileInfo fi, dirList)
+      for(QFileInfo fi : dirList)
       {
         recursiveDirFind(QDir(fi.absoluteFilePath())); // Recursive call
       }
     }
 
     QFileInfoList itemList = currentDir.entryInfoList(fileFilters);
-    foreach(QFileInfo itemInfo, itemList)
+    for(QFileInfo itemInfo : itemList)
     {
       QString itemFilePath = itemInfo.absoluteFilePath();
       // std::cout << "PIPELINE FILE: " << itemFilePath.toStdString() << std::endl;

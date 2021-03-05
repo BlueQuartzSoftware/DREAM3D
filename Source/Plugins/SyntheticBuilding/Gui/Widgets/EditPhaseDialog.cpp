@@ -195,7 +195,7 @@ void EditPhaseDialog::setupGui()
   // Monoclinic
   // Orthorhombic
   QVector<qint32> indx = {4, 5, 6};
-  foreach(int idx, indx)
+  for(int idx : indx)
   {
     QStandardItemModel* model = qobject_cast<QStandardItemModel*>(xtalCombo->model());
     bool disabled = true;

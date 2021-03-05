@@ -216,7 +216,7 @@ public:
     }
   }
 
-signals:
+Q_SIGNALS:
 
   void userEnteredValidData(bool);
 
@@ -250,7 +250,7 @@ protected:
    */
   void mousePressEvent(QMouseEvent* event) override;
 
-protected slots:
+protected Q_SLOTS:
 
   void on_m_Mu_SizeDistribution_textChanged(const QString& text);
   void on_m_Sigma_SizeDistribution_textChanged(const QString& text);

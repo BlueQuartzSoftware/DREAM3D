@@ -164,10 +164,10 @@ public:
 
   void setSizeDistributionValues(float mu, float sigma, float minCutOff, float maxCutOff, float binStepSize);
 
-signals:
+Q_SIGNALS:
   void dataChanged();
 
-public slots:
+public Q_SLOTS:
   void updatePlotCurves();
   void userCommittedData(QWidget* w);
   void highlightCurve(int index);

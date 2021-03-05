@@ -115,14 +115,14 @@ void RecursiveFileSearch(const QDir& currentDir, const QStringList& filters)
   QFileInfoList dirList = currentDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
   if(!dirList.isEmpty())
   {
-    foreach(QFileInfo fi, dirList)
+    for(QFileInfo fi : dirList)
     {
       RecursiveFileSearch<T>(QDir(fi.absoluteFilePath()), filters); // Recursive call
     }
   }
 
   QFileInfoList itemList = currentDir.entryInfoList(filters);
-  foreach(QFileInfo itemInfo, itemList)
+  for(QFileInfo itemInfo : itemList)
   {
     QString headerFilePath = itemInfo.absoluteFilePath();
     T()(headerFilePath);

@@ -459,12 +459,12 @@ void FindEuclideanDistMap::dataCheck()
 void FindEuclideanDistMap::preflight()
 {
   setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
+  Q_EMIT preflightAboutToExecute();
+  Q_EMIT updateFilterParameters(this);
   dataCheck();
   if(getErrorCode() < 0)
   {
-    emit preflightExecuted();
+    Q_EMIT preflightExecuted();
     setInPreflight(false);
     return;
   }
@@ -474,7 +474,7 @@ void FindEuclideanDistMap::preflight()
     AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(getFeatureIdsArrayPath().getAttributeMatrixName());
     attrMat->removeAttributeArray(getNearestNeighborsArrayName());
   }
-  emit preflightExecuted();
+  Q_EMIT preflightExecuted();
   setInPreflight(false);
 }
 

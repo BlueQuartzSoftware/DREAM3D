@@ -305,7 +305,7 @@ void StatsGenPlotWidget::resetTableModel()
 void StatsGenPlotWidget::userCommittedData(QWidget* w)
 {
   m_UserUpdatedData = true;
-  emit dataChanged();
+  Q_EMIT dataChanged();
 }
 
 // -----------------------------------------------------------------------------

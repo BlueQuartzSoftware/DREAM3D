@@ -125,7 +125,7 @@ QString EbsdMontageImportWidget::GetOpenDialogLastFilePath()
 // -----------------------------------------------------------------------------
 void EbsdMontageImportWidget::setWidgetListEnabled(bool b)
 {
-  foreach(QWidget* w, m_WidgetList)
+  for(QWidget* w : m_WidgetList)
   {
     w->setEnabled(b);
   }
@@ -192,7 +192,7 @@ void EbsdMontageImportWidget::connectSignalsSlots()
 void EbsdMontageImportWidget::spinnerChanged(int value)
 {
   updateFileListView();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -338,7 +338,7 @@ void EbsdMontageImportWidget::inputDir_textChanged(const QString& text)
     m_Ui->fileListView->clear();
   }
 
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -400,7 +400,7 @@ void EbsdMontageImportWidget::updateFileListView()
 void EbsdMontageImportWidget::widgetChanged(const QString& text)
 {
   updateFileListView();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -411,7 +411,7 @@ void EbsdMontageImportWidget::filterNeedsInputParameters(AbstractFilter* filter)
   if(nullptr == filter)
   {
     QString ss = QObject::tr("Error Setting FileListStack Gui values to Filter instance. Filter instance was nullptr.").arg(getFilterParameter()->getPropertyName());
-    emit errorSettingFilterParameter(ss);
+    Q_EMIT errorSettingFilterParameter(ss);
     return;
   }
 

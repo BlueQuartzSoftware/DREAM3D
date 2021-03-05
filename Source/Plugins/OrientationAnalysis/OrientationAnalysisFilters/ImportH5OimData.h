@@ -399,7 +399,7 @@ public:
   QVector<int> getPatternDims() const;
   Q_PROPERTY(QVector<int> PatternDims READ getPatternDims WRITE setPatternDims)
 
-public slots:
+public Q_SLOTS:
   /**
    * @brief flushCache Resets the cache file state
    */

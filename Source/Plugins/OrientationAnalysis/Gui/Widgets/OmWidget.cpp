@@ -136,16 +136,16 @@ void OmWidget::valuesUpdated(const QString& text)
   int errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
 
-  emit clearErrorTable();
+  Q_EMIT clearErrorTable();
 
   if(errorCode >= 0)
   {
-    emit valuesChanged(values, OrientationRepresentation::Type::OrientationMatrix, false);
+    Q_EMIT valuesChanged(values, OrientationRepresentation::Type::OrientationMatrix, false);
   }
   else
   {
-    emit valuesChanged(QVector<double>(), OrientationRepresentation::Type::OrientationMatrix, true);
-    emit invalidValues(errorCode, errorMsg);
+    Q_EMIT valuesChanged(QVector<double>(), OrientationRepresentation::Type::OrientationMatrix, true);
+    Q_EMIT invalidValues(errorCode, errorMsg);
   }
 }
 

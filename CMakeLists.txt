@@ -87,6 +87,7 @@ if(NOT DEFINED CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
     )
 endif()
 
+add_compile_definitions(QT_NO_KEYWORDS)
 
 #------------------------------------------------------------------------------
 # Find the Git Package for Versioning. It should be ok if Git is NOT found

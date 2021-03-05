@@ -239,7 +239,7 @@ bool SGBetaTableModel::setData(const QModelIndex& index, const QVariant& value, 
     Q_ASSERT(false);
   }
 
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -264,7 +264,7 @@ bool SGBetaTableModel::insertRows(int row, int count, const QModelIndex& index)
     m_RowCount = m_BinNumbers.count();
   }
   endInsertRows();
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -287,7 +287,7 @@ bool SGBetaTableModel::removeRows(int row, int count, const QModelIndex& index)
     m_RowCount = m_BinNumbers.count();
   }
   endRemoveRows();
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -397,7 +397,7 @@ void SGBetaTableModel::setTableData(QVector<float> bins, QVector<QVector<float>>
       offset = 0;
     }
     QModelIndex botRight = createIndex(offset, ColumnCount);
-    emit dataChanged(topLeft, botRight);
+    Q_EMIT dataChanged(topLeft, botRight);
   }
 }
 

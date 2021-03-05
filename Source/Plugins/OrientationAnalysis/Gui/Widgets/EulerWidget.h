@@ -47,7 +47,7 @@ public:
   EulerWidget(QWidget* parent = nullptr);
   virtual ~EulerWidget();
 
-protected slots:
+protected Q_SLOTS:
   void valuesUpdated(const QString& text);
 
   void convertData(bool isDegrees);

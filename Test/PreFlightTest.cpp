@@ -470,7 +470,7 @@ void TestUncategorizedFilterParameters()
       if(filter.get() != nullptr)
       {
         FilterParameterVectorType parameters = filter->getFilterParameters();
-        foreach(FilterParameter::Pointer fp, parameters)
+        for(FilterParameter::Pointer fp : parameters)
         {
           if(fp->getCategory() == FilterParameter::Category::Uncategorized)
           {

@@ -255,7 +255,7 @@ void StatsGenAxisODFWidget::tableDataChanged(const QModelIndex& topLeft, const Q
   Q_UNUSED(bottomRight);
 
   on_m_CalculateODFBtn_clicked();
-  emit dataChanged();
+  Q_EMIT dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -507,7 +507,7 @@ void StatsGenAxisODFWidget::calculateAxisODF()
   QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(convertedFigures[0].get(), convertedFigures[1].get(), convertedFigures[2].get(), config, m_ImageLayoutCB->currentIndex());
   m_PoleFigureLabel->setPixmap(QPixmap::fromImage(image));
 
-  emit dataChanged();
+  Q_EMIT dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -564,7 +564,7 @@ void StatsGenAxisODFWidget::on_deleteODFTextureBtn_clicked()
     m_ODFTableView->resizeColumnsToContents();
   }
   updatePlots();
-  emit dataChanged();
+  Q_EMIT dataChanged();
 }
 
 // -----------------------------------------------------------------------------

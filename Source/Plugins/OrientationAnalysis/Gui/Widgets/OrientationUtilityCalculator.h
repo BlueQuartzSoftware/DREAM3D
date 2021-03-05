@@ -58,10 +58,10 @@ public:
 
   QVector<double> getValues(OrientationRepresentation::Type outputType);
 
-protected slots:
+protected Q_SLOTS:
   void setDataAndInputType(QVector<double> values, OrientationRepresentation::Type inputType, bool hasErrors);
 
-signals:
+Q_SIGNALS:
   void calculatorReady(OrientationUtilityCalculator* calculator);
 
 private:

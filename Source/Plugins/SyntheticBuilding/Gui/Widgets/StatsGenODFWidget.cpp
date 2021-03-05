@@ -130,8 +130,8 @@ void StatsGenODFWidget::on_m_WeightSpreads_clicked(bool /* checked */)
   m_ODFTableView->setModel(m_ODFTableModel);
   QAbstractItemDelegate* idelegate = m_ODFTableModel->getItemDelegate();
   m_ODFTableView->setItemDelegate(idelegate);
-  emit bulkLoadEvent(false);
-  emit dataChanged();
+  Q_EMIT bulkLoadEvent(false);
+  Q_EMIT dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -143,8 +143,8 @@ void StatsGenODFWidget::on_m_WeightSpreadsBulkLoad_clicked(bool /* checked */)
   m_ODFTableView->setModel(m_OdfBulkTableModel);
   QAbstractItemDelegate* idelegate = m_OdfBulkTableModel->getItemDelegate();
   m_ODFTableView->setItemDelegate(idelegate);
-  emit bulkLoadEvent(!(m_OdfBulkTableModel->rowCount() > 0));
-  emit dataChanged();
+  Q_EMIT bulkLoadEvent(!(m_OdfBulkTableModel->rowCount() > 0));
+  Q_EMIT dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -499,7 +499,7 @@ void StatsGenODFWidget::updatePlots()
   calculateODF();
   m_AbortUpdate = true;
   updatePFStatus(QString(""));
-  emit odfDataChanged();
+  Q_EMIT odfDataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -674,7 +674,7 @@ void StatsGenODFWidget::calculateODF()
 
     QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(convertedFigures[0].get(), convertedFigures[1].get(), convertedFigures[2].get(), config, m_ImageLayoutCB->currentIndex());
     m_PoleFigureLabel->setPixmap(QPixmap::fromImage(image));
-    emit dataChanged();
+    Q_EMIT dataChanged();
   }
 }
 
@@ -748,7 +748,7 @@ void StatsGenODFWidget::on_angleFilePath_textChanged()
   m_OdfBulkTableModel->setCrystalStructure(m_CrystalStructure);
   m_OdfBulkTableModel->setInitialValues();
 
-  emit bulkLoadEvent(true);
+  Q_EMIT bulkLoadEvent(true);
   updatePlots();
 }
 
@@ -760,14 +760,14 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   QString file = angleFilePath->text();
   if(file.isEmpty())
   {
-    emit bulkLoadEvent(true);
+    Q_EMIT bulkLoadEvent(true);
     return;
   }
 
   QFileInfo fi(angleFilePath->text());
   if(!fi.exists())
   {
-    emit bulkLoadEvent(true);
+    Q_EMIT bulkLoadEvent(true);
     return;
   }
 
@@ -787,7 +787,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   {
     QMessageBox::critical(this, "ANG File Loading NOT Supported",
                           "Please use the 'Write StatsGenerator ODF Angle File' filter from DREAM.3D to generate a file. See that filter's help for the proper format.", QMessageBox::Ok);
-    emit bulkLoadEvent(true);
+    Q_EMIT bulkLoadEvent(true);
     return;
 #if 0
     phaseOfInterest->setEnabled(true);
@@ -853,7 +853,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   {
     QMessageBox::critical(this, "CTF File Loading not Supported",
                           "Please use the 'Write StatsGenerator ODF Angle File' filter from DREAM.3D to generate a file. See that filter's help for the proper format.", QMessageBox::Ok);
-    emit bulkLoadEvent(true);
+    Q_EMIT bulkLoadEvent(true);
     return;
 #if 0
     phaseOfInterest->setEnabled(true);
@@ -947,7 +947,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   if(loader->getErrorCode() < 0)
   {
     QMessageBox::critical(this, "Error Loading Angle data", QString::fromStdString(loader->getErrorMessage()), QMessageBox::Ok);
-    emit bulkLoadEvent(true);
+    Q_EMIT bulkLoadEvent(true);
     return;
   }
   count = data->getNumberOfTuples();
@@ -992,7 +992,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   m_OdfBulkTableModel->blockSignals(false);
 #endif
 
-  emit bulkLoadEvent(false);
+  Q_EMIT bulkLoadEvent(false);
   on_m_CalculateODFBtn_clicked();
   progress.setValue(3);
 }

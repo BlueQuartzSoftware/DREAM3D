@@ -116,7 +116,7 @@ public:
    */
   bool getInitializing() const;
 
-protected slots:
+protected Q_SLOTS:
   void on_m_CalculateODFBtn_clicked();
   void on_addODFTextureBtn_clicked();
   void on_deleteODFTextureBtn_clicked();
@@ -137,7 +137,7 @@ protected slots:
   void on_m_PFLambertSize_valueChanged(int i);
   void updatePFStatus(const QString& msg);
 
-signals:
+Q_SIGNALS:
   void dataChanged();
   void bulkLoadEvent(bool fail);
   void odfDataChanged();

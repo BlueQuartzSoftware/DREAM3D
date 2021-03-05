@@ -142,13 +142,13 @@ void AxisAngleWidget::valuesUpdated(const QString& text)
   values[1] = axis[1];
   values[2] = axis[2];
 
-  emit clearErrorTable();
+  Q_EMIT clearErrorTable();
   int errorCode = 0;
   std::stringstream ss;
   ss << "Axis Angle values were normalized. Actual values used for the calculation are: ";
   ss << "<" << values[0] << ", " << values[1] << ", " << values[2] << "> " << values[3];
 
-  emit invalidValues(errorCode, QString::fromStdString(ss.str()));
+  Q_EMIT invalidValues(errorCode, QString::fromStdString(ss.str()));
 
   OrientationTransformation::ResultType result = OrientationTransformation::ax_check(values);
   errorCode = result.result;
@@ -156,12 +156,12 @@ void AxisAngleWidget::valuesUpdated(const QString& text)
 
   if(errorCode >= 0)
   {
-    emit valuesChanged(values, OrientationRepresentation::Type::AxisAngle, false);
+    Q_EMIT valuesChanged(values, OrientationRepresentation::Type::AxisAngle, false);
   }
   else
   {
-    emit valuesChanged(QVector<double>(), OrientationRepresentation::Type::AxisAngle, true);
-    emit invalidValues(errorCode, errorMsg);
+    Q_EMIT valuesChanged(QVector<double>(), OrientationRepresentation::Type::AxisAngle, true);
+    Q_EMIT invalidValues(errorCode, errorMsg);
   }
 }
 

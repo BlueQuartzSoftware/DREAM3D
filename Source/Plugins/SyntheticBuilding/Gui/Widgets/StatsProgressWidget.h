@@ -54,7 +54,7 @@ public:
 
   ~StatsProgressWidget() override;
 
-public slots:
+public Q_SLOTS:
 
   /**
    * @brief setValue
