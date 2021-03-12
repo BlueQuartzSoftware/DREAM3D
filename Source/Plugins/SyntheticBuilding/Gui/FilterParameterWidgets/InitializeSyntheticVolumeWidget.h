@@ -67,8 +67,8 @@ public:
    */
   void setupGui() override;
 
-  void setFilter(AbstractFilter* value);
-  AbstractFilter* getFilter() const;
+  void setFilter(AbstractFilter* value) override;
+  AbstractFilter* getFilter() const override;
 
 public Q_SLOTS:
   // void widgetChanged(const QString& msg);

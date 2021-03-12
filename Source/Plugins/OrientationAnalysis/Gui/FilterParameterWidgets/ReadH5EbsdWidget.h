@@ -63,18 +63,18 @@ public:
    */
   ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
 
-  virtual ~ReadH5EbsdWidget();
+  ~ReadH5EbsdWidget() override;
 
   /**
    * @brief Initializes some of the GUI elements with selections or other GUI related items
    */
-  virtual void setupGui();
+  void setupGui() override;
 
-  void setFilter(AbstractFilter* value);
-  AbstractFilter* getFilter() const;
+  void setFilter(AbstractFilter* value) override;
+  AbstractFilter* getFilter() const override;
 
-  void setFilterParameter(FilterParameter* value);
-  FilterParameter* getFilterParameter() const;
+  void setFilterParameter(FilterParameter* value) override;
+  FilterParameter* getFilterParameter() const override;
 
 public Q_SLOTS:
   // void widgetChanged(const QString& msg);
@@ -96,11 +96,6 @@ protected:
   void setInputFilePath(QString val);
   QString getInputFilePath();
 
-  /**
-   * @brief setInputFile
-   * @param v
-   */
-  void setInputFile(const QString& v);
 
   /**
    * @brief validateInputFile
@@ -140,7 +135,7 @@ protected:
    * @brief
    * @param event
    */
-  void keyPressEvent(QKeyEvent* event);
+  void keyPressEvent(QKeyEvent* event) override;
 
   /**
    * @brief setupMenuField
@@ -151,14 +146,14 @@ private:
   ReadH5Ebsd* m_Filter = nullptr;
   ReadH5EbsdFilterParameter* m_FilterParameter = nullptr;
   QList<QWidget*> m_WidgetList;
-  AxisAngleInput m_SampleTransformation;
-  AxisAngleInput m_EulerTransformation;
+  AxisAngleInput m_SampleTransformation = {0.0F, 0.0F, 1.0F, 0.0F};
+  AxisAngleInput m_EulerTransformation = {0.0F, 0.0F, 1.0F, 0.0F};
 
   QAction* m_ShowFileAction = nullptr;
   QString m_CurrentText = "";
   bool m_DidCausePreflight = false;
-  bool m_NewFileLoaded;
-  bool m_Version4Warning;
+  bool m_NewFileLoaded = false;
+  bool m_Version4Warning = false;
 
 public:
   ReadH5EbsdWidget(const ReadH5EbsdWidget&) = delete;            // Copy Constructor Not Implemented

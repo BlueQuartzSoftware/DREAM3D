@@ -2980,7 +2980,7 @@ void InsertPrecipitatePhases::moveShapeDescriptions()
   AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(getFeaturePhasesArrayPath());
 
   QList<IDataArray::Pointer> attrArrays;
-  for(const QString name : names)
+  for(const QString& name : names)
   {
     IDataArray::Pointer arrayPtr = cellFeatureAttrMat->removeAttributeArray(name);
     if(arrayPtr != IDataArray::NullPointer())

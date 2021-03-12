@@ -75,20 +75,18 @@ public:
    */
   EMMPMWidget(QWidget* parent = nullptr);
 
-  virtual ~EMMPMWidget();
-
-  void initialize(FilterParameter* parameter, AbstractFilter* filter = nullptr);
+  ~EMMPMWidget() override;
 
   /**
    * @brief This method does additional GUI widget connections
    */
-  void setupGui();
+  void setupGui() override;
 
-  void setFilter(AbstractFilter* value);
-  AbstractFilter* getFilter() const;
+  void setFilter(AbstractFilter* value) override;
+  AbstractFilter* getFilter() const override;
 
-  void setFilterParameter(FilterParameter* value);
-  FilterParameter* getFilterParameter() const;
+  void setFilterParameter(FilterParameter* value) override;
+  FilterParameter* getFilterParameter() const override;
 
 public Q_SLOTS:
   void beforePreflight();

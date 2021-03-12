@@ -68,11 +68,11 @@ public:
 
   void updateList();
 
-  void setFilter(AbstractFilter* value);
-  AbstractFilter* getFilter() const;
+  void setFilter(AbstractFilter* value) override;
+  AbstractFilter* getFilter() const override;
 
-  void setFilterParameter(FilterParameter* value);
-  FilterParameter* getFilterParameter() const;
+  void setFilterParameter(FilterParameter* value) override;
+  FilterParameter* getFilterParameter() const override;
 
 public Q_SLOTS:
   void beforePreflight();

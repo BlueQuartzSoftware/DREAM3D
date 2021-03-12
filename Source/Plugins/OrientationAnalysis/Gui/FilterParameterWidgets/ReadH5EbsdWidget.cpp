@@ -43,24 +43,16 @@
 
 #include "EbsdLib/Core/EbsdLibConstants.h"
 #include "EbsdLib/Core/EbsdMacros.h"
-#include "EbsdLib/IO/H5EbsdVolumeInfo.h"
 #include "EbsdLib/IO/H5EbsdVolumeReader.h"
-#include "EbsdLib/IO/HKL/CtfFields.h"
-#include "EbsdLib/IO/HKL/H5CtfVolumeReader.h"
-#include "EbsdLib/IO/TSL/AngFields.h"
-#include "EbsdLib/IO/TSL/H5AngVolumeReader.h"
 
-#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Utilities/FilterCompatibility.hpp"
 #include "SIMPLib/Utilities/SIMPLDataPathValidator.h"
 
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
 #include "SVWidgetsLib/QtSupport/QtSFileUtils.h"
 #include "SVWidgetsLib/QtSupport/QtSHelpUrlGenerator.h"
-#include "SVWidgetsLib/QtSupport/QtSMacros.h"
 
 #include "OrientationAnalysis/FilterParameters/ReadH5EbsdFilterParameter.h"
-#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadH5Ebsd.h"
 
 // -----------------------------------------------------------------------------
@@ -68,10 +60,6 @@
 // -----------------------------------------------------------------------------
 ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent)
 : FilterParameterWidget(parameter, filter, parent)
-, m_NewFileLoaded(false)
-, m_Version4Warning(false)
-, m_SampleTransformation(0.0f, 0.0f, 1.0f, 0.0f)
-, m_EulerTransformation(0.0f, 0.0f, 1.0f, 0.0f)
 {
   m_Filter = SIMPL_FILTER_COMPATIBILITY_CHECK(filter, parameter, ReadH5EbsdWidget, ReadH5Ebsd);
   m_FilterParameter = SIMPL_FILTER_PARAMETER_COMPATIBILITY_CHECK(filter, parameter, ReadH5EbsdWidget, ReadH5EbsdFilterParameter);
@@ -602,9 +590,6 @@ void ReadH5EbsdWidget::updateFileInfoWidgets()
       int64_t ypoints = 0;
       int64_t zpoints = 1;
 
-      int zStart = 0;
-      int zEnd = 0;
-
       if(h5Reader->readVolumeInfo() >= 0)
       {
 
@@ -618,8 +603,8 @@ void ReadH5EbsdWidget::updateFileInfoWidgets()
         m_YDim->setText(QString::number(ypoints));
         m_ZDim->setText(QString::number(zpoints));
 
-        zStart = h5Reader->getZStart();
-        zEnd = h5Reader->getZEnd();
+        int32_t zStart = h5Reader->getZStart();
+        int32_t zEnd = h5Reader->getZEnd();
         m_ZMin->setText(QString::number(zStart));
         m_ZMax->setText(QString::number(zEnd));
 

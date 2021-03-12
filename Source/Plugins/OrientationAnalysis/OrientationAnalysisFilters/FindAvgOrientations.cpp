@@ -219,9 +219,7 @@ void FindAvgOrientations::execute()
   for(size_t i = 1; i < totalFeatures; i++)
   {
     avgQuatsPtr = m_AvgQuats + i * 4;                                           // Get the pointer to the current average quaternion
-    QuatF qAvg(avgQuatsPtr[0], avgQuatsPtr[1], avgQuatsPtr[2], avgQuatsPtr[3]); // Create a copy of the quaternion
-    qAvg = QuatF::identity();
-    qAvg.copyInto(avgQuatsPtr, QuatF::Order::VectorScalar);
+    QuatF::identity().copyInto(avgQuatsPtr, QuatF::Order::VectorScalar);
   }
   // Initialize all Euler Angles to Zero
   m_FeatureEulerAnglesPtr.lock()->initializeWithZeros();
