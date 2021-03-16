@@ -59,6 +59,10 @@
 #include "SyntheticBuilding/Gui/Widgets/StatsGenCurveTracker.h"
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif
 #include <qwt_picker_machine.h>
 #include <qwt_plot_canvas.h>
 #include <qwt_plot_curve.h>

@@ -3477,7 +3477,7 @@ void PackPrimaryPhases::moveShapeDescriptions()
   std::vector<size_t> tDims(1, 0);
 
   QList<IDataArray::Pointer> attrArrays;
-  for(const QString name : names)
+  for(const QString& name : names)
   {
     IDataArray::Pointer arrayPtr = cellFeatureAttrMat->removeAttributeArray(name);
     if(arrayPtr != IDataArray::NullPointer())

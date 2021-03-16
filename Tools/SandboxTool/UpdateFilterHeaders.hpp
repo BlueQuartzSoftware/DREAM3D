@@ -15,9 +15,6 @@ public:
   // -----------------------------------------------------------------------------
   bool positionInHeader(QString& contents, const QString& var, bool isPointer, QString arg)
   {
-
-    // QStringList names;
-    bool found = false;
     int lineNum = 1;
     QString searchString = var;
 
@@ -109,20 +106,13 @@ public:
         }
         break;
       }
-      int colonOffset = line.indexOf(":");
       int offset = line.indexOf("m_");
       int offset2 = line.indexOf("(");
       int offset3 = line.lastIndexOf(")");
       QString var = line.mid(offset, offset2 - offset);
       QString arg = line.mid(offset2 + 1, offset3 - offset2 - 1);
-      if(line.contains("(nullptr)"))
-      {
-        isPointer = true;
-      }
-      else
-      {
-        isPointer = false;
-      }
+      isPointer = line.contains("(nullptr)");
+
       didReplace = positionInHeader(hFileContents, var, isPointer, arg);
       if(!didReplace)
       {

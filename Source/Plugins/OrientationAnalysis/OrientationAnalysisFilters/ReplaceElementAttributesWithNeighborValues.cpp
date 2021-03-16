@@ -55,7 +55,6 @@
 
 namespace Detail
 {
-static const int LessThan = 0;
 static const int GreaterThan = 1;
 
 template <typename T>

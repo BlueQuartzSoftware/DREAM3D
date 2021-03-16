@@ -38,13 +38,13 @@
 #include <iostream>
 #include <limits>
 
+#include <QtCore/QDebug>
+
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/Core/EbsdLibConstants.h"
-
-#include <QtCore/QDebug>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Constants.h"
@@ -70,6 +70,10 @@
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/PrimaryRolledPreset.h"
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
 

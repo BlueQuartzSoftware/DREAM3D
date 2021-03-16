@@ -51,6 +51,10 @@
 #include <QtWidgets/QTableView>
 
 //-- Qwt Includes
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif
 #include <qwt.h>
 #include <qwt_abstract_scale_draw.h>
 #include <qwt_compat.h>

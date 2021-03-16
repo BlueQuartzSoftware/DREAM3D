@@ -68,7 +68,12 @@
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/PrimaryEquiaxedPreset.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/PrimaryRecrystallizedPreset.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/PrimaryRolledPreset.h"
+
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif
 #include <qwt_plot_curve.h>
 #include <qwt_plot_grid.h>
 #include <qwt_plot_marker.h>

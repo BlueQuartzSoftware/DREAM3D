@@ -67,6 +67,10 @@
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/PrecipitateRolledPreset.h"
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
 
