@@ -89,6 +89,46 @@ endif()
 
 add_compile_definitions(QT_NO_KEYWORDS)
 
+option(DREAM3D_DISABLE_DEPENDENCY_COPY_INSTALL_RULES "Disables creating copy/install rules for dependencies" OFF)
+
+if(DREAM3D_DISABLE_DEPENDENCY_COPY_INSTALL_RULES)
+  set(CMP_HDF5_ENABLE_COPY OFF)
+  set(CMP_HDF5_ENABLE_INSTALL OFF)
+  set(CMP_HARU_ENABLE_COPY_INSTALL OFF)
+  set(CMP_QT5_ENABLE_INSTALL OFF)
+  set(CMP_QT5_ENABLE_COPY OFF)
+  set(CMP_QWT_ENABLE_COPY_INSTALL OFF)
+  set(CMP_TBB_ENABLE_COPY_INSTALL OFF)
+  set(CMP_ITK_ENABLE_COPY_INSTALL OFF)
+  set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
+endif()
+
+option(DREAM3D_ANACONDA "Builds DREAM3D for an Anaconda package" OFF)
+
+if(DREAM3D_ANACONDA AND NOT WIN32)
+  message(WARNING "Building an Anconda package is experimental on non-Windows platforms")
+endif()
+
+if(DREAM3D_ANACONDA)
+  set(DREAM3D_PYTHON_PACKAGE_ROOT_DIR ${DREAM3DProj_BINARY_DIR}/python_package)
+  file(REMOVE_RECURSE ${DREAM3D_PYTHON_PACKAGE_ROOT_DIR})
+  file(MAKE_DIRECTORY ${DREAM3D_PYTHON_PACKAGE_ROOT_DIR})
+  set(DREAM3D_PYTHON_PACKAGE_DIR ${DREAM3D_PYTHON_PACKAGE_ROOT_DIR}/dream3d)
+  file(MAKE_DIRECTORY ${DREAM3D_PYTHON_PACKAGE_DIR})
+  file(COPY ${DREAM3DProj_SOURCE_DIR}/Python/setup.py
+    DESTINATION ${DREAM3D_PYTHON_PACKAGE_ROOT_DIR}
+  )
+  set(DREAM3D_INIT_PY_FILE ${DREAM3D_PYTHON_PACKAGE_DIR}/__init__.py)
+  file(TOUCH ${DREAM3D_INIT_PY_FILE})
+
+  add_custom_target(CopyPythonPackage ALL
+    COMMAND copy \"*.py\" \"${DREAM3D_PYTHON_PACKAGE_DIR}\"
+    COMMAND copy \"*.pyd\" \"${DREAM3D_PYTHON_PACKAGE_DIR}\"
+    WORKING_DIRECTORY $<TARGET_FILE_DIR:simpl>
+    COMMENT "Copying *.py and *.pyd files"
+  )
+endif()
+
 #------------------------------------------------------------------------------
 # Find the Git Package for Versioning. It should be ok if Git is NOT found
 Find_package(Git)
@@ -350,9 +390,15 @@ if(APPLE)
 else()
   set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}")
 endif()
+
+if(DREAM3D_ANACONDA)
+  set(INSTALL_DESTINATION "share/DREAM3D")
+endif()
+
 install(FILES ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt
-        DESTINATION "${INSTALL_DESTINATION}"
-        COMPONENT Applications)
+  DESTINATION "${INSTALL_DESTINATION}"
+  COMPONENT Applications
+)
 
 #------------------------------------------------------------------------------
 # If the developer has set another EbsdLib directory then use that, otherwise look

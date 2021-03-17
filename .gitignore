@@ -39,3 +39,5 @@ Support/Scripts/GMT/gmt.history
 .cmake
 
 CMakeUserPresets.json
+
+/.mypy_cache/

@@ -205,6 +205,10 @@ if(NOT APPLE AND UNIX)
   set(${plug_target_name}_install_dest "lib")
 endif()
 
+if(DREAM3D_ANACONDA AND WIN32)
+  set(${plug_target_name}_install_dest "bin")
+endif()
+
 PluginProperties(TARGET_NAME ${plug_target_name}
                 DEBUG_EXTENSION "_debug"
                 VERSION "${DREAM3D_VERSION}"
