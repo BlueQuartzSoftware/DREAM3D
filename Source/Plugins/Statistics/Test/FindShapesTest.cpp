@@ -36,20 +36,14 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
-#include <QtCore/QDebug>
-
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
-#include "SIMPLib/Filtering/FilterPipeline.h"
-#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
-#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
-#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -295,7 +289,7 @@ public:
     DREAM3D_CLOSE_ENOUGH(axisLengths->getValue(5), 10.0f, 1.5f);
 
     DREAM3D_CLOSE_ENOUGH(axisEulerAngles->getValue(3), 3.141f, 0.001f);
-    DREAM3D_CLOSE_ENOUGH(axisEulerAngles->getValue(4), 0.0f, 0.00001f);
+    DREAM3D_CLOSE_ENOUGH(axisEulerAngles->getValue(4), 3.14159f, 0.00001f);
     DREAM3D_CLOSE_ENOUGH(axisEulerAngles->getValue(5), 0.0f, 0.00001f);
 
     DREAM3D_CLOSE_ENOUGH(aspectRatios->getValue(2), 0.3333f, 0.0001f);
