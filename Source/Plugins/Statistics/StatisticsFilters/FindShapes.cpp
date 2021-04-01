@@ -37,6 +37,7 @@
 
 #include <array>
 #include <cmath>
+#include <utility>
 
 #include <Eigen/Core>
 
@@ -71,9 +72,9 @@ namespace
 template <typename T>
 std::array<size_t, 3> TripletSort(T a, T b, T c, bool lowToHigh)
 {
-  const size_t A = 0;
-  const size_t B = 1;
-  const size_t C = 2;
+  constexpr size_t A = 0;
+  constexpr size_t B = 1;
+  constexpr size_t C = 2;
   std::array<size_t, 3> idx = {0, 1, 2};
   if(a > b && a > c)
   {
@@ -102,7 +103,7 @@ std::array<size_t, 3> TripletSort(T a, T b, T c, bool lowToHigh)
     }
     else
     {
-      //  sorted[1] = c;
+      // sorted[1] = c;
       // sorted[0] = a;
       idx = {A, C, B};
     }
@@ -131,9 +132,7 @@ std::array<size_t, 3> TripletSort(T a, T b, T c, bool lowToHigh)
 
   if(!lowToHigh)
   {
-    size_t temp = idx[0];
-    idx[0] = idx[2];
-    idx[2] = temp;
+    std::swap(idx[0], idx[2]);
   }
   return idx;
 }
@@ -402,16 +401,16 @@ void FindShapes::find_moments()
     featureMoments[featureId * 6 + 5] = -featureMoments[featureId * 6 + 5] * konst1;
 
     // Now store the 3x3 Matrix for the Eigen Value/Vectors
-    // clang-format off
-    //featureEigenVals =  Eigen::EigenSolver<Eigen::Matrix3f>::EigenvalueType eigenValues = es.eigenvalues();
     Eigen::Matrix3f moment;
-    moment(0,0) = featureMoments[featureId * 6 + 0]; /**/ moment(0,1) = featureMoments[featureId * 6 + 3]; /**/moment(0,2) = featureMoments[featureId * 6 + 5];
-    moment(1,0) = featureMoments[featureId * 6 + 3]; /**/ moment(1,1) = featureMoments[featureId * 6 + 1]; /**/moment(1,2) = featureMoments[featureId * 6 + 4];
-    moment(2,0) = featureMoments[featureId * 6 + 5]; /**/ moment(2,1) = featureMoments[featureId * 6 + 4]; /**/moment(2,2) = featureMoments[featureId * 6 + 2];
+    // clang-format off
+    moment <<
+      featureMoments[featureId * 6 + 0], featureMoments[featureId * 6 + 3], featureMoments[featureId * 6 + 5],
+      featureMoments[featureId * 6 + 3], featureMoments[featureId * 6 + 1], featureMoments[featureId * 6 + 4],
+      featureMoments[featureId * 6 + 5], featureMoments[featureId * 6 + 4], featureMoments[featureId * 6 + 2];
+    // clang-format on
     Eigen::EigenSolver<Eigen::Matrix3f> es(moment);
     Eigen::EigenSolver<Eigen::Matrix3f>::EigenvalueType eigenValues = es.eigenvalues();
     Eigen::EigenSolver<Eigen::Matrix3f>::EigenvectorsType eigenVectors = es.eigenvectors();
-    // clang-format on
 
     // Returns the argument order sorted high to low
     std::array<size_t, 3> idxs = ::TripletSort(eigenValues[0].real(), eigenValues[1].real(), eigenValues[2].real(), false);
@@ -509,9 +508,6 @@ void FindShapes::find_moments2D()
     featureMoments[featureId] = 0.0;
   }
 
-  // float x = 0.0f, y = 0.0f, x1 = 0.0f, x2 = 0.0f, y1 = 0.0f, y2 = 0.0f;
-  //  float xdist1 = 0.0f, xdist2 = 0.0f, xdist3 = 0.0f, xdist4 = 0.0f;
-  //  float ydist1 = 0.0f, ydist2 = 0.0f, ydist3 = 0.0f, ydist4 = 0.0f;
   size_t yStride = 0;
   for(size_t yPoint = 0; yPoint < yPoints; yPoint++)
   {
@@ -568,7 +564,7 @@ void FindShapes::find_axes()
   FS_DECLARE_REF(FloatArrayType, AspectRatios, aspectRatios)
 
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
-  const double multiplier = 1.0 / (4.0 * M_PI);
+  constexpr double multiplier = 1.0 / (4.0 * M_PI);
   for(size_t featureId = 1; featureId < numfeatures; featureId++)
   {
     double r1 = featureEigenVals[3 * featureId];
