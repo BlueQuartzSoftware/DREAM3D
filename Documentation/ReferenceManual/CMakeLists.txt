@@ -328,7 +328,7 @@ if(SIMPL_USE_DISCOUNT)
       file(APPEND "${PluginJsonFile}" "  \"${DocGroup}\": { \n")
 
       if(${DocGroup} STREQUAL "Core" OR ${DocGroup} STREQUAL "Test")
-        get_filename_component(core_PARENT ${DREAM3D_${DocGroup}_SOURCE_DIR} DIRECTORY)
+        get_filename_component(core_PARENT "${DREAM3D_${DocGroup}_SOURCE_DIR}" DIRECTORY)
 
         file(APPEND "${PluginJsonFile}" "    \"SOURCE_DIR\": \"${core_PARENT}\",\n")
         file(APPEND "${PluginJsonFile}" "    \"DOC_DIR\": \"Documentation/SIMPLibFilters/${DocGroup}Filters\",\n")
@@ -359,7 +359,7 @@ if(SIMPL_USE_DISCOUNT)
         endif()
 
         if(${DocGroup} STREQUAL "Core" OR ${DocGroup} STREQUAL "Test")
-          string(REPLACE "/${DocGroup}Filters" "/Documentation/SIMPLibFilters/${DocGroup}Filters" tempstring ${DREAM3D_${DocGroup}_SOURCE_DIR})
+          string(REPLACE "/${DocGroup}Filters" "/Documentation/SIMPLibFilters/${DocGroup}Filters" tempstring "${DREAM3D_${DocGroup}_SOURCE_DIR}")
           string(REPLACE "${tempstring}/" "" tempstring ${docListItem})
           string(REPLACE "Filters" "" tempstring ${tempstring})
           string(REPLACE "Plugins/${DocGroup}/" "" filterName ${tempstring})
