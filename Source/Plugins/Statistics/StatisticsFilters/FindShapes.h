@@ -38,6 +38,7 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
@@ -105,27 +106,6 @@ public:
    */
   DataArrayPath getCellFeatureAttributeMatrixName() const;
   Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
-  // N x 6 Array
-  /**
-   * @brief Setter property for FeatureMomentsPtr
-   */
-  void setFeatureMomentsPtr(const std::shared_ptr<DataArray<double>>& value);
-  /**
-   * @brief Getter property for FeatureMomentsPtr
-   * @return Value of FeatureMomentsPtr
-   */
-  std::shared_ptr<DataArray<double>> getFeatureMomentsPtr() const;
-
-  // N x 3 Array
-  /**
-   * @brief Setter property for FeatureEigenValsPtr
-   */
-  void setFeatureEigenValsPtr(const std::shared_ptr<DataArray<double>>& value);
-  /**
-   * @brief Getter property for FeatureEigenValsPtr
-   * @return Value of FeatureEigenValsPtr
-   */
-  std::shared_ptr<DataArray<double>> getFeatureEigenValsPtr() const;
 
   /**
    * @brief Setter property for FeatureIdsArrayPath
@@ -307,34 +287,28 @@ protected:
   void find_axiseulers2D();
 
 private:
-  DataArrayPath m_CellFeatureAttributeMatrixName = {};
-  std::shared_ptr<DataArray<double>> m_FeatureMomentsPtr;
-  double* m_FeatureMoments = nullptr;
-  std::shared_ptr<DataArray<double>> m_FeatureEigenValsPtr;
-  double* m_FeatureEigenVals = nullptr;
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_CentroidsArrayPath = {};
-  QString m_Omega3sArrayName = {};
-  QString m_VolumesArrayName = {};
-  QString m_AxisLengthsArrayName = {};
-  QString m_AxisEulerAnglesArrayName = {};
-  QString m_AspectRatiosArrayName = {};
-  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
-  int32_t* m_FeatureIds = nullptr;
-  std::weak_ptr<DataArray<float>> m_CentroidsPtr;
-  float* m_Centroids = nullptr;
-  std::weak_ptr<DataArray<float>> m_AxisEulerAnglesPtr;
-  float* m_AxisEulerAngles = nullptr;
-  std::weak_ptr<DataArray<float>> m_AxisLengthsPtr;
-  float* m_AxisLengths = nullptr;
-  std::weak_ptr<DataArray<float>> m_Omega3sPtr;
-  float* m_Omega3s = nullptr;
-  std::weak_ptr<DataArray<float>> m_VolumesPtr;
-  float* m_Volumes = nullptr;
-  std::weak_ptr<DataArray<float>> m_AspectRatiosPtr;
-  float* m_AspectRatios = nullptr;
+  DataArrayPath m_CellFeatureAttributeMatrixName = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""};
+  std::shared_ptr<DoubleArrayType> m_FeatureMomentsPtr;
+  std::shared_ptr<DoubleArrayType> m_FeatureEigenValsPtr;
 
-  double m_ScaleFactor;
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_CentroidsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Centroids};
+  QString m_Omega3sArrayName = {SIMPL::FeatureData::Omega3s};
+  QString m_VolumesArrayName = {SIMPL::FeatureData::Volumes};
+  QString m_AxisLengthsArrayName = {SIMPL::FeatureData::AxisLengths};
+  QString m_AxisEulerAnglesArrayName = {SIMPL::FeatureData::AxisEulerAngles};
+  QString m_AspectRatiosArrayName = {SIMPL::FeatureData::AspectRatios};
+  std::weak_ptr<Int32ArrayType> m_FeatureIdsPtr;
+  std::weak_ptr<FloatArrayType> m_CentroidsPtr;
+  std::weak_ptr<FloatArrayType> m_AxisEulerAnglesPtr;
+  std::weak_ptr<FloatArrayType> m_AxisLengthsPtr;
+  std::weak_ptr<FloatArrayType> m_Omega3sPtr;
+  std::weak_ptr<FloatArrayType> m_VolumesPtr;
+  std::weak_ptr<FloatArrayType> m_AspectRatiosPtr;
+
+  FloatArrayType::Pointer m_EFVec;
+
+  double m_ScaleFactor = {1.0};
 
 public:
   FindShapes(const FindShapes&) = delete;            // Copy Constructor Not Implemented
