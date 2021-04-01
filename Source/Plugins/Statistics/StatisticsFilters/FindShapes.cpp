@@ -257,6 +257,9 @@ void FindShapes::dataCheck()
   m_AspectRatiosPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims, "", DataArrayID34);
 }
 
+#define FS_DECLARE_REF(TYPE, NAME, VAR)                                                                                                                                                                \
+  TYPE::Pointer ptr_##NAME = m_##NAME##Ptr.lock();                                                                                                                                                     \
+  TYPE& VAR = *ptr_##NAME;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -267,10 +270,11 @@ void FindShapes::find_moments()
 
   DoubleArrayType& featureMoments = *m_FeatureMomentsPtr; // Get a local reference to the Data Array
   DoubleArrayType& featureEigenVals = *m_FeatureEigenValsPtr;
-  Int32ArrayType& featureIds = *m_FeatureIdsPtr.lock(); // Get a local reference to the Data Array
-  FloatArrayType& centroids = *m_CentroidsPtr.lock();
-  FloatArrayType& volumes = *m_VolumesPtr.lock();
-  FloatArrayType& omega3s = *m_Omega3sPtr.lock();
+
+  FS_DECLARE_REF(Int32ArrayType, FeatureIds, featureIds)
+  FS_DECLARE_REF(FloatArrayType, Centroids, centroids)
+  FS_DECLARE_REF(FloatArrayType, Volumes, volumes)
+  FS_DECLARE_REF(FloatArrayType, Omega3s, omega3s)
 
   float u200 = 0.0f;
   float u020 = 0.0f;
@@ -462,9 +466,10 @@ void FindShapes::find_moments()
 void FindShapes::find_moments2D()
 {
   DoubleArrayType& featureMoments = *m_FeatureMomentsPtr; // Get a local reference to the Data Array
-  Int32ArrayType& featureIds = *m_FeatureIdsPtr.lock();   // Get a local reference to the Data Array
-  FloatArrayType& centroids = *m_CentroidsPtr.lock();
-  FloatArrayType& volumes = *m_VolumesPtr.lock();
+
+  FS_DECLARE_REF(Int32ArrayType, FeatureIds, featureIds)
+  FS_DECLARE_REF(FloatArrayType, Centroids, centroids)
+  FS_DECLARE_REF(FloatArrayType, Volumes, volumes)
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
@@ -558,8 +563,9 @@ void FindShapes::find_moments2D()
 void FindShapes::find_axes()
 {
   DoubleArrayType& featureEigenVals = *m_FeatureEigenValsPtr;
-  FloatArrayType& axisLengths = *m_AxisLengthsPtr.lock();
-  FloatArrayType& aspectRatios = *m_AspectRatiosPtr.lock();
+
+  FS_DECLARE_REF(FloatArrayType, AxisLengths, axisLengths)
+  FS_DECLARE_REF(FloatArrayType, AspectRatios, aspectRatios)
 
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
   const double multiplier = 1.0 / (4.0 * M_PI);
@@ -603,9 +609,9 @@ void FindShapes::find_axes()
 void FindShapes::find_axes2D()
 {
   DoubleArrayType& featureMoments = *m_FeatureMomentsPtr; // Get a local reference to the Data Array
-  FloatArrayType& volumes = *m_VolumesPtr.lock();
-  FloatArrayType& axisLengths = *m_AxisLengthsPtr.lock();
-  FloatArrayType& aspectRatios = *m_AspectRatiosPtr.lock();
+  FS_DECLARE_REF(FloatArrayType, Volumes, volumes)
+  FS_DECLARE_REF(FloatArrayType, AxisLengths, axisLengths)
+  FS_DECLARE_REF(FloatArrayType, AspectRatios, aspectRatios)
 
   double Ixx = 0.0, Iyy = 0.0, Ixy = 0.0;
 
@@ -677,8 +683,8 @@ void FindShapes::find_axes2D()
 // -----------------------------------------------------------------------------
 void FindShapes::find_axiseulers()
 {
-  FloatArrayType& centroids = *m_CentroidsPtr.lock();
-  FloatArrayType& axisEulerAngles = *m_AxisEulerAnglesPtr.lock();
+  FS_DECLARE_REF(FloatArrayType, Centroids, centroids)
+  FS_DECLARE_REF(FloatArrayType, AxisEulerAngles, axisEulerAngles)
 
   size_t numfeatures = centroids.getNumberOfTuples();
   for(size_t featureId = 1; featureId < numfeatures; featureId++)
@@ -714,9 +720,9 @@ void FindShapes::find_axiseulers()
 // -----------------------------------------------------------------------------
 void FindShapes::find_axiseulers2D()
 {
-  FloatArrayType& axisEulerAngles = *m_AxisEulerAnglesPtr.lock(); // Get a local reference to the Data Array
-  DoubleArrayType& featureMoments = *m_FeatureMomentsPtr;         // Get a local reference to the Data Array
-  FloatArrayType& centroids = *m_CentroidsPtr.lock();
+  DoubleArrayType& featureMoments = *m_FeatureMomentsPtr;
+  FS_DECLARE_REF(FloatArrayType, Centroids, centroids)
+  FS_DECLARE_REF(FloatArrayType, AxisEulerAngles, axisEulerAngles)
 
   size_t numfeatures = centroids.getNumberOfTuples();
 
