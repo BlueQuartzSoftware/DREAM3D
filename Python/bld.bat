@@ -31,5 +31,5 @@ ninja install
 if errorlevel 1 exit 1
 
 cd python_package
-%PYTHON% setup.py install --single-version-externally-managed
+%PYTHON% setup.py install
 if errorlevel 1 exit 1
