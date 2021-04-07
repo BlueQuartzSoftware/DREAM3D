@@ -18,7 +18,7 @@ source:
     folder: EbsdLib
   - path: ../../H5Support
     folder: H5Support
-  - path: ../../DREAM3D_SDK/DREAM3D_Data
+  - path: ../../DREAM3D_Data
     folder: DREAM3D_Data
   - path: ../../DREAM3D_Plugins/DREAM3DReview
     folder: DREAM3D_Plugins/DREAM3DReview
