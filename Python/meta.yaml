@@ -38,6 +38,7 @@ requirements:
     - "cmake>=3.16"
     - ninja
     - git
+    - ripgrep
   host:
     - python
     - mkdocs
