@@ -35,6 +35,7 @@
 
 #include "CAxisSegmentFeatures.h"
 
+#include <algorithm>
 #include <chrono>
 #include <random>
 
@@ -393,7 +394,6 @@ bool CAxisSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t nei
       // dividing by the magnitudes (they would be 1)
       MatrixMath::Normalize3x1(c1);
       MatrixMath::Normalize3x1(c2);
-
       w = ((c1[0] * c2[0]) + (c1[1] * c2[1]) + (c1[2] * c2[2]));
       if(w < -1.0F) { w = -1.0F; }
       if(w > 1.0F) { w = 1.0F; }

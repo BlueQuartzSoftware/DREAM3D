@@ -170,8 +170,21 @@ void IdentifySample::execute()
 
   // In this loop over the data we are finding the biggest contiguous set of GoodVoxels and calling that the 'sample'  All GoodVoxels that do not touch the 'sample'
   // are flipped to be called 'bad' voxels or 'not sample'
+  float threshold = 0.0f;
   for(int64_t i = 0; i < totalPoints; i++)
   {
+    float percentIncrement = static_cast<float>(i) / static_cast<float>(totalPoints) * 100.0f;
+    if(percentIncrement > threshold)
+    {
+      QString ss = QObject::tr("%1% Scanned").arg(static_cast<int32_t>(percentIncrement));
+      notifyStatusMessage(getHumanLabel(), ss);
+      threshold = threshold + 5.0f;
+      if(threshold < percentIncrement)
+      {
+        threshold = percentIncrement;
+      }
+    }
+
     if(!checked[i] && m_GoodVoxels[i])
     {
       currentvlist.push_back(i);
@@ -242,11 +255,24 @@ void IdentifySample::execute()
 
   // In this loop we are going to 'close' all of the 'holes' inside of the region already identified as the 'sample' if the user chose to do so.
   // This is done by flipping all 'bad' voxel features that do not touch the outside of the sample (i.e. they are fully contained inside of the 'sample'.
+  threshold = 0.0F;
   if(m_FillHoles)
   {
     bool touchesBoundary = false;
     for(int64_t i = 0; i < totalPoints; i++)
     {
+      float percentIncrement = static_cast<float>(i) / static_cast<float>(totalPoints) * 100.0f;
+      if(percentIncrement > threshold)
+      {
+        QString ss = QObject::tr("%1% Filling Holes").arg(static_cast<int32_t>(percentIncrement));
+        notifyStatusMessage(getHumanLabel(), ss);
+        threshold = threshold + 5.0f;
+        if(threshold < percentIncrement)
+        {
+          threshold = percentIncrement;
+        }
+      }
+
       if(!checked[i] && !m_GoodVoxels[i])
       {
         currentvlist.push_back(i);

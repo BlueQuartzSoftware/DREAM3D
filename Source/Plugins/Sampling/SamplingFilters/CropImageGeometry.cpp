@@ -49,6 +49,7 @@
 #include "SIMPLib/Math/SIMPLibRandom.h"
 
 #include "Sampling/SamplingConstants.h"
+#include "Sampling/SamplingFilters/Utils/SamplingUtils.hpp"
 #include "Sampling/SamplingVersion.h"
 
 // -----------------------------------------------------------------------------
@@ -367,6 +368,13 @@ void CropImageGeometry::dataCheck()
 
     QVector<bool> activeObjects(cellFeatureAttrMat->getNumberOfTuples(), true);
     cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
+
+    // If we are saving as a new Data Container, then we need a copy of the Cell Feature Data Attribute Matrix
+    if(getRenumberFeatures())
+    {
+      AttributeMatrix::Pointer cfAm = cellFeatureAttrMat->deepCopy(getInPreflight());
+      destCellDataContainer->addAttributeMatrix(cfAm->getName(), cfAm);
+    }
   }
 }
 
@@ -403,7 +411,7 @@ void CropImageGeometry::execute()
   AttributeMatrix::Pointer cellAttrMat = srcCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   DataContainer::Pointer destCellDataContainer = srcCellDataContainer;
 
-  if(m_SaveAsNewDataContainer)
+  if(getSaveAsNewDataContainer())
   {
     float ox = 0.0f, oy = 0.0f, oz = 0.0f, rx = 0.0f, ry = 0.0f, rz = 0.0f;
     srcCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin(ox, oy, oz);
@@ -413,12 +421,20 @@ void CropImageGeometry::execute()
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
     destCellDataContainer->setGeometry(image);
 
-    destCellDataContainer->getGeometryAs<ImageGeom>()->setOrigin(ox, oy, oz);
-    destCellDataContainer->getGeometryAs<ImageGeom>()->setResolution(rx, ry, rz);
+    image->setOrigin(ox, oy, oz);
+    image->setResolution(rx, ry, rz);
 
     AttributeMatrix::Pointer cellAttrMatCopy = cellAttrMat->deepCopy(false);
     destCellDataContainer->addAttributeMatrix(cellAttrMatCopy->getName(), cellAttrMatCopy);
     cellAttrMat = destCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
+  }
+
+  // If we are renumbering grains and creating a new Data Container, then copy the Cell Feature Attribute Matrix into the destination
+  if(getRenumberFeatures() && getSaveAsNewDataContainer())
+  {
+    AttributeMatrix::Pointer srcCellFeatureAttrMat = srcCellDataContainer->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
+    AttributeMatrix::Pointer destCellFeatureAttrMat = srcCellFeatureAttrMat->deepCopy(false);
+    destCellDataContainer->addAttributeMatrix(destCellFeatureAttrMat->getName(), destCellFeatureAttrMat);
   }
 
   if(nullptr == destCellDataContainer.get() || nullptr == cellAttrMat.get() || getErrorCondition() < 0)
@@ -449,7 +465,7 @@ void CropImageGeometry::execute()
   // Check to make sure the new dimensions are not "out of bounds" and warn the user if they are
   if(dims[0] <= m_XMax)
   {
-    QString ss = QObject::tr("The Max X value (%1) is greater than the Image Geometry X entent (%2)."
+    QString ss = QObject::tr("The Max X value (%1) is greater than the Image Geometry X extent (%2)."
                              " This may lead to junk data being filled into the extra space.")
                      .arg(m_XMax)
                      .arg(dims[0]);
@@ -531,65 +547,13 @@ void CropImageGeometry::execute()
 
   if(m_RenumberFeatures)
   {
-    totalPoints = destCellDataContainer->getGeometryAs<ImageGeom>()->getNumberOfElements();
-
-    // This just sanity checks to make sure there were existing features before the cropping
-    AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-    size_t totalFeatures = cellFeatureAttrMat->getNumberOfTuples();
-    QVector<bool> activeObjects(totalFeatures, false);
-    if(0 == totalFeatures)
+    DataArrayPath dap = getCellFeatureAttributeMatrixPath();
+    dap.setDataContainerName(destCellDataContainer->getName());
+    Sampling::RenumberFeatures(this, {m_NewDataContainerName, "", ""}, m_CellAttributeMatrixPath, dap, m_FeatureIdsArrayPath, m_SaveAsNewDataContainer);
+    if(getErrorCondition() < 0)
     {
-      setErrorCondition(-600);
-      notifyErrorMessage(getHumanLabel(), "The number of Features is 0 and should be greater than 0", getErrorCondition());
       return;
     }
-
-    // QVector<size_t> cDims(1, 1);
-    DataArrayPath dap = getFeatureIdsArrayPath();
-    if(getSaveAsNewDataContainer())
-    {
-      dap.setDataContainerName(getNewDataContainerName());
-    }
-    m_FeatureIdsPtr = cellAttrMat->getAttributeArrayAs<Int32ArrayType>(dap.getDataArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_FeatureIdsPtr.lock())                                                       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    {
-      m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
-    else
-    {
-      setErrorCondition(-601);
-      QString ss = QObject::tr("The FeatureIds array with name '%1' was not found in the destination DataContainer. The expected path was '%2'").arg(dap.getDataArrayName()).arg(dap.serialize("/"));
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-
-    // Find the unique set of feature ids
-    for(int64_t i = 0; i < totalPoints; ++i)
-    {
-      if(getCancel())
-      {
-        break;
-      }
-
-      int32_t currentFeatureId = m_FeatureIds[i];
-      if(currentFeatureId < totalFeatures)
-      {
-        activeObjects[currentFeatureId] = true;
-      }
-      else
-      {
-        setErrorCondition(-601);
-        QString ss = QObject::tr("The total number of Features from %1 is %2, but a value of %3 was found in DataArray %4.")
-                         .arg(cellFeatureAttrMat->getName())
-                         .arg(totalFeatures)
-                         .arg(currentFeatureId)
-                         .arg(getFeatureIdsArrayPath().serialize("/"));
-        qDebug() << ss;
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-    }
-    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
   }
 
   if(m_UpdateOrigin)

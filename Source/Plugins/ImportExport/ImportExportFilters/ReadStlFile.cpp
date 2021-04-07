@@ -35,12 +35,7 @@
 
 #include "ReadStlFile.h"
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/blocked_range.h>
-#include <tbb/parallel_for.h>
-#include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
-#endif
+#include <QtCore/QFileInfo>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -52,7 +47,26 @@
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
 
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
 #define STL_HEADER_LENGTH 80
+
+namespace ReadStlFileErrors
+{
+constexpr int32_t k_InputFileNotSet = -1100;
+constexpr int32_t k_InputFileDoesNotExist = -1101;
+constexpr int32_t k_UnsupportedFileType = -1102;
+constexpr int32_t k_ErrorOpeningFile = -1103;
+constexpr int32_t k_StlHeaderParseError = -1104;
+constexpr int32_t k_TriangleCountParseError = -1105;
+constexpr int32_t k_TriangleParseError = -1106;
+constexpr int32_t k_AttributeParseError = -1107;
+} // namespace ReadStlFileErrors
 
 /**
  * @brief The FindUniqueIdsImpl class implements a threaded algorithm that determines the set of
@@ -102,6 +116,35 @@ private:
   QVector<QVector<size_t>> m_NodesInBin;
   int64_t* m_UniqueIds;
 };
+
+// -----------------------------------------------------------------------------
+// Returns 0 for Binary, 1 for ASCII, anything else is an error.
+int32_t getStlFileType(const std::string& path)
+{
+  // Open File
+  FILE* f = std::fopen(path.c_str(), "rb");
+  if(nullptr == f)
+  {
+    return ReadStlFileErrors::k_ErrorOpeningFile;
+  }
+
+  char h[STL_HEADER_LENGTH];
+  if(std::fread(h, STL_HEADER_LENGTH, 1, f) != 1)
+  {
+    std::ignore = fclose(f);
+    return ReadStlFileErrors::k_StlHeaderParseError;
+  }
+  // close the file
+  std::ignore = fclose(f);
+
+  // Look for the 'solid' sequence that would indicate an ASCI STL file
+  if(h[0] == 's' && h[1] == 'o' && h[2] == 'l' && h[3] == 'i' && h[4] == 'd')
+  {
+    return 1;
+  }
+
+  return 0;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -195,6 +238,37 @@ void ReadStlFile::dataCheck()
   {
     setErrorCondition(-1003);
     notifyErrorMessage(getHumanLabel(), "The input file must be set", -1003);
+  }
+
+  QFileInfo fi(getStlFilePath());
+
+  if(getStlFilePath().isEmpty())
+  {
+    QString ss = QObject::tr("The input file must be set");
+    setErrorCondition(ReadStlFileErrors::k_InputFileNotSet);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+  else if(!fi.exists())
+  {
+    QString ss = QObject::tr("The input file does not exist");
+    setErrorCondition(ReadStlFileErrors::k_InputFileDoesNotExist);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  int32_t fileType = getStlFileType(getStlFilePath().toStdString());
+  if(fileType == 1)
+  {
+    QString ss = QObject::tr("The Input STL File is ASCII which is not currently supported. Please convert it to a binary STL file using another program.");
+    setErrorCondition(ReadStlFileErrors::k_UnsupportedFileType);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+  if(fileType < 0)
+  {
+    QString ss = QObject::tr("Error reading the STL file.");
+    setErrorCondition(fileType);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
 
   // Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
@@ -405,6 +479,10 @@ void ReadStlFile::readFile()
     triangles[t * 3] = 3 * t + 0;
     triangles[t * 3 + 1] = 3 * t + 1;
     triangles[t * 3 + 2] = 3 * t + 2;
+    if(getCancel())
+    {
+      return;
+    }
   }
 }
 

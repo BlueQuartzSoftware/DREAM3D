@@ -296,6 +296,7 @@ void ChangeResolution::execute()
   {
     return;
   }
+  std::cout << "m_Resolution: " << m_Resolution.x << "\t" << m_Resolution.y << "\t" << m_Resolution.z << std::endl;
 
   DataContainer::Pointer m;
   if(!m_SaveAsNewDataContainer)
@@ -306,32 +307,40 @@ void ChangeResolution::execute()
   {
     m = getDataContainerArray()->getDataContainer(getNewDataContainerName());
   }
+  // Get the new resolution
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
   std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
 
+  std::cout << "m->getGeometryAs<ImageGeom>()->getResolution(): " << xRes << "\t" << yRes << "\t" << zRes << std::endl;
+  // Make sure something has changed with the resolution, otherwise just return because
+  // a copy of the DC has already been made at this point.
   if(xRes == m_Resolution.x && yRes == m_Resolution.y && zRes == m_Resolution.z)
   {
     return;
   }
-
+  // Get the Targeted Cell AM that is going to be resampled
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-
+  // Get the new dimensions of the
   size_t dims[3] = {0, 0, 0};
   std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  std::cout << "m->getGeometryAs<ImageGeom>()->getDimensions(): " << dims[0] << "\t" << dims[1] << "\t" << dims[2] << std::endl;
 
-  float sizex = 0.0f;
-  float sizey = 0.0f;
-  float sizez = 0.0f;
-  std::tie(sizex, sizey, sizez) = m->getGeometryAs<ImageGeom>()->getResolution();
-  sizex *= static_cast<float>(dims[0]);
-  sizey *= static_cast<float>(dims[1]);
-  sizez *= static_cast<float>(dims[2]);
+  float resx = 0.0f;
+  float resy = 0.0f;
+  float resz = 0.0f;
+  std::tie(resx, resy, resz) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::cout << "m->getGeometryAs<ImageGeom>()->getResolution(): " << resx << "\t" << resy << "\t" << resz << std::endl;
 
-  size_t m_XP = size_t(sizex / m_Resolution.x);
-  size_t m_YP = size_t(sizey / m_Resolution.y);
-  size_t m_ZP = size_t(sizez / m_Resolution.z);
+  resx *= static_cast<float>(dims[0]);
+  resy *= static_cast<float>(dims[1]);
+  resz *= static_cast<float>(dims[2]);
+  std::cout << "Max Coord: " << resx << "\t" << resy << "\t" << resz << std::endl;
+
+  size_t m_XP = size_t(resx / m_Resolution.x);
+  size_t m_YP = size_t(resy / m_Resolution.y);
+  size_t m_ZP = size_t(resz / m_Resolution.z);
   if(m_XP == 0)
   {
     m_XP = 1;
@@ -344,7 +353,11 @@ void ChangeResolution::execute()
   {
     m_ZP = 1;
   }
+  // Computes new dimensions
+  std::cout << "Max Dim: " << m_XP << "\t" << m_YP << "\t" << m_ZP << std::endl;
+
   size_t totalPoints = m_XP * m_YP * m_ZP;
+  std::cout << "totalPoints: " << totalPoints << std::endl;
 
   float x = 0.0f, y = 0.0f, z = 0.0f;
   size_t col = 0, row = 0, plane = 0;
@@ -353,7 +366,8 @@ void ChangeResolution::execute()
   size_t progressInt = 0;
   std::vector<size_t> newindicies(totalPoints);
   float res[3] = {0.0f, 0.0f, 0.0f};
-  m->getGeometryAs<ImageGeom>()->getResolution(res);
+  m->getGeometryAs<ImageGeom>()->getResolution(res); // Original Resoltion Values
+  std::cout << "m->getGeometryAs<ImageGeom>()->getResolution(): " << res[0] << "\t" << res[1] << "\t" << res[2] << std::endl;
 
   for(size_t i = 0; i < m_ZP; i++)
   {

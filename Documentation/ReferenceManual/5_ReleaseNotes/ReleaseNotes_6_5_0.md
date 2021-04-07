@@ -10,6 +10,27 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.5.151 ##
+
+### Version 6.5.151 KNOWN ISSUES ###
+
+### Version 6.5.151 New Filters & Features ###
+
++ Find Feature Eigen Strains
+
+### 6.5.151 Fixed DREAM3D Issues ###
+
++ ITKImportImageStack: Error out if the images are not the same pixel size
++ ImportVTKStructuredPoints: Fix parsing issues with the spacing
++ FindShapes: Fix NaNs produced with during the Eigen Value and Eigen Vector calculation
++ Feedback to the IdentifySample filter
++ Fix Renumber Features bug in the CropImageGeometry Filter
++ Detect ASCI STL File and error out
++ Fix bug in VTKRectilinearWriter
++ Fix issue where voxels with the same quaternion would not group together.
+
+
+
 ## Version 6.5.150 ##
 
 ### Version 6.5.150 KNOWN ISSUES ###

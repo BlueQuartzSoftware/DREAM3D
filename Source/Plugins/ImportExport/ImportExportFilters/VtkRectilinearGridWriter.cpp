@@ -396,7 +396,8 @@ void VtkRectilinearGridWriter::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  err = Detail::WriteCoords<float>(f, "Z_COORDINATES", "float", dims[2] + 1, origin[0] - res[2] * 0.5f, (float)(dims[2] + 1 * res[2]), res[2], m_WriteBinaryFile);
+
+  err = Detail::WriteCoords<float>(f, "Z_COORDINATES", "float", dims[2] + 1, origin[2] - res[2] * 0.5f, (float)(dims[2] + 1 * res[2]), res[2], m_WriteBinaryFile);
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing Z Coordinates in vtk file %s'\n ").arg(m_OutputFile);

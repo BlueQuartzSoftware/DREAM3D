@@ -90,8 +90,9 @@ void VtkStructuredPointsReader::setupFilterParameters()
   linkedProps << "VolumeDataContainerName"
               << "CellAttributeMatrixName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Read Cell Data", ReadCellData, FilterParameter::Parameter, VtkStructuredPointsReader, linkedProps));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Point Data Data Container", VertexDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Data Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container [Point Data]", VertexDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container [Cell Data]", VolumeDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
+
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Point Data Attribute Matrix", VertexAttributeMatrixName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Data Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
@@ -569,7 +570,9 @@ int32_t VtkStructuredPointsReader::readFile()
   err = readLine(in, buffer, kBufferSize); // Read Line 5 which is the Dimension values
   // But we need the 'extents' which is one less in all directions (unless dim=1)
   QVector<size_t> dims(3, 0);
-  QList<QByteArray> tokens = buf.split(' ');
+  QString line(buffer);
+  QStringList tokens = line.split(' ');
+
   dims[0] = tokens[1].toInt(&ok, 10);
   dims[1] = tokens[2].toInt(&ok, 10);
   dims[2] = tokens[3].toInt(&ok, 10);
@@ -587,7 +590,8 @@ int32_t VtkStructuredPointsReader::readFile()
   volDc->getGeometryAs<ImageGeom>()->setDimensions(tDims.data());
 
   err = readLine(in, buffer, kBufferSize); // Read Line 7 which is the Scaling values
-  tokens = buf.split(' ');
+  line = QString(buffer);
+  tokens = line.split(' ');
   float resolution[3];
   resolution[0] = tokens[1].toFloat(&ok);
   resolution[1] = tokens[2].toFloat(&ok);
@@ -597,7 +601,9 @@ int32_t VtkStructuredPointsReader::readFile()
   vertDc->getGeometryAs<ImageGeom>()->setResolution(resolution);
 
   err = readLine(in, buffer, kBufferSize); // Read Line 6 which is the Origin values
-  tokens = buf.split(' ');
+  line = QString(buffer);
+  tokens = line.split(' ');
+
   float origin[3];
   origin[0] = tokens[1].toFloat(&ok);
   origin[1] = tokens[2].toFloat(&ok);
@@ -609,7 +615,8 @@ int32_t VtkStructuredPointsReader::readFile()
   // Read the first key word which should be POINT_DATA or CELL_DATA
   err = readLine(in, buffer, kBufferSize); // Read Line 6 which is the first type of data we are going to read
 
-  tokens = buf.split(' ');
+  line = QString(buffer);
+  tokens = line.split(' ');
   QString word = QString(tokens[0]);
   int32_t npts = 0, ncells = 0;
   int32_t numPts = 0;
