@@ -24,10 +24,10 @@ cmake -S "%SRC_DIR%/DREAM3D" -B . -G "Ninja" ^
   -D SIMPLView_BUILD_DOCUMENTATION:BOOL=ON
 if errorlevel 1 exit 1
 
-ninja all
+cmake --build . --target all
 if errorlevel 1 exit 1
 
-ninja install
+cmake --build . --target install
 if errorlevel 1 exit 1
 
 cd python_package
