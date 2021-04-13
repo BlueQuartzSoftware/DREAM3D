@@ -121,11 +121,18 @@ if(DREAM3D_ANACONDA)
   set(DREAM3D_INIT_PY_FILE ${DREAM3D_PYTHON_PACKAGE_DIR}/__init__.py)
   file(TOUCH ${DREAM3D_INIT_PY_FILE})
 
+  set(COPY_COMMAND cp)
+  if(WIN32)
+    set(COPY_COMMAND copy)
+  endif()
+
+  find_package(pybind11 2.6 REQUIRED)
+
   add_custom_target(CopyPythonPackage ALL
-    COMMAND copy \"*.py\" \"${DREAM3D_PYTHON_PACKAGE_DIR}\"
-    COMMAND copy \"*.pyd\" \"${DREAM3D_PYTHON_PACKAGE_DIR}\"
+    COMMAND ${COPY_COMMAND} "*.py" \"${DREAM3D_PYTHON_PACKAGE_DIR}\"
+    COMMAND ${COPY_COMMAND} "*${PYTHON_MODULE_EXTENSION}" \"${DREAM3D_PYTHON_PACKAGE_DIR}\"
     WORKING_DIRECTORY $<TARGET_FILE_DIR:simpl>
-    COMMENT "Copying *.py and *.pyd files"
+    COMMENT "Copying *.py and *${PYTHON_MODULE_EXTENSION} files"
   )
 endif()
 
