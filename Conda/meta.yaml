@@ -38,7 +38,6 @@ requirements:
     - "cmake>=3.16"
     - ninja
     - git
-    - ripgrep
     - {{ cdt('mesa-libgl-devel') }} # [linux]
     - {{ cdt('mesa-dri-drivers') }} # [linux]
     - {{ cdt('libselinux') }} # [linux]

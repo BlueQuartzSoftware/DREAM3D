@@ -7,6 +7,11 @@
     conda config --add channels conda-forge
     conda config --set channel_priority strict
     ```
+4. Create a new conda environment
+    ```
+    conda create -n dream3d_build
+    conda activate dream3d_build
+    ```
 4. Install conda-build
     ```
     conda install conda-build
