@@ -254,7 +254,7 @@ endif()
 
 # -------------------------------------------------------------------- 
 # If Python Wrapping is enabled then generate the Python module code 
-if(SIMPL_ENABLE_PYTHON)
+if(SIMPL_WRAP_PYTHON)
   include(${SIMPLProj_SOURCE_DIR}/Wrapping/Python/Binding/CreatePybind11Module.cmake)
 
   CreatePybind11Plugin(PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_TARGET ${plug_target_name})
