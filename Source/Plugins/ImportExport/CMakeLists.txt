@@ -266,12 +266,7 @@ if(EXISTS ${${PLUGIN_NAME}_SOURCE_DIR}/Data/${PLUGIN_NAME})
               COMMENT "Copying ${PLUGIN_NAME} Data Folder into Binary Directory")
   set_target_properties(${PLUGIN_NAME}DataFolderCopy PROPERTIES FOLDER ZZ_COPY_FILES)
 
-  if(APPLE)
-    set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/Resources/Data")
-  else()
-    set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}")
-  endif()
-
+  set(INSTALL_DESTINATION "Data")
   if(DREAM3D_ANACONDA)
     set(INSTALL_DESTINATION "share/DREAM3D/Data")
   endif()
