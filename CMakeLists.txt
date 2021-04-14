@@ -105,8 +105,8 @@ endif()
 
 option(DREAM3D_ANACONDA "Builds DREAM3D for an Anaconda package" OFF)
 
-if(DREAM3D_ANACONDA AND NOT WIN32)
-  message(WARNING "Building an Anconda package is experimental on non-Windows platforms")
+if(DREAM3D_ANACONDA AND APPLE)
+  message(WARNING "Building an Anconda package is experimental on macOS")
 endif()
 
 if(DREAM3D_ANACONDA)
