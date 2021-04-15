@@ -15,8 +15,10 @@ if(MSVC)
     SET(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP 1)
     #SET(CMAKE_INSTALL_DEBUG_LIBRARIES OFF)
 
-    # Gather the list of system level runtime libraries
-    INCLUDE (InstallRequiredSystemLibraries)
+    if(NOT DREAM3D_DISABLE_DEPENDENCY_COPY_INSTALL_RULES)
+      # Gather the list of system level runtime libraries
+      include(InstallRequiredSystemLibraries)
+    endif()
 
     # Our own Install rule for Release builds of the MSVC runtime libs
     if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)

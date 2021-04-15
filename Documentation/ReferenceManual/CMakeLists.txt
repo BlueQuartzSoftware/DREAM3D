@@ -289,8 +289,13 @@ if(SIMPL_USE_MKDOCS)
   if(APPLE)
 
   else()
+    set(help_dir "Help")
+    if(DREAM3D_ANACONDA)
+      set(help_dir "share/DREAM3D/Help")
+    endif()
+
     install(DIRECTORY ${HTML_OUTPUT_DIR}
-            DESTINATION "Help"
+      DESTINATION ${help_dir}
     )
   endif()
 

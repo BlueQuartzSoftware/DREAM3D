@@ -17,10 +17,15 @@ if(APPLE)
 else()
   set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}")
 endif()
-install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
-        DESTINATION ${INSTALL_DESTINATION}
-        COMPONENT Applications )
 
+if(DREAM3D_ANACONDA)
+  set(INSTALL_DESTINATION "share/DREAM3D")
+endif()
+
+install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
+  DESTINATION ${INSTALL_DESTINATION}
+  COMPONENT Applications
+)
 
 #-------------------------------------------------------------------------------
 # Copy the Data Folder to the build directory
@@ -42,12 +47,17 @@ set(DREAM3D_DATA_DIRECTORIES
   ${DREAM3D_DATA_DIR}/Data/Models
 )
 
+set(INSTALL_DESTINATION "Data")
+if(DREAM3D_ANACONDA)
+  set(INSTALL_DESTINATION "share/DREAM3D/Data")
+endif()
+
 foreach(data_dir ${DREAM3D_DATA_DIRECTORIES})
   if(EXISTS ${data_dir})
-    set(INSTALL_DESTINATION "Data")
     install(DIRECTORY 
-          ${data_dir}
-          DESTINATION ${INSTALL_DESTINATION}
-          COMPONENT Applications)
+      ${data_dir}
+      DESTINATION ${INSTALL_DESTINATION}
+      COMPONENT Applications
+    )
   endif()
 endforeach()

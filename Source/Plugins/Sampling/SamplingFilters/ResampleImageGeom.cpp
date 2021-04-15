@@ -34,6 +34,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ResampleImageGeom.h"
 
+#include <cstring>
 #include <thread>
 
 #include <QtCore/QTextStream>

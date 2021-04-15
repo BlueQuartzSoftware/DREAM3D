@@ -143,7 +143,7 @@ endforeach()
 
 #------------------------------------------------------------------------------
 # If Python is enabled, then enable the Python unit tests for this plugin
-if(SIMPL_ENABLE_PYTHON)
+if(SIMPL_WRAP_PYTHON)
   set(PLUGIN_PYTHON_TESTS
     "Import_ASCII"
     "ColorData_Change_Test"

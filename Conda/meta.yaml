@@ -1,0 +1,77 @@
+{% set name = "dream3d" %}
+{% set version = "1.0.0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  - path: ../
+    folder: DREAM3D
+  - path: ../../CMP
+    folder: CMP
+  - path: ../../SIMPL
+    folder: SIMPL
+  - path: ../../SIMPLView
+    folder: SIMPLView
+  - path: ../../EbsdLib
+    folder: EbsdLib
+  - path: ../../H5Support
+    folder: H5Support
+  - path: ../../DREAM3D_Data
+    folder: DREAM3D_Data
+  - path: ../../DREAM3D_Plugins/DREAM3DReview
+    folder: DREAM3D_Plugins/DREAM3DReview
+  - path: ../../DREAM3D_Plugins/ITKImageProcessing
+    folder: DREAM3D_Plugins/ITKImageProcessing
+  - path: ../../DREAM3D_Plugins/SimulationIO
+    folder: DREAM3D_Plugins/SimulationIO
+  - path: ../../DREAM3D_Plugins/UCSBUtilities
+    folder: DREAM3D_Plugins/UCSBUtilities
+
+build:
+  number: 0
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+    - "cmake>=3.16"
+    - ninja
+    - git
+    - {{ cdt('mesa-libgl-devel') }} # [linux]
+    - {{ cdt('mesa-dri-drivers') }} # [linux]
+    - {{ cdt('libselinux') }} # [linux]
+    - {{ cdt('libxdamage') }} # [linux]
+    - {{ cdt('libxxf86vm') }} # [linux]
+    - {{ cdt('libxext') }} # [linux]
+  host:
+    - python
+    - mkdocs
+    - mkdocs-material
+    - mkdocs-material-extensions
+    - cpp-filesystem
+    - eigen
+    - hdf5=1.10.5
+    - libharu
+    - libitk
+    - libitk-devel
+    - "pybind11>=2.6"
+    - "qt>=5.9"
+    - qwt
+    - tbb
+    - tbb-devel
+    - xorg-libxfixes # [linux]
+  run:
+    - python
+    - numpy
+    - hdf5=1.10.5
+    - libharu
+    - libitk
+    - qt
+    - qwt
+    - tbb
+
+about:
+  home: http://dream3d.bluequartz.net/
+  license: BSD
+  summary: DREAM.3D consists of data analysis tools (Filters) that allow for the construction of customized workflows (Pipelines) to analyze data.

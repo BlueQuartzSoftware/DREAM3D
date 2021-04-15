@@ -1,0 +1,21 @@
+name: dream3d
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7
+  - numpy
+  - imageio
+  - mkdocs
+  - mkdocs-material
+  - mkdocs-material-extensions
+  - cpp-filesystem
+  - eigen
+  - hdf5=1.10.5
+  - libharu
+  - libitk
+  - libitk-devel
+  - pybind11>=2.6
+  - qt>=5.9
+  - qwt
+  - tbb
+  - tbb-devel
