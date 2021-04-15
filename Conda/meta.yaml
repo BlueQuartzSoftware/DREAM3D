@@ -1,5 +1,5 @@
 {% set name = "dream3d" %}
-{% set version = "1.0.0" %}
+{% set version = "6.6.0" %}
 
 package:
   name: {{ name|lower }}
