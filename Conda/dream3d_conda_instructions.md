@@ -2,8 +2,6 @@
 
 1. Install [Visual Studio](https://visualstudio.microsoft.com/downloads/) (Windows)
 2. Install [Anaconda](https://docs.anaconda.com/anaconda/install/)
-    
-
 3. Setup [conda-forge](https://conda-forge.org/) channel (requires conda >= 4.6)
     ```
     conda config --add channels conda-forge
@@ -82,4 +80,6 @@ Filters must derive from the abstract base class `dream3d.Filter` and implement 
 
 To use Python filters in DREAM3D or PipelineRunner, create an environment variable `SIMPL_PYTHONPATH`. This variable should contain a list(platform delimited i.e. ":" on Unix and ";" on Windows) of directories to load Python filters from. All Python files should be of the above format.
 
-If use the DREAM3D GUI, Python filters can be reloaded at runtime. DREAM3D will clear all existing Python filters and attempt to reload them from directories in `SIMPL_PYTHONPATH`. Currently loaded pipelines with Python filters will be preserved if the relevant filters still exist in those directories.
+If using the DREAM3D GUI, Python filters can be reloaded at runtime. DREAM3D will clear all existing Python filters and attempt to reload them from directories in `SIMPL_PYTHONPATH`. Currently loaded pipelines with Python filters will be preserved if the relevant filters still exist in those directories.
+
+If you want to use a Python filter with `simpl.FilterPipeline`, you must first wrap in a `simpl.PythonFilter`.
