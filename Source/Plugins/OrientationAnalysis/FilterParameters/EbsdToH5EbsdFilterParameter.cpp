@@ -102,7 +102,7 @@ void EbsdToH5EbsdFilterParameter::readJson(const QJsonObject& json)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdFilterParameter::writeJson(QJsonObject& json)
+void EbsdToH5EbsdFilterParameter::writeJson(QJsonObject& json) const
 {
   json["OutputFile"] = m_Filter->getOutputFile();
   json["ZStartIndex"] = QString::number(m_Filter->getZStartIndex());

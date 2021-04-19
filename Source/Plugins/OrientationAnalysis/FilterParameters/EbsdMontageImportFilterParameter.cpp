@@ -98,7 +98,7 @@ void EbsdMontageImportFilterParameter::readJson(const QJsonObject& json)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdMontageImportFilterParameter::writeJson(QJsonObject& json)
+void EbsdMontageImportFilterParameter::writeJson(QJsonObject& json) const
 {
   if(m_GetterCallback)
   {

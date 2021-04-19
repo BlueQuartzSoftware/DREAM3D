@@ -120,7 +120,7 @@ void EMMPMFilterParameter::readJson(const QJsonObject& json)
 // -----------------------------------------------------------------------------
 // THIS IS A SPECIAL CASE AND IS NOT STANDARD.  DO NOT COPY THIS CODE.
 // -----------------------------------------------------------------------------
-void EMMPMFilterParameter::writeJson(QJsonObject& json)
+void EMMPMFilterParameter::writeJson(QJsonObject& json) const
 {
   if(nullptr == m_Filter)
   {

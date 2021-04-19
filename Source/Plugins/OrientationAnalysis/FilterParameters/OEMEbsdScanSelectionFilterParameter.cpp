@@ -95,7 +95,7 @@ void OEMEbsdScanSelectionFilterParameter::readJson(const QJsonObject& json)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OEMEbsdScanSelectionFilterParameter::writeJson(QJsonObject& json)
+void OEMEbsdScanSelectionFilterParameter::writeJson(QJsonObject& json) const
 {
   QStringList scanNames = m_GetterCallback();
   QJsonArray scanNamesArray;

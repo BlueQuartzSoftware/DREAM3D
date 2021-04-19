@@ -98,7 +98,7 @@ void ConvertHexGridToSquareGridFilterParameter::readJson(const QJsonObject& json
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertHexGridToSquareGridFilterParameter::writeJson(QJsonObject& json)
+void ConvertHexGridToSquareGridFilterParameter::writeJson(QJsonObject& json) const
 {
   json["FileExtension"] = m_Filter->getFileExtension();
   json["FilePrefix"] = m_Filter->getFilePrefix();

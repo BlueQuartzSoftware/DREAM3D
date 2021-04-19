@@ -99,7 +99,7 @@ void ReadH5EbsdFilterParameter::readJson(const QJsonObject& json)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5EbsdFilterParameter::writeJson(QJsonObject& json)
+void ReadH5EbsdFilterParameter::writeJson(QJsonObject& json) const
 {
   json["InputFile"] = m_Filter->getInputFile();
   json["ZStartIndex"] = m_Filter->getZStartIndex();

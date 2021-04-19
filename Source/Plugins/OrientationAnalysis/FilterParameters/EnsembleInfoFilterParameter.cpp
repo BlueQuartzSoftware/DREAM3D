@@ -114,7 +114,7 @@ void EnsembleInfoFilterParameter::readJson(const QJsonObject& json)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EnsembleInfoFilterParameter::writeJson(QJsonObject& json)
+void EnsembleInfoFilterParameter::writeJson(QJsonObject& json) const
 {
   if(m_GetterCallback)
   {

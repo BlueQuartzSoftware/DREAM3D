@@ -120,7 +120,7 @@ public:
    * @brief writeJson
    * @return
    */
-  void writeJson(QJsonObject& json) override;
+  void writeJson(QJsonObject& json) const override;
 
 protected:
   ConvertHexGridToSquareGridFilterParameter();

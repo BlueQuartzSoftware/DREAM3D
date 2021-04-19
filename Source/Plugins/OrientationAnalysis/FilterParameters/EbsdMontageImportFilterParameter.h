@@ -126,7 +126,7 @@ public:
    * @brief writeJson Writes this filter parameter's corresponding property to a QJsonObject.
    * @param json The QJsonObject that the filter parameter writes to.
    */
-  void writeJson(QJsonObject& json) override;
+  void writeJson(QJsonObject& json) const override;
 
   /**
    * @param SetterCallback The method in the AbstractFilter subclass that <i>sets</i> the value of the property
