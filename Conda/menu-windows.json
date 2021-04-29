@@ -1,0 +1,13 @@
+{
+  "menu_name": "Anaconda${PY_VER} ${PLATFORM}",
+  "menu_items": [
+    {
+      "pywscript": "${PYTHON_SCRIPTS}/run_dream3d_win.py",
+      "name": "DREAM3D",
+      "workdir": "${PREFIX}",
+      "icon": "${MENU_DIR}/DREAM3D.ico",
+      "desktop": false,
+      "quicklaunch": false
+    }
+  ]
+}
