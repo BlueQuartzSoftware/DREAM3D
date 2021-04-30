@@ -70,6 +70,7 @@ requirements:
     - qt
     - qwt
     - tbb
+    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.14") }} # [osx and x86_64]
 
 about:
   home: http://dream3d.bluequartz.net/
