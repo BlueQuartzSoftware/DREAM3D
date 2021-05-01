@@ -3,3 +3,6 @@ CONDA_BUILD_SYSROOT:                        # [osx and x86_64]
 
 MACOSX_DEPLOYMENT_TARGET: # [osx and x86_64]
   - "10.14"               # [osx and x86_64]
+
+DREAM3D_PLUGINS:
+  - "DREAM3DReview;ITKImageProcessing;SimulationIO;UCSBUtilities"

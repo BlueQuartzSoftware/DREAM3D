@@ -1,5 +1,8 @@
 {% set name = "dream3d" %}
 {% set version = "6.6.0" %}
+{% if DREAM3D_PLUGINS is defined %}
+  {% set plugin_list = DREAM3D_PLUGINS.split(';') %}
+{% endif %}
 
 package:
   name: {{ name|lower }}
@@ -20,17 +23,15 @@ source:
     folder: H5Support
   - path: ../../DREAM3D_Data
     folder: DREAM3D_Data
-  - path: ../../DREAM3D_Plugins/DREAM3DReview
-    folder: DREAM3D_Plugins/DREAM3DReview
-  - path: ../../DREAM3D_Plugins/ITKImageProcessing
-    folder: DREAM3D_Plugins/ITKImageProcessing
-  - path: ../../DREAM3D_Plugins/SimulationIO
-    folder: DREAM3D_Plugins/SimulationIO
-  - path: ../../DREAM3D_Plugins/UCSBUtilities
-    folder: DREAM3D_Plugins/UCSBUtilities
+{% for plugin in plugin_list|default([]) %}
+  - path: ../../DREAM3D_Plugins/{{ plugin }}
+    folder: DREAM3D_Plugins/{{ plugin }}
+{% endfor %}
 
 build:
   number: 0
+  script_env:
+    - DREAM3D_PLUGINS={{ DREAM3D_PLUGINS|default("") }}
 
 requirements:
   build:
