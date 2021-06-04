@@ -71,9 +71,9 @@ The initial "solving environment" step may take a while in particular, and it do
 (d3d_embed) C:\Users\johnsmith> conda build /path/to/DREAM3D/Conda
 ```
 
-+ Install locally built *DREAM3D* package into the current virtual environment
+Install locally built *DREAM3D* package into the current virtual environment
 
-Make sure the Python version of the environment matches the version used to build with DREAM3D.
++ Make sure the Python version of the environment matches the version used to build DREAM3D.
 
 ```lang-console
 (d3d_embed) C:\Users\johnsmith> conda install -c local dream3d
