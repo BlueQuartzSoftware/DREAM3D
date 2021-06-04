@@ -188,11 +188,9 @@ protected:
   void initialize();
 
 private:
-  std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
-  bool* m_GoodVoxels = nullptr;
-
   bool m_FillHoles = {false};
   DataArrayPath m_GoodVoxelsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask};
+  int8_t m_ArrayType = 0;
 
 public:
   IdentifySample(const IdentifySample&) = delete;            // Copy Constructor Not Implemented

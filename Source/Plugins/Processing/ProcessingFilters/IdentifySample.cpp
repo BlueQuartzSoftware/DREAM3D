@@ -38,6 +38,7 @@
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -68,7 +69,7 @@ void IdentifySample::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("Fill Holes in Largest Feature", FillHoles, FilterParameter::Category::Parameter, IdentifySample));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement({SIMPL::TypeNames::Bool,SIMPL::TypeNames::UInt8}, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::Category::RequiredArray, IdentifySample, req));
   }
   setFilterParameters(parameters);
@@ -102,27 +103,41 @@ void IdentifySample::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getGoodVoxelsArrayPath().getDataContainerName());
 
-  std::vector<size_t> cDims(1, 1);
-  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>>(this, getGoodVoxelsArrayPath(), cDims);
-  if(nullptr != m_GoodVoxelsPtr.lock())
-  {
-    m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
-}
+  m_ArrayType = 0;
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void IdentifySample::execute()
-{
-  dataCheck();
-  if(getErrorCode() < 0)
+  IDataArray::Pointer inputData = getDataContainerArray()->getPrereqIDataArrayFromPath(this, getGoodVoxelsArrayPath());
+
+  if(TemplateHelpers::CanDynamicCast<DataArray<bool>>()(inputData))                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    m_ArrayType = 1;                                                                                                                                                                 \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<DataArray<uint8_t>>()(inputData))                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    m_ArrayType = 2;
+  }
+  else
   {
-    return;
+    QString ss = QObject::tr("The input data must be of type BOOL or UINT8");
+    setErrorCondition(-12001, ss);
   }
 
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_GoodVoxelsArrayPath.getDataContainerName());
-  int64_t totalPoints = static_cast<int64_t>(m_GoodVoxelsPtr.lock()->getNumberOfTuples());
+}
+
+template<typename T>
+void _execute(IdentifySample* filter)
+{
+  using ArrayType = DataArray<T>;
+  using ArrayPointerType = typename DataArray<T>::Pointer;
+
+
+  DataContainerArray::Pointer dca = filter->getDataContainerArray();
+  DataContainer::Pointer m = dca->getDataContainer(filter->getGoodVoxelsArrayPath().getDataContainerName());
+
+  std::vector<size_t> cDims = {1};
+  ArrayPointerType m_GoodVoxelsPtr = dca->getPrereqArrayFromPath<ArrayType>(filter, filter->getGoodVoxelsArrayPath(), cDims);
+  T* m_GoodVoxels = m_GoodVoxelsPtr->getTuplePointer(0);
+
+  int64_t totalPoints = static_cast<int64_t>(m_GoodVoxelsPtr->getNumberOfTuples());
 
   SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
@@ -162,7 +177,7 @@ void IdentifySample::execute()
     if(percentIncrement > threshold)
     {
       QString ss = QObject::tr("%1% Scanned").arg(static_cast<int32_t>(percentIncrement));
-      notifyStatusMessage(ss);
+      filter->notifyStatusMessage(ss);
       threshold = threshold + 5.0f;
       if(threshold < percentIncrement)
       {
@@ -241,7 +256,7 @@ void IdentifySample::execute()
   // In this loop we are going to 'close' all of the 'holes' inside of the region already identified as the 'sample' if the user chose to do so.
   // This is done by flipping all 'bad' voxel features that do not touch the outside of the sample (i.e. they are fully contained inside of the 'sample'.
   threshold = 0.0F;
-  if(m_FillHoles)
+  if(filter->getFillHoles())
   {
     bool touchesBoundary = false;
     for(int64_t i = 0; i < totalPoints; i++)
@@ -250,7 +265,7 @@ void IdentifySample::execute()
       if(percentIncrement > threshold)
       {
         QString ss = QObject::tr("%1% Filling Holes").arg(static_cast<int32_t>(percentIncrement));
-        notifyStatusMessage(ss);
+        filter->notifyStatusMessage(ss);
         threshold = threshold + 5.0f;
         if(threshold < percentIncrement)
         {
@@ -321,6 +336,27 @@ void IdentifySample::execute()
     }
   }
   checked.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void IdentifySample::execute()
+{
+  dataCheck();
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
+
+  if(m_ArrayType == 1)
+  {
+    _execute<bool>(this);
+  }
+  if(m_ArrayType == 2)
+  {
+    _execute<uint8_t>(this);
+  }
 }
 
 // -----------------------------------------------------------------------------
