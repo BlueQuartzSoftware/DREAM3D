@@ -291,7 +291,6 @@ add_subdirectory( ${SIMPLViewProj_SOURCE_DIR} ${PROJECT_BINARY_DIR}/SIMPLView)
 include(${CMP_SOURCE_DIR}/ExtLib/Qt5Support.cmake)
 set(DREAM3D_Qt5_Components Core Widgets Network Gui Concurrent Xml OpenGL PrintSupport Sql)
 CMP_AddQt5Support( "${DREAM3D_Qt5_Components}"
-                    "${SIMPL_USE_QtWebEngine}"
                     "${DREAM3DProj_BINARY_DIR}"
                     "DREAM3D")
 
