@@ -44,7 +44,6 @@
 #include <QtCore/QDir>
 #include <QtCore/QTextStream>
 
-#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -55,7 +54,6 @@
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
-#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/MatrixMath.h"
@@ -63,16 +61,13 @@
 #include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
+#include "SIMPLib/Utilities/TimeUtilities.h"
 
 #include "EbsdLib/Core/Orientation.hpp"
 #include "EbsdLib/Core/OrientationTransformation.hpp"
-#include "EbsdLib/Core/Quaternion.hpp"
-#include "EbsdLib/LaueOps/CubicOps.h"
-#include "EbsdLib/LaueOps/HexagonalOps.h"
 #include "EbsdLib/LaueOps/LaueOps.h"
 #include "EbsdLib/LaueOps/OrthoRhombicOps.h"
 
-#include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
 namespace
 {
@@ -100,34 +95,7 @@ const QString PrecipitateSyntheticShapeParametersName("Synthetic Shape Parameter
 //
 // -----------------------------------------------------------------------------
 InsertPrecipitatePhases::InsertPrecipitatePhases()
-: m_ClusteringListArrayName(SIMPL::FeatureData::ClusteringList)
-, m_ErrorOutputFile("")
-, m_CsvOutputFile("")
-, m_MaskArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
-, m_UseMask(false)
-, m_FeatureGeneration(0)
-, m_PrecipInputFile("")
-, m_PeriodicBoundaries(false)
-, m_MatchRDF(false)
-, m_WriteGoalAttributes(false)
-, m_InputStatsArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics)
-, m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes)
-, m_InputShapeTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::ShapeTypes)
-, m_FeatureIdsArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_CellPhasesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
-, m_BoundaryCellsArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::BoundaryCells)
-, m_FeaturePhasesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
-, m_NumCellsArrayName(SIMPL::FeatureData::NumCells)
-, m_EquivalentDiametersArrayName(SIMPL::FeatureData::EquivalentDiameters)
-, m_VolumesArrayName(SIMPL::FeatureData::Volumes)
-, m_Omega3sArrayName(SIMPL::FeatureData::Omega3s)
-, m_CentroidsArrayName(SIMPL::FeatureData::Centroids)
-, m_AxisEulerAnglesArrayName(SIMPL::FeatureData::AxisEulerAngles)
-, m_AxisLengthsArrayName(SIMPL::FeatureData::AxisLengths)
-, m_NumFeaturesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::NumFeatures)
-, m_SaveGeometricDescriptions(0)
-, m_NewAttributeMatrixPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, PrecipitateSyntheticShapeParametersName, "")
-, m_Neighbors(nullptr)
+: m_NewAttributeMatrixPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, PrecipitateSyntheticShapeParametersName, "")
 {
 
   initialize();
@@ -216,7 +184,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
     choices.push_back("Generate Precipitates");
     choices.push_back("Already Have Precipitates");
     parameter->setChoices(choices);
-    std::vector<QString> linkedProps;
+    linkedProps.clear();
     linkedProps.push_back("InputStatsArrayPath");
     linkedProps.push_back("PrecipInputFile");
     parameter->setLinkedProperties(linkedProps);
@@ -229,7 +197,6 @@ void InsertPrecipitatePhases::setupFilterParameters()
   linkedProps.push_back("PrecipInputFile");
   linkedProps.push_back("InputStatsArrayPath");
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Precipitates Input File", PrecipInputFile, FilterParameter::Category::Parameter, InsertPrecipitatePhases, "*.txt", "Text File", 1));
-  linkedProps.clear();
 
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
@@ -243,7 +210,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
     choices.push_back("Save To New Attribute Matrix");
     choices.push_back("Append To Existing Attribute Matrix");
     parameter->setChoices(choices);
-    std::vector<QString> linkedProps;
+    linkedProps.clear();
     linkedProps.push_back("NewAttributeMatrixPath");
     linkedProps.push_back("SelectedAttributeMatrixPath");
     parameter->setLinkedProperties(linkedProps);
@@ -308,10 +275,7 @@ void InsertPrecipitatePhases::updateFeatureInstancePointers()
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   }
-  if(nullptr != m_NumCellsPtr.lock())
-  {
-    m_NumCells = m_NumCellsPtr.lock()->getPointer(0);
-  }
+
   if(nullptr != m_EquivalentDiametersPtr.lock())
   {
     m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
@@ -351,14 +315,8 @@ void InsertPrecipitatePhases::initialize()
   m_XPoints = m_YPoints = m_ZPoints = m_TotalPoints = 0;
   m_TotalPoints = 0;
 
-  m_ClusteringList = NeighborList<float>::NullPointer();
 
   m_ShapeOps = ShapeOps::getShapeOpsQVector();
-  m_UnknownShapeOps = ShapeOps::NullPointer();
-  m_CubicOctohedronOps = ShapeOps::NullPointer();
-  m_CylinderOps = ShapeOps::NullPointer();
-  m_EllipsoidOps = ShapeOps::NullPointer();
-  m_SuperEllipsoidOps = ShapeOps::NullPointer();
   ::m_OrthoOps = OrthoRhombicOps::New();
 
   m_Neighbors = nullptr;
@@ -519,12 +477,6 @@ void InsertPrecipitatePhases::dataCheck()
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   }
 
-  tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getNumCellsArrayName());
-  m_NumCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>>(this, tempPath, 0, cDims, getNumCellsArrayName(), DataArrayID31);
-  if(nullptr != m_NumCellsPtr.lock())
-  {
-    m_NumCells = m_NumCellsPtr.lock()->getPointer(0);
-  }
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getEquivalentDiametersArrayName());
   m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims, getEquivalentDiametersArrayName(), DataArrayID32);
@@ -1219,7 +1171,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     {
       return;
     }
-    QString ss = QObject::tr("Packing Precipitates || Placing Precipitate #%1").arg(i);
+    ss = QObject::tr("Packing Precipitates || Placing Precipitate #%1").arg(i);
     notifyStatusMessage(ss);
 
     PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[m_FeaturePhases[i]]);
@@ -1385,16 +1337,33 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     // This is not based on convergence or any physics - it's just a factor
     // and there's probably room for improvement here
     int32_t totalAdjustments = static_cast<int32_t>(1000 * ((numfeatures - m_FirstPrecipitateFeature) - 1));
+
+    //    int32_t incProg = totalAdjustments / 100;
+    //    int32_t currentProg = 0;
+    uint64_t millis = QDateTime::currentMSecsSinceEpoch();
+    uint64_t startMillis = millis;
+    uint64_t estimatedTime = 0;
+    float timeDiff = 0.0f;
+
     for(int32_t iteration = 0; iteration < totalAdjustments; ++iteration)
     {
-      QString ss;
-      ss = QObject::tr("Packing Features - Swapping/Moving/Adding/Removing "
-                       "Features Iteration %1/%2")
-               .arg(iteration)
-               .arg(totalAdjustments);
-      if(iteration % 100 == 0)
+      if(getCancel())
       {
+        return;
+      }
+      uint64_t currentMillis = QDateTime::currentMSecsSinceEpoch();
+      if(currentMillis - millis > 1000)
+      {
+        timeDiff = (static_cast<float>(iteration) / static_cast<float>(currentMillis - startMillis));
+        estimatedTime = static_cast<float>(totalAdjustments - iteration) / timeDiff;
+
+        ss = QObject::tr("Packing Features - Swapping/Moving/Adding/Removing "
+                         "Features Iteration %1/%2")
+                 .arg(iteration)
+                 .arg(totalAdjustments);
+        ss += QObject::tr(" || Est. Time Remain: %1 || Iterations/Sec: %2").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime)).arg(timeDiff * 1000);
         notifyStatusMessage(ss);
+        millis = QDateTime::currentMSecsSinceEpoch();
       }
 
       if(writeErrorFile && iteration % 25 == 0)
@@ -2021,52 +1990,7 @@ void InsertPrecipitatePhases::determine_currentRDF(int32_t gnum, int32_t add, bo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::determine_randomRDF(size_t gnum, int32_t add, bool double_count, int32_t largeNumber)
-{
-
-  float x = 0.0f, y = 0.0f, z = 0.0f;
-  float xn = 0.0f, yn = 0.0f, zn = 0.0f;
-  float r = 0.0f;
-
-  int32_t rdfBin = 0;
-
-  x = m_RandomCentroids[3 * gnum];
-  y = m_RandomCentroids[3 * gnum + 1];
-  z = m_RandomCentroids[3 * gnum + 2];
-
-  size_t ln = static_cast<size_t>(largeNumber);
-
-  for(size_t n = 0; n < ln; n++)
-  {
-    if(n != gnum)
-    {
-      xn = m_RandomCentroids[3 * n];
-      yn = m_RandomCentroids[3 * n + 1];
-      zn = m_RandomCentroids[3 * n + 2];
-      r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
-
-      rdfBin = (r - m_rdfMin) / m_StepSize;
-
-      if(r < m_rdfMin)
-      {
-        rdfBin = -1;
-      }
-      if(double_count)
-      {
-        m_RdfRandom[rdfBin + 1] += 2 * add;
-      }
-      else if(!double_count)
-      {
-        m_RdfRandom[rdfBin + 1] += add;
-      }
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf, int32_t num_bins, float m_StepSize, float rdfmin, int32_t numPPTfeatures)
+std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf, int32_t num_bins, float stepSize, float rdfmin, int32_t numPPTfeatures)
 {
   //  //Normalizing the RDF by number density of particles
   //  (4/3*pi*(r2^3-r1^3)*numPPTfeatures/volume)
@@ -2084,8 +2008,8 @@ std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf,
 
   //  for (size_t i = 1; i < num_bins+2; i++)
   //  {
-  //    r1 = (rdfmin + (i-1)*m_StepSize);
-  //    r2 = (r1 + m_StepSize);
+  //    r1 = (rdfmin + (i-1)*stepSize);
+  //    r2 = (r1 + stepSize);
   //    r1 = r1*finiteAdjFactor;
   //    r2 = r2*finiteAdjFactor;
   //    normfactor = 4.0f/3.0f*SIMPLib::Constants::k_Pi*((r2*r2*r2) -
@@ -2177,43 +2101,6 @@ void InsertPrecipitatePhases::compare_2Ddistributions(std::vector<std::vector<fl
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::compare_3Ddistributions(std::vector<std::vector<std::vector<float>>> array1, std::vector<std::vector<std::vector<float>>> array2, float& bhattdist)
-{
-  bhattdist = 0;
-  std::vector<std::vector<float>> counts1(array1.size());
-  std::vector<std::vector<float>> counts2(array2.size());
-  size_t array1Size = array1.size();
-  for(size_t i = 0; i < array1Size; i++)
-  {
-    counts1[i].resize(array1[i].size());
-    counts2[i].resize(array2[i].size());
-    size_t array2Size = array1[i].size();
-    for(size_t j = 0; j < array2Size; j++)
-    {
-      size_t array3Size = array1[i][j].size();
-      for(size_t k = 0; k < array3Size; k++)
-      {
-        counts1[i][j] += array1[i][j][k];
-        counts2[i][j] += array2[i][j][k];
-      }
-    }
-  }
-  for(size_t i = 0; i < array1Size; i++)
-  {
-    size_t array2Size = array1[i].size();
-    for(size_t j = 0; j < array2Size; j++)
-    {
-      size_t array3Size = array1[i][j].size();
-      for(size_t k = 0; k < array3Size; k++)
-      {
-        bhattdist = bhattdist + sqrtf(((array1[i][j][k] / counts1[i][j]) * (array2[i][j][k] / counts2[i][j])));
-      }
-    }
-  }
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -2829,40 +2716,6 @@ void InsertPrecipitatePhases::assign_gaps()
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-float InsertPrecipitatePhases::find_xcoord(int64_t index)
-{
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
-  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
-
-  float x = spacing[0] * static_cast<float>(index % m->getGeometryAs<ImageGeom>()->getXPoints());
-  return x;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-float InsertPrecipitatePhases::find_ycoord(int64_t index)
-{
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
-  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
-  float y = spacing[1] * static_cast<float>((index / m->getGeometryAs<ImageGeom>()->getXPoints()) % m->getGeometryAs<ImageGeom>()->getYPoints());
-  return y;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-float InsertPrecipitatePhases::find_zcoord(int64_t index)
-{
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
-  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
-
-  float z = spacing[2] * static_cast<float>(index / (m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints()));
-  return z;
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -2891,7 +2744,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   if(!outFile.open(QIODevice::WriteOnly))
   {
     QString msg = QObject::tr("CSV Output file could not be opened: %1").arg(getCsvOutputFile());
-    setErrorCondition(-200, "");
+    setErrorCondition(-200, msg);
     return;
   }
 
@@ -3155,18 +3008,6 @@ QString InsertPrecipitatePhases::getNameOfClass() const
 QString InsertPrecipitatePhases::ClassName()
 {
   return QString("InsertPrecipitatePhases");
-}
-
-// -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::setClusteringListArrayName(const QString& value)
-{
-  m_ClusteringListArrayName = value;
-}
-
-// -----------------------------------------------------------------------------
-QString InsertPrecipitatePhases::getClusteringListArrayName() const
-{
-  return m_ClusteringListArrayName;
 }
 
 // -----------------------------------------------------------------------------

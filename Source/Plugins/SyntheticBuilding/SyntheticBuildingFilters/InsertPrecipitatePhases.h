@@ -38,12 +38,15 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/ShapeOps/ShapeOps.h"
+
+#include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
 class IDataArray;
 using IDataArrayShPtrType = std::shared_ptr<IDataArray>;
@@ -143,20 +146,12 @@ public:
     AppendToExisting = 2
   };
 
-  /**
-   * @brief Setter property for ClusteringListArrayName
-   */
-  void setClusteringListArrayName(const QString& value);
-  /**
-   * @brief Getter property for ClusteringListArrayName
-   * @return Value of ClusteringListArrayName
-   */
-  QString getClusteringListArrayName() const;
 
   /**
    * @brief Setter property for ErrorOutputFile
    */
   void setErrorOutputFile(const QString& value);
+
   /**
    * @brief Getter property for ErrorOutputFile
    * @return Value of ErrorOutputFile
@@ -608,15 +603,6 @@ protected:
   void determine_currentRDF(int32_t featureNum, int32_t add, bool double_count);
 
   /**
-   * @brief determine_randomRDF Determines a random radial distribution function
-   * @param gnum Index for the precipitate to determine RDF
-   * @param add Determines amount to iterate RDF bins
-   * @param double_count Determines whether to double count items in bins
-   * @param largeNumber Placeholder value for large address space
-   */
-  void determine_randomRDF(size_t gnum, int32_t add, bool double_count, int32_t largeNumber);
-
-  /**
    * @brief normalizeRDF Normalizes a radial distribution function
    * @param rdf RDF to normalize
    * @param num_bins Number of bins in the discretized RDF
@@ -654,27 +640,6 @@ protected:
   void write_goal_attributes();
 
   /**
-   * @brief find_xcoord Returns the x coordinate at a given index
-   * @param index Index to determine coordinate
-   * @return Float value of x coordinate
-   */
-  float find_xcoord(int64_t index);
-
-  /**
-   * @brief find_ycoord Returns the y coordinate at a given index
-   * @param index Index to determine coordinate
-   * @return Float value of y coordinate
-   */
-  float find_ycoord(int64_t index);
-
-  /**
-   * @brief find_zcoord Returns the z coordinate at a given index
-   * @param index Index to determine coordinate
-   * @return Float value of z coordinate
-   */
-  float find_zcoord(int64_t index);
-
-  /**
    * @brief compare_1Ddistributions Computes the 1D Bhattacharyya distance
    * @param sqrerror Float 1D Bhattacharyya distance
    */
@@ -685,12 +650,6 @@ protected:
    * @param sqrerror Float 1D Bhattacharyya distance
    */
   void compare_2Ddistributions(std::vector<std::vector<float>>, std::vector<std::vector<float>>, float& sqrerror);
-
-  /**
-   * @brief compare_3Ddistributions Computes the 3D Bhattacharyya distance
-   * @param sqrerror Float 1D Bhattacharyya distance
-   */
-  void compare_3Ddistributions(std::vector<std::vector<std::vector<float>>>, std::vector<std::vector<std::vector<float>>>, float& sqrerror);
 
   /**
    * @brief Moves the temporary arrays that hold the inputs into the shape algorithms
@@ -721,8 +680,6 @@ private:
   float* m_EquivalentDiameters = nullptr;
   std::weak_ptr<Int32ArrayType> m_FeaturePhasesPtr;
   int32_t* m_FeaturePhases = nullptr;
-  std::weak_ptr<Int32ArrayType> m_NumCellsPtr;
-  int32_t* m_NumCells = nullptr;
   std::weak_ptr<DataArray<PhaseType::EnumType>> m_PhaseTypesPtr;
   PhaseType::EnumType* m_PhaseTypes = nullptr;
   std::weak_ptr<DataArray<ShapeType::EnumType>> m_ShapeTypesPtr;
@@ -730,66 +687,58 @@ private:
   std::weak_ptr<Int32ArrayType> m_NumFeaturesPtr;
   int32_t* m_NumFeatures = nullptr;
 
-  QString m_ClusteringListArrayName = {};
   QString m_ErrorOutputFile = {};
   QString m_CsvOutputFile = {};
-  DataArrayPath m_MaskArrayPath = {};
-  bool m_UseMask = {};
-  int m_FeatureGeneration = {};
+  DataArrayPath m_MaskArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask};
+  bool m_UseMask = {false};
+  int m_FeatureGeneration = {0};
   QString m_PrecipInputFile = {};
-  bool m_PeriodicBoundaries = {};
-  bool m_MatchRDF = {};
-  bool m_WriteGoalAttributes = {};
-  DataArrayPath m_InputStatsArrayPath = {};
-  DataArrayPath m_InputPhaseTypesArrayPath = {};
-  DataArrayPath m_InputShapeTypesArrayPath = {};
-  DataArrayPath m_FeatureIdsArrayPath = {};
-  DataArrayPath m_CellPhasesArrayPath = {};
-  DataArrayPath m_BoundaryCellsArrayPath = {};
-  DataArrayPath m_FeaturePhasesArrayPath = {};
-  QString m_NumCellsArrayName = {};
-  QString m_EquivalentDiametersArrayName = {};
-  QString m_VolumesArrayName = {};
-  QString m_Omega3sArrayName = {};
-  QString m_CentroidsArrayName = {};
-  QString m_AxisEulerAnglesArrayName = {};
-  QString m_AxisLengthsArrayName = {};
-  DataArrayPath m_NumFeaturesArrayPath = {};
-  int m_SaveGeometricDescriptions = {};
+  bool m_PeriodicBoundaries = {false};
+  bool m_MatchRDF = {false};
+  bool m_WriteGoalAttributes = {false};
+  DataArrayPath m_InputStatsArrayPath = {SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics};
+  DataArrayPath m_InputPhaseTypesArrayPath = {SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes};
+  DataArrayPath m_InputShapeTypesArrayPath = {SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::ShapeTypes};
+  DataArrayPath m_FeatureIdsArrayPath = {SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds};
+  DataArrayPath m_CellPhasesArrayPath = {SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases};
+  DataArrayPath m_BoundaryCellsArrayPath = {SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::BoundaryCells};
+  DataArrayPath m_FeaturePhasesArrayPath = {SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases};
+  QString m_NumCellsArrayName = {SIMPL::FeatureData::NumCells};
+  QString m_EquivalentDiametersArrayName = {SIMPL::FeatureData::EquivalentDiameters};
+  QString m_VolumesArrayName = {SIMPL::FeatureData::Volumes};
+  QString m_Omega3sArrayName = {SIMPL::FeatureData::Omega3s};
+  QString m_CentroidsArrayName = {SIMPL::FeatureData::Centroids};
+  QString m_AxisEulerAnglesArrayName = {SIMPL::FeatureData::AxisEulerAngles};
+  QString m_AxisLengthsArrayName = {SIMPL::FeatureData::AxisLengths};
+  DataArrayPath m_NumFeaturesArrayPath = {SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::NumFeatures};
+  int m_SaveGeometricDescriptions = {0};
   DataArrayPath m_NewAttributeMatrixPath = {};
   DataArrayPath m_SelectedAttributeMatrixPath = {};
 
-  int32_t m_FirstPrecipitateFeature;
-  float m_SizeX;
-  float m_SizeY;
-  float m_SizeZ;
-  float m_XRes;
-  float m_YRes;
-  float m_ZRes;
-  float m_TotalVol;
-  float m_UseableTotalVol;
-  int64_t m_XPoints;
-  int64_t m_YPoints;
-  int64_t m_ZPoints;
-  int64_t m_TotalPoints;
+  int32_t m_FirstPrecipitateFeature = -1;
+  float m_SizeX = 0.0f;
+  float m_SizeY = 0.0f;
+  float m_SizeZ = 0.0f;
+  float m_XRes = 0.0f;
+  float m_YRes = 0.0f;
+  float m_ZRes = 0.0f;
+  float m_TotalVol = 0.0f;
+  float m_UseableTotalVol = 0.0f;
+  int64_t m_XPoints = 0;
+  int64_t m_YPoints = 0;
+  int64_t m_ZPoints = 0;
+  int64_t m_TotalPoints = 0;
 
   // Cell Data - make sure these are all initialized to nullptr in the constructor
 
   // Feature Data - make sure these are all initialized to nullptr in the constructor
 
-  NeighborList<float>::WeakPointer m_ClusteringList;
-
   // Ensemble Data - make sure these are all initialized to nullptr in the constructor
 
   // All other private variables
   QVector<ShapeOps::Pointer> m_ShapeOps;
-  ShapeOps::Pointer m_UnknownShapeOps;
-  ShapeOps::Pointer m_CubicOctohedronOps;
-  ShapeOps::Pointer m_CylinderOps;
-  ShapeOps::Pointer m_EllipsoidOps;
-  ShapeOps::Pointer m_SuperEllipsoidOps;
 
-  int64_t* m_Neighbors;
+  int64_t* m_Neighbors = nullptr;
   StatsDataArray::WeakPointer m_StatsDataArray;
 
   std::vector<std::vector<int64_t>> m_ColumnList;
@@ -815,12 +764,14 @@ private:
   std::vector<int64_t> m_GSizes;
 
   size_t m_AvailablePointsCount;
-  float m_currentRDFerror, m_oldRDFerror;
-  float m_CurrentSizeDistError, m_OldSizeDistError;
-  float m_rdfMax;
-  float m_rdfMin;
-  float m_StepSize;
-  int32_t m_numRDFbins;
+  float m_currentRDFerror = 0.0f;
+  float m_oldRDFerror = 0.0;
+  float m_CurrentSizeDistError = 0.0f;
+  float m_OldSizeDistError = 0.0f;
+  float m_rdfMax = 0.0f;
+  float m_rdfMin = 0.0f;
+  float m_StepSize = 0.0f;
+  int32_t m_numRDFbins = 0;
 
   std::vector<int32_t> m_PrecipitatePhases;
   std::vector<float> m_PrecipitatePhaseFractions;
