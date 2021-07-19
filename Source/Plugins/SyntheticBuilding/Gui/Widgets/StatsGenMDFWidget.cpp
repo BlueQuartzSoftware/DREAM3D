@@ -57,7 +57,6 @@
 #endif
 #include <qwt.h>
 #include <qwt_abstract_scale_draw.h>
-#include <qwt_compat.h>
 #include <qwt_interval.h>
 #include <qwt_picker_machine.h>
 #include <qwt_plot.h>
@@ -394,8 +393,8 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float>& odf)
   }
 
   m_MDFPlot->setAxisScale(QwtPlot::xBottom, 0.0, x.size() * 5.0, 10);
-  QwtArray<double> xD(static_cast<int>(x.size()));
-  QwtArray<double> yD(static_cast<int>(x.size()));
+  QVector<double> xD(static_cast<int>(x.size()));
+  QVector<double> yD(static_cast<int>(x.size()));
   for(ContainerType::size_type i = 0; i < x.size(); ++i)
   {
     xD[i] = static_cast<double>(x[i]);

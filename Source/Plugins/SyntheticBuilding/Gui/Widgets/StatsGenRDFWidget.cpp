@@ -58,7 +58,6 @@
 #endif
 #include <qwt.h>
 #include <qwt_abstract_scale_draw.h>
-#include <qwt_compat.h>
 #include <qwt_interval.h>
 #include <qwt_picker_machine.h>
 #include <qwt_plot.h>
@@ -321,8 +320,8 @@ bool StatsGenRDFWidget::validateInput()
 void StatsGenRDFWidget::updateRDFPlot(QVector<float>& freqs)
 {
   // These are the output vectors
-  QwtArray<double> xD(static_cast<int>(freqs.size()));
-  QwtArray<double> yD(static_cast<int>(freqs.size()));
+  QVector<double> xD(static_cast<int>(freqs.size()));
+  QVector<double> yD(static_cast<int>(freqs.size()));
 
   QLocale loc = QLocale::system();
 

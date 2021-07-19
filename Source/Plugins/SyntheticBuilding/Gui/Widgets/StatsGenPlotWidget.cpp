@@ -57,7 +57,6 @@
 #endif
 #include <qwt.h>
 #include <qwt_abstract_scale_draw.h>
-#include <qwt_compat.h>
 #include <qwt_interval.h>
 #include <qwt_plot.h>
 #include <qwt_plot_canvas.h>
@@ -599,18 +598,18 @@ void StatsGenPlotWidget::createBetaCurve(int tableRow, float& xMax, float& yMax)
   float alpha = m_TableModel->getDataValue(SGBetaTableModel::Alpha, tableRow);
   float beta = m_TableModel->getDataValue(SGBetaTableModel::Beta, tableRow);
   int size = 256;
-  QwtArray<float> x;
-  QwtArray<float> y;
+  QVector<float> x;
+  QVector<float> y;
 
-  err = StatsGen::GenBetaPlotData<QwtArray<float>>(alpha, beta, x, y, size);
+  err = StatsGen::GenBetaPlotData<QVector<float>>(alpha, beta, x, y, size);
   if(err == 1)
   {
     // TODO: Present Error Message
     return;
   }
 
-  QwtArray<double> xD(size);
-  QwtArray<double> yD(size);
+  QVector<double> xD(size);
+  QVector<double> yD(size);
   for(int i = 0; i < size; ++i)
   {
     //   qDebug() << x[i] << "  " << y[i] << "\n";
@@ -641,18 +640,18 @@ void StatsGenPlotWidget::createLogNormalCurve(int tableRow, float& xMax, float& 
   float avg = m_TableModel->getDataValue(SGLogNormalTableModel::Average, tableRow);
   float stdDev = m_TableModel->getDataValue(SGLogNormalTableModel::StdDev, tableRow);
   int size = 256;
-  QwtArray<float> x;
-  QwtArray<float> y;
+  QVector<float> x;
+  QVector<float> y;
 
-  err = StatsGen::GenLogNormalPlotData<QwtArray<float>>(avg, stdDev, x, y, size);
+  err = StatsGen::GenLogNormalPlotData<QVector<float>>(avg, stdDev, x, y, size);
   if(err == 1)
   {
     // TODO: Present Error Message
     return;
   }
 
-  QwtArray<double> xD(size);
-  QwtArray<double> yD(size);
+  QVector<double> xD(size);
+  QVector<double> yD(size);
   for(int i = 0; i < size; ++i)
   {
     //   qDebug() << x[i] << "  " << y[i] << "\n";
@@ -684,18 +683,18 @@ void StatsGenPlotWidget::createPowerCurve(int tableRow, float& xMax, float& yMax
   float k = m_TableModel->getDataValue(SGPowerLawTableModel::K, tableRow);
   float beta = m_TableModel->getDataValue(SGPowerLawTableModel::Beta, tableRow);
   int size = 256;
-  QwtArray<float> x;
-  QwtArray<float> y;
+  QVector<float> x;
+  QVector<float> y;
 
-  err = StatsGen::GenPowerLawPlotData<QwtArray<float>>(alpha, k, beta, x, y, size);
+  err = StatsGen::GenPowerLawPlotData<QVector<float>>(alpha, k, beta, x, y, size);
   if(err == 1)
   {
     // TODO: Present Error Message
     return;
   }
 
-  QwtArray<double> xD(size);
-  QwtArray<double> yD(size);
+  QVector<double> xD(size);
+  QVector<double> yD(size);
   for(int i = 0; i < size; ++i)
   {
     //   qDebug() << x[i] << "  " << y[i] << "\n";
