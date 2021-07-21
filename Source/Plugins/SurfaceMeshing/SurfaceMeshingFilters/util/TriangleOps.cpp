@@ -35,8 +35,6 @@
 
 #include "TriangleOps.h"
 
-#include <QtCore/QDebug>
-
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/MatrixMath.h"
@@ -55,9 +53,9 @@ TriangleOps::~TriangleOps() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<MeshIndexType> TriangleOps::findAdjacentTriangles(TriangleGeom::Pointer triangles, MeshIndexType triangleIndex, DataArray<int32_t>::Pointer faceLabelsPtr, int32_t label)
+std::vector<MeshIndexType> TriangleOps::findAdjacentTriangles(TriangleGeom::Pointer triangles, MeshIndexType triangleIndex, DataArray<int32_t>::Pointer faceLabelsPtr, int32_t label)
 {
-  QVector<MeshIndexType> adjacentTris;
+  std::vector<MeshIndexType> adjacentTris;
 
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
@@ -190,9 +188,9 @@ int TriangleOps::getLabelIndex(int32_t* triLabels, int label)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<MeshIndexType> TriangleOps::getNodeIndices(MeshIndexType t[3], int32_t* faceLabel, int32_t label)
+std::vector<MeshIndexType> TriangleOps::getNodeIndices(MeshIndexType t[3], int32_t* faceLabel, int32_t label)
 {
-  QVector<MeshIndexType> tNodes(3);
+  std::vector<MeshIndexType> tNodes(3);
   MeshIndexType idx = TriangleOps::getLabelIndex(faceLabel, label);
   if(idx == 1)
   {
@@ -222,7 +220,7 @@ void TriangleOps::flipWinding(MeshIndexType t[])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VectorType TriangleOps::computeNormal(float n0[3], float n1[3], float n2[3])
+TriangleOps::NormalType TriangleOps::computeNormal(float n0[3], float n1[3], float n2[3])
 {
   double vert0[3];
   double vert1[3];
@@ -231,17 +229,17 @@ VectorType TriangleOps::computeNormal(float n0[3], float n1[3], float n2[3])
   double w[3];
   double normal[3];
 
-  vert0[0] = static_cast<float>(n0[0]);
-  vert0[1] = static_cast<float>(n0[1]);
-  vert0[2] = static_cast<float>(n0[2]);
+  vert0[0] = static_cast<double>(n0[0]);
+  vert0[1] = static_cast<double>(n0[1]);
+  vert0[2] = static_cast<double>(n0[2]);
 
-  vert1[0] = static_cast<float>(n1[0]);
-  vert1[1] = static_cast<float>(n1[1]);
-  vert1[2] = static_cast<float>(n1[2]);
+  vert1[0] = static_cast<double>(n1[0]);
+  vert1[1] = static_cast<double>(n1[1]);
+  vert1[2] = static_cast<double>(n1[2]);
 
-  vert2[0] = static_cast<float>(n2[0]);
-  vert2[1] = static_cast<float>(n2[1]);
-  vert2[2] = static_cast<float>(n2[2]);
+  vert2[0] = static_cast<double>(n2[0]);
+  vert2[1] = static_cast<double>(n2[1]);
+  vert2[2] = static_cast<double>(n2[2]);
 
   //
   // Compute the normal
@@ -256,7 +254,7 @@ VectorType TriangleOps::computeNormal(float n0[3], float n1[3], float n2[3])
   MatrixMath::CrossProduct(u, w, normal);
   MatrixMath::Normalize3x1(normal);
 
-  return VectorType(normal[0], normal[1], normal[2]);
+  return {static_cast<float>(normal[0]), static_cast<float>(normal[1]), static_cast<float>(normal[2])};
 }
 
 // -----------------------------------------------------------------------------

@@ -35,14 +35,13 @@
 
 #pragma once
 
+#include <array>
 #include <set>
 #include <vector>
 
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Geometry/IGeometry.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
-
-#include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
 
 class SurfaceDataContainer;
 
@@ -54,17 +53,19 @@ class TriangleOps
 public:
   virtual ~TriangleOps();
 
+  using NormalType = std::array<float, 3>;
+
   static int getLabelIndex(int32_t* triLabels, int label);
 
-  QVector<MeshIndexType> getNodeIndices(MeshIndexType t[], int32_t* faceLabel, int32_t label);
+  std::vector<MeshIndexType> getNodeIndices(MeshIndexType t[], int32_t* faceLabel, int32_t label);
 
   static void flipWinding(MeshIndexType triangle[3]);
 
-  static VectorType computeNormal(float n0[3], float n1[3], float n2[3]);
+  static NormalType computeNormal(float n0[3], float n1[3], float n2[3]);
 
   static QSet<int32_t> generateUniqueLabels(DataArray<int32_t>::Pointer faceLabelsPtr);
 
-  static QVector<MeshIndexType> findAdjacentTriangles(TriangleGeom::Pointer triangles, MeshIndexType triangleIndex, DataArray<int32_t>::Pointer faceLabelsPtr, int32_t label);
+  static std::vector<MeshIndexType> findAdjacentTriangles(TriangleGeom::Pointer triangles, MeshIndexType triangleIndex, DataArray<int32_t>::Pointer faceLabelsPtr, int32_t label);
 
   static bool verifyWinding(MeshIndexType source[], MeshIndexType tri[], int32_t* faceLabelSource, int32_t* faceLabelTri, int32_t label);
 

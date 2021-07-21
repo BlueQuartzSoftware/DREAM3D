@@ -59,11 +59,6 @@ endforeach()
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
 
-  
-  # These filters require extensive updates to comply with the IGeometry design
-  #M3CSliceBySlice
-  #MovingFiniteElementSmoothing
-  #VerifyTriangleWinding
 )
 
 #-----------------
@@ -86,18 +81,8 @@ ADD_SIMPL_SUPPORT_HEADER(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} MeshLi
 ADD_SIMPL_SUPPORT_HEADER(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} FindNRingNeighbors.h)
 ADD_SIMPL_SUPPORT_SOURCE(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} FindNRingNeighbors.cpp)
 
-ADD_SIMPL_SUPPORT_HEADER(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} util/Vector3.h)
-ADD_SIMPL_SUPPORT_SOURCE(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} util/Vector3.cpp)
-
-ADD_SIMPL_SUPPORT_HEADER(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} util/Plane.h)
-ADD_SIMPL_SUPPORT_SOURCE(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} util/Plane.cpp)
-
 ADD_SIMPL_SUPPORT_HEADER(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} util/TriangleOps.h)
 ADD_SIMPL_SUPPORT_SOURCE(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} util/TriangleOps.cpp)
-
-#ADD_SIMPL_SUPPORT_HEADER(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} util/Exception.h)
-#ADD_SIMPL_SUPPORT_HEADER(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} util/InvalidParameterException.h)
-
 
 
 SIMPL_END_FILTER_GROUP(${SurfaceMeshing_BINARY_DIR} "${_filterGroupName}" "Surface Meshing Filters")

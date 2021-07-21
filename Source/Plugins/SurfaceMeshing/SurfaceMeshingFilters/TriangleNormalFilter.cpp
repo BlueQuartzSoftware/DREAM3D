@@ -94,10 +94,10 @@ public:
       float* n1 = &(nodes[nIdx1]);
       float* n2 = &(nodes[nIdx2]);
 
-      VectorType normal = TriangleOps::computeNormal(n0, n1, n2);
-      m_Normals[i * 3 + 0] = normal.x;
-      m_Normals[i * 3 + 1] = normal.y;
-      m_Normals[i * 3 + 2] = normal.z;
+      TriangleOps::NormalType normal = TriangleOps::computeNormal(n0, n1, n2);
+      m_Normals[i * 3 + 0] = normal[0];
+      m_Normals[i * 3 + 1] = normal[1];
+      m_Normals[i * 3 + 2] = normal[2];
     }
   }
 
