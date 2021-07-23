@@ -299,11 +299,17 @@ void VtkRectilinearGridWriter::dataCheck()
 
   QString dcName = DataArrayPath::GetAttributeMatrixPath(getSelectedDataArrayPaths()).getDataContainerName();
 
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(dcName)->getPrereqGeometry<ImageGeom>(this);
-  if(getErrorCode() < 0 || nullptr == image.get())
+  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
+  if (dc != nullptr)
   {
-    return;
+    ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom>(this);
+    if(getErrorCode() < 0 || nullptr == image.get())
+    {
+      return;
+    }
   }
+
+
 }
 
 // -----------------------------------------------------------------------------
