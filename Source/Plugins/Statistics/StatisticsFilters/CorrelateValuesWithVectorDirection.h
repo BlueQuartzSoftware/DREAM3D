@@ -50,8 +50,6 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
 
-#include "EbsdLib/LaueOps/LaueOps.h"
-
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsDLLExport.h"
 #include "Statistics/StatisticsVersion.h"

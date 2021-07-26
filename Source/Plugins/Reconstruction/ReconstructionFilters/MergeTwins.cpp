@@ -54,6 +54,7 @@
 #include "EbsdLib/Core/Orientation.hpp"
 #include "EbsdLib/Core/Quaternion.hpp"
 #include "EbsdLib/LaueOps/LaueOps.h"
+#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"

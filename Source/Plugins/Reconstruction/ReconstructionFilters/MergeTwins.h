@@ -41,8 +41,6 @@
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
-#include "EbsdLib/Core/EbsdLibConstants.h"
-
 #include "Reconstruction/ReconstructionDLLExport.h"
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
 

@@ -217,7 +217,6 @@ PluginProperties(TARGET_NAME ${plug_target_name}
 target_link_libraries(${plug_target_name}
                     Qt5::Core
                     SIMPLib
-                    EbsdLib
 )
 
 
