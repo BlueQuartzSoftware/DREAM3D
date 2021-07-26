@@ -34,6 +34,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "FindNeighbors.h"
 
+#include <algorithm>
+
 #include <QtCore/QDateTime>
 #include <QtCore/QTextStream>
 
@@ -221,7 +223,7 @@ void FindNeighbors::execute()
 
   /* Ensure that we will be able to work with the user selected feature Id Array */
   Int32ArrayType& featureIdsPtr = *(m_FeatureIdsPtr.lock().get());
-  const auto [minFeatureId, maxFeatureId] = std::minmax_element(featureIdsPtr.cbegin(), featureIdsPtr.cend());
+  const auto [minFeatureId, maxFeatureId] = std::minmax_element(m_FeatureIds, m_FeatureIds + totalPoints);
   if(static_cast<size_t>(*maxFeatureId) >= totalFeatures)
   {
     QString msg;

@@ -58,21 +58,21 @@ class Processing_EXPORT ProcessingPlugin : public QObject, public ISIMPLibPlugin
 
 public:
   ProcessingPlugin();
-  virtual ~ProcessingPlugin();
+  ~ProcessingPlugin() override;
   /**
    * @brief Returns the name of the plugin that appears on the file system.
    *
    * Note that if the build is a debug build there will be a _Plugin postfix
    * to the filename.
    */
-  virtual QString getPluginFileName();
+  QString getPluginFileName() override;
 
   /**
    * @brief getPluginDisplayName The name that should be used for human facing
    * labels and display strings
    * @return
    */
-  virtual QString getPluginDisplayName();
+  QString getPluginDisplayName() override;
 
   /**
    * @brief getPluginBaseName The Name of the plugin.
@@ -80,98 +80,98 @@ public:
    * This typically will NOT have the Plugin suffix.
    * @return
    */
-  virtual QString getPluginBaseName();
+  QString getPluginBaseName() override;
 
   /**
    * @brief Returns the version
    */
-  virtual QString getVersion();
+   QString getVersion() override;
 
   /**
    * @brief Returns the compatibility version
    */
-  virtual QString getCompatibilityVersion();
+   QString getCompatibilityVersion() override;
 
   /**
    * @brief Returns the name of the vendor
    */
-  virtual QString getVendor();
+   QString getVendor() override;
 
   /**
    * @brief Returns the URL of the plugin
    */
-  virtual QString getURL();
+   QString getURL() override;
 
   /**
    * @brief Returns the location of the plugin
    */
-  virtual QString getLocation();
+   QString getLocation() override;
 
   /**
    * @brief Returns the description of the plugin
    */
-  virtual QString getDescription();
+   QString getDescription() override;
 
   /**
    * @brief Returns the copyright of the plugin
    */
-  virtual QString getCopyright();
+   QString getCopyright() override;
 
   /**
    * @brief Returns the license of the plugin
    */
-  virtual QString getLicense();
+   QString getLicense() override;
 
   /**
    * @brief Returns the filters of the plugin
    */
-  virtual QList<QString> getFilters();
+   QList<QString> getFilters() override;
 
   /**
    * @brief Returns the third party licenses of the plugin
    */
-  virtual QMap<QString, QString> getThirdPartyLicenses();
+   QMap<QString, QString> getThirdPartyLicenses() override;
 
   /**
    * @brief Returns the load status of the plugin
    */
-  virtual bool getDidLoad();
+   bool getDidLoad() override;
 
   /**
    * @brief Sets the load status of the plugin
    */
-  virtual void setDidLoad(bool didLoad);
+   void setDidLoad(bool didLoad) override;
 
   /**
    * @brief Sets the location of the plugin on the file system.
    * This is required so that we can cache the file path information
    * as the plugin is loaded.
    */
-  virtual void setLocation(QString filePath);
+   void setLocation(QString filePath) override;
 
   /**
    * @brief Register all the filters with the FilterWidgetFactory
    */
-  virtual void registerFilterWidgets(FilterWidgetManager* fwm);
+   void registerFilterWidgets(FilterWidgetManager* fwm) override;
 
   /**
    * @brief This registers the filters that this plugin implements with the Filter Manager that is passed in
    * @param fm The FilterManager to register the filters into.
    */
-  virtual void registerFilters(FilterManager* fm);
+   void registerFilters(FilterManager* fm) override;
 
   /**
    * @brief Writes the settings in the input gui to the Application's preference file
    * @param prefs A valid QSettings pointer.
    */
-  virtual void writeSettings(QSettings& prefs);
+   void writeSettings(QSettings& prefs) override;
 
   /**
    * @brief Reads the settings from the Application's preference file and sets
    * the input GUI widgets accordingly.
    * @param prefs
    */
-  virtual void readSettings(QSettings& prefs);
+   void readSettings(QSettings& prefs) override;
 
 private:
   QString m_Version;

@@ -22,7 +22,7 @@ class ImportExport_EXPORT ImportExportPlugin : public QObject, public ISIMPLibPl
 
 public:
   ImportExportPlugin();
-  virtual ~ImportExportPlugin();
+  ~ImportExportPlugin() override;
 
   /**
    * @brief Returns the name of the plugin that appears on the file system.
@@ -30,14 +30,14 @@ public:
    * Note that if the build is a debug build there will be a _Plugin postfix
    * to the filename.
    */
-  virtual QString getPluginFileName();
+  QString getPluginFileName() override;
 
   /**
    * @brief getPluginDisplayName The name that should be used for human facing
    * labels and display strings
    * @return
    */
-  virtual QString getPluginDisplayName();
+  QString getPluginDisplayName() override;
 
   /**
    * @brief getPluginBaseName The Name of the plugin.
@@ -45,72 +45,72 @@ public:
    * This typically will NOT have the Plugin suffix.
    * @return
    */
-  virtual QString getPluginBaseName();
+  QString getPluginBaseName() override;
 
   /**
    * @brief getVersion Returns the version
    */
-  virtual QString getVersion();
+   QString getVersion() override;
 
   /**
    * @brief getCompatibilityVersion Returns the compatibility version
    */
-  virtual QString getCompatibilityVersion();
+   QString getCompatibilityVersion() override;
 
   /**
    * @brief getVendor Returns the name of the vendor
    */
-  virtual QString getVendor();
+   QString getVendor() override;
 
   /**
    * @brief getURL Returns the URL of the plugin
    */
-  virtual QString getURL();
+   QString getURL() override;
 
   /**
    * @brief getLocationReturns the location of the plugin
    */
-  virtual QString getLocation();
+   QString getLocation() override;
 
   /**
    * @brief getDescription Returns the description of the plugin
    * PLEASE UPDATE YOUR PLUGIN'S DESCRIPTION FILE.
    * It is located at ImportExport/Resources/ImportExport/ImportExportDescription.txt
    */
-  virtual QString getDescription();
+   QString getDescription() override;
 
   /**
    * @brief getCopyright Returns the copyright of the plugin
    */
-  virtual QString getCopyright();
+   QString getCopyright() override;
 
   /**
    * @brief getLicense Returns the license of the plugin
    * PLEASE UPDATE YOUR PLUGIN'S LICENSE FILE.
    * It is located at ImportExport/Resources/ImportExport/ImportExportLicense.txt
    */
-  virtual QString getLicense();
+   QString getLicense() override;
 
   /**
    * @brief getFilters Returns the filters of the plugin
    */
-  virtual QList<QString> getFilters();
+   QList<QString> getFilters() override;
 
   /**
    * @brief getThirdPartyLicenses Returns the third party licenses of the plugin
    */
-  virtual QMap<QString, QString> getThirdPartyLicenses();
+   QMap<QString, QString> getThirdPartyLicenses() override;
 
   /**
    * @brief getDidLoad Returns the load status of the plugin
    */
-  virtual bool getDidLoad();
+   bool getDidLoad() override;
 
   /**
    * @brief setDidLoad Sets the load status of the plugin
    * @param didLoad Boolean value to set status
    */
-  virtual void setDidLoad(bool didLoad);
+   void setDidLoad(bool didLoad);
 
   /**
    * @brief setLocation Sets the location of the plugin on the file system.
@@ -118,32 +118,32 @@ public:
    * as the plugin is loaded.
    * @param filePath File path
    */
-  virtual void setLocation(QString filePath);
+   void setLocation(QString filePath);
 
   /**
    * @brief registerFilterWidgets Register all the filters with the FilterWidgetFactory
    * @param fwm FilterWidgetManager instance pointer
    */
-  virtual void registerFilterWidgets(FilterWidgetManager* fwm);
+   void registerFilterWidgets(FilterWidgetManager* fwm);
 
   /**
    * @brief registerFilters Registers the filters that this plugin implements with the Filter Manager that is passed in
    * @param fm FilterManager instance pointer
    */
-  virtual void registerFilters(FilterManager* fm);
+   void registerFilters(FilterManager* fm);
 
   /**
    * @brief writeSettings Writes the settings in the input gui to the Application's preference file
    * @param prefs QSettings reference variable
    */
-  virtual void writeSettings(QSettings& prefs);
+   void writeSettings(QSettings& prefs);
 
   /**
    * @brief readSettings Reads the settings from the Application's preference file and sets
    * the input GUI widgets accordingly.
    * @param prefs QSettings reference variable
    */
-  virtual void readSettings(QSettings& prefs);
+   void readSettings(QSettings& prefs);
 
 private:
   QString m_Version;
