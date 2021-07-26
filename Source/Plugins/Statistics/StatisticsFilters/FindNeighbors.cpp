@@ -149,39 +149,40 @@ void FindNeighbors::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   std::vector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeatureIdsArrayPath(), cDims);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType>(this, getFeatureIdsArrayPath(), cDims);
   if(nullptr != m_FeatureIdsPtr.lock())
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getBoundaryCellsArrayName());
   if(m_StoreBoundaryCells)
   {
-    m_BoundaryCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>>(this, tempPath, 0, cDims);
+    m_BoundaryCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<Int8ArrayType>(this, tempPath, 0, cDims);
     if(nullptr != m_BoundaryCellsPtr.lock())
     {
       m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0);
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
+    }
   }
 
   getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, getCellFeatureAttributeMatrixPath(), -301);
 
   tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getNumNeighborsArrayName());
-  m_NumNeighborsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>>(this, tempPath, 0, cDims);
+
+  m_NumNeighborsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType>(this, tempPath, 0, cDims);
   if(nullptr != m_NumNeighborsPtr.lock())
   {
     m_NumNeighbors = m_NumNeighborsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getSurfaceFeaturesArrayName());
   if(m_StoreSurfaceFeatures)
   {
-    m_SurfaceFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>>(this, tempPath, false, cDims);
+    m_SurfaceFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<BoolArrayType>(this, tempPath, false, cDims);
     if(nullptr != m_SurfaceFeaturesPtr.lock())
     {
       m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0);
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
+    }
   }
 
   // Feature Data
@@ -214,8 +215,23 @@ void FindNeighbors::execute()
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
+  AttributeMatrix::Pointer featureAM = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath());
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m_NumNeighborsPtr.lock()->getNumberOfTuples();
+
+  /* Ensure that we will be able to work with the user selected feature Id Array */
+  Int32ArrayType& featureIdsPtr = *(m_FeatureIdsPtr.lock().get());
+  const auto [minFeatureId, maxFeatureId] = std::minmax_element(featureIdsPtr.cbegin(), featureIdsPtr.cend());
+  if(static_cast<size_t>(*maxFeatureId) >= totalFeatures)
+  {
+    QString msg;
+    QTextStream out(&msg);
+    out << "Data Array " << featureIdsPtr.getName() << " has a maximum value of " << *maxFeatureId << " which is greater than the "
+        << " number of features from array " << m_NumNeighborsPtr.lock()->getName() << " which has " << totalFeatures << ". Did you select the "
+        << " incorrect array for the 'FeatureIds' array?";
+    setErrorCondition(-24500, msg);
+    return;
+  }
 
   SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
@@ -291,7 +307,7 @@ void FindNeighbors::execute()
 
     onsurf = 0;
     feature = m_FeatureIds[j];
-    if(feature > 0)
+    if(feature > 0 && feature < neighborlist.size())
     {
       column = static_cast<int64_t>(j % m->getGeometryAs<ImageGeom>()->getXPoints());
       row = static_cast<int64_t>((j / m->getGeometryAs<ImageGeom>()->getXPoints()) % m->getGeometryAs<ImageGeom>()->getYPoints());
