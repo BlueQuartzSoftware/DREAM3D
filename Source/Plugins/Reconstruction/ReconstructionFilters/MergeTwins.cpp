@@ -47,13 +47,11 @@
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/Math/MatrixMath.h"
+
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
 
 #include "EbsdLib/Core/Orientation.hpp"
-#include "EbsdLib/Core/OrientationTransformation.hpp"
 #include "EbsdLib/Core/Quaternion.hpp"
 #include "EbsdLib/LaueOps/LaueOps.h"
 
@@ -205,21 +203,21 @@ void MergeTwins::dataCheck()
   if(nullptr != m_FeatureIdsPtr.lock())
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getCellParentIdsArrayName());
   m_CellParentIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>>(this, tempPath, -1, cDims);
   if(nullptr != m_CellParentIdsPtr.lock())
   {
     m_CellParentIds = m_CellParentIdsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   // Feature Data
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>>(this, getFeaturePhasesArrayPath(), cDims);
   if(nullptr != m_FeaturePhasesPtr.lock())
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
   if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeaturePhasesArrayPath());
@@ -230,14 +228,14 @@ void MergeTwins::dataCheck()
   if(nullptr != m_FeatureParentIdsPtr.lock())
   {
     m_FeatureParentIds = m_FeatureParentIdsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   cDims[0] = 4;
   m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>>(this, getAvgQuatsArrayPath(), cDims);
   if(nullptr != m_AvgQuatsPtr.lock())
   {
     m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
   if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getAvgQuatsArrayPath());
@@ -250,14 +248,14 @@ void MergeTwins::dataCheck()
   if(nullptr != m_ActivePtr.lock())
   {
     m_Active = m_ActivePtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   // Ensemble Data
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>>(this, getCrystalStructuresArrayPath(), cDims);
   if(nullptr != m_CrystalStructuresPtr.lock())
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 }
@@ -363,6 +361,20 @@ void MergeTwins::execute()
   {
     return;
   }
+
+  /* Sanity check that each phase is Cubic High (m3m) Laue class. If not then warn the user.
+   * There is code later on to ensure that only m3m Laue class is used.
+   */
+  UInt32ArrayType& laueClasses = *(m_CrystalStructuresPtr.lock().get());
+  for(size_t i = 1; i < laueClasses.size(); i++)
+  {
+    if (i != EbsdLib::CrystalStructure::Cubic_High)
+    {
+      QString msg = QString("Phase %1 is NOT m3m crystal symmetry. Data from this phase will not be used in this filter.");
+      setWarningCondition(-23501, msg);
+    }
+  }
+
 
   m_AxisToleranceRad = m_AxisTolerance * SIMPLib::Constants::k_PiOver180D;
 
@@ -574,18 +586,6 @@ void MergeTwins::setAngleTolerance(float value)
 float MergeTwins::getAngleTolerance() const
 {
   return m_AngleTolerance;
-}
-
-// -----------------------------------------------------------------------------
-void MergeTwins::setRandomizeParentIds(bool value)
-{
-  m_RandomizeParentIds = value;
-}
-
-// -----------------------------------------------------------------------------
-bool MergeTwins::getRandomizeParentIds() const
-{
-  return m_RandomizeParentIds;
 }
 
 // -----------------------------------------------------------------------------

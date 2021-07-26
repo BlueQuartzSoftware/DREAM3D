@@ -103,7 +103,7 @@ public:
    */
   static QString ClassName();
 
-  virtual ~MergeTwins();
+  ~MergeTwins() override;
 
   /**
    * @brief Setter property for NewCellFeatureAttributeMatrixName
@@ -137,16 +137,6 @@ public:
    */
   float getAngleTolerance() const;
   Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
-
-  /**
-   * @brief Setter property for RandomizeParentIds
-   */
-  void setRandomizeParentIds(bool value);
-  /**
-   * @brief Getter property for RandomizeParentIds
-   * @return Value of RandomizeParentIds
-   */
-  bool getRandomizeParentIds() const;
 
   /**
    * @brief Setter property for FeatureIdsArrayPath
@@ -313,19 +303,19 @@ protected:
   void characterize_twins();
 
 private:
-  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  std::weak_ptr<Int32ArrayType> m_FeatureIdsPtr;
   int32_t* m_FeatureIds = nullptr;
-  std::weak_ptr<DataArray<float>> m_AvgQuatsPtr;
+  std::weak_ptr<FloatArrayType> m_AvgQuatsPtr;
   float* m_AvgQuats = nullptr;
-  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  std::weak_ptr<Int32ArrayType> m_FeaturePhasesPtr;
   int32_t* m_FeaturePhases = nullptr;
-  std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
+  std::weak_ptr<UInt32ArrayType> m_CrystalStructuresPtr;
   unsigned int* m_CrystalStructures = nullptr;
-  std::weak_ptr<DataArray<bool>> m_ActivePtr;
+  std::weak_ptr<BoolArrayType> m_ActivePtr;
   bool* m_Active = nullptr;
-  std::weak_ptr<DataArray<int32_t>> m_CellParentIdsPtr;
+  std::weak_ptr<Int32ArrayType> m_CellParentIdsPtr;
   int32_t* m_CellParentIds = nullptr;
-  std::weak_ptr<DataArray<int32_t>> m_FeatureParentIdsPtr;
+  std::weak_ptr<Int32ArrayType> m_FeatureParentIdsPtr;
   int32_t* m_FeatureParentIds = nullptr;
 
   QString m_NewCellFeatureAttributeMatrixName = {};
