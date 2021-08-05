@@ -26,7 +26,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * The code contained herein was partially funded by the followig contracts:
+ * The code contained herein was partially funded by the following contracts:
  *    United States Air Force Prime Contract FA8650-07-D-5800
  *    United States Air Force Prime Contract FA8650-10-D-5210
  *    United States Prime Contract Navy N00173-07-C-2068
@@ -85,93 +85,93 @@ public:
   /**
    * @brief Returns the version
    */
-   QString getVersion() override;
+  QString getVersion() override;
 
   /**
    * @brief Returns the compatibility version
    */
-   QString getCompatibilityVersion() override;
+  QString getCompatibilityVersion() override;
 
   /**
    * @brief Returns the name of the vendor
    */
-   QString getVendor() override;
+  QString getVendor() override;
 
   /**
    * @brief Returns the URL of the plugin
    */
-   QString getURL() override;
+  QString getURL() override;
 
   /**
    * @brief Returns the location of the plugin
    */
-   QString getLocation() override;
+  QString getLocation() override;
 
   /**
    * @brief Returns the description of the plugin
    */
-   QString getDescription() override;
+  QString getDescription() override;
 
   /**
    * @brief Returns the copyright of the plugin
    */
-   QString getCopyright() override;
+  QString getCopyright() override;
 
   /**
    * @brief Returns the license of the plugin
    */
-   QString getLicense() override;
+  QString getLicense() override;
 
   /**
    * @brief Returns the filters of the plugin
    */
-   QList<QString> getFilters() override;
+  QList<QString> getFilters() override;
 
   /**
    * @brief Returns the third party licenses of the plugin
    */
-   QMap<QString, QString> getThirdPartyLicenses() override;
+  QMap<QString, QString> getThirdPartyLicenses() override;
 
   /**
    * @brief Returns the load status of the plugin
    */
-   bool getDidLoad() override;
+  bool getDidLoad() override;
 
   /**
    * @brief Sets the load status of the plugin
    */
-   void setDidLoad(bool didLoad) override;
+  void setDidLoad(bool didLoad) override;
 
   /**
    * @brief Sets the location of the plugin on the file system.
    * This is required so that we can cache the file path information
    * as the plugin is loaded.
    */
-   void setLocation(QString filePath) override;
+  void setLocation(QString filePath) override;
 
   /**
    * @brief Register all the filters with the FilterWidgetFactory
    */
-   void registerFilterWidgets(FilterWidgetManager* fwm) override;
+  void registerFilterWidgets(FilterWidgetManager* fwm) override;
 
   /**
    * @brief This registers the filters that this plugin implements with the Filter Manager that is passed in
    * @param fm The FilterManager to register the filters into.
    */
-   void registerFilters(FilterManager* fm) override;
+  void registerFilters(FilterManager* fm) override;
 
   /**
    * @brief Writes the settings in the input gui to the Application's preference file
    * @param prefs A valid QSettings pointer.
    */
-   void writeSettings(QSettings& prefs) override;
+  void writeSettings(QSettings& prefs) override;
 
   /**
    * @brief Reads the settings from the Application's preference file and sets
    * the input GUI widgets accordingly.
    * @param prefs
    */
-   void readSettings(QSettings& prefs) override;
+  void readSettings(QSettings& prefs) override;
 
 private:
   QString m_Version;

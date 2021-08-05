@@ -26,7 +26,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * The code contained herein was partially funded by the followig contracts:
+ * The code contained herein was partially funded by the following contracts:
  *    United States Air Force Prime Contract FA8650-07-D-5800
  *    United States Air Force Prime Contract FA8650-10-D-5210
  *    United States Prime Contract Navy N00173-07-C-2068
@@ -51,10 +51,10 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
 
+#include "EbsdLib/Core/EbsdLibConstants.h"
 #include "EbsdLib/Core/Orientation.hpp"
 #include "EbsdLib/Core/Quaternion.hpp"
 #include "EbsdLib/LaueOps/LaueOps.h"
-#include "EbsdLib/Core/EbsdLibConstants.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -369,13 +369,12 @@ void MergeTwins::execute()
   UInt32ArrayType& laueClasses = *(m_CrystalStructuresPtr.lock().get());
   for(size_t i = 1; i < laueClasses.size(); i++)
   {
-    if (i != EbsdLib::CrystalStructure::Cubic_High)
+    if(i != EbsdLib::CrystalStructure::Cubic_High)
     {
       QString msg = QString("Phase %1 is NOT m3m crystal symmetry. Data from this phase will not be used in this filter.");
       setWarningCondition(-23501, msg);
     }
   }
-
 
   m_AxisToleranceRad = m_AxisTolerance * SIMPLib::Constants::k_PiOver180D;
 

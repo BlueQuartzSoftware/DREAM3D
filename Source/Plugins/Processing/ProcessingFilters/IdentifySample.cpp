@@ -26,7 +26,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * The code contained herein was partially funded by the followig contracts:
+ * The code contained herein was partially funded by the following contracts:
  *    United States Air Force Prime Contract FA8650-07-D-5800
  *    United States Air Force Prime Contract FA8650-10-D-5210
  *    United States Prime Contract Navy N00173-07-C-2068
@@ -69,7 +69,8 @@ void IdentifySample::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("Fill Holes in Largest Feature", FillHoles, FilterParameter::Category::Parameter, IdentifySample));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement({SIMPL::TypeNames::Bool,SIMPL::TypeNames::UInt8}, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement({SIMPL::TypeNames::Bool, SIMPL::TypeNames::UInt8}, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::Category::RequiredArray, IdentifySample, req));
   }
   setFilterParameters(parameters);
@@ -107,12 +108,12 @@ void IdentifySample::dataCheck()
 
   IDataArray::Pointer inputData = getDataContainerArray()->getPrereqIDataArrayFromPath(this, getGoodVoxelsArrayPath());
 
-  if(TemplateHelpers::CanDynamicCast<DataArray<bool>>()(inputData))                                                                                                                          \
-  {                                                                                                                                                                                                    \
-    m_ArrayType = 1;                                                                                                                                                                 \
-  }                                                                                                                                                                                                    \
-  else if(TemplateHelpers::CanDynamicCast<DataArray<uint8_t>>()(inputData))                                                                                                                          \
-  {                                                                                                                                                                                                    \
+  if(TemplateHelpers::CanDynamicCast<DataArray<bool>>()(inputData))
+  {
+    m_ArrayType = 1;
+  }
+  else if(TemplateHelpers::CanDynamicCast<DataArray<uint8_t>>()(inputData))
+  {
     m_ArrayType = 2;
   }
   else
@@ -120,15 +121,13 @@ void IdentifySample::dataCheck()
     QString ss = QObject::tr("The input data must be of type BOOL or UINT8");
     setErrorCondition(-12001, ss);
   }
-
 }
 
-template<typename T>
+template <typename T>
 void _execute(IdentifySample* filter)
 {
   using ArrayType = DataArray<T>;
   using ArrayPointerType = typename DataArray<T>::Pointer;
-
 
   DataContainerArray::Pointer dca = filter->getDataContainerArray();
   DataContainer::Pointer m = dca->getDataContainer(filter->getGoodVoxelsArrayPath().getDataContainerName());

@@ -26,7 +26,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * The code contained herein was partially funded by the followig contracts:
+ * The code contained herein was partially funded by the following contracts:
  *    United States Air Force Prime Contract FA8650-07-D-5800
  *    United States Air Force Prime Contract FA8650-10-D-5210
  *    United States Prime Contract Navy N00173-07-C-2068
@@ -730,7 +730,7 @@ void MovingFiniteElementSmoothing::execute()
     TJ_scale = 19000.0; //  arbitrary choice for triple line smoothing !
     A_scale = 4000.0;
     //  designed to ramp up the weight attached to the Quality forces
-    Q_scale = 500.0 + 50.0 * (double)updates / (double)final;
+    Q_scale = 500.0 + 50.0 * (double)updates / (double) final;
     //    WAS:  Q_scale = 1000;
     //  14 may 10: discovered that ramping up the quality forces so high
     //    leads to UNsmoothing of the mesh!

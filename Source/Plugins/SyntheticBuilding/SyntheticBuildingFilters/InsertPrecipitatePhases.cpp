@@ -29,7 +29,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * The code contained herein was partially funded by the followig contracts:
+ * The code contained herein was partially funded by the following contracts:
  *    United States Air Force Prime Contract FA8650-07-D-5800
  *    United States Air Force Prime Contract FA8650-10-D-5210
  *    United States Prime Contract Navy N00173-07-C-2068
@@ -315,7 +315,6 @@ void InsertPrecipitatePhases::initialize()
   m_XPoints = m_YPoints = m_ZPoints = m_TotalPoints = 0;
   m_TotalPoints = 0;
 
-
   m_ShapeOps = ShapeOps::getShapeOpsQVector();
   ::m_OrthoOps = OrthoRhombicOps::New();
 
@@ -476,7 +475,6 @@ void InsertPrecipitatePhases::dataCheck()
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   }
-
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getEquivalentDiametersArrayName());
   m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, tempPath, 0, cDims, getEquivalentDiametersArrayName(), DataArrayID32);
@@ -2101,7 +2099,6 @@ void InsertPrecipitatePhases::compare_2Ddistributions(std::vector<std::vector<fl
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -2715,7 +2712,6 @@ void InsertPrecipitatePhases::assign_gaps()
     }
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //

@@ -26,7 +26,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * The code contained herein was partially funded by the followig contracts:
+ * The code contained herein was partially funded by the following contracts:
  *    United States Air Force Prime Contract FA8650-07-D-5800
  *    United States Air Force Prime Contract FA8650-10-D-5210
  *    United States Prime Contract Navy N00173-07-C-2068
@@ -149,7 +149,6 @@ int32_t getStlFileType(const std::string& path)
   }
   // close the file
   std::ignore = fclose(f);
-
 
   size_t solid_pos = header.find("solid", 0);
   // The word 'solid' was not found ANYWHERE in the first 80 bytes.
