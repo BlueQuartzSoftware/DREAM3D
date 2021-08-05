@@ -29,22 +29,25 @@ You wil need to clone DREAM3D development repos into a new directory of your cho
 ```lang-console
 (base) C:\Users\johnsmith> mkdir DREAM3D-Dev
 (base) C:\Users\johnsmith> cd DREAM3D-Dev
-(base) C:\Users\johnsmith> git clone https://github.com/BlueQuartzSoftware/DREAM3D
-(base) C:\Users\johnsmith> git clone https://github.com/BlueQuartzSoftware/SIMPL
-(base) C:\Users\johnsmith> git clone https://github.com/BlueQuartzSoftware/SIMPLView
-(base) C:\Users\johnsmith> git clone https://github.com/BlueQuartzSoftware/EbsdLib
-(base) C:\Users\johnsmith> git clone https://github.com/BlueQuartzSoftware/H5Support
-(base) C:\Users\johnsmith> git clone https://github.com/BlueQuartzSoftware/CMP
-(base) C:\Users\johnsmith> git clone https://github.com/dream3d/DREAM3D_Data
-(base) C:\Users\johnsmith> mkdir DREAM3D_Plugins
-(base) C:\Users\johnsmith> cd DREAM3D_Plugins
-(base) C:\Users\johnsmith> git clone https://github.com/BlueQuartzSoftware/SimulationIO
-(base) C:\Users\johnsmith> git clone https://github.com/BlueQuartzSoftware/ITKImageProcessing
-(base) C:\Users\johnsmith> git clone https://github.com/dream3d/DREAM3DReview
-(base) C:\Users\johnsmith> git clone https://github.com/dream3d/UCSBUtilities
+(base) C:\Users\johnsmith\DREAM3D-Dev> git clone https://github.com/BlueQuartzSoftware/DREAM3D
+(base) C:\Users\johnsmith\DREAM3D-Dev> git clone https://github.com/BlueQuartzSoftware/SIMPL
+(base) C:\Users\johnsmith\DREAM3D-Dev> git clone https://github.com/BlueQuartzSoftware/SIMPLView
+(base) C:\Users\johnsmith\DREAM3D-Dev> git clone https://github.com/BlueQuartzSoftware/EbsdLib
+(base) C:\Users\johnsmith\DREAM3D-Dev> git clone https://github.com/BlueQuartzSoftware/H5Support
+(base) C:\Users\johnsmith\DREAM3D-Dev> git clone https://github.com/BlueQuartzSoftware/CMP
+(base) C:\Users\johnsmith\DREAM3D-Dev> git clone https://github.com/dream3d/DREAM3D_Data
 ```
 
-If there are additional repositories that you have developed, please clone them into the *DREAM3D_Plugins* directory
+We now need to clone any additional plugins that are needed. The below are the 4 standard plugins that are
+used in DREAM.3D builds.
+```lang-console
+(base) C:\Users\johnsmith\DREAM3D-Dev> mkdir DREAM3D_Plugins
+(base) C:\Users\johnsmith\DREAM3D-Dev> cd DREAM3D_Plugins
+(base) C:\Users\johnsmith\DREAM3D-Dev\DREAM3D_Plugins> git clone https://github.com/BlueQuartzSoftware/SimulationIO
+(base) C:\Users\johnsmith\DREAM3D-Dev\DREAM3D_Plugins> git clone https://github.com/BlueQuartzSoftware/ITKImageProcessing
+(base) C:\Users\johnsmith\DREAM3D-Dev\DREAM3D_Plugins> git clone https://github.com/dream3d/DREAM3DReview
+(base) C:\Users\johnsmith\DREAM3D-Dev\DREAM3D_Plugins> git clone https://github.com/dream3d/UCSBUtilities
+```
 
 We need to decompress (Unzip) the following in DREAM3D_Data directory. Use your favorite decompression tool such as **tar** or **7Zip**.
 
@@ -63,10 +66,10 @@ We are now ready to start building the DREAM3D Anaconda package.
 (base) C:\Users\johnsmith> conda config --set channel_priority strict
 ```
 
-+ Next we need to create an anaconda virtual environment where we will build and eventually install the **dream3d** package. In this example we are calling our virtual environment **d3d_embed** and we are going to use python version 3.8. Create a new conda virtual environment:
++ Next we need to create an anaconda virtual environment where we will build and eventually install the **dream3d** package. In this example we are calling our virtual environment **d3d_embed** and we are going to use python version 3.7. Create a new conda virtual environment:
 
 ```lang-console
-(base) C:\Users\johnsmith> conda create -n d3d_embed python=3.8
+(base) C:\Users\johnsmith> conda create -n d3d_embed python=3.7
 (base) C:\Users\johnsmith> conda activate d3d_embed
 (d3d_embed) C:\Users\johnsmith> 
 ```

@@ -1,8 +1,9 @@
-# Using Python to Script DREAM.3D #
+# Using Python to Script DREAM.3D using Prebuilt conda package #
 
 ## Requirements ##
 
 The prebuilt python is currently in testing and only supports Windows environments.
+
 + Windows Python Environment
 + Python 3.8/3.9
 + Ability to install from a custom URL source.
@@ -17,7 +18,6 @@ The prebuilt python is currently in testing and only supports Windows environmen
 (d3d_embed) C:\Users\johnsmith> 
 (d3d_embed) C:\Users\johnsmith>conda install -c http://dream3d.bluequartz.net/binaries/conda dream3d-conda
 ```
-
 
 ## Using the DREAM.3D Python Bindings ##
 
@@ -41,4 +41,4 @@ There are many use-cases where the DREAM.3D python bindings could be used. we ar
 
 ### Accessing DREAM.3D Data Structures and Functionality ###
 
-There are a few examples of the first use case. In one instance a user would like to leverage some of the DREAM.3D functionality within a wider workflow. An example of this would be to access DREAM.3D's EBSD file parsing ability and then feed that data into a histogram generation code to display a histogram. This code is documented in the `DREAM3D/Conda/Python_Examples` folder.
+There are a few examples of the first use case. In one instance a user would like to leverage some of the DREAM.3D functionality within a wider workflow. An example of this would be to access DREAM.3D's EBSD file parsing ability and then feed that data into a histogram generation code to display a histogram. This code is documented in the `SIMPL/Wrapping/Python/Examples` folder.

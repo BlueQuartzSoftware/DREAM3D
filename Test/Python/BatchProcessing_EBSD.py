@@ -1,7 +1,7 @@
 '''
 This example shows batch processing of .ang files to generate an IPF Color Image for 
 each slice of data. As each filter is instantiated in the loop the filter is executed. 
-We are not building up a pipeline and then executing that pipeline.
+We are *not* building up a pipeline and then executing that pipeline.
 '''
 
 import numpy as np
