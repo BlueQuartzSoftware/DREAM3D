@@ -1,12 +1,28 @@
-# Building a DREAM3D Anaconda Package #
+# DREAM3D and Python (Anaconda Python) #
 
-## Requirements ##
+In order to use DREAM3D from within a Python environment you will need to pick one of two options:
+
++ 1: Install a prebuilt 'dream3d-conda' package
++ 2: Build DREAM.3D from source using the ananconda/condaforge environment
+
+
+## Install a Prebuilt 'dream3d-conda' Package ##
+
+See the instructions in the file python\_filter\_development.md
+
+### Writing a DREAM3D Filter in Python ###
+
+Please see the file _conda\_filter\_development.md_ file for instructions.
+
+## Building a DREAM3D Anaconda Package ##
+
+### Requirements ###
 
 + Install [Visual Studio](https://visualstudio.microsoft.com/downloads/) (Windows)
 + Install [Anaconda](https://docs.anaconda.com/anaconda/install/)
 + Setup [conda-forge](https://conda-forge.org/) channel (requires conda >= 4.6)
 
-## Clone the DREAM3D git repositories ##
+### Clone the DREAM3D git repositories ###
 
 You wil need to clone DREAM3D development repos into a new directory of your choice
 
@@ -36,7 +52,7 @@ We need to decompress (Unzip) the following in DREAM3D_Data directory. Use your 
 + DREAM3D_Data/Data/SmallN100.tar.gz
 + DREAM3D_Data/Data/T12-MAI-2010.tar.gz
 
-## Anaconda Virtual Environment Setup ##
+### Anaconda Virtual Environment Setup ###
 
 We are now ready to start building the DREAM3D Anaconda package.
 
@@ -100,21 +116,3 @@ from dream3d import simplpy
 dca = simpl.DataContainerArray()
 result = simplpy.create_data_container(dca, data_container_name='foo')
 ```
-
-## Writing DREAM3D filters in Python ##
-
-Inside `SIMPL/Source/SIMPLib/Python`, there are two examples of filters written in Python, `initialize_data.py` and `ExampleFilter.py`.
-
-Filters must derive from the abstract base class `dream3d.Filter` and implement its methods similiary to C++ filters. Then inside the Python file, a global variable `filters` must exist which should be a list of types where each type is a filter.
-
-To use Python filters in DREAM3D or PipelineRunner, create an environment variable `SIMPL_PYTHONPATH` by exporting in from the *anaconda prompt* like this:
-
-```lang-console
-(d3d_embed) C:\Users\johnsmith> set SIMPL_PYTHONPATH=C:\Users\johnsmith\DREAM3D-Dev\SIMPL\Source\SIMPLib\Python
-```
-
-If you have multiple directories that you want **DREAM3D** to search for python filters set the `SIMPL_PYTHONPATH` to a list of directories. For Windows use a `;` to separate the directories. For Linux/Unix/macOS use the `:` to separate each directory. If there are **spaces** anywhere in the path you **MUST** use double quotes around the path.
-
-If using the DREAM3D GUI, Python filters can be reloaded at runtime. DREAM3D will clear all existing Python filters and attempt to reload them from directories in `SIMPL_PYTHONPATH`. Currently loaded pipelines with Python filters will be preserved if the relevant filters still exist in those directories.
-
-If you want to use a Python filter with `simpl.FilterPipeline`, you must first wrap in a `simpl.PythonFilter`.
