@@ -110,7 +110,7 @@ public:
    * @brief setDidLoad Sets the load status of the plugin
    * @param didLoad Boolean value to set status
    */
-   void setDidLoad(bool didLoad);
+   void setDidLoad(bool didLoad) override;
 
   /**
    * @brief setLocation Sets the location of the plugin on the file system.
@@ -118,32 +118,32 @@ public:
    * as the plugin is loaded.
    * @param filePath File path
    */
-   void setLocation(QString filePath);
+   void setLocation(QString filePath) override;
 
   /**
    * @brief registerFilterWidgets Register all the filters with the FilterWidgetFactory
    * @param fwm FilterWidgetManager instance pointer
    */
-   void registerFilterWidgets(FilterWidgetManager* fwm);
+   void registerFilterWidgets(FilterWidgetManager* fwm) override;
 
   /**
    * @brief registerFilters Registers the filters that this plugin implements with the Filter Manager that is passed in
    * @param fm FilterManager instance pointer
    */
-   void registerFilters(FilterManager* fm);
+   void registerFilters(FilterManager* fm) override;
 
   /**
    * @brief writeSettings Writes the settings in the input gui to the Application's preference file
    * @param prefs QSettings reference variable
    */
-   void writeSettings(QSettings& prefs);
+   void writeSettings(QSettings& prefs) override;
 
   /**
    * @brief readSettings Reads the settings from the Application's preference file and sets
    * the input GUI widgets accordingly.
    * @param prefs QSettings reference variable
    */
-   void readSettings(QSettings& prefs);
+   void readSettings(QSettings& prefs) override;
 
 private:
   QString m_Version;
