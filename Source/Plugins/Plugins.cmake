@@ -128,7 +128,7 @@ set(DREAM3D_BASE_PLUGINS
   Processing
   Reconstruction
   Sampling
-  Statistics
+  StatsToolbox
   SurfaceMeshing
   SyntheticBuilding
 )
