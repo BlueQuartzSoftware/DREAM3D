@@ -7,7 +7,7 @@ import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy as orientationanalysis
 import genericpy as generic
-import statisticspy as statistics
+import statstoolboxpy
 import syntheticbuildingpy as syntheticbuilding
 
 def two_phase_test():
@@ -125,7 +125,7 @@ def two_phase_test():
     assert err == 0, f'InsertPrecipitatePhases ErrorCondition: {err}'
 
     # Find Feature Neighbors
-    err = statistics.find_neighbors(dca, simpl.DataArrayPath('SyntheticVolumeDataContainer', 'Grain Data', ''),
+    err = statstoolboxpy.find_neighbors(dca, simpl.DataArrayPath('SyntheticVolumeDataContainer', 'Grain Data', ''),
                                     'SharedSurfaceAreaList', 'NeighborList',
                                     simpl.DataArrayPath('SyntheticVolumeDataContainer', 'CellData',
                                                         'FeatureIds'),

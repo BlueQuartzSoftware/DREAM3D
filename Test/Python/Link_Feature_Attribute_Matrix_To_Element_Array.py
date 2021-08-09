@@ -6,7 +6,7 @@ import simplpy
 import simpl_helpers as sh
 import simpl_test_dirs as sd
 import genericpy as generic
-import statisticspy as statistics
+import statstoolboxpy
 
 def link_feature_map_to_element_array_test():
     # Create Data Container Array
@@ -70,27 +70,27 @@ def link_feature_map_to_element_array_test():
     assert err == 0, f'FindFeatureCentroids ErrorCondition {err}'
 
     # Find Feature Sizes
-    err = statistics.find_sizes(dca, simpl.DataArrayPath('Small IN100', 'Grain Data', ''),
+    err = statstoolboxpy.find_sizes(dca, simpl.DataArrayPath('Small IN100', 'Grain Data', ''),
                                 simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'),
                                 'Size Volumes', 'EquivalentDiameters', 'NumElements', False)
     assert err == 0, f'FindSizes ErrorCondition {err}'
 
     # Find Feature Shapes
-    err = statistics.find_shapes(dca, simpl.DataArrayPath('Small IN100', 'Grain Data', ''),
+    err = statstoolboxpy.find_shapes(dca, simpl.DataArrayPath('Small IN100', 'Grain Data', ''),
                                  simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'),
                                  simpl.DataArrayPath('Small IN100', 'Grain Data', 'Centroids'),
                                  'Omega3s', 'Shape Volumes', 'AxisLengths', 'AxisEulerAngles', 'AspectRatios')
     assert err == 0, f'FindSizes ErrorCondition {err}'
 
     # Find Feature Neighbors
-    err = statistics.find_neighbors(dca, simpl.DataArrayPath('Small IN100', 'Grain Data', ''),
+    err = statstoolboxpy.find_neighbors(dca, simpl.DataArrayPath('Small IN100', 'Grain Data', ''),
                                     'SharedSurfaceAreaList', 'NeighborList',
                                     simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'),
                                     '', 'NumNeighbors', '', False, False)
     assert err == 0, f'FindNeighbors ErrorCondition {err}'
 
     # Find Feature Neighborhoods
-    err = statistics.find_neighborhoods(dca, 'NeighborhoodList', 1,
+    err = statstoolboxpy.find_neighborhoods(dca, 'NeighborhoodList', 1,
                                         simpl.DataArrayPath('Small IN100', 'Grain Data', 'EquivalentDiameters'),
                                         simpl.DataArrayPath('Small IN100', 'Grain Data', 'Phases'),
                                         simpl.DataArrayPath('Small IN100', 'Grain Data', 'Centroids'),
@@ -98,14 +98,14 @@ def link_feature_map_to_element_array_test():
     assert err == 0, f'FindNeighborhoods ErrorCondition {err}'
 
     # Find Euclidean Distance Map
-    err = statistics.find_euclidean_dist_map(dca,
+    err = statstoolboxpy.find_euclidean_dist_map(dca,
                                              simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'),
                                              'GBManhattanDistances', 'TJManhattanDistances', 'QPManhattanDistances',
                                              'NearestNeighbors', True, True, True, False, True)
     assert err == 0, f'FindEuclideanDistanceMap ErrorCondition {err}'
 
     # Find Surface Area to Volume and Sphericity
-    err = statistics.find_surface_area_to_volume(dca,
+    err = statstoolboxpy.find_surface_area_to_volume(dca,
                                                  simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'),
                                                  simpl.DataArrayPath('Small IN100', 'Grain Data', 'NumElements'),
                                                  'SurfaceAreaVolumeRatio', 'Sphericity', True)

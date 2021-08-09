@@ -10,7 +10,7 @@ import orientationanalysispy as orientation_analysis
 import reconstructionpy as reconstruction
 import processingpy as processing
 import genericpy as generic
-import statisticspy as statistics
+import statstoolboxpy
 
 def small_in100_postseg_processing():
     # Create Data Container Array
@@ -38,7 +38,7 @@ def small_in100_postseg_processing():
     assert err == 0, f'FindAvgOrientations ErrorCondition {err}'
 
     # Find Feature Neighbors #1
-    err = statistics.find_neighbors(dca, simpl.DataArrayPath('Small IN100', 'Grain Data', ''),
+    err = statstoolboxpy.find_neighbors(dca, simpl.DataArrayPath('Small IN100', 'Grain Data', ''),
                                     'SharedSurfaceAreaList2', 'NeighborList2',
                                     simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'),
                                     '', 'NumNeighbors2', '', False, False)
@@ -57,7 +57,7 @@ def small_in100_postseg_processing():
     assert err == 0, f'MergeTwins ErrorCondition {err}'
 
     # Find Feature Sizes
-    err = statistics.find_sizes(dca, simpl.DataArrayPath('Small IN100', 'Grain Data', ''),
+    err = statstoolboxpy.find_sizes(dca, simpl.DataArrayPath('Small IN100', 'Grain Data', ''),
                                 simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'),
                                 'Volumes', 'EquivalentDiameters', 'NumElements', False)
     assert err == 0, f'FindSizes ErrorCondition {err}'
@@ -70,7 +70,7 @@ def small_in100_postseg_processing():
     assert err == 0, f'MinSize ErrorCondition {err}'
 
     # Find Feature Neighbors #12
-    err = statistics.find_neighbors(dca, simpl.DataArrayPath('Small IN100', 'Grain Data', ''),
+    err = statstoolboxpy.find_neighbors(dca, simpl.DataArrayPath('Small IN100', 'Grain Data', ''),
                                     'SharedSurfaceAreaList', 'NeighborList',
                                     simpl.DataArrayPath('Small IN100', 'EBSD Scan Data', 'FeatureIds'),
                                     '', 'NumNeighbors', '', False, False)

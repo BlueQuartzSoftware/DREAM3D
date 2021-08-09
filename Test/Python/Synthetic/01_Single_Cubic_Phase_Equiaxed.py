@@ -6,7 +6,7 @@ import simpl
 import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy as orientationanalysis
-import statisticspy as statistics
+import statstoolboxpy
 import syntheticbuildingpy as syntheticbuilding
 
 def single_cubic_phase_equiaxed():
@@ -148,7 +148,7 @@ def single_cubic_phase_equiaxed():
     assert err == 0, f'PackPrimaryPhases ErrorCondition: {err}'
 
     # Find Feature Neighbors
-    err = statistics.find_neighbors(dca, simpl.DataArrayPath('SyntheticVolumeDataContainer', 'Grain Data', ''),
+    err = statstoolboxpy.find_neighbors(dca, simpl.DataArrayPath('SyntheticVolumeDataContainer', 'Grain Data', ''),
                                     'SharedSurfaceAreaList', 'NeighborList',
                                     simpl.DataArrayPath('SyntheticVolumeDataContainer', 'CellData',
                                                         'FeatureIds'),

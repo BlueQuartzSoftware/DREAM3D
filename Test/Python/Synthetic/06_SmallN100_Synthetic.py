@@ -8,7 +8,7 @@ import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy as orientationanalysis
 import genericpy as generic
-import statisticspy as statistics
+import statstoolboxpy
 import syntheticbuildingpy as syntheticbuilding
 
 import datetime
@@ -145,9 +145,6 @@ def small_in100_test():
                                               ['Small IN100', 'Grain Data', 'SlipSystems'],
                                               ['Small IN100', 'Grain Data', 'Sphericity'],
                                               ['Small IN100', 'Grain Data', 'SurfaceAreaVolumeRatio']])
-    now_time = datetime.datetime.now()
-    now_time_seconds = now_time.hour * 3600 + now_time.minute * 60 + now_time.second
-    dt = simpl.DateTime(now_time.year, now_time.month, now_time.day, now_time_seconds)
     err = d3d.data_container_reader(dca,
                                     sd.GetBuildDirectory() +
                                     '/Data/Output/Statistics/SmallIN100_CrystalStats.dream3d',
@@ -155,7 +152,7 @@ def small_in100_test():
     assert err == 0, f'DataContainerReader ErrorCondition {err}'
 
     # Find Feature Neighbors
-    err = statistics.find_neighbors(dca, grain_data_attr_matrix,
+    err = statstoolboxpy.find_neighbors(dca, grain_data_attr_matrix,
                                     'SharedSurfaceAreaList', 'NeighborList', feature_ids_array_path,
                                     '', 'NumNeighbors', 'SurfaceFeatures', False, False)
     assert err == 0, f'FindNeighbors #1 ErrorCondition: {err}'
@@ -174,17 +171,17 @@ def small_in100_test():
     assert err == 0, f'FindBiasedFeatures ErrorCondition: {err}'
 
     # Find Feature Sizes
-    err = statistics.find_sizes(dca, grain_data_attr_matrix, feature_ids_array_path, 'SizeVolumes',
+    err = statstoolboxpy.find_sizes(dca, grain_data_attr_matrix, feature_ids_array_path, 'SizeVolumes',
                                 'EquivalentDiameters', 'NumElements', False)
     assert err == 0, f'FindSizes ErrorCondition: {err}'
 
     # Find Feature Shapes
-    err = statistics.find_shapes(dca, grain_data_attr_matrix, feature_ids_array_path, centroids_array_path,
+    err = statstoolboxpy.find_shapes(dca, grain_data_attr_matrix, feature_ids_array_path, centroids_array_path,
                                  'Omega3s', 'ShapeVolumes', 'AxisLengths', 'AxisEulerAngles', 'AspectRatios')
     assert err == 0, f'FindShapes ErrorCondition: {err}'
 
     # Find Feature Neighborhoods
-    err = statistics.find_neighborhoods(dca, 'NeighborhoodList', 1, equivalent_diameters_array_path,
+    err = statstoolboxpy.find_neighborhoods(dca, 'NeighborhoodList', 1, equivalent_diameters_array_path,
                                         feature_phases_array_path,
                                         centroids_array_path, 'Neighborhoods')
     assert err == 0, f'FindNeighborhoods ErrorCondition: {err}'
@@ -196,7 +193,7 @@ def small_in100_test():
     assert err == 0, f'FindAvgOrientations ErrorCondition: {err}'
 
     # Generate Ensemble Statistics
-    err = statistics.generate_ensemble_statistics(dca, cell_ensemble_attribute_matrix_path,
+    err = statstoolboxpy.generate_ensemble_statistics(dca, cell_ensemble_attribute_matrix_path,
                                                   'PhaseTypes', [simpl.PhaseType.Primary], [simpl.PhaseType.Primary],
                                                   neighbor_list_array_path, shared_surface_area_list_array_path,
                                                   feature_phases_array_path, biased_features_array_path,
@@ -258,7 +255,7 @@ def small_in100_test():
     assert err == 0, f'PackPrimaryPhases ErrorCondition: {err}'
 
     # Find Feature Neighbors
-    err = statistics.find_neighbors(dca, simpl.DataArrayPath('SyntheticVolumeDataContainer', 'Grain Data', ''),
+    err = statstoolboxpy.find_neighbors(dca, simpl.DataArrayPath('SyntheticVolumeDataContainer', 'Grain Data', ''),
                                     'SharedSurfaceAreaList', 'NeighborList',
                                     simpl.DataArrayPath('SyntheticVolumeDataContainer', 'EBSD Scan Data',
                                                         'FeatureIds'),

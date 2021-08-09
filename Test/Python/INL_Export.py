@@ -7,11 +7,10 @@ import simplpy
 import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy
-import samplingpy
 import processingpy
 import reconstructionpy
 import genericpy
-import statisticspy
+import statstoolboxpy
 import itkimageprocessing
 import itkimageprocessingpy
 
@@ -102,7 +101,7 @@ def inl_export():
     assert err == 0, f'FindFeaturePhases ErrorCondition {err}'
 
     # Find Number of Features
-    err = statisticspy.find_num_features(dca,
+    err = statstoolboxpy.find_num_features(dca,
                                          simpl.DataArrayPath('Small IN100 Slice 1', 'Grain Data', 'Phases'),
                                          simpl.DataArrayPath('Small IN100 Slice 1', 'Phase Data', 'NumFeatures'))
     assert err == 0, f'FindNumFeatures ErrorCondition {err}'

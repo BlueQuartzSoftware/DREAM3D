@@ -7,8 +7,7 @@ import simplpy
 import simpl_helpers as sh
 import simpl_test_dirs as sd
 import orientationanalysispy
-import statisticspy
-import samplingpy
+import statstoolboxpy
 
 def confidence_index_histogram_test():
     # Create Data Container Array
@@ -45,7 +44,7 @@ def confidence_index_histogram_test():
     assert err == 0, f'ConditionalSetValue ErrorCondition: {err}'
 
     # Calculate Frequency Histogram
-    err = statisticspy.calculate_array_histogram(dca, simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD Scan Data',
+    err = statstoolboxpy.calculate_array_histogram(dca, simpl.DataArrayPath('Small IN100 Slice 1', 'EBSD Scan Data',
                                                                           'Confidence Index'),
                                                  50, 0, 1, False, 0, 'Histograms', 'CI_Histogram', False, simpl.DataArrayPath(''))
     assert err == 0, f'CalculatArrayHistogram ErrorCondition: {err}'

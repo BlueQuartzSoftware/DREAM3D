@@ -9,7 +9,7 @@ import simpl_test_dirs as sd
 import itkimageprocessing
 import itkimageprocessingpy
 import reconstructionpy
-import statisticspy
+import statstoolboxpy
 import genericpy
 import orientationanalysispy
 
@@ -57,7 +57,7 @@ def image_segmentation():
     assert err == 0, f'ScalarSegmentFeatures ErrorCondition {err}'
 
     # Find Feature Sizes
-    err = statisticspy.find_sizes(dca, simpl.DataArrayPath(data_container_name, 'Pore Data', ''),
+    err = statstoolboxpy.find_sizes(dca, simpl.DataArrayPath(data_container_name, 'Pore Data', ''),
                                   simpl.DataArrayPath(data_container_name, attr_matrix_name, 'FeatureIds'),
                                   'Volumes', 'EquivalentDiameters', 'NumElements', False)
     assert err == 0, f'FindSizes ErrorCondition {err}'
@@ -109,7 +109,7 @@ def image_segmentation():
     assert err == 0, f'CreateEnsembleInfo ErrorCondition {err}'
 
     # Find Feature Clustering
-    err = statisticspy.find_feature_clustering(dca, 10, 2, simpl.DataArrayPath(data_container_name,
+    err = statstoolboxpy.find_feature_clustering(dca, 10, 2, simpl.DataArrayPath(data_container_name,
                                                                                'EnsembleAttributeMatrix', ''),
                                                False, simpl.DataArrayPath('', '', ''), 
                                                simpl.DataArrayPath(data_container_name, 'Pore Data',

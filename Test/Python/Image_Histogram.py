@@ -5,7 +5,7 @@ Pipeline example based on Image_Histogram
 import simpl
 import simplpy
 import simpl_test_dirs as sd
-import statisticspy
+import statstoolboxpy
 import itkimageprocessing
 import itkimageprocessingpy
 
@@ -21,7 +21,7 @@ def image_histogram():
     assert err == 0, f'ITKImageReader ErrorCondition {err}'
 
     # Calculate Frequency Histogram
-    err = statisticspy.calculate_array_histogram(dca, simpl.DataArrayPath('ImageDataContainer', 'CellData',
+    err = statstoolboxpy.calculate_array_histogram(dca, simpl.DataArrayPath('ImageDataContainer', 'CellData',
                                                                           'ImageData'),
                                                  256, 0, 256, True, False, 'HistogramAttributeMatrix',
                                                  'Image_Histogram', False, '')
