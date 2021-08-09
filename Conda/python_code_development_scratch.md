@@ -91,8 +91,31 @@ The following is an example of the command prompt set of commands that should co
 ```lang-console
 (dream3d) C:\Users\johnsmith\DREAM3D-Dev\DREAM3D-Builds\Release> set LIBRARY_PREFIX=C:/Applications/Anaconda3/envs/dream3d/Library
 (dream3d) C:\Users\johnsmith\DREAM3D-Dev\DREAM3D-Builds\Release> set SRC_DIR=C:\Users\mjackson\DREAM3D-Dev
-(dream3d) C:\Users\johnsmith\DREAM3D-Dev\DREAM3D-Builds\Release> cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PREFIX_PATH=%LIBRARY_PREFIX% -DQWT_INSTALL=%LIBRARY_PREFIX% -DSIMPL_WRAP_PYTHON=ON -DSIMPL_EMBED_PYTHON=ON -DDREAM3D_DISABLE_DEPENDENCY_COPY_INSTALL_RULES=ON -DDREAM3D_ANACONDA=ON -DDREAM3D_EXTRA_PLUGINS="DREAM3DReview;ITKImageProcessing;UCSBUtilities;SimulationIO" -DITKImageProcessing_ENABLE_ITK_MONTAGE=OFF -DITKImageProcessing_ENABLE_ITK_TOTAL_VARIATION=OFF -DSIMPL_USE_MULTITHREADED_ALGOS=ON -DDREAM3D_DATA_DIR=%SRC_DIR%/DREAM3D_Data ../../DREAM3D
+(dream3d) C:\Users\johnsmith\DREAM3D-Dev\DREAM3D-Builds\Release> cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PREFIX_PATH=$LIBRARY_PREFIX -DQWT_INSTALL=$LIBRARY_PREFIX -DSIMPL_WRAP_PYTHON=ON -DSIMPL_EMBED_PYTHON=ON -DDREAM3D_DISABLE_DEPENDENCY_COPY_INSTALL_RULES=ON -DDREAM3D_ANACONDA=ON -DDREAM3D_EXTRA_PLUGINS="DREAM3DReview;ITKImageProcessing;UCSBUtilities;SimulationIO" -DITKImageProcessing_ENABLE_ITK_MONTAGE=OFF -DITKImageProcessing_ENABLE_ITK_TOTAL_VARIATION=OFF -DSIMPL_USE_MULTITHREADED_ALGOS=ON -DDREAM3D_DATA_DIR=$SRC_DIR/DREAM3D_Data -Dlibharu_INCLUDE_DIR=/opt/local/anaconda3/envs/dream3d/include -DQWT_INCLUDE_DIR=/opt/local/anaconda3/envs/dream3d/include -DQWT_LIBRARY=/opt/local/anaconda3/envs/dream3d/lib/libqwt.6.2.0.dylib -DMKDOCS_PYTHON_EXECUTABLE=`which python` ../../DREAM3D
 (dream3d) C:\Users\johnsmith\DREAM3D-Dev\DREAM3D-Builds\Release> ninja
+```
+
+**macOS/Linux TERMINAL EXAMPLE**
+
+Due to an unsolved bug in the Anaconda distribution, being able to actually run the DREAM.3D GUI application is not possible at this time.
+
+The following is an example of the configuration command from a terminal (bash/zsh). Note that anaconda is installed into `/opt/local/anaconda3`
+
+In order to compile on macOS or Linux you will need to install the anaconda preferred compiler toolchains. [https://docs.conda.io/projects/conda-build/en/latest/resources/compiler-tools.html](https://docs.conda.io/projects/conda-build/en/latest/resources/compiler-tools.html)
+
+```long-console
+(dream3d) [user@host:Release]% conda install clang_osx-64
+```
+
+You will also need to install one of the MacOS SDKs from the repository mentioned in the URL from above.
+
+
+```lang-console
+(dream3d) [user@host:Release]% export LIBRARY_PREFIX=/opt/local/anaconda3/envs/dream3d/lib
+(dream3d) [user@host:Release]% export SRC_DIR=/Users/mjackson/DREAM3D-Dev
+
+(dream3d) [user@host:Release]% cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_SYSTEM_PREFIX_PATH=$LIBRARY_PREFIX -DSIMPL_WRAP_PYTHON=ON -DSIMPL_EMBED_PYTHON=ON -DDREAM3D_DISABLE_DEPENDENCY_COPY_INSTALL_RULES=ON -DDREAM3D_ANACONDA=ON -DDREAM3D_EXTRA_PLUGINS="DREAM3DReview;ITKImageProcessing;UCSBUtilities;SimulationIO" -DITKImageProcessing_ENABLE_ITK_MONTAGE=OFF -DITKImageProcessing_ENABLE_ITK_TOTAL_VARIATION=OFF -DSIMPL_USE_MULTITHREADED_ALGOS=ON -DDREAM3D_DATA_DIR=$SRC_DIR/DREAM3D_Data -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_OSX_SYSROOT=/opt/local/MacOSX-SDKs/MacOSX10.15.sdk -DQWT_LIBRARY=$LIBRARY_PREFIX/libqwt.6.2.0.dylib -DQWT_INCLUDE_DIR=$LIBRARY_PREFIX/../include -DMKDOCS_PYTHON_EXECUTABLE=`which python`   ../../DREAM3D
+(dream3d) [user@host:Release]% ninja
 ```
 
 **The build can take up to an hour on a fast quad core system, 30 minutes on a fast 8 core system. Be patient. Go get coffee or a snack.**
@@ -102,6 +125,13 @@ Once the build is finished you will need to set/update the **PYTHONPATH** enviro
 ```lang-console
 (dream3d) C:\Users\johnsmith\DREAM3D-Dev\DREAM3D-Builds\Release> set PYTHONPATH=C:\Users\johnsmith\DREAM3D-Dev\DREAM3D-Builds\Release\python_packages
 (dream3d) C:\Users\johnsmith\DREAM3D-Dev\DREAM3D-Builds\Release> set PATH=%PATH%;C:\Users\johnsmith\DREAM3D-Dev\DREAM3D-Builds\Release\bin
+```
+
+or for macOS/Linux
+
+```lang-console
+(dream3d) [user@host:Release]% export PYTHONPATH=/Users/johnsmith/DREAM3D-Dev/DREAM3D-Builds/Release/python_packages
+(dream3d) [user@host:Release]% export PATH=$PATH:/Users/johnsmith/DREAM3D-Dev/DREAM3D-Builds/Release/Bin
 ```
 
 You should now be able to run your custom python files. To get started there are a few example files in `SIMPL\Wrapping\Python\Examples`. There are also a lot of unit test files located at `DREAM3D\Test\Python\*.py` that can also be used with some minor modifications. Due to how the unit tests are run the `import` statemetns are slightly different. To use the files you will need to change the following:
@@ -121,4 +151,4 @@ import dream3d.simplpy as simplpy
 import dream3d.simpl_helpers as sh
 ```
 
-With that change to the import statements the codes should work correctly.
+After updating the `import` statements, the python codes should now execute correctly.
