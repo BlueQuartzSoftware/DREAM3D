@@ -7,7 +7,7 @@ setup(
     name='dream3d',
     version='1.0.0',
     packages=find_packages(),
-    package_data={'dream3d': [f'*{ext}']},
+    package_data={'dream3d': [f'*{ext}', '*.pyi', 'py.typed']},
     include_package_data=True,
     zip_safe=False
 )

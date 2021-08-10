@@ -120,6 +120,7 @@ if(DREAM3D_ANACONDA)
   )
   set(DREAM3D_INIT_PY_FILE ${DREAM3D_PYTHON_PACKAGE_DIR}/__init__.py)
   file(TOUCH ${DREAM3D_INIT_PY_FILE})
+  file(WRITE ${DREAM3D_PYTHON_PACKAGE_DIR}/py.typed "partial\n")
 
   set(COPY_COMMAND cp)
   if(WIN32)
@@ -133,6 +134,15 @@ if(DREAM3D_ANACONDA)
     COMMAND ${COPY_COMMAND} "*${PYTHON_MODULE_EXTENSION}" \"${DREAM3D_PYTHON_PACKAGE_DIR}\"
     WORKING_DIRECTORY $<TARGET_FILE_DIR:simpl>
     COMMENT "Copying *.py and *${PYTHON_MODULE_EXTENSION} files"
+  )
+
+  find_program(MYPY_STUBGEN_EXE stubgen REQUIRED)
+  add_custom_target(CreateDREAM3DStubs ALL
+    COMMAND
+      ${CMAKE_COMMAND} -E env PYTHONPATH=${DREAM3D_PYTHON_PACKAGE_ROOT_DIR}
+      ${MYPY_STUBGEN_EXE} -v -p dream3d -o ${DREAM3D_PYTHON_PACKAGE_ROOT_DIR}
+    WORKING_DIRECTORY $<TARGET_FILE_DIR:simpl>
+    COMMENT "dream3d: Generating .pyi files"
   )
 endif()
 

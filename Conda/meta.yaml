@@ -56,6 +56,8 @@ requirements:
     - libharu
     - libitk
     - libitk-devel
+    - "numpy>=1.16"
+    - mypy
     - "pybind11>=2.6"
     - "qt>=5.9"
     - qwt
