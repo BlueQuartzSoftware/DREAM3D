@@ -50,67 +50,67 @@ public:
   /**
    * @brief getVersion Returns the version
    */
-   QString getVersion() override;
+  QString getVersion() override;
 
   /**
    * @brief getCompatibilityVersion Returns the compatibility version
    */
-   QString getCompatibilityVersion() override;
+  QString getCompatibilityVersion() override;
 
   /**
    * @brief getVendor Returns the name of the vendor
    */
-   QString getVendor() override;
+  QString getVendor() override;
 
   /**
    * @brief getURL Returns the URL of the plugin
    */
-   QString getURL() override;
+  QString getURL() override;
 
   /**
    * @brief getLocationReturns the location of the plugin
    */
-   QString getLocation() override;
+  QString getLocation() override;
 
   /**
    * @brief getDescription Returns the description of the plugin
    * PLEASE UPDATE YOUR PLUGIN'S DESCRIPTION FILE.
    * It is located at ImportExport/Resources/ImportExport/ImportExportDescription.txt
    */
-   QString getDescription() override;
+  QString getDescription() override;
 
   /**
    * @brief getCopyright Returns the copyright of the plugin
    */
-   QString getCopyright() override;
+  QString getCopyright() override;
 
   /**
    * @brief getLicense Returns the license of the plugin
    * PLEASE UPDATE YOUR PLUGIN'S LICENSE FILE.
    * It is located at ImportExport/Resources/ImportExport/ImportExportLicense.txt
    */
-   QString getLicense() override;
+  QString getLicense() override;
 
   /**
    * @brief getFilters Returns the filters of the plugin
    */
-   QList<QString> getFilters() override;
+  QList<QString> getFilters() override;
 
   /**
    * @brief getThirdPartyLicenses Returns the third party licenses of the plugin
    */
-   QMap<QString, QString> getThirdPartyLicenses() override;
+  QMap<QString, QString> getThirdPartyLicenses() override;
 
   /**
    * @brief getDidLoad Returns the load status of the plugin
    */
-   bool getDidLoad() override;
+  bool getDidLoad() override;
 
   /**
    * @brief setDidLoad Sets the load status of the plugin
    * @param didLoad Boolean value to set status
    */
-   void setDidLoad(bool didLoad) override;
+  void setDidLoad(bool didLoad) override;
 
   /**
    * @brief setLocation Sets the location of the plugin on the file system.
@@ -118,32 +118,32 @@ public:
    * as the plugin is loaded.
    * @param filePath File path
    */
-   void setLocation(QString filePath) override;
+  void setLocation(QString filePath) override;
 
   /**
    * @brief registerFilterWidgets Register all the filters with the FilterWidgetFactory
    * @param fwm FilterWidgetManager instance pointer
    */
-   void registerFilterWidgets(FilterWidgetManager* fwm) override;
+  void registerFilterWidgets(FilterWidgetManager* fwm) override;
 
   /**
    * @brief registerFilters Registers the filters that this plugin implements with the Filter Manager that is passed in
    * @param fm FilterManager instance pointer
    */
-   void registerFilters(FilterManager* fm) override;
+  void registerFilters(FilterManager* fm) override;
 
   /**
    * @brief writeSettings Writes the settings in the input gui to the Application's preference file
    * @param prefs QSettings reference variable
    */
-   void writeSettings(QSettings& prefs) override;
+  void writeSettings(QSettings& prefs) override;
 
   /**
    * @brief readSettings Reads the settings from the Application's preference file and sets
    * the input GUI widgets accordingly.
    * @param prefs QSettings reference variable
    */
-   void readSettings(QSettings& prefs) override;
+  void readSettings(QSettings& prefs) override;
 
 private:
   QString m_Version;
