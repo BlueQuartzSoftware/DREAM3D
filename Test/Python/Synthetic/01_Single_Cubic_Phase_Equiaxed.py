@@ -28,12 +28,10 @@ def single_cubic_phase_equiaxed():
     stats_data_array.getStatsData(0).FeatureSize_DistType = 1
 
     # Crystal Structures:
-    crystal_structures = simpl.UInt32Array(1, 'CrystalStructures', True)
-    crystal_structures[0] = 1
+    crystal_structures = simpl.UInt32Array(1, 'CrystalStructures', 1)
 
     # Phase Types
-    phase_types = simpl.UInt32Array(1, 'PhaseTypes', True)
-    phase_types[0] = simpl.PhaseType.Primary
+    phase_types = simpl.UInt32Array(1, 'PhaseTypes', simpl.PhaseType.Primary)
 
     # Phase Name
     phase_names = simpl.StringDataArray(1, 'PhaseName', True)

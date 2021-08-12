@@ -82,7 +82,7 @@ def color_data_change_test():
 
 
     # Create the wrapped DataArray<float> object
-    newdata = simpl.UInt8Array(np_array, 'IPFColor', False)
+    newdata = simpl.UInt8Array(np_array, 'IPFColor')
     # Add the DataArray to the AttributeMatrix
     am.addOrReplaceAttributeArray(newdata)
 
