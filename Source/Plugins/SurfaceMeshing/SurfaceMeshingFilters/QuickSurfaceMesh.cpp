@@ -34,35 +34,33 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "QuickSurfaceMesh.h"
 
-#include <array>
-#include <random>
-#include <set>
-#include <unordered_map>
-#include <unordered_set>
-
-#include <QtCore/QTextStream>
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
+#include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.h"
-#include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
-#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/EdgeGeom.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
 
-#include "SurfaceMeshing/SurfaceMeshingConstants.h"
-#include "SurfaceMeshing/SurfaceMeshingVersion.h"
+#include <QtCore/QTextStream>
+
+#include <array>
+#include <random>
+#include <set>
+#include <unordered_map>
+#include <exception>
 
 enum createdPathID : RenameDataPath::DataID_t
 {
@@ -130,6 +128,7 @@ QuickSurfaceMesh::~QuickSurfaceMesh() = default;
 void QuickSurfaceMesh::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Attempt to Fix Problem Voxels", FixProblemVoxels, FilterParameter::Category::Parameter, QuickSurfaceMesh));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Any);
@@ -346,7 +345,7 @@ void QuickSurfaceMesh::getGridCoordinates(const IGeometryGrid::Pointer& grid, si
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::flipProblemVoxelCase1(MeshIndexType v1, MeshIndexType v2, MeshIndexType v3, MeshIndexType v4, MeshIndexType v5, MeshIndexType v6)
 {
-  SIMPL_RANDOMNG_NEW();
+  SIMPL_RANDOMNG_NEW()
 
   float val = static_cast<float>(rg.genrand_res53());
   if(val < 0.25f)
@@ -372,7 +371,7 @@ void QuickSurfaceMesh::flipProblemVoxelCase1(MeshIndexType v1, MeshIndexType v2,
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::flipProblemVoxelCase2(MeshIndexType v1, MeshIndexType v2, MeshIndexType v3, MeshIndexType v4)
 {
-  SIMPL_RANDOMNG_NEW();
+  SIMPL_RANDOMNG_NEW()
 
   float val = static_cast<float>(rg.genrand_res53());
   if(val < 0.125f)
@@ -414,7 +413,7 @@ void QuickSurfaceMesh::flipProblemVoxelCase2(MeshIndexType v1, MeshIndexType v2,
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::flipProblemVoxelCase3(MeshIndexType v1, MeshIndexType v2, MeshIndexType v3)
 {
-  SIMPL_RANDOMNG_NEW();
+  SIMPL_RANDOMNG_NEW()
 
   float val = static_cast<float>(rg.genrand_res53());
   if(val < 0.5f)
@@ -980,10 +979,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock(), true)
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock(), true)
           }
 
           triangleIndex++;
@@ -994,10 +993,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock(), true)
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock(), true)
           }
 
           triangleIndex++;
@@ -1031,10 +1030,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock(), true)
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock(), true)
           }
 
           triangleIndex++;
@@ -1045,10 +1044,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock(), true)
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock(), true)
           }
 
           triangleIndex++;
@@ -1082,10 +1081,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock(), true)
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock(), true)
           }
 
           triangleIndex++;
@@ -1096,10 +1095,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock(), true)
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock(), true)
           }
 
           triangleIndex++;
@@ -1133,10 +1132,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock(), true)
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock(), true)
           }
 
           triangleIndex++;
@@ -1147,10 +1146,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock(), true)
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock(), true)
           }
 
           triangleIndex++;
@@ -1195,10 +1194,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
             cIndex2 = neigh1;
           }
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh1, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock())
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, neigh1, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock())
           }
 
           triangleIndex++;
@@ -1220,10 +1219,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
             cIndex2 = neigh1;
           }
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh1, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock())
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, neigh1, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock())
           }
 
           triangleIndex++;
@@ -1257,10 +1256,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock(), true)
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock(), true)
           }
 
           triangleIndex++;
@@ -1271,10 +1270,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock(), true)
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock(), true)
           }
 
           triangleIndex++;
@@ -1319,10 +1318,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
             cIndex2 = neigh2;
           }
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh2, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock())
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, neigh2, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock())
           }
 
           triangleIndex++;
@@ -1344,10 +1343,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
             cIndex2 = neigh2;
           }
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh2, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock())
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, neigh2, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock())
           }
 
           triangleIndex++;
@@ -1381,10 +1380,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock(), true)
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock(), true)
           }
 
           triangleIndex++;
@@ -1395,10 +1394,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock(), true)
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock(), true)
           }
 
           triangleIndex++;
@@ -1443,10 +1442,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
             cIndex2 = neigh3;
           }
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh3, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock())
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, neigh3, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock())
           }
 
           triangleIndex++;
@@ -1468,10 +1467,10 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
             cIndex2 = neigh3;
           }
 
-          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t dataVectorIndex = 0; dataVectorIndex < m_SelectedWeakPtrVector.size(); dataVectorIndex++)
           {
-            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh3, point, m_SelectedWeakPtrVector[i].lock(),
-                                      m_CreatedWeakPtrVector[i].lock())
+            EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[dataVectorIndex].lock(), triangleIndex, neigh3, point, m_SelectedWeakPtrVector[dataVectorIndex].lock(),
+                                      m_CreatedWeakPtrVector[dataVectorIndex].lock())
           }
 
           triangleIndex++;
@@ -1545,7 +1544,10 @@ void QuickSurfaceMesh::execute()
   size_t nodeCount = 0;
   size_t triangleCount = 0;
 
-  correctProblemVoxels();
+  if(getFixProblemVoxels())
+  {
+    correctProblemVoxels();
+  }
 
   determineActiveNodes(m_NodeIds, nodeCount, triangleCount);
 
@@ -1628,7 +1630,8 @@ void QuickSurfaceMesh::generateTripleLines()
    * later if needed.
    * Mike Jackson, JULY 2018
    */
-  Q_ASSERT(false); // We don't want anyone to run this program.
+  throw std::exception();
+
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
 
@@ -2028,4 +2031,16 @@ void QuickSurfaceMesh::setFeatureAttributeMatrixName(const QString& value)
 QString QuickSurfaceMesh::getFeatureAttributeMatrixName() const
 {
   return m_FeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void QuickSurfaceMesh::setFixProblemVoxels(bool value)
+{
+  m_FixProblemVoxels = value;
+}
+
+// -----------------------------------------------------------------------------
+bool QuickSurfaceMesh::getFixProblemVoxels() const
+{
+  return m_FixProblemVoxels;
 }

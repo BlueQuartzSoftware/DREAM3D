@@ -34,7 +34,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
-#include <memory>
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
@@ -42,7 +42,7 @@
 #include "SIMPLib/Geometry/IGeometry.h"
 #include "SIMPLib/Geometry/IGeometryGrid.h"
 
-#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+#include <memory>
 
 /**
  * @brief The QuickSurfaceMesh class. See [Filter documentation](@ref quicksurfacemesh) for details.
@@ -64,6 +64,7 @@ class SurfaceMeshing_EXPORT QuickSurfaceMesh : public AbstractFilter
   PYB11_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
   PYB11_PROPERTY(QString NodeTypesArrayName READ getNodeTypesArrayName WRITE setNodeTypesArrayName)
   PYB11_PROPERTY(QString FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
+  PYB11_PROPERTY(bool FixProblemVoxels READ getFixProblemVoxels WRITE setFixProblemVoxels)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
 
@@ -197,6 +198,17 @@ public:
   Q_PROPERTY(QString FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
 
   /**
+   * @brief Setter property for FeatureAttributeMatrixName
+   */
+  void setFixProblemVoxels(bool value);
+  /**
+   * @brief Getter property for FeatureAttributeMatrixName
+   * @return Value of FeatureAttributeMatrixName
+   */
+  bool getFixProblemVoxels() const;
+  Q_PROPERTY(bool FixProblemVoxels READ getFixProblemVoxels WRITE setFixProblemVoxels)
+
+  /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
   QString getCompiledLibraryName() const override;
@@ -280,6 +292,7 @@ private:
   QString m_FaceLabelsArrayName = {SIMPL::FaceData::SurfaceMeshFaceLabels};
   QString m_NodeTypesArrayName = {SIMPL::VertexData::SurfaceMeshNodeType};
   QString m_FeatureAttributeMatrixName = {SIMPL::Defaults::FaceFeatureAttributeMatrixName};
+  bool m_FixProblemVoxels = true;
 
   std::vector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
   std::vector<IDataArray::WeakPointer> m_CreatedWeakPtrVector;
