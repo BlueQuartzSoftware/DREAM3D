@@ -10,6 +10,30 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.5.XXX ##
+
+### Version 6.5.XXX KNOWN ISSUES ###
+
+### Version 6.5.XXX New Filters & Features ###
+
+
+### 6.5.XXX Fixed DREAM3D Issues ###
+
++ More robust ASCII or Binary STL file detection.
++ InsertPrecipitatePhases: Check for cancel more often.
++ VtkRectilinearGridWriter: Fixed crashing bug due to nullptr return.
++ Add warning to MergeTwins if non Cubic-High (m3m) is used
++ FindNeighbors: Fix crashing issue when incorrect/mismatched DataArray is selected.
++ GenerateFZQuaternions: Validate all input/output paths (except Crystal Structures) have the same tuple length
+
+### SIMPL Changes ###
++ Check for illegal or troublesome characters when importing CSV file.
++ Do NOT write NeighborLists to XDMF files as it doesn't make sense
++ Clean up FilterInputWidget in PipelineItem if it isn't nullptr.
++ CreateGeometry: The data arrays that were set for things such as the vertex shared list were not being removed from the source Attribute Matrix when the user selected to have the data MOVED instead of COPIED.
++ FileListInfoWidget: Find potential out-of-bounds access during filename parsing.
+
+
 ## Version 6.5.151 ##
 
 ### Version 6.5.151 KNOWN ISSUES ###
