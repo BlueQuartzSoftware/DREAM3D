@@ -63,9 +63,9 @@ constexpr int32_t k_InputFileDoesNotExist = -1101;
 constexpr int32_t k_UnsupportedFileType = -1102;
 constexpr int32_t k_ErrorOpeningFile = -1103;
 constexpr int32_t k_StlHeaderParseError = -1104;
-constexpr int32_t k_TriangleCountParseError = -1105;
-constexpr int32_t k_TriangleParseError = -1106;
-constexpr int32_t k_AttributeParseError = -1107;
+//constexpr int32_t k_TriangleCountParseError = -1105;
+//constexpr int32_t k_TriangleParseError = -1106;
+//constexpr int32_t k_AttributeParseError = -1107;
 } // namespace ReadStlFileErrors
 
 /**
@@ -128,8 +128,10 @@ int32_t getStlFileType(const std::string& path)
     return ReadStlFileErrors::k_ErrorOpeningFile;
   }
 
-  char h[STL_HEADER_LENGTH];
-  if(std::fread(h, STL_HEADER_LENGTH, 1, f) != 1)
+  // Read the first 256 bytes of data, that should be enough but I'm sure someone will write
+  // an ASCII STL File that contains a really long name which messes this up.
+  std::string header(STL_HEADER_LENGTH, 0x00);
+  if(std::fread(reinterpret_cast<void*>(&header.front()), 1, STL_HEADER_LENGTH, f) != STL_HEADER_LENGTH)
   {
     std::ignore = fclose(f);
     return ReadStlFileErrors::k_StlHeaderParseError;
@@ -137,13 +139,26 @@ int32_t getStlFileType(const std::string& path)
   // close the file
   std::ignore = fclose(f);
 
-  // Look for the 'solid' sequence that would indicate an ASCI STL file
-  if(h[0] == 's' && h[1] == 'o' && h[2] == 'l' && h[3] == 'i' && h[4] == 'd')
+  size_t solid_pos = header.find("solid", 0);
+  // The word 'solid' was not found ANYWHERE in the first 80 bytes.
+  if(solid_pos == std::string::npos)
   {
+    return 0;
+  }
+  // 'solid' was found as the first 5 bytes of the header. This is am ambiguous case so let's try to find 'facet'
+  if(solid_pos == 0)
+  {
+    size_t facet_pos = header.find("facet", solid_pos + 6);
+    if(facet_pos == std::string::npos)
+    {
+      // 'facet' was NOT found so this is a binary file.
+      return 0;
+    }
     return 1;
   }
 
   return 0;
+
 }
 
 // -----------------------------------------------------------------------------
