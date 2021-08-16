@@ -293,6 +293,7 @@ private:
   QString m_NodeTypesArrayName = {SIMPL::VertexData::SurfaceMeshNodeType};
   QString m_FeatureAttributeMatrixName = {SIMPL::Defaults::FaceFeatureAttributeMatrixName};
   bool m_FixProblemVoxels = true;
+  bool m_GenerateTripleLines = false;
 
   std::vector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
   std::vector<IDataArray::WeakPointer> m_CreatedWeakPtrVector;

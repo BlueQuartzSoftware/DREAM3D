@@ -1612,6 +1612,10 @@ void QuickSurfaceMesh::execute()
       edgeCount++;
     }
   }
+  if(m_GenerateTripleLines)
+  {
+      generateTripleLines();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -1630,7 +1634,6 @@ void QuickSurfaceMesh::generateTripleLines()
    * later if needed.
    * Mike Jackson, JULY 2018
    */
-  throw std::exception();
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
