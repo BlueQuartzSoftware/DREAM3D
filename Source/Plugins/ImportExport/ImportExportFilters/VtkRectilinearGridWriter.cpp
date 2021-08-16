@@ -312,7 +312,7 @@ void VtkRectilinearGridWriter::dataCheck()
     if (dc != nullptr)
     {
       ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom>(this);
-      if(getErrorCode() < 0 || nullptr == image.get())
+      if(getErrorCondition()< 0 || nullptr == image.get())
       {
         return;
       }

@@ -57,6 +57,7 @@
 #include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
+#include "SIMPLib/Utilities/TimeUtilities.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
@@ -1373,16 +1374,33 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     // This is not based on convergence or any physics - it's just a factor
     // and there's probably room for improvement here
     int32_t totalAdjustments = static_cast<int32_t>(1000 * ((numfeatures - m_FirstPrecipitateFeature) - 1));
+    //    int32_t incProg = totalAdjustments / 100;
+    //    int32_t currentProg = 0;
+    uint64_t millis = QDateTime::currentMSecsSinceEpoch();
+    uint64_t startMillis = millis;
+    uint64_t estimatedTime = 0;
+    float timeDiff = 0.0f;
+
+
     for(int32_t iteration = 0; iteration < totalAdjustments; ++iteration)
     {
-      QString ss;
-      ss = QObject::tr("Packing Features - Swapping/Moving/Adding/Removing "
-                       "Features Iteration %1/%2")
-               .arg(iteration)
-               .arg(totalAdjustments);
-      if(iteration % 100 == 0)
+      if(getCancel())
       {
-        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+        return;
+      }
+      uint64_t currentMillis = QDateTime::currentMSecsSinceEpoch();
+      if(currentMillis - millis > 1000)
+      {
+        timeDiff = (static_cast<float>(iteration) / static_cast<float>(currentMillis - startMillis));
+        estimatedTime = static_cast<float>(totalAdjustments - iteration) / timeDiff;
+
+        ss = QObject::tr("Packing Features - Swapping/Moving/Adding/Removing "
+                         "Features Iteration %1/%2")
+                 .arg(iteration)
+                 .arg(totalAdjustments);
+        ss += QObject::tr(" || Est. Time Remain: %1 || Iterations/Sec: %2").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime)).arg(timeDiff * 1000);
+        notifyStatusMessage("", getHumanLabel(), ss);
+        millis = QDateTime::currentMSecsSinceEpoch();
       }
 
       if(writeErrorFile && iteration % 25 == 0)

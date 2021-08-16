@@ -368,7 +368,7 @@ void MergeTwins::execute()
   * There is code later on to ensure that only m3m Laue class is used.
   */
   UInt32ArrayType& laueClasses = *(m_CrystalStructuresPtr.lock().get());
-  for(size_t i = 1; i < laueClasses.size(); i++)
+  for(size_t i = 1; i < laueClasses.getSize(); i++)
   {
     if (i != Ebsd::CrystalStructure::Cubic_High)
     {
