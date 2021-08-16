@@ -46,6 +46,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
 
+
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
 
@@ -362,6 +363,21 @@ void MergeTwins::execute()
   {
     return;
   }
+
+  /* Sanity check that each phase is Cubic High (m3m) Laue class. If not then warn the user.
+  * There is code later on to ensure that only m3m Laue class is used.
+  */
+  UInt32ArrayType& laueClasses = *(m_CrystalStructuresPtr.lock().get());
+  for(size_t i = 1; i < laueClasses.size(); i++)
+  {
+    if (i != Ebsd::CrystalStructure::Cubic_High)
+    {
+      QString msg = QString("Phase %1 is NOT m3m crystal symmetry. Data from this phase will not be used in this filter.");
+      setWarningCondition(-23501);
+      AbstractFilter::notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
+    }
+  }
+
 
   m_AxisToleranceRad = m_AxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
