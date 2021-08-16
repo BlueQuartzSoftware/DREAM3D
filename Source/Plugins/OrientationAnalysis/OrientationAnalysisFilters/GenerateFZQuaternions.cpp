@@ -200,7 +200,7 @@ void GenerateFZQuaternions::dataCheck()
   if(nullptr != m_CellPhasesPtr.lock())
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
   if(getErrorCode() >= 0)
   {
     dataArraypaths.push_back(getCellPhasesArrayPath());
@@ -211,14 +211,18 @@ void GenerateFZQuaternions::dataCheck()
   if(nullptr != m_QuatsPtr.lock())
   {
     m_Quats = m_QuatsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
+  if(getErrorCode() >= 0)
+  {
+      dataArraypaths.push_back(getQuatsArrayPath());
+  }
 
   cDims[0] = 1;
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>>(this, getCrystalStructuresArrayPath(), cDims);
   if(nullptr != m_CrystalStructuresPtr.lock())
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   cDims[0] = 4;
   m_FZQuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, getFZQuatsArrayPath(), 0, cDims, "", DataArrayID31);
@@ -226,6 +230,11 @@ void GenerateFZQuaternions::dataCheck()
   {
     m_FZQuats = m_FZQuatsPtr.lock()->getPointer(0);
   }
+  if(getErrorCode() >= 0)
+  {
+      dataArraypaths.push_back(getFZQuatsArrayPath());
+  }
+
 
   if(getUseGoodVoxels())
   {
@@ -235,7 +244,7 @@ void GenerateFZQuaternions::dataCheck()
     if(nullptr != m_GoodVoxelsPtr.lock())
     {
       m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
+    }
     if(getErrorCode() >= 0)
     {
       dataArraypaths.push_back(getGoodVoxelsArrayPath());
