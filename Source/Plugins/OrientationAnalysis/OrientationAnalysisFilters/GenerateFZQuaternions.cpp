@@ -186,12 +186,11 @@ void GenerateFZQuaternions::dataCheck()
   QVector<DataArrayPath> dataArraypaths;
 
   QVector<size_t> cDims(1, 1);
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
-                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_CellPhasesPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); 
+  if(nullptr != m_CellPhasesPtr.lock())                                                                         
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  } 
   if(getErrorCondition() >= 0)
   {
     dataArraypaths.push_back(getCellPhasesArrayPath());
@@ -202,15 +201,18 @@ void GenerateFZQuaternions::dataCheck()
   if(nullptr != m_QuatsPtr.lock())
   {
     m_Quats = m_QuatsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
+  if(getErrorCondition() >= 0)
+  {
+    dataArraypaths.push_back(getQuatsArrayPath());
+  }
 
   cDims[0] = 1;
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(),
-                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_CrystalStructuresPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); 
+  if(nullptr != m_CrystalStructuresPtr.lock()) 
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  } 
 
   cDims[0] = 4;
   m_FZQuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getFZQuatsArrayPath(), 0, cDims);
@@ -218,17 +220,20 @@ void GenerateFZQuaternions::dataCheck()
   {
     m_FZQuats = m_FZQuatsPtr.lock()->getPointer(0);
   }
+  if(getErrorCondition() >= 0)
+  {
+    dataArraypaths.push_back(getFZQuatsArrayPath());
+  }
 
   if(getUseGoodVoxels())
   {
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
     cDims[0] = 1;
-    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
-                                                                                                       cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_GoodVoxelsPtr.lock())                                                                      /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); 
+    if(nullptr != m_GoodVoxelsPtr.lock())                                                                      
     {
       m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
+    } 
     if(getErrorCondition() >= 0)
     {
       dataArraypaths.push_back(getGoodVoxelsArrayPath());
