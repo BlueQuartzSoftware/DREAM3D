@@ -146,43 +146,39 @@ void FindNeighbors::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
-                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FeatureIdsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); 
+  if(nullptr != m_FeatureIdsPtr.lock())                                                                         
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  } 
 
   tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getBoundaryCellsArrayName());
   if(m_StoreBoundaryCells)
   {
-    m_BoundaryCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(
-        this, tempPath, 0, cDims);                 /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_BoundaryCellsPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_BoundaryCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<Int8ArrayType, AbstractFilter, int8_t>(this, tempPath, 0, cDims);                 
+    if(nullptr != m_BoundaryCellsPtr.lock())       
     {
       m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0);
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
+    } 
   }
 
   getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellFeatureAttributeMatrixPath(), -301);
 
   tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getNumNeighborsArrayName());
-  m_NumNeighborsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
-      this, tempPath, 0, cDims);                /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_NumNeighborsPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_NumNeighborsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType, AbstractFilter, int32_t>(this, tempPath, 0, cDims);                
+  if(nullptr != m_NumNeighborsPtr.lock())       
   {
     m_NumNeighbors = m_NumNeighborsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  } 
 
   tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getSurfaceFeaturesArrayName());
   if(m_StoreSurfaceFeatures)
   {
-    m_SurfaceFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(
-        this, tempPath, false, cDims);               /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_SurfaceFeaturesPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_SurfaceFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<BoolArrayType, AbstractFilter, bool>(this, tempPath, false, cDims);               
+    if(nullptr != m_SurfaceFeaturesPtr.lock())       
     {
       m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0);
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
+    } 
   }
 
   // Feature Data
@@ -191,7 +187,7 @@ void FindNeighbors::dataCheck()
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getNeighborListArrayName());
   m_NeighborList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter, int32_t>(
-      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, 0, cDims); 
   if(getErrorCondition() < 0)
   {
     return;
@@ -201,7 +197,7 @@ void FindNeighbors::dataCheck()
   // And we do the same for the SharedSurfaceArea list
   tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getSharedSurfaceAreaListArrayName());
   m_SharedSurfaceAreaList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(
-      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, 0, cDims); 
   m_SharedSurfaceAreaList.lock()->setNumNeighborsArrayName(getNumNeighborsArrayName());
 }
 
@@ -232,8 +228,26 @@ void FindNeighbors::execute()
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
+  AttributeMatrix::Pointer featureAM = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath());
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m_NumNeighborsPtr.lock()->getNumberOfTuples();
+
+  /* Ensure that we will be able to work with the user selected feature Id Array */
+  Int32ArrayType& featureIdsPtr = *(m_FeatureIdsPtr.lock().get());
+
+  const auto min_max = std::minmax_element(featureIdsPtr.getPointer(0), featureIdsPtr.getPointer(featureIdsPtr.getSize()));
+  if(static_cast<size_t>( *(min_max.second) ) >= totalFeatures)
+  {
+    QString msg;
+    QTextStream out(&msg);
+    out << "Data Array " << featureIdsPtr.getName() << " has a maximum value of " << *(min_max.second) << " which is greater than the "
+        << " number of features from array " << m_NumNeighborsPtr.lock()->getName() << " which has " << totalFeatures << ". Did you select the "
+        << " incorrect array for the 'FeatureIds' array?";
+    setErrorCondition(-24500);
+    notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
+    return;
+  }
+
 
   size_t udims[3] = {0, 0, 0};
   std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
@@ -308,7 +322,7 @@ void FindNeighbors::execute()
 
     onsurf = 0;
     feature = m_FeatureIds[j];
-    if(feature > 0)
+    if(feature > 0 && feature < neighborlist.size())
     {
       column = static_cast<int64_t>(j % m->getGeometryAs<ImageGeom>()->getXPoints());
       row = static_cast<int64_t>((j / m->getGeometryAs<ImageGeom>()->getXPoints()) % m->getGeometryAs<ImageGeom>()->getYPoints());
