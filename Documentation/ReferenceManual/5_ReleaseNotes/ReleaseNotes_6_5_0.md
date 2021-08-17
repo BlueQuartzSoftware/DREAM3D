@@ -25,6 +25,7 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 + Add warning to MergeTwins if non Cubic-High (m3m) is used
 + FindNeighbors: Fix crashing issue when incorrect/mismatched DataArray is selected.
 + GenerateFZQuaternions: Validate all input/output paths (except Crystal Structures) have the same tuple length
++ Use Kahan Summation for Find Feature Centroids
 
 ### SIMPL Changes ###
 + Check for illegal or troublesome characters when importing CSV file.
