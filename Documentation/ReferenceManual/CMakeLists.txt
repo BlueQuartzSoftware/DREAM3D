@@ -19,6 +19,9 @@ set(RefManual_Docs_Developer
     SourceDownload
     Windows_Configuring_and_Building_DREAM3D
     WritingAFilter
+    python_code_development_prebuilt
+    python_filter_development_prebuilt
+    python_code_development_scratch
   )
 
 set(RefManual_Docs_ReleaseNotes
@@ -29,6 +32,7 @@ set(RefManual_Docs_ReleaseNotes
     ReleaseNotes_6_2_0
     ReleaseNotes_6_3_0
     ReleaseNotes_6_4_0
+    ReleaseNotes_6_5_0
   )
 
 set(RefManual_Docs_SupportedFileFormats

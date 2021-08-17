@@ -99,3 +99,62 @@ A few of the other required functions should be filled in for your specific filt
 + 'sub_group_name'
 + 'human_label' where the 'human_label' is the most important as that is what will show up to the user in the DREAM.3D user interface.
 
+## Creating a Python Filter (An Example) ##
+
+Use the file SIMPL/Source/SIMPLib/Python/Example.py as the base file. Copy the contents into a new python file.
+
+### Change the Class Name ###
+
+Do a search and replace on `ExampleFilter` and change it to the name of your filter.
+
+### Change the UUID ###
+
+```lang-console
+(pyd3d) C:\Users\johnsmith>python
+>>> import uuid
+>>> uuid.uuid4()
+UUID('f8035905-9882-4423-a2ab-65bc37a77c7e')
+```
+
+copy the result and replace the UUID value in your source.
+
+### Names and Descriptions ##
+
+Update the methods `name`, `group_name`, `sub_group_name`, `human_label`, `version` and `compiled_library_name` to return the proper strings for your filter.
+
+### Adding Parameters ###
+
+This section is best done as an example. Let's say that we want our filter to take in a floating point value called `Temperature` from the user. There are several pieces of code that we need to write.
+
++ Create a variable in the `__init__` section, for instance:
+
+```{.python}
+self.temperature_param:float = 0.0
+```
+
++ Create a getter and setting method for the variable
+
+```{.python}
+def _set_temperature_param(self, value: float) -> None:
+    self.temperature_param = value`
+def _get_temperature_param(self) -> float:
+    return self.temperature_param
+```
+
++ Decide on the type of SIMPL Filter Parameter that you will use to get the value from the user interface into the filter. For this example case we are going to use the `FloatFilterParameter`. There are many other classes of *FilterParameters*. (Insert list somewhere)
+
+```{.python}
+from dream3d.simpl import FloatFilterParameter
+```
+
+Lastly create an entry in the list of FilterParameters for the filter connecting the `self.temperature_param` to the DREAM.3D application. If your filter will have more than one *filter parameter* then you will create a comma delimited list in this section.
+
+```{.python}
+  def setup_parameters(self) -> List[FilterParameter]:
+    return [
+        FloatFilterParameter('Integer', 'temperature_param', self.temperature_param, FilterParameter.Category.Parameter, 
+                              self._set_temperature_param, self._get_temperature_param, -1)
+    ]
+```
+
+
