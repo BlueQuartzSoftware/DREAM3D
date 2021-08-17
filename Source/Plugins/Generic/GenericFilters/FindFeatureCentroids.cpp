@@ -118,14 +118,14 @@ void FindFeatureCentroids::dataCheck()
   if(nullptr != m_FeatureIdsPtr.lock())
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   cDims[0] = 3;
   m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>>(this, getCentroidsArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_CentroidsPtr.lock())
   {
     m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -138,17 +138,17 @@ void FindFeatureCentroids::find_centroids()
 
   size_t totalFeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
 
-  std::vector<size_t> dims(1, 4);
-  FloatArrayType::Pointer m_FeatureCentersPtr = FloatArrayType::CreateArray(totalFeatures, dims, "_INTERNAL_USE_ONLY_Centroids", true);
-  m_FeatureCentersPtr->initializeWithZeros();
-  float* featurecenters = m_FeatureCentersPtr->getPointer(0);
-
   size_t xPoints = imageGeom->getXPoints();
   size_t yPoints = imageGeom->getYPoints();
   size_t zPoints = imageGeom->getZPoints();
 
-  // FloatVec3Type spacing = imageGeom->getSpacing();
-  // FloatVec3Type origin = imageGeom->getOrigin();
+  //Copy the Coords into an array and then compute the sum
+
+  std::vector<double> sum(totalFeatures * 3, 0.0);
+  std::vector<double> c(totalFeatures * 3, 0.0);
+  std::vector<double> count(totalFeatures * 3, 0.0);
+
+  std::array<float, 3> voxel_center = {{0.0f, 0.0f, 0.0f}};
 
   size_t zStride = 0;
   size_t yStride = 0;
@@ -160,26 +160,56 @@ void FindFeatureCentroids::find_centroids()
       yStride = j * xPoints;
       for(size_t k = 0; k < xPoints; k++)
       {
-        int32_t gnum = m_FeatureIds[zStride + yStride + k];
-        featurecenters[gnum * 4 + 0]++;
-        std::array<float, 3> coords = {{0.0f, 0.0f, 0.0f}};
-        imageGeom->getCoords(k, j, i, coords.data());
-        featurecenters[gnum * 4 + 1] = featurecenters[gnum * 4 + 1] + coords[0];
-        featurecenters[gnum * 4 + 2] = featurecenters[gnum * 4 + 2] + coords[1];
-        featurecenters[gnum * 4 + 3] = featurecenters[gnum * 4 + 3] + coords[2];
+        int32_t featureId = m_FeatureIds[zStride + yStride + k]; // Get the current FeatureId
+
+        imageGeom->getCoords(k, j, i, voxel_center.data()); // Get teh voxel center based on XYZ index from Image Geom
+
+        //Kahan Sum for X Coord
+        size_t featureId_idx = static_cast<size_t>(featureId * 3);
+        double y = static_cast<double>(voxel_center[0] - c[featureId_idx]);
+        double t = sum[featureId_idx] + y;
+        c[featureId_idx] = (t - sum[featureId_idx]) - y;
+        sum[featureId_idx] = t;
+        count[featureId_idx] += 1.0;
+
+
+        //Kahan Sum for Y Coord
+        featureId_idx = static_cast<size_t>(featureId * 3 + 1);
+        y = static_cast<double>(voxel_center[1] - c[featureId_idx]);
+        t = sum[featureId_idx] + y;
+        c[featureId_idx] = (t - sum[featureId_idx]) - y;
+        sum[featureId_idx] = t;
+        count[featureId_idx] += 1.0;
+
+        //Kahan Sum for Z Coord
+        featureId_idx = static_cast<size_t>(featureId * 3 + 2);
+        y = static_cast<double>(voxel_center[2] - c[featureId_idx]);
+        t = sum[featureId_idx] + y;
+        c[featureId_idx] = (t - sum[featureId_idx]) - y;
+        sum[featureId_idx] = t;
+        count[featureId_idx] += 1.0;
       }
     }
   }
-  for(size_t i = 0; i < totalFeatures; i++)
+
+  for(size_t featureId = 0; featureId < totalFeatures; featureId++)
   {
-    if(featurecenters[i * 4 + 0] > 0.0f)
+    size_t featureId_idx = static_cast<size_t>(featureId * 3);
+    if(sum[featureId_idx] > 0.0f)
     {
-      featurecenters[i * 4 + 1] = featurecenters[i * 4 + 1] / featurecenters[i * 4 + 0];
-      featurecenters[i * 4 + 2] = featurecenters[i * 4 + 2] / featurecenters[i * 4 + 0];
-      featurecenters[i * 4 + 3] = featurecenters[i * 4 + 3] / featurecenters[i * 4 + 0];
-      m_Centroids[3 * i] = featurecenters[i * 4 + 1];
-      m_Centroids[3 * i + 1] = featurecenters[i * 4 + 2];
-      m_Centroids[3 * i + 2] = featurecenters[i * 4 + 3];
+      m_Centroids[featureId_idx] = sum[featureId_idx] / count[featureId_idx];
+    }
+
+    featureId_idx = static_cast<size_t>(featureId * 3 + 1);
+    if(sum[featureId_idx] > 0.0f)
+    {
+      m_Centroids[featureId_idx] = sum[featureId_idx] / count[featureId_idx];
+    }
+
+    featureId_idx = static_cast<size_t>(featureId * 3 + 2);
+    if(sum[featureId_idx] > 0.0f)
+    {
+      m_Centroids[featureId_idx] = sum[featureId_idx] / count[featureId_idx];
     }
   }
 }
