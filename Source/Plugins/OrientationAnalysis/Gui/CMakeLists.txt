@@ -39,6 +39,32 @@ target_sources(${plug_gui_target_name}
     ${${PLUGIN_NAME}_SOURCE_DIR}/Gui/${PLUGIN_NAME}GuiPlugin.cpp
     ${${PLUGIN_NAME}_SOURCE_DIR}/Gui/${PLUGIN_NAME}GuiPlugin.h
 
+    # -- Add the IPF Legend Painters here: This is sort of legacy to ensure they are still compiling
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/IPFLegendPainter.cpp
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/HexagonalIPFLegendPainter.cpp
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/CubicIPFLegendPainter.cpp
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/HexagonalLowIPFLegendPainter.cpp
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/CubicLowIPFLegendPainter.cpp
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/TriclinicIPFLegendPainter.cpp
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/MonoclinicIPFLegendPainter.cpp
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/OrthorhombicIPFLegendPainter.cpp
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/TetragonalLowIPFLegendPainter.cpp
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/TetragonalIPFLegendPainter.cpp
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/TrigonalLowIPFLegendPainter.cpp
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/TrigonalIPFLegendPainter.cpp
+
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/IPFLegendPainter.h
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/HexagonalIPFLegendPainter.h
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/CubicIPFLegendPainter.h
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/HexagonalLowIPFLegendPainter.h
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/CubicLowIPFLegendPainter.h
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/TriclinicIPFLegendPainter.h
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/MonoclinicIPFLegendPainter.h
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/OrthorhombicIPFLegendPainter.h
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/TetragonalLowIPFLegendPainter.h
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/TetragonalIPFLegendPainter.h
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/TrigonalLowIPFLegendPainter.h
+    ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/IPFLegendHelpers/TrigonalIPFLegendPainter.h    
 )
 CMP_AddDefinitions(TARGET ${plug_gui_target_name}) 
  
