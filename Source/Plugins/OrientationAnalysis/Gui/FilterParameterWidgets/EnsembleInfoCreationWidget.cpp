@@ -121,7 +121,7 @@ void EnsembleInfoCreationWidget::setupGui()
   m_EnsembleInfoTableModel = createEnsembleInfoModel();
 
   // Set the data into the TableModel
-  EnsembleInfo info = m_FilterParameter->getGetterCallback()();
+  EnsembleInfo info = SafeFilterParameterGetter(m_FilterParameter, getFilter());
   m_EnsembleInfoTableModel->setTableData(info);
 
 #if 0
@@ -322,7 +322,7 @@ void EnsembleInfoCreationWidget::filterNeedsInputParameters(AbstractFilter* filt
 {
   QVariant var;
   EnsembleInfo data = getEnsembleInfo();
-  m_FilterParameter->getSetterCallback()(data);
+  SafeFilterParameterSetter(m_FilterParameter, data, getFilter());
 }
 
 // -----------------------------------------------------------------------------

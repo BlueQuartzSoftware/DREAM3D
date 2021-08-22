@@ -260,7 +260,7 @@ void EbsdMontageImportWidget::getGuiParametersFromFilter()
 {
   blockSignals(true);
 
-  MontageFileListInfo data = m_FilterParameter->getGetterCallback()();
+  MontageFileListInfo data = SafeFilterParameterGetter(m_FilterParameter, getFilter());
 
   m_Ui->inputDir->setText(data.InputPath);
   setValidFilePath(data.InputPath);
@@ -431,7 +431,7 @@ void EbsdMontageImportWidget::filterNeedsInputParameters(AbstractFilter* filter)
   data.Ordering = 0; // By Default we use RowColumn ordering
   data.PaddingDigits = m_Ui->totalDigits->value();
 
-  m_FilterParameter->getSetterCallback()(data);
+  SafeFilterParameterSetter(m_FilterParameter, data, getFilter());
 }
 
 // -----------------------------------------------------------------------------
