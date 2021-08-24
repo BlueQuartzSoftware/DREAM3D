@@ -195,20 +195,9 @@ target_include_directories(${plug_target_name}
                               ${PLUGINS_BINARY_DIR}
                               ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters
 )
+
 # --------------------------------------------------------------------
-# Set some additional properties of the plugin like its output name
-set(${plug_target_name}_install_dest "./Plugins")
-if(WIN32)
-  set(${plug_target_name}_install_dest ".")
-endif()
-if(NOT APPLE AND UNIX)
-  set(${plug_target_name}_install_dest "lib")
-endif()
-
-if(DREAM3D_ANACONDA AND WIN32)
-  set(${plug_target_name}_install_dest "bin")
-endif()
-
+# Set up the target and install rules for this plugin
 PluginProperties(TARGET_NAME ${plug_target_name}
                 DEBUG_EXTENSION "_debug"
                 VERSION "${DREAM3D_VERSION}"
@@ -217,7 +206,7 @@ PluginProperties(TARGET_NAME ${plug_target_name}
                 OUTPUT_NAME ${PLUGIN_NAME}
                 BINARY_DIR "${DREAM3D_BINARY_DIR}"
                 PLUGIN_FILE "${CMP_PLUGIN_LIST_FILE}"
-                INSTALL_DEST "${${plug_target_name}_install_dest}"
+                ANACONDA_INSTALL ${DREAM3D_ANACONDA}
 )
 
 target_link_libraries(${plug_target_name}
