@@ -54,13 +54,6 @@ target_include_directories(${plug_gui_target_name}
 
 # --------------------------------------------------------------------
 # Set some additional properties of the plugin like its output name
-
-if(DREAM3D_ANACONDA AND WIN32)
-  set(gui_plugin_install_dir "bin")
-else()
-  set(gui_plugin_install_dir "./Plugins")
-endif()
-
 PluginProperties(TARGET_NAME ${plug_gui_target_name}
                 DEBUG_EXTENSION "_debug"
                 VERSION "${DREAM3D_VERSION}"
@@ -69,7 +62,7 @@ PluginProperties(TARGET_NAME ${plug_gui_target_name}
                 OUTPUT_NAME ${PLUGIN_NAME}Ui
                 BINARY_DIR "${DREAM3D_BINARY_DIR}"
                 PLUGIN_FILE "${CMP_PLUGIN_LIST_FILE}"
-                INSTALL_DEST ${gui_plugin_install_dir}
+                ANACONDA_INSTALL ${DREAM3D_ANACONDA}
 )
 
 target_link_libraries(${plug_gui_target_name}
