@@ -240,7 +240,8 @@ cmpRevisionString( GENERATED_HEADER_FILE_PATH "${SIMPLView_VERSION_HDR_FILE}"
                         GENERATED_SOURCE_FILE_PATH "${SIMPLView_VERSION_SRC_FILE}"
                         NAMESPACE "SIMPLView"
                         PROJECT_NAME "${PROJECT_NAME}"
-                        EXPORT_MACRO "SIMPLView_EXPORT")
+                        EXPORT_MACRO "SIMPLView_EXPORT"
+                        BUILD_DATE_AS_VERSION ${DREAM3D_ANACONDA})
 
 set_property(GLOBAL PROPERTY SIMPLViewProj_VERSION_MAJOR "${${PROJECT_NAME}_VERSION_MAJOR}")
 set_property(GLOBAL PROPERTY SIMPLViewProj_VERSION_MINOR "${${PROJECT_NAME}_VERSION_MINOR}")
