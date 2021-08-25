@@ -192,35 +192,32 @@ target_link_libraries(${PROJECT_NAME} Qt5::Core ${TBB_LIBRARIES} SIMPLib)
 
 set(install_dir "bin")
 set(lib_install_dir "lib")
-
-if(APPLE)
-  get_property(DREAM3D_PACKAGE_DEST_PREFIX GLOBAL PROPERTY DREAM3D_PACKAGE_DEST_PREFIX)
-  set(install_dir "${DREAM3D_PACKAGE_DEST_PREFIX}bin")
-  set(lib_install_dir "${DREAM3D_PACKAGE_DEST_PREFIX}lib")
-elseif(WIN32)
-  set(install_dir ".")
-  set(lib_install_dir ".")
+if(WIN32)
+    set(install_dir ".")
+    set(lib_install_dir ".")
 endif()
 
-if(DREAM3D_ANACONDA AND WIN32)
-  set(install_dir "bin")
-  set(lib_install_dir "bin")
-endif()
-
-if(BUILD_SHARED_LIBS AND NOT APPLE)
-  install(TARGETS ${PROJECT_NAME}
-    COMPONENT Applications
-    RUNTIME DESTINATION ${install_dir}
-    LIBRARY DESTINATION ${lib_install_dir}
-    BUNDLE DESTINATION "."
-  )
-
-  if(NOT DREAM3D_ANACONDA)
+if(NOT DREAM3D_ANACONDA)
+  if(BUILD_SHARED_LIBS AND NOT APPLE)
     install(TARGETS ${PROJECT_NAME}
       COMPONENT Applications
-      ARCHIVE DESTINATION lib
+      RUNTIME DESTINATION ${install_dir}
+      LIBRARY DESTINATION ${lib_install_dir}
+      ARCHIVE DESTINATION ${lib_install_dir}
+      BUNDLE DESTINATION "."
+    )
+  endif()
+else()
+  if(WIN32)
+    install(TARGETS ${PROJECT_NAME}
+      RUNTIME DESTINATION bin
+    )
+  else()
+    install(TARGETS ${PROJECT_NAME}
+      LIBRARY DESTINATION lib
     )
   endif()
 endif()
+
 
 
