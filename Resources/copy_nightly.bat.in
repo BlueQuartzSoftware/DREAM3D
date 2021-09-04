@@ -17,8 +17,8 @@ echo datestamp: "%datestamp%"
 echo timestamp: "%timestamp%"
 
 @rem make sure the directory is created
-mkdir \\THOR\DREAM3D_Public_Builds\%stamp%
+mkdir \\thor.bluequartz.net\DREAM3D_Public_Builds\%stamp%
 @rem Copy the executable to the webserver
 
 
-copy  @UPLOAD_FILE_NAME@ \\THOR\DREAM3D_Public_Builds\%stamp%\@UPLOAD_FILE_NAME@
+copy  @UPLOAD_FILE_NAME@ \\thor.bluequartz.net\DREAM3D_Public_Builds\%stamp%\@UPLOAD_FILE_NAME@
