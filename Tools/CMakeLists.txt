@@ -37,12 +37,6 @@ endif()
 configure_file( ${DREAM3DTools_SOURCE_DIR}/ToolConfiguration.h.in
                 ${DREAM3DTools_BINARY_DIR}/${PROJECT_NAME}Configuration.h)
 
-# ---------- Find HDF5 Headers/Libraries -----------------------
-# HDF5 now comes with everything that is needed for CMake to load
-# up the targets (Exported) that it needs. We just need to find where
-# HDF5 is installed.
-include(${CMP_SOURCE_DIR}/ExtLib/HDF5Support.cmake)
-
 #-------------------------------------------------------------------------------
 # Function COMPILE_TOOL to help alleviate lots of extra code below for adding
 # simple command line tools that just need one or two source files
