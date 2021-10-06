@@ -1,0 +1,27 @@
+#include "@PLUGIN_NAME@Plugin.hpp"
+
+@FILTER_INCLUDE_LIST@
+
+using namespace complex;
+
+namespace
+{
+// List of all filter UUIDS go here
+@FILTER_UUID_LIST@
+} // namespace
+
+@PLUGIN_NAME@::@PLUGIN_NAME@()
+: AbstractPlugin(k_ID, "@PLUGIN_NAME@", "Description", "BlueQuartz Software")
+{
+// List of all filters added to the addFilter() method
+@FILTER_REGISTER_LIST@
+}
+
+@PLUGIN_NAME@::~@PLUGIN_NAME@() = default;
+
+std::vector<complex::IH5DataFactory*> @PLUGIN_NAME@::getDataFactories() const
+{
+  return {};
+}
+
+COMPLEX_DEF_PLUGIN(@PLUGIN_NAME@)
