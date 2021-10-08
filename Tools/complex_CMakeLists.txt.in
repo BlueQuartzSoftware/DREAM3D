@@ -1,6 +1,9 @@
 include(GenerateExportHeader)
 include(GNUInstallDirs)
 
+
+
+
 set(COMPLEX_PLUGIN_NAME "@PLUGIN_NAME@")
 
 PROJECT(${COMPLEX_PLUGIN_NAME}
@@ -30,15 +33,20 @@ add_library(${COMPLEX_PLUGIN_NAME} SHARED)
 set_target_properties(${COMPLEX_PLUGIN_NAME} PROPERTIES
     FOLDER "Plugins/${COMPLEX_PLUGIN_NAME}"
     SUFFIX ".complex"
-    LIBRARY_OUTPUT_DIRECTORY $<TARGET_FILE_DIR:complex>/Plugins
-    RUNTIME_OUTPUT_DIRECTORY $<TARGET_FILE_DIR:complex>/Plugins
+#    LIBRARY_OUTPUT_DIRECTORY $<TARGET_FILE_DIR:complex>/Plugins
+#    RUNTIME_OUTPUT_DIRECTORY $<TARGET_FILE_DIR:complex>/Plugins
 )
-# if(APPLE)
-#   set_target_properties(${COMPLEX_PLUGIN_NAME} PROPERTIES
-#     LIBRARY_OUTPUT_DIRECTORY $<TARGET_FILE_DIR:complex>/complex_test.app/Contents/Plugins/${COMPLEX_PLUGIN_NAME}
-#     RUNTIME_OUTPUT_DIRECTORY $<TARGET_FILE_DIR:complex>/complex_test.app/Contents/Plugins/${COMPLEX_PLUGIN_NAME}
-#   )
-# endif()
+
+#------------------------------------------------------------------------------
+# Where are the plugins going to be placed during the build
+get_property(COMPLEX_PLUGIN_OUTPUT_DIR GLOBAL PROPERTY COMPLEX_PLUGIN_OUTPUT_DIR)
+if(NOT "${COMPLEX_PLUGIN_OUTPUT_DIR}" STREQUAL "")
+  set_target_properties(${COMPLEX_PLUGIN_NAME} PROPERTIES
+    LIBRARY_OUTPUT_DIRECTORY ${COMPLEX_PLUGIN_OUTPUT_DIR}
+    RUNTIME_OUTPUT_DIRECTORY ${COMPLEX_PLUGIN_OUTPUT_DIR}
+  )
+endif()
+
 target_link_libraries(${COMPLEX_PLUGIN_NAME} PUBLIC complex)
 
 generate_export_header(${COMPLEX_PLUGIN_NAME}

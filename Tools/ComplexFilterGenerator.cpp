@@ -235,7 +235,7 @@ void InitDefaultValueMapping ()
   s_DefaultValueMapping["FloatVec3FilterParameter"] = "std::vector<float32>(3), std::vector<std::string>(3)";
   s_DefaultValueMapping["NumericTypeFilterParameter"] = "NumericType::int8";
   s_DefaultValueMapping["StringFilterParameter"] = "\"SomeString\"";
-  s_DefaultValueMapping["SeparatorFilterParameter"] = "\"\"";
+  s_DefaultValueMapping["SeparatorFilterParameter"] = "\"Separator\"";
   s_DefaultValueMapping["LinkedDataContainerSelectionFilterParameter"] = "DataPath{}";
   s_DefaultValueMapping["LinkedPathCreationFilterParameter"] = "DataPath{}";
 
@@ -309,7 +309,7 @@ void InitIncludeMapping()
   s_InlcudeMapping["FloatVec3FilterParameter"] = "VectorParameter";
   s_InlcudeMapping["NumericTypeFilterParameter"] = "NumericTypeParameter";
   s_InlcudeMapping["StringFilterParameter"] = "StringParameter";
-  s_InlcudeMapping["SeparatorFilterParameter"] = "SeparatorParameter";
+  s_InlcudeMapping["SeparatorFilterParameter"] = "";
   s_InlcudeMapping["LinkedDataContainerSelectionFilterParameter"] = "DataGroupSelectionParameter";
   s_InlcudeMapping["LinkedPathCreationFilterParameter"] = "ArrayCreationParameter";
   
@@ -519,6 +519,44 @@ QString ReadTemplateFile(const QString& file)
 }
 
 // -----------------------------------------------------------------------------
+void writeTopLevelOutput(const QString& pluginName, const QString& outLines, const QString& fileName)
+{
+  QString filtersDir = "/Filters/";
+  if(!s_HasAllParameters)
+  {
+    filtersDir = "/Filters-Disabled/";
+  }
+
+  // Assume we are Core first...
+  QString outputPath;
+  if(s_CurrentPlugin == "Core")
+  {
+    outputPath = k_OutputDir + "/" + s_CurrentPlugin + filtersDir;
+    return;
+  }
+  else
+  {
+    outputPath = k_PluginsOutputDir + "/" + s_CurrentPlugin;
+  }
+
+  // Make sure the output directory structure is created.
+  QDir outputDir(outputPath);
+  outputDir.mkpath(outputPath);
+
+  // Generate the Output File Path
+  QString finalOutPath = outputPath + "/" + fileName;
+  QFileInfo fi(finalOutPath);
+
+  // Write the output
+  QFile hOut(finalOutPath);
+  hOut.open(QFile::WriteOnly);
+  QTextStream stream(&hOut);
+  stream << outLines;
+  hOut.close();
+  // qDebug() << "Saved File " << fi.absoluteFilePath();
+}
+
+// -----------------------------------------------------------------------------
 void writeOutput( AbstractFilter* filter, const QString& outLines, const QString& ext)
 {
   QString filtersDir = "/Filters/";
@@ -577,7 +615,7 @@ QString GenerateUuid(const QString& libName, const QString& className)
   return p1.toString().replace("{", "").replace("}", "");
 }
 
-std::vector<QString> sepKeys;
+//std::vector<QString> sepKeys;
 // -----------------------------------------------------------------------------
 void GenerateHeaderFile(AbstractFilter* filter)
 {
@@ -598,12 +636,10 @@ void GenerateHeaderFile(AbstractFilter* filter)
   for(const auto& parameter : parameters)
   {
     QString propName = parameter->getPropertyName();
-    if(propName.isEmpty())
+    if(!propName.isEmpty())
     {
-      propName = sepKeys.back();
-      sepKeys.pop_back();
+      out << "  static inline constexpr StringLiteral k_" << propName << "_Key = \"" << propName << "\";\n";
     }
-    out << "  static inline constexpr StringLiteral k_" << propName << "_Key = \"" << propName << "\";\n";
   }
   headerTemplate = headerTemplate.replace(k_PARAMETER_KEYS, pString);
 
@@ -623,7 +659,6 @@ void GenerateSourceFile(AbstractFilter* filter)
   sourceTemplate = sourceTemplate.replace(k_UUID, uuid);
   sourceTemplate = sourceTemplate.replace(k_FILTER_HUMAN_NAME, humanName);
 
-  sepKeys.clear();
   // Generate the Parameter Section
   FilterParameterVectorType parameters = filter->getFilterParameters();
   QString pString;
@@ -657,23 +692,19 @@ void GenerateSourceFile(AbstractFilter* filter)
 
     if(!propName.isEmpty())
     {
-      preFlightOut << "  " << paramType << " p" << propName << "Value = filterArgs.value<" << paramType << ">(k_" << propName << "_Key.view());\n";
+      preFlightOut << "  auto p" << propName << "Value = filterArgs.value<" << paramType << ">(k_" << propName << "_Key);\n";
     }
 
-    if(propName.isEmpty())
-    {
-      propName = QString::number(s_ParameterCount[origParamClassName]);
-      sepKeys.push_back(propName);
-    }
     if(origParamClassName == "SeparatorFilterParameter")
     {
-      parameterOut << "//TODO: Translate SeparatorFilterParameter";
-      includeOut << "//";
+      parameterOut << "  params.insertSeparator(Parameters::Separator{\"" << propHuman << "\"});\n";
+     // includeOut << "#include \"complex/Filter/Parameters.hpp\"\n";
     }
-    parameterOut << "  params.insert(std::make_unique<" << propClass << ">(k_" << propName << "_Key.str(), \"" << propHuman << "\", \"\", " << defaultValue << "));\n";
-
-
-    includeOut << "#include \"complex/Core/Parameters/" << propInclude << ".hpp\"\n";
+    else
+    {
+      parameterOut << "  params.insert(std::make_unique<" << propClass << ">(k_" << propName << "_Key, \"" << propHuman << "\", \"\", " << defaultValue << "));\n";
+      includeOut << "#include \"complex/Core/Parameters/" << propInclude << ".hpp\"\n";
+    }
     if(propInclude == "FileSystemPathParameter")
     {
       needsFs = true;
@@ -707,43 +738,7 @@ void GenerateSourceFile(AbstractFilter* filter)
   writeOutput(filter, sourceTemplate, ".cpp");
 }
 
-// -----------------------------------------------------------------------------
-void writeTopLevelOutput(const QString& pluginName, const QString& outLines, const QString& fileName)
-{
-  QString filtersDir = "/Filters/";
-  if(!s_HasAllParameters)
-  {
-    filtersDir = "/Filters-Disabled/";
-  }
- 
-  // Assume we are Core first...
-  QString outputPath;
-  if(s_CurrentPlugin == "Core")
-  {
-    outputPath = k_OutputDir + "/" + s_CurrentPlugin + filtersDir;
-    return;
-  }
-  else
-  {
-    outputPath = k_PluginsOutputDir + "/" + s_CurrentPlugin;
-  }
-  
-  // Make sure the output directory structure is created.
-  QDir outputDir(outputPath);
-  outputDir.mkpath(outputPath);
 
-  // Generate the Output File Path
-  QString finalOutPath = outputPath + "/" + fileName;
-  QFileInfo fi(finalOutPath);
-
-  // Write the output
-  QFile hOut(finalOutPath);
-  hOut.open(QFile::WriteOnly);
-  QTextStream stream(&hOut);
-  stream << outLines;
-  hOut.close();
- // qDebug() << "Saved File " << fi.absoluteFilePath();
-}
 
 // -----------------------------------------------------------------------------
 void GenerateCMakeFile(const QString& pluginName, std::vector<AbstractFilter::Pointer>& filters)
@@ -754,8 +749,8 @@ void GenerateCMakeFile(const QString& pluginName, std::vector<AbstractFilter::Po
   QString filterHeaderList;
   QTextStream hOut(&filterHeaderList);
 
-    QString filterSourceList;
-    QTextStream sOut(&filterSourceList);
+  QString filterSourceList;
+  QTextStream sOut(&filterSourceList);
     
   for(const auto& filter : filters)
   {
@@ -840,6 +835,35 @@ void GeneratePluginSource(const QString& pluginName, std::vector<AbstractFilter:
   writeTopLevelOutput(pluginName, cmakeTemplate, pluginName + "Plugin.cpp");
 }
 
+
+void GenerateMarkdownSummary(const QString& pluginName, std::vector<AbstractFilter::Pointer>& filters )
+{
+  QString md;
+  QTextStream mdOut(&md);
+
+
+  mdOut << "# " << pluginName << " #\n\n";
+
+  mdOut << "|  Filter Name | All Parameters Working | DataCheck Implemented | Execute Implemented |\n";
+  mdOut << "|--------------|------------------------|-----------------------|---------------------|\n";
+  for(const auto& filter : filters)
+  {
+    QString prefix = "|   ";
+
+    mdOut << "| " << filter->getNameOfClass() << " |";
+    if(s_FilterHasAllParameters[filter->getNameOfClass().toStdString()])
+    {
+      mdOut << " TRUE ";
+    }
+    else
+    {
+      mdOut << " FALSE ";
+    }
+    mdOut << " | | |\n";
+  }
+
+  writeTopLevelOutput(pluginName, md, "FilterGuide.md");
+}
 // -----------------------------------------------------------------------------
 void GenerateComplexFilters()
 {
@@ -877,6 +901,7 @@ void GenerateComplexFilters()
     GenerateCMakeFile(s_CurrentPlugin, filters);
     GeneratePluginHeader(s_CurrentPlugin, filters);
     GeneratePluginSource(s_CurrentPlugin, filters);
+    GenerateMarkdownSummary(s_CurrentPlugin, filters);
   }
 //  for(const auto& pName : paramNames)
 //  {
