@@ -19,7 +19,7 @@ namespace
 
 @PLUGIN_NAME@::~@PLUGIN_NAME@() = default;
 
-std::vector<complex::IH5DataFactory*> @PLUGIN_NAME@::getDataFactories() const
+std::vector<complex::H5::IDataFactory*> @PLUGIN_NAME@::getDataFactories() const
 {
   return {};
 }

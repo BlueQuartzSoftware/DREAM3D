@@ -51,13 +51,13 @@ Result<OutputActions> @FILTER_NAME@::preflightImpl(const DataStructure& ds, cons
 
 Result<> @FILTER_NAME@::executeImpl(DataStructure& ds, const Arguments& filterArgs, const MessageHandler& messageHandler) const
 {
-/****************************************************************************
-* Extract the actual input values from the 'filterArgs' object
-***************************************************************************/
+  /****************************************************************************
+   * Extract the actual input values from the 'filterArgs' object
+   ***************************************************************************/
 @PREFLIGHT_DEFS@
-/****************************************************************************
-* Write your algorithm implementation in this function
-***************************************************************************/
+  /****************************************************************************
+   * Write your algorithm implementation in this function
+   ***************************************************************************/
 
   return {};
 }
