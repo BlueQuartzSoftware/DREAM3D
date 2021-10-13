@@ -21,6 +21,7 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 
 
 #include "DREAM3DToolsConfiguration.h"
@@ -90,6 +91,7 @@ void InitParameterCount ()
   s_ParameterCount["LinkedPathCreationFilterParameter"] = 0;
   s_ParameterCount["MultiDataArraySelectionFilterParameter"] =0;
   s_ParameterCount["LinkedBooleanFilterParameter"] = 0;
+  s_ParameterCount["LinkedChoicesFilterParameter"] = 0;
 
   // No COMPLEX Type Yet
   s_ParameterCount["CalculatorFilterParameter"] = 0;
@@ -112,7 +114,6 @@ void InitParameterCount ()
   s_ParameterCount["ImportHDF5DatasetFilterParameter"] = 0;
   s_ParameterCount["ImportVectorImageStackFilterParameter"] = 0;
   s_ParameterCount["KbrRecisConfigFilterParameter"] = 0;
-  s_ParameterCount["LinkedChoicesFilterParameter"] = 0;
   s_ParameterCount["MontageSelectionFilterParameter"] = 0;
   s_ParameterCount["MontageStructureSelectionFilterParameter"] = 0;
   s_ParameterCount["MultiAttributeMatrixSelectionFilterParameter"] = 0;
@@ -163,6 +164,7 @@ void InitParameterTypeMapping ()
   s_ParameterTypeMapping["LinkedPathCreationFilterParameter"] = "DataPath";
   s_ParameterTypeMapping["MultiDataArraySelectionFilterParameter"] = "MultiArraySelectionParameter::ValueType";
   s_ParameterTypeMapping["LinkedBooleanFilterParameter"] = "bool";
+  s_ParameterTypeMapping["LinkedChoicesFilterParameter"] = "ChoicesParameter::ValueType";
 
   // No COMPLEX Type Yet
   s_ParameterTypeMapping["CalculatorFilterParameter"] = "<<<NOT_IMPLEMENTED>>>";
@@ -185,7 +187,6 @@ void InitParameterTypeMapping ()
   s_ParameterTypeMapping["ImportHDF5DatasetFilterParameter"] = "<<<NOT_IMPLEMENTED>>>";
   s_ParameterTypeMapping["ImportVectorImageStackFilterParameter"] = "<<<NOT_IMPLEMENTED>>>";
   s_ParameterTypeMapping["KbrRecisConfigFilterParameter"] = "<<<NOT_IMPLEMENTED>>>";
-  s_ParameterTypeMapping["LinkedChoicesFilterParameter"] = "<<<NOT_IMPLEMENTED>>>";
   s_ParameterTypeMapping["MontageSelectionFilterParameter"] = "<<<NOT_IMPLEMENTED>>>";
   s_ParameterTypeMapping["MontageStructureSelectionFilterParameter"] = "<<<NOT_IMPLEMENTED>>>";
   s_ParameterTypeMapping["MultiAttributeMatrixSelectionFilterParameter"] = "<<<NOT_IMPLEMENTED>>>";
@@ -237,6 +238,7 @@ void InitDefaultValueMapping ()
   s_DefaultValueMapping["LinkedPathCreationFilterParameter"] = "DataPath{}";
   s_DefaultValueMapping["MultiDataArraySelectionFilterParameter"] = "MultiArraySelectionParameter::ValueType {DataPath(), DataPath(), DataPath()}";
   s_DefaultValueMapping["LinkedBooleanFilterParameter"] = "false";
+  s_DefaultValueMapping["LinkedChoicesFilterParameter"] = "0, ChoicesParameter::Choices{\"Option 1\", \"Option 2\", \"Option 3\"}";
 
   // No COMPLEX Type Yet
   s_DefaultValueMapping["CalculatorFilterParameter"] = "{}";
@@ -259,7 +261,6 @@ void InitDefaultValueMapping ()
   s_DefaultValueMapping["ImportHDF5DatasetFilterParameter"] = "{}";
   s_DefaultValueMapping["ImportVectorImageStackFilterParameter"] = "{}";
   s_DefaultValueMapping["KbrRecisConfigFilterParameter"] = "{}";
-  s_DefaultValueMapping["LinkedChoicesFilterParameter"] = "{}";
   s_DefaultValueMapping["MontageSelectionFilterParameter"] = "{}";
   s_DefaultValueMapping["MontageStructureSelectionFilterParameter"] = "{}";
   s_DefaultValueMapping["MultiAttributeMatrixSelectionFilterParameter"] = "{}";
@@ -310,6 +311,7 @@ void InitIncludeMapping()
   s_InlcudeMapping["LinkedPathCreationFilterParameter"] = "ArrayCreationParameter";
   s_InlcudeMapping["MultiDataArraySelectionFilterParameter"] = "MultiArraySelectionParameter";
   s_InlcudeMapping["LinkedBooleanFilterParameter"] = "BoolParameter";
+  s_InlcudeMapping["LinkedChoicesFilterParameter"] = "ChoicesParameter";
 
   // No COMPLEX Type Yet
   s_InlcudeMapping["CalculatorFilterParameter"] = "CalculatorFilterParameter";
@@ -332,7 +334,6 @@ void InitIncludeMapping()
   s_InlcudeMapping["ImportHDF5DatasetFilterParameter"] = "ImportHDF5DatasetFilterParameter";
   s_InlcudeMapping["ImportVectorImageStackFilterParameter"] = "ImportVectorImageStackFilterParameter";
   s_InlcudeMapping["KbrRecisConfigFilterParameter"] = "KbrRecisConfigFilterParameter";
-  s_InlcudeMapping["LinkedChoicesFilterParameter"] = "LinkedChoicesFilterParameter";
   s_InlcudeMapping["MontageSelectionFilterParameter"] = "MontageSelectionFilterParameter";
   s_InlcudeMapping["MontageStructureSelectionFilterParameter"] = "MontageStructureSelectionFilterParameter";
   s_InlcudeMapping["MultiAttributeMatrixSelectionFilterParameter"] = "MultiAttributeMatrixSelectionFilterParameter";
@@ -384,6 +385,7 @@ void InitParameterMapping()
   s_ParameterMapping["LinkedPathCreationFilterParameter"] = "ArrayCreationParameter";
   s_ParameterMapping["MultiDataArraySelectionFilterParameter"] = "MultiArraySelectionParameter";
   s_ParameterMapping["LinkedBooleanFilterParameter"] = "BoolParameter";
+  s_ParameterMapping["LinkedChoicesFilterParameter"] = "ChoicesParameter";
 
   // No COMPLEX Type Yet
   s_ParameterMapping["CalculatorFilterParameter"] = "CalculatorFilterParameter";
@@ -406,7 +408,6 @@ void InitParameterMapping()
   s_ParameterMapping["ImportHDF5DatasetFilterParameter"] = "ImportHDF5DatasetFilterParameter";
   s_ParameterMapping["ImportVectorImageStackFilterParameter"] = "ImportVectorImageStackFilterParameter";
   s_ParameterMapping["KbrRecisConfigFilterParameter"] = "KbrRecisConfigFilterParameter";
-  s_ParameterMapping["LinkedChoicesFilterParameter"] = "LinkedChoicesFilterParameter";
   s_ParameterMapping["MontageSelectionFilterParameter"] = "MontageSelectionFilterParameter";
   s_ParameterMapping["MontageStructureSelectionFilterParameter"] = "MontageStructureSelectionFilterParameter";
   s_ParameterMapping["MultiAttributeMatrixSelectionFilterParameter"] = "MultiAttributeMatrixSelectionFilterParameter";
@@ -457,6 +458,7 @@ void InitParameterAvailableMapping()
   s_ParameterAvailable["LinkedPathCreationFilterParameter"] = true;
   s_ParameterAvailable["MultiDataArraySelectionFilterParameter"] = true;
   s_ParameterAvailable["LinkedBooleanFilterParameter"] = true;
+  s_ParameterAvailable["LinkedChoicesFilterParameter"] = true;
 
   // No COMPLEX Type Yet
   s_ParameterAvailable["CalculatorFilterParameter"] = false;
@@ -479,7 +481,6 @@ void InitParameterAvailableMapping()
   s_ParameterAvailable["ImportHDF5DatasetFilterParameter"] = false;
   s_ParameterAvailable["ImportVectorImageStackFilterParameter"] = false;
   s_ParameterAvailable["KbrRecisConfigFilterParameter"] = false;
-  s_ParameterAvailable["LinkedChoicesFilterParameter"] = false;
   s_ParameterAvailable["MontageSelectionFilterParameter"] = false;
   s_ParameterAvailable["MontageStructureSelectionFilterParameter"] = false;
   s_ParameterAvailable["MultiAttributeMatrixSelectionFilterParameter"] = false;
@@ -707,6 +708,33 @@ void GenerateSourceFile(AbstractFilter* filter)
       {
        // parameterOut << "  // Linked Prop: " << linkedProp << "\n";
         linkedOut << "  params.linkParameters(k_" << propName << "_Key, k_" << linkedProp << "_Key, true);\n";
+      }
+      includeOut << "#include \"complex/Core/Parameters/" << propInclude << ".hpp\"\n";
+    }
+    else if(origParamClassName == "LinkedChoicesFilterParameter")
+    {
+      LinkedChoicesFilterParameter::Pointer fp = std::dynamic_pointer_cast<LinkedChoicesFilterParameter>(parameter);
+      std::vector<QString> linkedChoices = fp->getChoices();
+      size_t i = 0;
+      defaultValue = "0,  ChoicesParameter::Choices{";
+      for(const auto& choice : linkedChoices)
+      {
+        defaultValue = defaultValue + "\"" + choice + "\"";
+        i++;
+        if(i < linkedChoices.size())
+        {
+          defaultValue += ", ";
+        }
+      }
+      defaultValue += "}";
+      parameterOut << "  params.insertLinkableParameter(std::make_unique<" << propClass << ">(k_" << propName << "_Key, \"" << propHuman << "\", \"\", " << defaultValue << "));\n";
+      std::vector<QString> linkedProps = fp->getLinkedProperties();
+      i = 0;
+      for(const auto& linkedProp : linkedProps)
+      {
+        // parameterOut << "  // Linked Prop: " << linkedProp << "\n";
+        linkedOut << "  params.linkParameters(k_" << propName << "_Key, k_" << linkedProp << "_Key, " << i << ");\n";
+        i++;
       }
       includeOut << "#include \"complex/Core/Parameters/" << propInclude << ".hpp\"\n";
     }
