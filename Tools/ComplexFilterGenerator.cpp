@@ -12,6 +12,7 @@
 #include <QtCore/QMetaProperty>
 #include <QtCore/QString>
 #include <QtCore/QTextStream>
+#include <sys/_types/_int32_t.h>
 
 
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -558,7 +559,7 @@ void writeTopLevelOutput(const QString& pluginName, const QString& outLines, con
 }
 
 // -----------------------------------------------------------------------------
-void writeOutput( AbstractFilter* filter, const QString& outLines, const QString& ext)
+void writeOutput( AbstractFilter* filter, const QString& outLines, const QString& ext, const QString& mdSummary)
 {
   QString filtersDir = "/Filters/";
   if(!s_HasAllParameters)
@@ -568,6 +569,7 @@ void writeOutput( AbstractFilter* filter, const QString& outLines, const QString
  
   // Assume we are Core first...
   QString outputPath;
+  QString mdOutputPath;
  if(s_CurrentPlugin == "AFRLDistributionC" 
   || s_CurrentPlugin == "CRADA3DSystems" 
   || s_CurrentPlugin == "ECAccess" 
@@ -576,28 +578,48 @@ void writeOutput( AbstractFilter* filter, const QString& outLines, const QString
   || s_CurrentPlugin == "NETLIntegration" 
   )
   {
-   outputPath = k_PluginsOutputDir + "_private/" + s_CurrentPlugin + "/src/" + s_CurrentPlugin + "/" + filtersDir;
+    outputPath = k_PluginsOutputDir + "_private/" + s_CurrentPlugin + "/src/" + s_CurrentPlugin + "/" + filtersDir;
+    mdOutputPath = k_PluginsOutputDir + "_private/" + s_CurrentPlugin + "/docs/" + s_CurrentPlugin + "/";
   }
   else
   {
-   outputPath = k_PluginsOutputDir + "/" + s_CurrentPlugin + "/src/" + s_CurrentPlugin + "/" + filtersDir;
+    outputPath = k_PluginsOutputDir + "/" + s_CurrentPlugin + "/src/" + s_CurrentPlugin + "/" + filtersDir;
+    mdOutputPath = k_PluginsOutputDir + "/" + s_CurrentPlugin + "/docs/" + s_CurrentPlugin + "/";
   }
-  
+
   // Make sure the output directory structure is created.
-  QDir outputDir(outputPath);
-  outputDir.mkpath(outputPath);
+  {
+    QDir outputDir(outputPath);
+    outputDir.mkpath(outputPath);
 
-  // Generate the Output File Path
-  QString finalOutPath = outputPath + filter->getNameOfClass() + ext;
-  QFileInfo fi(finalOutPath);
+    // Generate the Output File Path
+    QString finalOutPath = outputPath + filter->getNameOfClass() + ext;
+    QFileInfo fi(finalOutPath);
 
-  // Write the output
-  QFile hOut(finalOutPath);
-  hOut.open(QFile::WriteOnly);
-  QTextStream stream(&hOut);
-  stream << outLines;
-  hOut.close();
- // qDebug() << "Saved File " << fi.absoluteFilePath();
+    // Write the output
+    QFile hOut(finalOutPath);
+    hOut.open(QFile::WriteOnly);
+    QTextStream stream(&hOut);
+    stream << outLines;
+    hOut.close();
+  }
+  // write the markdown file
+  if(!mdSummary.isEmpty())
+  {
+    QDir outputDir(mdOutputPath);
+    outputDir.mkpath(mdOutputPath);
+    // Generate the Output File Path
+    QString finalOutPath = mdOutputPath + filter->getNameOfClass() + ".md";
+    std::cout << "Writing MD File: " << finalOutPath.toStdString() << std::endl;
+    QFileInfo fi(finalOutPath);
+
+    // Write the output
+    QFile hOut(finalOutPath);
+    hOut.open(QFile::WriteOnly);
+    QTextStream stream(&hOut);
+    stream << mdSummary;
+    hOut.close();
+  }
 }
 
 QString GenerateUuid(const QString& libName, const QString& className)
@@ -650,7 +672,7 @@ void GenerateHeaderFile(AbstractFilter* filter)
   }
   headerTemplate = headerTemplate.replace(k_PARAMETER_KEYS, pString);
 
-  writeOutput(filter, headerTemplate, ".hpp");
+  writeOutput(filter, headerTemplate, ".hpp", "");
 }
 
 // -----------------------------------------------------------------------------
@@ -680,6 +702,14 @@ void GenerateSourceFile(AbstractFilter* filter)
 
   QString preflightString;
   QTextStream preFlightOut(&preflightString);
+
+  QString mdParamString;
+  QTextStream mdParamOut(&mdParamString);
+
+  mdParamOut << "# " << filterName << " #\n\n";
+  mdParamOut << "| Ready | Parameter Key | Human Name | Parameter Type | Parameter Class |\n";
+  mdParamOut << "|-------|---------------|------------|-----------------|----------------|\n";
+
   s_HasAllParameters = true;
   bool needsFs = false;
 
@@ -703,6 +733,8 @@ void GenerateSourceFile(AbstractFilter* filter)
     if(!propName.isEmpty())
     {
       preFlightOut << "  auto p" << propName << "Value = filterArgs.value<" << paramType << ">(k_" << propName << "_Key);\n";
+
+      mdParamOut << "| " << (hasParameter ? "YES" : "NO") << " | " << propName << " | " << propHuman << " | " << paramType << " | " << propClass << " |\n";
     }
 
     if(origParamClassName == "SeparatorFilterParameter")
@@ -794,7 +826,7 @@ void GenerateSourceFile(AbstractFilter* filter)
     s_TotalBadFilters++;
   }
   s_FilterHasAllParameters[filter->getNameOfClass().toStdString()] = s_HasAllParameters;
-  writeOutput(filter, sourceTemplate, ".cpp");
+  writeOutput(filter, sourceTemplate, ".cpp", mdParamString);
 }
 
 

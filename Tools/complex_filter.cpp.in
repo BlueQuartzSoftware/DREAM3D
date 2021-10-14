@@ -11,6 +11,11 @@ std::string @FILTER_NAME@::name() const
   return FilterTraits<@FILTER_NAME@>::name.str();
 }
 
+std::string @FILTER_NAME@::className() const
+{
+  return FilterTraits<@FILTER_NAME@>::className;
+}
+
 Uuid @FILTER_NAME@::uuid() const
 {
   return FilterTraits<@FILTER_NAME@>::uuid;
