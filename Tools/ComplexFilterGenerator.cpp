@@ -32,7 +32,8 @@ const QString k_CMakeListsFile(D3DTools::GetDREAM3DToolsDir() + "/complex_CMakeL
 const QString k_PluginHeaderFile(D3DTools::GetDREAM3DToolsDir() + "/complex_plugin.hpp.in");
 const QString k_PluginSourceFile(D3DTools::GetDREAM3DToolsDir() + "/complex_plugin.cpp.in");
 
-const QString k_OutputDir("/Users/mjackson/Workspace1/complex/src/complex/");
+//const QString k_OutputDir("/Users/mjackson/Workspace1/complex/src/complex/");
+const QString k_OutputDir("/Users/mjackson/Workspace1/complex_plugins/ComplexCore");
 const QString k_PluginsOutputDir("/Users/mjackson/Workspace1/complex_plugins");
 //const QString k_OutputDir("/tmp/");
 
@@ -524,10 +525,15 @@ void writeTopLevelOutput(const QString& pluginName, const QString& outLines, con
 
   // Assume we are Core first...
   QString outputPath;
-  if(s_CurrentPlugin == "Core")
+  if(s_CurrentPlugin == "AFRLDistributionC" 
+  || s_CurrentPlugin == "CRADA3DSystems" 
+  || s_CurrentPlugin == "ECAccess" 
+  || s_CurrentPlugin == "BrukerIntegration" 
+  || s_CurrentPlugin == "CAxisByPolarizedLight" 
+  || s_CurrentPlugin == "NETLIntegration" 
+  )
   {
-    outputPath = k_OutputDir + "/" + s_CurrentPlugin + filtersDir;
-    return;
+   outputPath = k_PluginsOutputDir + "_private/" + s_CurrentPlugin;
   }
   else
   {
@@ -562,9 +568,15 @@ void writeOutput( AbstractFilter* filter, const QString& outLines, const QString
  
   // Assume we are Core first...
   QString outputPath;
-  if(s_CurrentPlugin == "Core")
+ if(s_CurrentPlugin == "AFRLDistributionC" 
+  || s_CurrentPlugin == "CRADA3DSystems" 
+  || s_CurrentPlugin == "ECAccess" 
+  || s_CurrentPlugin == "BrukerIntegration" 
+  || s_CurrentPlugin == "CAxisByPolarizedLight" 
+  || s_CurrentPlugin == "NETLIntegration" 
+  )
   {
-     outputPath  = k_OutputDir + "/" + s_CurrentPlugin + filtersDir;
+   outputPath = k_PluginsOutputDir + "_private/" + s_CurrentPlugin + "/src/" + s_CurrentPlugin + "/" + filtersDir;
   }
   else
   {
@@ -661,7 +673,6 @@ void GenerateSourceFile(AbstractFilter* filter)
 
   QString linkString;
   QTextStream linkedOut(&linkString);
-  linkedOut << "  // Associate the Linkable Parameter(s) to the children parameters that they control\n";
 
   QString incString;
   QTextStream includeOut(&incString);
@@ -709,7 +720,7 @@ void GenerateSourceFile(AbstractFilter* filter)
        // parameterOut << "  // Linked Prop: " << linkedProp << "\n";
         linkedOut << "  params.linkParameters(k_" << propName << "_Key, k_" << linkedProp << "_Key, true);\n";
       }
-      includeOut << "#include \"complex/Core/Parameters/" << propInclude << ".hpp\"\n";
+      includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
     }
     else if(origParamClassName == "LinkedChoicesFilterParameter")
     {
@@ -736,12 +747,12 @@ void GenerateSourceFile(AbstractFilter* filter)
         linkedOut << "  params.linkParameters(k_" << propName << "_Key, k_" << linkedProp << "_Key, " << i << ");\n";
         i++;
       }
-      includeOut << "#include \"complex/Core/Parameters/" << propInclude << ".hpp\"\n";
+      includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
     }
     else
     {
       parameterOut << "  params.insert(std::make_unique<" << propClass << ">(k_" << propName << "_Key, \"" << propHuman << "\", \"\", " << defaultValue << "));\n";
-      includeOut << "#include \"complex/Core/Parameters/" << propInclude << ".hpp\"\n";
+      includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
     }
 
 
@@ -766,7 +777,12 @@ void GenerateSourceFile(AbstractFilter* filter)
   sourceTemplate = sourceTemplate.replace(k_PARAMETER_INCLUDES, incString);
 
   // Concatentate the parameter string with the linkable params string.
-  pString = pString + linkString;
+  if(!linkString.isEmpty())
+  {
+    linkString = "  // Associate the Linkable Parameter(s) to the children parameters that they control\n" + linkString;
+    pString = pString + linkString;
+  }
+ 
   sourceTemplate = sourceTemplate.replace(k_PARAMETER_DEFS, pString);
   sourceTemplate = sourceTemplate.replace(k_PREFLIGHT_DEFS, preflightString);
   if(s_HasAllParameters)
@@ -789,25 +805,22 @@ void GenerateCMakeFile(const QString& pluginName, std::vector<AbstractFilter::Po
   QString cmakeTemplate = ReadTemplateFile(k_CMakeListsFile);
   cmakeTemplate = cmakeTemplate.replace(k_PLUGIN_NAME, pluginName);
 
-  QString filterHeaderList;
-  QTextStream hOut(&filterHeaderList);
-
-  QString filterSourceList;
-  QTextStream sOut(&filterSourceList);
+  QString filterList;
+  QTextStream hOut(&filterList);
     
   for(const auto& filter : filters)
   {
-    QString prefix = "#   ";
+    QString prefix = "  #";
+    QString suffix = " # MISSING 1 or more Parameter Implementations";
     if(s_FilterHasAllParameters[filter->getNameOfClass().toStdString()])
     {
-      prefix = "    ";
+      prefix = "  ";
+      suffix = "";
     }
-    hOut << prefix << "${${COMPLEX_PLUGIN_NAME}_SOURCE_DIR}/src/" << pluginName << "/Filters/" << filter->getNameOfClass() << ".hpp\n";
-    sOut << prefix << "${${COMPLEX_PLUGIN_NAME}_SOURCE_DIR}/src/" << pluginName << "/Filters/" << filter->getNameOfClass() << ".cpp\n";
+    hOut << prefix << filter->getNameOfClass() << suffix << "\n";
   }
 
-  cmakeTemplate = cmakeTemplate.replace("@FILTER_HEADER_LIST@", filterHeaderList);
-  cmakeTemplate = cmakeTemplate.replace("@FILTER_SOURCE_LIST@", filterSourceList);
+  cmakeTemplate = cmakeTemplate.replace("@FILTER_LIST@", filterList);
 
   writeTopLevelOutput(pluginName, cmakeTemplate, "CMakeLists.txt");
 }
@@ -884,26 +897,32 @@ void GenerateMarkdownSummary(const QString& pluginName, std::vector<AbstractFilt
   QString md;
   QTextStream mdOut(&md);
 
-
   mdOut << "# " << pluginName << " #\n\n";
-
-  mdOut << "|  Filter Name | All Parameters Working | DataCheck Implemented | Execute Implemented |\n";
-  mdOut << "|--------------|------------------------|-----------------------|---------------------|\n";
+  mdOut << "|  Filter Name | All Parameters Working | DataCheck Implemented | Execute Implemented | Documentation Implemented |\n";
+  mdOut << "|--------------|------------------------|-----------------------|---------------------|---------------------------|\n";
+  int32_t goodCount = 0;
+  int32_t badCount = 0;
   for(const auto& filter : filters)
   {
     QString prefix = "|   ";
-
     mdOut << "| " << filter->getNameOfClass() << " |";
     if(s_FilterHasAllParameters[filter->getNameOfClass().toStdString()])
     {
       mdOut << " TRUE ";
+      goodCount++;
     }
     else
     {
       mdOut << " FALSE ";
+      badCount++;
     }
-    mdOut << " | | |\n";
+    mdOut << " | | | |\n";
   }
+
+  mdOut << "\n\n";
+  mdOut << "## Summary ##\n\n";
+  mdOut << "+ Filters Ready to be Ported: " << goodCount << "\n";
+  mdOut << "+ Filters Needing more Parameters Implemented: " << badCount << "\n";
 
   writeTopLevelOutput(pluginName, md, "FilterGuide.md");
 }
