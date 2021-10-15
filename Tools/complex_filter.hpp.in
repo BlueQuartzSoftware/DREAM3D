@@ -1,8 +1,9 @@
 #pragma once
 
+#include "@PLUGIN_NAME@/@PLUGIN_NAME@_export.hpp"
+
 #include "complex/Filter/FilterTraits.hpp"
 #include "complex/Filter/IFilter.hpp"
-#include "complex/complex_export.hpp"
 
 namespace complex
 {
@@ -10,7 +11,7 @@ namespace complex
  * @class @FILTER_NAME@
  * @brief This filter will ....
  */
-class COMPLEX_EXPORT @FILTER_NAME@ : public IFilter
+class @PLUGIN_NAME_UPPER@_EXPORT @FILTER_NAME@ : public IFilter
 {
 public:
   @FILTER_NAME@() = default;

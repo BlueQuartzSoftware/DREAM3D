@@ -646,7 +646,7 @@ QString GenerateUuid(const QString& libName, const QString& className)
 
 //std::vector<QString> sepKeys;
 // -----------------------------------------------------------------------------
-void GenerateHeaderFile(AbstractFilter* filter)
+void GenerateHeaderFile(AbstractFilter* filter, const QString& pluginName)
 {
   QString headerTemplate = ReadTemplateFile(k_HeaderFile);
   QString filterName = filter->getNameOfClass();
@@ -657,6 +657,9 @@ void GenerateHeaderFile(AbstractFilter* filter)
 
   headerTemplate = headerTemplate.replace(k_FILTER_NAME, filterName);
   headerTemplate = headerTemplate.replace(k_UUID, uuid);
+  headerTemplate = headerTemplate.replace(k_PLUGIN_NAME, pluginName);
+  QString pluginNameUpper = pluginName.toUpper();
+  headerTemplate = headerTemplate.replace("@PLUGIN_NAME_UPPER@", pluginNameUpper);
 
   // Generate the Parameter keys
   FilterParameterVectorType parameters = filter->getFilterParameters();
@@ -986,7 +989,7 @@ void GenerateComplexFilters()
       {
         AbstractFilter::Pointer filter = factory->create();
         GenerateSourceFile(filter.get());
-        GenerateHeaderFile(filter.get());
+        GenerateHeaderFile(filter.get(), s_CurrentPlugin);
         filters.push_back(filter);
       }
       factoryMapIter++;
