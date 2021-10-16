@@ -610,7 +610,7 @@ void writeOutput( AbstractFilter* filter, const QString& outLines, const QString
     outputDir.mkpath(mdOutputPath);
     // Generate the Output File Path
     QString finalOutPath = mdOutputPath + filter->getNameOfClass() + ".md";
-    std::cout << "Writing MD File: " << finalOutPath.toStdString() << std::endl;
+    // std::cout << "Writing MD File: " << finalOutPath.toStdString() << std::endl;
     QFileInfo fi(finalOutPath);
 
     // Write the output
