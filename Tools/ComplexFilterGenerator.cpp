@@ -14,7 +14,7 @@
 #include <QtCore/QTextStream>
 #include <sys/_types/_int32_t.h>
 
-
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
@@ -53,6 +53,7 @@ const QString k_PARAMETER_DEFS("@PARAMETER_DEFS@");
 const QString k_FILTER_HUMAN_NAME("@FILTER_HUMAN_NAME@");
 const QString k_PARAMETER_INCLUDES("@PARAMETER_INCLUDES@");
 const QString k_PREFLIGHT_DEFS("@PREFLIGHT_DEFS@");
+const QString k_DEFAULT_TAGS("@DEFAULT_TAGS@");
 
 static QMap<QString, QString> s_ParameterMapping;
 static QMap<QString, QString> s_InlcudeMapping;
@@ -687,9 +688,21 @@ void GenerateSourceFile(AbstractFilter* filter)
   QString uuid = GenerateUuid(filter->getCompiledLibraryName(), filter->getNameOfClass());
   QString DEFAULT_VALUE = "{0}";
 
+  QString defaultTags = QString("\"#%1\", \"#%2\"").arg(filter->getGroupName(), filter->getSubGroupName());
+  if(filter->getSubGroupName() == SIMPL::FilterSubGroups::InputFilters)
+  {
+    defaultTags = defaultTags + ", \"#Read\", \"#Import\"";
+  }
+  if(filter->getSubGroupName() == SIMPL::FilterSubGroups::OutputFilters)
+  {
+    defaultTags = defaultTags + ", \"#Write\", \"#Export\"";
+  }
+
   sourceTemplate = sourceTemplate.replace(k_FILTER_NAME, filterName);
   sourceTemplate = sourceTemplate.replace(k_UUID, uuid);
   sourceTemplate = sourceTemplate.replace(k_FILTER_HUMAN_NAME, humanName);
+  sourceTemplate = sourceTemplate.replace(k_DEFAULT_TAGS, defaultTags);
+
 
   // Generate the Parameter Section
   FilterParameterVectorType parameters = filter->getFilterParameters();

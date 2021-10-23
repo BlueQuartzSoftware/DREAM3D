@@ -6,26 +6,37 @@ using namespace complex;
 
 namespace complex
 {
+//------------------------------------------------------------------------------
 std::string @FILTER_NAME@::name() const
 {
   return FilterTraits<@FILTER_NAME@>::name.str();
 }
 
+//------------------------------------------------------------------------------
 std::string @FILTER_NAME@::className() const
 {
   return FilterTraits<@FILTER_NAME@>::className;
 }
 
+//------------------------------------------------------------------------------
 Uuid @FILTER_NAME@::uuid() const
 {
   return FilterTraits<@FILTER_NAME@>::uuid;
 }
 
+//------------------------------------------------------------------------------
 std::string @FILTER_NAME@::humanName() const
 {
   return "@FILTER_HUMAN_NAME@";
 }
 
+//------------------------------------------------------------------------------
+std::vector<std::string> @FILTER_NAME@::defaultTags() const
+{
+  return {@DEFAULT_TAGS@};
+}
+
+//------------------------------------------------------------------------------
 Parameters @FILTER_NAME@::parameters() const
 {
   Parameters params;
@@ -34,11 +45,13 @@ Parameters @FILTER_NAME@::parameters() const
   return params;
 }
 
+//------------------------------------------------------------------------------
 IFilter::UniquePointer @FILTER_NAME@::clone() const
 {
   return std::make_unique<@FILTER_NAME@>();
 }
 
+//------------------------------------------------------------------------------
 Result<OutputActions> @FILTER_NAME@::preflightImpl(const DataStructure& ds, const Arguments& filterArgs, const MessageHandler& messageHandler) const
 {
   /****************************************************************************
@@ -54,6 +67,7 @@ Result<OutputActions> @FILTER_NAME@::preflightImpl(const DataStructure& ds, cons
   return {std::move(actions)};
 }
 
+//------------------------------------------------------------------------------
 Result<> @FILTER_NAME@::executeImpl(DataStructure& ds, const Arguments& filterArgs, const MessageHandler& messageHandler) const
 {
   /****************************************************************************
