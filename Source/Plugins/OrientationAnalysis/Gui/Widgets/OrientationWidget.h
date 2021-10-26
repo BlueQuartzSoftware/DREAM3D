@@ -37,9 +37,8 @@
 
 #include <QtWidgets/QWidget>
 
-#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
 
-#include "OrientationUtilityCalculator.h"
+class OrientationUtilityCalculator; 
 
 class OrientationWidget : public QWidget
 {
@@ -50,7 +49,7 @@ public:
   virtual ~OrientationWidget();
 
 signals:
-  void valuesChanged(QVector<double> values, OrientationConverter<double>::OrientationType type, bool hasErrors);
+  void valuesChanged(QVector<double> values, int32_t type, bool hasErrors);
   void invalidValues(int errorCode, QString errorMsg);
   void clearErrorTable();
 

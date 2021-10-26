@@ -35,6 +35,9 @@
 #include "OrientationUtilityCalculator.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
+
+using InputType = OrientationConverter<double>::OrientationType;
 
 #include "AxisAngleWidget.h"
 #include "CubochoricWidget.h"
@@ -63,10 +66,10 @@ OrientationUtilityCalculator::~OrientationUtilityCalculator() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationUtilityCalculator::setDataAndInputType(QVector<double> values, OrientationConverter<double>::OrientationType inputType, bool hasErrors)
+void OrientationUtilityCalculator::setDataAndInputType(QVector<double> values, int32_t inputType, bool hasErrors)
 {
   m_InputData = values;
-  m_InputType = inputType;
+  m_InputType =inputType;
   m_HasErrors = hasErrors;
   emit calculatorReady(this);
 }
@@ -74,7 +77,7 @@ void OrientationUtilityCalculator::setDataAndInputType(QVector<double> values, O
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationConverter<double>::OrientationType OrientationUtilityCalculator::getInputType()
+int32_t OrientationUtilityCalculator::getInputType()
 {
   return m_InputType;
 }
@@ -90,7 +93,7 @@ bool OrientationUtilityCalculator::getHasErrors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<double> OrientationUtilityCalculator::getValues(OrientationConverter<double>::OrientationType outputType)
+QVector<double> OrientationUtilityCalculator::getValues(int32_t outputType)
 {
   typedef OrientationConverter<double> OCType;
   QVector<OCType::Pointer> converters(7);

@@ -35,6 +35,10 @@
 
 #include "OrientationWidget.h"
 
+#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
+
+#include "OrientationUtilityCalculator.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -43,6 +43,9 @@
 #include <Eigen/Dense>
 #include <Eigen/Eigen>
 
+#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
+#include "OrientationUtilityCalculator.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -39,6 +39,10 @@
 
 #include "SIMPLib/Math/SIMPLibMath.h"
 
+#include "OrientationUtilityCalculator.h"
+#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

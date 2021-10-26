@@ -37,8 +37,6 @@
 
 #include "OrientationWidget.h"
 
-#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
-
 #include "ui_CubochoricWidget.h"
 
 class CubochoricWidget : public OrientationWidget, private Ui::CubochoricWidget

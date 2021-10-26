@@ -37,6 +37,8 @@
 
 #include <QtGui/QDoubleValidator>
 
+#include "OrientationUtilityCalculator.h"
+#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
 
 // -----------------------------------------------------------------------------
 //

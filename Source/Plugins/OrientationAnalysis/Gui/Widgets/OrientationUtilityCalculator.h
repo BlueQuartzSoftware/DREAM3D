@@ -37,7 +37,6 @@
 
 #include <QtWidgets/QWidget>
 
-#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
 
 class OrientationUtilityCalculator : public QWidget
 {
@@ -47,21 +46,21 @@ public:
   OrientationUtilityCalculator(QWidget* parent = nullptr);
   virtual ~OrientationUtilityCalculator();
 
-  OrientationConverter<double>::OrientationType getInputType();
+  int32_t getInputType();
 
   bool getHasErrors();
 
-  QVector<double> getValues(OrientationConverter<double>::OrientationType outputType);
+  QVector<double> getValues(int32_t outputType);
 
 protected slots:
-  void setDataAndInputType(QVector<double> values, OrientationConverter<double>::OrientationType inputType, bool hasErrors);
+  void setDataAndInputType(QVector<double> values, int32_t inputType, bool hasErrors);
 
 signals:
   void calculatorReady(OrientationUtilityCalculator* calculator);
 
 private:
   QVector<double> m_InputData;
-  OrientationConverter<double>::OrientationType m_InputType;
+  int32_t m_InputType;
   bool m_HasErrors;
 
 public:

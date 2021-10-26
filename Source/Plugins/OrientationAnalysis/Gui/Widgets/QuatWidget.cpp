@@ -39,6 +39,10 @@
 
 #include "SIMPLib/Math/QuaternionMath.hpp"
 
+#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
+
+#include "OrientationUtilityCalculator.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
