@@ -4,11 +4,10 @@ using namespace complex;
 
 namespace
 {
-// List Plugin Uuid
 @FILTER_UUID_LIST@} // namespace
 
 @PLUGIN_NAME@Plugin::@PLUGIN_NAME@Plugin()
-: AbstractPlugin(k_ID, "@PLUGIN_NAME@", "Description", "BlueQuartz Software")
+: AbstractPlugin(k_ID, "@PLUGIN_NAME@", "@PLUGIN_DESCRIPTION@", "@PLUGIN_VENDOR@")
 {
   registerFilters();
 }

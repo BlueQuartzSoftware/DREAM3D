@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include <iostream>
+#include <set>
 
 
 #include <QtCore/QCoreApplication>
@@ -21,6 +22,7 @@
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
+#include "SIMPLib/Plugin/PluginManager.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 
@@ -46,6 +48,8 @@ static QMap<QString, QString> s_FilterUuidMapping;
 static std::map<std::string, bool> s_FilterHasAllParameters;
 
 const QString k_PLUGIN_NAME("@PLUGIN_NAME@");
+const QString k_PLUGIN_DESCRIPTION("@PLUGIN_DESCRIPTION@");
+const QString k_PLUGIN_VENDOR("@PLUGIN_VENDOR@");
 const QString k_FILTER_NAME("@FILTER_NAME@");
 const QString k_UUID("@UUID@");
 const QString k_PARAMETER_KEYS("@PARAMETER_KEYS@");
@@ -653,8 +657,9 @@ void GenerateHeaderFile(AbstractFilter* filter, const QString& pluginName)
   QString filterName = filter->getNameOfClass();
   QString humanName = filter->getHumanLabel();
   QString uuid = GenerateUuid(filter->getCompiledLibraryName(), filter->getNameOfClass());
+  QString prevUuid = filter->getUuid().toString();
 
-  s_FilterUuidMapping[filterName] = uuid;
+  s_FilterUuidMapping[prevUuid] = uuid;
 
   headerTemplate = headerTemplate.replace(k_FILTER_NAME, filterName);
   headerTemplate = headerTemplate.replace(k_UUID, uuid);
@@ -685,7 +690,6 @@ void GenerateSourceFile(AbstractFilter* filter)
   QString sourceTemplate = ReadTemplateFile(k_SourceFile);
   QString filterName = filter->getNameOfClass();
   QString humanName = filter->getHumanLabel();
-  QString uuid = GenerateUuid(filter->getCompiledLibraryName(), filter->getNameOfClass());
   QString DEFAULT_VALUE = "{0}";
 
   QString defaultTags = QString("\"#%1\", \"#%2\"").arg(filter->getGroupName(), filter->getSubGroupName());
@@ -699,7 +703,6 @@ void GenerateSourceFile(AbstractFilter* filter)
   }
 
   sourceTemplate = sourceTemplate.replace(k_FILTER_NAME, filterName);
-  sourceTemplate = sourceTemplate.replace(k_UUID, uuid);
   sourceTemplate = sourceTemplate.replace(k_FILTER_HUMAN_NAME, humanName);
   sourceTemplate = sourceTemplate.replace(k_DEFAULT_TAGS, defaultTags);
 
@@ -799,6 +802,10 @@ void GenerateSourceFile(AbstractFilter* filter)
     }
     else
     {
+      if(!hasParameter)
+      {
+        parameterOut << "/*[x]*/";
+      }
       parameterOut << "  params.insert(std::make_unique<" << propClass << ">(k_" << propName << "_Key, \"" << propHuman << "\", \"\", " << defaultValue << "));\n";
       includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
     }
@@ -890,6 +897,26 @@ void GeneratePluginSource(const QString& pluginName, std::vector<AbstractFilter:
   QString cmakeTemplate = ReadTemplateFile(k_PluginSourceFile);
   cmakeTemplate = cmakeTemplate.replace(k_PLUGIN_NAME, pluginName);
 
+  PluginManager* pluginManager = PluginManager::Instance();
+  QVector<ISIMPLibPlugin*> plugins = pluginManager->getPluginsVector();
+  ISIMPLibPlugin* currentPlugin = nullptr;
+  for(const auto& p : plugins)
+  {
+    if(p->getPluginBaseName() == pluginName)
+    {
+      currentPlugin = p;
+    }
+  }
+  QString plugDescription = "Description";
+  QString plugOrg = "BlueQuartz Software";
+  if(currentPlugin != nullptr)
+  {
+    plugDescription = currentPlugin->getDescription();
+    plugOrg = currentPlugin->getVendor();
+  }
+
+  cmakeTemplate = cmakeTemplate.replace(k_PLUGIN_DESCRIPTION, plugDescription);
+  cmakeTemplate = cmakeTemplate.replace(k_PLUGIN_VENDOR, plugOrg);
 
   QString filterHeaderList;
   QTextStream hOut(&filterHeaderList);
@@ -907,18 +934,17 @@ void GeneratePluginSource(const QString& pluginName, std::vector<AbstractFilter:
 
   filterHeaderList.clear();
   QMapIterator<QString, QString> i(s_FilterUuidMapping);
-  // while(i.hasNext())
-  // {
-  //   i.next();
-  //   QString prefix = "//";
-  //   if(s_FilterHasAllParameters[i.key().toStdString()])
-  //   {
-  //     prefix = "  ";
-  //   }
-  //   hOut << prefix <<  "constexpr AbstractPlugin::IdType k_" << i.key() << "_ID = *Uuid::FromString(\"" << i.value() << "\");\n";
-  // }
+  hOut << "// This maps previous filters from DREAM.3D Version 6.x to DREAM.3D Version 7.x\n";
+  hOut << "std::map<complex::Uuid, complex::Uuid> k_SimplToComplexFilterMapping = {\n";
+   while(i.hasNext())
+   {
+     i.next();
+     hOut << "{Uuid::FromString(\"" << i.key() << "\").value(), Uuid::FromString(\"" << i.value() << "\").value()}, \n";
+   }
+   hOut << "};\n";
 
-  QString uuid = GenerateUuid(pluginName, "SomeFiterThing");
+  QString uuid = GenerateUuid(pluginName, "SomeFilterThing");
+  hOut << "// Plugin Uuid\n";
   hOut << "  " << "constexpr AbstractPlugin::IdType k_ID = *Uuid::FromString(\"" << uuid << "\");\n";
   cmakeTemplate = cmakeTemplate.replace("@FILTER_UUID_LIST@", filterHeaderList);
 
@@ -1001,6 +1027,9 @@ void GenerateComplexFilters()
       if(factory.get() != nullptr)
       {
         AbstractFilter::Pointer filter = factory->create();
+        
+
+
         GenerateSourceFile(filter.get());
         GenerateHeaderFile(filter.get(), s_CurrentPlugin);
         filters.push_back(filter);
