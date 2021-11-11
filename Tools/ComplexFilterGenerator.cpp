@@ -25,7 +25,7 @@
 #include "SIMPLib/Plugin/PluginManager.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
-
+#include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 
 #include "DREAM3DToolsConfiguration.h"
 
@@ -34,6 +34,9 @@ const QString k_SourceFile(D3DTools::GetDREAM3DToolsDir() + "/complex_filter.cpp
 const QString k_CMakeListsFile(D3DTools::GetDREAM3DToolsDir() + "/complex_CMakeLists.txt.in");
 const QString k_PluginHeaderFile(D3DTools::GetDREAM3DToolsDir() + "/complex_plugin.hpp.in");
 const QString k_PluginSourceFile(D3DTools::GetDREAM3DToolsDir() + "/complex_plugin.cpp.in");
+const QString k_TestCMakeListsFile(D3DTools::GetDREAM3DToolsDir() + "/test_complex_CMakeLists.txt.in");
+const QString k_UnitTestSourceFile(D3DTools::GetDREAM3DToolsDir() + "/unit_test_filter.cpp.in");
+const QString k_TestDirsHeaderFile(D3DTools::GetDREAM3DToolsDir() + "/test_dirs.hpp.in");
 
 //const QString k_OutputDir("/Users/mjackson/Workspace1/complex/src/complex/");
 const QString k_OutputDir("/Users/mjackson/Workspace1/complex_plugins/ComplexCore");
@@ -58,13 +61,17 @@ const QString k_FILTER_HUMAN_NAME("@FILTER_HUMAN_NAME@");
 const QString k_PARAMETER_INCLUDES("@PARAMETER_INCLUDES@");
 const QString k_PREFLIGHT_DEFS("@PREFLIGHT_DEFS@");
 const QString k_DEFAULT_TAGS("@DEFAULT_TAGS@");
+const QString k_PREFLIGHT_UPDATED_VALUES("@PREFLIGHT_UPDATED_VALUES@");
+const QString k_PREFLIGHT_UPDATED_DEFS("@PREFLIGHT_UPDATED_DEFS@");
+
 
 static QMap<QString, QString> s_ParameterMapping;
 static QMap<QString, QString> s_InlcudeMapping;
-static QMap<QString, QString> s_DefaultValueMapping;
+static QMap<QString, QString> s_DefaultConstructorMapping;
 static QMap<QString, QString> s_ParameterTypeMapping;
 static QMap<QString, bool> s_ParameterAvailable;
 static QMap<QString, int32_t> s_ParameterCount;
+static QMap<QString, QString> s_UnitTestDefaultValue;
 
 
 void InitParameterCount ()
@@ -99,6 +106,7 @@ void InitParameterCount ()
   s_ParameterCount["MultiDataArraySelectionFilterParameter"] =0;
   s_ParameterCount["LinkedBooleanFilterParameter"] = 0;
   s_ParameterCount["LinkedChoicesFilterParameter"] = 0;
+  s_ParameterCount["PreflightUpdatedValueFilterParameter"] = 0;
 
   // No COMPLEX Type Yet
   s_ParameterCount["CalculatorFilterParameter"] = 0;
@@ -130,7 +138,6 @@ void InitParameterCount ()
   s_ParameterCount["OrientationUtilityFilterParameter"] = 0;
   s_ParameterCount["ParagraphFilterParameter"] = 0;
   s_ParameterCount["PhaseTypeSelectionFilterParameter"] = 0;
-  s_ParameterCount["PreflightUpdatedValueFilterParameter"] = 0;
   s_ParameterCount["RangeFilterParameter"] = 0;
   s_ParameterCount["ReadASCIIDataFilterParameter"] = 0;
   s_ParameterCount["ReadH5EbsdFilterParameter"] = 0;
@@ -172,6 +179,7 @@ void InitParameterTypeMapping ()
   s_ParameterTypeMapping["MultiDataArraySelectionFilterParameter"] = "MultiArraySelectionParameter::ValueType";
   s_ParameterTypeMapping["LinkedBooleanFilterParameter"] = "bool";
   s_ParameterTypeMapping["LinkedChoicesFilterParameter"] = "ChoicesParameter::ValueType";
+  s_ParameterTypeMapping["PreflightUpdatedValueFilterParameter"] = "<<<NOT_IMPLEMENTED>>>";
 
   // No COMPLEX Type Yet
   s_ParameterTypeMapping["CalculatorFilterParameter"] = "<<<NOT_IMPLEMENTED>>>";
@@ -203,7 +211,6 @@ void InitParameterTypeMapping ()
   s_ParameterTypeMapping["OrientationUtilityFilterParameter"] = "<<<NOT_IMPLEMENTED>>>";
   s_ParameterTypeMapping["ParagraphFilterParameter"] = "<<<NOT_IMPLEMENTED>>>";
   s_ParameterTypeMapping["PhaseTypeSelectionFilterParameter"] = "<<<NOT_IMPLEMENTED>>>";
-  s_ParameterTypeMapping["PreflightUpdatedValueFilterParameter"] = "<<<NOT_IMPLEMENTED>>>";
   s_ParameterTypeMapping["RangeFilterParameter"] = "<<<NOT_IMPLEMENTED>>>";
   s_ParameterTypeMapping["ReadASCIIDataFilterParameter"] = "<<<NOT_IMPLEMENTED>>>";
   s_ParameterTypeMapping["ReadH5EbsdFilterParameter"] = "<<<NOT_IMPLEMENTED>>>";
@@ -214,77 +221,152 @@ void InitParameterTypeMapping ()
 }
 
 
-void InitDefaultValueMapping ()
+void InitDefaultParameterConstructor ()
 {
-  s_DefaultValueMapping["BooleanFilterParameter"] = "false";
-  s_DefaultValueMapping["DataArrayCreationFilterParameter"] = "DataPath{}";
-  s_DefaultValueMapping["DataArraySelectionFilterParameter"] = "DataPath{}";
-  s_DefaultValueMapping["ChoiceFilterParameter"] = "0, ChoicesParameter::Choices{\"Option 1\", \"Option 2\", \"Option 3\"}";
-  s_DefaultValueMapping["AttributeMatrixCreationFilterParameter"] = "DataPath{}";
-  s_DefaultValueMapping["AttributeMatrixSelectionFilterParameter"] = "DataPath{}";
-  s_DefaultValueMapping["DataContainerCreationFilterParameter"] = "DataPath{}";
-  s_DefaultValueMapping["DataContainerSelectionFilterParameter"] = "DataPath{}";
-  s_DefaultValueMapping["InputFileFilterParameter"] = "fs::path(\"<default file to read goes here>\"), FileSystemPathParameter::PathType::InputFile";
-  s_DefaultValueMapping["InputPathFilterParameter"] = "fs::path(\"<default file to read goes here>\"), FileSystemPathParameter::PathType::InputDir";
-  s_DefaultValueMapping["OutputFileFilterParameter"] = "fs::path(\"<default file to read goes here>\"), FileSystemPathParameter::PathType::OutputFile";
-  s_DefaultValueMapping["OutputPathFilterParameter"] = "fs::path(\"<default file to read goes here>\"), FileSystemPathParameter::PathType::OutputDir";
-  s_DefaultValueMapping["FileListInfoFilterParameter"] = "GeneratedFileListParameter::ValueType{}";
-  s_DefaultValueMapping["FloatFilterParameter"] = "1.23345f";
-  s_DefaultValueMapping["IntFilterParameter"] = "1234356";
-  s_DefaultValueMapping["DoubleFilterParameter"] = "2.3456789";
-  s_DefaultValueMapping["UInt64FilterParameter"] = "13412341234212";
-  s_DefaultValueMapping["AxisAngleFilterParameter"] = "std::vector<float32>(4), std::vector<std::string>(4)";
-  s_DefaultValueMapping["IntVec2FilterParameter"] = "std::vector<int32>(2), std::vector<std::string>(2)";
-  s_DefaultValueMapping["IntVec3FilterParameter"] = "std::vector<int32>(3), std::vector<std::string>(3)";
-  s_DefaultValueMapping["FloatVec2FilterParameter"] = "std::vector<float32>(2), std::vector<std::string>(2)";
-  s_DefaultValueMapping["FloatVec3FilterParameter"] = "std::vector<float32>(3), std::vector<std::string>(3)";
-  s_DefaultValueMapping["NumericTypeFilterParameter"] = "NumericType::int8";
-  s_DefaultValueMapping["StringFilterParameter"] = "\"SomeString\"";
-  s_DefaultValueMapping["SeparatorFilterParameter"] = "\"Separator\"";
-  s_DefaultValueMapping["LinkedDataContainerSelectionFilterParameter"] = "DataPath{}";
-  s_DefaultValueMapping["LinkedPathCreationFilterParameter"] = "DataPath{}";
-  s_DefaultValueMapping["MultiDataArraySelectionFilterParameter"] = "MultiArraySelectionParameter::ValueType {DataPath(), DataPath(), DataPath()}";
-  s_DefaultValueMapping["LinkedBooleanFilterParameter"] = "false";
-  s_DefaultValueMapping["LinkedChoicesFilterParameter"] = "0, ChoicesParameter::Choices{\"Option 1\", \"Option 2\", \"Option 3\"}";
+  s_DefaultConstructorMapping["BooleanFilterParameter"] = "false";
+  s_DefaultConstructorMapping["DataArrayCreationFilterParameter"] = "DataPath{}";
+  s_DefaultConstructorMapping["DataArraySelectionFilterParameter"] = "DataPath{}";
+  s_DefaultConstructorMapping["ChoiceFilterParameter"] = "0, ChoicesParameter::Choices{\"Option 1\", \"Option 2\", \"Option 3\"}";
+  s_DefaultConstructorMapping["AttributeMatrixCreationFilterParameter"] = "DataPath{}";
+  s_DefaultConstructorMapping["AttributeMatrixSelectionFilterParameter"] = "DataPath{}";
+  s_DefaultConstructorMapping["DataContainerCreationFilterParameter"] = "DataPath{}";
+  s_DefaultConstructorMapping["DataContainerSelectionFilterParameter"] = "DataPath{}";
+  s_DefaultConstructorMapping["InputFileFilterParameter"] = "fs::path(\"<default file to read goes here>\"), FileSystemPathParameter::PathType::InputFile";
+  s_DefaultConstructorMapping["InputPathFilterParameter"] = "fs::path(\"<default file to read goes here>\"), FileSystemPathParameter::PathType::InputDir";
+  s_DefaultConstructorMapping["OutputFileFilterParameter"] = "fs::path(\"<default file to read goes here>\"), FileSystemPathParameter::PathType::OutputFile";
+  s_DefaultConstructorMapping["OutputPathFilterParameter"] = "fs::path(\"<default file to read goes here>\"), FileSystemPathParameter::PathType::OutputDir";
+  s_DefaultConstructorMapping["FileListInfoFilterParameter"] = "GeneratedFileListParameter::ValueType{}";
+  s_DefaultConstructorMapping["FloatFilterParameter"] = "1.23345f";
+  s_DefaultConstructorMapping["IntFilterParameter"] = "1234356";
+  s_DefaultConstructorMapping["DoubleFilterParameter"] = "2.3456789";
+  s_DefaultConstructorMapping["UInt64FilterParameter"] = "13412341234212";
+  s_DefaultConstructorMapping["AxisAngleFilterParameter"] = "std::vector<float32>(4), std::vector<std::string>(4)";
+  s_DefaultConstructorMapping["IntVec2FilterParameter"] = "std::vector<int32>(2), std::vector<std::string>(2)";
+  s_DefaultConstructorMapping["IntVec3FilterParameter"] = "std::vector<int32>(3), std::vector<std::string>(3)";
+  s_DefaultConstructorMapping["FloatVec2FilterParameter"] = "std::vector<float32>(2), std::vector<std::string>(2)";
+  s_DefaultConstructorMapping["FloatVec3FilterParameter"] = "std::vector<float32>(3), std::vector<std::string>(3)";
+  s_DefaultConstructorMapping["NumericTypeFilterParameter"] = "NumericType::int8";
+  s_DefaultConstructorMapping["StringFilterParameter"] = "\"SomeString\"";
+  s_DefaultConstructorMapping["SeparatorFilterParameter"] = "\"Separator\"";
+  s_DefaultConstructorMapping["LinkedDataContainerSelectionFilterParameter"] = "DataPath{}";
+  s_DefaultConstructorMapping["LinkedPathCreationFilterParameter"] = "DataPath{}";
+  s_DefaultConstructorMapping["MultiDataArraySelectionFilterParameter"] = "MultiArraySelectionParameter::ValueType {DataPath(), DataPath(), DataPath()}";
+  s_DefaultConstructorMapping["LinkedBooleanFilterParameter"] = "false";
+  s_DefaultConstructorMapping["LinkedChoicesFilterParameter"] = "0, ChoicesParameter::Choices{\"Option 1\", \"Option 2\", \"Option 3\"}";
+  s_DefaultConstructorMapping["PreflightUpdatedValueFilterParameter"] = "{}";
 
   // No COMPLEX Type Yet
-  s_DefaultValueMapping["CalculatorFilterParameter"] = "{}";
-  s_DefaultValueMapping["ComparisonSelectionAdvancedFilterParameter"] = "{}";
-  s_DefaultValueMapping["ComparisonSelectionFilterParameter"] = "{}";
-  s_DefaultValueMapping["ConvertHexGridToSquareGridFilterParameter"] = "{}";
-  s_DefaultValueMapping["DataContainerArrayProxyFilterParameter"] = "{}";
-  s_DefaultValueMapping["DataContainerReaderFilterParameter"] = "{}";
-  s_DefaultValueMapping["DynamicChoiceFilterParameter"] = "{}";
-  s_DefaultValueMapping["DynamicTableFilterParameter"] = "{}";
-  s_DefaultValueMapping["EMMPMFilterParameter"] = "{}";
-  s_DefaultValueMapping["EbsdMontageImportFilterParameter"] = "{}";
-  s_DefaultValueMapping["EbsdToH5EbsdFilterParameter"] = "{}";
-  s_DefaultValueMapping["EbsdWarpPolynomialFilterParameter"] = "{}";
-  s_DefaultValueMapping["EnsembleInfoFilterParameter"] = "{}";
-  s_DefaultValueMapping["SecondOrderPolynomialFilterParameter"] = "{}";
-  s_DefaultValueMapping["ThirdOrderPolynomialFilterParameter"] = "{}";
-  s_DefaultValueMapping["FourthOrderPolynomialFilterParameter"] = "{}";
-  s_DefaultValueMapping["GenerateColorTableFilterParameter"] = "{}";
-  s_DefaultValueMapping["ImportHDF5DatasetFilterParameter"] = "{}";
-  s_DefaultValueMapping["ImportVectorImageStackFilterParameter"] = "{}";
-  s_DefaultValueMapping["KbrRecisConfigFilterParameter"] = "{}";
-  s_DefaultValueMapping["MontageSelectionFilterParameter"] = "{}";
-  s_DefaultValueMapping["MontageStructureSelectionFilterParameter"] = "{}";
-  s_DefaultValueMapping["MultiAttributeMatrixSelectionFilterParameter"] = "{}";
-  s_DefaultValueMapping["MultiDataContainerSelectionFilterParameter"] = "{}";
-  s_DefaultValueMapping["MultiInputFileFilterParameter"] = "{}";
-  s_DefaultValueMapping["OEMEbsdScanSelectionFilterParameter"] = "{}";
-  s_DefaultValueMapping["OrientationUtilityFilterParameter"] = "{}";
-  s_DefaultValueMapping["ParagraphFilterParameter"] = "{}";
-  s_DefaultValueMapping["PhaseTypeSelectionFilterParameter"] = "{}";
-  s_DefaultValueMapping["PreflightUpdatedValueFilterParameter"] = "{}";
-  s_DefaultValueMapping["RangeFilterParameter"] = "{}";
-  s_DefaultValueMapping["ReadASCIIDataFilterParameter"] = "{}";
-  s_DefaultValueMapping["ReadH5EbsdFilterParameter"] = "{}";
-  s_DefaultValueMapping["ScalarTypeFilterParameter"] = "{}";
-  s_DefaultValueMapping["ShapeTypeSelectionFilterParameter"] = "{}";
-  s_DefaultValueMapping["StatsGeneratorFilterParameter"] = "{}";
-  s_DefaultValueMapping["Symmetric6x6FilterParameter"] = "{}";
+  s_DefaultConstructorMapping["CalculatorFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["ComparisonSelectionAdvancedFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["ComparisonSelectionFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["ConvertHexGridToSquareGridFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["DataContainerArrayProxyFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["DataContainerReaderFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["DynamicChoiceFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["DynamicTableFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["EMMPMFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["EbsdMontageImportFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["EbsdToH5EbsdFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["EbsdWarpPolynomialFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["EnsembleInfoFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["SecondOrderPolynomialFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["ThirdOrderPolynomialFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["FourthOrderPolynomialFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["GenerateColorTableFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["ImportHDF5DatasetFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["ImportVectorImageStackFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["KbrRecisConfigFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["MontageSelectionFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["MontageStructureSelectionFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["MultiAttributeMatrixSelectionFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["MultiDataContainerSelectionFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["MultiInputFileFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["OEMEbsdScanSelectionFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["OrientationUtilityFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["ParagraphFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["PhaseTypeSelectionFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["RangeFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["ReadASCIIDataFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["ReadH5EbsdFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["ScalarTypeFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["ShapeTypeSelectionFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["StatsGeneratorFilterParameter"] = "{}";
+  s_DefaultConstructorMapping["Symmetric6x6FilterParameter"] = "{}";
+}
+
+
+void InitUnitTestParameterConstruction ()
+{
+  s_UnitTestDefaultValue["BooleanFilterParameter"] = "false";
+  s_UnitTestDefaultValue["DataArrayCreationFilterParameter"] = "DataPath{}";
+  s_UnitTestDefaultValue["DataArraySelectionFilterParameter"] = "DataPath{}";
+  s_UnitTestDefaultValue["ChoiceFilterParameter"] = "0";
+  s_UnitTestDefaultValue["AttributeMatrixCreationFilterParameter"] = "DataPath{}";
+  s_UnitTestDefaultValue["AttributeMatrixSelectionFilterParameter"] = "DataPath{}";
+  s_UnitTestDefaultValue["DataContainerCreationFilterParameter"] = "DataPath{}";
+  s_UnitTestDefaultValue["DataContainerSelectionFilterParameter"] = "DataPath{}";
+  s_UnitTestDefaultValue["InputFileFilterParameter"] = "fs::path(\"/Path/To/Input/File/To/Read.data\")";
+  s_UnitTestDefaultValue["InputPathFilterParameter"] = "fs::path(\"/Path/To/Input/Directory/To/Read\")";
+  s_UnitTestDefaultValue["OutputFileFilterParameter"] = "fs::path(\"/Path/To/Output/File/To/Write.data\")";
+  s_UnitTestDefaultValue["OutputPathFilterParameter"] = "fs::path(\"/Path/To/Output/Directory/To/Read\")";
+  s_UnitTestDefaultValue["FileListInfoFilterParameter"] = "GeneratedFileListParameter::ValueType{}";
+  s_UnitTestDefaultValue["FloatFilterParameter"] = "1.23345f";
+  s_UnitTestDefaultValue["IntFilterParameter"] = "1234356";
+  s_UnitTestDefaultValue["DoubleFilterParameter"] = "2.3456789";
+  s_UnitTestDefaultValue["UInt64FilterParameter"] = "13412341234212";
+  s_UnitTestDefaultValue["AxisAngleFilterParameter"] = "std::vector<float32>(4)";
+  s_UnitTestDefaultValue["IntVec2FilterParameter"] = "std::vector<int32>(2)";
+  s_UnitTestDefaultValue["IntVec3FilterParameter"] = "std::vector<int32>(3)";
+  s_UnitTestDefaultValue["FloatVec2FilterParameter"] = "std::vector<float32>(2)";
+  s_UnitTestDefaultValue["FloatVec3FilterParameter"] = "std::vector<float32>(3)";
+  s_UnitTestDefaultValue["NumericTypeFilterParameter"] = "NumericType::int8";
+  s_UnitTestDefaultValue["StringFilterParameter"] = "\"SomeString\"";
+  s_UnitTestDefaultValue["SeparatorFilterParameter"] = "\"Separator\"";
+  s_UnitTestDefaultValue["LinkedDataContainerSelectionFilterParameter"] = "DataPath{}";
+  s_UnitTestDefaultValue["LinkedPathCreationFilterParameter"] = "DataPath{}";
+  s_UnitTestDefaultValue["MultiDataArraySelectionFilterParameter"] = "MultiArraySelectionParameter::ValueType {DataPath(), DataPath(), DataPath()}";
+  s_UnitTestDefaultValue["LinkedBooleanFilterParameter"] = "false";
+  s_UnitTestDefaultValue["LinkedChoicesFilterParameter"] = "0";
+  s_UnitTestDefaultValue["PreflightUpdatedValueFilterParameter"] = "{{\"key\", \"Value\"}}";
+
+  // No COMPLEX Type Yet
+  s_UnitTestDefaultValue["CalculatorFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["ComparisonSelectionAdvancedFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["ComparisonSelectionFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["ConvertHexGridToSquareGridFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["DataContainerArrayProxyFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["DataContainerReaderFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["DynamicChoiceFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["DynamicTableFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["EMMPMFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["EbsdMontageImportFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["EbsdToH5EbsdFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["EbsdWarpPolynomialFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["EnsembleInfoFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["SecondOrderPolynomialFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["ThirdOrderPolynomialFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["FourthOrderPolynomialFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["GenerateColorTableFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["ImportHDF5DatasetFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["ImportVectorImageStackFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["KbrRecisConfigFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["MontageSelectionFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["MontageStructureSelectionFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["MultiAttributeMatrixSelectionFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["MultiDataContainerSelectionFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["MultiInputFileFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["OEMEbsdScanSelectionFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["OrientationUtilityFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["ParagraphFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["PhaseTypeSelectionFilterParameter"] = "{}";
+
+  s_UnitTestDefaultValue["RangeFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["ReadASCIIDataFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["ReadH5EbsdFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["ScalarTypeFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["ShapeTypeSelectionFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["StatsGeneratorFilterParameter"] = "{}";
+  s_UnitTestDefaultValue["Symmetric6x6FilterParameter"] = "{}";
 }
 
 void InitIncludeMapping()
@@ -319,6 +401,7 @@ void InitIncludeMapping()
   s_InlcudeMapping["MultiDataArraySelectionFilterParameter"] = "MultiArraySelectionParameter";
   s_InlcudeMapping["LinkedBooleanFilterParameter"] = "BoolParameter";
   s_InlcudeMapping["LinkedChoicesFilterParameter"] = "ChoicesParameter";
+  s_InlcudeMapping["PreflightUpdatedValueFilterParameter"] = "// no includes for PreflightUpdatedValueFilterParameter";
 
   // No COMPLEX Type Yet
   s_InlcudeMapping["CalculatorFilterParameter"] = "CalculatorFilterParameter";
@@ -350,7 +433,6 @@ void InitIncludeMapping()
   s_InlcudeMapping["OrientationUtilityFilterParameter"] = "OrientationUtilityFilterParameter";
   s_InlcudeMapping["ParagraphFilterParameter"] = "ParagraphFilterParameter";
   s_InlcudeMapping["PhaseTypeSelectionFilterParameter"] = "PhaseTypeSelectionFilterParameter";
-  s_InlcudeMapping["PreflightUpdatedValueFilterParameter"] = "PreflightUpdatedValueFilterParameter";
   s_InlcudeMapping["RangeFilterParameter"] = "RangeFilterParameter";
   s_InlcudeMapping["ReadASCIIDataFilterParameter"] = "ReadASCIIDataFilterParameter";
   s_InlcudeMapping["ReadH5EbsdFilterParameter"] = "ReadH5EbsdFilterParameter";
@@ -393,6 +475,7 @@ void InitParameterMapping()
   s_ParameterMapping["MultiDataArraySelectionFilterParameter"] = "MultiArraySelectionParameter";
   s_ParameterMapping["LinkedBooleanFilterParameter"] = "BoolParameter";
   s_ParameterMapping["LinkedChoicesFilterParameter"] = "ChoicesParameter";
+  s_ParameterMapping["PreflightUpdatedValueFilterParameter"] = "NO PARAMETER TYPE";
 
   // No COMPLEX Type Yet
   s_ParameterMapping["CalculatorFilterParameter"] = "CalculatorFilterParameter";
@@ -424,7 +507,6 @@ void InitParameterMapping()
   s_ParameterMapping["OrientationUtilityFilterParameter"] = "OrientationUtilityFilterParameter";
   s_ParameterMapping["ParagraphFilterParameter"] = "ParagraphFilterParameter";
   s_ParameterMapping["PhaseTypeSelectionFilterParameter"] = "PhaseTypeSelectionFilterParameter";
-  s_ParameterMapping["PreflightUpdatedValueFilterParameter"] = "PreflightUpdatedValueFilterParameter";
   s_ParameterMapping["RangeFilterParameter"] = "RangeFilterParameter";
   s_ParameterMapping["ReadASCIIDataFilterParameter"] = "ReadASCIIDataFilterParameter";
   s_ParameterMapping["ReadH5EbsdFilterParameter"] = "ReadH5EbsdFilterParameter";
@@ -466,6 +548,7 @@ void InitParameterAvailableMapping()
   s_ParameterAvailable["MultiDataArraySelectionFilterParameter"] = true;
   s_ParameterAvailable["LinkedBooleanFilterParameter"] = true;
   s_ParameterAvailable["LinkedChoicesFilterParameter"] = true;
+  s_ParameterAvailable["PreflightUpdatedValueFilterParameter"] = true;
 
   // No COMPLEX Type Yet
   s_ParameterAvailable["CalculatorFilterParameter"] = false;
@@ -497,7 +580,6 @@ void InitParameterAvailableMapping()
   s_ParameterAvailable["OrientationUtilityFilterParameter"] = false;
   s_ParameterAvailable["ParagraphFilterParameter"] = false;
   s_ParameterAvailable["PhaseTypeSelectionFilterParameter"] = false;
-  s_ParameterAvailable["PreflightUpdatedValueFilterParameter"] = false;
   s_ParameterAvailable["RangeFilterParameter"] = false;
   s_ParameterAvailable["ReadASCIIDataFilterParameter"] = false;
   s_ParameterAvailable["ReadH5EbsdFilterParameter"] = false;
@@ -507,6 +589,19 @@ void InitParameterAvailableMapping()
   s_ParameterAvailable["Symmetric6x6FilterParameter"] = false;
 }
 
+bool isPropertySepOrPreflight(const QString& property, FilterParameterVectorType parameters)
+{
+  for(const auto& parameter : parameters)
+  {
+    QString origParamClassName = parameter->getNameOfClass();
+    if (parameter->getPropertyName() == property &&
+        (origParamClassName == "PreflightUpdatedValueFilterParameter" || origParamClassName == "SeparatorFilterParameter"))
+    {
+      return true;
+    }
+  }
+  return false;
+}
 
 // -----------------------------------------------------------------------------
 QString ReadTemplateFile(const QString& file)
@@ -546,13 +641,14 @@ void writeTopLevelOutput(const QString& pluginName, const QString& outLines, con
     outputPath = k_PluginsOutputDir + "/" + s_CurrentPlugin;
   }
 
-  // Make sure the output directory structure is created.
-  QDir outputDir(outputPath);
-  outputDir.mkpath(outputPath);
-
   // Generate the Output File Path
   QString finalOutPath = outputPath + "/" + fileName;
   QFileInfo fi(finalOutPath);
+  outputPath = fi.absolutePath();
+
+  // Make sure the output directory structure is created.
+  QDir outputDir(outputPath);
+  outputDir.mkpath(outputPath);
 
   // Write the output
   QFile hOut(finalOutPath);
@@ -673,8 +769,9 @@ void GenerateHeaderFile(AbstractFilter* filter, const QString& pluginName)
   QTextStream out(&pString);
   for(const auto& parameter : parameters)
   {
+    QString origParamClassName = parameter->getNameOfClass();
     QString propName = parameter->getPropertyName();
-    if(!propName.isEmpty())
+    if(origParamClassName != "SeparatorFilterParameter" && origParamClassName != "PreflightUpdatedValueFilterParameter")
     {
       out << "  static inline constexpr StringLiteral k_" << propName << "_Key = \"" << propName << "\";\n";
     }
@@ -725,12 +822,27 @@ void GenerateSourceFile(AbstractFilter* filter)
   QString mdParamString;
   QTextStream mdParamOut(&mdParamString);
 
+  QString preflightUpdatedValues;
+  QTextStream pfuv(&preflightUpdatedValues);
+  QString preflightUpdatedDefs;
+  QTextStream pfud(&preflightUpdatedDefs);
+
   mdParamOut << "# " << filterName << " #\n\n";
   mdParamOut << "| Ready | Parameter Key | Human Name | Parameter Type | Parameter Class |\n";
   mdParamOut << "|-------|---------------|------------|-----------------|----------------|\n";
 
   s_HasAllParameters = true;
   bool needsFs = false;
+
+  // Loop through all the parameters once to map out any linkable parameters
+  QMap<QString, int> propToGroupMap;
+  for(const auto& parameter : parameters)
+  {
+    QString propName = parameter->getPropertyName();
+    int32_t groupIndex = parameter->getGroupIndex();
+    propToGroupMap[propName] = groupIndex;
+  }
+
 
   for(const auto& parameter : parameters)
   {
@@ -739,7 +851,7 @@ void GenerateSourceFile(AbstractFilter* filter)
     QString propClass = s_ParameterMapping[origParamClassName];
     QString propHuman = parameter->getHumanLabel();
     QString propInclude = s_InlcudeMapping[origParamClassName];
-    QString defaultValue = s_DefaultValueMapping[origParamClassName];
+    QString defaultValue = s_DefaultConstructorMapping[origParamClassName];
     QString paramType = s_ParameterTypeMapping[origParamClassName];
     bool hasParameter = s_ParameterAvailable[origParamClassName];
     s_ParameterCount[origParamClassName]++;
@@ -749,17 +861,15 @@ void GenerateSourceFile(AbstractFilter* filter)
       s_HasAllParameters = false;
     }
 
-    if(!propName.isEmpty())
+    if(origParamClassName != "SeparatorFilterParameter" && origParamClassName != "PreflightUpdatedValueFilterParameter")
     {
       preFlightOut << "  auto p" << propName << "Value = filterArgs.value<" << paramType << ">(k_" << propName << "_Key);\n";
-
       mdParamOut << "| " << (hasParameter ? "YES" : "NO") << " | " << propName << " | " << propHuman << " | " << paramType << " | " << propClass << " |\n";
     }
 
     if(origParamClassName == "SeparatorFilterParameter")
     {
       parameterOut << "  params.insertSeparator(Parameters::Separator{\"" << propHuman << "\"});\n";
-     // includeOut << "#include \"complex/Filter/Parameters.hpp\"\n";
     }
     else if(origParamClassName == "LinkedBooleanFilterParameter")
     {
@@ -768,8 +878,10 @@ void GenerateSourceFile(AbstractFilter* filter)
       std::vector<QString> linkedProps = fp->getConditionalProperties();
       for(const auto& linkedProp : linkedProps)
       {
-       // parameterOut << "  // Linked Prop: " << linkedProp << "\n";
-        linkedOut << "  params.linkParameters(k_" << propName << "_Key, k_" << linkedProp << "_Key, true);\n";
+        if(!isPropertySepOrPreflight(linkedProp, parameters))
+        {
+          linkedOut << "  params.linkParameters(k_" << propName << "_Key, k_" << linkedProp << "_Key, true);\n";
+        }
       }
       includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
     }
@@ -794,11 +906,22 @@ void GenerateSourceFile(AbstractFilter* filter)
       i = 0;
       for(const auto& linkedProp : linkedProps)
       {
-        // parameterOut << "  // Linked Prop: " << linkedProp << "\n";
-        linkedOut << "  params.linkParameters(k_" << propName << "_Key, k_" << linkedProp << "_Key, " << i << ");\n";
-        i++;
+        if(!isPropertySepOrPreflight(linkedProp, parameters))
+        {
+          linkedOut << "  params.linkParameters(k_" << propName << "_Key, k_" << linkedProp << "_Key, " << propToGroupMap[linkedProp] << ");\n";
+          i++;
+        }
       }
       includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
+    }
+    else if(origParamClassName == "PreflightUpdatedValueFilterParameter")
+    {
+      PreflightUpdatedValueFilterParameter::Pointer fp = std::dynamic_pointer_cast<PreflightUpdatedValueFilterParameter>(parameter);
+      QString lower = fp->getPropertyName();
+      lower[0] = lower[0].toLower();
+      pfud << "  std::string "<< lower << ";\n";
+      pfuv << "  preflightResult.outputValues.push_back({\"" << fp->getPropertyName() << "\", " << lower << "});\n";
+
     }
     else
     {
@@ -807,6 +930,145 @@ void GenerateSourceFile(AbstractFilter* filter)
         parameterOut << "/*[x]*/";
       }
       parameterOut << "  params.insert(std::make_unique<" << propClass << ">(k_" << propName << "_Key, \"" << propHuman << "\", \"\", " << defaultValue << "));\n";
+      includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
+    }
+
+    if(propInclude == "FileSystemPathParameter")
+    {
+      needsFs = true;
+    }
+    includeSet.insert(incString);
+    incString.clear();
+
+  } // End loop over all Parameters
+
+  if(!preflightUpdatedValues.isEmpty())
+  {
+    preflightUpdatedValues = "  // These values should have been updated during the preflightImpl(...) method\n" + preflightUpdatedValues;
+  }
+  if(!preflightUpdatedDefs.isEmpty())
+  {
+    preflightUpdatedDefs = QString("  // These variables should be updated with the latest data generated for each variable during preflight. \n")
+                         + QString("  // These will be returned through the preflightResult variable to the\n")
+                         + QString("  // user interface. You could make these member variables instead if needed.\n") + preflightUpdatedDefs;
+  }
+
+  for(const auto& incStr : includeSet)
+  {
+    includeOut << incStr;
+  }
+  if(needsFs)
+  {
+    includeOut << "\n#include <filesystem>\nnamespace fs = std::filesystem;\n";
+  }
+
+  sourceTemplate = sourceTemplate.replace(k_PARAMETER_INCLUDES, incString);
+
+  // Concatenate the parameter string with the linkable params string.
+  if(!linkString.isEmpty())
+  {
+    linkString = "  // Associate the Linkable Parameter(s) to the children parameters that they control\n" + linkString;
+    pString = pString + linkString;
+  }
+ 
+  sourceTemplate = sourceTemplate.replace(k_PARAMETER_DEFS, pString);
+  sourceTemplate = sourceTemplate.replace(k_PREFLIGHT_DEFS, preflightString);
+  sourceTemplate = sourceTemplate.replace(k_PREFLIGHT_UPDATED_VALUES, preflightUpdatedValues);
+  sourceTemplate = sourceTemplate.replace(k_PREFLIGHT_UPDATED_DEFS, preflightUpdatedDefs);
+
+  if(s_HasAllParameters)
+  {
+    s_TotalGoodFilters++;
+    std::cout << filter->getNameOfClass().toStdString() << std::endl;
+  }
+  else {
+    s_TotalBadFilters++;
+  }
+  s_FilterHasAllParameters[filter->getNameOfClass().toStdString()] = s_HasAllParameters;
+  writeOutput(filter, sourceTemplate, ".cpp", mdParamString);
+}
+
+// -----------------------------------------------------------------------------
+void GenerateUnitTestSourceFile(const AbstractFilter::Pointer& filter)
+{
+  QString sourceTemplate = ReadTemplateFile(k_UnitTestSourceFile);
+  QString filterName = filter->getNameOfClass();
+  QString humanName = filter->getHumanLabel();
+  QString DEFAULT_VALUE = "{0}";
+  // Generate the Parameter Section
+  FilterParameterVectorType parameters = filter->getFilterParameters();
+
+  sourceTemplate = sourceTemplate.replace(k_FILTER_NAME, filterName);
+  sourceTemplate = sourceTemplate.replace(k_FILTER_HUMAN_NAME, humanName);
+  sourceTemplate = sourceTemplate.replace(k_PLUGIN_NAME, s_CurrentPlugin);
+
+  QString pString;
+  QTextStream parameterOut(&pString);
+
+  QString linkString;
+  QTextStream linkedOut(&linkString);
+
+  QString incString;
+  QTextStream includeOut(&incString);
+  QSet<QString> includeSet;
+
+  QString preflightString;
+  QTextStream preFlightOut(&preflightString);
+
+  QString mdParamString;
+  QTextStream mdParamOut(&mdParamString);
+
+  bool needsFs = false;
+  for(const auto& parameter : parameters)
+  {
+    QString origParamClassName = parameter->getNameOfClass();
+    QString propName = parameter->getPropertyName();
+    QString propClass = s_ParameterMapping[origParamClassName];
+    QString propHuman = parameter->getHumanLabel();
+    QString propInclude = s_InlcudeMapping[origParamClassName];
+    QString defaultValue = s_DefaultConstructorMapping[origParamClassName];
+    QString unitTestDefaultValue = s_UnitTestDefaultValue[origParamClassName];
+    QString paramType = s_ParameterTypeMapping[origParamClassName];
+    bool hasParameter = s_ParameterAvailable[origParamClassName];
+    s_ParameterCount[origParamClassName]++;
+
+
+    if(!hasParameter)
+    {
+      s_HasAllParameters = false;
+    }
+
+    if(!propName.isEmpty())
+    {
+      preFlightOut << "  auto p" << propName << "Value = filterArgs.value<" << paramType << ">(k_" << propName << "_Key);\n";
+
+      mdParamOut << "| " << (hasParameter ? "YES" : "NO") << " | " << propName << " | " << propHuman << " | " << paramType << " | " << propClass << " |\n";
+    }
+
+    if(origParamClassName == "SeparatorFilterParameter")
+    {
+      //parameterOut << "  params.insertSeparator(Parameters::Separator{\"" << propHuman << "\"});\n";
+    }
+    else if(origParamClassName == "LinkedBooleanFilterParameter")
+    {
+      parameterOut << "  args.insert(" << filterName << "::k_" << propName << "_Key, std::make_any<" << paramType << ">(" << unitTestDefaultValue << "));\n";
+      includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
+    }
+    else if(origParamClassName == "LinkedChoicesFilterParameter")
+    {
+
+    }
+    else if(origParamClassName == "PreflightUpdatedValueFilterParameter")
+    {
+
+    }
+    else
+    {
+      if(!hasParameter)
+      {
+        parameterOut << "/*[x]*/";
+      }
+      parameterOut << "  args.insert(" << filterName << "::k_" << propName << "_Key, std::make_any<" << paramType << ">(" << unitTestDefaultValue << "));\n";
       includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
     }
 
@@ -831,15 +1093,16 @@ void GenerateSourceFile(AbstractFilter* filter)
 
   sourceTemplate = sourceTemplate.replace(k_PARAMETER_INCLUDES, incString);
 
-  // Concatentate the parameter string with the linkable params string.
+  // Concatenate the parameter string with the linkable params string.
   if(!linkString.isEmpty())
   {
     linkString = "  // Associate the Linkable Parameter(s) to the children parameters that they control\n" + linkString;
     pString = pString + linkString;
   }
- 
+
   sourceTemplate = sourceTemplate.replace(k_PARAMETER_DEFS, pString);
   sourceTemplate = sourceTemplate.replace(k_PREFLIGHT_DEFS, preflightString);
+
   if(s_HasAllParameters)
   {
     s_TotalGoodFilters++;
@@ -849,9 +1112,58 @@ void GenerateSourceFile(AbstractFilter* filter)
     s_TotalBadFilters++;
   }
   s_FilterHasAllParameters[filter->getNameOfClass().toStdString()] = s_HasAllParameters;
-  writeOutput(filter, sourceTemplate, ".cpp", mdParamString);
+
+
+  QString outputFileName = QString("test/%1Test.cpp").arg(filterName);
+  writeTopLevelOutput(s_CurrentPlugin, sourceTemplate, outputFileName);
 }
 
+// -----------------------------------------------------------------------------
+void GenerateUnitTestCMakeFile(const QString& pluginName, std::vector<AbstractFilter::Pointer>& filters)
+{
+  QString cmakeTemplate = ReadTemplateFile(k_TestCMakeListsFile);
+  cmakeTemplate = cmakeTemplate.replace(k_PLUGIN_NAME, pluginName);
+
+  QString filterList;
+  QTextStream hOut(&filterList);
+
+  for(const auto& filter : filters)
+  {
+    QString prefix = "    #";
+    QString suffix = "    # MISSING 1 or more Parameter Implementations";
+    if(s_FilterHasAllParameters[filter->getNameOfClass().toStdString()])
+    {
+      prefix = "    ";
+      suffix = "";
+    }
+    hOut << prefix << filter->getNameOfClass() << "Test.cpp" << suffix << "\n";
+    GenerateUnitTestSourceFile(filter);
+  }
+
+  cmakeTemplate = cmakeTemplate.replace("@FILTER_LIST@", filterList);
+  writeTopLevelOutput(pluginName, cmakeTemplate, "test/CMakeLists.txt");
+
+
+  // Write the 'Catch2' main file
+  QString catch2Main;
+  QTextStream c2mOut(&catch2Main);
+
+  c2mOut <<"// Catch2 recommends placing these lines by themselves in a translation unit\n";
+  c2mOut <<"// which will help reduce unnecessary recompilations of the expensive Catch main\n";
+  c2mOut <<"#define CATCH_CONFIG_MAIN\n";
+  c2mOut <<"#include <catch2/catch.hpp>\n";
+
+  QString outputFileName = QString("test/%1_test_main.cpp").arg(s_CurrentPlugin);
+
+  writeTopLevelOutput(pluginName, catch2Main, outputFileName);
+
+
+  // Write the cmake configured header template file
+  QString testDirsTemplate = ReadTemplateFile(k_TestDirsHeaderFile);
+  outputFileName = QString("test/test_dirs.hpp.in");
+  writeTopLevelOutput(pluginName, testDirsTemplate, outputFileName);
+
+}
 
 
 // -----------------------------------------------------------------------------
@@ -1041,6 +1353,7 @@ void GenerateComplexFilters()
     GeneratePluginHeader(s_CurrentPlugin, filters);
     GeneratePluginSource(s_CurrentPlugin, filters);
     GenerateMarkdownSummary(s_CurrentPlugin, filters);
+    GenerateUnitTestCMakeFile(s_CurrentPlugin, filters);
   }
 //  for(const auto& pName : paramNames)
 //  {
@@ -1055,10 +1368,11 @@ int main(int argc, char** argv)
 {
   InitParameterMapping();
   InitIncludeMapping();
-  InitDefaultValueMapping();
+  InitDefaultParameterConstructor();
   InitParameterTypeMapping();
   InitParameterAvailableMapping();
   InitParameterCount();
+  InitUnitTestParameterConstruction();
 
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
