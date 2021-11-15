@@ -1103,17 +1103,6 @@ void GenerateUnitTestSourceFile(const AbstractFilter::Pointer& filter)
   sourceTemplate = sourceTemplate.replace(k_PARAMETER_DEFS, pString);
   sourceTemplate = sourceTemplate.replace(k_PREFLIGHT_DEFS, preflightString);
 
-  if(s_HasAllParameters)
-  {
-    s_TotalGoodFilters++;
-    std::cout << filter->getNameOfClass().toStdString() << std::endl;
-  }
-  else {
-    s_TotalBadFilters++;
-  }
-  s_FilterHasAllParameters[filter->getNameOfClass().toStdString()] = s_HasAllParameters;
-
-
   QString outputFileName = QString("test/%1Test.cpp").arg(filterName);
   writeTopLevelOutput(s_CurrentPlugin, sourceTemplate, outputFileName);
 }
@@ -1418,5 +1407,5 @@ int main(int argc, char** argv)
   }
 
   
-  return EXIT_FAILURE;
+  return EXIT_SUCCESS;
 }
