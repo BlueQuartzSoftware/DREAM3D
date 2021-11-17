@@ -29,7 +29,7 @@
 
 using namespace complex;
 
-TEST_CASE("@PLUGIN_NAME@::@FILTER_NAME@: Basic Instantiation and Parameter Check","[@FILTER_NAME@][.][UNIMPLEMENTED][!mayfail]")
+TEST_CASE("@PLUGIN_NAME@::@FILTER_NAME@: Instantiation and Parameter Check","[@PLUGIN_NAME@][@FILTER_NAME@][.][UNIMPLEMENTED][!mayfail]")
 {
   // Instantiate the filter, a DataStructure object and an Arguments Object
   @FILTER_NAME@ filter;

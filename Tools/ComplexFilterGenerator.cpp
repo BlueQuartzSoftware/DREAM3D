@@ -1033,6 +1033,11 @@ void GenerateUnitTestSourceFile(const AbstractFilter::Pointer& filter)
     s_ParameterCount[origParamClassName]++;
 
 
+    if(propName.endsWith("Value"))
+    {
+      propName.chop(5);
+    }
+
     if(!hasParameter)
     {
       s_HasAllParameters = false;
