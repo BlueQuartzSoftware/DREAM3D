@@ -6,7 +6,17 @@ DREAM.3D is an open source, cross-platform and modular software package that all
 
 ## Precompiled Binaries for Windows/MacOS/Linux ##
 
-Please download a precompiled binary for your platform from [dream3d.bluequartz.net](http://dream3d.bluequartz.net/?page_id=32)
+Please download a precompiled binary for your platform from [dream3d.bluequartz.net](http://dream3d.bluequartz.net)
+
+## Anaconda Python Distribution ##
+
+There is an anaconda distribution available for DREAM.3D. This gives python developers/users the ability to call every DREAM.3D
+filter directly from python.
+
+```(lang-console)
+conda install -c http://dream3d.bluequartz.net/binaries/conda dream3d-conda
+```
+The API docs are located at [http://www.dream3d.io/python_docs/html/](http://www.dream3d.io/python_docs/html/)
 
 ## General Features ##
 
