@@ -854,6 +854,8 @@ void GenerateSourceFile(AbstractFilter* filter)
     QString defaultValue = s_DefaultConstructorMapping[origParamClassName];
     QString paramType = s_ParameterTypeMapping[origParamClassName];
     bool hasParameter = s_ParameterAvailable[origParamClassName];
+    bool endsWithValue = propName.endsWith("Value");
+
     s_ParameterCount[origParamClassName]++;
 
     if(!hasParameter)
@@ -863,7 +865,7 @@ void GenerateSourceFile(AbstractFilter* filter)
 
     if(origParamClassName != "SeparatorFilterParameter" && origParamClassName != "PreflightUpdatedValueFilterParameter")
     {
-      preFlightOut << "  auto p" << propName << "Value = filterArgs.value<" << paramType << ">(k_" << propName << "_Key);\n";
+      preFlightOut << "  auto p" << propName << (endsWithValue ? "":"Value") <<  " = filterArgs.value<" << paramType << ">(k_" << propName << "_Key);\n";
       mdParamOut << "| " << (hasParameter ? "YES" : "NO") << " | " << propName << " | " << propHuman << " | " << paramType << " | " << propClass << " |\n";
     }
 
@@ -1031,12 +1033,8 @@ void GenerateUnitTestSourceFile(const AbstractFilter::Pointer& filter)
     QString paramType = s_ParameterTypeMapping[origParamClassName];
     bool hasParameter = s_ParameterAvailable[origParamClassName];
     s_ParameterCount[origParamClassName]++;
+    bool endsWithValue = propName.endsWith("Value");
 
-
-    if(propName.endsWith("Value"))
-    {
-      propName.chop(5);
-    }
 
     if(!hasParameter)
     {
@@ -1045,7 +1043,7 @@ void GenerateUnitTestSourceFile(const AbstractFilter::Pointer& filter)
 
     if(!propName.isEmpty())
     {
-      preFlightOut << "  auto p" << propName << "Value = filterArgs.value<" << paramType << ">(k_" << propName << "_Key);\n";
+      preFlightOut << "  auto p" << propName << (endsWithValue ? "" : "Value") << " = filterArgs.value<" << paramType << ">(k_" << propName << "_Key);\n";
 
       mdParamOut << "| " << (hasParameter ? "YES" : "NO") << " | " << propName << " | " << propHuman << " | " << paramType << " | " << propClass << " |\n";
     }
