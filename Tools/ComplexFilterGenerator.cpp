@@ -1054,7 +1054,7 @@ void GenerateUnitTestSourceFile(const AbstractFilter::Pointer& filter)
     }
     else if(origParamClassName == "LinkedBooleanFilterParameter")
     {
-      parameterOut << "  args.insert(" << filterName << "::k_" << propName << "_Key, std::make_any<" << paramType << ">(" << unitTestDefaultValue << "));\n";
+      parameterOut << "  args.insertOrAssign(" << filterName << "::k_" << propName << "_Key, std::make_any<" << paramType << ">(" << unitTestDefaultValue << "));\n";
       includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
     }
     else if(origParamClassName == "LinkedChoicesFilterParameter")
@@ -1071,7 +1071,7 @@ void GenerateUnitTestSourceFile(const AbstractFilter::Pointer& filter)
       {
         parameterOut << "/*[x]*/";
       }
-      parameterOut << "  args.insert(" << filterName << "::k_" << propName << "_Key, std::make_any<" << paramType << ">(" << unitTestDefaultValue << "));\n";
+      parameterOut << "  args.insertOrAssign(" << filterName << "::k_" << propName << "_Key, std::make_any<" << paramType << ">(" << unitTestDefaultValue << "));\n";
       includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
     }
 
