@@ -29,6 +29,8 @@
 
 #include "DREAM3DToolsConfiguration.h"
 
+const std::set<std::string> k_BlackList = { "ConditionalSetValue", "CreateImageGeometry"};
+
 const QString k_HeaderFile(D3DTools::GetDREAM3DToolsDir() + "/complex_filter.hpp.in");
 const QString k_SourceFile(D3DTools::GetDREAM3DToolsDir() + "/complex_filter.cpp.in");
 const QString k_CMakeListsFile(D3DTools::GetDREAM3DToolsDir() + "/complex_CMakeLists.txt.in");
@@ -48,6 +50,8 @@ static bool s_HasAllParameters = false;
 static int32_t s_TotalGoodFilters = 0;
 static int32_t s_TotalBadFilters = 0;
 static QMap<QString, QString> s_FilterUuidMapping;
+
+static QString s_PrevToNewUuidMapping;
 static std::map<std::string, bool> s_FilterHasAllParameters;
 
 const QString k_PLUGIN_NAME("@PLUGIN_NAME@");
@@ -756,6 +760,10 @@ void GenerateHeaderFile(AbstractFilter* filter, const QString& pluginName)
   QString prevUuid = filter->getUuid().toString();
 
   s_FilterUuidMapping[prevUuid] = uuid;
+  QTextStream ptonew(&s_PrevToNewUuidMapping);
+
+  ptonew << "{Uuid::FromString(\"" << prevUuid << "\").value(), Uuid::FromString(\"" << uuid << "\").value()}, ";
+  ptonew << "/* " << filterName << " */\n";
 
   headerTemplate = headerTemplate.replace(k_FILTER_NAME, filterName);
   headerTemplate = headerTemplate.replace(k_UUID, uuid);
@@ -922,7 +930,7 @@ void GenerateSourceFile(AbstractFilter* filter)
       QString lower = fp->getPropertyName();
       lower[0] = lower[0].toLower();
       pfud << "  std::string "<< lower << ";\n";
-      pfuv << "  preflightResult.outputValues.push_back({\"" << fp->getPropertyName() << "\", " << lower << "});\n";
+      pfuv << "  preflightUpdatedValues.push_back({\"" << fp->getPropertyName() << "\", " << lower << "});\n";
 
     }
     else
@@ -1121,15 +1129,18 @@ void GenerateUnitTestCMakeFile(const QString& pluginName, std::vector<AbstractFi
 
   for(const auto& filter : filters)
   {
-    QString prefix = "    #";
-    QString suffix = "    # MISSING 1 or more Parameter Implementations";
-    if(s_FilterHasAllParameters[filter->getNameOfClass().toStdString()])
+    if(k_BlackList.find(filter->getNameOfClass().toStdString()) == k_BlackList.end())
     {
-      prefix = "    ";
-      suffix = "";
+      QString prefix = "    #";
+      QString suffix = "    # MISSING 1 or more Parameter Implementations";
+      if(s_FilterHasAllParameters[filter->getNameOfClass().toStdString()])
+      {
+        prefix = "    ";
+        suffix = "";
+      }
+      hOut << prefix << filter->getNameOfClass() << "Test.cpp" << suffix << "\n";
+      GenerateUnitTestSourceFile(filter);
     }
-    hOut << prefix << filter->getNameOfClass() << "Test.cpp" << suffix << "\n";
-    GenerateUnitTestSourceFile(filter);
   }
 
   cmakeTemplate = cmakeTemplate.replace("@FILTER_LIST@", filterList);
@@ -1169,14 +1180,17 @@ void GenerateCMakeFile(const QString& pluginName, std::vector<AbstractFilter::Po
     
   for(const auto& filter : filters)
   {
-    QString prefix = "  #";
-    QString suffix = " # MISSING 1 or more Parameter Implementations";
-    if(s_FilterHasAllParameters[filter->getNameOfClass().toStdString()])
+    if(k_BlackList.find(filter->getNameOfClass().toStdString()) == k_BlackList.end())
     {
-      prefix = "  ";
-      suffix = "";
+      QString prefix = "  #";
+      QString suffix = " # MISSING 1 or more Parameter Implementations";
+      if(s_FilterHasAllParameters[filter->getNameOfClass().toStdString()])
+      {
+        prefix = "  ";
+        suffix = "";
+      }
+      hOut << prefix << filter->getNameOfClass() << suffix << "\n";
     }
-    hOut << prefix << filter->getNameOfClass() << suffix << "\n";
   }
 
   cmakeTemplate = cmakeTemplate.replace("@FILTER_LIST@", filterList);
@@ -1226,12 +1240,15 @@ void GeneratePluginSource(const QString& pluginName, std::vector<AbstractFilter:
   QTextStream hOut(&filterHeaderList);
   for(const auto& filter : filters)
   {
-    QString prefix = "//";
-    if(s_FilterHasAllParameters[filter->getNameOfClass().toStdString()])
+    if(k_BlackList.find(filter->getNameOfClass().toStdString()) == k_BlackList.end())
     {
-      prefix = "";
+      QString prefix = "//";
+      if(s_FilterHasAllParameters[filter->getNameOfClass().toStdString()])
+      {
+        prefix = "";
+      }
+      hOut << prefix << "#include \"" << pluginName << "/Filters/" << filter->getNameOfClass() << ".hpp\"\n";
     }
-    hOut << prefix << "#include \"" << pluginName << "/Filters/" << filter->getNameOfClass() << ".hpp\"\n";
   }
   
   cmakeTemplate = cmakeTemplate.replace("@FILTER_INCLUDE_LIST@", filterHeaderList);
@@ -1240,12 +1257,13 @@ void GeneratePluginSource(const QString& pluginName, std::vector<AbstractFilter:
   QMapIterator<QString, QString> i(s_FilterUuidMapping);
   hOut << "// This maps previous filters from DREAM.3D Version 6.x to DREAM.3D Version 7.x\n";
   hOut << "std::map<complex::Uuid, complex::Uuid> k_SimplToComplexFilterMapping = {\n";
-   while(i.hasNext())
-   {
-     i.next();
-     hOut << "{Uuid::FromString(\"" << i.key() << "\").value(), Uuid::FromString(\"" << i.value() << "\").value()}, \n";
-   }
-   hOut << "};\n";
+  hOut << s_PrevToNewUuidMapping;
+//  while(i.hasNext())
+//  {
+//    i.next();
+//    hOut << "{Uuid::FromString(\"" << i.key() << "\").value(), Uuid::FromString(\"" << i.value() << "\").value()}, \n";
+//  }
+  hOut << "};\n";
 
   QString uuid = GenerateUuid(pluginName, "SomeFilterThing");
   hOut << "// Plugin Uuid\n";
@@ -1282,19 +1300,22 @@ void GenerateMarkdownSummary(const QString& pluginName, std::vector<AbstractFilt
   int32_t badCount = 0;
   for(const auto& filter : filters)
   {
-    QString prefix = "|   ";
-    mdOut << "| " << filter->getNameOfClass() << " |";
-    if(s_FilterHasAllParameters[filter->getNameOfClass().toStdString()])
+    if(k_BlackList.find(filter->getNameOfClass().toStdString()) == k_BlackList.end())
     {
-      mdOut << " TRUE ";
-      goodCount++;
+      QString prefix = "|   ";
+      mdOut << "| " << filter->getNameOfClass() << " |";
+      if(s_FilterHasAllParameters[filter->getNameOfClass().toStdString()])
+      {
+        mdOut << " TRUE ";
+        goodCount++;
+      }
+      else
+      {
+        mdOut << " FALSE ";
+        badCount++;
+      }
+      mdOut << " | | | |\n";
     }
-    else
-    {
-      mdOut << " FALSE ";
-      badCount++;
-    }
-    mdOut << " | | | |\n";
   }
 
   mdOut << "\n\n";
@@ -1318,11 +1339,13 @@ void GenerateComplexFilters()
     // {
     //   continue;
     // }
-    std::cout <<"<================================" <<  pluginName.toStdString()<<"================================>" << std::endl;
+    std::cout << "<================================" << pluginName.toStdString() << "================================>" << std::endl;
     std::vector<AbstractFilter::Pointer> filters;
     s_FilterUuidMapping.clear();
+    s_PrevToNewUuidMapping.clear();
+
     s_FilterHasAllParameters.clear();
-    
+
     FilterManager::Collection factories = fm->getFactoriesForPluginName(pluginName);
     FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
     while(factoryMapIter != factories.constEnd())
@@ -1331,12 +1354,13 @@ void GenerateComplexFilters()
       if(factory.get() != nullptr)
       {
         AbstractFilter::Pointer filter = factory->create();
-        
 
-
-        GenerateSourceFile(filter.get());
-        GenerateHeaderFile(filter.get(), s_CurrentPlugin);
-        filters.push_back(filter);
+        if(k_BlackList.find(filter->getNameOfClass().toStdString()) == k_BlackList.end())
+        {
+          GenerateSourceFile(filter.get());
+          GenerateHeaderFile(filter.get(), s_CurrentPlugin);
+          filters.push_back(filter);
+        }
       }
       factoryMapIter++;
     }
@@ -1346,6 +1370,7 @@ void GenerateComplexFilters()
     GeneratePluginSource(s_CurrentPlugin, filters);
     GenerateMarkdownSummary(s_CurrentPlugin, filters);
     GenerateUnitTestCMakeFile(s_CurrentPlugin, filters);
+
   }
 //  for(const auto& pName : paramNames)
 //  {

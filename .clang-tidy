@@ -1,31 +1,93 @@
-Checks:          '-*,modernize-use-nullptr,modernize-deprecated-headers,modernize-shrink-to-fit,modernize-use-bool-literals,modernize-use-default-member-init,modernize-use-equals-default,modernize-use-equals-delete,modernize-use-override,modernize-use-equals-default,readability-avoid-const-params-in-decls,readability-braces-around-statements,readability-container-size-empty,readability-delete-null-pointer,readability-else-after-return,readability-implicit-bool-conversion,readability-redundant-control-flow,readability-redundant-declaration,readability-redundant-function-ptr-dereference,readability-redundant-member-init,readability-redundant-smartptr-get,readability-redundant-string-cstr,readability-redundant-string-init,readability-simplify-boolean-expr,readability-simplify-subscript-expr,readability-static-accessed-through-instance,readability-static-definition-in-anonymous-namespace,readability-string-compare,bugprone-unused-return-value'
-WarningsAsErrors: ''
-HeaderFilterRegex: ''
-AnalyzeTemporaryDtors: false
-FormatStyle:     file
-User:            mjackson
-CheckOptions:
-  - key:             google-readability-braces-around-statements.ShortStatementLines
-    value:           '1'
-  - key:             google-readability-function-size.StatementThreshold
-    value:           '800'
-  - key:             google-readability-namespace-comments.ShortNamespaceLines
-    value:           '10'
-  - key:             google-readability-namespace-comments.SpacesBeforeComments
-    value:           '2'
-  - key:             modernize-loop-convert.MaxCopySize
-    value:           '16'
-  - key:             modernize-loop-convert.MinConfidence
-    value:           reasonable
-  - key:             modernize-loop-convert.NamingStyle
-    value:           CamelCase
-  - key:             modernize-pass-by-value.IncludeStyle
-    value:           llvm
-  - key:             modernize-replace-auto-ptr.IncludeStyle
-    value:           llvm
-  - key:             modernize-use-default-member-init.IgnoreMacros
-    value:           '1'
-  - key:             modernize-use-default-member-init.UseAssignment
-    value:           '1'
-  - key:             modernize-use-nullptr.NullMacros
-    value:           'NULL'
+---
+Language:        Cpp
+# BasedOnStyle:  LLVM
+# AccessModifierOffset: -2
+# AlignAfterOpenBracket: Align
+# AlignConsecutiveAssignments: false
+# AlignConsecutiveDeclarations: false
+# AlignEscapedNewlinesLeft: false
+# AlignOperands:   true
+# AlignTrailingComments: true
+# AllowAllParametersOfDeclarationOnNextLine: true
+# AllowShortBlocksOnASingleLine: false
+# AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+# AllowShortIfStatementsOnASingleLine: false
+# AllowShortLoopsOnASingleLine: false
+# AlwaysBreakAfterDefinitionReturnType: None
+# AlwaysBreakAfterReturnType: None
+# AlwaysBreakBeforeMultilineStrings: false
+AlwaysBreakTemplateDeclarations: true
+# BinPackArguments: true
+# BinPackParameters: true
+BraceWrapping:   
+  AfterClass:      true
+  AfterControlStatement: true
+  AfterEnum:       true
+  AfterFunction:   true
+  AfterNamespace:  true
+  AfterObjCDeclaration: false
+  AfterStruct:     true
+  AfterUnion:      false
+  BeforeCatch:     false
+  BeforeElse:      true
+  IndentBraces:    false
+#BreakBeforeBinaryOperators: None
+BreakBeforeBraces: Custom
+BreakBeforeTernaryOperators: false
+BreakConstructorInitializersBeforeComma: true
+ColumnLimit:     200
+# CommentPragmas:  '^ IWYU pragma:'
+# ConstructorInitializerAllOnOneLineOrOnePerLine: false
+ConstructorInitializerIndentWidth: 0
+# ContinuationIndentWidth: 4
+# Cpp11BracedListStyle: true
+# DerivePointerAlignment: false
+# DisableFormat:   false
+# ExperimentalAutoDetectBinPacking: false
+# ForEachMacros:   [ foreach, Q_FOREACH, BOOST_FOREACH ]
+SortIncludes: true
+#IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex:           '^(<|"(QtCore|QtWidgets|QtGui|QtNetwork)/)'
+    Priority:        5
+  - Regex:           '^"(SIMPL|llvm-c|clang|clang-c)/'
+    Priority:        100
+  - Regex:           '^"(SIMPLib/SIMPLib)'
+    Priority:        90
+  - Regex:           '.*'
+    Priority:        1000
+# IndentCaseLabels: false
+# IndentWidth:     2
+# IndentWrappedFunctionNames: false
+# KeepEmptyLinesAtTheStartOfBlocks: true
+# MacroBlockBegin: ''
+# MacroBlockEnd:   ''
+# MaxEmptyLinesToKeep: 1
+# NamespaceIndentation: None
+# ObjCBlockIndentWidth: 2
+# ObjCSpaceAfterProperty: false
+# ObjCSpaceBeforeProtocolList: true
+# PenaltyBreakBeforeFirstCallParameter: 19
+# PenaltyBreakComment: 300
+# PenaltyBreakFirstLessLess: 120
+# PenaltyBreakString: 1000
+# PenaltyExcessCharacter: 1000000
+# PenaltyReturnTypeOnItsOwnLine: 60
+PointerAlignment: Left
+# ReflowComments:  true
+# SpaceAfterCStyleCast: false
+# SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: Never
+# SpaceInEmptyParentheses: false
+# SpacesBeforeTrailingComments: 1
+# SpacesInAngles:  false
+# SpacesInContainerLiterals: true
+# SpacesInCStyleCastParentheses: false
+# SpacesInParentheses: false
+# SpacesInSquareBrackets: false
+Standard:        Cpp11
+TabWidth:        2
+UseTab:          Never
+...
+
