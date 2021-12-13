@@ -761,7 +761,8 @@ void GenerateHeaderFile(AbstractFilter* filter, const QString& pluginName)
   QString humanName = filter->getHumanLabel();
   QString uuid = filter->getUuid().toString();//GenerateUuid(filter->getCompiledLibraryName(), filter->getNameOfClass());
   QString prevUuid = filter->getUuid().toString();
-
+  uuid = uuid.remove("{");
+  uuid = uuid.remove("}");
   s_FilterUuidMapping[prevUuid] = uuid;
   QTextStream ptonew(&s_PrevToNewUuidMapping);
 
@@ -1000,7 +1001,7 @@ void GenerateSourceFile(AbstractFilter* filter)
   s_FilterHasAllParameters[filter->getNameOfClass().toStdString()] = s_HasAllParameters;
   writeOutput(filter, sourceTemplate, ".cpp", mdParamString);
 
-  writeTopLevelOutput(pluginName, sourceTemplate, "src/" + pluginName + "/Filters/Algorithms/" + filterName + ".cpp");
+ // writeTopLevelOutput(pluginName, sourceTemplate, "src/" + pluginName + "/Filters/Algorithms/" + filterName + ".cpp");
 }
 
 // -----------------------------------------------------------------------------
