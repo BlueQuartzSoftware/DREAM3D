@@ -70,6 +70,7 @@ const QString k_PREFLIGHT_DEFS("@PREFLIGHT_DEFS@");
 const QString k_DEFAULT_TAGS("@DEFAULT_TAGS@");
 const QString k_PREFLIGHT_UPDATED_VALUES("@PREFLIGHT_UPDATED_VALUES@");
 const QString k_PREFLIGHT_UPDATED_DEFS("@PREFLIGHT_UPDATED_DEFS@");
+const QString k_PROPOSED_ACTIONS("@PROPOSED_ACTIONS@");
 
 
 static QMap<QString, QString> s_ParameterMapping;
@@ -839,6 +840,10 @@ void GenerateSourceFile(AbstractFilter* filter)
   QString preflightUpdatedDefs;
   QTextStream pfud(&preflightUpdatedDefs);
 
+  QString proposedActions;
+  QTextStream actionsOut(&proposedActions);
+  int dataArrayCreation = 0;
+
   mdParamOut << "# " << filterName << " #\n\n";
   mdParamOut << "| Ready | Parameter Key | Human Name | Parameter Type | Parameter Class |\n";
   mdParamOut << "|-------|---------------|------------|-----------------|----------------|\n";
@@ -947,6 +952,29 @@ void GenerateSourceFile(AbstractFilter* filter)
       includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
     }
 
+    if(origParamClassName == "DataArrayCreationFilterParameter")
+    {
+      actionsOut << "  // This block is commented out because it needs some variables to be filled in.\n";
+      actionsOut << "  {\n    // auto createArrayAction = std::make_unique<CreateArrayAction>(complex::NumericType::FILL_ME_IN, std::vector<usize>{NUM_TUPLES_VALUE}, NUM_COMPONENTS, p" << propName << (endsWithValue ? "":"Value") <<  ");\n";
+      actionsOut << "    // resultOutputActions.value().actions.push_back(std::move(createArrayAction));\n  }\n";
+      includeSet.insert("#include \"complex/Filter/Actions/CreateArrayAction.hpp\"\n");
+      dataArrayCreation++;
+    }
+    else if(origParamClassName == "AttributeMatrixCreationFilterParameter")
+    {
+      actionsOut << "  {\n    auto createDataGroupAction = std::make_unique<CreateDataGroupAction>(p" << propName << (endsWithValue ? "":"Value") <<  ");\n";
+      actionsOut << "    resultOutputActions.value().actions.push_back(std::move(createDataGroupAction));\n  }\n";
+      includeSet.insert("#include \"complex/Filter/Actions/CreateDataGroupAction.hpp\"\n");
+      dataArrayCreation++;
+    }
+    else if(origParamClassName == "DataContainerCreationFilterParameter")
+    {
+      actionsOut << "  {\n    auto createDataGroupAction = std::make_unique<CreateDataGroupAction>(p" << propName << (endsWithValue ? "":"Value") <<  ");\n";
+      actionsOut << "    resultOutputActions.value().actions.push_back(std::move(createDataGroupAction));\n  }\n";
+      includeSet.insert("#include \"complex/Filter/Actions/CreateDataGroupAction.hpp\"\n");
+      dataArrayCreation++;
+    }
+
     if(propInclude == "FileSystemPathParameter")
     {
       needsFs = true;
@@ -956,6 +984,11 @@ void GenerateSourceFile(AbstractFilter* filter)
 
   } // End loop over all Parameters
 
+  if(dataArrayCreation > 0)
+  {
+    proposedActions = "  // These are some proposed Actions based on the FilterParameters used. Please check them for correctness.\n" + proposedActions;
+  }
+  sourceTemplate = sourceTemplate.replace(k_PROPOSED_ACTIONS, proposedActions);
   if(!preflightUpdatedValues.isEmpty())
   {
     preflightUpdatedValues = "  // These values should have been updated during the preflightImpl(...) method\n" + preflightUpdatedValues;
@@ -984,10 +1017,18 @@ void GenerateSourceFile(AbstractFilter* filter)
     linkString = "  // Associate the Linkable Parameter(s) to the children parameters that they control\n" + linkString;
     pString = pString + linkString;
   }
- 
+
   sourceTemplate = sourceTemplate.replace(k_PARAMETER_DEFS, pString);
   sourceTemplate = sourceTemplate.replace(k_PREFLIGHT_DEFS, preflightString);
+  if(preflightUpdatedValues.isEmpty())
+  {
+    preflightUpdatedValues = "  // None found based on the filter parameters\n";
+  }
   sourceTemplate = sourceTemplate.replace(k_PREFLIGHT_UPDATED_VALUES, preflightUpdatedValues);
+  if(preflightUpdatedDefs.isEmpty())
+  {
+    preflightUpdatedDefs = "  // None found in this filter based on the filter parameters\n";
+  }
   sourceTemplate = sourceTemplate.replace(k_PREFLIGHT_UPDATED_DEFS, preflightUpdatedDefs);
 
   if(s_HasAllParameters)
