@@ -3,6 +3,9 @@
 
 #include <iostream>
 #include <set>
+#include <string>
+
+using namespace std::string_literals;
 
 
 #include <QtCore/QCoreApplication>
@@ -756,7 +759,7 @@ void GenerateHeaderFile(AbstractFilter* filter, const QString& pluginName)
   QString headerTemplate = ReadTemplateFile(k_HeaderFile);
   QString filterName = filter->getNameOfClass();
   QString humanName = filter->getHumanLabel();
-  QString uuid = GenerateUuid(filter->getCompiledLibraryName(), filter->getNameOfClass());
+  QString uuid = filter->getUuid().toString();//GenerateUuid(filter->getCompiledLibraryName(), filter->getNameOfClass());
   QString prevUuid = filter->getUuid().toString();
 
   s_FilterUuidMapping[prevUuid] = uuid;
@@ -795,7 +798,7 @@ void GenerateSourceFile(AbstractFilter* filter)
   QString sourceTemplate = ReadTemplateFile(k_SourceFile);
   QString filterName = filter->getNameOfClass();
   QString humanName = filter->getHumanLabel();
-  QString DEFAULT_VALUE = "{0}";
+  QString pluginName = filter->getCompiledLibraryName();
 
   QString defaultTags = QString("\"#%1\", \"#%2\"").arg(filter->getGroupName(), filter->getSubGroupName());
   if(filter->getSubGroupName() == SIMPL::FilterSubGroups::InputFilters)
@@ -996,6 +999,8 @@ void GenerateSourceFile(AbstractFilter* filter)
   }
   s_FilterHasAllParameters[filter->getNameOfClass().toStdString()] = s_HasAllParameters;
   writeOutput(filter, sourceTemplate, ".cpp", mdParamString);
+
+  writeTopLevelOutput(pluginName, sourceTemplate, "src/" + pluginName + "/Filters/Algorithms/" + filterName + ".cpp");
 }
 
 // -----------------------------------------------------------------------------
@@ -1206,7 +1211,7 @@ void GeneratePluginHeader(const QString& pluginName, std::vector<AbstractFilter:
   QString pluginNameUpper = pluginName.toUpper();
   cmakeTemplate = cmakeTemplate.replace("@PLUGIN_NAME_UPPER@", pluginNameUpper);
 
-  writeTopLevelOutput(pluginName, cmakeTemplate, pluginName + "Plugin.hpp");
+  writeTopLevelOutput(pluginName, cmakeTemplate, "src/" + pluginName + "/" + pluginName + "Plugin.hpp");
 }
 
 // -----------------------------------------------------------------------------
@@ -1284,7 +1289,7 @@ void GeneratePluginSource(const QString& pluginName, std::vector<AbstractFilter:
   }
   cmakeTemplate = cmakeTemplate.replace("@FILTER_REGISTER_LIST@", filterHeaderList);
 
-  writeTopLevelOutput(pluginName, cmakeTemplate, pluginName + "Plugin.cpp");
+  writeTopLevelOutput(pluginName, cmakeTemplate, "src/" + pluginName + "/" + pluginName + "Plugin.cpp");
 }
 
 
@@ -1330,7 +1335,6 @@ void GenerateComplexFilters()
 {
   qDebug() << "-------------- PrintFilterInfo ------------------------------";
   FilterManager* fm = FilterManager::Instance();
-  QSet<QString> paramNames;
   QSet<QString> pluginNames = fm->getPluginNames();
   for(const auto& pluginName : pluginNames)
   {

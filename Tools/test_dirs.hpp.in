@@ -11,6 +11,9 @@ namespace complex
 {
 namespace unit_test
 {
+inline constexpr StringLiteral k_ComplexSourceDir = "@COMPLEX_SOURCE_DIR_NORM@";
+inline constexpr StringLiteral k_ComplexTestSourceDir = "@COMPLEX_SOURCE_DIR_NORM@/test";
+inline constexpr StringLiteral k_ComplexTestDataSourceDir = "@COMPLEX_SOURCE_DIR_NORM@/test/Data";
 inline constexpr StringLiteral k_SourceDir = "@PLUGIN_SOURCE_DIR_NORM@";
 inline constexpr StringLiteral k_BinaryDir = "@complex_BINARY_DIR@/Plugins/@PLUGIN_NAME@";
 inline constexpr StringLiteral k_BuildDir = COMPLEX_BUILD_DIR;
