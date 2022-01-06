@@ -47,6 +47,8 @@
 #include "H5Support/QH5Lite.h"
 #include "H5Support/QH5Utilities.h"
 
+using namespace H5Support;
+
 #include <QtCore/QDebug>
 
 #include "SIMPLib/Common/Constants.h"

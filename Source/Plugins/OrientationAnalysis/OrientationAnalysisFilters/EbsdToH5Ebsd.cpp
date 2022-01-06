@@ -41,6 +41,8 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/QH5Lite.h"
 
+using namespace H5Support;
+
 #include "EbsdLib/IO/HKL/H5CtfImporter.h"
 #include "EbsdLib/IO/TSL/H5AngImporter.h"
 

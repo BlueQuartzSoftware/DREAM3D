@@ -50,6 +50,8 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/QH5Utilities.h"
 
+using namespace H5Support;
+
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
