@@ -10,6 +10,16 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+
+## Version 6.5.xxx ##
+
+### 6.5.xxx Fixed DREAM3D Issues ###
+
++ Add sanity check to Generate Ensemble Statistics to ensure that when Calculate Crystallographic Statistics is TRUE only Cubic and Hexagonal phases are present in the data. #984
+
+### SIMPL Changes ###
+
+
 ## Version 6.5.160 ##
 
 ### Version 6.5.160 New Filters & Features ###
