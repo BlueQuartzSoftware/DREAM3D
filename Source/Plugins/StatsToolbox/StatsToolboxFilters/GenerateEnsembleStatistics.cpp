@@ -986,7 +986,8 @@ void GenerateEnsembleStatistics::gatherODFStats()
   for(size_t i = 1; i < numensembles; i++)
   {
     totalvol[i] = 0;
-    if(m_CrystalStructures[i] == EbsdLib::CrystalStructure::Hexagonal_High)
+    uint32_t laueClass = m_CrystalStructures[i];
+    if(laueClass == EbsdLib::CrystalStructure::Hexagonal_High)
     {
       dims = 36 * 36 * 12;
       eulerodf[i] = FloatArrayType::CreateArray(dims, SIMPL::StringConstants::ODF, true);
@@ -995,7 +996,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
         eulerodf[i]->setValue(j, 0.0);
       }
     }
-    else if(m_CrystalStructures[i] == EbsdLib::CrystalStructure::Cubic_High)
+    else if(laueClass == EbsdLib::CrystalStructure::Cubic_High)
     {
       dims = 18 * 18 * 18;
       eulerodf[i] = FloatArrayType::CreateArray(dims, SIMPL::StringConstants::ODF, true);
@@ -1003,6 +1004,25 @@ void GenerateEnsembleStatistics::gatherODFStats()
       {
         eulerodf[i]->setValue(j, 0.0);
       }
+    }
+    else
+    {
+      QString errorMessage;
+      QTextStream out(&errorMessage);
+      out << "The option 'Calculate Crystallographic Statistics' only works with Laue classes [Cubic m3m] and [Hexagonal 6/mmm]. ";
+      out << "The offending phase was " << i << " with a value of " << QString::fromStdString(m_OrientationOps[laueClass]->getSymmetryName());
+      out << ".\nThe following Laue classes were also found [Phase #] Laue Class:\n";
+      for(size_t e = 1; e < numensembles; e++)
+      {
+        uint32_t lc = m_CrystalStructures[e];
+        out << "  [" << QString::number(e) << "] " << QString::fromStdString(m_OrientationOps[lc]->getSymmetryName());
+        if(e < numensembles - 1)
+        {
+          out << "\n";
+        }
+      }
+      setErrorCondition(-3015, errorMessage);
+      return;
     }
   }
   for(size_t i = 1; i < numfeatures; i++)
@@ -1401,6 +1421,10 @@ void GenerateEnsembleStatistics::execute()
   if(m_CalculateODF)
   {
     gatherODFStats();
+  }
+  if(getErrorCode() < 0)
+  {
+    return;
   }
   if(m_CalculateMDF)
   {
