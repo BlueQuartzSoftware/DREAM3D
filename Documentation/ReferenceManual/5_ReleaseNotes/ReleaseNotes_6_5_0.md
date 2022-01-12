@@ -16,6 +16,7 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 ### 6.5.xxx Fixed DREAM3D Issues ###
 
 + Add sanity check to Generate Ensemble Statistics to ensure that when Calculate Crystallographic Statistics is TRUE only Cubic and Hexagonal phases are present in the data. #984
++ Fix issue in FindBoundingBoxFeatures where the XY coordinates were locked into the XY plane even if the '2D' was on another plane. #985
 
 ### SIMPL Changes ###
 

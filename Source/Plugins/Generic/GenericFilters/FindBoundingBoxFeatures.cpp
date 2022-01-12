@@ -344,23 +344,32 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
   int32_t xPoints = 0, yPoints = 0;
   float xRes = 0.0f, yRes = 0.0f, zRes = 0.0f;
 
+  size_t centroidShift0 = 0;
+  size_t centroidShift1 = 1;
+    
   if(imageGeom->getXPoints() == 1)
   {
     xPoints = imageGeom->getYPoints();
     yPoints = imageGeom->getZPoints();
     std::tie(zRes, xRes, yRes) = imageGeom->getResolution();
+    centroidShift0 = 1;
+    centroidShift1 = 2;
   }
   if(imageGeom->getYPoints() == 1)
   {
     xPoints = imageGeom->getXPoints();
     yPoints = imageGeom->getZPoints();
     std::tie(xRes, zRes, yRes) = imageGeom->getResolution();
+    centroidShift0 = 0;
+    centroidShift1 = 2;
   }
   if(imageGeom->getZPoints() == 1)
   {
     xPoints = imageGeom->getXPoints();
     yPoints = imageGeom->getYPoints();
     std::tie(xRes, yRes, zRes) = imageGeom->getResolution();
+    centroidShift0 = 0;
+    centroidShift1 = 1;
   }
 
   boundbox[0] = xOrigin;
@@ -376,8 +385,8 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
       sidetomove = 0;
       move = 1;
       mindist = std::numeric_limits<float>::max();
-      x = m_Centroids[3 * i];
-      y = m_Centroids[3 * i + 1];
+      x = m_Centroids[3 * i + centroidShift0];
+      y = m_Centroids[3 * i + centroidShift1];
       coords[0] = x;
       coords[1] = x;
       coords[2] = y;
