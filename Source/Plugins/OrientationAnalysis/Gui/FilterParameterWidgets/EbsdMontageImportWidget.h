@@ -90,14 +90,14 @@ public:
    */
   void setupGui() override;
 
-public slots:
+public Q_SLOTS:
   void widgetChanged(const QString& msg);
   void beforePreflight();
   void afterPreflight();
   void filterNeedsInputParameters(AbstractFilter* filter);
   void spinnerChanged(int value);
 
-protected slots:
+protected Q_SLOTS:
 
   // Slots to catch signals emitted by the various ui widgets
   void inputDirBtn_clicked();

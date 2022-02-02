@@ -81,7 +81,7 @@ public:
   void setPhaseName(QString& name);
   QString getPhaseName();
 
-protected slots:
+protected Q_SLOTS:
   void on_phaseFraction_textChanged(const QString& string);
   void on_phaseTypeCombo_currentIndexChanged(int index);
 

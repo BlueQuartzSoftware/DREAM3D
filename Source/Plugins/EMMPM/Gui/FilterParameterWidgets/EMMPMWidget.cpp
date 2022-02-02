@@ -252,7 +252,7 @@ void EMMPMWidget::on_tableWidget_cellChanged(int row, int column)
   m_Filter->setEMMPMTableData(newData);
 
   m_DidCausePreflight = true;
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
   m_DidCausePreflight = false;
 }
 

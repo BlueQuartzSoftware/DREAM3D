@@ -130,7 +130,7 @@ AbstractFilter* EbsdToH5EbsdWidget::getFilter() const
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::setWidgetListEnabled(bool b)
 {
-  foreach(QWidget* w, m_WidgetList)
+  Q_FOREACH(QWidget* w, m_WidgetList)
   {
     w->setEnabled(b);
   }
@@ -172,7 +172,7 @@ void EbsdToH5EbsdWidget::setupGui()
     on_m_OutputFile_textChanged(m_OutputFile->text());
     blockSignals(false);
 
-    emit parametersChanged();
+    Q_EMIT parametersChanged();
   });
 
   m_WidgetList << m_LineEdit << m_InputDirBtn << m_OutputFile << m_OutputFileBtn;
@@ -271,7 +271,7 @@ void EbsdToH5EbsdWidget::getGuiParametersFromFilter()
   m_OutputFile->setText(m_Filter->getOutputFile());
 
   QObjectList obs = children();
-  foreach(QObject* ob, obs)
+  Q_FOREACH(QObject* ob, obs)
   {
     ob->blockSignals(true);
   }
@@ -289,7 +289,7 @@ void EbsdToH5EbsdWidget::getGuiParametersFromFilter()
   m_SampleTransformation = m_Filter->getSampleTransformation();
   m_EulerTransformation = m_Filter->getEulerTransformation();
 
-  foreach(QObject* ob, obs)
+  Q_FOREACH(QObject* ob, obs)
   {
     ob->blockSignals(false);
   }
@@ -346,7 +346,7 @@ void EbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString& text)
     outputAbsPathLabel->hide();
   }
 
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -436,7 +436,7 @@ void EbsdToH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
   }
   m_fileExtUsedForTransformInit = false;
 
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -475,7 +475,7 @@ void EbsdToH5EbsdWidget::setRefFrameZDir(uint32_t ref)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::on_m_zSpacing_textChanged(const QString& string)
 {
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -483,7 +483,7 @@ void EbsdToH5EbsdWidget::on_m_zSpacing_textChanged(const QString& string)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::stackingOrderChanged(bool checked)
 {
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -492,7 +492,7 @@ void EbsdToH5EbsdWidget::stackingOrderChanged(bool checked)
 void EbsdToH5EbsdWidget::on_m_ZEndIndex_valueChanged(int value)
 {
   generateExampleEbsdInputFile();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -501,7 +501,7 @@ void EbsdToH5EbsdWidget::on_m_ZEndIndex_valueChanged(int value)
 void EbsdToH5EbsdWidget::on_m_ZStartIndex_valueChanged(int value)
 {
   generateExampleEbsdInputFile();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -510,7 +510,7 @@ void EbsdToH5EbsdWidget::on_m_ZStartIndex_valueChanged(int value)
 void EbsdToH5EbsdWidget::on_m_TotalDigits_valueChanged(int value)
 {
   generateExampleEbsdInputFile();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -519,7 +519,7 @@ void EbsdToH5EbsdWidget::on_m_TotalDigits_valueChanged(int value)
 void EbsdToH5EbsdWidget::on_m_FileExt_textChanged(const QString& string)
 {
   generateExampleEbsdInputFile();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -528,7 +528,7 @@ void EbsdToH5EbsdWidget::on_m_FileExt_textChanged(const QString& string)
 void EbsdToH5EbsdWidget::on_m_FileSuffix_textChanged(const QString& string)
 {
   generateExampleEbsdInputFile();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -537,7 +537,7 @@ void EbsdToH5EbsdWidget::on_m_FileSuffix_textChanged(const QString& string)
 void EbsdToH5EbsdWidget::on_m_FilePrefix_textChanged(const QString& string)
 {
   generateExampleEbsdInputFile();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -658,7 +658,7 @@ void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
     m_NoTranschecked = d.getNoTranschecked();
     d.getSampleTranformation(m_SampleTransformation);
     d.getEulerTranformation(m_EulerTransformation);
-    emit parametersChanged(); // emit to let the system know to preflight
+    Q_EMIT parametersChanged(); // Q_EMIT to let the system know to preflight
   }
 }
 
@@ -766,7 +766,7 @@ void EbsdToH5EbsdWidget::findEbsdMaxSliceAndPrefix()
   int digitEnd = 0;
   int totalOimFilesFound = 0;
   int minTotalDigits = 1000;
-  foreach(QFileInfo fi, angList)
+  Q_FOREACH(QFileInfo fi, angList)
   {
     if((fi.suffix().compare(ext) != 0) && fi.isFile())
     {
@@ -830,7 +830,7 @@ void EbsdToH5EbsdWidget::findEbsdMaxSliceAndPrefix()
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::widgetChanged(const QString& text)
 {
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -841,7 +841,7 @@ void EbsdToH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
   if(nullptr == filter)
   {
     QString ss = QObject::tr("Error Setting EbsdToH5Ebsd Gui values to Filter instance. Filter instance was nullptr.").arg(getFilterParameter()->getPropertyName());
-    emit errorSettingFilterParameter(ss);
+    Q_EMIT errorSettingFilterParameter(ss);
   }
 
   EbsdToH5Ebsd* ebsdConverter = qobject_cast<EbsdToH5Ebsd*>(filter);

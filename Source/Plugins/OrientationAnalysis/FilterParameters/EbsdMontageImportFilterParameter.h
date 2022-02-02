@@ -43,7 +43,7 @@
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/SIMPLib.h"
 
-using EbsdMontageListInfo_t = struct
+ struct EbsdMontageListInfo_t
 {
   qint32 PaddingDigits = 3;
   quint32 Ordering = 0; /* Ordering=0 = RowColumn, Ordering=1 = ColumnRow */

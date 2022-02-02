@@ -94,7 +94,7 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
     void setFilter(AbstractFilter* value);
     AbstractFilter* getFilter() const;
 
-  public slots:
+  public Q_SLOTS:
     void widgetChanged(const QString& msg);
     void beforePreflight();
     void afterPreflight();
@@ -105,7 +105,7 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
      */
     void showFileInFileSystem() override;
 
-  protected slots:
+  protected Q_SLOTS:
     /* OIM Data Import Slots */
     void on_m_InputDirBtn_clicked();
     void on_m_OutputFileBtn_clicked();

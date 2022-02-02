@@ -71,7 +71,7 @@ void OrientationUtilityCalculator::setDataAndInputType(QVector<double> values, i
   m_InputData = values;
   m_InputType =inputType;
   m_HasErrors = hasErrors;
-  emit calculatorReady(this);
+  Q_EMIT calculatorReady(this);
 }
 
 // -----------------------------------------------------------------------------

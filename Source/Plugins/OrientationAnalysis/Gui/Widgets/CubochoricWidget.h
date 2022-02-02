@@ -47,7 +47,7 @@ public:
   CubochoricWidget(QWidget* parent = nullptr);
   virtual ~CubochoricWidget();
 
-protected slots:
+protected Q_SLOTS:
   void valuesUpdated(const QString& text);
 
   virtual void updateData(OrientationUtilityCalculator* calculator);

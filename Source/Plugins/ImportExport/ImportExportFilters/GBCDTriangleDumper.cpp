@@ -190,11 +190,11 @@ void GBCDTriangleDumper::dataCheckVoxel()
 void GBCDTriangleDumper::preflight()
 {
   setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
+  Q_EMIT preflightAboutToExecute();
+  Q_EMIT updateFilterParameters(this);
   dataCheckSurfaceMesh();
   dataCheckVoxel();
-  emit preflightExecuted();
+  Q_EMIT preflightExecuted();
   setInPreflight(false);
 }
 

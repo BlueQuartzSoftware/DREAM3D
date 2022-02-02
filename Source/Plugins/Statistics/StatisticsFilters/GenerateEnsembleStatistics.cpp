@@ -658,10 +658,10 @@ void GenerateEnsembleStatistics::dataCheck()
 void GenerateEnsembleStatistics::preflight()
 {
   setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
+  Q_EMIT preflightAboutToExecute();
+  Q_EMIT updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
+  Q_EMIT preflightExecuted();
   setInPreflight(false);
 }
 
@@ -1056,18 +1056,19 @@ void GenerateEnsembleStatistics::gatherODFStats()
       QString errorMessage;
       QTextStream out(&errorMessage);
       out << "The option 'Calculate Crystallographic Statistics' only works with Laue classes [Cubic m3m] and [Hexagonal 6/mmm]. ";
-      out << "The offending phase was " << i << " with a value of " << QString::fromStdString(m_OrientationOps[laueClass]->getSymmetryName());
+      out << "The offending phase was " << i << " with a value of " << m_OrientationOps[i]->getSymmetryName();
       out << ".\nThe following Laue classes were also found [Phase #] Laue Class:\n";
       for(size_t e = 1; e < numensembles; e++)
       {
         uint32_t lc = m_CrystalStructures[e];
-        out << "  [" << QString::number(e) << "] " << QString::fromStdString(m_OrientationOps[lc]->getSymmetryName());
+        out << "  [" << QString::number(e) << "] " << m_OrientationOps[lc]->getSymmetryName();
         if(e < numensembles - 1)
         {
           out << "\n";
         }
       }
-      setErrorCondition(-3015, errorMessage);
+      setErrorCondition(-3015);
+      notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
       return;
     }
   }
@@ -1464,7 +1465,7 @@ void GenerateEnsembleStatistics::execute()
   {
     gatherODFStats();
   }
-  if(getErrorCode() < 0)
+  if(getErrorCondition() < 0)
   {
     return;
   }

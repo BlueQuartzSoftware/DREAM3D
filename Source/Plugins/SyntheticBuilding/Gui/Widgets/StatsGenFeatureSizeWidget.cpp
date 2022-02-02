@@ -213,7 +213,7 @@ void StatsGenFeatureSizeWidget::plotPointSelected(const QPointF& point)
     }
   }
   m_SizeDistributionPlot->replot();
-  emit binSelected(selectedBin);
+  Q_EMIT binSelected(selectedBin);
 }
 
 // -----------------------------------------------------------------------------
@@ -327,39 +327,39 @@ bool StatsGenFeatureSizeWidget::validateMuSigma()
   if(!muValid)
   {
     m_NumberBinsGenerated->setText("Error: Mu not valid");
-    emit userEnteredValidData(false);
+    Q_EMIT userEnteredValidData(false);
     return false;
   }
   bool sigmaValid = validateValue(m_SigmaValidator, m_Sigma_SizeDistribution);
   if(!sigmaValid)
   {
     m_NumberBinsGenerated->setText("Error: Sigma not valid");
-    emit userEnteredValidData(false);
+    Q_EMIT userEnteredValidData(false);
     return false;
   }
   bool minValid = validateValue(m_MinCutoffValidator, m_MinSigmaCutOff);
   if(!minValid)
   {
     m_NumberBinsGenerated->setText("Error: Min Cutoff not valid");
-    emit userEnteredValidData(false);
+    Q_EMIT userEnteredValidData(false);
     return false;
   }
   bool maxValid = validateValue(m_MaxCutoffValidator, m_MaxSigmaCutOff);
   if(!maxValid)
   {
     m_NumberBinsGenerated->setText("Error: Max Cutoff not valid");
-    emit userEnteredValidData(false);
+    Q_EMIT userEnteredValidData(false);
     return false;
   }
 
   if(muValid && sigmaValid && minValid && maxValid)
   {
-    emit userEnteredValidData(true);
+    Q_EMIT userEnteredValidData(true);
     return true;
   }
 
   m_NumberBinsGenerated->setText("Error");
-  emit userEnteredValidData(false);
+  Q_EMIT userEnteredValidData(false);
   return false;
 }
 
@@ -408,7 +408,7 @@ void StatsGenFeatureSizeWidget::on_m_Mu_SizeDistribution_textChanged(const QStri
   {
     return;
   }
-  emit dataChanged();
+  Q_EMIT dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -443,7 +443,7 @@ void StatsGenFeatureSizeWidget::on_m_Sigma_SizeDistribution_textChanged(const QS
   {
     return;
   }
-  emit dataChanged();
+  Q_EMIT dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -465,7 +465,7 @@ void StatsGenFeatureSizeWidget::on_m_MinSigmaCutOff_textChanged(const QString& t
   {
     return;
   }
-  emit dataChanged();
+  Q_EMIT dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -487,7 +487,7 @@ void StatsGenFeatureSizeWidget::on_m_MaxSigmaCutOff_textChanged(const QString& t
   {
     return;
   }
-  emit dataChanged();
+  Q_EMIT dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -508,7 +508,7 @@ void StatsGenFeatureSizeWidget::on_m_BinStepSize_valueChanged(double v)
   {
     return;
   }
-  emit dataChanged();
+  Q_EMIT dataChanged();
 }
 
 // -----------------------------------------------------------------------------

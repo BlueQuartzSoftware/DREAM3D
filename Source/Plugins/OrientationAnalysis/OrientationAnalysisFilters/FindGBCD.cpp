@@ -40,7 +40,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 #include <QtCore/QDateTime>
@@ -564,15 +563,15 @@ void FindGBCD::dataCheckVoxel()
 void FindGBCD::preflight()
 {
   setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
+  Q_EMIT preflightAboutToExecute();
+  Q_EMIT updateFilterParameters(this);
   dataCheckVoxel();
   // order here matters...because we are going to use the size of the crystal structures out of the dataCheckVoxel to size the faceAttrMat in dataCheckSurfaceMesh
   if(getErrorCondition() >= 0)
   {
     dataCheckSurfaceMesh();
   }
-  emit preflightExecuted();
+  Q_EMIT preflightExecuted();
   setInPreflight(false);
 }
 
@@ -596,8 +595,7 @@ void FindGBCD::execute()
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
+    bool doParallel = true;
 #endif
 
   size_t totalPhases = m_CrystalStructuresPtr.lock()->getNumberOfTuples();

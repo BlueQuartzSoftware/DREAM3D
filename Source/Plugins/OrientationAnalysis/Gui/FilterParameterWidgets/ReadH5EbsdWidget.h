@@ -86,13 +86,13 @@ class ReadH5EbsdWidget : public FilterParameterWidget, private Ui::ReadH5EbsdWid
     FilterParameter* getFilterParameter() const;
 
 
-  public slots:
+  public Q_SLOTS:
     //void widgetChanged(const QString& msg);
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
-  protected slots:
+  protected Q_SLOTS:
     void on_m_LineEditBtn_clicked();
     void on_m_LineEdit_textChanged(const QString& text);
     void on_m_CellList_itemClicked(QListWidgetItem* item);

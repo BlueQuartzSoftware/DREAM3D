@@ -160,7 +160,7 @@ public:
    */
   void preflight() override;
 
-public slots:
+public Q_SLOTS:
   /**
    * @brief flushCache Clears the input file cache
    */

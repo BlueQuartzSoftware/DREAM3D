@@ -57,7 +57,7 @@ public:
   QString newTempFile(QString directory);
   void checkWindowPosition(StatsGeneratorUI* win);
 
-public slots:
+public Q_SLOTS:
   void windowClosed(StatsGeneratorUI* window);
 
 private:

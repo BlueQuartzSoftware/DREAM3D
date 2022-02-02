@@ -80,6 +80,7 @@ if(BUILD_SHARED_LIBS)
 	set(EbsdLib_BUILT_AS_DYNAMIC_LIB 1)
 endif(BUILD_SHARED_LIBS)
 
+add_compile_definitions(QT_NO_KEYWORDS)
 
 # Look for our Prerequisite Libraries
 if(NOT DEFINED DREAM3DProj_BINARY_DIR)

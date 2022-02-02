@@ -39,7 +39,6 @@
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #include <tbb/task_group.h>
 #include <tbb/task.h>
 #endif
@@ -1205,8 +1204,7 @@ void HexagonalLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, Flo
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
+    bool doParallel = true;
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -1391,8 +1389,7 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
   DoubleArrayType::Pointer intensity011 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label1 + "_Intensity_Image");
   DoubleArrayType::Pointer intensity111 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label2 + "_Intensity_Image");
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
+    bool doParallel = true;
 
   if(doParallel)
   {

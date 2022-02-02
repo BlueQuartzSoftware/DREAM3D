@@ -47,7 +47,7 @@ public:
   AxisAngleWidget(QWidget* parent = nullptr);
   virtual ~AxisAngleWidget();
 
-protected slots:
+protected Q_SLOTS:
   void convertData(bool isDegrees);
   void valuesUpdated(const QString& text);
 

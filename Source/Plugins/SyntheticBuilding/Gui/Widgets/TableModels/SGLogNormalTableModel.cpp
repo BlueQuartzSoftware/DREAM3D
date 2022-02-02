@@ -240,7 +240,7 @@ bool SGLogNormalTableModel::setData(const QModelIndex& index, const QVariant& va
     Q_ASSERT(false);
   }
 
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -264,7 +264,7 @@ bool SGLogNormalTableModel::insertRows(int row, int count, const QModelIndex& in
     m_RowCount = m_BinNumbers.count();
   }
   endInsertRows();
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -287,7 +287,7 @@ bool SGLogNormalTableModel::removeRows(int row, int count, const QModelIndex& in
     m_RowCount = m_BinNumbers.count();
   }
   endRemoveRows();
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -374,7 +374,7 @@ void SGLogNormalTableModel::setTableData(QVector<float> bins, QVector<QVector<fl
     {
       offset = 0;
     }
-    // Now mass insert the data to the table then emit that the data has changed
+    // Now mass insert the data to the table then Q_EMIT that the data has changed
     beginInsertRows(QModelIndex(), row, offset);
     m_BinNumbers = bins;
     m_Average = data[0];
@@ -389,7 +389,7 @@ void SGLogNormalTableModel::setTableData(QVector<float> bins, QVector<QVector<fl
       offset = 0;
     }
     QModelIndex botRight = createIndex(offset, ColumnCount);
-    emit dataChanged(topLeft, botRight);
+    Q_EMIT dataChanged(topLeft, botRight);
   }
 }
 

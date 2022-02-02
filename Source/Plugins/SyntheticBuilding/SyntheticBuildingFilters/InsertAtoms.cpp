@@ -39,7 +39,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 #include "SIMPLib/Common/Constants.h"
@@ -454,10 +453,10 @@ void InsertAtoms::dataCheck()
 void InsertAtoms::preflight()
 {
   setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
+  Q_EMIT preflightAboutToExecute();
+  Q_EMIT updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
+  Q_EMIT preflightExecuted();
   setInPreflight(false);
 }
 
@@ -580,8 +579,7 @@ void InsertAtoms::execute()
   SIMPL_RANDOMNG_NEW()
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
+    bool doParallel = true;
 #endif
 
   // pull down faces

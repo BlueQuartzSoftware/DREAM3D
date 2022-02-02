@@ -47,7 +47,7 @@ public:
   HomochoricWidget(QWidget* parent = nullptr);
   virtual ~HomochoricWidget();
 
-protected slots:
+protected Q_SLOTS:
   void valuesUpdated(const QString& text);
 
   virtual void updateData(OrientationUtilityCalculator* calculator);

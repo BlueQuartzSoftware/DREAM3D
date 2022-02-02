@@ -47,7 +47,7 @@ public:
   QuatWidget(QWidget* parent = nullptr);
   virtual ~QuatWidget();
 
-protected slots:
+protected Q_SLOTS:
   void valuesUpdated(const QString& text);
 
   virtual void updateData(OrientationUtilityCalculator* calculator);

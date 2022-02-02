@@ -321,15 +321,15 @@ void verifyPreflightEmitsProperly()
     QTextStream ss(&buf);
     if(p.m_beforePreflight == false)
     {
-      ss << filter->getNameOfClass() << " Missing emit preflightAboutToExecute()";
+      ss << filter->getNameOfClass() << " Missing Q_EMIT preflightAboutToExecute()";
     }
     if(p.m_afterPreflight == false)
     {
-      ss << filter->getNameOfClass() << " Missing emit preflightExecuted()";
+      ss << filter->getNameOfClass() << " Missing Q_EMIT preflightExecuted()";
     }
     if(p.m_filterNeedsInputParameters == false)
     {
-      ss << filter->getNameOfClass() << " Missing emit updateFilterParameters()";
+      ss << filter->getNameOfClass() << " Missing Q_EMIT updateFilterParameters()";
     }
     if(filter->getInPreflight() == true)
     {
@@ -464,7 +464,7 @@ void TestUncategorizedFilterParameters()
       if(filter.get() != nullptr)
       {
         QVector<FilterParameter::Pointer> parameters = filter->getFilterParameters();
-        foreach(FilterParameter::Pointer fp, parameters)
+        Q_FOREACH(FilterParameter::Pointer fp, parameters)
         {
           if(fp->getCategory() == FilterParameter::Uncategorized)
           {

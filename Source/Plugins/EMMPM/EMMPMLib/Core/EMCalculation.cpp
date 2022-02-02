@@ -54,7 +54,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "EMMPMLib/Core/MorphFilt.h"
 
 #if EMMPM_USE_PARALLEL_ALGORITHMS
-#include <tbb/task_scheduler_init.h>
 #endif
 
 // -----------------------------------------------------------------------------
@@ -76,8 +75,7 @@ EMCalculation::~EMCalculation() = default;
 void EMCalculation::execute()
 {
 #if EMMPM_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-//  int threads = init.default_num_threads();
+  //  int threads = init.default_num_threads();
 //   std::cout << "TBB Thread Count: " << threads << std::endl;
 #endif
   EMMPM_Data* data = m_Data.get();

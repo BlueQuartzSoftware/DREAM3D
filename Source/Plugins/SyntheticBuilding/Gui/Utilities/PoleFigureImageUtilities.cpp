@@ -39,6 +39,7 @@
 #include <QtGui/QColor>
 #include <QtGui/QFont>
 #include <QtGui/QPainter>
+#include <QtGui/QPainterPath>
 
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/ColorTable.h"

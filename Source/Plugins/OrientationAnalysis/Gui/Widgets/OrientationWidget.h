@@ -48,7 +48,7 @@ public:
   OrientationWidget(QWidget* parent = nullptr);
   virtual ~OrientationWidget();
 
-signals:
+Q_SIGNALS:
   void valuesChanged(QVector<double> values, int32_t type, bool hasErrors);
   void invalidValues(int errorCode, QString errorMsg);
   void clearErrorTable();
@@ -62,7 +62,7 @@ protected:
 
   AngleMeasurement m_AngleMeasurement;
 
-protected slots:
+protected Q_SLOTS:
   virtual void updateData(OrientationUtilityCalculator* calculator);
   void updateAngleMeasurement(bool isRadians);
 

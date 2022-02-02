@@ -146,7 +146,7 @@ void SurfaceMeshToVtk::dataCheck()
     dcName = m_SelectedVertexArrays[0].getDataContainerName();
   }
 
-  foreach(DataArrayPath dap, m_SelectedFaceArrays)
+  Q_FOREACH(DataArrayPath dap, m_SelectedFaceArrays)
   {
     if(dap.getDataContainerName().compare(dcName) != 0)
     {
@@ -155,7 +155,7 @@ void SurfaceMeshToVtk::dataCheck()
       return;
     }
   }
-  foreach(DataArrayPath dap, m_SelectedVertexArrays)
+  Q_FOREACH(DataArrayPath dap, m_SelectedVertexArrays)
   {
     if(dap.getDataContainerName().compare(dcName) != 0)
     {
@@ -212,10 +212,10 @@ void SurfaceMeshToVtk::dataCheck()
 void SurfaceMeshToVtk::preflight()
 {
   setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
+  Q_EMIT preflightAboutToExecute();
+  Q_EMIT updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
+  Q_EMIT preflightExecuted();
   setInPreflight(false);
 }
 

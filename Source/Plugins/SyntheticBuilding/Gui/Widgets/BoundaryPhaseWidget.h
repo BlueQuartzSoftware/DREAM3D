@@ -67,9 +67,9 @@ public:
 
   virtual QIcon getPhaseIcon();
 
-protected slots:
+protected Q_SLOTS:
 
-signals:
+Q_SIGNALS:
   void dataChanged();
   void progressText(const QString& text);
 

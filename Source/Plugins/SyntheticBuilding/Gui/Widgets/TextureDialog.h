@@ -66,7 +66,7 @@ public:
 
   void getODFEntry(float& e1, float& e2, float& e3, float& weight, float& sigma);
 
-protected slots:
+protected Q_SLOTS:
   void on_presetListWidget_itemSelectionChanged();
   void on_presetListWidget_itemDoubleClicked(QListWidgetItem* item);
 

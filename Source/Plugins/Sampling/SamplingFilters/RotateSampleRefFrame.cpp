@@ -39,7 +39,6 @@
 #include <tbb/blocked_range3d.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 #include "SIMPLib/Common/Constants.h"
@@ -233,10 +232,10 @@ void RotateSampleRefFrame::preflight()
   setInPreflight(true);
   setErrorCondition(0);
   setWarningCondition(0);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
+  Q_EMIT preflightAboutToExecute();
+  Q_EMIT updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
+  Q_EMIT preflightExecuted();
 
   if(getErrorCondition() < 0)
   {
@@ -587,8 +586,7 @@ void RotateSampleRefFrame::execute()
   int64_t* newindicies = newIndiciesPtr->getPointer(0);
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
+    bool doParallel = true;
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS

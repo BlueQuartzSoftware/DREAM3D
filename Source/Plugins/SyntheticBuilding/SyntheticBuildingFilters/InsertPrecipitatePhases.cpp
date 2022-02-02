@@ -590,10 +590,10 @@ void InsertPrecipitatePhases::dataCheck()
 void InsertPrecipitatePhases::preflight()
 {
   setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
+  Q_EMIT preflightAboutToExecute();
+  Q_EMIT updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
+  Q_EMIT preflightExecuted();
 
   AttributeMatrix::Pointer attrMat = getDataContainerArray()->getAttributeMatrix(getFeaturePhasesArrayPath());
   if(attrMat == nullptr)
@@ -3005,7 +3005,7 @@ void InsertPrecipitatePhases::moveShapeDescriptions()
   AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(getFeaturePhasesArrayPath());
 
   QList<IDataArray::Pointer> attrArrays;
-  foreach(const QString name, names)
+  Q_FOREACH(const QString name, names)
   {
     IDataArray::Pointer arrayPtr = cellFeatureAttrMat->removeAttributeArray(name);
     if(arrayPtr != IDataArray::NullPointer())
@@ -3043,7 +3043,7 @@ void InsertPrecipitatePhases::saveToNewAttributeMatrix(QList<IDataArray::Pointer
       newAM->resizeAttributeArrays(tDims);
     }
 
-    foreach(IDataArray::Pointer incomingArray, incomingArrays)
+    Q_FOREACH(IDataArray::Pointer incomingArray, incomingArrays)
     {
       newAM->addAttributeArray(incomingArray->getName(), incomingArray);
     }
@@ -3068,7 +3068,7 @@ void InsertPrecipitatePhases::appendToExistingAttributeMatrix(QList<IDataArray::
       existingAM->resizeAttributeArrays(tDims);
     }
 
-    foreach(IDataArray::Pointer incomingArray, incomingArrays)
+    Q_FOREACH(IDataArray::Pointer incomingArray, incomingArrays)
     {
       int err = 0;
       IDataArray::Pointer existingArray = existingAM->getPrereqIDataArray<IDataArray, AbstractFilter>(this, incomingArray->getName(), err);

@@ -81,7 +81,7 @@ public:
 
   void loadData() override;
 
-protected slots:
+protected Q_SLOTS:
 
   void beforePreflight();
   void afterPreflight();

@@ -41,7 +41,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 #include "SIMPLib/Common/Constants.h"
@@ -432,11 +431,11 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
 void FindTwinBoundarySchmidFactors::preflight()
 {
   setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
+  Q_EMIT preflightAboutToExecute();
+  Q_EMIT updateFilterParameters(this);
   dataCheckVoxel();
   dataCheckSurfaceMesh();
-  emit preflightExecuted();
+  Q_EMIT preflightExecuted();
   setInPreflight(false);
 }
 
@@ -459,8 +458,7 @@ void FindTwinBoundarySchmidFactors::execute()
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
+    bool doParallel = true;
 #endif
 
   size_t numTriangles = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();

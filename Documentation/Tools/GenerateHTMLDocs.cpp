@@ -482,7 +482,7 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
   
   bool parentWritten = false;
   QFileInfoList itemList = currentDir.entryInfoList(filters);
-  foreach(QFileInfo itemInfo, itemList)
+  Q_FOREACH(QFileInfo itemInfo, itemList)
   {
     QString itemFilePath = itemInfo.absoluteFilePath();
     
@@ -520,7 +520,7 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
   QFileInfoList dirList = currentDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
   if(dirList.size() > 0)
   {
-    foreach(QFileInfo fi, dirList)
+    Q_FOREACH(QFileInfo fi, dirList)
     {
       
       ReplaceGrepSearchesRecursively(QDir(fi.absoluteFilePath())); // Recursive call

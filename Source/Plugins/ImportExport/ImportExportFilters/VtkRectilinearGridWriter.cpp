@@ -327,10 +327,10 @@ void VtkRectilinearGridWriter::dataCheck()
 void VtkRectilinearGridWriter::preflight()
 {
   setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
+  Q_EMIT preflightAboutToExecute();
+  Q_EMIT updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
+  Q_EMIT preflightExecuted();
   setInPreflight(false);
 }
 
@@ -418,7 +418,7 @@ void VtkRectilinearGridWriter::execute()
   fprintf(f, "CELL_DATA %d\n", (int)totalCells);
 
   QVector<DataArrayPath> dataPaths = getSelectedDataArrayPaths();
-  foreach(const DataArrayPath arrayPath, dataPaths)
+  Q_FOREACH(const DataArrayPath arrayPath, dataPaths)
   {
     IDataArray::Pointer iDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, arrayPath);
 

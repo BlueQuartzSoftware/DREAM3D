@@ -253,7 +253,7 @@ public:
     err = am2->addAttributeArray(k_ActivesName, actives);
     DREAM3D_REQUIRE(err >= 0);
 
-    foreach(QString da, am1->getAttributeArrayNames())
+    Q_FOREACH(QString da, am1->getAttributeArrayNames())
     {
       DREAM3D_REQUIRE_EQUAL(am1->getAttributeArray(da)->getNumberOfTuples(), tDims[0] * tDims[1] * tDims[2]);
     }

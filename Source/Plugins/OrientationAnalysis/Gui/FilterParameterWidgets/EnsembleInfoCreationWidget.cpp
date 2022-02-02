@@ -168,7 +168,7 @@ void EnsembleInfoCreationWidget::on_conditionalCB_stateChanged(int state)
   linkLeft->setVisible(boolProp);
   linkRight->setVisible(boolProp);
   m_DidCausePreflight = true;
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
   m_DidCausePreflight = false;
 
 }
@@ -236,7 +236,7 @@ void EnsembleInfoCreationWidget::tableDataWasChanged(const QModelIndex& topLeft,
   Q_UNUSED(topLeft)
   Q_UNUSED(bottomRight)
   m_DidCausePreflight = true;
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
   m_DidCausePreflight = false;
 }
 
@@ -247,7 +247,7 @@ void EnsembleInfoCreationWidget::widgetChanged(const QString& text)
 {
   Q_UNUSED(text)
   m_DidCausePreflight = true;
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
   m_DidCausePreflight = false;
 }
 

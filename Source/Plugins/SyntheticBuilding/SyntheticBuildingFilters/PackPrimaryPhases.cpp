@@ -41,7 +41,6 @@
 #include <tbb/blocked_range3d.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 #include <QtCore/QDir>
@@ -806,10 +805,10 @@ void PackPrimaryPhases::dataCheck()
 void PackPrimaryPhases::preflight()
 {
   setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
+  Q_EMIT preflightAboutToExecute();
+  Q_EMIT updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
+  Q_EMIT preflightExecuted();
 
   DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath());
   if(dc == nullptr)
@@ -2636,8 +2635,7 @@ void PackPrimaryPhases::assignVoxels()
   };
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
+    bool doParallel = true;
 #endif
 
   int64_t column = 0, row = 0, plane = 0;
@@ -3480,7 +3478,7 @@ void PackPrimaryPhases::moveShapeDescriptions()
   QVector<size_t> tDims(1, 0);
 
   QList<IDataArray::Pointer> attrArrays;
-  foreach(const QString name, names)
+  Q_FOREACH(const QString name, names)
   {
     IDataArray::Pointer arrayPtr = cellFeatureAttrMat->removeAttributeArray(name);
     if(arrayPtr != IDataArray::NullPointer())
@@ -3503,7 +3501,7 @@ void PackPrimaryPhases::moveShapeDescriptions()
         newAM->resizeAttributeArrays(tDims);
       }
 
-      foreach(IDataArray::Pointer incomingArray, attrArrays)
+      Q_FOREACH(IDataArray::Pointer incomingArray, attrArrays)
       {
         newAM->addAttributeArray(incomingArray->getName(), incomingArray);
       }
@@ -3522,7 +3520,7 @@ void PackPrimaryPhases::moveShapeDescriptions()
         existingAM->resizeAttributeArrays(tDims);
       }
 
-      foreach(IDataArray::Pointer incomingArray, attrArrays)
+      Q_FOREACH(IDataArray::Pointer incomingArray, attrArrays)
       {
         int err = 0;
         IDataArray::Pointer existingArray = existingAM->getPrereqIDataArray<IDataArray, AbstractFilter>(this, incomingArray->getName(), err);

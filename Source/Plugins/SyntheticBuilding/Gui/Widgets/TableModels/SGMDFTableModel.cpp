@@ -298,7 +298,7 @@ bool SGMDFTableModel::setData(const QModelIndex& index, const QVariant& value, i
     Q_ASSERT(false);
   }
 
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -322,7 +322,7 @@ bool SGMDFTableModel::insertRows(int row, int count, const QModelIndex& parent)
     m_RowCount = m_Angles.count();
   }
   endInsertRows();
-  emit dataChanged(parent, parent);
+  Q_EMIT dataChanged(parent, parent);
   return true;
 }
 
@@ -346,7 +346,7 @@ bool SGMDFTableModel::removeRows(int row, int count, const QModelIndex& parent)
     m_RowCount = m_Angles.count();
   }
   endRemoveRows();
-  emit dataChanged(parent, parent);
+  Q_EMIT dataChanged(parent, parent);
   return true;
 }
 
@@ -406,7 +406,7 @@ void SGMDFTableModel::setTableData(const QVector<float>& angles, const QVector<f
 
   if(count > 0)
   {
-    // Now mass insert the data to the table then emit that the data has changed
+    // Now mass insert the data to the table then Q_EMIT that the data has changed
     beginInsertRows(QModelIndex(), row, row + count - 1);
     m_Angles = angles;
     m_Weights = weights;
@@ -429,7 +429,7 @@ void SGMDFTableModel::setTableData(const QVector<float>& angles, const QVector<f
     createIndex(0, 0);
     createIndex(count - 1, ColumnCount);
   }
-  emit dataChanged(topLeft, botRight);
+  Q_EMIT dataChanged(topLeft, botRight);
 }
 
 // -----------------------------------------------------------------------------

@@ -91,7 +91,7 @@ public:
    */
   virtual void setupGui();
 
-public slots:
+public Q_SLOTS:
   /**
    * @brief beforePreflight
    */
@@ -137,7 +137,7 @@ protected:
    */
   QString checkStringValues(QString curDcName, QString filtDcName);
 
-protected slots:
+protected Q_SLOTS:
   /**
    * @brief on_addComparison_clicked
    */

@@ -128,25 +128,25 @@ void RodriguesWidget::valuesUpdated(const QString& text)
   values[1] = rod[1];
   values[2] = rod[2];
 
-  emit clearErrorTable();
+  Q_EMIT clearErrorTable();
   int errorCode = 0;
   std::stringstream ss;
   ss << "Rodrigues vector was normalized. Actual values used for the calculation are: ";
   ss << values[0] << ", " << values[1] << ", " << values[2] << ", " << values[3];
 
-  emit invalidValues(errorCode, QString::fromStdString(ss.str()));
+  Q_EMIT invalidValues(errorCode, QString::fromStdString(ss.str()));
   OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ro_check(values);
   errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
 
   if(errorCode >= 0)
   {
-    emit valuesChanged(values, OrientationConverter<double>::Rodrigues, false);
+    Q_EMIT valuesChanged(values, OrientationConverter<double>::Rodrigues, false);
   }
   else
   {
-    emit valuesChanged(QVector<double>(), OrientationConverter<double>::Rodrigues, true);
-    emit invalidValues(errorCode, errorMsg);
+    Q_EMIT valuesChanged(QVector<double>(), OrientationConverter<double>::Rodrigues, true);
+    Q_EMIT invalidValues(errorCode, errorMsg);
   }
 }
 

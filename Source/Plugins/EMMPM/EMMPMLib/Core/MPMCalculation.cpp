@@ -52,9 +52,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-- C++ includes
 #include <random>
 #include <chrono>
+#include <thread>
 
 #include "EMMPMLib/Common/EMMPM_Math.h"
-#include "EMMPMLib/Common/EMTime.h"
 #include "EMMPMLib/Common/MSVCDefines.h"
 #include "EMMPMLib/Core/EMMPM.h"
 #include "EMMPMLib/Core/EMMPMUtilities.h"
@@ -65,7 +65,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_group.h>
-#include <tbb/task_scheduler_init.h>
 
 #endif
 
@@ -436,8 +435,7 @@ void MPMCalculation::execute()
     data->inside_mpm_loop = 1;
 
 #if EMMPM_USE_PARALLEL_ALGORITHMS
-    tbb::task_scheduler_init init;
-    int threads = tbb::task_scheduler_init::default_num_threads();
+        int threads = std::thread::hardware_concurrency();
 #if USE_TBB_TASK_GROUP
     std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     unsigned int rowIncrement = rows / threads;

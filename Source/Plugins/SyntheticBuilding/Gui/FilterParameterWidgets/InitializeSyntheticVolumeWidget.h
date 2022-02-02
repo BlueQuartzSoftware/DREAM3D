@@ -71,14 +71,14 @@ class InitializeSyntheticVolumeWidget : public FilterParameterWidget, private Ui
     void setFilter(AbstractFilter* value);
     AbstractFilter* getFilter() const;
 
-  public slots:
+  public Q_SLOTS:
     //void widgetChanged(const QString& msg);
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
     void displayErrorMessage(const PipelineMessage& msg);
 
-  protected slots:
+  protected Q_SLOTS:
     // Auto Hookup Slots
     void on_m_InputFileBtn_clicked();
     void on_m_InputFile_textChanged(const QString& text);

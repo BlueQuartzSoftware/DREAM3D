@@ -36,7 +36,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 #include "SIMPLib/Common/Constants.h"
@@ -206,10 +205,10 @@ void Stereographic3D::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
   setInPreflight(true);              // Set the fact that we are preflighting.
-  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
-  emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
+  Q_EMIT preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
+  Q_EMIT updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
   dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted();          // We are done preflighting this filter
+  Q_EMIT preflightExecuted();          // We are done preflighting this filter
   setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
 }
 
@@ -233,8 +232,7 @@ void Stereographic3D::execute()
   size_t totalPoints = m_QuatsPtr.lock()->getNumberOfTuples();
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
+    bool doParallel = true;
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS

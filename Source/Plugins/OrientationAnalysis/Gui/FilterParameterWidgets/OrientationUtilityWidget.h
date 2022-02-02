@@ -67,12 +67,12 @@ public:
    */
   virtual void setupGui();
 
-protected slots:
+protected Q_SLOTS:
   void setErrorEntry(int errorCode, QString errorMsg);
 
   void clearErrorTable();
 
-signals:
+Q_SIGNALS:
   void newValuesCalculated();
 
 private:

@@ -54,7 +54,6 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #endif
 
 /**
@@ -394,7 +393,6 @@ class ConvertRepresentation
   typename DataArray<T>::Pointer output = DataArray<T>::CreateArray(nTuples, cDims, #OUT_ARRAY_NAME);\
   output->initializeWithZeros(); /* Intialize the array with Zeros */\
   T* outPtr = output->getPointer(0);\
-  tbb::task_scheduler_init init;\
   tbb::parallel_for(tbb::blocked_range<size_t>(0, nTuples),\
   ConvertRepresentation<T, Convertors::FUNCTOR<T>>(inPtr, outPtr, inStride, outStride), tbb::auto_partitioner());\
   this->setOutputData(output);
@@ -527,8 +525,7 @@ class EulerConverter : public OrientationConverter<T>
       int inStride = input->getNumberOfComponents();
       
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      tbb::task_scheduler_init init;
-      bool doParallel = true;
+            bool doParallel = true;
 #endif
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
       if(doParallel == true)
@@ -716,8 +713,7 @@ class OrientationMatrixConverter : public OrientationConverter<T>
       size_t nTuples = input->getNumberOfTuples();
       int inStride = input->getNumberOfComponents();
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      tbb::task_scheduler_init init;
-      bool doParallel = true;
+            bool doParallel = true;
 #endif
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
       if(doParallel == true)
@@ -883,8 +879,7 @@ class QuaternionConverter : public OrientationConverter<T>
       size_t nTuples = input->getNumberOfTuples();
       int inStride = input->getNumberOfComponents();
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      tbb::task_scheduler_init init;
-      bool doParallel = true;
+            bool doParallel = true;
 #endif
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
       if(doParallel == true)
@@ -1044,8 +1039,7 @@ class AxisAngleConverter : public OrientationConverter<T>
       size_t nTuples = input->getNumberOfTuples();
       int inStride = input->getNumberOfComponents();
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      tbb::task_scheduler_init init;
-      bool doParallel = true;
+            bool doParallel = true;
 #endif
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
       if(doParallel == true)
@@ -1209,8 +1203,7 @@ class RodriguesConverter : public OrientationConverter<T>
       size_t nTuples = input->getNumberOfTuples();
       int inStride = input->getNumberOfComponents();
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      tbb::task_scheduler_init init;
-      bool doParallel = true;
+            bool doParallel = true;
 #endif
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
       if(doParallel == true)
@@ -1375,8 +1368,7 @@ class HomochoricConverter : public OrientationConverter<T>
       size_t nTuples = input->getNumberOfTuples();
       int inStride = input->getNumberOfComponents();
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      tbb::task_scheduler_init init;
-      bool doParallel = true;
+            bool doParallel = true;
 #endif
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
       if(doParallel == true)
@@ -1542,8 +1534,7 @@ class CubochoricConverter : public OrientationConverter<T>
       size_t nTuples = input->getNumberOfTuples();
       int inStride = input->getNumberOfComponents();
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      tbb::task_scheduler_init init;
-      bool doParallel = true;
+            bool doParallel = true;
 #endif
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
       if(doParallel == true)

@@ -95,14 +95,14 @@ public:
 
   virtual void generateDefaultData();
 
-  //  public slots:
+  //  public Q_SLOTS:
   //    virtual void on_m_GenerateDefaultData_clicked();
 
-  //  protected slots:
+  //  protected Q_SLOTS:
 
   //    virtual void dataWasEdited();
 
-  //  signals:
+  //  Q_SIGNALS:
   //    void phaseParametersChanged();
 
 public:

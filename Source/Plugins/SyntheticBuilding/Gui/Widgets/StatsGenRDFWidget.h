@@ -132,13 +132,13 @@ public:
    */
   QString getTabTitle();
 
-protected slots:
+protected Q_SLOTS:
   /**
    * @brief on_generateRDFBtn_clicked
    */
   void on_generateRDFBtn_clicked();
 
-signals:
+Q_SIGNALS:
 
   /**
    * @brief rdfParametersChanged

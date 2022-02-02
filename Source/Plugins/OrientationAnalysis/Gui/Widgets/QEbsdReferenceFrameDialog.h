@@ -87,7 +87,7 @@ public:
   void getSampleTranformation(AxisAngleInput_t& input);
   void getEulerTranformation(AxisAngleInput_t& input);
 
-protected slots:
+protected Q_SLOTS:
   void originChanged(bool checked);
 
   void degToRagsChanged(int state);

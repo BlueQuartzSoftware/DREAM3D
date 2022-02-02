@@ -193,7 +193,7 @@ bool SGRDFTableModel::setData(const QModelIndex& index, const QVariant& value, i
     Q_ASSERT(false);
   }
 
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -210,7 +210,7 @@ bool SGRDFTableModel::insertRows(int row, int count, const QModelIndex& index)
     m_RowCount = m_Frequencies.count();
   }
   endInsertRows();
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -230,7 +230,7 @@ bool SGRDFTableModel::removeRows(int row, int count, const QModelIndex& index)
     m_RowCount = m_Frequencies.count();
   }
   endRemoveRows();
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -328,7 +328,7 @@ void SGRDFTableModel::setTableData(QVector<float> freqs)
   QModelIndex botRight;
   if(count >= 1)
   {
-    // Now mass insert the data to the table then emit that the data has changed
+    // Now mass insert the data to the table then Q_EMIT that the data has changed
     beginInsertRows(QModelIndex(), row, row + count - 1);
     m_Frequencies = freqs;
     m_RowCount = count;
@@ -336,5 +336,5 @@ void SGRDFTableModel::setTableData(QVector<float> freqs)
     createIndex(0, 0);
     createIndex(count - 1, ColumnCount);
   }
-  emit dataChanged(topLeft, botRight);
+  Q_EMIT dataChanged(topLeft, botRight);
 }

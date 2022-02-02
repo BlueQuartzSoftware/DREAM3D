@@ -117,7 +117,7 @@ FilterParameter* ConvertHexGridToSquareGridWidget::getFilterParameter() const
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::setWidgetListEnabled(bool b)
 {
-  foreach(QWidget* w, m_WidgetList)
+  Q_FOREACH(QWidget* w, m_WidgetList)
   {
     w->setEnabled(b);
   }
@@ -178,7 +178,7 @@ void ConvertHexGridToSquareGridWidget::getGuiParametersFromFilter()
   m_InputDir->setText(m_Filter->getInputPath());
 
   QObjectList obs = children();
-  foreach(QObject* ob, obs)
+  Q_FOREACH(QObject* ob, obs)
   {
     ob->blockSignals(true);
   }
@@ -201,7 +201,7 @@ void ConvertHexGridToSquareGridWidget::getGuiParametersFromFilter()
   m_OutputDir->setText(m_Filter->getOutputPath());
   m_OutputPrefix->setText(m_Filter->getOutputPrefix());
 
-  foreach(QObject* ob, obs)
+  Q_FOREACH(QObject* ob, obs)
   {
     ob->blockSignals(false);
   }
@@ -243,7 +243,7 @@ void ConvertHexGridToSquareGridWidget::validateInputFile()
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::resolutionChanged(const QString& string)
 {
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -331,7 +331,7 @@ void ConvertHexGridToSquareGridWidget::on_m_OutputDir_textChanged(const QString&
   //  QFileInfo fi(text);
   //  setOpenDialogLastFilePath(fi.path());
   //}
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -339,7 +339,7 @@ void ConvertHexGridToSquareGridWidget::on_m_OutputDir_textChanged(const QString&
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::on_m_OutputPrefix_textChanged(const QString& text)
 {
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -348,7 +348,7 @@ void ConvertHexGridToSquareGridWidget::on_m_OutputPrefix_textChanged(const QStri
 void ConvertHexGridToSquareGridWidget::on_m_ZEndIndex_valueChanged(int value)
 {
   generateExampleInputFile();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -357,7 +357,7 @@ void ConvertHexGridToSquareGridWidget::on_m_ZEndIndex_valueChanged(int value)
 void ConvertHexGridToSquareGridWidget::on_m_ZStartIndex_valueChanged(int value)
 {
   generateExampleInputFile();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -366,7 +366,7 @@ void ConvertHexGridToSquareGridWidget::on_m_ZStartIndex_valueChanged(int value)
 void ConvertHexGridToSquareGridWidget::on_m_TotalDigits_valueChanged(int value)
 {
   generateExampleInputFile();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -375,7 +375,7 @@ void ConvertHexGridToSquareGridWidget::on_m_TotalDigits_valueChanged(int value)
 void ConvertHexGridToSquareGridWidget::on_m_FileExt_textChanged(const QString& string)
 {
   generateExampleInputFile();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -384,7 +384,7 @@ void ConvertHexGridToSquareGridWidget::on_m_FileExt_textChanged(const QString& s
 void ConvertHexGridToSquareGridWidget::on_m_FileSuffix_textChanged(const QString& string)
 {
   generateExampleInputFile();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -393,7 +393,7 @@ void ConvertHexGridToSquareGridWidget::on_m_FileSuffix_textChanged(const QString
 void ConvertHexGridToSquareGridWidget::on_m_FilePrefix_textChanged(const QString& string)
 {
   generateExampleInputFile();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -507,7 +507,7 @@ void ConvertHexGridToSquareGridWidget::findMaxSliceAndPrefix()
   int digitEnd = 0;
   int totalOimFilesFound = 0;
   int minTotalDigits = 1000;
-  foreach(QFileInfo fi, angList)
+  Q_FOREACH(QFileInfo fi, angList)
   {
     if((fi.suffix().compare(ext) != 0) && fi.isFile())
     {
@@ -572,7 +572,7 @@ void ConvertHexGridToSquareGridWidget::findMaxSliceAndPrefix()
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::widgetChanged(const QString& text)
 {
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -583,7 +583,7 @@ void ConvertHexGridToSquareGridWidget::filterNeedsInputParameters(AbstractFilter
   if(nullptr == filter)
   {
     QString ss = QObject::tr("Error Setting ConvertHexGridToSquareGrid Gui values to Filter instance. Filter instance was nullptr.").arg(m_FilterParameter->getPropertyName());
-    emit errorSettingFilterParameter(ss);
+    Q_EMIT errorSettingFilterParameter(ss);
   }
 
   ConvertHexGridToSquareGrid* f = qobject_cast<ConvertHexGridToSquareGrid*>(filter);

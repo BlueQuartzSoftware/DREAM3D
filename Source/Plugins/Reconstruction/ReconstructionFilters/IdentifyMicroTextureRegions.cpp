@@ -40,11 +40,9 @@
 #include <QtCore/QDateTime>
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/atomic.h>
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/task_group.h>
-#include <tbb/task_scheduler_init.h>
 #include <tbb/tick_count.h>
 #endif
 
@@ -401,10 +399,10 @@ void IdentifyMicroTextureRegions::dataCheck()
 void IdentifyMicroTextureRegions::preflight()
 {
   setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
+  Q_EMIT preflightAboutToExecute();
+  Q_EMIT updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
+  Q_EMIT preflightExecuted();
   setInPreflight(false);
 }
 
@@ -586,8 +584,7 @@ void IdentifyMicroTextureRegions::execute()
   m_CAxisToleranceRad = m_CAxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
+    bool doParallel = true;
 #endif
 
 // first determine the misorientation vectors on all the voxel faces

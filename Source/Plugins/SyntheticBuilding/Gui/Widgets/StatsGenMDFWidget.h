@@ -120,10 +120,10 @@ public:
 
   SGMDFTableModel* tableModel();
 
-public slots:
+public Q_SLOTS:
   void updatePlots();
 
-protected slots:
+protected Q_SLOTS:
   void on_addMDFRowBtn_clicked();
   void on_deleteMDFRowBtn_clicked();
   void on_m_MDFUpdateBtn_clicked();
@@ -131,7 +131,7 @@ protected slots:
 
   void tableDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight);
 
-signals:
+Q_SIGNALS:
   void dataChanged();
 
 protected:

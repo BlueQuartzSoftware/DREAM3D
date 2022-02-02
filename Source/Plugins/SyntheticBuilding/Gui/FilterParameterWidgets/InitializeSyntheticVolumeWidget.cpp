@@ -113,7 +113,7 @@ AbstractFilter* InitializeSyntheticVolumeWidget::getFilter() const
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolumeWidget::setWidgetListEnabled(bool b)
 {
-  foreach(QWidget* w, m_WidgetList)
+  Q_FOREACH(QWidget* w, m_WidgetList)
   {
     w->setEnabled(b);
   }
@@ -198,7 +198,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   // We need to send the file down to the filter BEFORE any of the preflight starts because it needs this updated file
   // m_Filter->setInputFile(m_InputFile->text());
   // Once the input file is changed then kick off the prefligth by emitting the parametersChanged() signal
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
   m_DidCausePreflight = false;
   m_NewFileLoaded = false;
 
@@ -321,7 +321,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   // Estimate the number of Features
   estimateNumFeaturesSetup();
 
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -332,7 +332,7 @@ void InitializeSyntheticVolumeWidget::filterNeedsInputParameters(AbstractFilter*
   if(nullptr == filter)
   {
     QString ss = QObject::tr("Error Setting InitializeSyntheticVolumeWidget Gui values to Filter instance. Filter instance was nullptr.").arg(getFilterParameter()->getPropertyName());
-    emit errorSettingFilterParameter(ss);
+    Q_EMIT errorSettingFilterParameter(ss);
   }
 
   InitializeSyntheticVolume* filt = qobject_cast<InitializeSyntheticVolume*>(filter);
@@ -386,7 +386,7 @@ void InitializeSyntheticVolumeWidget::displayErrorMessage(const PipelineMessage&
 void InitializeSyntheticVolumeWidget::on_m_XPoints_valueChanged(int v)
 {
   estimateNumFeaturesSetup();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -395,7 +395,7 @@ void InitializeSyntheticVolumeWidget::on_m_XPoints_valueChanged(int v)
 void InitializeSyntheticVolumeWidget::on_m_YPoints_valueChanged(int v)
 {
   estimateNumFeaturesSetup();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -404,7 +404,7 @@ void InitializeSyntheticVolumeWidget::on_m_YPoints_valueChanged(int v)
 void InitializeSyntheticVolumeWidget::on_m_ZPoints_valueChanged(int v)
 {
   estimateNumFeaturesSetup();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -413,7 +413,7 @@ void InitializeSyntheticVolumeWidget::on_m_ZPoints_valueChanged(int v)
 void InitializeSyntheticVolumeWidget::on_m_ZResolution_valueChanged(double v)
 {
   estimateNumFeaturesSetup();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -422,7 +422,7 @@ void InitializeSyntheticVolumeWidget::on_m_ZResolution_valueChanged(double v)
 void InitializeSyntheticVolumeWidget::on_m_YResolution_valueChanged(double v)
 {
   estimateNumFeaturesSetup();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -431,7 +431,7 @@ void InitializeSyntheticVolumeWidget::on_m_YResolution_valueChanged(double v)
 void InitializeSyntheticVolumeWidget::on_m_XResolution_valueChanged(double v)
 {
   estimateNumFeaturesSetup();
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------

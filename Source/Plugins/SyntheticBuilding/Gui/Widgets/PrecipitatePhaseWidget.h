@@ -80,11 +80,11 @@ public:
 
   void generateDefaultData() override;
 
-protected slots:
+protected Q_SLOTS:
 
   void on_m_GenerateDefaultData_clicked();
 
-signals:
+Q_SIGNALS:
 
   void dataChanged();
 

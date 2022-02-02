@@ -192,7 +192,7 @@ void EditPhaseDialog::setupGui()
 
   // Disable the selection of crystal structures that are not supported.
   QVector<qint32> indx = {2, 3, 4, 5, 7, 8, 9, 10};
-  foreach(int idx, indx)
+  Q_FOREACH(int idx, indx)
   {
     QStandardItemModel* model = qobject_cast<QStandardItemModel*>(xtalCombo->model());
     bool disabled = true;

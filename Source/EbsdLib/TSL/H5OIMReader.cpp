@@ -450,7 +450,7 @@ int H5OIMReader::readHeader(hid_t parId)
   // m_Phases.clear();
   QVector<AngPhase::Pointer> phaseVector;
 
-  foreach(QString phaseGroupName, names)
+  Q_FOREACH(QString phaseGroupName, names)
   {
     hid_t pid = H5Gopen(phasesGid, phaseGroupName.toLatin1().data(), H5P_DEFAULT);
 

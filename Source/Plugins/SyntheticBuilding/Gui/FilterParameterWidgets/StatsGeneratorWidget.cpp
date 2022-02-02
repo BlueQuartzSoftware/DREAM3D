@@ -243,7 +243,7 @@ void StatsGeneratorWidget::loadData()
 // -----------------------------------------------------------------------------
 void StatsGeneratorWidget::on_updatePipelineBtn_clicked()
 {
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -456,7 +456,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
     // Make sure the new tab is the active tab
     phaseTabs->setCurrentIndex(phaseTabs->count() - 1);
   }
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -529,7 +529,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       phaseTabs->setTabText(phaseTabs->currentIndex(), dialog.getPhaseName());
       QString cName = ppw->getComboString();
       setWindowModified(true);
-      emit parametersChanged();
+      Q_EMIT parametersChanged();
       // ppw->updatePlots();
     }
     if(dialog.getPhaseType() == PhaseType::Type::Precipitate)
@@ -543,7 +543,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       phaseTabs->setTabText(phaseTabs->currentIndex(), dialog.getPhaseName());
       QString cName = ppw->getComboString();
       setWindowModified(true);
-      emit parametersChanged();
+      Q_EMIT parametersChanged();
       // ppw->updatePlots();
     }
     if(dialog.getPhaseType() == PhaseType::Type::Transformation)
@@ -557,7 +557,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       phaseTabs->setTabText(phaseTabs->currentIndex(), dialog.getPhaseName());
       QString cName = tpw->getComboString();
       setWindowModified(true);
-      emit parametersChanged();
+      Q_EMIT parametersChanged();
       // tpw->updatePlots();
     }
     if(dialog.getPhaseType() == PhaseType::Type::Matrix)
@@ -570,7 +570,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       phaseTabs->setTabText(phaseTabs->currentIndex(), dialog.getPhaseName());
       QString cName = mpw->getComboString();
       setWindowModified(true);
-      emit parametersChanged();
+      Q_EMIT parametersChanged();
     }
     if(dialog.getPhaseType() == PhaseType::Type::Boundary)
     {
@@ -582,7 +582,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       phaseTabs->setTabText(phaseTabs->currentIndex(), dialog.getPhaseName());
       QString cName = bpw->getComboString();
       setWindowModified(true);
-      emit parametersChanged();
+      Q_EMIT parametersChanged();
     }
   }
 }
@@ -608,7 +608,7 @@ void StatsGeneratorWidget::on_phaseTabs_tabCloseRequested(int index)
     }
   }
   setWindowModified(true);
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------

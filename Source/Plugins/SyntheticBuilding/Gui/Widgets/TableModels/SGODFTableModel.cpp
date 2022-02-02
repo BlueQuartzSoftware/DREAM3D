@@ -233,7 +233,7 @@ bool SGODFTableModel::setData(const QModelIndex& index, const QVariant& value, i
     Q_ASSERT(false);
   }
 
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -261,7 +261,7 @@ bool SGODFTableModel::insertRows(int row, int count, const QModelIndex& index)
     m_RowCount = m_Euler1s.count();
   }
   endInsertRows();
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -285,7 +285,7 @@ bool SGODFTableModel::removeRows(int row, int count, const QModelIndex& index)
     m_RowCount = m_Euler1s.count();
   }
   endRemoveRows();
-  emit dataChanged(index, index);
+  Q_EMIT dataChanged(index, index);
   return true;
 }
 
@@ -424,7 +424,7 @@ void SGODFTableModel::setTableData(QVector<float> e1, QVector<float> e2, QVector
   QModelIndex botRight;
   if(count >= 1)
   {
-    // Now mass insert the data to the table then emit that the data has changed
+    // Now mass insert the data to the table then Q_EMIT that the data has changed
     beginInsertRows(QModelIndex(), row, row + count - 1);
     m_Euler1s = e1;
     m_Euler2s = e2;
@@ -436,7 +436,7 @@ void SGODFTableModel::setTableData(QVector<float> e1, QVector<float> e2, QVector
     createIndex(0, 0);
     createIndex(count - 1, ColumnCount);
   }
-  emit dataChanged(topLeft, botRight);
+  Q_EMIT dataChanged(topLeft, botRight);
 }
 
 // -----------------------------------------------------------------------------

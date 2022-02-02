@@ -36,11 +36,9 @@
 #include "FindEuclideanDistMap.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/atomic.h>
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/task_group.h>
-#include <tbb/task_scheduler_init.h>
 #include <tbb/tick_count.h>
 #endif
 
@@ -458,12 +456,12 @@ void FindEuclideanDistMap::dataCheck()
 void FindEuclideanDistMap::preflight()
 {
   setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
+  Q_EMIT preflightAboutToExecute();
+  Q_EMIT updateFilterParameters(this);
   dataCheck();
   if(getErrorCondition() < 0)
   {
-    emit preflightExecuted();
+    Q_EMIT preflightExecuted();
     setInPreflight(false);
     return;
   }
@@ -473,7 +471,7 @@ void FindEuclideanDistMap::preflight()
     AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(getFeatureIdsArrayPath().getAttributeMatrixName());
     attrMat->removeAttributeArray(getNearestNeighborsArrayName());
   }
-  emit preflightExecuted();
+  Q_EMIT preflightExecuted();
   setInPreflight(false);
 }
 
@@ -656,8 +654,7 @@ void FindEuclideanDistMap::findDistanceMap()
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
+    bool doParallel = true;
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS

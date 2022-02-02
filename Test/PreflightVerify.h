@@ -23,7 +23,7 @@ class PreflightVerify : public QObject
     bool m_filterNeedsInputParameters;
 
 
-  public slots:
+  public Q_SLOTS:
     void widgetChanged(const QString& msg);
     void beforePreflight();
     void afterPreflight();

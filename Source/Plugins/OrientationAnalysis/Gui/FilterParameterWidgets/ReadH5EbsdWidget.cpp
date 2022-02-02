@@ -137,7 +137,7 @@ FilterParameter* ReadH5EbsdWidget::getFilterParameter() const
 // -----------------------------------------------------------------------------
 void ReadH5EbsdWidget::setWidgetListEnabled(bool b)
 {
-  foreach(QWidget* w, m_WidgetList)
+  Q_FOREACH(QWidget* w, m_WidgetList)
   {
     w->setEnabled(b);
   }
@@ -185,7 +185,7 @@ void ReadH5EbsdWidget::setupGui()
     on_m_LineEdit_textChanged(m_LineEdit->text());
     blockSignals(false);
 
-    emit parametersChanged();
+    Q_EMIT parametersChanged();
   });
 
   // Set the initial range based on the z min & z max. This will get adjusted later
@@ -360,13 +360,13 @@ void ReadH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
   m_Filter->setInputFile(inputPath);
 
   // Once the input file is changed then kick off the prefligth by emitting the parametersChanged() signal
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
   m_DidCausePreflight = false;
   m_NewFileLoaded = false;
 }
 
 // -----------------------------------------------------------------------------
-// Any time something gets clicked, emit the preflight
+// Any time something gets clicked, Q_EMIT the preflight
 // -----------------------------------------------------------------------------
 void ReadH5EbsdWidget::on_m_CellList_itemClicked(QListWidgetItem* item)
 {
@@ -394,7 +394,7 @@ void ReadH5EbsdWidget::on_m_CellList_itemClicked(QListWidgetItem* item)
     m_DataArraysCheckBox->setCheckState(Qt::Unchecked);
   }
   m_DataArraysCheckBox->blockSignals(false);
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 
   m_DidCausePreflight = false;
 }
@@ -421,7 +421,7 @@ void ReadH5EbsdWidget::on_m_DataArraysCheckBox_stateChanged(int state)
   {
     m_CellList->item(i)->setCheckState(Qt::CheckState(state));
   }
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 
   m_DidCausePreflight = false;
 }
@@ -432,7 +432,7 @@ void ReadH5EbsdWidget::on_m_DataArraysCheckBox_stateChanged(int state)
 void ReadH5EbsdWidget::on_m_ZStartIndex_valueChanged(int value)
 {
   m_DidCausePreflight = true;
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
   m_DidCausePreflight = false;
 }
 
@@ -442,7 +442,7 @@ void ReadH5EbsdWidget::on_m_ZStartIndex_valueChanged(int value)
 void ReadH5EbsdWidget::on_m_ZEndIndex_valueChanged(int value)
 {
   m_DidCausePreflight = true;
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
   m_DidCausePreflight = false;
 }
 
@@ -453,7 +453,7 @@ void ReadH5EbsdWidget::on_m_UseTransformations_stateChanged(int state)
 {
   m_DidCausePreflight = true;
   m_AngleRepresentationCB->setEnabled(m_UseTransformations->isChecked());
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
   m_DidCausePreflight = false;
 }
 
@@ -463,7 +463,7 @@ void ReadH5EbsdWidget::on_m_UseTransformations_stateChanged(int state)
 void ReadH5EbsdWidget::on_m_AngleRepresentationCB_currentIndexChanged(int index)
 {
   m_DidCausePreflight = true;
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
   m_DidCausePreflight = false;
 }
 
@@ -475,7 +475,7 @@ void ReadH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
   if(nullptr == filter)
   {
     QString ss = QObject::tr("Error Setting ReadH5Ebsd Gui values to Filter instance. Filter instance was nullptr.").arg(m_FilterParameter->getPropertyName());
-    emit errorSettingFilterParameter(ss);
+    Q_EMIT errorSettingFilterParameter(ss);
   }
 
   ReadH5Ebsd* readEbsd = qobject_cast<ReadH5Ebsd*>(filter);
@@ -572,7 +572,7 @@ void ReadH5EbsdWidget::updateModelFromFilter(QSet<QString>& arrayNames, bool set
   // Clear the list and put in those from the incoming list and also check any items that were already selected by the user
   m_CellList->clear();
 
-  foreach(QString item, arrayNames)
+  Q_FOREACH(QString item, arrayNames)
   {
     QListWidgetItem* listItem = new QListWidgetItem(item, m_CellList);
     if((selections.find(item) != selections.end()) || (setChecked))

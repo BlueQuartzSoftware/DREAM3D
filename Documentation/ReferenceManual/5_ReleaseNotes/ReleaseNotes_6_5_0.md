@@ -11,12 +11,14 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
 
-## Version 6.5.xxx ##
+## Version 6.5.163 ##
 
-### 6.5.xxx Fixed DREAM3D Issues ###
+### 6.5.163 Fixed DREAM3D Issues ###
 
 + Add sanity check to Generate Ensemble Statistics to ensure that when Calculate Crystallographic Statistics is TRUE only Cubic and Hexagonal phases are present in the data. #984
 + Fix issue in FindBoundingBoxFeatures where the XY coordinates were locked into the XY plane even if the '2D' was on another plane. #985
+* Fixed on issue where adding the Import Image Montage would crash DREAM.3D due to nullptr. (ITKImageProcessing Plugin fix)
+* fixed issue with linking on Ubuntu 20.04 and above involving rpaths
 
 ### SIMPL Changes ###
 

@@ -39,7 +39,6 @@
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
 #include <tbb/task_group.h>
 #include <tbb/task.h>
 #endif
@@ -1508,8 +1507,7 @@ void CubicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArray
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
+    bool doParallel = true;
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -1831,8 +1829,7 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
   DoubleArrayType::Pointer intensity111 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label2 + "_Intensity_Image");
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
+    bool doParallel = true;
 
   if(doParallel)
   {

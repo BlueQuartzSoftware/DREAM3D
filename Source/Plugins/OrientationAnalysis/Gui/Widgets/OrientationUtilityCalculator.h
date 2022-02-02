@@ -52,10 +52,10 @@ public:
 
   QVector<double> getValues(int32_t outputType);
 
-protected slots:
+protected Q_SLOTS:
   void setDataAndInputType(QVector<double> values, int32_t inputType, bool hasErrors);
 
-signals:
+Q_SIGNALS:
   void calculatorReady(OrientationUtilityCalculator* calculator);
 
 private:

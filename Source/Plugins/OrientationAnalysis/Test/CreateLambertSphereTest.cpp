@@ -100,7 +100,7 @@ public:
 
     QStringList props = {"QuadDataContainerName",     "TriangleDataContainerName", "EdgeDataContainerName",  "VertexDataContainerName",
                          "VertexAttributeMatrixName", "EdgeAttributeMatrixName",   "FaceAttributeMatrixName"};
-    foreach(QString prop, props)
+    Q_FOREACH(QString prop, props)
     {
       // Reset the filter by creating a new one
       filter = filterFactory->create();

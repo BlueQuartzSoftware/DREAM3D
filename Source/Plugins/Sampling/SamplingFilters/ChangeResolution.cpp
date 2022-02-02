@@ -187,13 +187,13 @@ void ChangeResolution::dataCheck()
 void ChangeResolution::preflight()
 {
   setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
+  Q_EMIT preflightAboutToExecute();
+  Q_EMIT updateFilterParameters(this);
   dataCheck();
 
   if(getErrorCondition() < 0)
   {
-    emit preflightExecuted();
+    Q_EMIT preflightExecuted();
     setInPreflight(false);
     return;
   }
@@ -280,7 +280,7 @@ void ChangeResolution::preflight()
       cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
     }
   }
-  emit preflightExecuted();
+  Q_EMIT preflightExecuted();
   setInPreflight(false);
 }
 

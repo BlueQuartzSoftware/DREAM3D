@@ -215,7 +215,7 @@ public:
    */
   void setUpdateProgress(int tuplesCompleted);
 
-signals:
+Q_SIGNALS:
   /**
    * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
    * be pushed from a user-facing control (such as a widget)

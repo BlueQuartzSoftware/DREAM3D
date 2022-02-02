@@ -112,16 +112,16 @@ void HomochoricWidget::valuesUpdated(const QString& text)
   int errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
 
-  emit clearErrorTable();
+  Q_EMIT clearErrorTable();
 
   if(errorCode >= 0)
   {
-    emit valuesChanged(values, OrientationConverter<double>::Homochoric, false);
+    Q_EMIT valuesChanged(values, OrientationConverter<double>::Homochoric, false);
   }
   else
   {
-    emit valuesChanged(QVector<double>(), OrientationConverter<double>::Homochoric, true);
-    emit invalidValues(errorCode, errorMsg);
+    Q_EMIT valuesChanged(QVector<double>(), OrientationConverter<double>::Homochoric, true);
+    Q_EMIT invalidValues(errorCode, errorMsg);
   }
 }
 

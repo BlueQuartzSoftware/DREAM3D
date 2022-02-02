@@ -340,10 +340,10 @@ void VerifyTriangleWinding::dataCheck()
 void VerifyTriangleWinding::preflight()
 {
   setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
+  Q_EMIT preflightAboutToExecute();
+  Q_EMIT updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
+  Q_EMIT preflightExecuted();
   setInPreflight(false);
 
   /* *** THIS FILTER NEEDS TO BE CHECKED *** */

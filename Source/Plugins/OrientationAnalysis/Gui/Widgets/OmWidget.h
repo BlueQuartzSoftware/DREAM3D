@@ -47,7 +47,7 @@ public:
   OmWidget(QWidget* parent = nullptr);
   virtual ~OmWidget();
 
-protected slots:
+protected Q_SLOTS:
   void valuesUpdated(const QString& text);
 
   virtual void updateData(OrientationUtilityCalculator* calculator);

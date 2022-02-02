@@ -111,16 +111,16 @@ void CubochoricWidget::valuesUpdated(const QString& text)
   int errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
 
-  emit clearErrorTable();
+  Q_EMIT clearErrorTable();
 
   if(errorCode >= 0)
   {
-    emit valuesChanged(values, OrientationConverter<double>::Cubochoric, false);
+    Q_EMIT valuesChanged(values, OrientationConverter<double>::Cubochoric, false);
   }
   else
   {
-    emit valuesChanged(QVector<double>(), OrientationConverter<double>::Cubochoric, true);
-    emit invalidValues(errorCode, errorMsg);
+    Q_EMIT valuesChanged(QVector<double>(), OrientationConverter<double>::Cubochoric, true);
+    Q_EMIT invalidValues(errorCode, errorMsg);
   }
 }
 

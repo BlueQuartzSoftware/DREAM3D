@@ -131,7 +131,7 @@ void OEMEbsdScanSelectionWidget::filterNeedsInputParameters(AbstractFilter* filt
   if(nullptr == filter)
   {
     QString ss = QObject::tr("Error Setting ReadH5Ebsd Gui values to Filter instance. Filter instance was nullptr.").arg(m_FilterParameter->getPropertyName());
-    emit errorSettingFilterParameter(ss);
+    Q_EMIT errorSettingFilterParameter(ss);
   }
 
   ImportH5OimData* readEdax = qobject_cast<ImportH5OimData*>(filter);
@@ -257,7 +257,7 @@ void OEMEbsdScanSelectionWidget::on_stackLowToHighBtn_toggled(bool checked)
     sortList(selectedScanNames, Qt::DescendingOrder);
   }
 
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------

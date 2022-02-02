@@ -91,7 +91,7 @@ public:
 
   void drawODFPlotGrid(QwtPlot* plot);
 
-protected slots:
+protected Q_SLOTS:
   void on_m_CalculateODFBtn_clicked();
   void on_addODFTextureBtn_clicked();
   void on_deleteODFTextureBtn_clicked();
@@ -102,7 +102,7 @@ protected slots:
   virtual void on_m_WeightSpreads_clicked(bool b);
   virtual void on_m_WeightSpreadsBulkLoad_clicked(bool b);
 
-signals:
+Q_SIGNALS:
   void dataChanged();
 
 protected:

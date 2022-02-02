@@ -459,11 +459,11 @@ void ReadH5Ebsd::preflight()
   readVolumeInfo(); // This is specific to "readers" in general (I think), or at least those readers that need to show
   // a structure to the user to allow them to select only specific parts of the file to read
   // Now signal that any GUI widget is ready to read the information from this instance
-  emit preflightAboutToExecute();
+  Q_EMIT preflightAboutToExecute();
   // Let the GUI Widget (or anything else) update the parameters for this filter
-  emit updateFilterParameters(this);
+  Q_EMIT updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
+  Q_EMIT preflightExecuted();
   setInPreflight(false);
 }
 

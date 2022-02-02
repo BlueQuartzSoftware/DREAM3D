@@ -58,7 +58,7 @@ public:
   float getB();
   float getC();
 
-public slots:
+public Q_SLOTS:
 
   void checkInputs(const QString& text);
 

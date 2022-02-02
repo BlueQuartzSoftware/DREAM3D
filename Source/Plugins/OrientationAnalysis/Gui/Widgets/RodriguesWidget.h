@@ -47,7 +47,7 @@ public:
   RodriguesWidget(QWidget* parent = nullptr);
   virtual ~RodriguesWidget();
 
-protected slots:
+protected Q_SLOTS:
   void valuesUpdated(const QString& text);
 
   virtual void updateData(OrientationUtilityCalculator* calculator);
