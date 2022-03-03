@@ -239,7 +239,7 @@ void FindSurfaceFeatures::find_surfacefeatures2D()
     for(int64_t k = 0; k < xPoints; k++)
     {
       int32_t gnum = m_FeatureIds[yStride + k];
-      if(!m_SurfaceFeatures[gnum])
+      if(!m_SurfaceFeatures[gnum] && gnum != 0)
       {
         if(k <= 0)
         {
@@ -267,11 +267,11 @@ void FindSurfaceFeatures::find_surfacefeatures2D()
           {
             m_SurfaceFeatures[gnum] = true;
           }
-          if(m_FeatureIds[yStride + k - static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints())] == 0)
+          if(m_FeatureIds[yStride + k - xPoints] == 0)
           {
             m_SurfaceFeatures[gnum] = true;
           }
-          if(m_FeatureIds[yStride + k + static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints())] == 0)
+          if(m_FeatureIds[yStride + k + xPoints] == 0)
           {
             m_SurfaceFeatures[gnum] = true;
           }
