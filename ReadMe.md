@@ -14,6 +14,9 @@ There is an anaconda distribution available for DREAM.3D. This gives python deve
 filter directly from python.
 
 ```(lang-console)
+conda config --add channels conda-forge
+conda create  -n dream3d python=3.7 numpy imageio
+conda activate dream3d
 conda install -c http://dream3d.bluequartz.net/binaries/conda dream3d-conda
 ```
 The API docs are located at [http://www.dream3d.io/python_docs/html/](http://www.dream3d.io/python_docs/html/)
