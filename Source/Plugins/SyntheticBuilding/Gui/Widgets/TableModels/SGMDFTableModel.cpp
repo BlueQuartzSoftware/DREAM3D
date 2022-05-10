@@ -251,9 +251,17 @@ bool SGMDFTableModel::setData(const QModelIndex& index, const QVariant& value, i
   case Angle:
     m_Angles[row] = value.toFloat(&ok);
     break;
-  case Axis:
-    m_Axis[row] = value.toFloat(&ok);
+  case Axis: {
+    QString input = value.toString();
+    input = input.replace('<', "");
+    input = input.replace('>', "");
+    QStringList tokens = input.split(",");
+
+    m_Axis[row * 3] = tokens[0].toFloat(&ok);
+    m_Axis[row * 3 + 1] = tokens[1].toFloat(&ok);
+    m_Axis[row * 3 + 2] = tokens[2].toFloat(&ok);
     break;
+  }
   case Weight:
     m_Weights[row] = value.toFloat(&ok);
     break;
