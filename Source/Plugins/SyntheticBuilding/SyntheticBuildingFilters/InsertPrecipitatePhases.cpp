@@ -2329,6 +2329,7 @@ void InsertPrecipitatePhases::assign_voxels()
 
   float totalPoints = dims[0] * dims[1] * dims[2];
   FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type origin = m->getGeometryAs<ImageGeom>()->getOrigin();
 
   int64_t column = 0, row = 0, plane = 0;
   float inside = 0.0f;
@@ -2376,9 +2377,9 @@ void InsertPrecipitatePhases::assign_voxels()
     float ga[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
     OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(m_AxisEulerAngles + 3 * pptFeatureId, 3)).toGMatrix(ga);
 
-    column = static_cast<int64_t>((xc - (spacing[0] / 2.0f)) / spacing[0]);
-    row = static_cast<int64_t>((yc - (spacing[1] / 2.0f)) / spacing[1]);
-    plane = static_cast<int64_t>((zc - (spacing[2] / 2.0f)) / spacing[2]);
+    column = static_cast<int64_t>((xc - (spacing[0] / 2.0f) - origin[0]) / spacing[0]);
+    row = static_cast<int64_t>((yc - (spacing[1] / 2.0f) - origin[1]) / spacing[1]);
+    plane = static_cast<int64_t>((zc - (spacing[2] / 2.0f) - origin[2]) / spacing[2]);
     xmin = static_cast<int64_t>(column - ((radcur1 / spacing[0]) + 1));
     xmax = static_cast<int64_t>(column + ((radcur1 / spacing[0]) + 1));
     ymin = static_cast<int64_t>(row - ((radcur1 / spacing[1]) + 1));
@@ -2474,9 +2475,9 @@ void InsertPrecipitatePhases::assign_voxels()
           }
           index = (plane * dims[0] * dims[1]) + (row * dims[0]) + column;
           inside = -1.0f;
-          coords[0] = float(column) * spacing[0];
-          coords[1] = float(row) * spacing[1];
-          coords[2] = float(plane) * spacing[2];
+          coords[0] = float(column) * spacing[0] + origin[0];
+          coords[1] = float(row) * spacing[1] + origin[0];
+          coords[2] = float(plane) * spacing[2] + origin[0];
           if(iter1 < 0)
           {
             coords[0] = coords[0] - m_SizeX;
