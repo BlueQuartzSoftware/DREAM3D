@@ -36,6 +36,10 @@ const std::set<std::string> k_BlackList = { "ConditionalSetValue", "CreateImageG
 
 const QString k_HeaderFile(D3DTools::GetDREAM3DToolsDir() + "/complex_filter.hpp.in");
 const QString k_SourceFile(D3DTools::GetDREAM3DToolsDir() + "/complex_filter.cpp.in");
+
+const QString k_AlgorithmHeaderFile(D3DTools::GetDREAM3DToolsDir() + "/complex_algorithm.hpp.in");
+const QString k_AlgorithmSourceFile(D3DTools::GetDREAM3DToolsDir() + "/complex_algorithm.cpp.in");
+
 const QString k_CMakeListsFile(D3DTools::GetDREAM3DToolsDir() + "/complex_CMakeLists.txt.in");
 const QString k_PluginHeaderFile(D3DTools::GetDREAM3DToolsDir() + "/complex_plugin.hpp.in");
 const QString k_PluginSourceFile(D3DTools::GetDREAM3DToolsDir() + "/complex_plugin.cpp.in");
@@ -43,11 +47,13 @@ const QString k_TestCMakeListsFile(D3DTools::GetDREAM3DToolsDir() + "/test_compl
 const QString k_UnitTestSourceFile(D3DTools::GetDREAM3DToolsDir() + "/unit_test_filter.cpp.in");
 const QString k_TestDirsHeaderFile(D3DTools::GetDREAM3DToolsDir() + "/test_dirs.hpp.in");
 
-//const QString k_OutputDir("/Users/mjackson/Workspace1/complex/src/complex/");
-const QString k_OutputDir("/Users/mjackson/Workspace1/complex_plugins/ComplexCore");
+#if 1
+const QString k_OutputDir("/tmp");
 const QString k_PluginsOutputDir("/Users/mjackson/Workspace1/complex_plugins");
-//const QString k_OutputDir("/tmp/");
-
+#else
+const QString k_OutputDir("/tmp/");
+const QString k_PluginsOutputDir("/tmp/complex_plugins");
+#endif
 static QString s_CurrentPlugin = "";
 static bool s_HasAllParameters = false;
 static int32_t s_TotalGoodFilters = 0;
@@ -795,6 +801,102 @@ void GenerateHeaderFile(AbstractFilter* filter, const QString& pluginName)
 }
 
 // -----------------------------------------------------------------------------
+void GenerateAlgorithmFile(AbstractFilter* filter)
+{
+
+  QString filterName = filter->getNameOfClass();
+  QString humanName = filter->getHumanLabel();
+  QString pluginName = filter->getCompiledLibraryName();
+  QString pluginNameUpper = pluginName.toUpper();
+
+  QString sourceTemplate = ReadTemplateFile(k_AlgorithmSourceFile);
+  QString headerTemplate = ReadTemplateFile(k_AlgorithmHeaderFile);
+
+  sourceTemplate = sourceTemplate.replace(k_FILTER_NAME, filterName);
+  sourceTemplate = sourceTemplate.replace(k_PLUGIN_NAME, pluginName);
+
+  headerTemplate = headerTemplate.replace(k_FILTER_NAME, filterName);
+  headerTemplate = headerTemplate.replace(k_PLUGIN_NAME, pluginName);
+  headerTemplate = headerTemplate.replace("@PLUGIN_NAME_UPPER@", pluginNameUpper);
+
+  // Generate the Parameter Section
+  FilterParameterVectorType parameters = filter->getFilterParameters();
+  QString pString;
+  QTextStream parameterOut(&pString);
+
+  QString executeString;
+  QTextStream executeOut(&executeString);
+
+  executeOut << "  " << filterName << "InputValues inputValues;\n\n";
+
+  for(const auto& parameter : parameters)
+  {
+    QString origParamClassName = parameter->getNameOfClass();
+    QString propName = parameter->getPropertyName();
+    QString propClass = s_ParameterMapping[origParamClassName];
+    QString propHuman = parameter->getHumanLabel();
+    QString propInclude = s_InlcudeMapping[origParamClassName];
+    QString defaultValue = s_DefaultConstructorMapping[origParamClassName];
+    QString unitTestDefaultValue = s_UnitTestDefaultValue[origParamClassName];
+    QString paramType = s_ParameterTypeMapping[origParamClassName];
+    bool hasParameter = s_ParameterAvailable[origParamClassName];
+    s_ParameterCount[origParamClassName]++;
+    bool endsWithValue = propName.endsWith("Value");
+
+    if(!hasParameter)
+    {
+      s_HasAllParameters = false;
+    }
+
+    if(!propName.isEmpty())
+    {
+      parameterOut << "  " << paramType << " " << propName << ";\n";
+      executeOut << "  inputValues." << propName << " = filterArgs.value<" << paramType << ">(k_" << propName << "_Key);\n";
+    }
+
+    if(origParamClassName == "SeparatorFilterParameter")
+    {
+      // parameterOut << "  params.insertSeparator(Parameters::Separator{\"" << propHuman << "\"});\n";
+    }
+    else if(origParamClassName == "LinkedBooleanFilterParameter")
+    {
+      // parameterOut << "  args.insertOrAssign(" << filterName << "::k_" << propName << "_Key, std::make_any<" << paramType << ">(" << unitTestDefaultValue << "));\n";
+      //      includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
+    }
+    else if(origParamClassName == "LinkedChoicesFilterParameter")
+    {
+    }
+    else if(origParamClassName == "PreflightUpdatedValueFilterParameter")
+    {
+    }
+    else
+    {
+      if(!hasParameter)
+      {
+        parameterOut << "/*[x]*/";
+      }
+      // parameterOut << "  args.insertOrAssign(" << filterName << "::k_" << propName << "_Key, std::make_any<" << paramType << ">(" << unitTestDefaultValue << "));\n";
+      //  includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
+    }
+
+    if(propInclude == "FileSystemPathParameter")
+    {
+      //  needsFs = true;
+    }
+    //  includeSet.insert(incString);
+    //  incString.clear();
+  }
+
+  executeOut << "\n  return " << filterName << "(dataStructure, messageHandler, shouldCancel, &inputValues)();\n";
+
+  headerTemplate = headerTemplate.replace("@INPUT_VALUE_STRUCT_DEF@", pString);
+  headerTemplate = headerTemplate.replace("@EXECUTE_EXAMPLE_CODE@", executeString);
+
+  writeTopLevelOutput(pluginName, sourceTemplate, "src/" + pluginName + "/Filters_Private/Algorithms/" + filterName + ".cpp");
+  writeTopLevelOutput(pluginName, headerTemplate, "src/" + pluginName + "/Filters_Private/Algorithms/" + filterName + ".hpp");
+}
+
+// -----------------------------------------------------------------------------
 void GenerateSourceFile(AbstractFilter* filter)
 {
   QString sourceTemplate = ReadTemplateFile(k_SourceFile);
@@ -1403,20 +1505,21 @@ void GenerateComplexFilters()
 
         if(k_BlackList.find(filter->getNameOfClass().toStdString()) == k_BlackList.end())
         {
-          GenerateSourceFile(filter.get());
-          GenerateHeaderFile(filter.get(), s_CurrentPlugin);
+          // GenerateSourceFile(filter.get());
+          // GenerateHeaderFile(filter.get(), s_CurrentPlugin);
+          GenerateAlgorithmFile(filter.get());
+
           filters.push_back(filter);
         }
       }
       factoryMapIter++;
     }
 
-    GenerateCMakeFile(s_CurrentPlugin, filters);
-    GeneratePluginHeader(s_CurrentPlugin, filters);
-    GeneratePluginSource(s_CurrentPlugin, filters);
-    GenerateMarkdownSummary(s_CurrentPlugin, filters);
-    GenerateUnitTestCMakeFile(s_CurrentPlugin, filters);
-
+    //    GenerateCMakeFile(s_CurrentPlugin, filters);
+    //    GeneratePluginHeader(s_CurrentPlugin, filters);
+    //    GeneratePluginSource(s_CurrentPlugin, filters);
+    //    GenerateMarkdownSummary(s_CurrentPlugin, filters);
+    //    GenerateUnitTestCMakeFile(s_CurrentPlugin, filters);
   }
 //  for(const auto& pName : paramNames)
 //  {

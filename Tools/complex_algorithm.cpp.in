@@ -1,0 +1,33 @@
+#include "@FILTER_NAME@.hpp"
+
+#include "complex/DataStructure/DataArray.hpp"
+#include "complex/DataStructure/DataGroup.hpp"
+
+using namespace complex;
+
+// -----------------------------------------------------------------------------
+@FILTER_NAME@::FillBadData(DataStructure& dataStructure, const IFilter::MessageHandler& mesgHandler, const std::atomic_bool& shouldCancel, @FILTER_NAME@InputValues* inputValues)
+: m_DataStructure(dataStructure)
+, m_InputValues(inputValues)
+, m_ShouldCancel(shouldCancel)
+, m_MessageHandler(mesgHandler)
+{
+}
+
+// -----------------------------------------------------------------------------
+@FILTER_NAME@::~@FILTER_NAME@() noexcept = default;
+
+// -----------------------------------------------------------------------------
+const std::atomic_bool& @FILTER_NAME@::getCancel()
+{
+  return m_ShouldCancel;
+}
+
+
+// -----------------------------------------------------------------------------
+Result<> @FILTER_NAME@::operator()()
+{
+
+
+  return {};
+}

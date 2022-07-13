@@ -1,0 +1,49 @@
+#pragma once
+
+#include "@PLUGIN_NAME@/@PLUGIN_NAME@_export.hpp"
+
+#include "complex/DataStructure/DataPath.hpp"
+#include "complex/DataStructure/DataStructure.hpp"
+#include "complex/Filter/IFilter.hpp"
+
+/**
+* This is example code to put in the Execute Method of the filter.
+@EXECUTE_EXAMPLE_CODE@*/
+
+namespace complex
+{
+
+struct @PLUGIN_NAME_UPPER@_EXPORT @FILTER_NAME@InputValues
+{
+@INPUT_VALUE_STRUCT_DEF@
+};
+
+/**
+ * @class ConditionalSetValue
+ * @brief This filter replaces values in the target array with a user specified value
+ * where a bool mask array specifies.
+ */
+
+class @PLUGIN_NAME_UPPER@_EXPORT @FILTER_NAME@
+{
+public:
+  @FILTER_NAME@(DataStructure& dataStructure, const IFilter::MessageHandler& mesgHandler, const std::atomic_bool& shouldCancel, @FILTER_NAME@InputValues* inputValues);
+  ~@FILTER_NAME@() noexcept;
+
+  @FILTER_NAME@(const @FILTER_NAME@&) = delete;
+  @FILTER_NAME@(@FILTER_NAME@&&) noexcept = delete;
+  @FILTER_NAME@& operator=(const @FILTER_NAME@&) = delete;
+  @FILTER_NAME@& operator=(@FILTER_NAME@&&) noexcept = delete;
+
+  Result<> operator()();
+
+  const std::atomic_bool& getCancel();
+
+private:
+  DataStructure& m_DataStructure;
+  const @FILTER_NAME@InputValues* m_InputValues = nullptr;
+  const std::atomic_bool& m_ShouldCancel;
+  const IFilter::MessageHandler& m_MessageHandler;
+};
+
+} // namespace complex
