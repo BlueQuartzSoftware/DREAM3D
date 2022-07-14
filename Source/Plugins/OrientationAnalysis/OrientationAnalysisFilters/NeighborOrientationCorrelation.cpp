@@ -377,7 +377,7 @@ void NeighborOrientationCorrelation::execute()
                 q1 = QuatF(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
 
                 phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-                currentQuatPtr = m_Quats + neighbor2 * 4;
+                currentQuatPtr = m_Quats + neighbor * 4;
                 q2 = QuatF(currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]);
                 OrientationD axisAngle(0.0, 0.0, 0.0, std::numeric_limits<double>::max());
                 if(m_CellPhases[neighbor2] == m_CellPhases[neighbor] && m_CellPhases[neighbor2] > 0)
