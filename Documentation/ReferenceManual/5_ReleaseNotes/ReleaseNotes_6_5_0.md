@@ -11,6 +11,16 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
 
+## Version 6.5.xxx ##
+
+### 6.5.xxx Fixed DREAM3D Issues ###
+
++ FindFeatureCentroids: Incorrect implementation was not producing correct results.
+
+### SIMPL Changes ###
+
+
+
 ## Version 6.5.163 ##
 
 ### 6.5.163 Fixed DREAM3D Issues ###
