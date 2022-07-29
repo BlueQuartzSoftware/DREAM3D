@@ -11,14 +11,15 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
 
-## Version 6.5.xxx ##
+## Version 6.5.65 ##
 
 ### 6.5.xxx Fixed DREAM3D Issues ###
 
 + FindFeatureCentroids: Incorrect implementation was not producing correct results.
++ MergeTwins: Fix sanity check for Cubic high Laue class
++ InsertTransformationPhase: Fix bad attribute matrix generation which caused crashes when reading the .dream3d file
 
 ### SIMPL Changes ###
-
 
 
 ## Version 6.5.163 ##
