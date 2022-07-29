@@ -369,7 +369,7 @@ void MergeTwins::execute()
   UInt32ArrayType& laueClasses = *(m_CrystalStructuresPtr.lock().get());
   for(size_t i = 1; i < laueClasses.size(); i++)
   {
-    if(i != EbsdLib::CrystalStructure::Cubic_High)
+    if(laueClasses[i] != EbsdLib::CrystalStructure::Cubic_High)
     {
       QString msg = QString("Phase %1 is NOT m3m crystal symmetry. Data from this phase will not be used in this filter.");
       setWarningCondition(-23501, msg);
