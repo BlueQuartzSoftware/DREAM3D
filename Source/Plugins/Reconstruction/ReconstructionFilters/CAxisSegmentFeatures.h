@@ -70,6 +70,7 @@ class Reconstruction_EXPORT CAxisSegmentFeatures : public SegmentFeatures
   PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
   PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
   PYB11_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
+  PYB11_PROPERTY(bool RandomizeFeatureIds READ getRandomizeFeatureIds WRITE setRandomizeFeatureIds)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
 

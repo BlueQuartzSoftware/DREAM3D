@@ -71,6 +71,7 @@ class Reconstruction_EXPORT EBSDSegmentFeatures : public SegmentFeatures
   PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
   PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
   PYB11_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
+  PYB11_PROPERTY(bool RandomizeFeatureIds READ getRandomizeFeatureIds WRITE setRandomizeFeatureIds)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
 
