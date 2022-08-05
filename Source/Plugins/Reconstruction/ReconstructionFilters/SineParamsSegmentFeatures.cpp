@@ -42,6 +42,7 @@
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -83,6 +84,7 @@ void SineParamsSegmentFeatures::setupFilterParameters()
 
   std::vector<QString> linkedProps = {"GoodVoxelsArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Good Voxels Array", UseGoodVoxels, FilterParameter::Category::Parameter, SineParamsSegmentFeatures, linkedProps));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Randomize Feature Ids", RandomizeFeatureIds, FilterParameter::Category::Parameter, SineParamsSegmentFeatures));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;

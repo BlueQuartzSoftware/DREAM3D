@@ -42,6 +42,7 @@
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -190,6 +191,7 @@ void ScalarSegmentFeatures::setupFilterParameters()
   std::vector<QString> linkedProps = {"GoodVoxelsArrayPath"};
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Scalar Tolerance", ScalarTolerance, FilterParameter::Category::Parameter, ScalarSegmentFeatures));
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Category::Parameter, ScalarSegmentFeatures, linkedProps));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Randomize Feature Ids", RandomizeFeatureIds, FilterParameter::Category::Parameter, ScalarSegmentFeatures));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Any);

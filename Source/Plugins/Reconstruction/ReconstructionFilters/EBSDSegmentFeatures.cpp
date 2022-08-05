@@ -43,6 +43,7 @@
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -89,6 +90,8 @@ void EBSDSegmentFeatures::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Misorientation Tolerance (Degrees)", MisorientationTolerance, FilterParameter::Category::Parameter, EBSDSegmentFeatures));
   std::vector<QString> linkedProps = {"GoodVoxelsArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Category::Parameter, EBSDSegmentFeatures, linkedProps));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Randomize Feature Ids", RandomizeFeatureIds, FilterParameter::Category::Parameter, EBSDSegmentFeatures));
+
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, AttributeMatrix::Type::Cell, IGeometry::Type::Image);

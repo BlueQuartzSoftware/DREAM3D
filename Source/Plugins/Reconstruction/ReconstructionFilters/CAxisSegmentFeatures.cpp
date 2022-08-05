@@ -44,6 +44,7 @@
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -106,6 +107,7 @@ void CAxisSegmentFeatures::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_FLOAT_FP("C-Axis Misorientation Tolerance (Degrees)", MisorientationTolerance, FilterParameter::Category::Parameter, CAxisSegmentFeatures));
   std::vector<QString> linkedProps = {"GoodVoxelsArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Category::Parameter, CAxisSegmentFeatures, linkedProps));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Randomize Feature Ids", RandomizeFeatureIds, FilterParameter::Category::Parameter, CAxisSegmentFeatures));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
