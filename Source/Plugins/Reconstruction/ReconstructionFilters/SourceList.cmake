@@ -42,6 +42,7 @@ set(_PublicFilters
   MergeTwins
   ScalarSegmentFeatures
   ComputeFeatureRect
+  PartitionGeometry
 )
 
 
