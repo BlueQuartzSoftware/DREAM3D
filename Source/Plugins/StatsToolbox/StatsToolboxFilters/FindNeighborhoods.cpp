@@ -80,7 +80,6 @@ public:
 
   void convert(size_t start, size_t end) const
   {
-    float x = 0.0f, y = 0.0f, z = 0.0f;
     int64_t bin1x = 0, bin2x = 0, bin1y = 0, bin2y = 0, bin1z = 0, bin2z = 0;
     float dBinX = 0, dBinY = 0, dBinZ = 0;
     float criticalDistance1 = 0, criticalDistance2 = 0;
@@ -104,9 +103,9 @@ public:
       {
         break;
       }
-      x = m_Centroids[3 * i];
-      y = m_Centroids[3 * i + 1];
-      z = m_Centroids[3 * i + 2];
+      // x = m_Centroids[3 * i];
+      // y = m_Centroids[3 * i + 1];
+      // z = m_Centroids[3 * i + 2];
       bin1x = m_Bins[3 * i];
       bin1y = m_Bins[3 * i + 1];
       bin1z = m_Bins[3 * i + 2];

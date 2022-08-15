@@ -304,7 +304,7 @@ FindEuclideanDistMap::~FindEuclideanDistMap() = default;
 void FindEuclideanDistMap::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Calculate Manhattan Distance", CalcManhattanDist, FilterParameter::Category::Parameter, FindEuclideanDistMap));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Output arrays are Manhattan istance (int32)", CalcManhattanDist, FilterParameter::Category::Parameter, FindEuclideanDistMap));
   std::vector<QString> linkedProps = {"GBDistancesArrayName"};
 
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Distance to Boundaries", DoBoundaries, FilterParameter::Category::Parameter, FindEuclideanDistMap, linkedProps));

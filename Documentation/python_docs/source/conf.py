@@ -19,7 +19,7 @@ import sys
 # -- Project information -----------------------------------------------------
 
 project = 'dream3d'
-copyright = '2021, BlueQuartz Softeawre'
+copyright = '2022, BlueQuartz Softeawre'
 author = 'BlueQuartz Software'
 
 # The full version, including alpha/beta/rc tags
