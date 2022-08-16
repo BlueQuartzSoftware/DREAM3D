@@ -59,81 +59,48 @@ public:
   ~PartitionGeometry() override;
 
   /**
-   * @brief Setter property for CellAttributeMatrixPath
+   * @brief Setter property for AttributeMatrixPath
    */
-  void setCellAttributeMatrixPath(const DataArrayPath& value);
+  void setAttributeMatrixPath(const DataArrayPath& value);
   /**
-   * @brief Getter property for CellAttributeMatrixPath
-   * @return Value of CellAttributeMatrixPath
+   * @brief Getter property for AttributeMatrixPath
+   * @return Value of AttributeMatrixPath
    */
-  DataArrayPath getCellAttributeMatrixPath() const;
-  Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
+  DataArrayPath getAttributeMatrixPath() const;
+  Q_PROPERTY(DataArrayPath AttributeMatrixPath READ getAttributeMatrixPath WRITE setAttributeMatrixPath)
 
   /**
-   * @brief Setter property for Origin
+   * @brief Setter property for PartitionOrigin
    */
-  void setOrigin(const FloatVec3Type& value);
+  void setPartitionOrigin(const FloatVec3Type& value);
   /**
-   * @brief Getter property for Origin
-   * @return Value of Origin
+   * @brief Getter property for PartitionOrigin
+   * @return Value of PartitionOrigin
    */
-  FloatVec3Type getOrigin() const;
-  Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
+  FloatVec3Type getPartitionOrigin() const;
+  Q_PROPERTY(FloatVec3Type PartitionOrigin READ getPartitionOrigin WRITE setPartitionOrigin)
 
   /**
-   * @brief Setter property for Spacing
+   * @brief Setter property for PartitionSpacing
    */
-  void setSpacing(const FloatVec3Type& value);
+  void setPartitionSpacing(const FloatVec3Type& value);
   /**
-   * @brief Getter property for Spacing
-   * @return Value of Spacing
+   * @brief Getter property for PartitionSpacing
+   * @return Value of PartitionSpacing
    */
-  FloatVec3Type getSpacing() const;
-  Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
+  FloatVec3Type getPartitionSpacing() const;
+  Q_PROPERTY(FloatVec3Type PartitionSpacing READ getPartitionSpacing WRITE setPartitionSpacing)
 
   /**
-   * @brief Setter property for XBounds
+   * @brief Setter property for PartitionDimensions
    */
-  void setXBounds(const FloatVec2Type& value);
+  void setPartitionDimensions(const IntVec3Type& value);
   /**
-   * @brief Getter property for XBounds
-   * @return Value of XBounds
+   * @brief Getter property for PartitionDimensions
+   * @return Value of PartitionDimensions
    */
-  FloatVec2Type getXBounds() const;
-  Q_PROPERTY(FloatVec2Type XBounds READ getXBounds WRITE setXBounds)
-
-  /**
-   * @brief Setter property for YBounds
-   */
-  void setYBounds(const FloatVec2Type& value);
-  /**
-   * @brief Getter property for YBounds
-   * @return Value of YBounds
-   */
-  FloatVec2Type getYBounds() const;
-  Q_PROPERTY(FloatVec2Type YBounds READ getYBounds WRITE setYBounds)
-
-  /**
-   * @brief Setter property for ZBounds
-   */
-  void setZBounds(const FloatVec2Type& value);
-  /**
-   * @brief Getter property for ZBounds
-   * @return Value of ZBounds
-   */
-  FloatVec2Type getZBounds() const;
-  Q_PROPERTY(FloatVec2Type ZBounds READ getZBounds WRITE setZBounds)
-
-  /**
-   * @brief Setter property for GridDimensions
-   */
-  void setGridDimensions(const IntVec3Type& value);
-  /**
-   * @brief Getter property for GridDimensions
-   * @return Value of GridDimensions
-   */
-  IntVec3Type getGridDimensions() const;
-  Q_PROPERTY(IntVec3Type GridDimensions READ getGridDimensions WRITE setGridDimensions)
+  IntVec3Type getPartitionDimensions() const;
+  Q_PROPERTY(IntVec3Type PartitionDimensions READ getPartitionDimensions WRITE setPartitionDimensions)
 
   /**
    * @brief Setter property for DefaultValue
@@ -145,6 +112,20 @@ public:
    */
   int getDefaultValue() const;
   Q_PROPERTY(int DefaultValue READ getDefaultValue WRITE setDefaultValue)
+
+  /**
+   * @brief Getter property for GeometryString
+   * @return Value of GeometryString
+   */
+  QString getGeometryString() const;
+  Q_PROPERTY(QString GeometryString READ getGeometryString)
+
+  /**
+   * @brief Getter property for PartitionSpaceString
+   * @return Value of PartitionSpaceString
+   */
+  QString getPartitionSpaceString() const;
+  Q_PROPERTY(QString PartitionSpaceString READ getPartitionSpaceString)
 
   /**
    * @brief Setter property for PartitionIdsArrayName
@@ -226,18 +207,25 @@ protected:
   void initialize();
 
 private:
-  DataArrayPath m_CellAttributeMatrixPath = {"", "", ""};
-  FloatVec3Type m_Origin = {0, 0, 0};
-  FloatVec3Type m_Spacing = {1, 1, 1};
-  FloatVec2Type m_XBounds = {};
-  FloatVec2Type m_YBounds = {};
-  FloatVec2Type m_ZBounds = {};
-  IntVec3Type m_GridDimensions = {};
+  IntVec3Type m_PartitionDimensions = {};
+  FloatVec3Type m_PartitionOrigin = {0, 0, 0};
+  FloatVec3Type m_PartitionSpacing = {1, 1, 1};
   int m_DefaultValue = 0;
+  DataArrayPath m_AttributeMatrixPath = {"", "", ""};
   QString m_PartitionIdsArrayName = {"PartitionIds"};
 
   std::weak_ptr<Int32ArrayType> m_PartitionIdsPtr;
   int32_t* m_PartitionIds = nullptr;
+
+  QString getImageGeometrySpaceDescription(const ImageGeom& geometry) const;
+  QString getRectGridGeometrySpaceDescription() const;
+  QString getVertexGeometrySpaceDescription() const;
+  QString getEdgeGeometrySpaceDescription() const;
+  QString getTriangleGeometrySpaceDescription() const;
+  QString getQuadGeometrySpaceDescription() const;
+  QString getTetrahedralGeometrySpaceDescription() const;
+  QString getHexahedralGeometrySpaceDescription() const;
+  QString getUnknownGeometrySpaceDescription() const;
 
   void partitionCellBasedGeometry(const IGeometryGrid& geometry, const ImageGeom& partitionImageGeom, Int32ArrayType& partitionIds);
   void partitionNodeBasedGeometry(const SharedVertexList& vertexList, const ImageGeom& partitionImageGeom, Int32ArrayType& partitionIds);
