@@ -807,5 +807,5 @@ void QEbsdReferenceFrameDialog::referenceDirectionChanged()
 // -----------------------------------------------------------------------------
 void QEbsdReferenceFrameDialog::on_showHelp_clicked()
 {
-  QtSHelpUrlGenerator::generateAndOpenHTMLUrl("ebsdtoh5ebsd", this);
+  QtSHelpUrlGenerator::generateAndOpenHTMLUrl("EbsdToH5Ebsd", this);
 }

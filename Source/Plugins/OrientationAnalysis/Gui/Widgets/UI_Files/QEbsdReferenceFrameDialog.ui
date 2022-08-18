@@ -378,47 +378,6 @@ font-size: 10px;
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QPushButton" name="showHelp">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>24</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>24</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/SIMPL/icons/images/information.png</normaloff>:/information.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>24</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="autoDefault">
-        <bool>false</bool>
-       </property>
-       <property name="flat">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item row="4" column="0" colspan="2">
@@ -487,8 +446,8 @@ font-size: 10px;
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/SIMPL/icons/images/zoom_in.png</normaloff>:/zoom_in.png</iconset>
+        <iconset>
+         <normaloff>:/SIMPL/icons/images/zoom_in.png</normaloff>:/SIMPL/icons/images/zoom_in.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -528,8 +487,8 @@ font-size: 10px;
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/SIMPL/icons/images/zoom_out.png</normaloff>:/zoom_out.png</iconset>
+        <iconset>
+         <normaloff>:/SIMPL/icons/images/zoom_out.png</normaloff>:/SIMPL/icons/images/zoom_out.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -569,8 +528,8 @@ font-size: 10px;
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/SIMPL/icons/images/fit_to_window.png</normaloff>:/fit_to_window.png</iconset>
+        <iconset>
+         <normaloff>:/SIMPL/icons/images/fit_to_window.png</normaloff>:/SIMPL/icons/images/fit_to_window.png</iconset>
        </property>
        <property name="iconSize">
         <size>
