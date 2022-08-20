@@ -36,6 +36,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
@@ -221,6 +222,13 @@ public:
    */
   void execute() override;
 
+  /**
+   * @brief sendThreadSafeProgressMessage
+   * @param counter
+   * @param max
+   */
+  void sendThreadSafeProgressMessage(int64_t counter);
+
 protected:
   FindKernelAvgMisorientations();
   /**
@@ -251,6 +259,11 @@ private:
   DataArrayPath m_QuatsArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats};
   QString m_KernelAverageMisorientationsArrayName = {SIMPL::CellData::KernelAverageMisorientations};
   IntVec3Type m_KernelSize = {};
+
+  // Thread safe Progress Message
+  mutable std::mutex m_ProgressMessage_Mutex;
+  size_t m_InstanceIndex = {0};
+  int64_t m_TotalElements = {};
 
 public:
   FindKernelAvgMisorientations(const FindKernelAvgMisorientations&) = delete;            // Copy Constructor Not Implemented
