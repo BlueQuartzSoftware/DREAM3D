@@ -73,6 +73,7 @@ void OrientationUtilityWidget::setupGui()
   m_OrientationWidgets.push_back(omWidget);
   m_OrientationWidgets.push_back(quatWidget);
   m_OrientationWidgets.push_back(rodriguesWidget);
+  m_OrientationWidgets.push_back(stereographicWidget);
 
   // Connect signals and slots
   connect(degreesBtn, SIGNAL(toggled(bool)), axisAngleWidget, SLOT(convertData(bool)));

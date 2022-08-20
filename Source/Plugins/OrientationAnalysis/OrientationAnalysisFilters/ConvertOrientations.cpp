@@ -222,7 +222,7 @@ void generateRepresentation(ConvertOrientations* filter, typename DataArray<T>::
   using ArrayType = DataArray<T>;
   using ArrayPointerType = typename ArrayType::Pointer;
   using OCType = OrientationConverter<ArrayType, T>;
-  std::vector<typename OCType::Pointer> converters(7);
+  std::vector<typename OCType::Pointer> converters(8);
 
   converters[0] = EulerConverter<ArrayType, T>::New();
   converters[1] = OrientationMatrixConverter<ArrayType, T>::New();
@@ -231,6 +231,7 @@ void generateRepresentation(ConvertOrientations* filter, typename DataArray<T>::
   converters[4] = RodriguesConverter<ArrayType, T>::New();
   converters[5] = HomochoricConverter<ArrayType, T>::New();
   converters[6] = CubochoricConverter<ArrayType, T>::New();
+  converters[7] = StereographicConverter<ArrayType, T>::New();
 
   std::vector<OrientationRepresentation::Type> ocTypes = OCType::GetOrientationTypes();
 

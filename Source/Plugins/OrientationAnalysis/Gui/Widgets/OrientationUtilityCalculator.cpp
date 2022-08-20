@@ -95,7 +95,7 @@ bool OrientationUtilityCalculator::getHasErrors()
 QVector<double> OrientationUtilityCalculator::getValues(OrientationRepresentation::Type outputType)
 {
   typedef OrientationConverter<DoubleArrayType, double> OCType;
-  QVector<OCType::Pointer> converters(7);
+  QVector<OCType::Pointer> converters(8);
 
   converters[0] = EulerConverter<DoubleArrayType, double>::New();
   converters[1] = OrientationMatrixConverter<DoubleArrayType, double>::New();
@@ -104,6 +104,7 @@ QVector<double> OrientationUtilityCalculator::getValues(OrientationRepresentatio
   converters[4] = RodriguesConverter<DoubleArrayType, double>::New();
   converters[5] = HomochoricConverter<DoubleArrayType, double>::New();
   converters[6] = CubochoricConverter<DoubleArrayType, double>::New();
+  converters[7] = StereographicConverter<DoubleArrayType, double>::New();
 
   std::vector<OrientationRepresentation::Type> ocTypes = OCType::GetOrientationTypes();
 

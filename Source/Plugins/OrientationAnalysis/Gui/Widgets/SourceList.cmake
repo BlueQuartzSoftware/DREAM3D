@@ -15,6 +15,7 @@ set(DREAM3D_WIDGETS
     RodriguesWidget
     HomochoricWidget
     CubochoricWidget
+    StereographicWidget
 )
 
 set(DREAM3D_WIDGETS_NO_UI
