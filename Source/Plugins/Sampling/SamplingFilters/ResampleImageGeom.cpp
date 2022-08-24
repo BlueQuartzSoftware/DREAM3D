@@ -108,9 +108,9 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  void operator()(const SIMPLRange3D& r) const
+  void operator()(const tbb::blocked_range3d<size_t, size_t, size_t>& r) const
   {
-    compute(r[0], r[1], r[2], r[3], r[4], r[5]);
+    compute(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
   }
 
 private:
@@ -426,17 +426,21 @@ void ResampleImageGeom::execute()
 
   ss = QObject::tr("Computing new indices... ");
   notifyStatusMessage(ss);
-  // Allow data-based parallelization
-  size_t grain = destDims[2] == 1 ? 1 : destDims[2] / std::thread::hardware_concurrency();
-  if(grain == 0) // This can happen if dims[2] > number of processors
+
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+  bool doParallel = true;
+  if(doParallel)
   {
-    grain = 1;
+    // TBB wants the space in slowest to fastest ordering (ZYX for SIMPL)
+    tbb::blocked_range3d<size_t, size_t, size_t> tbbRange(0, destDims[2], 0, destDims[1], 0, destDims[0]);
+    tbb::parallel_for(tbbRange, ChangeResolutionImpl(this, newindicies, m_Spacing, sourceSpacing, sourceDims, destDims));
   }
-  ParallelData3DAlgorithm dataAlg;
-  dataAlg.setRange(destDims[2], destDims[1], destDims[0]);
-  dataAlg.setGrain(grain);
-  dataAlg.setParallelizationEnabled(true);
-  dataAlg.execute(ChangeResolutionImpl(this, newindicies, m_Spacing, sourceSpacing, sourceDims, destDims));
+  else
+#endif
+  {
+    ChangeResolutionImpl serial(this, newindicies, m_Spacing, sourceSpacing, sourceDims, destDims);
+    serial.compute(0, destDims[2], 0, destDims[1], 0, destDims[0]);
+  }
 
   QList<QString> voxelArrayNames = destAM->getAttributeArrayNames();
   for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
@@ -447,10 +451,19 @@ void ResampleImageGeom::execute()
     IDataArray::Pointer sourceData = sourceCellAM->getAttributeArray(*iter);
     IDataArray::Pointer destinationData = destAM->getAttributeArray(*iter);
 
-    ParallelDataAlgorithm placeAlg;
-    placeAlg.setRange(0, destTotalPoints);
-    placeAlg.setParallelizationEnabled(true);
-    placeAlg.execute(ChangeResolutionPlaceDataImpl(this, newindicies, sourceData, destinationData));
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+    if(doParallel)
+    {
+      // TBB wants the space in slowest to fastest ordering (ZYX for SIMPL)
+      tbb::blocked_range<size_t> tbbRange(0, destTotalPoints);
+      tbb::parallel_for(tbbRange, ChangeResolutionPlaceDataImpl(this, newindicies, sourceData, destinationData));
+    }
+    else
+#endif
+    {
+      ChangeResolutionPlaceDataImpl serial(this, newindicies, sourceData, destinationData);
+      serial.compute(0, destTotalPoints);
+    }
   }
 
   if(m_RenumberFeatures)
