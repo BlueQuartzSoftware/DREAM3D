@@ -70,62 +70,73 @@ public:
   Q_PROPERTY(DataArrayPath AttributeMatrixPath READ getAttributeMatrixPath WRITE setAttributeMatrixPath)
 
   /**
-   * @brief Setter property for PartitionOrigin
+   * @brief Setter property for PartitioningSchemeOrigin
    */
-  void setPartitionOrigin(const FloatVec3Type& value);
+  void setPartitioningSchemeOrigin(const FloatVec3Type& value);
   /**
-   * @brief Getter property for PartitionOrigin
-   * @return Value of PartitionOrigin
+   * @brief Getter property for PartitioningSchemeOrigin
+   * @return Value of PartitioningSchemeOrigin
    */
-  FloatVec3Type getPartitionOrigin() const;
-  Q_PROPERTY(FloatVec3Type PartitionOrigin READ getPartitionOrigin WRITE setPartitionOrigin)
+  FloatVec3Type getPartitioningSchemeOrigin() const;
+  Q_PROPERTY(FloatVec3Type PartitioningSchemeOrigin READ getPartitioningSchemeOrigin WRITE setPartitioningSchemeOrigin)
 
   /**
-   * @brief Setter property for PartitionSpacing
+   * @brief Setter property for LengthPerPartition
    */
-  void setPartitionSpacing(const FloatVec3Type& value);
+  void setLengthPerPartition(const FloatVec3Type& value);
   /**
-   * @brief Getter property for PartitionSpacing
-   * @return Value of PartitionSpacing
+   * @brief Getter property for LengthPerPartition
+   * @return Value of LengthPerPartition
    */
-  FloatVec3Type getPartitionSpacing() const;
-  Q_PROPERTY(FloatVec3Type PartitionSpacing READ getPartitionSpacing WRITE setPartitionSpacing)
+  FloatVec3Type getLengthPerPartition() const;
+  Q_PROPERTY(FloatVec3Type LengthPerPartition READ getLengthPerPartition WRITE setLengthPerPartition)
 
   /**
-   * @brief Setter property for PartitionDimensions
+   * @brief Setter property for NumberOfPartitionsPerAxis
    */
-  void setPartitionDimensions(const IntVec3Type& value);
+  void setNumberOfPartitionsPerAxis(const IntVec3Type& value);
   /**
-   * @brief Getter property for PartitionDimensions
-   * @return Value of PartitionDimensions
+   * @brief Getter property for NumberOfPartitionsPerAxis
+   * @return Value of NumberOfPartitionsPerAxis
    */
-  IntVec3Type getPartitionDimensions() const;
-  Q_PROPERTY(IntVec3Type PartitionDimensions READ getPartitionDimensions WRITE setPartitionDimensions)
+  IntVec3Type getNumberOfPartitionsPerAxis() const;
+  Q_PROPERTY(IntVec3Type NumberOfPartitionsPerAxis READ getNumberOfPartitionsPerAxis WRITE setNumberOfPartitionsPerAxis)
 
   /**
-   * @brief Setter property for DefaultValue
+   * @brief Setter property for OutOfBoundsValue
    */
-  void setDefaultValue(const int& value);
+  void setOutOfBoundsValue(const int& value);
   /**
-   * @brief Getter property for DefaultValue
-   * @return Value of DefaultValue
+   * @brief Getter property for OutOfBoundsValue
+   * @return Value of OutOfBoundsValue
    */
-  int getDefaultValue() const;
-  Q_PROPERTY(int DefaultValue READ getDefaultValue WRITE setDefaultValue)
+  int getOutOfBoundsValue() const;
+  Q_PROPERTY(int OutOfBoundsValue READ getOutOfBoundsValue WRITE setOutOfBoundsValue)
 
   /**
-   * @brief Getter property for GeometryString
-   * @return Value of GeometryString
+   * @brief Setter property for StartingPartitionID
    */
-  QString getGeometryString() const;
-  Q_PROPERTY(QString GeometryString READ getGeometryString)
+  void setStartingPartitionID(const int& value);
+  /**
+   * @brief Getter property for StartingPartitionID
+   * @return Value of StartingPartitionID
+   */
+  int getStartingPartitionID() const;
+  Q_PROPERTY(int StartingPartitionID READ getStartingPartitionID WRITE setStartingPartitionID)
 
   /**
-   * @brief Getter property for PartitionSpaceString
-   * @return Value of PartitionSpaceString
+   * @brief Getter property for InputGeometryInformation
+   * @return Value of InputGeometryInformation
    */
-  QString getPartitionSpaceString() const;
-  Q_PROPERTY(QString PartitionSpaceString READ getPartitionSpaceString)
+  QString getInputGeometryInformation() const;
+  Q_PROPERTY(QString InputGeometryInformation READ getInputGeometryInformation)
+
+  /**
+   * @brief Getter property for PartitioningSchemeInformation
+   * @return Value of PartitioningSchemeInformation
+   */
+  QString getPartitioningSchemeInformation() const;
+  Q_PROPERTY(QString PartitioningSchemeInformation READ getPartitioningSchemeInformation)
 
   /**
    * @brief Setter property for PartitionIdsArrayName
@@ -137,6 +148,40 @@ public:
    */
   QString getPartitionIdsArrayName() const;
   Q_PROPERTY(QString PartitionIdsArrayName READ getPartitionIdsArrayName WRITE setPartitionIdsArrayName)
+
+  /**
+   * @brief Setter property for SavePartitioningScheme
+   */
+  void setSavePartitioningScheme(const bool& value);
+
+  /**
+   * @brief Getter property for SavePartitioningScheme
+   * @return Value of SavePartitioningScheme
+   */
+  bool getSavePartitioningScheme() const;
+  Q_PROPERTY(bool SavePartitioningScheme READ getSavePartitioningScheme WRITE setSavePartitioningScheme)
+
+  /**
+   * @brief Setter property for PSDataContainerPath
+   */
+  void setPSDataContainerPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for PSDataContainerPath
+   * @return Value of PSDataContainerPath
+   */
+  DataArrayPath getPSDataContainerPath() const;
+  Q_PROPERTY(DataArrayPath PSDataContainerPath READ getPSDataContainerPath WRITE setPSDataContainerPath)
+
+  /**
+   * @brief Setter property for PSAttributeMatrixName
+   */
+  void setPSAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for PSAttributeMatrixName
+   * @return Value of PSAttributeMatrixName
+   */
+  QString getPSAttributeMatrixName() const;
+  Q_PROPERTY(QString PSAttributeMatrixName READ getPSAttributeMatrixName WRITE setPSAttributeMatrixName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -207,25 +252,35 @@ protected:
   void initialize();
 
 private:
-  IntVec3Type m_PartitionDimensions = {};
-  FloatVec3Type m_PartitionOrigin = {0, 0, 0};
-  FloatVec3Type m_PartitionSpacing = {1, 1, 1};
-  int m_DefaultValue = 0;
+  IntVec3Type m_NumberOfPartitionsPerAxis = {};
+  FloatVec3Type m_PartitioningSchemeOrigin = {0, 0, 0};
+  FloatVec3Type m_LengthPerPartition = {1, 1, 1};
+  bool m_SavePartitioningScheme = {false};
+  DataArrayPath m_PSDataContainerPath = {"PartitioningSchemeDataContainer", "", ""};
+  QString m_PSAttributeMatrixName = {"CellData"};
+  QString m_PSDataArrayName = {"PartitioningSchemeIds"};
+  QString m_PSImageGeomName = {"PartitioningSchemeImageGeom"};
+  int m_OutOfBoundsValue = 0;
+  int m_StartingPartitionID = 1;
   DataArrayPath m_AttributeMatrixPath = {"", "", ""};
   QString m_PartitionIdsArrayName = {"PartitionIds"};
+  const QString m_VertexAttrMatrixName = "VertexData";
 
   std::weak_ptr<Int32ArrayType> m_PartitionIdsPtr;
   int32_t* m_PartitionIds = nullptr;
+  std::weak_ptr<Int32ArrayType> m_PartitioningSchemeIdsPtr;
+  int32_t* m_PartitioningSchemeIds = nullptr;
+  ImageGeom::Pointer m_PartitionImageGeometry = ImageGeom::NullPointer();
 
-  QString getImageGeometrySpaceDescription(const ImageGeom& geometry) const;
-  QString getRectGridGeometrySpaceDescription() const;
-  QString getVertexGeometrySpaceDescription() const;
-  QString getEdgeGeometrySpaceDescription() const;
-  QString getTriangleGeometrySpaceDescription() const;
-  QString getQuadGeometrySpaceDescription() const;
-  QString getTetrahedralGeometrySpaceDescription() const;
-  QString getHexahedralGeometrySpaceDescription() const;
-  QString getUnknownGeometrySpaceDescription() const;
+  QString getInputImageGeometryInformation(const ImageGeom& geometry) const;
+  QString getInputRectGridGeometryInformation() const;
+  QString getInputVertexGeometryInformation() const;
+  QString getInputEdgeGeometryInformation() const;
+  QString getInputTriangleGeometryInformation() const;
+  QString getInputQuadGeometryInformation() const;
+  QString getInputTetrahedralGeometryInformation() const;
+  QString getInputHexahedralGeometryInformation() const;
+  QString getInputUnknownGeometryInformation() const;
 
   void partitionCellBasedGeometry(const IGeometryGrid& geometry, const ImageGeom& partitionImageGeom, Int32ArrayType& partitionIds);
   void partitionNodeBasedGeometry(const SharedVertexList& vertexList, const ImageGeom& partitionImageGeom, Int32ArrayType& partitionIds);
