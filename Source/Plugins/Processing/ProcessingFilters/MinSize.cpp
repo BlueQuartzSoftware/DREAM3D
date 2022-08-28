@@ -66,7 +66,7 @@ MinSize::~MinSize() = default;
 void MinSize::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Minimum Allowed Feature Size", MinAllowedFeatureSize, FilterParameter::Category::Parameter, MinSize));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Minimum Allowed Feature Size (Voxels)", MinAllowedFeatureSize, FilterParameter::Category::Parameter, MinSize));
   std::vector<QString> linkedProps;
   linkedProps.push_back("PhaseNumber");
   linkedProps.push_back("FeaturePhasesArrayPath");
@@ -86,7 +86,7 @@ void MinSize::setupFilterParameters()
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Number of Cells", NumCellsArrayPath, FilterParameter::Category::RequiredArray, MinSize, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Number of Elements", NumCellsArrayPath, FilterParameter::Category::RequiredArray, MinSize, req));
   }
   {
     MultiDataArraySelectionFilterParameter::RequirementType req;
