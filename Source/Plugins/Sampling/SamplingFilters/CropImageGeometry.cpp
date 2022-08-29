@@ -338,7 +338,7 @@ void CropImageGeometry::dataCheck()
     cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
 
     // If we are saving as a new Data Container, then we need a copy of the Cell Feature Data Attribute Matrix
-    if(getRenumberFeatures())
+    if(getSaveAsNewDataContainer())
     {
       AttributeMatrix::Pointer cfAm = cellFeatureAttrMat->deepCopy(getInPreflight());
       destCellDataContainer->addOrReplaceAttributeMatrix(cfAm);
