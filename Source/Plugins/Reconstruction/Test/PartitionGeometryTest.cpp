@@ -30,18 +30,14 @@
 
 #pragma once
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/Filtering/FilterFactory.hpp"
-#include "SIMPLib/Filtering/FilterManager.h"
-#include "SIMPLib/Filtering/FilterPipeline.h"
-#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
-#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
-#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
+#include "SIMPLib/CoreFilters/DataContainerReader.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
+#include "Reconstruction/ReconstructionFilters/PartitionGeometry.h"
 #include "Reconstruction/Test/ReconstructionTestFileLocations.h"
 #include "Reconstruction/Test/UnitTestSupport.hpp"
 
@@ -59,48 +55,183 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  int TestFilterAvailability()
+  void TestGeometry(const QString& inputFile, const DataArrayPath& inputArrayPath, const IntVec3Type& numOfPartitionsPerAxis, const FloatVec3Type& partitioningSchemeOrigin,
+                    const FloatVec3Type& lengthPerPartition, const DataArrayPath& outputArrayPath, const DataArrayPath& exemplaryArrayPath)
   {
-    // Now instantiate the PartitionGeometryTest Filter from the FilterManager
-    QString filtName = "PartitionGeometry";
-    FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
-    if(nullptr == filterFactory.get())
+    DataContainerArray::Pointer dca = DataContainerArray::New();
     {
-      std::stringstream ss;
-      ss << "The PartitionGeometryTest Requires the use of the " << filtName.toStdString() << " filter which is found in the Reconstruction Plugin";
-      DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+      DataContainerReader::Pointer filter = DataContainerReader::New();
+      DataContainerArrayProxy dcaProxy = filter->readDataContainerArrayStructure(inputFile);
+      filter->setInputFileDataContainerArrayProxy(dcaProxy);
+      filter->setInputFile(inputFile);
+      filter->setDataContainerArray(dca);
+      filter->execute();
+      int err = filter->getErrorCode();
+      DREAM3D_REQUIRE(err >= 0)
     }
-    return 0;
+
+    PartitionGeometry::Pointer filter = PartitionGeometry::New();
+    filter->setDataContainerArray(dca);
+    filter->setNumberOfPartitionsPerAxis(numOfPartitionsPerAxis);
+    filter->setPartitioningSchemeOrigin(partitioningSchemeOrigin);
+    filter->setLengthPerPartition(lengthPerPartition);
+    filter->setAttributeMatrixPath(inputArrayPath);
+    filter->setPartitionIdsArrayName(outputArrayPath.getDataArrayName());
+
+    filter->execute();
+    int err = filter->getErrorCode();
+    DREAM3D_REQUIRE(err >= 0)
+
+    AttributeMatrix::Pointer am = dca->getAttributeMatrix(outputArrayPath);
+    DREAM3D_REQUIRE(am != AttributeMatrix::NullPointer())
+
+    Int32ArrayType::Pointer partitionIds = am->getAttributeArrayAs<Int32ArrayType>(outputArrayPath.getDataArrayName());
+    DREAM3D_REQUIRE(partitionIds != Int32ArrayType::NullPointer())
+
+    AttributeMatrix::Pointer exemplaryAM = dca->getAttributeMatrix(exemplaryArrayPath);
+    DREAM3D_REQUIRE(exemplaryAM != AttributeMatrix::NullPointer())
+
+    Int32ArrayType::Pointer exemplaryPartitionIds = exemplaryAM->getAttributeArrayAs<Int32ArrayType>(exemplaryArrayPath.getDataArrayName());
+    DREAM3D_REQUIRE(exemplaryPartitionIds != Int32ArrayType::NullPointer())
+
+    DREAM3D_REQUIRE_EQUAL(partitionIds->getSize(), exemplaryPartitionIds->getSize())
+
+    int32_t* partitionIdsPtr = partitionIds->getPointer(0);
+    int32_t* exemplaryPartitionIdsPtr = exemplaryPartitionIds->getPointer(0);
+    for(size_t i = 0; i < partitionIds->getSize(); i++)
+    {
+      const int32_t partitionId = partitionIdsPtr[i];
+      const int32_t exemplaryId = exemplaryPartitionIdsPtr[i];
+      DREAM3D_REQUIRE_EQUAL(partitionId, exemplaryId)
+    }
   }
 
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  int TestImageGeometry()
+  void TestImageGeometry()
   {
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    /* Please write PartitionGeometryTest test code here.
-     *
-     * To create IO test files, please edit the file template at Reconstruction/Test/TestFileLocations.h.in.
-     * Add a PartitionGeometryTest namespace inside the UnitTest namespace, and add your test file paths to your new namespace.
-     *
-     * SIMPLib provides some macros that will throw exceptions when a test fails
-     * and thus report that during testing. These macros are located in the
-     * SIMPLib/Utilities/UnitTestSupport.hpp file. Some examples are:
-     *
-     * SIMPLib_REQUIRE_EQUAL(foo, 0)
-     * This means that if the variable foo is NOT equal to Zero then test will fail
-     * and the current test will exit immediately. If there are more tests registered
-     * with the SIMPLib_REGISTER_TEST() macro, the next test will execute. There are
-     * lots of examples in the SIMPLib/Test folder to look at.
-     */
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryImageGeomIdsPath;
+    DataArrayPath inputArrayPath = {"DataContainer", "CellData", ""};
+    IntVec3Type numOfPartitionsPerAxis = {5, 5, 5};
+    FloatVec3Type partitioningSchemeOrigin = {-10, 5, 2};
+    FloatVec3Type lengthPerPartition = {5, 5, 5};
+    DataArrayPath outputArrayPath = {"DataContainer", "CellData", "PartitionIds"};
+    DataArrayPath exemplaryArrayPath = {"DataContainer", "CellData", "ExemplaryPartitionIds"};
 
-    int foo = -1;
-    DREAM3D_REQUIRE_EQUAL(foo, 0)
+    TestGeometry(inputFile, inputArrayPath, numOfPartitionsPerAxis, partitioningSchemeOrigin, lengthPerPartition, outputArrayPath, exemplaryArrayPath);
+  }
 
-    return EXIT_SUCCESS;
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void TestRectGridGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryRectGridGeomIdsPath;
+    DataArrayPath inputArrayPath = {"DataContainer", "CellData", ""};
+    IntVec3Type numOfPartitionsPerAxis = {5, 5, 5};
+    FloatVec3Type partitioningSchemeOrigin = {0, 0, 0};
+    FloatVec3Type lengthPerPartition = {6, 6, 6};
+    DataArrayPath outputArrayPath = {"DataContainer", "CellData", "PartitionIds"};
+    DataArrayPath exemplaryArrayPath = {"DataContainer", "CellData", "ExemplaryPartitionIds"};
+
+    TestGeometry(inputFile, inputArrayPath, numOfPartitionsPerAxis, partitioningSchemeOrigin, lengthPerPartition, outputArrayPath, exemplaryArrayPath);
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void TestTriangleGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryTriangleGeomIdsPath;
+    DataArrayPath inputArrayPath = {"TriangleDataContainer", "FaceData", ""};
+    IntVec3Type numOfPartitionsPerAxis = {4, 4, 3};
+    FloatVec3Type partitioningSchemeOrigin = {0, 0, 0};
+    FloatVec3Type lengthPerPartition = {5.01, 5.01, 10.01};
+    DataArrayPath outputArrayPath = {"TriangleDataContainer", "VertexData", "PartitionIds"};
+    DataArrayPath exemplaryArrayPath = {"TriangleDataContainer", "VertexData", "ExemplaryPartitionIds"};
+
+    TestGeometry(inputFile, inputArrayPath, numOfPartitionsPerAxis, partitioningSchemeOrigin, lengthPerPartition, outputArrayPath, exemplaryArrayPath);
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void TestEdgeGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryEdgeGeomIdsPath;
+    DataArrayPath inputArrayPath = {"DataContainer", "Bounds", ""};
+    IntVec3Type numOfPartitionsPerAxis = {4, 4, 4};
+    FloatVec3Type partitioningSchemeOrigin = {-1, -1, -0.05};
+    FloatVec3Type lengthPerPartition = {0.5, 0.5, 0.25};
+    DataArrayPath outputArrayPath = {"DataContainer", "VertexData", "PartitionIds"};
+    DataArrayPath exemplaryArrayPath = {"DataContainer", "VertexData", "ExemplaryPartitionIds"};
+
+    TestGeometry(inputFile, inputArrayPath, numOfPartitionsPerAxis, partitioningSchemeOrigin, lengthPerPartition, outputArrayPath, exemplaryArrayPath);
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void TestVertexGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryVertexGeomIdsPath;
+    DataArrayPath inputArrayPath = {"DataContainer", "Bounds", ""};
+    IntVec3Type numOfPartitionsPerAxis = {4, 4, 4};
+    FloatVec3Type partitioningSchemeOrigin = {-1, -1, -0.1};
+    FloatVec3Type lengthPerPartition = {0.25, 0.25, 0.25};
+    DataArrayPath outputArrayPath = {"DataContainer", "VertexData", "PartitionIds"};
+    DataArrayPath exemplaryArrayPath = {"DataContainer", "VertexData", "ExemplaryPartitionIds"};
+
+    TestGeometry(inputFile, inputArrayPath, numOfPartitionsPerAxis, partitioningSchemeOrigin, lengthPerPartition, outputArrayPath, exemplaryArrayPath);
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void TestQuadGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryQuadGeomIdsPath;
+    DataArrayPath inputArrayPath = {"DataContainer", "Bounds", ""};
+    IntVec3Type numOfPartitionsPerAxis = {10, 10, 10};
+    FloatVec3Type partitioningSchemeOrigin = {-1, -1, -0.05};
+    FloatVec3Type lengthPerPartition = {0.2, 0.2, 0.1};
+    DataArrayPath outputArrayPath = {"DataContainer", "VertexData", "PartitionIds"};
+    DataArrayPath exemplaryArrayPath = {"DataContainer", "VertexData", "ExemplaryPartitionIds"};
+
+    TestGeometry(inputFile, inputArrayPath, numOfPartitionsPerAxis, partitioningSchemeOrigin, lengthPerPartition, outputArrayPath, exemplaryArrayPath);
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void TestTetrahedralGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryTetrahedralGeomIdsPath;
+    DataArrayPath inputArrayPath = {"DataContainer", "Bounds", ""};
+    IntVec3Type numOfPartitionsPerAxis = {4, 4, 4};
+    FloatVec3Type partitioningSchemeOrigin = {-1, -1, -0.05};
+    FloatVec3Type lengthPerPartition = {0.5, 0.5, 0.25};
+    DataArrayPath outputArrayPath = {"DataContainer", "VertexData", "PartitionIds"};
+    DataArrayPath exemplaryArrayPath = {"DataContainer", "VertexData", "ExemplaryPartitionIds"};
+
+    TestGeometry(inputFile, inputArrayPath, numOfPartitionsPerAxis, partitioningSchemeOrigin, lengthPerPartition, outputArrayPath, exemplaryArrayPath);
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void TestHexahedralGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryHexahedralGeomIdsPath;
+    DataArrayPath inputArrayPath = {"DataContainer", "Bounds", ""};
+    IntVec3Type numOfPartitionsPerAxis = {4, 4, 4};
+    FloatVec3Type partitioningSchemeOrigin = {1, 1, 1};
+    FloatVec3Type lengthPerPartition = {0.75, 0.75, 0.75};
+    DataArrayPath outputArrayPath = {"DataContainer", "VertexData", "PartitionIds"};
+    DataArrayPath exemplaryArrayPath = {"DataContainer", "VertexData", "ExemplaryPartitionIds"};
+
+    TestGeometry(inputFile, inputArrayPath, numOfPartitionsPerAxis, partitioningSchemeOrigin, lengthPerPartition, outputArrayPath, exemplaryArrayPath);
   }
 
   // -----------------------------------------------------------------------------
@@ -111,10 +242,13 @@ public:
     int err = EXIT_SUCCESS;
     Q_UNUSED(err)
 
-    DREAM3D_REGISTER_TEST(TestFilterAvailability());
-
     DREAM3D_REGISTER_TEST(TestImageGeometry())
+    DREAM3D_REGISTER_TEST(TestRectGridGeometry())
+    DREAM3D_REGISTER_TEST(TestTriangleGeometry())
+    DREAM3D_REGISTER_TEST(TestEdgeGeometry())
+    DREAM3D_REGISTER_TEST(TestVertexGeometry())
+    DREAM3D_REGISTER_TEST(TestQuadGeometry())
+    DREAM3D_REGISTER_TEST(TestTetrahedralGeometry())
+    DREAM3D_REGISTER_TEST(TestHexahedralGeometry())
   }
-
-private:
 };
