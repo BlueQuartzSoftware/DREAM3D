@@ -441,8 +441,7 @@ void PartitionGeometry::partitionCellBasedGeometry(const IGeometryGrid& geometry
         auto partitionIndexResult = partitionImageGeom.getIndex(coord[0], coord[1], coord[2]);
         if(partitionIndexResult.has_value())
         {
-          size_t value = partitionIndexResult.value();
-          partitionIds.setValue(index, value + m_StartingPartitionID);
+          partitionIds.setValue(index, *partitionIndexResult + m_StartingPartitionID);
         }
         else
         {
@@ -465,8 +464,7 @@ void PartitionGeometry::partitionNodeBasedGeometry(const SharedVertexList& verte
     auto partitionIndexResult = partitionImageGeom.getIndex(vertexArray[idx * 3], vertexArray[idx * 3 + 1], vertexArray[idx * 3 + 2]);
     if(partitionIndexResult.has_value())
     {
-      size_t value = partitionIndexResult.value();
-      partitionIds.setValue(idx, value + m_StartingPartitionID);
+      partitionIds.setValue(idx, *partitionIndexResult + m_StartingPartitionID);
     }
     else
     {
