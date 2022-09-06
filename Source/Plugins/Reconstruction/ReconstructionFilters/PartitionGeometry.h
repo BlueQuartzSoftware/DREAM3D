@@ -39,6 +39,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Reconstruction/ReconstructionPlugin.h"
+#include "SIMPLib/Geometry/RectGridGeom.h"
 
 /**
  * @brief The PartitionGeometry class. See [Filter documentation](@ref partitiongeometry) for details.
@@ -52,7 +53,9 @@ class Reconstruction_EXPORT PartitionGeometry : public AbstractFilter
   PYB11_FILTER()
   PYB11_SHARED_POINTERS(PartitionGeometry)
   PYB11_FILTER_NEW_MACRO(PartitionGeometry)
+  PYB11_PROPERTY(int PartitioningMode READ getPartitioningMode WRITE setPartitioningMode)
   PYB11_PROPERTY(DataArrayPath AttributeMatrixPath READ getAttributeMatrixPath WRITE setAttributeMatrixPath)
+  PYB11_PROPERTY(DataArrayPath BoundingBoxPath READ getBoundingBoxPath WRITE setBoundingBoxPath)
   PYB11_PROPERTY(FloatVec3Type PartitioningSchemeOrigin READ getPartitioningSchemeOrigin WRITE setPartitioningSchemeOrigin)
   PYB11_PROPERTY(FloatVec3Type LengthPerPartition READ getLengthPerPartition WRITE setLengthPerPartition)
   PYB11_PROPERTY(IntVec3Type NumberOfPartitionsPerAxis READ getNumberOfPartitionsPerAxis WRITE setNumberOfPartitionsPerAxis)
@@ -90,6 +93,17 @@ public:
   ~PartitionGeometry() override;
 
   /**
+   * @brief Setter property for PartitioningMode
+   */
+  void setPartitioningMode(const int& value);
+  /**
+   * @brief Getter property for PartitioningMode
+   * @return Value of PartitioningMode
+   */
+  int getPartitioningMode() const;
+  Q_PROPERTY(int PartitioningMode READ getPartitioningMode WRITE setPartitioningMode)
+
+  /**
    * @brief Setter property for AttributeMatrixPath
    */
   void setAttributeMatrixPath(const DataArrayPath& value);
@@ -99,6 +113,17 @@ public:
    */
   DataArrayPath getAttributeMatrixPath() const;
   Q_PROPERTY(DataArrayPath AttributeMatrixPath READ getAttributeMatrixPath WRITE setAttributeMatrixPath)
+
+  /**
+   * @brief Setter property for BoundingBoxPath
+   */
+  void setBoundingBoxPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for BoundingBoxPath
+   * @return Value of BoundingBoxPath
+   */
+  DataArrayPath getBoundingBoxPath() const;
+  Q_PROPERTY(DataArrayPath BoundingBoxPath READ getBoundingBoxPath WRITE setBoundingBoxPath)
 
   /**
    * @brief Setter property for PartitioningSchemeOrigin
@@ -283,6 +308,7 @@ protected:
   void initialize();
 
 private:
+  int m_PartitioningMode = 0;
   IntVec3Type m_NumberOfPartitionsPerAxis = {};
   FloatVec3Type m_PartitioningSchemeOrigin = {0, 0, 0};
   FloatVec3Type m_LengthPerPartition = {1, 1, 1};
@@ -294,9 +320,12 @@ private:
   int m_OutOfBoundsValue = 0;
   int m_StartingPartitionID = 1;
   DataArrayPath m_AttributeMatrixPath = {"", "", ""};
+  DataArrayPath m_BoundingBoxPath = {"", "", ""};
   QString m_PartitionIdsArrayName = {"PartitionIds"};
   const QString m_VertexAttrMatrixName = "VertexData";
 
+  std::weak_ptr<FloatArrayType> m_BoundingBoxPtr;
+  float* m_BoundingBox = nullptr;
   std::weak_ptr<Int32ArrayType> m_PartitionIdsPtr;
   int32_t* m_PartitionIds = nullptr;
   std::weak_ptr<Int32ArrayType> m_PartitioningSchemeIdsPtr;
@@ -313,8 +342,11 @@ private:
   QString getInputHexahedralGeometryInformation() const;
   QString getInputUnknownGeometryInformation() const;
 
-  void partitionCellBasedGeometry(const IGeometryGrid& geometry, const ImageGeom& partitionImageGeom, Int32ArrayType& partitionIds);
-  void partitionNodeBasedGeometry(const SharedVertexList& vertexList, const ImageGeom& partitionImageGeom, Int32ArrayType& partitionIds);
+  template <typename T>
+  ImageGeom::Pointer createPartitioningSchemeGeometry(const T& geometry);
+
+  void partitionCellBasedGeometry(const IGeometryGrid& geometry, Int32ArrayType& partitionIds);
+  void partitionNodeBasedGeometry(const SharedVertexList& vertexList, Int32ArrayType& partitionIds);
 
 public:
   PartitionGeometry(const PartitionGeometry&) = delete;            // Copy Constructor Not Implemented
