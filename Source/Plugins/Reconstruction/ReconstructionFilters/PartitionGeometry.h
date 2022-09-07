@@ -308,6 +308,8 @@ protected:
   void initialize();
 
 private:
+  using PartitioningImageGeomResult = std::pair<ImageGeom::Pointer, std::optional<QString>>;
+
   int m_PartitioningMode = 0;
   IntVec3Type m_NumberOfPartitionsPerAxis = {};
   FloatVec3Type m_PartitioningSchemeOrigin = {0, 0, 0};
@@ -330,7 +332,7 @@ private:
   int32_t* m_PartitionIds = nullptr;
   std::weak_ptr<Int32ArrayType> m_PartitioningSchemeIdsPtr;
   int32_t* m_PartitioningSchemeIds = nullptr;
-  ImageGeom::Pointer m_PartitionImageGeometry = ImageGeom::NullPointer();
+  PartitioningImageGeomResult m_PartitionImageGeometryResult;
 
   QString getInputImageGeometryInformation(const ImageGeom& geometry) const;
   QString getInputRectGridGeometryInformation() const;
@@ -343,7 +345,7 @@ private:
   QString getInputUnknownGeometryInformation() const;
 
   template <typename T>
-  ImageGeom::Pointer createPartitioningSchemeGeometry(const T& geometry);
+  PartitioningImageGeomResult createPartitioningSchemeGeometry(const T& geometry);
 
   void partitionCellBasedGeometry(const IGeometryGrid& geometry, Int32ArrayType& partitionIds);
   void partitionNodeBasedGeometry(const SharedVertexList& vertexList, Int32ArrayType& partitionIds);

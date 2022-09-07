@@ -56,6 +56,8 @@
 
 namespace Detail
 {
+const QString k_RectGridSpaceUnknownStr = "Rectilinear grid geometry space unknown during preflight.";
+
 enum PartitioningMode
 {
   Simple = 0,
@@ -63,56 +65,60 @@ enum PartitioningMode
   BoundingBox = 2
 };
 
-void InitPartitioningGeometryUsingBoundingBox(ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, const FloatArrayType& vertices, bool inPreflight)
+std::optional<QString> InitPartitioningGeometryUsingBoundingBox(ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, const FloatArrayType& vertices, bool inPreflight)
 {
-  // Do not do this in preflight because the bounding box data is not available
-  if(!inPreflight)
+  if(inPreflight)
   {
-    FloatVec3Type ll = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
-    FloatVec3Type ur = {std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min()};
-
-    // For each tuple, update the current lower-left and upper-right coordinates
-    for(size_t tuple = 0; tuple < vertices.getNumberOfTuples(); tuple++)
-    {
-      float x = vertices.getComponent(tuple, 0);
-      ll[0] = (x < ll[0]) ? x : ll[0];
-      ur[0] = (x > ur[0]) ? x : ur[0];
-
-      float y = vertices.getComponent(tuple, 1);
-      ll[1] = (y < ll[1]) ? y : ll[1];
-      ur[1] = (y > ur[1]) ? y : ur[1];
-
-      float z = vertices.getComponent(tuple, 2);
-      ll[2] = (z < ll[2]) ? z : ll[2];
-      ur[2] = (z > ur[2]) ? z : ur[2];
-    }
-
-    // Set the origin to the bottom left vertex
-    partitionImageGeometry.setOrigin(ll);
-
-    // Calculate the total distance for each dimension
-    float totalXDist = ur[0] - ll[0];
-    float totalYDist = ur[1] - ll[1];
-    float totalZDist = ur[2] - ll[2];
-
-    // Calculate the length per partition for each dimension, and set it into the partitioning scheme image geometry
-    float lengthX = totalXDist / numberOfPartitionsPerAxis.getX();
-    float lengthY = totalYDist / numberOfPartitionsPerAxis.getY();
-    float lengthZ = totalZDist / numberOfPartitionsPerAxis.getZ();
-    FloatVec3Type lengthPerPartition = {lengthX, lengthY, lengthZ};
-    partitionImageGeometry.setSpacing(lengthPerPartition);
+    // Do not do this in preflight because the bounding box data is not available
+    return "Node-based geometry space unknown during preflight.";
   }
+
+  FloatVec3Type ll = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
+  FloatVec3Type ur = {std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min()};
+
+  // For each tuple, update the current lower-left and upper-right coordinates
+  for(size_t tuple = 0; tuple < vertices.getNumberOfTuples(); tuple++)
+  {
+    float x = vertices.getComponent(tuple, 0);
+    ll[0] = (x < ll[0]) ? x : ll[0];
+    ur[0] = (x > ur[0]) ? x : ur[0];
+
+    float y = vertices.getComponent(tuple, 1);
+    ll[1] = (y < ll[1]) ? y : ll[1];
+    ur[1] = (y > ur[1]) ? y : ur[1];
+
+    float z = vertices.getComponent(tuple, 2);
+    ll[2] = (z < ll[2]) ? z : ll[2];
+    ur[2] = (z > ur[2]) ? z : ur[2];
+  }
+
+  // Set the origin to the bottom left vertex
+  partitionImageGeometry.setOrigin(ll);
+
+  // Calculate the total distance for each dimension
+  float totalXDist = ur[0] - ll[0];
+  float totalYDist = ur[1] - ll[1];
+  float totalZDist = ur[2] - ll[2];
+
+  // Calculate the length per partition for each dimension, and set it into the partitioning scheme image geometry
+  float lengthX = totalXDist / numberOfPartitionsPerAxis.getX();
+  float lengthY = totalYDist / numberOfPartitionsPerAxis.getY();
+  float lengthZ = totalZDist / numberOfPartitionsPerAxis.getZ();
+  FloatVec3Type lengthPerPartition = {lengthX, lengthY, lengthZ};
+  partitionImageGeometry.setSpacing(lengthPerPartition);
+
+  return {};
 }
 
 template <typename T>
-void InitSimplePartitioningGeometry(const T& geometry, ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, bool inPreflight)
+std::optional<QString> InitSimplePartitioningGeometry(const T& geometry, ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, bool inPreflight)
 {
   SharedVertexList::Pointer vertexList = geometry.getVertices();
-  Detail::InitPartitioningGeometryUsingBoundingBox(partitionImageGeometry, numberOfPartitionsPerAxis, *vertexList, inPreflight);
+  return Detail::InitPartitioningGeometryUsingBoundingBox(partitionImageGeometry, numberOfPartitionsPerAxis, *vertexList, inPreflight);
 }
 
 template <>
-void InitSimplePartitioningGeometry(const ImageGeom& geometry, ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, bool inPreflight)
+std::optional<QString> InitSimplePartitioningGeometry(const ImageGeom& geometry, ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, bool inPreflight)
 {
   Q_UNUSED(inPreflight)
 
@@ -125,43 +131,48 @@ void InitSimplePartitioningGeometry(const ImageGeom& geometry, ImageGeom& partit
   float lengthZ = static_cast<float>(dims.getZ()) / numberOfPartitionsPerAxis.getZ() * spacing[2];
   FloatVec3Type lengthPerPartition = {lengthX, lengthY, lengthZ};
   partitionImageGeometry.setSpacing(lengthPerPartition);
+  return {};
 }
 
 template <>
-void InitSimplePartitioningGeometry(const RectGridGeom& geometry, ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, bool inPreflight)
+std::optional<QString> InitSimplePartitioningGeometry(const RectGridGeom& geometry, ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, bool inPreflight)
 {
   // Do not do this in preflight because the bounds data is not available
-  if(!inPreflight)
+  if(inPreflight)
   {
-    FloatArrayType::Pointer xBounds = geometry.getXBounds();
-    FloatArrayType::Pointer yBounds = geometry.getYBounds();
-    FloatArrayType::Pointer zBounds = geometry.getZBounds();
-    FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
-    FloatVec3Type lengthPerPartition = {0.0f, 0.0f, 0.0f};
-    if(xBounds != FloatArrayType::NullPointer() && xBounds->getSize() > 0)
-    {
-      origin.setX(xBounds->at(0));
-
-      float maxX = xBounds->getValue(xBounds->getNumberOfTuples() - 1);
-      lengthPerPartition.setX(maxX / numberOfPartitionsPerAxis.getX());
-    }
-    if(yBounds != FloatArrayType::NullPointer() && yBounds->getSize() > 0)
-    {
-      origin.setY(yBounds->at(0));
-
-      float maxY = yBounds->getValue(yBounds->getNumberOfTuples() - 1);
-      lengthPerPartition.setY(maxY / numberOfPartitionsPerAxis.getY());
-    }
-    if(zBounds != FloatArrayType::NullPointer() && zBounds->getSize() > 0)
-    {
-      origin.setZ(zBounds->at(0));
-
-      float maxZ = zBounds->getValue(zBounds->getNumberOfTuples() - 1);
-      lengthPerPartition.setZ(maxZ / numberOfPartitionsPerAxis.getZ());
-    }
-    partitionImageGeometry.setOrigin(origin);
-    partitionImageGeometry.setSpacing(lengthPerPartition);
+    return Detail::k_RectGridSpaceUnknownStr;
   }
+
+  FloatArrayType::Pointer xBounds = geometry.getXBounds();
+  FloatArrayType::Pointer yBounds = geometry.getYBounds();
+  FloatArrayType::Pointer zBounds = geometry.getZBounds();
+  FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
+  FloatVec3Type lengthPerPartition = {0.0f, 0.0f, 0.0f};
+  if(xBounds != FloatArrayType::NullPointer() && xBounds->getSize() > 0)
+  {
+    origin.setX(xBounds->at(0));
+
+    float maxX = xBounds->getValue(xBounds->getNumberOfTuples() - 1);
+    lengthPerPartition.setX(maxX / numberOfPartitionsPerAxis.getX());
+  }
+  if(yBounds != FloatArrayType::NullPointer() && yBounds->getSize() > 0)
+  {
+    origin.setY(yBounds->at(0));
+
+    float maxY = yBounds->getValue(yBounds->getNumberOfTuples() - 1);
+    lengthPerPartition.setY(maxY / numberOfPartitionsPerAxis.getY());
+  }
+  if(zBounds != FloatArrayType::NullPointer() && zBounds->getSize() > 0)
+  {
+    origin.setZ(zBounds->at(0));
+
+    float maxZ = zBounds->getValue(zBounds->getNumberOfTuples() - 1);
+    lengthPerPartition.setZ(maxZ / numberOfPartitionsPerAxis.getZ());
+  }
+  partitionImageGeometry.setOrigin(origin);
+  partitionImageGeometry.setSpacing(lengthPerPartition);
+
+  return {};
 }
 } // namespace Detail
 
@@ -372,14 +383,14 @@ void PartitionGeometry::dataCheck()
   {
     tempPath = DataArrayPath(m_AttributeMatrixPath.getDataContainerName(), m_AttributeMatrixPath.getAttributeMatrixName(), getPartitionIdsArrayName());
     ImageGeom::Pointer geometry = dc->getGeometryAs<ImageGeom>();
-    m_PartitionImageGeometry = createPartitioningSchemeGeometry(*geometry);
+    m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry);
     break;
   }
   case IGeometry::Type::RectGrid:
   {
     tempPath = DataArrayPath(m_AttributeMatrixPath.getDataContainerName(), m_AttributeMatrixPath.getAttributeMatrixName(), getPartitionIdsArrayName());
     RectGridGeom::Pointer geometry = dc->getGeometryAs<RectGridGeom>();
-    m_PartitionImageGeometry = createPartitioningSchemeGeometry(*geometry);
+    m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry);
     break;
   }
   case IGeometry::Type::Vertex:
@@ -391,7 +402,7 @@ void PartitionGeometry::dataCheck()
     {
       dc->createNonPrereqAttributeMatrix(this, tempPath, std::vector<size_t>{vertexList->getNumberOfTuples()}, AttributeMatrix::Type::Vertex, PartitionAttributeMatrixID);
     }
-    m_PartitionImageGeometry = createPartitioningSchemeGeometry(*geometry);
+    m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry);
     break;
   }
   case IGeometry::Type::Edge:
@@ -403,7 +414,7 @@ void PartitionGeometry::dataCheck()
     {
       dc->createNonPrereqAttributeMatrix(this, tempPath, std::vector<size_t>{vertexList->getNumberOfTuples()}, AttributeMatrix::Type::Vertex, PartitionAttributeMatrixID);
     }
-    m_PartitionImageGeometry = createPartitioningSchemeGeometry(*geometry);
+    m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry);
     break;
   }
   case IGeometry::Type::Triangle:
@@ -415,7 +426,7 @@ void PartitionGeometry::dataCheck()
     {
       dc->createNonPrereqAttributeMatrix(this, tempPath, std::vector<size_t>{vertexList->getNumberOfTuples()}, AttributeMatrix::Type::Vertex, PartitionAttributeMatrixID);
     }
-    m_PartitionImageGeometry = createPartitioningSchemeGeometry(*geometry);
+    m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry);
     break;
   }
   case IGeometry::Type::Quad:
@@ -427,7 +438,7 @@ void PartitionGeometry::dataCheck()
     {
       dc->createNonPrereqAttributeMatrix(this, tempPath, std::vector<size_t>{vertexList->getNumberOfTuples()}, AttributeMatrix::Type::Vertex, PartitionAttributeMatrixID);
     }
-    m_PartitionImageGeometry = createPartitioningSchemeGeometry(*geometry);
+    m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry);
     break;
   }
   case IGeometry::Type::Tetrahedral:
@@ -439,7 +450,7 @@ void PartitionGeometry::dataCheck()
     {
       dc->createNonPrereqAttributeMatrix(this, tempPath, std::vector<size_t>{vertexList->getNumberOfTuples()}, AttributeMatrix::Type::Vertex, PartitionAttributeMatrixID);
     }
-    m_PartitionImageGeometry = createPartitioningSchemeGeometry(*geometry);
+    m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry);
     break;
   }
   case IGeometry::Type::Hexahedral:
@@ -451,7 +462,7 @@ void PartitionGeometry::dataCheck()
     {
       dc->createNonPrereqAttributeMatrix(this, tempPath, std::vector<size_t>{vertexList->getNumberOfTuples()}, AttributeMatrix::Type::Vertex, PartitionAttributeMatrixID);
     }
-    m_PartitionImageGeometry = createPartitioningSchemeGeometry(*geometry);
+    m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry);
     break;
   }
   default:
@@ -482,7 +493,7 @@ void PartitionGeometry::dataCheck()
       return;
     }
 
-    ps_dc->setGeometry(m_PartitionImageGeometry);
+    ps_dc->setGeometry(m_PartitionImageGeometryResult.first);
 
     DataArrayPath dap = m_PSDataContainerPath;
     dap.setAttributeMatrixName(m_PSAttributeMatrixName);
@@ -587,7 +598,7 @@ void PartitionGeometry::execute()
 
   if(m_SavePartitioningScheme)
   {
-    for(size_t i = 0; i < m_PartitionImageGeometry->getNumberOfElements(); i++)
+    for(size_t i = 0; i < m_PartitionImageGeometryResult.first->getNumberOfElements(); i++)
     {
       m_PartitioningSchemeIds[i] = i + m_StartingPartitionID;
     }
@@ -598,7 +609,7 @@ void PartitionGeometry::execute()
 //
 // -----------------------------------------------------------------------------
 template <typename T>
-ImageGeom::Pointer PartitionGeometry::createPartitioningSchemeGeometry(const T& geometry)
+PartitionGeometry::PartitioningImageGeomResult PartitionGeometry::createPartitioningSchemeGeometry(const T& geometry)
 {
   ImageGeom::Pointer partitionImageGeometry = ImageGeom::CreateGeometry(m_PSImageGeomName);
   partitionImageGeometry->setDimensions(m_NumberOfPartitionsPerAxis.convertType<size_t>());
@@ -609,31 +620,29 @@ ImageGeom::Pointer PartitionGeometry::createPartitioningSchemeGeometry(const T& 
   {
   case Detail::PartitioningMode::Simple:
   {
-    Detail::InitSimplePartitioningGeometry(geometry, *partitionImageGeometry, m_NumberOfPartitionsPerAxis, getInPreflight());
-    break;
+    std::optional<QString> maybeErrMsg = Detail::InitSimplePartitioningGeometry(geometry, *partitionImageGeometry, m_NumberOfPartitionsPerAxis, getInPreflight());
+    return {partitionImageGeometry, maybeErrMsg};
   }
   case Detail::PartitioningMode::Custom:
   {
     partitionImageGeometry->setOrigin(m_PartitioningSchemeOrigin);
     partitionImageGeometry->setSpacing(m_LengthPerPartition);
-    break;
+    return {partitionImageGeometry, {}};
   }
   case Detail::PartitioningMode::BoundingBox:
   {
     AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_BoundingBoxPath);
     FloatArrayType::Pointer boundingBoxArray = am->getAttributeArrayAs<FloatArrayType>(m_BoundingBoxPath.getDataArrayName());
-    Detail::InitPartitioningGeometryUsingBoundingBox(*partitionImageGeometry, m_NumberOfPartitionsPerAxis, *boundingBoxArray, getInPreflight());
-    break;
+    std::optional<QString> maybeErrMsg = Detail::InitPartitioningGeometryUsingBoundingBox(*partitionImageGeometry, m_NumberOfPartitionsPerAxis, *boundingBoxArray, getInPreflight());
+    return {partitionImageGeometry, maybeErrMsg};
   }
   default:
   {
     QString ss = QObject::tr("Unable to create partitioning scheme geometry - Unknown partitioning mode.");
     setErrorCondition(-3011, ss);
-    break;
+    return {partitionImageGeometry, ss};
   }
   }
-
-  return partitionImageGeometry;
 }
 
 // -----------------------------------------------------------------------------
@@ -653,7 +662,7 @@ void PartitionGeometry::partitionCellBasedGeometry(const IGeometryGrid& geometry
 
         std::array<float, 3> coord;
         geometry.getCoords(x, y, z, coord.data());
-        auto partitionIndexResult = m_PartitionImageGeometry->getIndex(coord[0], coord[1], coord[2]);
+        auto partitionIndexResult = m_PartitionImageGeometryResult.first->getIndex(coord[0], coord[1], coord[2]);
         if(partitionIndexResult.has_value())
         {
           partitionIds.setValue(index, *partitionIndexResult + m_StartingPartitionID);
@@ -676,7 +685,7 @@ void PartitionGeometry::partitionNodeBasedGeometry(const SharedVertexList& verte
   float* vertexArray = vertexList.getPointer(0);
   for(size_t idx = 0; idx < numOfVertices; idx++)
   {
-    auto partitionIndexResult = m_PartitionImageGeometry->getIndex(vertexArray[idx * 3], vertexArray[idx * 3 + 1], vertexArray[idx * 3 + 2]);
+    auto partitionIndexResult = m_PartitionImageGeometryResult.first->getIndex(vertexArray[idx * 3], vertexArray[idx * 3 + 1], vertexArray[idx * 3 + 2]);
     if(partitionIndexResult.has_value())
     {
       partitionIds.setValue(idx, *partitionIndexResult + m_StartingPartitionID);
@@ -965,72 +974,77 @@ QString PartitionGeometry::getInputGeometryInformation() const
 // -----------------------------------------------------------------------------
 QString PartitionGeometry::getPartitioningSchemeInformation() const
 {
-  //  if(m_PartitionImageGeometry == ImageGeom::NullPointer())
-  //  {
-  //    return {};
-  //  }
+  if(m_PartitionImageGeometryResult.first == ImageGeom::NullPointer())
+  {
+    return {};
+  }
 
-  //  FloatVec3Type partitioningSchemeOrigin = m_PartitionImageGeometry->getOrigin();
-  //  FloatVec3Type lengthPerPartition = m_PartitionImageGeometry->getSpacing();
-  //  float xRangeMax = (partitioningSchemeOrigin[0] + (m_NumberOfPartitionsPerAxis[0] * lengthPerPartition[0]));
-  //  float xDelta = m_NumberOfPartitionsPerAxis[0] * lengthPerPartition[0];
-  //  float yRangeMax = (partitioningSchemeOrigin[1] + (m_NumberOfPartitionsPerAxis[1] * lengthPerPartition[1]));
-  //  float yDelta = m_NumberOfPartitionsPerAxis[1] * lengthPerPartition[1];
-  //  float zRangeMax = (partitioningSchemeOrigin[2] + (m_NumberOfPartitionsPerAxis[2] * lengthPerPartition[2]));
-  //  float zDelta = m_NumberOfPartitionsPerAxis[2] * lengthPerPartition[2];
+  if(m_PartitionImageGeometryResult.second.has_value())
+  {
+    // There was an error while creating the partition image geometry, return it
+    return *m_PartitionImageGeometryResult.second;
+  }
 
-  //  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_AttributeMatrixPath.getDataContainerName());
-  //  if(dc == DataContainer::NullPointer())
-  //  {
-  //    return {};
-  //  }
+  FloatVec3Type partitioningSchemeOrigin = m_PartitionImageGeometryResult.first->getOrigin();
+  FloatVec3Type lengthPerPartition = m_PartitionImageGeometryResult.first->getSpacing();
+  float xRangeMax = (partitioningSchemeOrigin[0] + (m_NumberOfPartitionsPerAxis[0] * lengthPerPartition[0]));
+  float xDelta = m_NumberOfPartitionsPerAxis[0] * lengthPerPartition[0];
+  float yRangeMax = (partitioningSchemeOrigin[1] + (m_NumberOfPartitionsPerAxis[1] * lengthPerPartition[1]));
+  float yDelta = m_NumberOfPartitionsPerAxis[1] * lengthPerPartition[1];
+  float zRangeMax = (partitioningSchemeOrigin[2] + (m_NumberOfPartitionsPerAxis[2] * lengthPerPartition[2]));
+  float zDelta = m_NumberOfPartitionsPerAxis[2] * lengthPerPartition[2];
 
-  //  IGeometry::Pointer iGeometry = dc->getGeometry();
-  //  if(iGeometry == IGeometry::NullPointer())
-  //  {
-  //    return {};
-  //  }
+  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_AttributeMatrixPath.getDataContainerName());
+  if(dc == DataContainer::NullPointer())
+  {
+    return {};
+  }
 
-  //  IGeometry::LengthUnit lengthUnits = iGeometry->getUnits();
-  //  QString lengthUnitStr = IGeometry::LengthUnitToString(lengthUnits);
-  //  if(lengthUnits == IGeometry::LengthUnit::Unspecified)
-  //  {
-  //    lengthUnitStr.append(" Units");
-  //  }
+  IGeometry::Pointer iGeometry = dc->getGeometry();
+  if(iGeometry == IGeometry::NullPointer())
+  {
+    return {};
+  }
 
-  //  QString desc =
-  //      QObject::tr("X Partition Bounds: %1 to %2 [%4].   Delta: %3 [%4].\n").arg(QString::number(partitioningSchemeOrigin[0]), QString::number(xRangeMax), QString::number(xDelta), lengthUnitStr);
-  //  desc.append(
-  //      QObject::tr("Y Partition Bounds: %1 to %2 [%4].   Delta: %3 [%4].\n").arg(QString::number(partitioningSchemeOrigin[1]), QString::number(yRangeMax), QString::number(yDelta), lengthUnitStr));
-  //  desc.append(
-  //      QObject::tr("Z Partition Bounds: %1 to %2 [%4].   Delta: %3 [%4].\n").arg(QString::number(partitioningSchemeOrigin[2]), QString::number(zRangeMax), QString::number(zDelta), lengthUnitStr));
+  IGeometry::LengthUnit lengthUnits = iGeometry->getUnits();
+  QString lengthUnitStr = IGeometry::LengthUnitToString(lengthUnits);
+  if(lengthUnits == IGeometry::LengthUnit::Unspecified)
+  {
+    lengthUnitStr.append(" Units");
+  }
 
-  //  if(dc != DataContainer::NullPointer())
-  //  {
-  //    ImageGeom::Pointer geometry = dc->getGeometryAs<ImageGeom>();
-  //    if(geometry != ImageGeom::NullPointer())
-  //    {
-  //      FloatVec3Type origin = geometry->getOrigin();
-  //      FloatVec3Type spacing = geometry->getSpacing();
-  //      SizeVec3Type dims = geometry->getDimensions();
-  //      float gxRangeMax = origin[0] + (dims[0] * spacing[0]);
-  //      float gyRangeMax = origin[1] + (dims[1] * spacing[1]);
-  //      float gzRangeMax = origin[2] + (dims[2] * spacing[2]);
+  QString desc =
+      QObject::tr("X Partition Bounds: %1 to %2 [%4].   Delta: %3 [%4].\n").arg(QString::number(partitioningSchemeOrigin[0]), QString::number(xRangeMax), QString::number(xDelta), lengthUnitStr);
+  desc.append(
+      QObject::tr("Y Partition Bounds: %1 to %2 [%4].   Delta: %3 [%4].\n").arg(QString::number(partitioningSchemeOrigin[1]), QString::number(yRangeMax), QString::number(yDelta), lengthUnitStr));
+  desc.append(
+      QObject::tr("Z Partition Bounds: %1 to %2 [%4].   Delta: %3 [%4].\n").arg(QString::number(partitioningSchemeOrigin[2]), QString::number(zRangeMax), QString::number(zDelta), lengthUnitStr));
 
-  //      if(origin[0] < partitioningSchemeOrigin[0] || origin[1] < partitioningSchemeOrigin[1] || origin[2] < partitioningSchemeOrigin[2] || gxRangeMax > xRangeMax || gyRangeMax > yRangeMax ||
-  //         gzRangeMax > zRangeMax)
-  //      {
-  //        desc.append("Geometry size DOES NOT fit within the partitioning space!");
-  //      }
-  //      else
-  //      {
-  //        desc.append("Geometry size fits within partitioning space.");
-  //      }
-  //    }
-  //  }
+  if(dc != DataContainer::NullPointer())
+  {
+    ImageGeom::Pointer geometry = dc->getGeometryAs<ImageGeom>();
+    if(geometry != ImageGeom::NullPointer())
+    {
+      FloatVec3Type origin = geometry->getOrigin();
+      FloatVec3Type spacing = geometry->getSpacing();
+      SizeVec3Type dims = geometry->getDimensions();
+      float gxRangeMax = origin[0] + (dims[0] * spacing[0]);
+      float gyRangeMax = origin[1] + (dims[1] * spacing[1]);
+      float gzRangeMax = origin[2] + (dims[2] * spacing[2]);
 
-  //  return desc;
-  return {};
+      if(origin[0] < partitioningSchemeOrigin[0] || origin[1] < partitioningSchemeOrigin[1] || origin[2] < partitioningSchemeOrigin[2] || gxRangeMax > xRangeMax || gyRangeMax > yRangeMax ||
+         gzRangeMax > zRangeMax)
+      {
+        desc.append("Geometry size DOES NOT fit within the partitioning space!");
+      }
+      else
+      {
+        desc.append("Geometry size fits within partitioning space.");
+      }
+    }
+  }
+
+  return desc;
 }
 
 // -----------------------------------------------------------------------------
@@ -1076,7 +1090,7 @@ QString PartitionGeometry::getInputImageGeometryInformation(const ImageGeom& geo
 // -----------------------------------------------------------------------------
 QString PartitionGeometry::getInputRectGridGeometryInformation() const
 {
-  return "Rectilinear grid geometry space unknown during preflight.";
+  return Detail::k_RectGridSpaceUnknownStr;
 }
 
 // -----------------------------------------------------------------------------
