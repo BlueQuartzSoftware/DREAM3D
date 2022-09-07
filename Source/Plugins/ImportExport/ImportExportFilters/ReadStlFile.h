@@ -59,6 +59,9 @@ class ImportExport_EXPORT ReadStlFile : public AbstractFilter
   PYB11_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
   PYB11_PROPERTY(QString StlFilePath READ getStlFilePath WRITE setStlFilePath)
   PYB11_PROPERTY(QString FaceNormalsArrayName READ getFaceNormalsArrayName WRITE setFaceNormalsArrayName)
+  PYB11_PROPERTY(bool ScaleOutput READ getScaleOutput WRITE setScaleOutput)
+  PYB11_PROPERTY(float ScaleFactor READ getScaleFactor WRITE setScaleFactor)
+
   PYB11_END_BINDINGS()
   // End Python bindings declarations
 
@@ -135,6 +138,29 @@ public:
    */
   QString getFaceNormalsArrayName() const;
   Q_PROPERTY(QString FaceNormalsArrayName READ getFaceNormalsArrayName WRITE setFaceNormalsArrayName)
+
+  /**
+   * @brief Setter property for ScaleOutput
+   */
+  void setScaleOutput(bool value);
+  /**
+   * @brief Getter property for ScaleOutput
+   * @return Value of ScaleOutput
+   */
+  bool getScaleOutput() const;
+  Q_PROPERTY(bool ScaleOutput READ getScaleOutput WRITE setScaleOutput)
+
+  /**
+   * @brief Setter property for ScaleOutput
+   */
+  void setScaleFactor(float value);
+  /**
+   * @brief Getter property for ScaleOutput
+   * @return Value of ScaleOutput
+   */
+  float getScaleFactor() const;
+  Q_PROPERTY(float ScaleFactor READ getScaleFactor WRITE setScaleFactor)
+
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -223,6 +249,9 @@ private:
   float m_maxYcoord = {-std::numeric_limits<float>::max()};
   float m_minZcoord = {std::numeric_limits<float>::max()};
   float m_maxZcoord = {-std::numeric_limits<float>::max()};
+
+  bool m_ScaleOutput = false;
+  float m_ScaleFactor = 1.0F;
 
   /**
    * @brief updateFaceInstancePointers Updates raw Face pointers

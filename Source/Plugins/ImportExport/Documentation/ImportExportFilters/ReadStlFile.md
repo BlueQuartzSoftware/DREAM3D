@@ -27,6 +27,8 @@ This **Filter**  will read a binary STL File and create a **Triangle Geometry** 
 | Name | Type | Description |
 |------|------|------|
 | STL File | File Path  | The input .stl file path |
+| Scale Output | Bool | Should the output vertex values be scaled |
+| Scale Factor | Float | Apply the scaling factor to each vertex |
 
 ## Required Geometry ##
 

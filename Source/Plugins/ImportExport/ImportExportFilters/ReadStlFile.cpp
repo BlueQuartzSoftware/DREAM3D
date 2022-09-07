@@ -46,7 +46,9 @@
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
@@ -187,10 +189,17 @@ ReadStlFile::~ReadStlFile() = default;
 void ReadStlFile::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
+  parameters.push_back(SeparatorFilterParameter::Create("Input Parameters", FilterParameter::Category::Parameter));
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("ScaleFactor");
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply Scaling to Geometry", ScaleOutput, FilterParameter::Category::Parameter, ReadStlFile, linkedProps));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Scale Factor", ScaleFactor, FilterParameter::Category::Parameter, ReadStlFile));
 
+  parameters.push_back(SeparatorFilterParameter::Create("Input File", FilterParameter::Category::Parameter));
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("STL File", StlFilePath, FilterParameter::Category::Parameter, ReadStlFile, "*.stl", "STL File"));
+
+  parameters.push_back(SeparatorFilterParameter::Create("Created Data Structures", FilterParameter::Category::CreatedArray));
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", SurfaceMeshDataContainerName, FilterParameter::Category::CreatedArray, ReadStlFile));
-  parameters.push_back(SeparatorFilterParameter::Create("Face Data", FilterParameter::Category::CreatedArray));
   parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Face Attribute Matrix", FaceAttributeMatrixName, SurfaceMeshDataContainerName, FilterParameter::Category::CreatedArray, ReadStlFile));
   parameters.push_back(
       SIMPL_NEW_DA_WITH_LINKED_AM_FP("Face Normals", FaceNormalsArrayName, SurfaceMeshDataContainerName, FaceAttributeMatrixName, FilterParameter::Category::CreatedArray, ReadStlFile));
@@ -579,14 +588,21 @@ void ReadStlFile::eliminate_duplicate_nodes()
     }
   }
 
+  float scaleFactor = 1.0F;
+  if(m_ScaleOutput)
+  {
+    scaleFactor = m_ScaleFactor;
+  }
   // Move nodes to unique Id and then resize nodes array
   for(size_t i = 0; i < nNodes; i++)
   {
-    vertex[uniqueIds[i] * 3] = vertex[i * 3];
-    vertex[uniqueIds[i] * 3 + 1] = vertex[i * 3 + 1];
-    vertex[uniqueIds[i] * 3 + 2] = vertex[i * 3 + 2];
+    vertex[uniqueIds[i] * 3] = vertex[i * 3] * scaleFactor;
+    vertex[uniqueIds[i] * 3 + 1] = vertex[i * 3 + 1] * scaleFactor;
+    vertex[uniqueIds[i] * 3 + 2] = vertex[i * 3 + 2] * scaleFactor;
   }
+  // Resize the vertex list will invalidate the `vertex` pointer
   triangleGeom->resizeVertexList(uniqueCount);
+  vertex = nullptr;
 
   // Update the triangle nodes to reflect the unique ids
   int64_t node1 = 0, node2 = 0, node3 = 0;
@@ -600,6 +616,7 @@ void ReadStlFile::eliminate_duplicate_nodes()
     triangles[i * 3 + 1] = uniqueIds[node2];
     triangles[i * 3 + 2] = uniqueIds[node3];
   }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -748,4 +765,24 @@ void ReadStlFile::setFaceNormalsArrayName(const QString& value)
 QString ReadStlFile::getFaceNormalsArrayName() const
 {
   return m_FaceNormalsArrayName;
+}
+// -----------------------------------------------------------------------------
+void ReadStlFile::setScaleOutput(bool value)
+{
+  m_ScaleOutput = value;
+}
+// -----------------------------------------------------------------------------
+bool ReadStlFile::getScaleOutput() const
+{
+  return m_ScaleOutput;
+}
+// -----------------------------------------------------------------------------
+void ReadStlFile::setScaleFactor(float value)
+{
+  m_ScaleFactor = value;
+}
+// -----------------------------------------------------------------------------
+float ReadStlFile::getScaleFactor() const
+{
+  return m_ScaleFactor;
 }
