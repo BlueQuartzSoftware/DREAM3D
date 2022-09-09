@@ -55,7 +55,9 @@ class Reconstruction_EXPORT PartitionGeometry : public AbstractFilter
   PYB11_FILTER_NEW_MACRO(PartitionGeometry)
   PYB11_PROPERTY(int PartitioningMode READ getPartitioningMode WRITE setPartitioningMode)
   PYB11_PROPERTY(DataArrayPath AttributeMatrixPath READ getAttributeMatrixPath WRITE setAttributeMatrixPath)
-  PYB11_PROPERTY(DataArrayPath BoundingBoxPath READ getBoundingBoxPath WRITE setBoundingBoxPath)
+//  PYB11_PROPERTY(DataArrayPath BoundingBoxPath READ getBoundingBoxPath WRITE setBoundingBoxPath)
+  PYB11_PROPERTY(FloatVec3Type LowerLeftCoord READ getLowerLeftCoord WRITE setLowerLeftCoord)
+  PYB11_PROPERTY(FloatVec3Type UpperRightCoord READ getUpperRightCoord WRITE setUpperRightCoord)
   PYB11_PROPERTY(FloatVec3Type PartitioningSchemeOrigin READ getPartitioningSchemeOrigin WRITE setPartitioningSchemeOrigin)
   PYB11_PROPERTY(FloatVec3Type LengthPerPartition READ getLengthPerPartition WRITE setLengthPerPartition)
   PYB11_PROPERTY(IntVec3Type NumberOfPartitionsPerAxis READ getNumberOfPartitionsPerAxis WRITE setNumberOfPartitionsPerAxis)
@@ -114,16 +116,38 @@ public:
   DataArrayPath getAttributeMatrixPath() const;
   Q_PROPERTY(DataArrayPath AttributeMatrixPath READ getAttributeMatrixPath WRITE setAttributeMatrixPath)
 
+  //  /**
+  //   * @brief Setter property for BoundingBoxPath
+  //   */
+  //  void setBoundingBoxPath(const DataArrayPath& value);
+  //  /**
+  //   * @brief Getter property for BoundingBoxPath
+  //   * @return Value of BoundingBoxPath
+  //   */
+  //  DataArrayPath getBoundingBoxPath() const;
+  //  Q_PROPERTY(DataArrayPath BoundingBoxPath READ getBoundingBoxPath WRITE setBoundingBoxPath)
+
   /**
-   * @brief Setter property for BoundingBoxPath
+   * @brief Setter property for LowerLeftCoord
    */
-  void setBoundingBoxPath(const DataArrayPath& value);
+  void setLowerLeftCoord(const FloatVec3Type& value);
   /**
-   * @brief Getter property for BoundingBoxPath
-   * @return Value of BoundingBoxPath
+   * @brief Getter property for LowerLeftCoord
+   * @return Value of LowerLeftCoord
    */
-  DataArrayPath getBoundingBoxPath() const;
-  Q_PROPERTY(DataArrayPath BoundingBoxPath READ getBoundingBoxPath WRITE setBoundingBoxPath)
+  FloatVec3Type getLowerLeftCoord() const;
+  Q_PROPERTY(FloatVec3Type LowerLeftCoord READ getLowerLeftCoord WRITE setLowerLeftCoord)
+
+  /**
+   * @brief Setter property for UpperRightCoord
+   */
+  void setUpperRightCoord(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for UpperRightCoord
+   * @return Value of UpperRightCoord
+   */
+  FloatVec3Type getUpperRightCoord() const;
+  Q_PROPERTY(FloatVec3Type UpperRightCoord READ getUpperRightCoord WRITE setUpperRightCoord)
 
   /**
    * @brief Setter property for PartitioningSchemeOrigin
@@ -314,16 +338,18 @@ private:
   IntVec3Type m_NumberOfPartitionsPerAxis = {};
   FloatVec3Type m_PartitioningSchemeOrigin = {0, 0, 0};
   FloatVec3Type m_LengthPerPartition = {1, 1, 1};
+  FloatVec3Type m_LowerLeftCoord = {0, 0, 0};
+  FloatVec3Type m_UpperRightCoord = {1, 1, 1};
   bool m_SavePartitioningScheme = {false};
+  QString m_PartitionIdsArrayName = {"PartitioningSchemeIds"};
   DataArrayPath m_PSDataContainerPath = {"PartitioningSchemeDataContainer", "", ""};
   QString m_PSAttributeMatrixName = {"CellData"};
-  QString m_PSDataArrayName = {"PartitioningSchemeIds"};
+  QString m_PSDataArrayName = m_PartitionIdsArrayName;
   QString m_PSImageGeomName = {"PartitioningSchemeImageGeom"};
   int m_OutOfBoundsValue = 0;
   int m_StartingPartitionID = 1;
   DataArrayPath m_AttributeMatrixPath = {"", "", ""};
-  DataArrayPath m_BoundingBoxPath = {"", "", ""};
-  QString m_PartitionIdsArrayName = {"PartitionIds"};
+  //  DataArrayPath m_BoundingBoxPath = {"", "", ""};
   const QString m_VertexAttrMatrixName = "VertexData";
 
   std::weak_ptr<FloatArrayType> m_BoundingBoxPtr;
