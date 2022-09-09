@@ -73,6 +73,13 @@ class Reconstruction_EXPORT PartitionGeometry : public AbstractFilter
   // clang-format on
 
 public:
+  enum class PartitioningMode
+  {
+    Basic = 0,
+    Advanced = 1,
+    BoundingBox = 2
+  };
+
   using Self = PartitionGeometry;
   using Pointer = std::shared_ptr<Self>;
   using ConstPointer = std::shared_ptr<const Self>;
@@ -350,7 +357,6 @@ private:
   int m_StartingPartitionID = 1;
   DataArrayPath m_AttributeMatrixPath = {"", "", ""};
   //  DataArrayPath m_BoundingBoxPath = {"", "", ""};
-  const QString m_VertexAttrMatrixName = "VertexData";
 
   std::weak_ptr<FloatArrayType> m_BoundingBoxPtr;
   float* m_BoundingBox = nullptr;

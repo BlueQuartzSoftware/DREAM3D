@@ -58,13 +58,6 @@ namespace Detail
 {
 const QString k_RectGridSpaceUnknownStr = "Rectilinear grid geometry space unknown during preflight.";
 
-enum PartitioningMode
-{
-  Basic = 0,
-  Advanced = 1,
-  BoundingBox = 2
-};
-
 std::optional<QString> InitPartitioningGeometryUsingVertices(ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, const FloatArrayType& vertices, bool inPreflight)
 {
   if(inPreflight)
@@ -322,7 +315,7 @@ void PartitionGeometry::dataCheck()
     return;
   }
 
-  if(m_PartitioningMode == Detail::PartitioningMode::Advanced)
+  if(static_cast<PartitioningMode>(m_PartitioningMode) == PartitioningMode::Advanced)
   {
     if(m_LengthPerPartition.getX() < 0)
     {
@@ -344,7 +337,7 @@ void PartitionGeometry::dataCheck()
     }
   }
 
-  if(m_PartitioningMode == Detail::PartitioningMode::BoundingBox)
+  if(static_cast<PartitioningMode>(m_PartitioningMode) == PartitioningMode::BoundingBox)
   {
     if(m_LowerLeftCoord.getX() > m_UpperRightCoord.getX())
     {
@@ -384,29 +377,31 @@ void PartitionGeometry::dataCheck()
     return;
   }
 
-  if(am->getNumberOfTuples() != iGeometry->getNumberOfElements())
-  {
-    QString ss = QObject::tr("The attribute matrix '%1' does not have the same number of tuples (%2) as the geometry in data container '%3' (%4).")
-                     .arg(m_AttributeMatrixPath.getAttributeMatrixName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(iGeometry->getNumberOfElements()));
-    setErrorCondition(-3010, ss);
-    return;
-  }
-
-  DataArrayPath tempPath;
-
   switch(iGeometry->getGeometryType())
   {
   case IGeometry::Type::Image:
   {
-    tempPath = DataArrayPath(m_AttributeMatrixPath.getDataContainerName(), m_AttributeMatrixPath.getAttributeMatrixName(), getPartitionIdsArrayName());
     ImageGeom::Pointer geometry = dc->getGeometryAs<ImageGeom>();
+    if(am->getNumberOfTuples() != geometry->getNumberOfElements())
+    {
+      QString ss = QObject::tr("The attribute matrix '%1' does not have the same tuple count (%2) as data container \"%3\"'s cell count (%4).")
+                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(geometry->getNumberOfElements()));
+      setErrorCondition(-3010, ss);
+      return;
+    }
     m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry);
     break;
   }
   case IGeometry::Type::RectGrid:
   {
-    tempPath = DataArrayPath(m_AttributeMatrixPath.getDataContainerName(), m_AttributeMatrixPath.getAttributeMatrixName(), getPartitionIdsArrayName());
     RectGridGeom::Pointer geometry = dc->getGeometryAs<RectGridGeom>();
+    if(am->getNumberOfTuples() != geometry->getNumberOfElements())
+    {
+      QString ss = QObject::tr("The attribute matrix '%1' does not have the same tuple count (%2) as data container \"%3\"'s cell count (%4).")
+                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(geometry->getNumberOfElements()));
+      setErrorCondition(-3011, ss);
+      return;
+    }
     m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry);
     break;
   }
@@ -414,10 +409,12 @@ void PartitionGeometry::dataCheck()
   {
     VertexGeom::Pointer geometry = dc->getGeometryAs<VertexGeom>();
     SharedVertexList::Pointer vertexList = geometry->getVertices();
-    tempPath = DataArrayPath(m_AttributeMatrixPath.getDataContainerName(), m_VertexAttrMatrixName, getPartitionIdsArrayName());
-    if(dc->getAttributeMatrix(m_VertexAttrMatrixName) == AttributeMatrix::NullPointer())
+    if(am->getNumberOfTuples() != vertexList->getNumberOfTuples())
     {
-      dc->createNonPrereqAttributeMatrix(this, tempPath, std::vector<size_t>{vertexList->getNumberOfTuples()}, AttributeMatrix::Type::Vertex, PartitionAttributeMatrixID);
+      QString ss = QObject::tr("The attribute matrix \"%1\" does not have the same tuple count (%2) as data container \"%3\"'s vertex count (%4).")
+                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(vertexList->getNumberOfTuples()));
+      setErrorCondition(-3012, ss);
+      return;
     }
     m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry);
     break;
@@ -426,10 +423,12 @@ void PartitionGeometry::dataCheck()
   {
     EdgeGeom::Pointer geometry = dc->getGeometryAs<EdgeGeom>();
     SharedVertexList::Pointer vertexList = geometry->getVertices();
-    tempPath = DataArrayPath(m_AttributeMatrixPath.getDataContainerName(), m_VertexAttrMatrixName, getPartitionIdsArrayName());
-    if(dc->getAttributeMatrix(m_VertexAttrMatrixName) == AttributeMatrix::NullPointer())
+    if(am->getNumberOfTuples() != vertexList->getNumberOfTuples())
     {
-      dc->createNonPrereqAttributeMatrix(this, tempPath, std::vector<size_t>{vertexList->getNumberOfTuples()}, AttributeMatrix::Type::Vertex, PartitionAttributeMatrixID);
+      QString ss = QObject::tr("The attribute matrix \"%1\" does not have the same tuple count (%2) as data container \"%3\"'s vertex count (%4).")
+                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(vertexList->getNumberOfTuples()));
+      setErrorCondition(-3013, ss);
+      return;
     }
     m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry);
     break;
@@ -438,10 +437,12 @@ void PartitionGeometry::dataCheck()
   {
     TriangleGeom::Pointer geometry = dc->getGeometryAs<TriangleGeom>();
     SharedVertexList::Pointer vertexList = geometry->getVertices();
-    tempPath = DataArrayPath(m_AttributeMatrixPath.getDataContainerName(), m_VertexAttrMatrixName, getPartitionIdsArrayName());
-    if(dc->getAttributeMatrix(m_VertexAttrMatrixName) == AttributeMatrix::NullPointer())
+    if(am->getNumberOfTuples() != vertexList->getNumberOfTuples())
     {
-      dc->createNonPrereqAttributeMatrix(this, tempPath, std::vector<size_t>{vertexList->getNumberOfTuples()}, AttributeMatrix::Type::Vertex, PartitionAttributeMatrixID);
+      QString ss = QObject::tr("The attribute matrix \"%1\" does not have the same tuple count (%2) as data container \"%3\"'s vertex count (%4).")
+                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(vertexList->getNumberOfTuples()));
+      setErrorCondition(-3014, ss);
+      return;
     }
     m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry);
     break;
@@ -450,10 +451,12 @@ void PartitionGeometry::dataCheck()
   {
     QuadGeom::Pointer geometry = dc->getGeometryAs<QuadGeom>();
     SharedVertexList::Pointer vertexList = geometry->getVertices();
-    tempPath = DataArrayPath(m_AttributeMatrixPath.getDataContainerName(), m_VertexAttrMatrixName, getPartitionIdsArrayName());
-    if(dc->getAttributeMatrix(m_VertexAttrMatrixName) == AttributeMatrix::NullPointer())
+    if(am->getNumberOfTuples() != vertexList->getNumberOfTuples())
     {
-      dc->createNonPrereqAttributeMatrix(this, tempPath, std::vector<size_t>{vertexList->getNumberOfTuples()}, AttributeMatrix::Type::Vertex, PartitionAttributeMatrixID);
+      QString ss = QObject::tr("The attribute matrix \"%1\" does not have the same tuple count (%2) as data container \"%3\"'s vertex count (%4).")
+                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(vertexList->getNumberOfTuples()));
+      setErrorCondition(-3015, ss);
+      return;
     }
     m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry);
     break;
@@ -462,10 +465,12 @@ void PartitionGeometry::dataCheck()
   {
     TetrahedralGeom::Pointer geometry = dc->getGeometryAs<TetrahedralGeom>();
     SharedVertexList::Pointer vertexList = geometry->getVertices();
-    tempPath = DataArrayPath(m_AttributeMatrixPath.getDataContainerName(), m_VertexAttrMatrixName, getPartitionIdsArrayName());
-    if(dc->getAttributeMatrix(m_VertexAttrMatrixName) == AttributeMatrix::NullPointer())
+    if(am->getNumberOfTuples() != vertexList->getNumberOfTuples())
     {
-      dc->createNonPrereqAttributeMatrix(this, tempPath, std::vector<size_t>{vertexList->getNumberOfTuples()}, AttributeMatrix::Type::Vertex, PartitionAttributeMatrixID);
+      QString ss = QObject::tr("The attribute matrix \"%1\" does not have the same tuple count (%2) as data container \"%3\"'s vertex count (%4).")
+                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(vertexList->getNumberOfTuples()));
+      setErrorCondition(-3016, ss);
+      return;
     }
     m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry);
     break;
@@ -474,10 +479,12 @@ void PartitionGeometry::dataCheck()
   {
     HexahedralGeom::Pointer geometry = dc->getGeometryAs<HexahedralGeom>();
     SharedVertexList::Pointer vertexList = geometry->getVertices();
-    tempPath = DataArrayPath(m_AttributeMatrixPath.getDataContainerName(), m_VertexAttrMatrixName, getPartitionIdsArrayName());
-    if(dc->getAttributeMatrix(m_VertexAttrMatrixName) == AttributeMatrix::NullPointer())
+    if(am->getNumberOfTuples() != vertexList->getNumberOfTuples())
     {
-      dc->createNonPrereqAttributeMatrix(this, tempPath, std::vector<size_t>{vertexList->getNumberOfTuples()}, AttributeMatrix::Type::Vertex, PartitionAttributeMatrixID);
+      QString ss = QObject::tr("The attribute matrix \"%1\" does not have the same tuple count (%2) as data container \"%3\"'s vertex count (%4).")
+                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(vertexList->getNumberOfTuples()));
+      setErrorCondition(-3017, ss);
+      return;
     }
     m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry);
     break;
@@ -485,7 +492,7 @@ void PartitionGeometry::dataCheck()
   default:
   {
     QString ss = QObject::tr("Unable to partition geometry - Unknown geometry type detected.");
-    setErrorCondition(-3011, ss);
+    setErrorCondition(-3018, ss);
     return;
   }
   }
@@ -496,6 +503,7 @@ void PartitionGeometry::dataCheck()
   }
 
   std::vector<size_t> cDims(1, 1);
+  DataArrayPath tempPath = DataArrayPath(m_AttributeMatrixPath.getDataContainerName(), m_AttributeMatrixPath.getAttributeMatrixName(), getPartitionIdsArrayName());
   m_PartitionIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType>(this, tempPath, 0, cDims);
   if(nullptr != m_PartitionIdsPtr.lock())
   {
@@ -633,20 +641,20 @@ PartitionGeometry::PartitioningImageGeomResult PartitionGeometry::createPartitio
   partitionImageGeometry->setOrigin({0, 0, 0});
   partitionImageGeometry->setSpacing({0, 0, 0});
 
-  switch(m_PartitioningMode)
+  switch(static_cast<PartitioningMode>(m_PartitioningMode))
   {
-  case Detail::PartitioningMode::Basic:
+  case PartitioningMode::Basic:
   {
     std::optional<QString> maybeErrMsg = Detail::InitSimplePartitioningGeometry(geometry, *partitionImageGeometry, m_NumberOfPartitionsPerAxis, getInPreflight());
     return {partitionImageGeometry, maybeErrMsg};
   }
-  case Detail::PartitioningMode::Advanced:
+  case PartitioningMode::Advanced:
   {
     partitionImageGeometry->setOrigin(m_PartitioningSchemeOrigin);
     partitionImageGeometry->setSpacing(m_LengthPerPartition);
     return {partitionImageGeometry, {}};
   }
-  case Detail::PartitioningMode::BoundingBox:
+  case PartitioningMode::BoundingBox:
   {
     std::optional<QString> maybeErrMsg = Detail::InitPartitioningGeometryUsingBoundingBox(*partitionImageGeometry, m_NumberOfPartitionsPerAxis, m_LowerLeftCoord, m_UpperRightCoord, getInPreflight());
     return {partitionImageGeometry, maybeErrMsg};
