@@ -58,7 +58,8 @@ namespace Detail
 {
 const QString k_RectGridSpaceUnknownStr = "Rectilinear grid geometry space unknown during preflight.";
 
-std::optional<QString> InitPartitioningGeometryUsingVertices(ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, const FloatArrayType& vertices, bool inPreflight)
+std::optional<QString> InitPartitioningGeometryUsingVertices(ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, const FloatArrayType& vertices, bool inPreflight,
+                                                             float padding = 0.0)
 {
   if(inPreflight)
   {
@@ -85,6 +86,14 @@ std::optional<QString> InitPartitioningGeometryUsingVertices(ImageGeom& partitio
     ur[2] = (z > ur[2]) ? z : ur[2];
   }
 
+  // Pad the points
+  ll[0] -= padding;
+  ll[1] -= padding;
+  ll[2] -= padding;
+  ur[0] += padding;
+  ur[1] += padding;
+  ur[2] += padding;
+
   // Set the origin to the bottom left vertex
   partitionImageGeometry.setOrigin(ll);
 
@@ -94,9 +103,9 @@ std::optional<QString> InitPartitioningGeometryUsingVertices(ImageGeom& partitio
   float totalZDist = ur[2] - ll[2];
 
   // Calculate the length per partition for each dimension, and set it into the partitioning scheme image geometry
-  float lengthX = totalXDist / numberOfPartitionsPerAxis.getX();
-  float lengthY = totalYDist / numberOfPartitionsPerAxis.getY();
-  float lengthZ = totalZDist / numberOfPartitionsPerAxis.getZ();
+  float lengthX = (totalXDist / numberOfPartitionsPerAxis.getX());
+  float lengthY = (totalYDist / numberOfPartitionsPerAxis.getY());
+  float lengthZ = (totalZDist / numberOfPartitionsPerAxis.getZ());
   FloatVec3Type lengthPerPartition = {lengthX, lengthY, lengthZ};
   partitionImageGeometry.setSpacing(lengthPerPartition);
 
@@ -120,7 +129,10 @@ template <typename T>
 std::optional<QString> InitSimplePartitioningGeometry(const T& geometry, ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, bool inPreflight)
 {
   SharedVertexList::Pointer vertexList = geometry.getVertices();
-  return Detail::InitPartitioningGeometryUsingVertices(partitionImageGeometry, numberOfPartitionsPerAxis, *vertexList, inPreflight);
+
+  // A very small padding around the edges is necessary to avoid assigning the edge indices the wrong partition ID.
+  // This is only needed in the Simple case, since the partition geometry inputs are more specific in the other cases.
+  return Detail::InitPartitioningGeometryUsingVertices(partitionImageGeometry, numberOfPartitionsPerAxis, *vertexList, inPreflight, 0.00001);
 }
 
 template <>

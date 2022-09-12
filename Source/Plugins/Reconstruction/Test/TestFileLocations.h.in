@@ -31,7 +31,7 @@ namespace UnitTest
   {
     inline const QString ExemplaryImageGeomIdsPath("@DREAM3DProj_SOURCE_DIR@/Source/Plugins/Reconstruction/Test/TestFiles/image_geom.dream3d");
     inline const QString ExemplaryRectGridGeomIdsPath("@DREAM3DProj_SOURCE_DIR@/Source/Plugins/Reconstruction/Test/TestFiles/rectgrid_geom.dream3d");
-    inline const QString ExemplaryTriangleGeomIdsPath("@DREAM3DProj_SOURCE_DIR@/Source/Plugins/Reconstruction/Test/TestFiles/cylinder.dream3d");
+    inline const QString ExemplaryTriangleGeomIdsPath("@DREAM3DProj_SOURCE_DIR@/Source/Plugins/Reconstruction/Test/TestFiles/triangle_geom.dream3d");
     inline const QString ExemplaryEdgeGeomIdsPath("@DREAM3DProj_SOURCE_DIR@/Source/Plugins/Reconstruction/Test/TestFiles/edge_geom.dream3d");
     inline const QString ExemplaryVertexGeomIdsPath("@DREAM3DProj_SOURCE_DIR@/Source/Plugins/Reconstruction/Test/TestFiles/vertex_geom.dream3d");
     inline const QString ExemplaryQuadGeomIdsPath("@DREAM3DProj_SOURCE_DIR@/Source/Plugins/Reconstruction/Test/TestFiles/quad_geom.dream3d");
