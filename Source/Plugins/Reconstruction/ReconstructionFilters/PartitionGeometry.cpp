@@ -59,7 +59,7 @@ namespace Detail
 const QString k_RectGridSpaceUnknownStr = "Rectilinear grid geometry space unknown during preflight.";
 
 std::optional<QString> InitPartitioningGeometryUsingVertices(ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, const FloatArrayType& vertices, bool inPreflight,
-                                                             float padding = 0.0)
+                                                             bool padEdges = false)
 {
   if(inPreflight)
   {
@@ -87,12 +87,16 @@ std::optional<QString> InitPartitioningGeometryUsingVertices(ImageGeom& partitio
   }
 
   // Pad the points
-  ll[0] -= padding;
-  ll[1] -= padding;
-  ll[2] -= padding;
-  ur[0] += padding;
-  ur[1] += padding;
-  ur[2] += padding;
+  if(padEdges)
+  {
+    float padding = 0.000001;
+    ll[0] -= padding;
+    ll[1] -= padding;
+    ll[2] -= padding;
+    ur[0] += padding;
+    ur[1] += padding;
+    ur[2] += padding;
+  }
 
   // Set the origin to the bottom left vertex
   partitionImageGeometry.setOrigin(ll);
@@ -132,7 +136,7 @@ std::optional<QString> InitSimplePartitioningGeometry(const T& geometry, ImageGe
 
   // A very small padding around the edges is necessary to avoid assigning the edge indices the wrong partition ID.
   // This is only needed in the Simple case, since the partition geometry inputs are more specific in the other cases.
-  return Detail::InitPartitioningGeometryUsingVertices(partitionImageGeometry, numberOfPartitionsPerAxis, *vertexList, inPreflight, 0.00001);
+  return Detail::InitPartitioningGeometryUsingVertices(partitionImageGeometry, numberOfPartitionsPerAxis, *vertexList, inPreflight, true);
 }
 
 template <>
