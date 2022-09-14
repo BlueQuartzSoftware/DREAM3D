@@ -62,6 +62,7 @@
 enum createdPathID : RenameDataPath::DataID_t
 {
   AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
 
   DataArrayID31 = 31,
 
@@ -200,6 +201,7 @@ void ReadStlFile::setupFilterParameters()
 
   parameters.push_back(SeparatorFilterParameter::Create("Created Data Structures", FilterParameter::Category::CreatedArray));
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", SurfaceMeshDataContainerName, FilterParameter::Category::CreatedArray, ReadStlFile));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, SurfaceMeshDataContainerName, FilterParameter::Category::CreatedArray, ReadStlFile));
   parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Face Attribute Matrix", FaceAttributeMatrixName, SurfaceMeshDataContainerName, FilterParameter::Category::CreatedArray, ReadStlFile));
   parameters.push_back(
       SIMPL_NEW_DA_WITH_LINKED_AM_FP("Face Normals", FaceNormalsArrayName, SurfaceMeshDataContainerName, FaceAttributeMatrixName, FilterParameter::Category::CreatedArray, ReadStlFile));
@@ -300,6 +302,8 @@ void ReadStlFile::dataCheck()
 
   std::vector<size_t> tDims(1, 0);
   sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face, AttributeMatrixID21);
+
+  sm->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Face, AttributeMatrixID22);
 
   std::vector<size_t> cDims(1, 3);
   tempPath.update(getSurfaceMeshDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), getFaceNormalsArrayName());
@@ -604,6 +608,9 @@ void ReadStlFile::eliminate_duplicate_nodes()
   triangleGeom->resizeVertexList(uniqueCount);
   vertex = nullptr;
 
+  // Resize the Vertex Attribute Array (even though it is empty)
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->resizeAttributeArrays({static_cast<size_t>(uniqueCount)});
+
   // Update the triangle nodes to reflect the unique ids
   int64_t node1 = 0, node2 = 0, node3 = 0;
   for(size_t i = 0; i < static_cast<size_t>(nTriangles); i++)
@@ -741,6 +748,18 @@ void ReadStlFile::setFaceAttributeMatrixName(const QString& value)
 QString ReadStlFile::getFaceAttributeMatrixName() const
 {
   return m_FaceAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadStlFile::setVertexAttributeMatrixName(const QString& value)
+{
+  m_VertexAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadStlFile::getVertexAttributeMatrixName() const
+{
+  return m_VertexAttributeMatrixName;
 }
 
 // -----------------------------------------------------------------------------

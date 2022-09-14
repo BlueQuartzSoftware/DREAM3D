@@ -61,6 +61,7 @@ class ImportExport_EXPORT ReadStlFile : public AbstractFilter
   PYB11_PROPERTY(QString FaceNormalsArrayName READ getFaceNormalsArrayName WRITE setFaceNormalsArrayName)
   PYB11_PROPERTY(bool ScaleOutput READ getScaleOutput WRITE setScaleOutput)
   PYB11_PROPERTY(float ScaleFactor READ getScaleFactor WRITE setScaleFactor)
+  PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
   PYB11_END_BINDINGS()
   // End Python bindings declarations
@@ -116,6 +117,17 @@ public:
    */
   QString getFaceAttributeMatrixName() const;
   Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
+
+  /**
+   * @brief Setter property for VertexAttributeMatrixName
+   */
+  void setVertexAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for VertexAttributeMatrixName
+   * @return Value of VertexAttributeMatrixName
+   */
+  QString getVertexAttributeMatrixName() const;
+  Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
   /**
    * @brief Setter property for StlFilePath
@@ -240,6 +252,7 @@ private:
 
   DataArrayPath m_SurfaceMeshDataContainerName = {SIMPL::Defaults::TriangleDataContainerName, "", ""};
   QString m_FaceAttributeMatrixName = {SIMPL::Defaults::FaceAttributeMatrixName};
+  QString m_VertexAttributeMatrixName = {SIMPL::Defaults::VertexAttributeMatrixName};
   QString m_StlFilePath = {""};
   QString m_FaceNormalsArrayName = {SIMPL::FaceData::SurfaceMeshFaceNormals};
 
