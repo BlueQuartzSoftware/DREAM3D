@@ -285,7 +285,7 @@ void PartitionGeometry::setupFilterParameters()
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req;
     req.amTypes = {AttributeMatrix::Type::Cell, AttributeMatrix::Type::Vertex, AttributeMatrix::Type::Face, AttributeMatrix::Type::Edge};
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Attribute Matrix", AttributeMatrixPath, FilterParameter::Category::RequiredArray, PartitionGeometry, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Attribute Matrix (Vertex=>Node Geometry, Cell=>Image/Rectilinear)", AttributeMatrixPath, FilterParameter::Category::RequiredArray, PartitionGeometry, req));
   }
 
   param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Input Geometry Information", InputGeometryInformation, FilterParameter::Category::RequiredArray, PartitionGeometry);
