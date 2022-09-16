@@ -189,15 +189,26 @@ public:
   Q_PROPERTY(IntVec3Type NumberOfPartitionsPerAxis READ getNumberOfPartitionsPerAxis WRITE setNumberOfPartitionsPerAxis)
 
   /**
-   * @brief Setter property for OutOfBoundsValue
+   * @brief Setter property for AdvancedOutOfBoundsValue
    */
-  void setOutOfBoundsValue(const int& value);
+  void setAdvancedOutOfBoundsValue(const int& value);
   /**
-   * @brief Getter property for OutOfBoundsValue
-   * @return Value of OutOfBoundsValue
+   * @brief Getter property for AdvancedOutOfBoundsValue
+   * @return Value of AdvancedOutOfBoundsValue
    */
-  int getOutOfBoundsValue() const;
-  Q_PROPERTY(int OutOfBoundsValue READ getOutOfBoundsValue WRITE setOutOfBoundsValue)
+  int getAdvancedOutOfBoundsValue() const;
+  Q_PROPERTY(int AdvancedOutOfBoundsValue READ getAdvancedOutOfBoundsValue WRITE setAdvancedOutOfBoundsValue)
+
+  /**
+   * @brief Setter property for BoundingBoxOutOfBoundsValue
+   */
+  void setBoundingBoxOutOfBoundsValue(const int& value);
+  /**
+   * @brief Getter property for BoundingBoxOutOfBoundsValue
+   * @return Value of BoundingBoxOutOfBoundsValue
+   */
+  int getBoundingBoxOutOfBoundsValue() const;
+  Q_PROPERTY(int BoundingBoxOutOfBoundsValue READ getBoundingBoxOutOfBoundsValue WRITE setBoundingBoxOutOfBoundsValue)
 
   /**
    * @brief Setter property for StartingPartitionID
@@ -352,7 +363,8 @@ private:
   QString m_PSAttributeMatrixName = {"CellData"};
   QString m_PSDataArrayName = m_PartitionIdsArrayName;
   QString m_PSImageGeomName = {"PartitioningSchemeImageGeom"};
-  int m_OutOfBoundsValue = 0;
+  int m_AdvancedOutOfBoundsValue = 0;
+  int m_BoundingBoxOutOfBoundsValue = 0;
   int m_StartingPartitionID = 1;
   DataArrayPath m_AttributeMatrixPath = {"", "", ""};
   //  DataArrayPath m_BoundingBoxPath = {"", "", ""};
@@ -378,8 +390,8 @@ private:
   template <typename T>
   PartitioningImageGeomResult createPartitioningSchemeGeometry(const T& geometry);
 
-  void partitionCellBasedGeometry(const IGeometryGrid& geometry, Int32ArrayType& partitionIds);
-  void partitionNodeBasedGeometry(const SharedVertexList& vertexList, Int32ArrayType& partitionIds);
+  void partitionCellBasedGeometry(const IGeometryGrid& geometry, Int32ArrayType& partitionIds, const std::optional<int> &outOfBoundsValue);
+  void partitionNodeBasedGeometry(const QString &geomName, const SharedVertexList& vertexList, Int32ArrayType& partitionIds, const std::optional<int> &outOfBoundsValue);
 
 public:
   PartitionGeometry(const PartitionGeometry&) = delete;            // Copy Constructor Not Implemented
