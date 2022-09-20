@@ -59,6 +59,10 @@
 #include "Sampling/SamplingFilters/Utils/SamplingUtils.hpp"
 #include "Sampling/SamplingVersion.h"
 
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include <tbb/blocked_range3d.h>
+#endif
+
 enum createdPathID : RenameDataPath::DataID_t
 {
   DataContainerID = 1
@@ -108,10 +112,12 @@ public:
   }
 
   // -----------------------------------------------------------------------------
+#if SIMPL_USE_PARALLEL_ALGORITHMS
   void operator()(const tbb::blocked_range3d<size_t, size_t, size_t>& r) const
   {
     compute(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
   }
+#endif
 
 private:
   ResampleImageGeom* m_Filter = nullptr;
@@ -428,19 +434,17 @@ void ResampleImageGeom::execute()
   notifyStatusMessage(ss);
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  bool doParallel = true;
-  if(doParallel)
   {
     // TBB wants the space in slowest to fastest ordering (ZYX for SIMPL)
     tbb::blocked_range3d<size_t, size_t, size_t> tbbRange(0, destDims[2], 0, destDims[1], 0, destDims[0]);
     tbb::parallel_for(tbbRange, ChangeResolutionImpl(this, newindicies, m_Spacing, sourceSpacing, sourceDims, destDims));
   }
-  else
-#endif
+#else
   {
     ChangeResolutionImpl serial(this, newindicies, m_Spacing, sourceSpacing, sourceDims, destDims);
     serial.compute(0, destDims[2], 0, destDims[1], 0, destDims[0]);
   }
+#endif
 
   QList<QString> voxelArrayNames = destAM->getAttributeArrayNames();
   for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
@@ -452,18 +456,17 @@ void ResampleImageGeom::execute()
     IDataArray::Pointer destinationData = destAM->getAttributeArray(*iter);
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel)
     {
       // TBB wants the space in slowest to fastest ordering (ZYX for SIMPL)
       tbb::blocked_range<size_t> tbbRange(0, destTotalPoints);
       tbb::parallel_for(tbbRange, ChangeResolutionPlaceDataImpl(this, newindicies, sourceData, destinationData));
     }
-    else
-#endif
+#else
     {
       ChangeResolutionPlaceDataImpl serial(this, newindicies, sourceData, destinationData);
       serial.compute(0, destTotalPoints);
     }
+#endif
   }
 
   if(m_RenumberFeatures)
