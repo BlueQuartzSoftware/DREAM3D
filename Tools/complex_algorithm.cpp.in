@@ -6,7 +6,7 @@
 using namespace complex;
 
 // -----------------------------------------------------------------------------
-@FILTER_NAME@::FillBadData(DataStructure& dataStructure, const IFilter::MessageHandler& mesgHandler, const std::atomic_bool& shouldCancel, @FILTER_NAME@InputValues* inputValues)
+@FILTER_NAME@::@FILTER_NAME@(DataStructure& dataStructure, const IFilter::MessageHandler& mesgHandler, const std::atomic_bool& shouldCancel, @FILTER_NAME@InputValues* inputValues)
 : m_DataStructure(dataStructure)
 , m_InputValues(inputValues)
 , m_ShouldCancel(shouldCancel)

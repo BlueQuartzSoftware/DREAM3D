@@ -47,7 +47,7 @@ const QString k_TestCMakeListsFile(D3DTools::GetDREAM3DToolsDir() + "/test_compl
 const QString k_UnitTestSourceFile(D3DTools::GetDREAM3DToolsDir() + "/unit_test_filter.cpp.in");
 const QString k_TestDirsHeaderFile(D3DTools::GetDREAM3DToolsDir() + "/test_dirs.hpp.in");
 
-#if 1
+#if 0
 const QString k_OutputDir("/tmp");
 const QString k_PluginsOutputDir("/Users/mjackson/Workspace1/complex_plugins");
 #else
@@ -1505,8 +1505,8 @@ void GenerateComplexFilters()
 
         if(k_BlackList.find(filter->getNameOfClass().toStdString()) == k_BlackList.end())
         {
-          // GenerateSourceFile(filter.get());
-          // GenerateHeaderFile(filter.get(), s_CurrentPlugin);
+           GenerateSourceFile(filter.get());
+           GenerateHeaderFile(filter.get(), s_CurrentPlugin);
           GenerateAlgorithmFile(filter.get());
 
           filters.push_back(filter);
