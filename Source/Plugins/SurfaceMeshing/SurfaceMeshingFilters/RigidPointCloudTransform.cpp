@@ -19,6 +19,17 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
+namespace
+{
+constexpr float k_Alpha = 0.2;
+constexpr float k_GradientConst = 0.000001f;
+constexpr size_t k_LoopMax = 1000;
+constexpr float k_LearningRate = 0.1;
+constexpr size_t k_IterationsMax = 10;
+constexpr std::array<float, 10> k_Steps = {-0.11, -0.011, -0.0011, 0.001, 0.01, 0.1, 0.5, 1.0, 2.0, 10.0};
+constexpr float k_Pi = 3.14159265359f;
+} // namespace
+
 /**
  * @brief The AlignPointCloudsFromPointsList class adjusts a geometry's points based on alignment lists
  *
@@ -27,6 +38,7 @@ class AlignPointCloudsFromPointsList
 {
   typedef Eigen::Matrix<float, Eigen::Dynamic, 3> MatrixNx3f;
   typedef Eigen::Matrix<float, 4, 4> AffineTransfromMatrix;
+  typedef Eigen::Matrix<float, 1, 3> Row;
 
 public:
   AlignPointCloudsFromPointsList(SharedVertexList::Pointer pointsToAlign, const MatrixNx3f& movingPointsList, const MatrixNx3f& staticPointsList)
@@ -57,6 +69,9 @@ public:
       movingPlanarCentroids.row(i) = findPlanarCentroids(createTrianglePlanebyIndex(m_MovingPointsList, rowIndices));
       staticPlanarCentroids.row(i) = findPlanarCentroids(createTrianglePlanebyIndex(m_StaticPointsList, rowIndices));
     }
+
+    auto affineTransform = findTranslationMatrix(movingPlanarCentroids, staticPlanarCentroids);
+    TransformSetOfPoints(m_PointsToAlign, affineTransform);
   }
 
 private:
@@ -92,39 +107,41 @@ private:
 
   AffineTransfromMatrix findTranslationMatrix(MatrixNx3f movingCentroids, MatrixNx3f staticCentroids)
   {
-    std::array<float, 6> optimizationArray = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}; // [dx, dy, dz, phi1, PHI, phi2, ?]
+    std::array<float, 6> optimizationArray = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}; // [dx, dy, dz, phi1, PHI, phi2]
+    std::vector<std::pair<size_t, size_t>> correlationMatrix(staticCentroids.rows(), std::make_pair(0, 0));
+    for(size_t i = 0; i < correlationMatrix.size(); i++)
+    {
+      correlationMatrix[i] = std::make_pair(i, i);
+    }
 
     // declare parameters
-    // V_S = np.zeros(shape = len(SS_data), dtype = np.float64)
-    // V_M = np.zeros(shape = len(CT_data), dtype = np.float64)
-    size_t iMax = 1000;
-    float learningRate = 0.1;
     bool notRegisteredFlag = true;
-    size_t iterCount = 0;
-    size_t iterMax = 10;
-    float gradientConst = 0.000001f;
-
+    size_t iteration = 0;
     auto movingBest = movingCentroids;
+    std::vector<float> lostListFull((k_IterationsMax + 1));
+
     // define actual algorithm
+    lostListFull[iteration] = LossFunctionWrapper(optimizationArray, staticCentroids, movingCentroids, correlationMatrix);
     do
     {
-        optimizationArray = leastSquaresFit(optimizationArray, staticCentroids, movingCentroids, gradientConst, iMax, learningRate);
-        movingBest = optimize(movingCentroids, optimizationArray);
-
-
-      if(iterCount >= iterMax)
+      optimizationArray = LeastSquaresFit(optimizationArray, staticCentroids, movingCentroids, correlationMatrix);
+      movingBest = Optimize(movingCentroids, optimizationArray);
+      correlationMatrix = FindClosestPoints(staticCentroids, movingBest, correlationMatrix);
+      iteration++;
+      lostListFull[iteration] = LossFunctionWrapper(optimizationArray, staticCentroids, movingCentroids, correlationMatrix);
+      if(iteration >= k_IterationsMax)
       {
         notRegisteredFlag = false;
       }
     } while(notRegisteredFlag);
 
     // create final affine transformation Matrix
-    auto TransformationMatrix = optimizeArrayToTMatrix(optimizationArray);
+    auto TransformationMatrix = OptimizeArrayToTMatrix(optimizationArray);
 
     return TransformationMatrix;
   }
 
-  AffineTransfromMatrix optimizeArrayToTMatrix(const std::array<float, 6>& optimizationArray)
+  AffineTransfromMatrix OptimizeArrayToTMatrix(const std::array<float, 6>& optimizationArray)
   {
     // translation
     Eigen::Vector3f translation;
@@ -133,13 +150,13 @@ private:
     translation(0, 2) = optimizationArray[2]; // dz
 
     // rotation matrix
-    auto rotationMatrix = eulerAnglesToRotationMatrix(optimizationArray[3], optimizationArray[4], optimizationArray[5]); // phi1, PHI, phi2
+    auto rotationMatrix = EulerAnglesToRotationMatrix(optimizationArray[3], optimizationArray[4], optimizationArray[5]); // phi1, PHI, phi2
 
     // affine transformation matrix
-    return craftTransformationMatrix(rotationMatrix, translation);
+    return CraftTransformationMatrix(rotationMatrix, translation);
   }
 
-  Eigen::Matrix<float, 3, 3> eulerAnglesToRotationMatrix(const float phi1, const float PHI, const float phi2)
+  Eigen::Matrix<float, 3, 3> EulerAnglesToRotationMatrix(const float phi1, const float PHI, const float phi2)
   {
     Eigen::Matrix<float, 3, 3> rotationMatrix;
 
@@ -164,13 +181,198 @@ private:
     return rotationMatrix;
   }
 
-  AffineTransfromMatrix craftTransformationMatrix(const Eigen::Matrix<float, 3, 3>& rotationMatrix, const Eigen::Vector3f& translationVector)
+  AffineTransfromMatrix CraftTransformationMatrix(const Eigen::Matrix<float, 3, 3>& rotationMatrix, const Eigen::Vector3f& translationVector)
   {
     AffineTransfromMatrix transfromMatrix;
     transfromMatrix.setIdentity(); // bottom row = [0,0,0,1]
     transfromMatrix.block<3, 3>(0, 0) = rotationMatrix;
     transfromMatrix.block<3, 1>(0, 3) = translationVector;
     return transfromMatrix;
+  }
+
+  float LossFunctionWrapper(const std::array<float, 6>& optimizationArray, const MatrixNx3f& staticCentroids, const MatrixNx3f& movingCentroids,
+                            const std::vector<std::pair<size_t, size_t>>& correlationMatrix)
+  {
+    return LossFunction(staticCentroids, Optimize(movingCentroids, optimizationArray), correlationMatrix);
+  }
+
+  float LossFunction(const MatrixNx3f& staticCentroid, const MatrixNx3f& attemptedAlignment, const std::vector<std::pair<size_t, size_t>>& correlationMatrix)
+  {
+    float result = 0.0f;
+    std::vector<float> rowSums(correlationMatrix.size());
+    for(size_t row = 0; row < correlationMatrix.size(); row++)
+    {
+      float sum;
+      for(size_t col = 0; col < staticCentroid.cols(); col++)
+      {
+        sum += std::powf(staticCentroid(correlationMatrix[row].first, col) - attemptedAlignment(correlationMatrix[row].second, col), 2.0);
+      }
+      rowSums.push_back(sum);
+    }
+    for(auto& num : rowSums)
+    {
+      result += num;
+    }
+    return result;
+  }
+
+  MatrixNx3f Optimize(const MatrixNx3f& movingCentroids, const std::array<float, 6>& optimizationArray)
+  {
+    return TranformPoints(movingCentroids, OptimizeArrayToTMatrix(optimizationArray));
+  }
+
+  MatrixNx3f TranformPoints(const MatrixNx3f& movingCentroids, const AffineTransfromMatrix& TransformationMatrix)
+  {
+    MatrixNx3f movedCentroids(movingCentroids);
+    Eigen::Vector4f coordinateColumn;
+    coordinateColumn(3, 0) = 1.0; // insert 1 at bottom of vect
+    for(size_t row = 0; row < movingCentroids.rows(); row++)
+    {
+      coordinateColumn.block<3, 1>(0, 0) = movingCentroids.row(row).transpose();
+      auto resultingCoord = TransformationMatrix * coordinateColumn;
+      movedCentroids.block<1, 3>(row, 0) = resultingCoord.block<3, 1>(0, 0).transpose();
+    }
+    return movedCentroids;
+  }
+
+  std::vector<std::pair<size_t, size_t>> FindClosestPoints(const MatrixNx3f& staticCentroids, const MatrixNx3f& movingBest, const std::vector<std::pair<size_t, size_t>>& correlation)
+  {
+    std::vector<std::pair<size_t, size_t>> newCorrelation;
+    auto indexAvailable = std::vector<bool>(staticCentroids.rows(), true);
+    for(size_t movingIndex = 0; movingIndex < movingBest.rows(); movingIndex++)
+    {
+      double lowestError = std::numeric_limits<double>::max();
+      bool foundCandidateCorrelation = false;
+      std::pair<size_t, size_t> candidateCorrelation(0, 0);
+      for(size_t staticIndex = 0; staticIndex < staticCentroids.rows(); staticIndex++)
+      {
+        if(indexAvailable[staticIndex])
+        {
+          auto squaredDistance = CalculateDistance(movingBest.row(movingIndex), staticCentroids.row(movingIndex));
+          auto calculatedError = k_Alpha * squaredDistance;
+          if(calculatedError < lowestError)
+          {
+            lowestError = calculatedError;
+            foundCandidateCorrelation = true;
+            candidateCorrelation = std::make_pair(staticIndex, movingIndex);
+          }
+        }
+      }
+      if(foundCandidateCorrelation)
+      {
+        indexAvailable[candidateCorrelation.first] = false;
+        newCorrelation.push_back(candidateCorrelation);
+      }
+    }
+    if(correlation.size() == 0)
+    {
+      newCorrelation = correlation;
+    }
+    return newCorrelation;
+  }
+
+  double CalculateDistance(const Row& movingRow, const Row& staticRow)
+  { // sqrt(sum(pow(movingRow - staticRow, 2)))
+    double sum = 0.0;
+    for(size_t i = 0; i < staticRow.cols(); i++)
+    {
+      sum += pow(movingRow(i) - staticRow(i), 2);
+    }
+    return sqrt(sum);
+  }
+
+  std::array<float, 6> LeastSquaresFit(std::array<float, 6> oldOptimizationArray, const MatrixNx3f& staticCentroids, const MatrixNx3f& movingCentroids,
+                                       const std::vector<std::pair<size_t, size_t>>& correlation)
+  {
+    auto bestLoss = LossFunctionWrapper(oldOptimizationArray, staticCentroids, movingCentroids, correlation);
+    auto bestOptimizationArray = oldOptimizationArray;
+
+    auto workingLoss = std::numeric_limits<float>::max();
+    auto workingOptimizationArray = oldOptimizationArray;
+    auto thisOptimizationArray = oldOptimizationArray;
+    for(size_t iteration = 0; iteration < k_LoopMax; iteration++)
+    {
+      auto loss = LossFunctionWrapper(workingOptimizationArray, staticCentroids, movingCentroids, correlation) * k_LearningRate;
+      auto gradient = CalculateGradient(workingOptimizationArray, staticCentroids, movingCentroids, correlation);
+      for(auto& value : gradient)
+      {
+        value = loss / value;
+      }
+      auto testOptimizationArray = workingOptimizationArray;
+      for(size_t i = 0; i < testOptimizationArray.size(); i++)
+      {
+        testOptimizationArray[i] = workingOptimizationArray[i] - gradient[i];
+      }
+      for(const auto& step : k_Steps)
+      {
+        auto stepOptimizationArray = workingOptimizationArray;
+        for(size_t i = 0; i < stepOptimizationArray.size(); i++)
+        {
+          stepOptimizationArray[i] = step * (testOptimizationArray[i] - workingOptimizationArray[i]);
+        }
+
+        auto stepLoss = LossFunctionWrapper(stepOptimizationArray, staticCentroids, movingCentroids, correlation);
+
+        if(stepLoss < workingLoss)
+        {
+          thisOptimizationArray = stepOptimizationArray;
+          workingLoss = stepLoss;
+        }
+      }
+      workingOptimizationArray = thisOptimizationArray;
+      if(workingLoss < bestLoss)
+      {
+        bestOptimizationArray = thisOptimizationArray;
+        bestLoss = workingLoss;
+      }
+      else // gen new guesses
+      {
+        for(auto& value : workingOptimizationArray) // gen new guesses
+        {
+          value *= (((static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) - 0.5) * 0.1 + 1.0);
+        }
+      }
+    }
+
+    // update euler angles properly
+    for(size_t i = 3; i < 6; i++)
+    {
+      bestOptimizationArray[i] = std::fmod(bestOptimizationArray[i], static_cast<float>(2.0 * k_Pi));
+    }
+
+    return bestOptimizationArray;
+  }
+
+  std::array<float, 6> CalculateGradient(const std::array<float, 6>& optimizationArray, const MatrixNx3f& staticCentroid, const MatrixNx3f& attemptedAlignment,
+                                         const std::vector<std::pair<size_t, size_t>>& correlationMatrix)
+  {
+    std::array<float, 6> gradient;
+    gradient.fill(0.0f);
+    for(size_t i = 0; i < optimizationArray.size(); i++)
+    {
+      auto workingOptimizationArray = optimizationArray;
+      workingOptimizationArray[i] += k_GradientConst;
+      gradient[i] = LossFunctionWrapper(workingOptimizationArray, staticCentroid, attemptedAlignment, correlationMatrix);
+    }
+    return gradient;
+  }
+
+  void TransformSetOfPoints(SharedVertexList::Pointer pointsToAlign, const AffineTransfromMatrix& TransformationMatrix)
+  {
+    Eigen::Vector4f coordinateColumn;
+    coordinateColumn(3, 0) = 1.0; // insert 1 at bottom of vect
+    for(size_t i = 0; i < pointsToAlign->getSize(); i += 3)
+    {
+      coordinateColumn(0, 0) = pointsToAlign->getValue(i);
+      coordinateColumn(1, 0) = pointsToAlign->getValue(i + 1);
+      coordinateColumn(2, 0) = pointsToAlign->getValue(i + 2);
+
+      auto resultingCoord = TransformationMatrix * coordinateColumn;
+
+      pointsToAlign->setValue(i, resultingCoord(0, 0));
+      pointsToAlign->setValue(i, resultingCoord(1, 0));
+      pointsToAlign->setValue(i, resultingCoord(2, 0));
+    }
   }
 };
 
@@ -241,7 +443,7 @@ void RigidPointCloudTransform::dataCheck()
   clearWarningCode();
   initialize();
 
-  //IGeometry::Pointer igeom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry>(this, getCellAttributeMatrixPath().getDataContainerName());
+  // IGeometry::Pointer igeom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry>(this, getCellAttributeMatrixPath().getDataContainerName());
 }
 
 // -----------------------------------------------------------------------------
