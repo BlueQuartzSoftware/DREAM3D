@@ -44,7 +44,6 @@
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 
@@ -171,16 +170,18 @@ void FindSurfaceAreaToVolume::execute()
   {
     return;
   }
+  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_NumCellsArrayPath.getDataContainerName());
+  AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(m_NumCellsArrayPath.getAttributeMatrixName());
 
-  // Validate that the selected InArray has tuples equal to the largest
-  // Feature Id; the filter would not crash otherwise, but the user should
-  // be notified of unanticipated behavior ; this cannot be done in the dataCheck since
-  // we don't have acces to the data yet
+  // Validate that the selected InArray has tuples not larger than the largest
+  // Feature Id; the filter would crash otherwise, but the user should
+  // be notified of unanticipated behavior. this cannot be done in the dataCheck since
+  // we don't have access to the data yet
   int32_t numFeatures = static_cast<int32_t>(m_NumCellsPtr.lock()->getNumberOfTuples());
   bool mismatchedFeatures = false;
   int32_t largestFeature = 0;
-  size_t numTuples = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  for(size_t i = 0; i < numTuples; i++)
+  size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  for(size_t i = 0; i < totalPoints; i++)
   {
     if(m_FeatureIds[i] > largestFeature)
     {
@@ -195,14 +196,11 @@ void FindSurfaceAreaToVolume::execute()
 
   if(mismatchedFeatures)
   {
-    QString ss = QObject::tr("The number of Features in the NumCells array (%1) is larger than the largest Feature Id in the FeatureIds array").arg(numFeatures);
-    setErrorCondition(-5555, ss);
-    return;
-  }
-
-  if(largestFeature != (numFeatures - 1))
-  {
-    QString ss = QObject::tr("The number of Features in the NumCells array (%1) does not match the largest Feature Id in the FeatureIds array").arg(numFeatures);
+    QString ss = QObject::tr("The given FeatureIds Array %1 has a value that is larger than allowed by the given Feature Attribute Matrix %2.\n %3 >= %4")
+                     .arg(m_FeatureIdsArrayPath.serialize("/"))
+                     .arg(m_NumCellsArrayPath.serialize("/"))
+                     .arg(largestFeature)
+                     .arg(numFeatures);
     setErrorCondition(-5555, ss);
     return;
   }
