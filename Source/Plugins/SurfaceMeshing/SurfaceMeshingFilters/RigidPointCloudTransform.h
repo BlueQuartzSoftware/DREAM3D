@@ -10,6 +10,8 @@
 #include "SIMPLib/FilterParameters/DynamicTableData.h"
 #include "SIMPLib/FilterParameters/DynamicTableData.h"
 #include "SurfaceMeshing/SurfaceMeshingPlugin.h"
+
+#include <Eigen/Dense>
     
 /**
  * @brief The RigidPointCloudTransform class. See [Filter documentation](@ref rigidpointcloudtransform) for details.
@@ -89,6 +91,27 @@ public:
     DynamicTableData getFixedKeyPoints() const;
     Q_PROPERTY(DynamicTableData FixedKeyPoints READ getFixedKeyPoints WRITE setFixedKeyPoints)
 
+    /**
+    * @brief Sets the value for Filter Parameter for MovingKeyPointsMatrix
+    * @param value The new value to use.
+    */
+    void setMovingKeyPointsMatrix(const Eigen::Matrix<float, Eigen::Dynamic, 3>& value);
+    /**
+    * @brief Gets the Filter Parameter value for MovingKeyPointsMatrix
+    * @return The value for MovingKeyPoints
+    */
+    Eigen::Matrix<float, Eigen::Dynamic, 3> getMovingKeyPointsMatrix() const;
+
+    /**
+    * @brief Sets the value for Filter Parameter for FixedKeyPointsMatrix
+    * @param value The new value to use.
+    */
+    void setFixedKeyPointsMatrix(const Eigen::Matrix<float, Eigen::Dynamic, 3>& value);
+    /**
+    * @brief Gets the Filter Parameter value for FixedKeyPointsMatrix
+    * @return The value for FixedKeyPoints
+    */
+    Eigen::Matrix<float, Eigen::Dynamic, 3> getFixedKeyPointsMatrix() const;
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -162,6 +185,8 @@ private:
     DataArrayPath  m_MovingGeometry;
     DynamicTableData  m_MovingKeyPoints;
     DynamicTableData  m_FixedKeyPoints;
+    Eigen::Matrix<float, Eigen::Dynamic, 3>  m_MovingKeyPointsMatrix;
+    Eigen::Matrix<float, Eigen::Dynamic, 3>  m_FixedKeyPointsMatrix;
 
 
 public:

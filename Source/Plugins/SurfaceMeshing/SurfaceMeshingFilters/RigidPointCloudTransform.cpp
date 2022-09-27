@@ -9,12 +9,15 @@
 #include <Eigen/Dense>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DynamicTableFilterParameter.h"
+#include "SIMPLib/Geometry/EdgeGeom.h"
+#include "SIMPLib/Geometry/IGeometry2D.h"
+#include "SIMPLib/Geometry/IGeometry3D.h"
+#include "SIMPLib/Geometry/VertexGeom.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -30,13 +33,13 @@ constexpr std::array<float, 10> k_Steps = {-0.11, -0.011, -0.0011, 0.001, 0.01, 
 constexpr float k_Pi = 3.14159265359f;
 } // namespace
 
+typedef Eigen::Matrix<float, Eigen::Dynamic, 3> MatrixNx3f;
 /**
  * @brief The AlignPointCloudsFromPointsList class adjusts a geometry's points based on alignment lists
  *
  */
 class AlignPointCloudsFromPointsList
 {
-  typedef Eigen::Matrix<float, Eigen::Dynamic, 3> MatrixNx3f;
   typedef Eigen::Matrix<float, 4, 4> AffineTransfromMatrix;
   typedef Eigen::Matrix<float, 1, 3> Row;
 
@@ -49,7 +52,7 @@ public:
   }
   virtual ~AlignPointCloudsFromPointsList() = default;
 
-  void generate(size_t start, size_t end)
+  void generate()
   {
     // load vector of proper size
     std::vector<size_t> iterate;
@@ -82,10 +85,10 @@ private:
   Eigen::Matrix<float, 1, 3> findPlanarCentroids(const MatrixNx3f& planarPoints) // could be parallelized
   {
     Eigen::Matrix<float, 1, 3> centroidsXYZ;
-    for(size_t col = 0; col < planarPoints.cols(); col++)
+    for(int col = 0; col < planarPoints.cols(); col++)
     {
       float coordSum = 0.0f;
-      for(size_t row = 0; row < planarPoints.rows(); row++)
+      for(int row = 0; row < planarPoints.rows(); row++)
       {
         coordSum += centroidsXYZ(row, col);
       }
@@ -200,10 +203,10 @@ private:
   {
     float result = 0.0f;
     std::vector<float> rowSums(correlationMatrix.size());
-    for(size_t row = 0; row < correlationMatrix.size(); row++)
+    for(int row = 0; row < correlationMatrix.size(); row++)
     {
       float sum;
-      for(size_t col = 0; col < staticCentroid.cols(); col++)
+      for(int col = 0; col < staticCentroid.cols(); col++)
       {
         sum += std::powf(staticCentroid(correlationMatrix[row].first, col) - attemptedAlignment(correlationMatrix[row].second, col), 2.0);
       }
@@ -226,7 +229,7 @@ private:
     MatrixNx3f movedCentroids(movingCentroids);
     Eigen::Vector4f coordinateColumn;
     coordinateColumn(3, 0) = 1.0; // insert 1 at bottom of vect
-    for(size_t row = 0; row < movingCentroids.rows(); row++)
+    for(int row = 0; row < movingCentroids.rows(); row++)
     {
       coordinateColumn.block<3, 1>(0, 0) = movingCentroids.row(row).transpose();
       auto resultingCoord = TransformationMatrix * coordinateColumn;
@@ -239,12 +242,12 @@ private:
   {
     std::vector<std::pair<size_t, size_t>> newCorrelation;
     auto indexAvailable = std::vector<bool>(staticCentroids.rows(), true);
-    for(size_t movingIndex = 0; movingIndex < movingBest.rows(); movingIndex++)
+    for(int movingIndex = 0; movingIndex < movingBest.rows(); movingIndex++)
     {
       double lowestError = std::numeric_limits<double>::max();
       bool foundCandidateCorrelation = false;
       std::pair<size_t, size_t> candidateCorrelation(0, 0);
-      for(size_t staticIndex = 0; staticIndex < staticCentroids.rows(); staticIndex++)
+      for(int staticIndex = 0; staticIndex < staticCentroids.rows(); staticIndex++)
       {
         if(indexAvailable[staticIndex])
         {
@@ -274,7 +277,7 @@ private:
   double CalculateDistance(const Row& movingRow, const Row& staticRow)
   { // sqrt(sum(pow(movingRow - staticRow, 2)))
     double sum = 0.0;
-    for(size_t i = 0; i < staticRow.cols(); i++)
+    for(int i = 0; i < staticRow.cols(); i++)
     {
       sum += pow(movingRow(i) - staticRow(i), 2);
     }
@@ -443,7 +446,46 @@ void RigidPointCloudTransform::dataCheck()
   clearWarningCode();
   initialize();
 
-  // IGeometry::Pointer igeom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry>(this, getCellAttributeMatrixPath().getDataContainerName());
+  std::vector<std::vector<double>> fixedRows = m_FixedKeyPoints.getTableData();
+  std::vector<std::vector<double>> movingRows = m_MovingKeyPoints.getTableData();
+
+  if(movingRows.size() != fixedRows.size())
+  {
+    QString ss = QObject::tr("Moving Key Points Table and Fixed Key Points Table do not have the same amount of rows");
+    setErrorCondition(-44360, ss);
+  }
+
+  if(movingRows.size() < 3)
+  {
+    QString ss =
+        QObject::tr("To accurately align objects at least 3 points must be provided. Only %1 points were provided, 5 or more recommended (not all coplanar for best results)").arg(movingRows.size());
+    setErrorCondition(-44361, ss);
+  }
+
+  MatrixNx3f fixedMatrix, movingMatrix;
+  fixedMatrix.resize(fixedRows.size(), Eigen::NoChange);
+  movingMatrix.resize(movingRows.size(), Eigen::NoChange);
+
+  Eigen::Vector3f coordinateRow;
+  for(size_t rowIndx = 0; rowIndx < fixedRows.size(); rowIndx++)
+  {
+    auto row = fixedRows[rowIndx];
+    for(size_t i = 0; i < row.size(); i++)
+    {
+      coordinateRow(i, 0) = static_cast<float>(row[i]);
+    }
+    fixedMatrix.block<1, 3>(rowIndx, 0) = coordinateRow.block<3, 1>(0, 0).transpose();
+  }
+
+  for(size_t rowIndx = 0; rowIndx < movingRows.size(); rowIndx++)
+  {
+    auto row = movingRows[rowIndx];
+    for(size_t i = 0; i < row.size(); i++)
+    {
+      coordinateRow(i, 0) = static_cast<float>(row[i]);
+    }
+    movingMatrix.block<1, 3>(rowIndx, 0) = coordinateRow.block<3, 1>(0, 0).transpose();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -463,16 +505,43 @@ void RigidPointCloudTransform::execute()
     return;
   }
 
+  SharedVertexList::Pointer completeMovingPoints;
+
+  auto igeom = getDataContainerArray()->getDataContainer(getMovingGeometry())->getGeometryAs<IGeometry>();
+
+  if(IGeometry2D::Pointer igeom2D = std::dynamic_pointer_cast<IGeometry2D>(igeom))
+  {
+    completeMovingPoints = igeom2D->getVertices();
+  }
+  else if(IGeometry3D::Pointer igeom3D = std::dynamic_pointer_cast<IGeometry3D>(igeom))
+  {
+    completeMovingPoints = igeom3D->getVertices();
+  }
+  else if(VertexGeom::Pointer vertex = std::dynamic_pointer_cast<VertexGeom>(igeom))
+  {
+    completeMovingPoints = vertex->getVertices();
+  }
+  else if(EdgeGeom::Pointer edge = std::dynamic_pointer_cast<EdgeGeom>(igeom))
+  {
+    completeMovingPoints = edge->getVertices();
+  }
+  else
+  {
+    return;
+  }
+
+  auto align = AlignPointCloudsFromPointsList(completeMovingPoints, m_MovingKeyPointsMatrix, m_FixedKeyPointsMatrix);
+
   if(getWarningCode() < 0)
   {
-    QString ss = QObject::tr("Some warning message");
-    setWarningCondition(-44360, ss);
+    QString ss = QObject::tr("Warning Flagged in RigidPointCloudTransform Filter");
+    setWarningCondition(-44362, ss);
   }
 
   if(getErrorCode() < 0)
   {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-44361, ss);
+    QString ss = QObject::tr("An error arose from RigidPointCloudTransform Filter");
+    setErrorCondition(-44363, ss);
     return;
   }
 }
@@ -538,7 +607,7 @@ QString RigidPointCloudTransform::getSubGroupName() const
 // -----------------------------------------------------------------------------
 QString RigidPointCloudTransform::getHumanLabel() const
 {
-  return "RigidPointCloudTransform";
+  return "Align Geometries from points";
 }
 
 // -----------------------------------------------------------------------------
@@ -607,4 +676,24 @@ void RigidPointCloudTransform::setFixedKeyPoints(const DynamicTableData& value)
 DynamicTableData RigidPointCloudTransform::getFixedKeyPoints() const
 {
   return m_FixedKeyPoints;
+}
+// -----------------------------------------------------------------------------
+void RigidPointCloudTransform::setMovingKeyPointsMatrix(const MatrixNx3f& value)
+{
+  m_MovingKeyPointsMatrix = value;
+}
+// -----------------------------------------------------------------------------
+MatrixNx3f RigidPointCloudTransform::getMovingKeyPointsMatrix() const
+{
+  return m_MovingKeyPointsMatrix;
+}
+// -----------------------------------------------------------------------------
+void RigidPointCloudTransform::setFixedKeyPointsMatrix(const MatrixNx3f& value)
+{
+  m_FixedKeyPointsMatrix = value;
+}
+// -----------------------------------------------------------------------------
+MatrixNx3f RigidPointCloudTransform::getFixedKeyPointsMatrix() const
+{
+  return m_FixedKeyPointsMatrix;
 }
