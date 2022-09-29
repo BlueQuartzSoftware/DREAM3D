@@ -99,6 +99,7 @@ void FeatureInfoReader::setupFilterParameters()
     amTypes.push_back(AttributeMatrix::Type::Edge);
     amTypes.push_back(AttributeMatrix::Type::Face);
     amTypes.push_back(AttributeMatrix::Type::Vertex);
+    req.amTypes = amTypes;
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Element Attribute Matrix", CellAttributeMatrixName, FilterParameter::Category::RequiredArray, FeatureInfoReader, req));
   }
   {
