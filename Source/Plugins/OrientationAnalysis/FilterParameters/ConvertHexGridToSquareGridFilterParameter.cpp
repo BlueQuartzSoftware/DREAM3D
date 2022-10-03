@@ -54,7 +54,7 @@ ConvertHexGridToSquareGridFilterParameter::~ConvertHexGridToSquareGridFilterPara
 // -----------------------------------------------------------------------------
 ConvertHexGridToSquareGridFilterParameter::Pointer ConvertHexGridToSquareGridFilterParameter::Create(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue,
                                                                                                      Category category, ConvertHexGridToSquareGrid* filter, const QString& fileExtension,
-                                                                                                     const QString& fileType, int groupIndex)
+                                                                                                     const QString& fileType, const std::vector<int>& groupIndices)
 {
   ConvertHexGridToSquareGridFilterParameter::Pointer ptr = ConvertHexGridToSquareGridFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -63,7 +63,7 @@ ConvertHexGridToSquareGridFilterParameter::Pointer ConvertHexGridToSquareGridFil
   ptr->setCategory(category);
   ptr->setFileExtension(fileExtension);
   ptr->setFileType(fileType);
-  ptr->setGroupIndex(groupIndex);
+  ptr->setGroupIndices(groupIndices);
   ptr->setFilter(filter);
 
   return ptr;

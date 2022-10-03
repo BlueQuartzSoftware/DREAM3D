@@ -391,7 +391,7 @@ void PackPrimaryPhases::setupFilterParameters()
     geomTypes.push_back(IGeometry::Type::Image);
     geomTypes.push_back(IGeometry::Type::Unknown);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Statistics", InputStatsArrayPath, FilterParameter::Category::RequiredArray, PackPrimaryPhases, req, 0));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Statistics", InputStatsArrayPath, FilterParameter::Category::RequiredArray, PackPrimaryPhases, req, {0}));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -463,7 +463,7 @@ void PackPrimaryPhases::setupFilterParameters()
   linkedProps.push_back("FeatureInputFile");
   linkedProps.push_back("InputStatsArrayPath");
   // parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Already Have Features", HaveFeatures, FilterParameter::Category::Parameter, PackPrimaryPhases, linkedProps));
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Feature Input File", FeatureInputFile, FilterParameter::Category::Parameter, PackPrimaryPhases, "*.txt", "Text File", 1));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Feature Input File", FeatureInputFile, FilterParameter::Category::Parameter, PackPrimaryPhases, "*.txt", "Text File", {1}));
   linkedProps.clear();
   //  linkedProps.push_back("CsvOutputFile");
   //  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Category::Parameter, PackPrimaryPhases, linkedProps));
@@ -492,12 +492,12 @@ void PackPrimaryPhases::setupFilterParameters()
 
   {
     AttributeMatrixCreationFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_AM_CREATION_FP("New Attribute Matrix", NewAttributeMatrixPath, FilterParameter::Category::Parameter, PackPrimaryPhases, req, 1));
+    parameters.push_back(SIMPL_NEW_AM_CREATION_FP("New Attribute Matrix", NewAttributeMatrixPath, FilterParameter::Category::Parameter, PackPrimaryPhases, req, {1}));
   }
 
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Category::Feature);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Selected Attribute Matrix", SelectedAttributeMatrixPath, FilterParameter::Category::Parameter, PackPrimaryPhases, req, 2));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Selected Attribute Matrix", SelectedAttributeMatrixPath, FilterParameter::Category::Parameter, PackPrimaryPhases, req, {2}));
   }
 
 #if PPP_SHOW_DEBUG_OUTPUTS

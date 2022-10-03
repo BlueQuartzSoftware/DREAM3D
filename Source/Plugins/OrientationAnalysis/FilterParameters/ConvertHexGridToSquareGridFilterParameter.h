@@ -68,7 +68,7 @@ public:
   static QString ClassName();
 
   static Pointer Create(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, ConvertHexGridToSquareGrid* filter,
-                        const QString& fileExtension = QString(""), const QString& fileType = QString(""), int groupIndex = -1);
+                        const QString& fileExtension = QString(""), const QString& fileType = QString(""), const std::vector<int>& groupIndices = {});
 
   ~ConvertHexGridToSquareGridFilterParameter() override;
 

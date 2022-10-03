@@ -126,8 +126,8 @@ void WritePoleFigure::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Lambert Image Size (Pixels)", LambertSize, FilterParameter::Category::Parameter, WritePoleFigure, 0));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Colors", NumColors, FilterParameter::Category::Parameter, WritePoleFigure, 0));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Lambert Image Size (Pixels)", LambertSize, FilterParameter::Category::Parameter, WritePoleFigure, {0}));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Colors", NumColors, FilterParameter::Category::Parameter, WritePoleFigure, {0}));
 
   // parameters.push_back(SIMPL_NEW_BOOL_FP("Generate Color Heat Map Style", UseDiscreteHeatMap, FilterParameter::Category::Parameter, WritePoleFigure, 1));
 

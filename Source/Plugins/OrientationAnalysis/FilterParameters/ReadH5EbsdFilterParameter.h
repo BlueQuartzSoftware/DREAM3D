@@ -68,7 +68,7 @@ public:
   static QString ClassName();
 
   static Pointer Create(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, ReadH5Ebsd* filter, const QString& fileExtension = QString(""),
-                        const QString& fileType = QString(""), int groupIndex = -1);
+                        const QString& fileType = QString(""), const std::vector<int>& groupIndices = {});
 
   ~ReadH5EbsdFilterParameter() override;
 

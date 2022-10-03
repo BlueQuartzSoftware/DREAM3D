@@ -66,7 +66,7 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 + Fix issue where NeighborList could not be selected for a path.	
 + RotateSampleRefFrame: Fix long preflight issues. Parallel Rotations.	
 + Adding new StringUtilities and StringLiteral files.
-
++ Updated filter parameters to utilize a group index array instead of a single group index.
 
 #### DREAM3D Changes (Since v6.6.0 Tag) ####
 

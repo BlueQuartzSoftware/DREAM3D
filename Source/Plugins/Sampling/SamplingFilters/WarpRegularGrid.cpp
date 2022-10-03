@@ -119,12 +119,12 @@ void WarpRegularGrid::setupFilterParameters()
     parameter->setCategory(FilterParameter::Category::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(SIMPL_NEW_SecondO_POLY_FP("Second Order A Coefficients", SecondOrderACoeff, FilterParameter::Category::Parameter, WarpRegularGrid, 0));
-  parameters.push_back(SIMPL_NEW_SecondO_POLY_FP("Second Order B Coefficients", SecondOrderBCoeff, FilterParameter::Category::Parameter, WarpRegularGrid, 0));
-  parameters.push_back(SIMPL_NEW_ThirdO_POLY_FP("Third Order A Coefficients", ThirdOrderACoeff, FilterParameter::Category::Parameter, WarpRegularGrid, 1));
-  parameters.push_back(SIMPL_NEW_ThirdO_POLY_FP("Third Order B Coefficients", ThirdOrderBCoeff, FilterParameter::Category::Parameter, WarpRegularGrid, 1));
-  parameters.push_back(SIMPL_NEW_FourthO_POLY_FP("Fourth Order A Coefficients", FourthOrderACoeff, FilterParameter::Category::Parameter, WarpRegularGrid, 2));
-  parameters.push_back(SIMPL_NEW_FourthO_POLY_FP("Fourth Order B Coefficients", FourthOrderBCoeff, FilterParameter::Category::Parameter, WarpRegularGrid, 2));
+  parameters.push_back(SIMPL_NEW_SecondO_POLY_FP("Second Order A Coefficients", SecondOrderACoeff, FilterParameter::Category::Parameter, WarpRegularGrid, {0}));
+  parameters.push_back(SIMPL_NEW_SecondO_POLY_FP("Second Order B Coefficients", SecondOrderBCoeff, FilterParameter::Category::Parameter, WarpRegularGrid, {0}));
+  parameters.push_back(SIMPL_NEW_ThirdO_POLY_FP("Third Order A Coefficients", ThirdOrderACoeff, FilterParameter::Category::Parameter, WarpRegularGrid, {1}));
+  parameters.push_back(SIMPL_NEW_ThirdO_POLY_FP("Third Order B Coefficients", ThirdOrderBCoeff, FilterParameter::Category::Parameter, WarpRegularGrid, {1}));
+  parameters.push_back(SIMPL_NEW_FourthO_POLY_FP("Fourth Order A Coefficients", FourthOrderACoeff, FilterParameter::Category::Parameter, WarpRegularGrid, {2}));
+  parameters.push_back(SIMPL_NEW_FourthO_POLY_FP("Fourth Order B Coefficients", FourthOrderBCoeff, FilterParameter::Category::Parameter, WarpRegularGrid, {2}));
   std::vector<QString> linkedProps;
   linkedProps.push_back("NewDataContainerName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Data Container", SaveAsNewDataContainer, FilterParameter::Category::Parameter, WarpRegularGrid, linkedProps));

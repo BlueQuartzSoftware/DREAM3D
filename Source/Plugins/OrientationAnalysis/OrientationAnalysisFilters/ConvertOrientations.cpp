@@ -104,11 +104,11 @@ void ConvertOrientations::setupFilterParameters()
     DataArraySelectionFilterParameter::RequirementType req;
     req.daTypes = std::vector<QString>(2, SIMPL::TypeNames::Double);
     req.daTypes[1] = SIMPL::TypeNames::Float;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Input Orientations", InputOrientationArrayPath, FilterParameter::Category::RequiredArray, ConvertOrientations, req, 0));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Input Orientations", InputOrientationArrayPath, FilterParameter::Category::RequiredArray, ConvertOrientations, req, {0}));
   }
 
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Output Orientations", OutputOrientationArrayName, InputOrientationArrayPath, InputOrientationArrayPath, FilterParameter::Category::CreatedArray,
-                                                      ConvertOrientations, 0));
+                                                      ConvertOrientations, {0}));
 
   setFilterParameters(parameters);
 }

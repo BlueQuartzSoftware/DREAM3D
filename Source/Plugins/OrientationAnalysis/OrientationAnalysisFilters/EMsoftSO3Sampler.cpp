@@ -118,19 +118,19 @@ void EMsoftSO3Sampler::setupFilterParameters()
     parameters.push_back(parameter);
 
     /* standard sampling method */
-    parameters.push_back(SIMPL_NEW_INTEGER_FP("Point group number (see documentation for list)", PointGroup, FilterParameter::Category::Parameter, EMsoftSO3Sampler, 0));
+    parameters.push_back(SIMPL_NEW_INTEGER_FP("Point group number (see documentation for list)", PointGroup, FilterParameter::Category::Parameter, EMsoftSO3Sampler, {0}));
     parameters.push_back(BooleanFilterParameter::Create("Offset sampling grid from origin?", "OffsetGrid", getOffsetGrid(), FilterParameter::Category::Parameter,
-                                                        SIMPL_BIND_SETTER(EMsoftSO3Sampler, this, OffsetGrid), SIMPL_BIND_GETTER(EMsoftSO3Sampler, this, OffsetGrid), 0));
+                                                        SIMPL_BIND_SETTER(EMsoftSO3Sampler, this, OffsetGrid), SIMPL_BIND_GETTER(EMsoftSO3Sampler, this, OffsetGrid), {0}));
 
     /* equal misorientation sampling method */
-    parameters.push_back(SIMPL_NEW_DOUBLE_FP("Misorientation angle (degree)", MisOr, FilterParameter::Category::Parameter, EMsoftSO3Sampler, 1));
+    parameters.push_back(SIMPL_NEW_DOUBLE_FP("Misorientation angle (degree)", MisOr, FilterParameter::Category::Parameter, EMsoftSO3Sampler, {1}));
     parameters.push_back(FloatVec3FilterParameter::Create("Reference orientation (Euler, °)", "RefOr", getRefOr(), FilterParameter::Category::Parameter,
-                                                          SIMPL_BIND_SETTER(EMsoftSO3Sampler, this, RefOr), SIMPL_BIND_GETTER(EMsoftSO3Sampler, this, RefOr), 1));
+                                                          SIMPL_BIND_SETTER(EMsoftSO3Sampler, this, RefOr), SIMPL_BIND_GETTER(EMsoftSO3Sampler, this, RefOr), {1}));
 
     /* maximum misorientation sampling method */
-    parameters.push_back(SIMPL_NEW_DOUBLE_FP("Misorientation angle (degree)", MisOrFull, FilterParameter::Category::Parameter, EMsoftSO3Sampler, 2));
+    parameters.push_back(SIMPL_NEW_DOUBLE_FP("Misorientation angle (degree)", MisOrFull, FilterParameter::Category::Parameter, EMsoftSO3Sampler, {2}));
     parameters.push_back(FloatVec3FilterParameter::Create("Reference orientation (Euler, °)", "RefOrFull", getRefOrFull(), FilterParameter::Category::Parameter,
-                                                          SIMPL_BIND_SETTER(EMsoftSO3Sampler, this, RefOrFull), SIMPL_BIND_GETTER(EMsoftSO3Sampler, this, RefOrFull), 2));
+                                                          SIMPL_BIND_SETTER(EMsoftSO3Sampler, this, RefOrFull), SIMPL_BIND_GETTER(EMsoftSO3Sampler, this, RefOrFull), {2}));
   }
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of sampling points along cube semi-axis", Numsp, FilterParameter::Category::Parameter, EMsoftSO3Sampler));
 

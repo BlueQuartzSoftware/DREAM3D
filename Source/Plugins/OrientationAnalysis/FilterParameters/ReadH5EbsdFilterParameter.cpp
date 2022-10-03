@@ -53,7 +53,7 @@ ReadH5EbsdFilterParameter::~ReadH5EbsdFilterParameter() = default;
 //
 // -----------------------------------------------------------------------------
 ReadH5EbsdFilterParameter::Pointer ReadH5EbsdFilterParameter::Create(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, ReadH5Ebsd* filter,
-                                                                     const QString& fileExtension, const QString& fileType, int groupIndex)
+                                                                     const QString& fileExtension, const QString& fileType, const std::vector<int>& groupIndices)
 {
   ReadH5EbsdFilterParameter::Pointer ptr = ReadH5EbsdFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -62,7 +62,7 @@ ReadH5EbsdFilterParameter::Pointer ReadH5EbsdFilterParameter::Create(const QStri
   ptr->setCategory(category);
   ptr->setFileExtension(fileExtension);
   ptr->setFileType(fileType);
-  ptr->setGroupIndex(groupIndex);
+  ptr->setGroupIndices(groupIndices);
   ptr->setFilter(filter);
   return ptr;
 }
