@@ -49,7 +49,7 @@ EbsdToH5EbsdFilterParameter::~EbsdToH5EbsdFilterParameter() = default;
 //
 // -----------------------------------------------------------------------------
 EbsdToH5EbsdFilterParameter::Pointer EbsdToH5EbsdFilterParameter::Create(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, EbsdToH5Ebsd* filter,
-                                                                         const QString& fileExtension, const QString& fileType, int groupIndex)
+                                                                         const QString& fileExtension, const QString& fileType, const std::vector<int>& groupIndices)
 {
   EbsdToH5EbsdFilterParameter::Pointer ptr = EbsdToH5EbsdFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -58,7 +58,7 @@ EbsdToH5EbsdFilterParameter::Pointer EbsdToH5EbsdFilterParameter::Create(const Q
   ptr->setCategory(category);
   ptr->setFileExtension(fileExtension);
   ptr->setFileType(fileType);
-  ptr->setGroupIndex(groupIndex);
+  ptr->setGroupIndices(groupIndices);
   ptr->setFilter(filter);
 
   return ptr;

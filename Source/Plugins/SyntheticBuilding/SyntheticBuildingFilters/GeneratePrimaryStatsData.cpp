@@ -153,7 +153,7 @@ void GeneratePrimaryStatsData::setupFilterParameters()
     m_OdfData.setColHeaders(cHeaders);
     m_OdfData.setTableData(defaultTable);
     m_OdfData.setDynamicRows(true);
-    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("ODF", OdfData, FilterParameter::Category::Parameter, GeneratePrimaryStatsData, false));
+    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("ODF", OdfData, FilterParameter::Category::Parameter, GeneratePrimaryStatsData, {false}));
   }
   {
     QStringList cHeaders;
@@ -166,7 +166,7 @@ void GeneratePrimaryStatsData::setupFilterParameters()
     m_MdfData.setColHeaders(cHeaders);
     m_MdfData.setTableData(defaultTable);
     m_MdfData.setDynamicRows(true);
-    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("MDF", MdfData, FilterParameter::Category::Parameter, GeneratePrimaryStatsData, false));
+    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("MDF", MdfData, FilterParameter::Category::Parameter, GeneratePrimaryStatsData, {false}));
   }
   {
     QStringList cHeaders;
@@ -179,7 +179,7 @@ void GeneratePrimaryStatsData::setupFilterParameters()
     m_AxisOdfData.setColHeaders(cHeaders);
     m_AxisOdfData.setTableData(defaultTable);
     m_AxisOdfData.setDynamicRows(true);
-    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("Axis ODF", AxisOdfData, FilterParameter::Category::Parameter, GeneratePrimaryStatsData, false));
+    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("Axis ODF", AxisOdfData, FilterParameter::Category::Parameter, GeneratePrimaryStatsData, {false}));
   }
 
   std::vector<QString> linkedProps = {"DataContainerName"};

@@ -81,7 +81,7 @@ void AvizoRectilinearCoordinateWriter::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::Category::RequiredArray, AvizoRectilinearCoordinateWriter, req));
   }
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Units", Units, FilterParameter::Category::Parameter, AvizoRectilinearCoordinateWriter, 0));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Units", Units, FilterParameter::Category::Parameter, AvizoRectilinearCoordinateWriter, {0}));
 
   setFilterParameters(parameters);
 }

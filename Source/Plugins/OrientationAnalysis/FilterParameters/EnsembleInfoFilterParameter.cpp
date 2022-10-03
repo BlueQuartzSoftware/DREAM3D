@@ -52,7 +52,7 @@ EnsembleInfoFilterParameter::~EnsembleInfoFilterParameter() = default;
 // -----------------------------------------------------------------------------
 EnsembleInfoFilterParameter::Pointer EnsembleInfoFilterParameter::Create(const QString& humanLabel, const QString& propertyName, EnsembleInfo defaultValue, Category category,
                                                                          const SetterCallbackType& setterCallback, const GetterCallbackType& getterCallback, QVector<QString> choices,
-                                                                         bool showOperators, int groupIndex)
+                                                                         bool showOperators, const std::vector<int>& groupIndices)
 {
   EnsembleInfoFilterParameter::Pointer ptr = EnsembleInfoFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -63,7 +63,7 @@ EnsembleInfoFilterParameter::Pointer EnsembleInfoFilterParameter::Create(const Q
   ptr->setCategory(category);
   ptr->setChoices(choices);
   ptr->setShowOperators(showOperators);
-  ptr->setGroupIndex(groupIndex);
+  ptr->setGroupIndices(groupIndices);
   ptr->setSetterCallback(setterCallback);
   ptr->setGetterCallback(getterCallback);
 

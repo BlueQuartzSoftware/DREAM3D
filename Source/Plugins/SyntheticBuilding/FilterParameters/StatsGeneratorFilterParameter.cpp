@@ -46,7 +46,7 @@ StatsGeneratorFilterParameter::~StatsGeneratorFilterParameter() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGeneratorFilterParameter::Pointer StatsGeneratorFilterParameter::Create(const QString& humanLabel, const QString& propertyName, const QString& defaultValue, Category category, int groupIndex)
+StatsGeneratorFilterParameter::Pointer StatsGeneratorFilterParameter::Create(const QString& humanLabel, const QString& propertyName, const QString& defaultValue, Category category, const std::vector<int>& groupIndices)
 {
 
   StatsGeneratorFilterParameter::Pointer ptr = StatsGeneratorFilterParameter::New();
@@ -54,7 +54,7 @@ StatsGeneratorFilterParameter::Pointer StatsGeneratorFilterParameter::Create(con
   ptr->setPropertyName(propertyName);
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
-  ptr->setGroupIndex(groupIndex);
+  ptr->setGroupIndices(groupIndices);
 
   return ptr;
 }

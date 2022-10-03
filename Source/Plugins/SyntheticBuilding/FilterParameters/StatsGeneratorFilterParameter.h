@@ -67,7 +67,7 @@ public:
    * @param groupIndex
    * @return
    */
-  static Pointer Create(const QString& humanLabel, const QString& propertyName, const QString& defaultValue, Category category, int groupIndex = -1);
+  static Pointer Create(const QString& humanLabel, const QString& propertyName, const QString& defaultValue, Category category, const std::vector<int>& groupIndices = {});
 
   virtual ~StatsGeneratorFilterParameter();
 

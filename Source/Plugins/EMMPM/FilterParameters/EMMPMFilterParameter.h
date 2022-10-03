@@ -84,7 +84,7 @@ public:
    * @return
    */
   static Pointer Create(const QString& humanLabel, const QString& propertyName, const QString& defaultValue, Category category, const SetterCallbackType& setterCallback,
-                        const GetterCallbackType& getterCallback, int groupIndex = -1);
+                        const GetterCallbackType& getterCallback, const std::vector<int>& groupIndices = {});
 
   virtual ~EMMPMFilterParameter();
 

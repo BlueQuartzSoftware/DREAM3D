@@ -78,7 +78,7 @@ void AvizoUniformCoordinateWriter::setupFilterParameters()
     DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeatureIds", FeatureIdsArrayPath, FilterParameter::Category::RequiredArray, AvizoUniformCoordinateWriter, req));
   }
-  parameters.push_back(SIMPL_NEW_STRING_FP("Units", Units, FilterParameter::Category::Parameter, AvizoUniformCoordinateWriter, 0));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Units", Units, FilterParameter::Category::Parameter, AvizoUniformCoordinateWriter, {0}));
 
   setFilterParameters(parameters);
 }

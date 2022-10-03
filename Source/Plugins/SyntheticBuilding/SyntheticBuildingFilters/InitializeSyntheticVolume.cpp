@@ -107,11 +107,11 @@ void InitializeSyntheticVolume::setupFilterParameters()
 
   {
     parameters.push_back(SeparatorFilterParameter::Create("Geometry Selection", FilterParameter::Category::RequiredArray));
-    parameters.back()->setGroupIndex(1);
+    parameters.back()->setGroupIndices({1});
     parameters.back()->setPropertyName("Geometry Selection");
     DataContainerSelectionFilterParameter::RequirementType req;
     req.dcGeometryTypes = {IGeometry::Type::Image};
-    parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Existing Geometry", GeometryDataContainer, FilterParameter::Category::RequiredArray, InitializeSyntheticVolume, req, 1));
+    parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Existing Geometry", GeometryDataContainer, FilterParameter::Category::RequiredArray, InitializeSyntheticVolume, req, {1}));
   }
 
   parameters.push_back(SeparatorFilterParameter::Create("Cell Ensemble Data", FilterParameter::Category::RequiredArray));
@@ -135,9 +135,9 @@ void InitializeSyntheticVolume::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Types", InputPhaseTypesArrayPath, FilterParameter::Category::RequiredArray, InitializeSyntheticVolume, req));
   }
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Synthetic Volume Data Container", DataContainerName, FilterParameter::Category::CreatedArray, InitializeSyntheticVolume, 0));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Synthetic Volume Data Container", DataContainerName, FilterParameter::Category::CreatedArray, InitializeSyntheticVolume, {0}));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, InitializeSyntheticVolume, 0));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, InitializeSyntheticVolume, {0}));
 
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
@@ -166,13 +166,13 @@ void InitializeSyntheticVolume::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions (Voxels)", Dimensions, FilterParameter::Category::Parameter, InitializeSyntheticVolume, 0));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Category::Parameter, InitializeSyntheticVolume, 0));
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions (Voxels)", Dimensions, FilterParameter::Category::Parameter, InitializeSyntheticVolume, {0}));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Category::Parameter, InitializeSyntheticVolume, {0}));
   parameters.back()->setLegacyPropertyName("Resolution");
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Category::Parameter, InitializeSyntheticVolume, 0));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Category::Parameter, InitializeSyntheticVolume, {0}));
 
   std::vector<QString> choices = IGeometry::GetAllLengthUnitStrings();
-  parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Units (For Description Only)", LengthUnit, FilterParameter::Category::Parameter, InitializeSyntheticVolume, choices, false, 0));
+  parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Units (For Description Only)", LengthUnit, FilterParameter::Category::Parameter, InitializeSyntheticVolume, choices, false, {0}));
 
   param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Box Size in Length Units", BoxDimensions, FilterParameter::Category::Parameter, InitializeSyntheticVolume);
   param->setReadOnly(true);

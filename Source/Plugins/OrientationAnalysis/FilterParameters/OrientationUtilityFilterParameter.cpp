@@ -49,14 +49,14 @@ OrientationUtilityFilterParameter::~OrientationUtilityFilterParameter() = defaul
 //
 // -----------------------------------------------------------------------------
 OrientationUtilityFilterParameter::Pointer OrientationUtilityFilterParameter::Create(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category,
-                                                                                     int groupIndex)
+                                                                                     const std::vector<int>& groupIndices)
 {
   OrientationUtilityFilterParameter::Pointer ptr = OrientationUtilityFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
-  ptr->setGroupIndex(groupIndex);
+  ptr->setGroupIndices(groupIndices);
   ptr->setReadOnly(true);
 
   return ptr;

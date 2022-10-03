@@ -109,8 +109,8 @@ void ImportEbsdMontage::setupFilterParameters()
                                              SIMPL_BIND_GETTER(ImportEbsdMontage, this, DefineScanOverlap), choices, linkedProps);
     parameters.push_back(linkedChoices);
 
-    parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Pixel Overlap Value (X, Y)", ScanOverlapPixel, FilterParameter::Category::Parameter, ImportEbsdMontage, 1));
-    parameters.push_back(SIMPL_NEW_FLOAT_VEC2_FP("Percent Overlap Value (X, Y)", ScanOverlapPercent, FilterParameter::Category::Parameter, ImportEbsdMontage, 2));
+    parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Pixel Overlap Value (X, Y)", ScanOverlapPixel, FilterParameter::Category::Parameter, ImportEbsdMontage, {1}));
+    parameters.push_back(SIMPL_NEW_FLOAT_VEC2_FP("Percent Overlap Value (X, Y)", ScanOverlapPercent, FilterParameter::Category::Parameter, ImportEbsdMontage, {2}));
   }
 
   {

@@ -264,15 +264,15 @@ void PartitionGeometry::setupFilterParameters()
   }
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Starting Partition ID", StartingPartitionID, FilterParameter::Category::Parameter, PartitionGeometry));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Out-Of-Bounds Partition ID", AdvancedOutOfBoundsValue, FilterParameter::Category::Parameter, PartitionGeometry, 1));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Out-Of-Bounds Partition ID", BoundingBoxOutOfBoundsValue, FilterParameter::Category::Parameter, PartitionGeometry, 2));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Out-Of-Bounds Partition ID", AdvancedOutOfBoundsValue, FilterParameter::Category::Parameter, PartitionGeometry, {1}));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Out-Of-Bounds Partition ID", BoundingBoxOutOfBoundsValue, FilterParameter::Category::Parameter, PartitionGeometry, {2}));
   parameters.push_back(SeparatorFilterParameter::Create("Partitioning Scheme Details", FilterParameter::Category::Parameter));
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Number Of Partitions Per Axis (X, Y, Z)", NumberOfPartitionsPerAxis, FilterParameter::Category::Parameter, PartitionGeometry));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Partitioning Scheme Origin (X, Y, Z)", PartitioningSchemeOrigin, FilterParameter::Category::Parameter, PartitionGeometry, 1));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Length Per Partition (X, Y, Z)", LengthPerPartition, FilterParameter::Category::Parameter, PartitionGeometry, 1));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Partitioning Scheme Origin (X, Y, Z)", PartitioningSchemeOrigin, FilterParameter::Category::Parameter, PartitionGeometry, {1}));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Length Per Partition (X, Y, Z)", LengthPerPartition, FilterParameter::Category::Parameter, PartitionGeometry, {1}));
 
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Lower Left Coordinate (X, Y, Z)", LowerLeftCoord, FilterParameter::Category::Parameter, PartitionGeometry, 2));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Upper Right Coordinate (X, Y, Z)", UpperRightCoord, FilterParameter::Category::Parameter, PartitionGeometry, 2));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Lower Left Coordinate (X, Y, Z)", LowerLeftCoord, FilterParameter::Category::Parameter, PartitionGeometry, {2}));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Upper Right Coordinate (X, Y, Z)", UpperRightCoord, FilterParameter::Category::Parameter, PartitionGeometry, {2}));
 
   PreflightUpdatedValueFilterParameter::Pointer param =
       SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Partitioning Scheme Information", PartitioningSchemeInformation, FilterParameter::Category::Parameter, PartitionGeometry);

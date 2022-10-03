@@ -108,7 +108,7 @@ public:
    * @return
    */
   static Pointer Create(const QString& humanLabel, const QString& propertyName, EnsembleInfo defaultValue, Category category, const SetterCallbackType& setterCallback,
-                        const GetterCallbackType& getterCallback, QVector<QString> choices, bool showOperators, int groupIndex = -1);
+                        const GetterCallbackType& getterCallback, QVector<QString> choices, bool showOperators, const std::vector<int>& groupIndices = {});
 
   virtual ~EnsembleInfoFilterParameter();
 

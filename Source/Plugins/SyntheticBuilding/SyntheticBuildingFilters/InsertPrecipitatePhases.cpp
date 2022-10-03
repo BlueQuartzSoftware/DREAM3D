@@ -196,7 +196,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
   linkedProps.clear();
   linkedProps.push_back("PrecipInputFile");
   linkedProps.push_back("InputStatsArrayPath");
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Precipitates Input File", PrecipInputFile, FilterParameter::Category::Parameter, InsertPrecipitatePhases, "*.txt", "Text File", 1));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Precipitates Input File", PrecipInputFile, FilterParameter::Category::Parameter, InsertPrecipitatePhases, "*.txt", "Text File", {1}));
 
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
@@ -221,12 +221,12 @@ void InsertPrecipitatePhases::setupFilterParameters()
 
   {
     AttributeMatrixCreationFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_AM_CREATION_FP("New Attribute Matrix", NewAttributeMatrixPath, FilterParameter::Category::Parameter, InsertPrecipitatePhases, req, 1));
+    parameters.push_back(SIMPL_NEW_AM_CREATION_FP("New Attribute Matrix", NewAttributeMatrixPath, FilterParameter::Category::Parameter, InsertPrecipitatePhases, req, {1}));
   }
 
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Category::Feature);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Selected Attribute Matrix", SelectedAttributeMatrixPath, FilterParameter::Category::Parameter, InsertPrecipitatePhases, req, 2));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Selected Attribute Matrix", SelectedAttributeMatrixPath, FilterParameter::Category::Parameter, InsertPrecipitatePhases, req, {2}));
   }
   setFilterParameters(parameters);
 }
