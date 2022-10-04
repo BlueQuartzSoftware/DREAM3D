@@ -7,6 +7,9 @@
 #include <QtCore/QTextStream>
 
 #include <Eigen/Dense>
+#include <chrono>
+#include <complex>
+#include <random>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
@@ -33,21 +36,23 @@ constexpr std::array<float, 10> k_Steps = {-0.11, -0.011, -0.0011, 0.001, 0.01, 
 constexpr float k_Pi = 3.14159265359f;
 } // namespace
 
-typedef Eigen::Matrix<float, Eigen::Dynamic, 3> MatrixNx3f;
+typedef Eigen::Matrix<std::complex<float>, Eigen::Dynamic, 3, Eigen::RowMajor> MatrixNx3cf;
 /**
  * @brief The AlignPointCloudsFromPointsList class adjusts a geometry's points based on alignment lists
  *
  */
 class AlignPointCloudsFromPointsList
 {
-  typedef Eigen::Matrix<float, 4, 4> AffineTransfromMatrix;
-  typedef Eigen::Matrix<float, 1, 3> Row;
+  typedef Eigen::Matrix<float, 4, 4, Eigen::RowMajor> AffineTransfromMatrix;
+  typedef Eigen::Matrix<std::complex<float>, 4, 4, Eigen::RowMajor> AffineTransfromMatrixC;
+  typedef Eigen::Matrix<float, 1, 3, Eigen::RowMajor> Row;
 
 public:
-  AlignPointCloudsFromPointsList(SharedVertexList::Pointer pointsToAlign, const MatrixNx3f& movingPointsList, const MatrixNx3f& staticPointsList)
+  AlignPointCloudsFromPointsList(RigidPointCloudTransform* filter, SharedVertexList::Pointer pointsToAlign, const MatrixNx3f& movingPointsList, const MatrixNx3f& staticPointsList)
   : m_PointsToAlign(pointsToAlign)
   , m_MovingPointsList(movingPointsList)
   , m_StaticPointsList(staticPointsList)
+  , m_Filter(filter)
   {
   }
   virtual ~AlignPointCloudsFromPointsList() = default;
@@ -55,8 +60,7 @@ public:
   void generate()
   {
     // load vector of proper size
-    std::vector<size_t> iterate;
-    iterate.resize(m_StaticPointsList.rows() - 2);
+    std::vector<size_t> iterate(m_StaticPointsList.rows() - 2);
     std::iota(iterate.begin(), iterate.end(), 0);
 
     // declare centroid matrices
@@ -69,11 +73,12 @@ public:
     for(const auto& i : iterate)
     {
       std::vector rowIndices{i, (i + 1), (i + 2)};
-      movingPlanarCentroids.row(i) = findPlanarCentroids(createTrianglePlanebyIndex(m_MovingPointsList, rowIndices));
-      staticPlanarCentroids.row(i) = findPlanarCentroids(createTrianglePlanebyIndex(m_StaticPointsList, rowIndices));
+      movingPlanarCentroids.block<1, 3>(i, 0) = findPlanarCentroids(createTrianglePlanebyIndex(m_MovingPointsList, rowIndices));
+      staticPlanarCentroids.block<1, 3>(i, 0) = findPlanarCentroids(createTrianglePlanebyIndex(m_StaticPointsList, rowIndices));
     }
 
     auto affineTransform = findTranslationMatrix(movingPlanarCentroids, staticPlanarCentroids);
+    ExportAffineTransformMatrixToDataStructure(affineTransform);
     TransformSetOfPoints(m_PointsToAlign, affineTransform);
   }
 
@@ -81,6 +86,7 @@ private:
   SharedVertexList::Pointer m_PointsToAlign;
   const MatrixNx3f& m_MovingPointsList;
   const MatrixNx3f& m_StaticPointsList;
+  RigidPointCloudTransform* m_Filter;
 
   Eigen::Matrix<float, 1, 3> findPlanarCentroids(const MatrixNx3f& planarPoints) // could be parallelized
   {
@@ -90,7 +96,7 @@ private:
       float coordSum = 0.0f;
       for(int row = 0; row < planarPoints.rows(); row++)
       {
-        coordSum += centroidsXYZ(row, col);
+        coordSum += planarPoints(row, col);
       }
       centroidsXYZ(0, col) = (coordSum / planarPoints.rows());
     }
@@ -101,74 +107,72 @@ private:
   {
     MatrixNx3f planeCoords;
     planeCoords.resize(rowIndices.size(), Eigen::NoChange);
-    for(size_t i = 0; i < rowIndices.size(); i++)
+    for(size_t row = 0; row < rowIndices.size(); row++)
     {
-      planeCoords.row(i) = pointsList.row(rowIndices[i]);
+      planeCoords.block<1, 3>(row, 0) = pointsList.block<1, 3>(rowIndices[row], 0);
     }
     return planeCoords;
   }
 
-  AffineTransfromMatrix findTranslationMatrix(MatrixNx3f movingCentroids, MatrixNx3f staticCentroids)
+  AffineTransfromMatrix findTranslationMatrix(const MatrixNx3f& movingCentroids, const MatrixNx3f& staticCentroids)
   {
-    std::array<float, 6> optimizationArray = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}; // [dx, dy, dz, phi1, PHI, phi2]
+    std::array<std::complex<float>, 6> optimizationArray = {std::complex<float>(11.9389f, 0), std::complex<float>(-1.5032f, 0), std::complex<float>(0.4524f, 0),
+                                                            std::complex<float>(3.9960f, 0),  std::complex<float>(0.0744f, 0),  std::complex<float>(0.8539f, 0)}; // [dx, dy, dz, phi1, PHI, phi2]
     std::vector<std::pair<size_t, size_t>> correlationMatrix(staticCentroids.rows(), std::make_pair(0, 0));
     for(size_t i = 0; i < correlationMatrix.size(); i++)
     {
       correlationMatrix[i] = std::make_pair(i, i);
     }
 
+    // pull complex form
+    auto complexMovingCentroids = getComplex(movingCentroids);
+    auto complexStaticCentroids = getComplex(staticCentroids);
+
     // declare parameters
-    bool notRegisteredFlag = true;
-    size_t iteration = 0;
     auto movingBest = movingCentroids;
-    std::vector<float> lostListFull((k_IterationsMax + 1));
 
     // define actual algorithm
-    lostListFull[iteration] = LossFunctionWrapper(optimizationArray, staticCentroids, movingCentroids, correlationMatrix);
-    do
+    for(int iteration = 0; iteration < k_IterationsMax; iteration++)
     {
-      optimizationArray = LeastSquaresFit(optimizationArray, staticCentroids, movingCentroids, correlationMatrix);
-      movingBest = Optimize(movingCentroids, optimizationArray);
+      m_Filter->notifyStatusMessage(QObject::tr("Generation: %1 of %2").arg(iteration + 1).arg(k_IterationsMax));
+      optimizationArray = getComplex(LeastSquaresFit(optimizationArray, complexStaticCentroids, complexMovingCentroids, correlationMatrix));
+      movingBest = OptimizeR(movingCentroids, optimizationArray);
       correlationMatrix = FindClosestPoints(staticCentroids, movingBest, correlationMatrix);
-      iteration++;
-      lostListFull[iteration] = LossFunctionWrapper(optimizationArray, staticCentroids, movingCentroids, correlationMatrix);
-      if(iteration >= k_IterationsMax)
-      {
-        notRegisteredFlag = false;
-      }
-    } while(notRegisteredFlag);
+    }
 
     // create final affine transformation Matrix
-    auto TransformationMatrix = OptimizeArrayToTMatrix(optimizationArray);
+    auto TransformationMatrix = getReal(OptimizeArrayToTMatrix(optimizationArray));
 
     return TransformationMatrix;
   }
 
-  AffineTransfromMatrix OptimizeArrayToTMatrix(const std::array<float, 6>& optimizationArray)
+  template <typename T>
+  Eigen::Matrix<T, 4, 4, Eigen::RowMajor> OptimizeArrayToTMatrix(const std::array<T, 6>& optimizationArray)
   {
     // translation
-    Eigen::Vector3f translation;
+    Eigen::Matrix<T, 1, 3, Eigen::RowMajor> translation;
     translation(0, 0) = optimizationArray[0]; // dx
     translation(0, 1) = optimizationArray[1]; // dy
     translation(0, 2) = optimizationArray[2]; // dz
 
     // rotation matrix
-    auto rotationMatrix = EulerAnglesToRotationMatrix(optimizationArray[3], optimizationArray[4], optimizationArray[5]); // phi1, PHI, phi2
+    Eigen::Matrix<T, 3, 3, Eigen::RowMajor> rotationMatrix = EulerAnglesToRotationMatrix(optimizationArray[3], optimizationArray[4], optimizationArray[5]); // phi1, PHI, phi2
 
     // affine transformation matrix
     return CraftTransformationMatrix(rotationMatrix, translation);
   }
 
-  Eigen::Matrix<float, 3, 3> EulerAnglesToRotationMatrix(const float phi1, const float PHI, const float phi2)
+  template <typename T>
+  Eigen::Matrix<T, 3, 3, Eigen::RowMajor> EulerAnglesToRotationMatrix(T phi1, T PHI, T phi2)
   {
-    Eigen::Matrix<float, 3, 3> rotationMatrix;
+    Eigen::Matrix<T, 3, 3, Eigen::RowMajor> rotationMatrix;
 
-    auto cos1 = std::cosf(phi1);
-    auto COS = std::cosf(PHI);
-    auto cos2 = std::cosf(phi2);
-    auto sin1 = std::sinf(phi1);
-    auto SIN = std::sinf(PHI);
-    auto sin2 = std::sinf(phi2);
+    auto cos1 = std::cos(phi1);
+    auto COS = std::cos(PHI);
+    auto cos2 = std::cos(phi2);
+    auto sin1 = std::sin(phi1);
+    auto SIN = std::sin(PHI);
+    auto sin2 = std::sin(phi2);
 
     // compute rotation matrix (ZXZ convention)
     rotationMatrix(0, 0) = (cos1 * cos2 - sin1 * sin2 * COS);
@@ -184,31 +188,37 @@ private:
     return rotationMatrix;
   }
 
-  AffineTransfromMatrix CraftTransformationMatrix(const Eigen::Matrix<float, 3, 3>& rotationMatrix, const Eigen::Vector3f& translationVector)
+  template <typename T>
+  Eigen::Matrix<T, 4, 4, Eigen::RowMajor> CraftTransformationMatrix(Eigen::Matrix<T, 3, 3, Eigen::RowMajor> rotationMatrix, Eigen::Matrix<T, 1, 3, Eigen::RowMajor> translationVector)
   {
-    AffineTransfromMatrix transfromMatrix;
+    Eigen::Matrix<T, 4, 4, Eigen::RowMajor> transfromMatrix;
     transfromMatrix.setIdentity(); // bottom row = [0,0,0,1]
     transfromMatrix.block<3, 3>(0, 0) = rotationMatrix;
-    transfromMatrix.block<3, 1>(0, 3) = translationVector;
+    transfromMatrix.block<3, 1>(0, 3) = translationVector.transpose();
     return transfromMatrix;
   }
 
-  float LossFunctionWrapper(const std::array<float, 6>& optimizationArray, const MatrixNx3f& staticCentroids, const MatrixNx3f& movingCentroids,
-                            const std::vector<std::pair<size_t, size_t>>& correlationMatrix)
+  std::complex<float> LossFunctionWrapper(const std::array<std::complex<float>, 6>& optimizationArray, const MatrixNx3cf& complexStaticCentroids, const MatrixNx3cf& complexMovingCentroids,
+                                          const std::vector<std::pair<size_t, size_t>>& correlationMatrix)
   {
-    return LossFunction(staticCentroids, Optimize(movingCentroids, optimizationArray), correlationMatrix);
+    return LossFunction(complexStaticCentroids, Optimize(complexMovingCentroids, optimizationArray), correlationMatrix);
   }
 
-  float LossFunction(const MatrixNx3f& staticCentroid, const MatrixNx3f& attemptedAlignment, const std::vector<std::pair<size_t, size_t>>& correlationMatrix)
+  std::complex<float> LossFunction(const MatrixNx3cf& complexStaticCentroid, const MatrixNx3cf& complexAttemptedAlignment, const std::vector<std::pair<size_t, size_t>>& correlationMatrix)
   {
-    float result = 0.0f;
-    std::vector<float> rowSums(correlationMatrix.size());
+    auto result = std::complex<float>(0.0f, 0.0f);
+    std::vector<std::complex<float>> rowSums;
     for(int row = 0; row < correlationMatrix.size(); row++)
     {
-      float sum;
-      for(int col = 0; col < staticCentroid.cols(); col++)
+      auto sum = std::complex<float>(0.0f, 0.0f);
+      std::vector<std::complex<float>> sums;
+      for(int col = 0; col < complexStaticCentroid.cols(); col++)
       {
-        sum += std::powf(staticCentroid(correlationMatrix[row].first, col) - attemptedAlignment(correlationMatrix[row].second, col), 2.0);
+        sums.push_back(std::pow(complexStaticCentroid(correlationMatrix[row].first, col) - complexAttemptedAlignment(correlationMatrix[row].second, col), 2.0));
+      }
+      for(int col = 0; col < complexStaticCentroid.cols(); col++)
+      {
+        sum += std::pow(complexStaticCentroid(correlationMatrix[row].first, col) - complexAttemptedAlignment(correlationMatrix[row].second, col), 2.0);
       }
       rowSums.push_back(sum);
     }
@@ -219,19 +229,27 @@ private:
     return result;
   }
 
-  MatrixNx3f Optimize(const MatrixNx3f& movingCentroids, const std::array<float, 6>& optimizationArray)
+  MatrixNx3f OptimizeR(const MatrixNx3f& movingCentroids, const std::array<std::complex<float>, 6>& optimizationArray)
   {
-    return TranformPoints(movingCentroids, OptimizeArrayToTMatrix(optimizationArray));
+    return TranformPointsR(movingCentroids, OptimizeArrayToTMatrix(optimizationArray));
+  }
+  MatrixNx3cf Optimize(const MatrixNx3cf& complexMovingCentroids, const std::array<std::complex<float>, 6>& optimizationArray)
+  {
+    return TranformPoints(complexMovingCentroids, OptimizeArrayToTMatrix(optimizationArray));
   }
 
-  MatrixNx3f TranformPoints(const MatrixNx3f& movingCentroids, const AffineTransfromMatrix& TransformationMatrix)
+  MatrixNx3f TranformPointsR(const MatrixNx3f& movingCentroids, AffineTransfromMatrixC& TransformationMatrix)
   {
-    MatrixNx3f movedCentroids(movingCentroids);
-    Eigen::Vector4f coordinateColumn;
-    coordinateColumn(3, 0) = 1.0; // insert 1 at bottom of vect
+    return getReal(TranformPoints(getComplex(movingCentroids), TransformationMatrix));
+  }
+  MatrixNx3cf TranformPoints(const MatrixNx3cf& movingCentroids, AffineTransfromMatrixC& TransformationMatrix)
+  {
+    MatrixNx3cf movedCentroids(movingCentroids);
+    Eigen::Matrix<std::complex<float>, 4, 1> coordinateColumn;
+    coordinateColumn(3, 0) = std::complex<float>(1.0f, 0.0f); // insert 1 at bottom of vect
     for(int row = 0; row < movingCentroids.rows(); row++)
     {
-      coordinateColumn.block<3, 1>(0, 0) = movingCentroids.row(row).transpose();
+      coordinateColumn.block<3, 1>(0, 0) = movingCentroids.block<1, 3>(row, 0).transpose();
       auto resultingCoord = TransformationMatrix * coordinateColumn;
       movedCentroids.block<1, 3>(row, 0) = resultingCoord.block<3, 1>(0, 0).transpose();
     }
@@ -256,8 +274,11 @@ private:
           if(calculatedError < lowestError)
           {
             lowestError = calculatedError;
-            foundCandidateCorrelation = true;
-            candidateCorrelation = std::make_pair(staticIndex, movingIndex);
+            if(squaredDistance < std::numeric_limits<double>::infinity())
+            {
+              foundCandidateCorrelation = true;
+              candidateCorrelation = std::make_pair(staticIndex, movingIndex);
+            }
           }
         }
       }
@@ -269,6 +290,11 @@ private:
     }
     if(correlation.size() == 0)
     {
+      /*for (int i = 0; i < movingBest.rows(); i++)
+      {
+          newCorrelation.push_back(std::make_pair(0, 0));
+      }*/
+
       newCorrelation = correlation;
     }
     return newCorrelation;
@@ -276,7 +302,7 @@ private:
 
   double CalculateDistance(const Row& movingRow, const Row& staticRow)
   { // sqrt(sum(pow(movingRow - staticRow, 2)))
-    double sum = 0.0;
+    auto sum = 0.0;
     for(int i = 0; i < staticRow.cols(); i++)
     {
       sum += pow(movingRow(i) - staticRow(i), 2);
@@ -284,37 +310,47 @@ private:
     return sqrt(sum);
   }
 
-  std::array<float, 6> LeastSquaresFit(std::array<float, 6> oldOptimizationArray, const MatrixNx3f& staticCentroids, const MatrixNx3f& movingCentroids,
+  std::array<float, 6> LeastSquaresFit(const std::array<std::complex<float>, 6>& oldOptimizationArray, const MatrixNx3cf& staticCentroids, const MatrixNx3cf& movingCentroids,
                                        const std::vector<std::pair<size_t, size_t>>& correlation)
   {
-    auto bestLoss = LossFunctionWrapper(oldOptimizationArray, staticCentroids, movingCentroids, correlation);
-    auto bestOptimizationArray = oldOptimizationArray;
+    auto bestLoss = LossFunctionWrapper(oldOptimizationArray, staticCentroids, movingCentroids, correlation).real();
+    auto bestOptimizationArray = getReal(oldOptimizationArray);
 
     auto workingLoss = std::numeric_limits<float>::max();
     auto workingOptimizationArray = oldOptimizationArray;
     auto thisOptimizationArray = oldOptimizationArray;
+    auto start = std::chrono::steady_clock::now();
     for(size_t iteration = 0; iteration < k_LoopMax; iteration++)
     {
-      auto loss = LossFunctionWrapper(workingOptimizationArray, staticCentroids, movingCentroids, correlation) * k_LearningRate;
+      auto now = std::chrono::steady_clock::now();
+      if(std::chrono::duration_cast<std::chrono::milliseconds>(now - start).count() > 1000)
+      {
+        auto percentage = static_cast<int>(100 * (static_cast<float>(iteration) / static_cast<float>(k_LoopMax)));
+        m_Filter->notifyStatusMessage(QObject::tr("Iterations complete: %1%").arg(percentage));
+        start = std::chrono::steady_clock::now();
+      }
+      auto loss = LossFunctionWrapper(workingOptimizationArray, staticCentroids, movingCentroids, correlation);
       auto gradient = CalculateGradient(workingOptimizationArray, staticCentroids, movingCentroids, correlation);
       for(auto& value : gradient)
       {
-        value = loss / value;
+        value = k_LearningRate * loss / value;
       }
+
       auto testOptimizationArray = workingOptimizationArray;
       for(size_t i = 0; i < testOptimizationArray.size(); i++)
       {
         testOptimizationArray[i] = workingOptimizationArray[i] - gradient[i];
       }
+
       for(const auto& step : k_Steps)
       {
         auto stepOptimizationArray = workingOptimizationArray;
         for(size_t i = 0; i < stepOptimizationArray.size(); i++)
         {
-          stepOptimizationArray[i] = step * (testOptimizationArray[i] - workingOptimizationArray[i]);
+          stepOptimizationArray[i] += std::complex<float>(step, 0.0) * (testOptimizationArray[i] - workingOptimizationArray[i]);
         }
 
-        auto stepLoss = LossFunctionWrapper(stepOptimizationArray, staticCentroids, movingCentroids, correlation);
+        auto stepLoss = LossFunctionWrapper(stepOptimizationArray, staticCentroids, movingCentroids, correlation).real();
 
         if(stepLoss < workingLoss)
         {
@@ -322,50 +358,64 @@ private:
           workingLoss = stepLoss;
         }
       }
+
       workingOptimizationArray = thisOptimizationArray;
       if(workingLoss < bestLoss)
       {
-        bestOptimizationArray = thisOptimizationArray;
+        bestOptimizationArray = getReal(thisOptimizationArray);
         bestLoss = workingLoss;
       }
       else // gen new guesses
       {
         for(auto& value : workingOptimizationArray) // gen new guesses
         {
-          value *= (((static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) - 0.5) * 0.1 + 1.0);
+          static std::default_random_engine i;
+          static std::uniform_real_distribution<> distribution(0, 1);
+          value *= std::complex<float>(((distribution(i) - 0.5) * 0.1 + 1.0), 0.0);
         }
       }
+
+      auto workingArray = getReal(workingOptimizationArray);
     }
 
     // update euler angles properly
     for(size_t i = 3; i < 6; i++)
     {
-      bestOptimizationArray[i] = std::fmod(bestOptimizationArray[i], static_cast<float>(2.0 * k_Pi));
+      bestOptimizationArray[i] = std::fmod(bestOptimizationArray[i], (2.0f * k_Pi));
     }
 
     return bestOptimizationArray;
   }
 
-  std::array<float, 6> CalculateGradient(const std::array<float, 6>& optimizationArray, const MatrixNx3f& staticCentroid, const MatrixNx3f& attemptedAlignment,
-                                         const std::vector<std::pair<size_t, size_t>>& correlationMatrix)
+  std::array<std::complex<float>, 6> CalculateGradient(const std::array<std::complex<float>, 6>& optimizationArray, const MatrixNx3cf& staticCentroid, const MatrixNx3cf& attemptedAlignment,
+                                                       const std::vector<std::pair<size_t, size_t>>& correlationMatrix)
   {
-    std::array<float, 6> gradient;
+    std::array<std::complex<float>, 6> gradient;
     gradient.fill(0.0f);
     for(size_t i = 0; i < optimizationArray.size(); i++)
     {
       auto workingOptimizationArray = optimizationArray;
-      workingOptimizationArray[i] += k_GradientConst;
-      gradient[i] = LossFunctionWrapper(workingOptimizationArray, staticCentroid, attemptedAlignment, correlationMatrix);
+      workingOptimizationArray[i] += std::complex<float>(0.0f, 1.0f) * k_GradientConst;
+      gradient[i] = LossFunctionWrapper(workingOptimizationArray, staticCentroid, attemptedAlignment, correlationMatrix).imag() / k_GradientConst;
     }
     return gradient;
   }
 
   void TransformSetOfPoints(SharedVertexList::Pointer pointsToAlign, const AffineTransfromMatrix& TransformationMatrix)
   {
-    Eigen::Vector4f coordinateColumn;
-    coordinateColumn(3, 0) = 1.0; // insert 1 at bottom of vect
+    Eigen::Matrix<float, 4, 1> coordinateColumn;
+    coordinateColumn(3, 0) = 1.0f; // insert 1 at bottom of vect
+    auto start = std::chrono::steady_clock::now();
     for(size_t i = 0; i < pointsToAlign->getSize(); i += 3)
     {
+      auto now = std::chrono::steady_clock::now();
+      if(std::chrono::duration_cast<std::chrono::milliseconds>(now - start).count() > 1000)
+      {
+        auto percentage = static_cast<int>(100 * (static_cast<float>(i) / static_cast<float>(pointsToAlign->getSize())));
+        m_Filter->notifyStatusMessage(QObject::tr("Points updated: %1%").arg(percentage));
+        start = std::chrono::steady_clock::now();
+      }
+
       coordinateColumn(0, 0) = pointsToAlign->getValue(i);
       coordinateColumn(1, 0) = pointsToAlign->getValue(i + 1);
       coordinateColumn(2, 0) = pointsToAlign->getValue(i + 2);
@@ -373,9 +423,84 @@ private:
       auto resultingCoord = TransformationMatrix * coordinateColumn;
 
       pointsToAlign->setValue(i, resultingCoord(0, 0));
-      pointsToAlign->setValue(i, resultingCoord(1, 0));
-      pointsToAlign->setValue(i, resultingCoord(2, 0));
+      pointsToAlign->setValue(i + 1, resultingCoord(1, 0));
+      pointsToAlign->setValue(i + 2, resultingCoord(2, 0));
     }
+  }
+
+  std::array<float, 6> getReal(const std::array<std::complex<float>, 6>& complex)
+  {
+    std::array<float, 6> reals;
+    for(int i = 0; i < reals.size(); i++)
+    {
+      reals[i] = complex[i].real();
+    }
+    return reals;
+  }
+  MatrixNx3f getReal(const MatrixNx3cf& complex)
+  {
+    MatrixNx3f reals;
+    reals.resize(complex.rows(), Eigen::NoChange);
+    for(int row = 0; row < reals.rows(); row++)
+    {
+      for(int col = 0; col < reals.cols(); col++)
+      {
+        reals(row, col) = complex(row, col).real();
+      }
+    }
+    return reals;
+  }
+  AffineTransfromMatrix getReal(const AffineTransfromMatrixC& complex)
+  {
+    AffineTransfromMatrix reals;
+    reals.resize(complex.rows(), Eigen::NoChange);
+    for(int row = 0; row < reals.rows(); row++)
+    {
+      for(int col = 0; col < reals.cols(); col++)
+      {
+        reals(row, col) = complex(row, col).real();
+      }
+    }
+    return reals;
+  }
+  std::array<std::complex<float>, 6> getComplex(const std::array<float, 6>& reals)
+  {
+    std::array<std::complex<float>, 6> complexes;
+    for(int i = 0; i < complexes.size(); i++)
+    {
+      complexes[i] = std::complex<float>(reals[i], 0.0);
+    }
+    return complexes;
+  }
+  MatrixNx3cf getComplex(const MatrixNx3f& reals)
+  {
+    MatrixNx3cf complexes;
+    complexes.resize(reals.rows(), Eigen::NoChange);
+    for(int row = 0; row < complexes.rows(); row++)
+    {
+      for(int col = 0; col < complexes.cols(); col++)
+      {
+        complexes(row, col) = std::complex<float>(reals(row, col), 0);
+      }
+    }
+    return reals;
+  }
+  AffineTransfromMatrixC getComplex(const AffineTransfromMatrix& reals)
+  {
+    AffineTransfromMatrixC complexes;
+    complexes.resize(reals.rows(), Eigen::NoChange);
+    for(int row = 0; row < complexes.rows(); row++)
+    {
+      for(int col = 0; col < complexes.cols(); col++)
+      {
+        complexes(row, col) = std::complex<float>(reals(row, col), 0);
+      }
+    }
+    return reals;
+  }
+
+  void ExportAffineTransformMatrixToDataStructure(const AffineTransfromMatrix& TransformationMatrix)
+  {
   }
 };
 
@@ -466,15 +591,15 @@ void RigidPointCloudTransform::dataCheck()
   fixedMatrix.resize(fixedRows.size(), Eigen::NoChange);
   movingMatrix.resize(movingRows.size(), Eigen::NoChange);
 
-  Eigen::Vector3f coordinateRow;
+  Eigen::Matrix<float, 1, 3, Eigen::RowMajor> coordinateRow;
   for(size_t rowIndx = 0; rowIndx < fixedRows.size(); rowIndx++)
   {
     auto row = fixedRows[rowIndx];
     for(size_t i = 0; i < row.size(); i++)
     {
-      coordinateRow(i, 0) = static_cast<float>(row[i]);
+      coordinateRow(0, i) = static_cast<float>(row[i]);
     }
-    fixedMatrix.block<1, 3>(rowIndx, 0) = coordinateRow.block<3, 1>(0, 0).transpose();
+    fixedMatrix.block<1, 3>(rowIndx, 0) = coordinateRow.block<1, 3>(0, 0).transpose();
   }
 
   for(size_t rowIndx = 0; rowIndx < movingRows.size(); rowIndx++)
@@ -482,10 +607,13 @@ void RigidPointCloudTransform::dataCheck()
     auto row = movingRows[rowIndx];
     for(size_t i = 0; i < row.size(); i++)
     {
-      coordinateRow(i, 0) = static_cast<float>(row[i]);
+      coordinateRow(0, i) = static_cast<float>(row[i]);
     }
-    movingMatrix.block<1, 3>(rowIndx, 0) = coordinateRow.block<3, 1>(0, 0).transpose();
+    movingMatrix.block<1, 3>(rowIndx, 0) = coordinateRow.block<1, 3>(0, 0).transpose();
   }
+
+  setMovingKeyPointsMatrix(movingMatrix);
+  setFixedKeyPointsMatrix(fixedMatrix);
 }
 
 // -----------------------------------------------------------------------------
@@ -530,7 +658,7 @@ void RigidPointCloudTransform::execute()
     return;
   }
 
-  auto align = AlignPointCloudsFromPointsList(completeMovingPoints, m_MovingKeyPointsMatrix, m_FixedKeyPointsMatrix);
+  AlignPointCloudsFromPointsList(this, completeMovingPoints, getMovingKeyPointsMatrix(), getFixedKeyPointsMatrix()).generate();
 
   if(getWarningCode() < 0)
   {

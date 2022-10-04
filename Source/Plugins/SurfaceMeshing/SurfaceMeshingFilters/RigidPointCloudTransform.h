@@ -8,11 +8,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "SIMPLib/FilterParameters/DynamicTableData.h"
-#include "SIMPLib/FilterParameters/DynamicTableData.h"
 #include "SurfaceMeshing/SurfaceMeshingPlugin.h"
 
 #include <Eigen/Dense>
-    
+
+typedef Eigen::Matrix<float, Eigen::Dynamic, 3, Eigen::RowMajor> MatrixNx3f;
+typedef Eigen::Matrix<std::complex<float>, Eigen::Dynamic, 3, Eigen::RowMajor> MatrixNx3cf;
 /**
  * @brief The RigidPointCloudTransform class. See [Filter documentation](@ref rigidpointcloudtransform) for details.
  */
@@ -33,7 +34,6 @@ class SurfaceMeshing_EXPORT RigidPointCloudTransform : public AbstractFilter
   // clang-format on
 
 public:
-
   using Self = RigidPointCloudTransform;
   using Pointer = std::shared_ptr<Self>;
   using ConstPointer = std::shared_ptr<const Self>;
@@ -54,64 +54,64 @@ public:
   static QString ClassName();
 
   ~RigidPointCloudTransform() override;
-  
-    /**
-    * @brief Sets the value for Filter Parameter for MovingGeometry
-    * @param value The new value to use.
-    */
-    void setMovingGeometry(const DataArrayPath& value);
-    /**
-    * @brief Gets the Filter Parameter value for MovingGeometry
-    * @return The value for MovingGeometry
-    */
-    DataArrayPath getMovingGeometry() const;
-    Q_PROPERTY(DataArrayPath MovingGeometry READ getMovingGeometry WRITE setMovingGeometry)
 
-    /**
-    * @brief Sets the value for Filter Parameter for MovingKeyPoints
-    * @param value The new value to use.
-    */
-    void setMovingKeyPoints(const DynamicTableData& value);
-    /**
-    * @brief Gets the Filter Parameter value for MovingKeyPoints
-    * @return The value for MovingKeyPoints
-    */
-    DynamicTableData getMovingKeyPoints() const;
-    Q_PROPERTY(DynamicTableData MovingKeyPoints READ getMovingKeyPoints WRITE setMovingKeyPoints)
+  /**
+   * @brief Sets the value for Filter Parameter for MovingGeometry
+   * @param value The new value to use.
+   */
+  void setMovingGeometry(const DataArrayPath& value);
+  /**
+   * @brief Gets the Filter Parameter value for MovingGeometry
+   * @return The value for MovingGeometry
+   */
+  DataArrayPath getMovingGeometry() const;
+  Q_PROPERTY(DataArrayPath MovingGeometry READ getMovingGeometry WRITE setMovingGeometry)
 
-    /**
-    * @brief Sets the value for Filter Parameter for FixedKeyPoints
-    * @param value The new value to use.
-    */
-    void setFixedKeyPoints(const DynamicTableData& value);
-    /**
-    * @brief Gets the Filter Parameter value for FixedKeyPoints
-    * @return The value for FixedKeyPoints
-    */
-    DynamicTableData getFixedKeyPoints() const;
-    Q_PROPERTY(DynamicTableData FixedKeyPoints READ getFixedKeyPoints WRITE setFixedKeyPoints)
+  /**
+   * @brief Sets the value for Filter Parameter for MovingKeyPoints
+   * @param value The new value to use.
+   */
+  void setMovingKeyPoints(const DynamicTableData& value);
+  /**
+   * @brief Gets the Filter Parameter value for MovingKeyPoints
+   * @return The value for MovingKeyPoints
+   */
+  DynamicTableData getMovingKeyPoints() const;
+  Q_PROPERTY(DynamicTableData MovingKeyPoints READ getMovingKeyPoints WRITE setMovingKeyPoints)
 
-    /**
-    * @brief Sets the value for Filter Parameter for MovingKeyPointsMatrix
-    * @param value The new value to use.
-    */
-    void setMovingKeyPointsMatrix(const Eigen::Matrix<float, Eigen::Dynamic, 3>& value);
-    /**
-    * @brief Gets the Filter Parameter value for MovingKeyPointsMatrix
-    * @return The value for MovingKeyPoints
-    */
-    Eigen::Matrix<float, Eigen::Dynamic, 3> getMovingKeyPointsMatrix() const;
+  /**
+   * @brief Sets the value for Filter Parameter for FixedKeyPoints
+   * @param value The new value to use.
+   */
+  void setFixedKeyPoints(const DynamicTableData& value);
+  /**
+   * @brief Gets the Filter Parameter value for FixedKeyPoints
+   * @return The value for FixedKeyPoints
+   */
+  DynamicTableData getFixedKeyPoints() const;
+  Q_PROPERTY(DynamicTableData FixedKeyPoints READ getFixedKeyPoints WRITE setFixedKeyPoints)
 
-    /**
-    * @brief Sets the value for Filter Parameter for FixedKeyPointsMatrix
-    * @param value The new value to use.
-    */
-    void setFixedKeyPointsMatrix(const Eigen::Matrix<float, Eigen::Dynamic, 3>& value);
-    /**
-    * @brief Gets the Filter Parameter value for FixedKeyPointsMatrix
-    * @return The value for FixedKeyPoints
-    */
-    Eigen::Matrix<float, Eigen::Dynamic, 3> getFixedKeyPointsMatrix() const;
+  /**
+   * @brief Sets the value for Filter Parameter for MovingKeyPointsMatrix
+   * @param value The new value to use.
+   */
+  void setMovingKeyPointsMatrix(const MatrixNx3f& value);
+  /**
+   * @brief Gets the Filter Parameter value for MovingKeyPointsMatrix
+   * @return The value for MovingKeyPoints
+   */
+  MatrixNx3f getMovingKeyPointsMatrix() const;
+
+  /**
+   * @brief Sets the value for Filter Parameter for FixedKeyPointsMatrix
+   * @param value The new value to use.
+   */
+  void setFixedKeyPointsMatrix(const MatrixNx3f& value);
+  /**
+   * @brief Gets the Filter Parameter value for FixedKeyPointsMatrix
+   * @return The value for FixedKeyPoints
+   */
+  MatrixNx3f getFixedKeyPointsMatrix() const;
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -181,18 +181,16 @@ protected:
    */
   void initialize();
 
-private: 
-    DataArrayPath  m_MovingGeometry;
-    DynamicTableData  m_MovingKeyPoints;
-    DynamicTableData  m_FixedKeyPoints;
-    Eigen::Matrix<float, Eigen::Dynamic, 3>  m_MovingKeyPointsMatrix;
-    Eigen::Matrix<float, Eigen::Dynamic, 3>  m_FixedKeyPointsMatrix;
-
+private:
+  DataArrayPath m_MovingGeometry;
+  DynamicTableData m_MovingKeyPoints;
+  DynamicTableData m_FixedKeyPoints;
+  Eigen::Matrix<float, Eigen::Dynamic, 3, Eigen::RowMajor> m_MovingKeyPointsMatrix;
+  Eigen::Matrix<float, Eigen::Dynamic, 3, Eigen::RowMajor> m_FixedKeyPointsMatrix;
 
 public:
   RigidPointCloudTransform(const RigidPointCloudTransform&) = delete;            // Copy Constructor Not Implemented
   RigidPointCloudTransform& operator=(const RigidPointCloudTransform&) = delete; // Copy Assignment Not Implemented
-  RigidPointCloudTransform(RigidPointCloudTransform &&) = delete;                // Move Constructor Not Implemented
+  RigidPointCloudTransform(RigidPointCloudTransform&&) = delete;                 // Move Constructor Not Implemented
   RigidPointCloudTransform& operator=(RigidPointCloudTransform&&) = delete;      // Move Assignment Not Implemented
 };
-
