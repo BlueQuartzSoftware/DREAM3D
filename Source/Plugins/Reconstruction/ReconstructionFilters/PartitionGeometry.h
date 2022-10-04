@@ -60,9 +60,9 @@ class Reconstruction_EXPORT PartitionGeometry : public AbstractFilter
   PYB11_PROPERTY(FloatVec3Type PartitioningSchemeOrigin READ getPartitioningSchemeOrigin WRITE setPartitioningSchemeOrigin)
   PYB11_PROPERTY(FloatVec3Type LengthPerPartition READ getLengthPerPartition WRITE setLengthPerPartition)
   PYB11_PROPERTY(IntVec3Type NumberOfPartitionsPerAxis READ getNumberOfPartitionsPerAxis WRITE setNumberOfPartitionsPerAxis)
-  PYB11_PROPERTY(int AdvancedOutOfBoundsValue READ getAdvancedOutOfBoundsValue WRITE setAdvancedOutOfBoundsValue)
-  PYB11_PROPERTY(int BoundingBoxOutOfBoundsValue READ getBoundingBoxOutOfBoundsValue WRITE setBoundingBoxOutOfBoundsValue)
+  PYB11_PROPERTY(int OutOfBoundsValue READ getOutOfBoundsValue WRITE setOutOfBoundsValue)
   PYB11_PROPERTY(int StartingPartitionID READ getStartingPartitionID WRITE setStartingPartitionID)
+  PYB11_PROPERTY(DataArrayPath PartitioningSchemeDataContainerName READ getPartitioningSchemeDataContainerName WRITE setPartitioningSchemeDataContainerName)
   PYB11_PROPERTY(QString InputGeometryInformation READ getInputGeometryInformation)
   PYB11_PROPERTY(QString PartitioningSchemeInformation READ getPartitioningSchemeInformation)
   PYB11_PROPERTY(QString PartitionIdsArrayName READ getPartitionIdsArrayName WRITE setPartitionIdsArrayName)
@@ -77,7 +77,8 @@ public:
   {
     Basic = 0,
     Advanced = 1,
-    BoundingBox = 2
+    BoundingBox = 2,
+    ExistingPartitioningScheme = 3
   };
 
   using Self = PartitionGeometry;
@@ -190,26 +191,26 @@ public:
   Q_PROPERTY(IntVec3Type NumberOfPartitionsPerAxis READ getNumberOfPartitionsPerAxis WRITE setNumberOfPartitionsPerAxis)
 
   /**
-   * @brief Setter property for AdvancedOutOfBoundsValue
+   * @brief Setter property for OutOfBoundsValue
    */
-  void setAdvancedOutOfBoundsValue(const int& value);
+  void setOutOfBoundsValue(const int& value);
   /**
-   * @brief Getter property for AdvancedOutOfBoundsValue
-   * @return Value of AdvancedOutOfBoundsValue
+   * @brief Getter property for OutOfBoundsValue
+   * @return Value of OutOfBoundsValue
    */
-  int getAdvancedOutOfBoundsValue() const;
-  Q_PROPERTY(int AdvancedOutOfBoundsValue READ getAdvancedOutOfBoundsValue WRITE setAdvancedOutOfBoundsValue)
+  int getOutOfBoundsValue() const;
+  Q_PROPERTY(int OutOfBoundsValue READ getOutOfBoundsValue WRITE setOutOfBoundsValue)
 
   /**
-   * @brief Setter property for BoundingBoxOutOfBoundsValue
+   * @brief Setter property for PartitioningSchemeDataContainerName
    */
-  void setBoundingBoxOutOfBoundsValue(const int& value);
+  void setPartitioningSchemeDataContainerName(const DataArrayPath& value);
   /**
-   * @brief Getter property for BoundingBoxOutOfBoundsValue
-   * @return Value of BoundingBoxOutOfBoundsValue
+   * @brief Getter property for PartitioningSchemeDataContainerName
+   * @return Value of PartitioningSchemeDataContainerName
    */
-  int getBoundingBoxOutOfBoundsValue() const;
-  Q_PROPERTY(int BoundingBoxOutOfBoundsValue READ getBoundingBoxOutOfBoundsValue WRITE setBoundingBoxOutOfBoundsValue)
+  DataArrayPath getPartitioningSchemeDataContainerName() const;
+  Q_PROPERTY(DataArrayPath PartitioningSchemeDataContainerName READ getPartitioningSchemeDataContainerName WRITE setPartitioningSchemeDataContainerName)
 
   /**
    * @brief Setter property for StartingPartitionID
@@ -364,9 +365,9 @@ private:
   QString m_PSAttributeMatrixName = {"CellData"};
   QString m_PSDataArrayName = m_PartitionIdsArrayName;
   QString m_PSImageGeomName = {"PartitioningSchemeImageGeom"};
-  int m_AdvancedOutOfBoundsValue = 0;
-  int m_BoundingBoxOutOfBoundsValue = 0;
+  int m_OutOfBoundsValue = 0;
   int m_StartingPartitionID = 1;
+  DataArrayPath m_PartitioningSchemeDataContainerName = {"", "", ""};
   DataArrayPath m_AttributeMatrixPath = {"", "", ""};
   //  DataArrayPath m_BoundingBoxPath = {"", "", ""};
 
@@ -389,10 +390,18 @@ private:
   QString getInputUnknownGeometryInformation() const;
 
   template <typename T>
-  PartitioningImageGeomResult createPartitioningSchemeGeometry(const T& geometry);
+  PartitioningImageGeomResult createPartitioningSchemeGeometry(const T& geometry, IntVec3Type& numberOfPartitionsPerAxis);
 
-  void partitionCellBasedGeometry(const IGeometryGrid& geometry, Int32ArrayType& partitionIds, const std::optional<int> &outOfBoundsValue);
-  void partitionNodeBasedGeometry(const QString &geomName, const SharedVertexList& vertexList, Int32ArrayType& partitionIds, const std::optional<int> &outOfBoundsValue);
+  void partitionCellBasedGeometry(const IGeometryGrid& geometry, Int32ArrayType& partitionIds, const std::optional<int>& outOfBoundsValue);
+  void partitionNodeBasedGeometry(const QString& geomName, const SharedVertexList& vertexList, Int32ArrayType& partitionIds, const std::optional<int>& outOfBoundsValue);
+
+  void dataCheckBasicMode();
+  void dataCheckAdvancedMode();
+  void dataCheckBoundingBoxMode();
+  void dataCheckExistingGeometryMode();
+
+  void dataCheckNumberOfPartitions();
+  void dataCheckPartitioningScheme();
 
 public:
   PartitionGeometry(const PartitionGeometry&) = delete;            // Copy Constructor Not Implemented
