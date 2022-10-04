@@ -92,6 +92,17 @@ public:
   Q_PROPERTY(DynamicTableData FixedKeyPoints READ getFixedKeyPoints WRITE setFixedKeyPoints)
 
   /**
+   * @brief Sets the value for Filter Parameter for GenerationCount
+   * @param value The new value to use.
+   */
+  void RigidPointCloudTransform::setGenerationCount(const int value);
+  /**
+   * @brief Gets the Filter Parameter value for GenerationCount
+   * @return The value for GenerationCount
+   */
+  int RigidPointCloudTransform::getGenerationCount() const;
+
+  /**
    * @brief Sets the value for Filter Parameter for MovingKeyPointsMatrix
    * @param value The new value to use.
    */
@@ -187,6 +198,7 @@ private:
   DynamicTableData m_FixedKeyPoints;
   Eigen::Matrix<float, Eigen::Dynamic, 3, Eigen::RowMajor> m_MovingKeyPointsMatrix;
   Eigen::Matrix<float, Eigen::Dynamic, 3, Eigen::RowMajor> m_FixedKeyPointsMatrix;
+  int m_GenerationCount = 10;
 
 public:
   RigidPointCloudTransform(const RigidPointCloudTransform&) = delete;            // Copy Constructor Not Implemented

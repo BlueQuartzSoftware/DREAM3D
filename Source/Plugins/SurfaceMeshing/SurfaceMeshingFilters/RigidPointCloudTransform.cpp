@@ -17,6 +17,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DynamicTableFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/Geometry/EdgeGeom.h"
 #include "SIMPLib/Geometry/IGeometry2D.h"
 #include "SIMPLib/Geometry/IGeometry3D.h"
@@ -31,9 +32,10 @@ constexpr float k_Alpha = 0.2;
 constexpr float k_GradientConst = 0.000001f;
 constexpr size_t k_LoopMax = 1000;
 constexpr float k_LearningRate = 0.1;
-constexpr size_t k_IterationsMax = 10;
 constexpr std::array<float, 10> k_Steps = {-0.11, -0.011, -0.0011, 0.001, 0.01, 0.1, 0.5, 1.0, 2.0, 10.0};
 constexpr float k_Pi = 3.14159265359f;
+const QString k_AffineMatrixName = "4x4 Affine Transform Matrix";
+const QString k_TransformationWrapper = "Tranformation Matrix";
 } // namespace
 
 typedef Eigen::Matrix<std::complex<float>, Eigen::Dynamic, 3, Eigen::RowMajor> MatrixNx3cf;
@@ -48,11 +50,14 @@ class AlignPointCloudsFromPointsList
   typedef Eigen::Matrix<float, 1, 3, Eigen::RowMajor> Row;
 
 public:
-  AlignPointCloudsFromPointsList(RigidPointCloudTransform* filter, SharedVertexList::Pointer pointsToAlign, const MatrixNx3f& movingPointsList, const MatrixNx3f& staticPointsList)
+  AlignPointCloudsFromPointsList(RigidPointCloudTransform* filter, SharedVertexList::Pointer pointsToAlign, const MatrixNx3f& movingPointsList, const MatrixNx3f& staticPointsList,
+                                 std::shared_ptr<DataArray<float>> dArray, const int generationCount)
   : m_PointsToAlign(pointsToAlign)
   , m_MovingPointsList(movingPointsList)
   , m_StaticPointsList(staticPointsList)
   , m_Filter(filter)
+  , m_TransformMatrix(dArray)
+  , m_GenerationCount(generationCount)
   {
   }
   virtual ~AlignPointCloudsFromPointsList() = default;
@@ -79,6 +84,10 @@ public:
 
     auto affineTransform = findTranslationMatrix(movingPlanarCentroids, staticPlanarCentroids);
     ExportAffineTransformMatrixToDataStructure(affineTransform);
+    if(m_Filter->getCancel())
+    {
+      return;
+    }
     TransformSetOfPoints(m_PointsToAlign, affineTransform);
   }
 
@@ -87,6 +96,8 @@ private:
   const MatrixNx3f& m_MovingPointsList;
   const MatrixNx3f& m_StaticPointsList;
   RigidPointCloudTransform* m_Filter;
+  std::shared_ptr<DataArray<float>> m_TransformMatrix;
+  int m_GenerationCount = 10;
 
   Eigen::Matrix<float, 1, 3> findPlanarCentroids(const MatrixNx3f& planarPoints) // could be parallelized
   {
@@ -132,12 +143,16 @@ private:
     auto movingBest = movingCentroids;
 
     // define actual algorithm
-    for(int iteration = 0; iteration < k_IterationsMax; iteration++)
+    for(int iteration = 0; iteration < m_GenerationCount; iteration++)
     {
-      m_Filter->notifyStatusMessage(QObject::tr("Generation: %1 of %2").arg(iteration + 1).arg(k_IterationsMax));
+      m_Filter->notifyStatusMessage(QObject::tr("Generation: %1 of %2").arg(iteration + 1).arg(m_GenerationCount));
       optimizationArray = getComplex(LeastSquaresFit(optimizationArray, complexStaticCentroids, complexMovingCentroids, correlationMatrix));
       movingBest = OptimizeR(movingCentroids, optimizationArray);
       correlationMatrix = FindClosestPoints(staticCentroids, movingBest, correlationMatrix);
+      if(m_Filter->getCancel())
+      {
+        return {};
+      }
     }
 
     // create final affine transformation Matrix
@@ -322,6 +337,10 @@ private:
     auto start = std::chrono::steady_clock::now();
     for(size_t iteration = 0; iteration < k_LoopMax; iteration++)
     {
+      if(m_Filter->getCancel())
+      {
+        return {};
+      }
       auto now = std::chrono::steady_clock::now();
       if(std::chrono::duration_cast<std::chrono::milliseconds>(now - start).count() > 1000)
       {
@@ -408,6 +427,10 @@ private:
     auto start = std::chrono::steady_clock::now();
     for(size_t i = 0; i < pointsToAlign->getSize(); i += 3)
     {
+      if(m_Filter->getCancel())
+      {
+        return;
+      }
       auto now = std::chrono::steady_clock::now();
       if(std::chrono::duration_cast<std::chrono::milliseconds>(now - start).count() > 1000)
       {
@@ -501,7 +524,17 @@ private:
 
   void ExportAffineTransformMatrixToDataStructure(const AffineTransfromMatrix& TransformationMatrix)
   {
+    for(int i = 0; i < m_TransformMatrix->size(); i++)
+    {
+      m_TransformMatrix->setValue(i, TransformationMatrix(i));
+    }
   }
+};
+
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID = 1,
+  DataArrayID = 2
 };
 
 // -----------------------------------------------------------------------------
@@ -533,6 +566,7 @@ void RigidPointCloudTransform::initialize()
 void RigidPointCloudTransform::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Generations to run: ", GenerationCount, FilterParameter::Category::Parameter, RigidPointCloudTransform));
   DataContainerSelectionFilterParameter::RequirementType dcsReq;
   parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Geometry To Align", MovingGeometry, FilterParameter::Category::Parameter, RigidPointCloudTransform, dcsReq));
   // Table 1 - Dynamic rows and fixed columns
@@ -571,20 +605,38 @@ void RigidPointCloudTransform::dataCheck()
   clearWarningCode();
   initialize();
 
+  if(getGenerationCount() < 9)
+  {
+    QString ss = QObject::tr("To accurately align objects at least 10 generations should be run. Only %1 generations were provided.").arg(getGenerationCount());
+    setErrorCondition(-44360, ss);
+  }
+
+  if (getGenerationCount() > 100)
+  {
+      QString ss = QObject::tr("In the intrest of time generation count is capped at 100. %1 generations were provided.").arg(getGenerationCount());
+      setErrorCondition(-44360, ss);
+  }
+
   std::vector<std::vector<double>> fixedRows = m_FixedKeyPoints.getTableData();
   std::vector<std::vector<double>> movingRows = m_MovingKeyPoints.getTableData();
 
   if(movingRows.size() != fixedRows.size())
   {
     QString ss = QObject::tr("Moving Key Points Table and Fixed Key Points Table do not have the same amount of rows");
-    setErrorCondition(-44360, ss);
+    setErrorCondition(-44361, ss);
   }
 
-  if(movingRows.size() < 3)
+  if(movingRows.size() < 4)
   {
     QString ss =
-        QObject::tr("To accurately align objects at least 3 points must be provided. Only %1 points were provided, 5 or more recommended (not all coplanar for best results)").arg(movingRows.size());
-    setErrorCondition(-44361, ss);
+        QObject::tr("To accurately align objects at least 5 points must be provided. Only %1 points were provided, 5 or more recommended (not all coplanar for best results)").arg(movingRows.size());
+    setErrorCondition(-44362, ss);
+  }
+
+  if(movingRows.size() > 10)
+  {
+    QString ss = QObject::tr("To optimize processing please select between 5 - 10. %1 points were provided,  between 5-10 required (not all coplanar for best results)").arg(movingRows.size());
+    setErrorCondition(-44363, ss);
   }
 
   MatrixNx3f fixedMatrix, movingMatrix;
@@ -614,6 +666,20 @@ void RigidPointCloudTransform::dataCheck()
 
   setMovingKeyPointsMatrix(movingMatrix);
   setFixedKeyPointsMatrix(fixedMatrix);
+
+  AttributeMatrix::Pointer transformationMatrix = getDataContainerArray()
+                                                      ->getDataContainer(getMovingGeometry().getDataContainerName())
+                                                      ->createNonPrereqAttributeMatrix(this, k_TransformationWrapper, {1}, AttributeMatrix::Type::Cell, AttributeMatrixID);
+
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
+
+  transformationMatrix->getDataArrayPath().setDataArrayName(k_AffineMatrixName);
+
+  std::vector<size_t> CDims = {4, 4};
+  transformationMatrix->createNonPrereqArray<DataArray<float>>(this, k_AffineMatrixName, 0.0f, CDims, DataArrayID);
 }
 
 // -----------------------------------------------------------------------------
@@ -633,6 +699,8 @@ void RigidPointCloudTransform::execute()
     return;
   }
 
+  auto attributeArrayPtr = getDataContainerArray()->getDataContainer(getMovingGeometry().getDataContainerName())->getAttributeMatrix(k_TransformationWrapper);
+  auto dataArray = attributeArrayPtr->getAttributeArrayAs<DataArray<float>>(k_AffineMatrixName);
   SharedVertexList::Pointer completeMovingPoints;
 
   auto igeom = getDataContainerArray()->getDataContainer(getMovingGeometry())->getGeometryAs<IGeometry>();
@@ -658,7 +726,7 @@ void RigidPointCloudTransform::execute()
     return;
   }
 
-  AlignPointCloudsFromPointsList(this, completeMovingPoints, getMovingKeyPointsMatrix(), getFixedKeyPointsMatrix()).generate();
+  AlignPointCloudsFromPointsList(this, completeMovingPoints, getMovingKeyPointsMatrix(), getFixedKeyPointsMatrix(), dataArray, getGenerationCount()).generate();
 
   if(getWarningCode() < 0)
   {
@@ -824,4 +892,14 @@ void RigidPointCloudTransform::setFixedKeyPointsMatrix(const MatrixNx3f& value)
 MatrixNx3f RigidPointCloudTransform::getFixedKeyPointsMatrix() const
 {
   return m_FixedKeyPointsMatrix;
+}
+// -----------------------------------------------------------------------------
+void RigidPointCloudTransform::setGenerationCount(const int value)
+{
+  m_GenerationCount = value;
+}
+// -----------------------------------------------------------------------------
+int RigidPointCloudTransform::getGenerationCount() const
+{
+  return m_GenerationCount;
 }
