@@ -10,6 +10,7 @@
 #include <chrono>
 #include <complex>
 #include <random>
+#include <type_traits>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
@@ -35,7 +36,7 @@ constexpr float k_LearningRate = 0.1;
 constexpr std::array<float, 10> k_Steps = {-0.11, -0.011, -0.0011, 0.001, 0.01, 0.1, 0.5, 1.0, 2.0, 10.0};
 constexpr float k_Pi = 3.14159265359f;
 const QString k_AffineMatrixName = "4x4 Affine Transform Matrix";
-const QString k_TransformationWrapper = "Tranformation Matrix";
+const QString k_TransformationWrapper = "Transformation Matrix";
 } // namespace
 
 typedef Eigen::Matrix<std::complex<float>, Eigen::Dynamic, 3, Eigen::RowMajor> MatrixNx3cf;
@@ -129,6 +130,7 @@ private:
   {
     std::array<std::complex<float>, 6> optimizationArray = {std::complex<float>(11.9389f, 0), std::complex<float>(-1.5032f, 0), std::complex<float>(0.4524f, 0),
                                                             std::complex<float>(3.9960f, 0),  std::complex<float>(0.0744f, 0),  std::complex<float>(0.8539f, 0)}; // [dx, dy, dz, phi1, PHI, phi2]
+    // initialize a vector of pairs to hold indices of like coords
     std::vector<std::pair<size_t, size_t>> correlationMatrix(staticCentroids.rows(), std::make_pair(0, 0));
     for(size_t i = 0; i < correlationMatrix.size(); i++)
     {
@@ -147,7 +149,7 @@ private:
     {
       m_Filter->notifyStatusMessage(QObject::tr("Generation: %1 of %2").arg(iteration + 1).arg(m_GenerationCount));
       optimizationArray = getComplex(LeastSquaresFit(optimizationArray, complexStaticCentroids, complexMovingCentroids, correlationMatrix));
-      movingBest = OptimizeR(movingCentroids, optimizationArray);
+      movingBest = Optimize(movingCentroids, optimizationArray);
       correlationMatrix = FindClosestPoints(staticCentroids, movingBest, correlationMatrix);
       if(m_Filter->getCancel())
       {
@@ -164,6 +166,7 @@ private:
   template <typename T>
   Eigen::Matrix<T, 4, 4, Eigen::RowMajor> OptimizeArrayToTMatrix(const std::array<T, 6>& optimizationArray)
   {
+    // optimization array = [dx, dy, dz, phi1, PHI, phi2]
     // translation
     Eigen::Matrix<T, 1, 3, Eigen::RowMajor> translation;
     translation(0, 0) = optimizationArray[0]; // dx
@@ -221,16 +224,17 @@ private:
 
   std::complex<float> LossFunction(const MatrixNx3cf& complexStaticCentroid, const MatrixNx3cf& complexAttemptedAlignment, const std::vector<std::pair<size_t, size_t>>& correlationMatrix)
   {
+    /*The goal of this function is to iterate through each row (x, y, z coordinate)
+     * and find the difference between the static and attempted alignment coord
+     * that correspond according to the correlation matrix. This difference is then squared
+     * and summed by row to a singular resulting column, which is then summed again to reach a
+     * singular complex float.
+     */
     auto result = std::complex<float>(0.0f, 0.0f);
     std::vector<std::complex<float>> rowSums;
     for(int row = 0; row < correlationMatrix.size(); row++)
     {
       auto sum = std::complex<float>(0.0f, 0.0f);
-      std::vector<std::complex<float>> sums;
-      for(int col = 0; col < complexStaticCentroid.cols(); col++)
-      {
-        sums.push_back(std::pow(complexStaticCentroid(correlationMatrix[row].first, col) - complexAttemptedAlignment(correlationMatrix[row].second, col), 2.0));
-      }
       for(int col = 0; col < complexStaticCentroid.cols(); col++)
       {
         sum += std::pow(complexStaticCentroid(correlationMatrix[row].first, col) - complexAttemptedAlignment(correlationMatrix[row].second, col), 2.0);
@@ -244,19 +248,20 @@ private:
     return result;
   }
 
-  MatrixNx3f OptimizeR(const MatrixNx3f& movingCentroids, const std::array<std::complex<float>, 6>& optimizationArray)
+  template <typename T>
+  Eigen::Matrix<T, Eigen::Dynamic, 3, Eigen::RowMajor> Optimize(const Eigen::Matrix<T, Eigen::Dynamic, 3, Eigen::RowMajor>& movingCentroids,
+                                                                const std::array<std::complex<float>, 6>& optimizationArray)
   {
-    return TranformPointsR(movingCentroids, OptimizeArrayToTMatrix(optimizationArray));
-  }
-  MatrixNx3cf Optimize(const MatrixNx3cf& complexMovingCentroids, const std::array<std::complex<float>, 6>& optimizationArray)
-  {
-    return TranformPoints(complexMovingCentroids, OptimizeArrayToTMatrix(optimizationArray));
+    if constexpr(std::is_same_v<T, std::complex<float>>)
+    {
+      return TranformPoints(movingCentroids, OptimizeArrayToTMatrix(optimizationArray));
+    }
+    if constexpr(std::is_same_v<T, float>)
+    {
+      return getReal(TranformPoints(getComplex(movingCentroids), OptimizeArrayToTMatrix(optimizationArray)));
+    }
   }
 
-  MatrixNx3f TranformPointsR(const MatrixNx3f& movingCentroids, AffineTransfromMatrixC& TransformationMatrix)
-  {
-    return getReal(TranformPoints(getComplex(movingCentroids), TransformationMatrix));
-  }
   MatrixNx3cf TranformPoints(const MatrixNx3cf& movingCentroids, AffineTransfromMatrixC& TransformationMatrix)
   {
     MatrixNx3cf movedCentroids(movingCentroids);
@@ -284,12 +289,12 @@ private:
       {
         if(indexAvailable[staticIndex])
         {
-          auto squaredDistance = CalculateDistance(movingBest.row(movingIndex), staticCentroids.row(movingIndex));
-          auto calculatedError = k_Alpha * squaredDistance;
+          auto distance = CalculateDistance(movingBest.row(movingIndex), staticCentroids.row(movingIndex));
+          auto calculatedError = k_Alpha * distance;
           if(calculatedError < lowestError)
           {
             lowestError = calculatedError;
-            if(squaredDistance < std::numeric_limits<double>::infinity())
+            if(distance < std::numeric_limits<double>::infinity())
             {
               foundCandidateCorrelation = true;
               candidateCorrelation = std::make_pair(staticIndex, movingIndex);
@@ -303,14 +308,12 @@ private:
         newCorrelation.push_back(candidateCorrelation);
       }
     }
-    if(correlation.size() == 0)
-    {
-      /*for (int i = 0; i < movingBest.rows(); i++)
+    if(newCorrelation.size() == 0)
+    { // reset to initial pairing
+      for(int i = 0; i < movingBest.rows(); i++)
       {
-          newCorrelation.push_back(std::make_pair(0, 0));
-      }*/
-
-      newCorrelation = correlation;
+        newCorrelation.push_back(std::make_pair(i, i));
+      }
     }
     return newCorrelation;
   }
@@ -566,7 +569,7 @@ void RigidPointCloudTransform::initialize()
 void RigidPointCloudTransform::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Generations to run: ", GenerationCount, FilterParameter::Category::Parameter, RigidPointCloudTransform));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Generations To Run: ", GenerationCount, FilterParameter::Category::Parameter, RigidPointCloudTransform));
   DataContainerSelectionFilterParameter::RequirementType dcsReq;
   parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Geometry To Align", MovingGeometry, FilterParameter::Category::Parameter, RigidPointCloudTransform, dcsReq));
   // Table 1 - Dynamic rows and fixed columns
@@ -611,10 +614,10 @@ void RigidPointCloudTransform::dataCheck()
     setErrorCondition(-44360, ss);
   }
 
-  if (getGenerationCount() > 100)
+  if(getGenerationCount() > 100)
   {
-      QString ss = QObject::tr("In the intrest of time generation count is capped at 100. %1 generations were provided.").arg(getGenerationCount());
-      setErrorCondition(-44360, ss);
+    QString ss = QObject::tr("In the intrest of time generation count is capped at 100. %1 generations were provided.").arg(getGenerationCount());
+    setErrorCondition(-44360, ss);
   }
 
   std::vector<std::vector<double>> fixedRows = m_FixedKeyPoints.getTableData();
@@ -680,6 +683,25 @@ void RigidPointCloudTransform::dataCheck()
 
   std::vector<size_t> CDims = {4, 4};
   transformationMatrix->createNonPrereqArray<DataArray<float>>(this, k_AffineMatrixName, 0.0f, CDims, DataArrayID);
+
+  auto igeom = getDataContainerArray()->getDataContainer(getMovingGeometry())->getGeometryAs<IGeometry>();
+  if (IGeometry2D::Pointer igeom2D = std::dynamic_pointer_cast<IGeometry2D>(igeom))
+  {
+  }
+  else if (IGeometry3D::Pointer igeom3D = std::dynamic_pointer_cast<IGeometry3D>(igeom))
+  {
+  }
+  else if (VertexGeom::Pointer vertex = std::dynamic_pointer_cast<VertexGeom>(igeom))
+  {
+  }
+  else if (EdgeGeom::Pointer edge = std::dynamic_pointer_cast<EdgeGeom>(igeom))
+  {
+  }
+  else
+  {
+      QString ss = QObject::tr("Geometry must be of type Igeometry2D, Igeometry3D, VertexGeom, or EdgeGeom");
+      setErrorCondition(-44364, ss);
+  }
 }
 
 // -----------------------------------------------------------------------------

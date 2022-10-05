@@ -26,7 +26,7 @@ class SurfaceMeshing_EXPORT RigidPointCloudTransform : public AbstractFilter
   PYB11_FILTER()
   PYB11_SHARED_POINTERS(RigidPointCloudTransform)
   PYB11_FILTER_NEW_MACRO(RigidPointCloudTransform)
-    PYB11_PROPERTY(DataArrayPath MovingGeometry READ getMovingGeometry WRITE setMovingGeometry)
+  PYB11_PROPERTY(DataArrayPath MovingGeometry READ getMovingGeometry WRITE setMovingGeometry)
   PYB11_PROPERTY(DynamicTableData MovingKeyPoints READ getMovingKeyPoints WRITE setMovingKeyPoints)
   PYB11_PROPERTY(DynamicTableData FixedKeyPoints READ getFixedKeyPoints WRITE setFixedKeyPoints)
 
