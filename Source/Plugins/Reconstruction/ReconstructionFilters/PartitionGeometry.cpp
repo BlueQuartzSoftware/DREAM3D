@@ -60,35 +60,70 @@ namespace Detail
 {
 const QString k_RectGridSpaceUnknownStr = "Rectilinear grid geometry space unknown during preflight.";
 
-std::optional<QString> InitPartitioningGeometryUsingVertices(ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, const FloatArrayType& vertices, bool inPreflight,
-                                                             bool padEdges = false)
+struct InitResult
+{
+  std::optional<QString> message;
+  int errorCode = 0;
+};
+
+InitResult InitPartitioningGeometryUsingVertices(ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, const FloatArrayType& vertices, bool inPreflight, bool padEdges = false)
 {
   if(inPreflight)
   {
     // Do not do this in preflight because the bounding box data is not available
-    return "Node-based geometry space unknown during preflight.";
+    return {"Node-based geometry space unknown during preflight."};
   }
 
   FloatVec3Type ll = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
   FloatVec3Type ur = {std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min()};
 
   // For each tuple, update the current lower-left and upper-right coordinates
+  std::set<float> setX;
+  std::set<float> setY;
+  std::set<float> setZ;
   for(size_t tuple = 0; tuple < vertices.getNumberOfTuples(); tuple++)
   {
     float x = vertices.getComponent(tuple, 0);
+    setX.insert(x);
     ll[0] = (x < ll[0]) ? x : ll[0];
     ur[0] = (x > ur[0]) ? x : ur[0];
 
     float y = vertices.getComponent(tuple, 1);
+    setY.insert(y);
     ll[1] = (y < ll[1]) ? y : ll[1];
     ur[1] = (y > ur[1]) ? y : ur[1];
 
     float z = vertices.getComponent(tuple, 2);
+    setZ.insert(z);
     ll[2] = (z < ll[2]) ? z : ll[2];
     ur[2] = (z > ur[2]) ? z : ur[2];
   }
 
-  // Pad the points
+  // YZ Plane
+  if(setX.size() == 1)
+  {
+    return {"Unable to create a partitioning scheme with an X dimension size of 0.  Vertices are in a YZ plane.  Use the Advanced or Bounding Box partitioning modes to manually create a "
+            "partitioning scheme.",
+            -3040};
+  }
+
+  // XZ Plane
+  if(setY.size() == 1)
+  {
+    return {"Unable to create a partitioning scheme with a Y dimension size of 0.  Vertices are in an XZ plane.  Use the Advanced or Bounding Box partitioning modes to manually create a "
+            "partitioning scheme.",
+            -3041};
+  }
+
+  // XY Plane
+  if(setZ.size() == 1)
+  {
+    return {"Unable to create a partitioning scheme with a Z dimension size of 0.  Vertices are in an XY plane.  Use the Advanced or Bounding Box partitioning modes to manually create a "
+            "partitioning scheme.",
+            -3042};
+  }
+
+  // Pad the points (needed to make sure that all points are within the partitioning scheme and not on an edge)
   if(padEdges)
   {
     float padding = 0.000001;
@@ -118,9 +153,27 @@ std::optional<QString> InitPartitioningGeometryUsingVertices(ImageGeom& partitio
   return {};
 }
 
-std::optional<QString> InitPartitioningGeometryUsingBoundingBox(ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, const FloatVec3Type& lowerLeftCoord,
-                                                                const FloatVec3Type& upperRightCoord, bool inPreflight)
+InitResult InitPartitioningGeometryUsingBoundingBox(ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, const FloatVec3Type& lowerLeftCoord,
+                                                    const FloatVec3Type& upperRightCoord, bool inPreflight)
 {
+  // YZ Plane
+  if(lowerLeftCoord.getX() == upperRightCoord.getX())
+  {
+    return {"Unable to create a partitioning scheme with an X dimension size of 0.  Bounding box is in a YZ plane.", -3043};
+  }
+
+  // XZ Plane
+  if(lowerLeftCoord.getY() == upperRightCoord.getY())
+  {
+    return {"Unable to create a partitioning scheme with a Y dimension size of 0.  Bounding box is in an XZ plane.", -3044};
+  }
+
+  // XY Plane
+  if(lowerLeftCoord.getZ() == upperRightCoord.getZ())
+  {
+    return {"Unable to create a partitioning scheme with a Z dimension size of 0.  Bounding box is in an XY plane.", -3045};
+  }
+
   FloatArrayType::Pointer vertices = FloatArrayType::CreateArray(2, {3}, "Vertices", true);
   vertices->setComponent(0, 0, lowerLeftCoord[0]);
   vertices->setComponent(0, 1, lowerLeftCoord[1]);
@@ -132,17 +185,14 @@ std::optional<QString> InitPartitioningGeometryUsingBoundingBox(ImageGeom& parti
 }
 
 template <typename T>
-std::optional<QString> InitSimplePartitioningGeometry(const T& geometry, ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, bool inPreflight)
+InitResult InitSimplePartitioningGeometry(const T& geometry, ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, bool inPreflight)
 {
   SharedVertexList::Pointer vertexList = geometry.getVertices();
-
-  // A very small padding around the edges is necessary to avoid assigning the edge indices the wrong partition ID.
-  // This is only needed in the Simple case, since the partition geometry inputs are more specific in the other cases.
-  return Detail::InitPartitioningGeometryUsingVertices(partitionImageGeometry, numberOfPartitionsPerAxis, *vertexList, inPreflight, true);
+  return InitPartitioningGeometryUsingVertices(partitionImageGeometry, numberOfPartitionsPerAxis, *vertexList, inPreflight, true);
 }
 
 template <>
-std::optional<QString> InitSimplePartitioningGeometry(const ImageGeom& geometry, ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, bool inPreflight)
+InitResult InitSimplePartitioningGeometry(const ImageGeom& geometry, ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, bool inPreflight)
 {
   Q_UNUSED(inPreflight)
 
@@ -159,12 +209,12 @@ std::optional<QString> InitSimplePartitioningGeometry(const ImageGeom& geometry,
 }
 
 template <>
-std::optional<QString> InitSimplePartitioningGeometry(const RectGridGeom& geometry, ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, bool inPreflight)
+InitResult InitSimplePartitioningGeometry(const RectGridGeom& geometry, ImageGeom& partitionImageGeometry, IntVec3Type& numberOfPartitionsPerAxis, bool inPreflight)
 {
   // Do not do this in preflight because the bounds data is not available
   if(inPreflight)
   {
-    return Detail::k_RectGridSpaceUnknownStr;
+    return {Detail::k_RectGridSpaceUnknownStr};
   }
 
   FloatArrayType::Pointer xBounds = geometry.getXBounds();
@@ -240,7 +290,7 @@ void PartitionGeometry::setupFilterParameters()
 
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
-    parameter->setHumanLabel("Select the partitioning scheme");
+    parameter->setHumanLabel("Select the partitioning mode");
     parameter->setPropertyName("PartitioningMode");
     parameter->setSetterCallback(SIMPL_BIND_SETTER(PartitionGeometry, this, PartitioningMode));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(PartitionGeometry, this, PartitioningMode));
@@ -330,6 +380,7 @@ void PartitionGeometry::dataCheck()
 {
   clearErrorCode();
   clearWarningCode();
+  m_PartitionImageGeometryResult = {};
 
   AttributeMatrix::Pointer am = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, m_AttributeMatrixPath, 1);
   if(getErrorCode() < 0)
@@ -642,6 +693,10 @@ void PartitionGeometry::dataCheckPartitioningScheme()
   }
 
   createPartitioningSchemeGeometry(*geometry);
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -660,8 +715,14 @@ void PartitionGeometry::createPartitioningSchemeGeometry(const G& geometry)
   {
   case PartitionGeometry::PartitioningMode::Basic:
   {
-    std::optional<QString> maybeErrMsg = Detail::InitSimplePartitioningGeometry(geometry, *partitionImageGeometry, m_NumberOfPartitionsPerAxis, getInPreflight());
-    m_PartitionImageGeometryResult = {partitionImageGeometry, maybeErrMsg};
+    Detail::InitResult result = Detail::InitSimplePartitioningGeometry(geometry, *partitionImageGeometry, m_NumberOfPartitionsPerAxis, getInPreflight());
+    if(result.errorCode < 0)
+    {
+      setErrorCondition(result.errorCode, *result.message);
+      return;
+    }
+
+    m_PartitionImageGeometryResult = {partitionImageGeometry, result.message};
     break;
   }
   case PartitionGeometry::PartitioningMode::Advanced:
@@ -673,8 +734,14 @@ void PartitionGeometry::createPartitioningSchemeGeometry(const G& geometry)
   }
   case PartitionGeometry::PartitioningMode::BoundingBox:
   {
-    std::optional<QString> maybeErrMsg = Detail::InitPartitioningGeometryUsingBoundingBox(*partitionImageGeometry, m_NumberOfPartitionsPerAxis, m_LowerLeftCoord, m_UpperRightCoord, getInPreflight());
-    m_PartitionImageGeometryResult = {partitionImageGeometry, maybeErrMsg};
+    Detail::InitResult result = Detail::InitPartitioningGeometryUsingBoundingBox(*partitionImageGeometry, m_NumberOfPartitionsPerAxis, m_LowerLeftCoord, m_UpperRightCoord, getInPreflight());
+    if(result.errorCode < 0)
+    {
+      setErrorCondition(result.errorCode, *result.message);
+      return;
+    }
+
+    m_PartitionImageGeometryResult = {partitionImageGeometry, result.message};
     break;
   }
   default:
