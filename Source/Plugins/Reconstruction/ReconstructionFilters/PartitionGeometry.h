@@ -65,6 +65,7 @@ class Reconstruction_EXPORT PartitionGeometry : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath PartitioningSchemeDataContainerName READ getPartitioningSchemeDataContainerName WRITE setPartitioningSchemeDataContainerName)
   PYB11_PROPERTY(QString InputGeometryInformation READ getInputGeometryInformation)
   PYB11_PROPERTY(QString PartitioningSchemeInformation READ getPartitioningSchemeInformation)
+  PYB11_PROPERTY(QString FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
   PYB11_PROPERTY(QString PartitionIdsArrayName READ getPartitionIdsArrayName WRITE setPartitionIdsArrayName)
   PYB11_PROPERTY(bool SavePartitioningScheme READ getSavePartitioningScheme WRITE setSavePartitioningScheme)
   PYB11_PROPERTY(DataArrayPath PSDataContainerPath READ getPSDataContainerPath WRITE setPSDataContainerPath)
@@ -238,6 +239,17 @@ public:
   Q_PROPERTY(QString PartitioningSchemeInformation READ getPartitioningSchemeInformation)
 
   /**
+   * @brief Setter property for FeatureAttributeMatrixName
+   */
+  void setFeatureAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for FeatureAttributeMatrixName
+   * @return Value of FeatureAttributeMatrixName
+   */
+  QString getFeatureAttributeMatrixName() const;
+  Q_PROPERTY(QString FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
+
+  /**
    * @brief Setter property for PartitionIdsArrayName
    */
   void setPartitionIdsArrayName(const QString& value);
@@ -369,6 +381,7 @@ private:
   int m_StartingPartitionID = 1;
   DataArrayPath m_PartitioningSchemeDataContainerName = {"", "", ""};
   DataArrayPath m_AttributeMatrixPath = {"", "", ""};
+  QString m_FeatureAttributeMatrixName = {"FeatureData"};
   //  DataArrayPath m_BoundingBoxPath = {"", "", ""};
 
   std::weak_ptr<FloatArrayType> m_BoundingBoxPtr;
@@ -389,18 +402,29 @@ private:
   QString getInputHexahedralGeometryInformation() const;
   QString getInputUnknownGeometryInformation() const;
 
-  template <typename T>
-  PartitioningImageGeomResult createPartitioningSchemeGeometry(const T& geometry, IntVec3Type& numberOfPartitionsPerAxis);
+  template <typename G>
+  void createPartitioningSchemeGeometry(const G& geometry);
 
   void partitionCellBasedGeometry(const IGeometryGrid& geometry, Int32ArrayType& partitionIds, const std::optional<int>& outOfBoundsValue);
   void partitionNodeBasedGeometry(const QString& geomName, const SharedVertexList& vertexList, Int32ArrayType& partitionIds, const std::optional<int>& outOfBoundsValue);
 
+  template <typename G>
+  void dataCheckPartitioningMode();
+
+  template <typename G>
   void dataCheckBasicMode();
+
+  template <typename G>
   void dataCheckAdvancedMode();
+
+  template <typename G>
   void dataCheckBoundingBoxMode();
+
   void dataCheckExistingGeometryMode();
 
   void dataCheckNumberOfPartitions();
+
+  template <typename G>
   void dataCheckPartitioningScheme();
 
 public:

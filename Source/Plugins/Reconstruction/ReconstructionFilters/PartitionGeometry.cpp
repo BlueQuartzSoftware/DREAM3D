@@ -317,6 +317,7 @@ void PartitionGeometry::setupFilterParameters()
   //    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Partitioning Scheme Bounding Box", BoundingBoxPath, FilterParameter::Category::RequiredArray, PartitionGeometry, req, 2));
   //  }
 
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Feature Attribute Matrix", FeatureAttributeMatrixName, AttributeMatrixPath, FilterParameter::Category::Parameter, PartitionGeometry));
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Partition Ids", PartitionIdsArrayName, AttributeMatrixPath, AttributeMatrixPath, FilterParameter::Category::CreatedArray, PartitionGeometry));
 
   setFilterParameters(parameters);
@@ -330,20 +331,70 @@ void PartitionGeometry::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  switch(static_cast<PartitioningMode>(m_PartitioningMode))
+  AttributeMatrix::Pointer am = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, m_AttributeMatrixPath, 1);
+  if(getErrorCode() < 0)
   {
-  case PartitioningMode::Basic:
-    dataCheckBasicMode();
+    return;
+  }
+
+  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_AttributeMatrixPath.getDataContainerName());
+  IGeometry::Pointer iGeometry = dc->getGeometry();
+  if(iGeometry == IGeometry::NullPointer())
+  {
+    QString ss = QObject::tr("The data container '%1', containing the attribute matrix '%2', must have a geometry.")
+                     .arg(m_AttributeMatrixPath.getDataContainerName(), m_AttributeMatrixPath.getAttributeMatrixName());
+    setErrorCondition(-3000, ss);
+    return;
+  }
+
+  switch(iGeometry->getGeometryType())
+  {
+  case IGeometry::Type::Image:
+  {
+    dataCheckPartitioningMode<ImageGeom>();
     break;
-  case PartitioningMode::Advanced:
-    dataCheckAdvancedMode();
+  }
+  case IGeometry::Type::RectGrid:
+  {
+    dataCheckPartitioningMode<RectGridGeom>();
     break;
-  case PartitioningMode::BoundingBox:
-    dataCheckBoundingBoxMode();
+  }
+  case IGeometry::Type::Vertex:
+  {
+    dataCheckPartitioningMode<VertexGeom>();
     break;
-  case PartitioningMode::ExistingPartitioningScheme:
-    dataCheckExistingGeometryMode();
+  }
+  case IGeometry::Type::Edge:
+  {
+    dataCheckPartitioningMode<EdgeGeom>();
     break;
+  }
+  case IGeometry::Type::Triangle:
+  {
+    dataCheckPartitioningMode<TriangleGeom>();
+    break;
+  }
+  case IGeometry::Type::Quad:
+  {
+    dataCheckPartitioningMode<QuadGeom>();
+    break;
+  }
+  case IGeometry::Type::Tetrahedral:
+  {
+    dataCheckPartitioningMode<TetrahedralGeom>();
+    break;
+  }
+  case IGeometry::Type::Hexahedral:
+  {
+    dataCheckPartitioningMode<HexahedralGeom>();
+    break;
+  }
+  default:
+  {
+    QString ss = QObject::tr("Unable to partition geometry - Unknown geometry type detected.");
+    setErrorCondition(-3001, ss);
+    return;
+  }
   }
 
   if(getErrorCode() < 0)
@@ -392,6 +443,59 @@ void PartitionGeometry::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+template <typename G>
+void PartitionGeometry::dataCheckPartitioningMode()
+{
+  if(m_StartingPartitionID < 0)
+  {
+    QString ss = QObject::tr("Starting Partition ID: The value cannot be negative.");
+    setErrorCondition(-3002, ss);
+    return;
+  }
+
+  switch(static_cast<PartitioningMode>(m_PartitioningMode))
+  {
+  case PartitioningMode::Basic:
+    dataCheckBasicMode<G>();
+    break;
+  case PartitioningMode::Advanced:
+    dataCheckAdvancedMode<G>();
+    break;
+  case PartitioningMode::BoundingBox:
+    dataCheckBoundingBoxMode<G>();
+    break;
+  case PartitioningMode::ExistingPartitioningScheme:
+    dataCheckExistingGeometryMode();
+    break;
+  }
+
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
+
+  if(m_FeatureAttributeMatrixName.isEmpty())
+  {
+    QString ss = QObject::tr("The output Feature Attribute Matrix must have a name.");
+    setErrorCondition(-3030, ss);
+    return;
+  }
+
+  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_AttributeMatrixPath.getDataContainerName());
+  if constexpr(std::is_same_v<G, ImageGeom> || std::is_same_v<G, RectGridGeom>)
+  {
+    dc->createAndAddAttributeMatrix({0}, m_FeatureAttributeMatrixName, AttributeMatrix::Type::CellFeature);
+  }
+  else
+  {
+    dc->createAndAddAttributeMatrix({0}, m_FeatureAttributeMatrixName, AttributeMatrix::Type::VertexFeature);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template <typename G>
 void PartitionGeometry::dataCheckBasicMode()
 {
   dataCheckNumberOfPartitions();
@@ -400,7 +504,7 @@ void PartitionGeometry::dataCheckBasicMode()
     return;
   }
 
-  dataCheckPartitioningScheme();
+  dataCheckPartitioningScheme<G>();
   if(getErrorCode() < 0)
   {
     return;
@@ -410,6 +514,7 @@ void PartitionGeometry::dataCheckBasicMode()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+template <typename G>
 void PartitionGeometry::dataCheckAdvancedMode()
 {
   dataCheckNumberOfPartitions();
@@ -437,7 +542,7 @@ void PartitionGeometry::dataCheckAdvancedMode()
     return;
   }
 
-  dataCheckPartitioningScheme();
+  dataCheckPartitioningScheme<G>();
   if(getErrorCode() < 0)
   {
     return;
@@ -447,6 +552,7 @@ void PartitionGeometry::dataCheckAdvancedMode()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+template <typename G>
 void PartitionGeometry::dataCheckBoundingBoxMode()
 {
   dataCheckNumberOfPartitions();
@@ -458,25 +564,25 @@ void PartitionGeometry::dataCheckBoundingBoxMode()
   if(m_LowerLeftCoord.getX() > m_UpperRightCoord.getX())
   {
     QString ss = QObject::tr("Lower Left Coordinate: X value is larger than the upper right coordinate X value.");
-    setErrorCondition(-3012, ss);
+    setErrorCondition(-3006, ss);
     return;
   }
 
   if(m_LowerLeftCoord.getY() > m_UpperRightCoord.getY())
   {
     QString ss = QObject::tr("Lower Left Coordinate: Y value is larger than the upper right coordinate Y value.");
-    setErrorCondition(-3013, ss);
+    setErrorCondition(-3007, ss);
     return;
   }
 
   if(m_LowerLeftCoord.getZ() > m_UpperRightCoord.getZ())
   {
     QString ss = QObject::tr("Lower Left Coordinate: Z value is larger than the upper right coordinate Z value.");
-    setErrorCondition(-3014, ss);
+    setErrorCondition(-3008, ss);
     return;
   }
 
-  dataCheckPartitioningScheme();
+  dataCheckPartitioningScheme<G>();
   if(getErrorCode() < 0)
   {
     return;
@@ -506,169 +612,105 @@ void PartitionGeometry::dataCheckExistingGeometryMode()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PartitionGeometry::dataCheckNumberOfPartitions()
+template <typename G>
+void PartitionGeometry::dataCheckPartitioningScheme()
 {
-  if(m_NumberOfPartitionsPerAxis.getX() <= 0)
+  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_AttributeMatrixPath.getDataContainerName());
+  AttributeMatrix::Pointer am = dc->getAttributeMatrix(m_AttributeMatrixPath.getAttributeMatrixName());
+
+  typename G::Pointer geometry = dc->getGeometryAs<G>();
+  if constexpr(std::is_same_v<G, ImageGeom> || std::is_same_v<G, RectGridGeom>)
   {
-    QString ss = QObject::tr("Number of Partitions Per Axis: The X dimension must be greater than 0.");
-    setErrorCondition(-3000, ss);
-    return;
+    if(am->getNumberOfTuples() != geometry->getNumberOfElements())
+    {
+      QString ss = QObject::tr("The attribute matrix '%1' does not have the same tuple count (%2) as data container \"%3\"'s cell count (%4).")
+                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(geometry->getNumberOfElements()));
+      setErrorCondition(-3009, ss);
+      return;
+    }
+  }
+  else
+  {
+    SharedVertexList::Pointer vertexList = geometry->getVertices();
+    if(am->getNumberOfTuples() != vertexList->getNumberOfTuples())
+    {
+      QString ss = QObject::tr("The attribute matrix \"%1\" does not have the same tuple count (%2) as data container \"%3\"'s vertex count (%4).")
+                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(vertexList->getNumberOfTuples()));
+      setErrorCondition(-3010, ss);
+      return;
+    }
   }
 
-  if(m_NumberOfPartitionsPerAxis.getY() <= 0)
-  {
-    QString ss = QObject::tr("Number of Partitions Per Axis: The Y dimension must be greater than 0.");
-    setErrorCondition(-3001, ss);
-    return;
-  }
+  createPartitioningSchemeGeometry(*geometry);
+}
 
-  if(m_NumberOfPartitionsPerAxis.getZ() <= 0)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template <typename G>
+void PartitionGeometry::createPartitioningSchemeGeometry(const G& geometry)
+{
+  ImageGeom::Pointer partitionImageGeometry = ImageGeom::CreateGeometry(m_PSImageGeomName);
+  partitionImageGeometry->setDimensions(m_NumberOfPartitionsPerAxis.convertType<size_t>());
+  partitionImageGeometry->setOrigin({0, 0, 0});
+  partitionImageGeometry->setSpacing({0, 0, 0});
+
+  PartitionGeometry::PartitioningMode partitioningMode = static_cast<PartitionGeometry::PartitioningMode>(m_PartitioningMode);
+  switch(partitioningMode)
   {
-    QString ss = QObject::tr("Number of Partitions Per Axis: The Z dimension must be greater than 0.");
-    setErrorCondition(-3002, ss);
-    return;
+  case PartitionGeometry::PartitioningMode::Basic:
+  {
+    std::optional<QString> maybeErrMsg = Detail::InitSimplePartitioningGeometry(geometry, *partitionImageGeometry, m_NumberOfPartitionsPerAxis, getInPreflight());
+    m_PartitionImageGeometryResult = {partitionImageGeometry, maybeErrMsg};
+    break;
+  }
+  case PartitionGeometry::PartitioningMode::Advanced:
+  {
+    partitionImageGeometry->setOrigin(m_PartitioningSchemeOrigin);
+    partitionImageGeometry->setSpacing(m_LengthPerPartition);
+    m_PartitionImageGeometryResult = {partitionImageGeometry, {}};
+    break;
+  }
+  case PartitionGeometry::PartitioningMode::BoundingBox:
+  {
+    std::optional<QString> maybeErrMsg = Detail::InitPartitioningGeometryUsingBoundingBox(*partitionImageGeometry, m_NumberOfPartitionsPerAxis, m_LowerLeftCoord, m_UpperRightCoord, getInPreflight());
+    m_PartitionImageGeometryResult = {partitionImageGeometry, maybeErrMsg};
+    break;
+  }
+  default:
+  {
+    QString ss = QObject::tr("Unable to create partitioning scheme geometry - Unknown partitioning mode.");
+    setErrorCondition(-3011, ss);
+    m_PartitionImageGeometryResult = {partitionImageGeometry, ss};
+    break;
+  }
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PartitionGeometry::dataCheckPartitioningScheme()
+void PartitionGeometry::dataCheckNumberOfPartitions()
 {
-  AttributeMatrix::Pointer am = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, m_AttributeMatrixPath, 1);
-  if(getErrorCode() < 0)
+  if(m_NumberOfPartitionsPerAxis.getX() <= 0)
   {
+    QString ss = QObject::tr("Number of Partitions Per Axis: The X dimension must be greater than 0.");
+    setErrorCondition(-3012, ss);
     return;
   }
 
-  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_AttributeMatrixPath.getDataContainerName());
-  IGeometry::Pointer iGeometry = dc->getGeometry();
-  if(iGeometry == IGeometry::NullPointer())
+  if(m_NumberOfPartitionsPerAxis.getY() <= 0)
   {
-    QString ss = QObject::tr("The data container '%1', containing the attribute matrix '%2', must have a geometry.")
-                     .arg(m_AttributeMatrixPath.getDataContainerName(), m_AttributeMatrixPath.getAttributeMatrixName());
-    setErrorCondition(-3015, ss);
+    QString ss = QObject::tr("Number of Partitions Per Axis: The Y dimension must be greater than 0.");
+    setErrorCondition(-3013, ss);
     return;
   }
 
-  switch(iGeometry->getGeometryType())
+  if(m_NumberOfPartitionsPerAxis.getZ() <= 0)
   {
-  case IGeometry::Type::Image:
-  {
-    ImageGeom::Pointer geometry = dc->getGeometryAs<ImageGeom>();
-    if(am->getNumberOfTuples() != geometry->getNumberOfElements())
-    {
-      QString ss = QObject::tr("The attribute matrix '%1' does not have the same tuple count (%2) as data container \"%3\"'s cell count (%4).")
-                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(geometry->getNumberOfElements()));
-      setErrorCondition(-3016, ss);
-      return;
-    }
-    m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry, m_NumberOfPartitionsPerAxis);
-    break;
-  }
-  case IGeometry::Type::RectGrid:
-  {
-    RectGridGeom::Pointer geometry = dc->getGeometryAs<RectGridGeom>();
-    if(am->getNumberOfTuples() != geometry->getNumberOfElements())
-    {
-      QString ss = QObject::tr("The attribute matrix '%1' does not have the same tuple count (%2) as data container \"%3\"'s cell count (%4).")
-                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(geometry->getNumberOfElements()));
-      setErrorCondition(-3017, ss);
-      return;
-    }
-    m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry, m_NumberOfPartitionsPerAxis);
-    break;
-  }
-  case IGeometry::Type::Vertex:
-  {
-    VertexGeom::Pointer geometry = dc->getGeometryAs<VertexGeom>();
-    SharedVertexList::Pointer vertexList = geometry->getVertices();
-    if(am->getNumberOfTuples() != vertexList->getNumberOfTuples())
-    {
-      QString ss = QObject::tr("The attribute matrix \"%1\" does not have the same tuple count (%2) as data container \"%3\"'s vertex count (%4).")
-                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(vertexList->getNumberOfTuples()));
-      setErrorCondition(-3018, ss);
-      return;
-    }
-    m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry, m_NumberOfPartitionsPerAxis);
-    break;
-  }
-  case IGeometry::Type::Edge:
-  {
-    EdgeGeom::Pointer geometry = dc->getGeometryAs<EdgeGeom>();
-    SharedVertexList::Pointer vertexList = geometry->getVertices();
-    if(am->getNumberOfTuples() != vertexList->getNumberOfTuples())
-    {
-      QString ss = QObject::tr("The attribute matrix \"%1\" does not have the same tuple count (%2) as data container \"%3\"'s vertex count (%4).")
-                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(vertexList->getNumberOfTuples()));
-      setErrorCondition(-3019, ss);
-      return;
-    }
-    m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry, m_NumberOfPartitionsPerAxis);
-    break;
-  }
-  case IGeometry::Type::Triangle:
-  {
-    TriangleGeom::Pointer geometry = dc->getGeometryAs<TriangleGeom>();
-    SharedVertexList::Pointer vertexList = geometry->getVertices();
-    if(am->getNumberOfTuples() != vertexList->getNumberOfTuples())
-    {
-      QString ss = QObject::tr("The attribute matrix \"%1\" does not have the same tuple count (%2) as data container \"%3\"'s vertex count (%4).")
-                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(vertexList->getNumberOfTuples()));
-      setErrorCondition(-3020, ss);
-      return;
-    }
-    m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry, m_NumberOfPartitionsPerAxis);
-    break;
-  }
-  case IGeometry::Type::Quad:
-  {
-    QuadGeom::Pointer geometry = dc->getGeometryAs<QuadGeom>();
-    SharedVertexList::Pointer vertexList = geometry->getVertices();
-    if(am->getNumberOfTuples() != vertexList->getNumberOfTuples())
-    {
-      QString ss = QObject::tr("The attribute matrix \"%1\" does not have the same tuple count (%2) as data container \"%3\"'s vertex count (%4).")
-                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(vertexList->getNumberOfTuples()));
-      setErrorCondition(-3021, ss);
-      return;
-    }
-    m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry, m_NumberOfPartitionsPerAxis);
-    break;
-  }
-  case IGeometry::Type::Tetrahedral:
-  {
-    TetrahedralGeom::Pointer geometry = dc->getGeometryAs<TetrahedralGeom>();
-    SharedVertexList::Pointer vertexList = geometry->getVertices();
-    if(am->getNumberOfTuples() != vertexList->getNumberOfTuples())
-    {
-      QString ss = QObject::tr("The attribute matrix \"%1\" does not have the same tuple count (%2) as data container \"%3\"'s vertex count (%4).")
-                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(vertexList->getNumberOfTuples()));
-      setErrorCondition(-3022, ss);
-      return;
-    }
-    m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry, m_NumberOfPartitionsPerAxis);
-    break;
-  }
-  case IGeometry::Type::Hexahedral:
-  {
-    HexahedralGeom::Pointer geometry = dc->getGeometryAs<HexahedralGeom>();
-    SharedVertexList::Pointer vertexList = geometry->getVertices();
-    if(am->getNumberOfTuples() != vertexList->getNumberOfTuples())
-    {
-      QString ss = QObject::tr("The attribute matrix \"%1\" does not have the same tuple count (%2) as data container \"%3\"'s vertex count (%4).")
-                       .arg(am->getName(), QString::number(am->getNumberOfTuples()), dc->getName(), QString::number(vertexList->getNumberOfTuples()));
-      setErrorCondition(-3023, ss);
-      return;
-    }
-    m_PartitionImageGeometryResult = createPartitioningSchemeGeometry(*geometry, m_NumberOfPartitionsPerAxis);
-    break;
-  }
-  default:
-  {
-    QString ss = QObject::tr("Unable to partition geometry - Unknown geometry type detected.");
-    setErrorCondition(-3024, ss);
+    QString ss = QObject::tr("Number of Partitions Per Axis: The Z dimension must be greater than 0.");
+    setErrorCondition(-3014, ss);
     return;
-  }
   }
 }
 
@@ -753,7 +795,7 @@ void PartitionGeometry::execute()
   default:
   {
     QString ss = QObject::tr("Unable to partition geometry - Unknown geometry type detected.");
-    setErrorCondition(-3012, ss);
+    setErrorCondition(-3015, ss);
     return;
   }
   }
@@ -770,48 +812,11 @@ void PartitionGeometry::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T>
-PartitionGeometry::PartitioningImageGeomResult PartitionGeometry::createPartitioningSchemeGeometry(const T& geometry, IntVec3Type& numberOfPartitionsPerAxis)
-{
-  ImageGeom::Pointer partitionImageGeometry = ImageGeom::CreateGeometry(m_PSImageGeomName);
-  partitionImageGeometry->setDimensions(numberOfPartitionsPerAxis.convertType<size_t>());
-  partitionImageGeometry->setOrigin({0, 0, 0});
-  partitionImageGeometry->setSpacing({0, 0, 0});
-
-  switch(static_cast<PartitioningMode>(m_PartitioningMode))
-  {
-  case PartitioningMode::Basic:
-  {
-    std::optional<QString> maybeErrMsg = Detail::InitSimplePartitioningGeometry(geometry, *partitionImageGeometry, numberOfPartitionsPerAxis, getInPreflight());
-    return {partitionImageGeometry, maybeErrMsg};
-  }
-  case PartitioningMode::Advanced:
-  {
-    partitionImageGeometry->setOrigin(m_PartitioningSchemeOrigin);
-    partitionImageGeometry->setSpacing(m_LengthPerPartition);
-    return {partitionImageGeometry, {}};
-  }
-  case PartitioningMode::BoundingBox:
-  {
-    std::optional<QString> maybeErrMsg = Detail::InitPartitioningGeometryUsingBoundingBox(*partitionImageGeometry, numberOfPartitionsPerAxis, m_LowerLeftCoord, m_UpperRightCoord, getInPreflight());
-    return {partitionImageGeometry, maybeErrMsg};
-  }
-  default:
-  {
-    QString ss = QObject::tr("Unable to create partitioning scheme geometry - Unknown partitioning mode.");
-    setErrorCondition(-3011, ss);
-    return {partitionImageGeometry, ss};
-  }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void PartitionGeometry::partitionCellBasedGeometry(const IGeometryGrid& geometry, Int32ArrayType& partitionIds, const std::optional<int>& outOfBoundsValue)
 {
   SizeVec3Type dims = geometry.getDimensions();
 
+  size_t maxValue = 0;
   for(size_t z = 0; z < dims[2]; z++)
   {
     for(size_t y = 0; y < dims[1]; y++)
@@ -825,7 +830,9 @@ void PartitionGeometry::partitionCellBasedGeometry(const IGeometryGrid& geometry
         auto partitionIndexResult = m_PartitionImageGeometryResult.first->getIndex(coord[0], coord[1], coord[2]);
         if(partitionIndexResult.has_value())
         {
-          partitionIds.setValue(index, *partitionIndexResult + m_StartingPartitionID);
+          int32_t partitionID = *partitionIndexResult + m_StartingPartitionID;
+          maxValue = partitionID > maxValue ? partitionID : maxValue;
+          partitionIds.setValue(index, partitionID);
         }
         else if(outOfBoundsValue.has_value())
         {
@@ -834,12 +841,15 @@ void PartitionGeometry::partitionCellBasedGeometry(const IGeometryGrid& geometry
         else
         {
           QString ss = QObject::tr("Coordinate (%1, %2, %3) is out-of-bounds of geometry '%4'.").arg(QString::number(x), QString::number(y), QString::number(z), geometry.getName());
-          setErrorCondition(-3020, ss);
+          setErrorCondition(-3016, ss);
           return;
         }
       }
     }
   }
+
+  AttributeMatrix::Pointer featureAM = getDataContainerArray()->getAttributeMatrix({m_AttributeMatrixPath.getDataContainerName(), m_FeatureAttributeMatrixName, ""});
+  featureAM->setTupleDimensions({maxValue + 1});
 }
 
 // -----------------------------------------------------------------------------
@@ -849,6 +859,7 @@ void PartitionGeometry::partitionNodeBasedGeometry(const QString& geomName, cons
 {
   size_t numOfVertices = vertexList.getNumberOfTuples();
   float* vertexArray = vertexList.getPointer(0);
+  size_t maxValue = 0;
   for(size_t idx = 0; idx < numOfVertices; idx++)
   {
     float x = vertexArray[idx * 3];
@@ -857,7 +868,9 @@ void PartitionGeometry::partitionNodeBasedGeometry(const QString& geomName, cons
     auto partitionIndexResult = m_PartitionImageGeometryResult.first->getIndex(x, y, z);
     if(partitionIndexResult.has_value())
     {
-      partitionIds.setValue(idx, *partitionIndexResult + m_StartingPartitionID);
+      int32_t partitionID = *partitionIndexResult + m_StartingPartitionID;
+      maxValue = partitionID > maxValue ? partitionID : maxValue;
+      partitionIds.setValue(idx, partitionID);
     }
     else if(outOfBoundsValue.has_value())
     {
@@ -866,10 +879,13 @@ void PartitionGeometry::partitionNodeBasedGeometry(const QString& geomName, cons
     else
     {
       QString ss = QObject::tr("Coordinate (%1, %2, %3) is out-of-bounds of geometry '%4'.").arg(QString::number(x), QString::number(y), QString::number(z), geomName);
-      setErrorCondition(-3021, ss);
+      setErrorCondition(-3017, ss);
       return;
     }
   }
+
+  AttributeMatrix::Pointer featureAM = getDataContainerArray()->getAttributeMatrix({m_AttributeMatrixPath.getDataContainerName(), m_FeatureAttributeMatrixName, ""});
+  featureAM->setTupleDimensions({maxValue + 1});
 }
 
 // -----------------------------------------------------------------------------
@@ -1257,6 +1273,18 @@ QString PartitionGeometry::getPartitioningSchemeInformation() const
   }
 
   return desc;
+}
+
+// -----------------------------------------------------------------------------
+void PartitionGeometry::setFeatureAttributeMatrixName(const QString& value)
+{
+  m_FeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString PartitionGeometry::getFeatureAttributeMatrixName() const
+{
+  return m_FeatureAttributeMatrixName;
 }
 
 // -----------------------------------------------------------------------------
