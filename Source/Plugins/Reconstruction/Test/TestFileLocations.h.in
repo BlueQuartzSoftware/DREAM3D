@@ -37,5 +37,8 @@ namespace UnitTest
     inline const QString ExemplaryQuadGeomIdsPath("@DREAM3DProj_SOURCE_DIR@/Source/Plugins/Reconstruction/Test/TestFiles/quad_geom.dream3d");
     inline const QString ExemplaryTetrahedralGeomIdsPath("@DREAM3DProj_SOURCE_DIR@/Source/Plugins/Reconstruction/Test/TestFiles/tetrahedral_geom.dream3d");
     inline const QString ExemplaryHexahedralGeomIdsPath("@DREAM3DProj_SOURCE_DIR@/Source/Plugins/Reconstruction/Test/TestFiles/hexahedral_geom.dream3d");
+    inline const QString ExemplaryPlanalXYNodeGeomIdsPath("@DREAM3DProj_SOURCE_DIR@/Source/Plugins/Reconstruction/Test/TestFiles/planal_xy_node_geom.dream3d");
+    inline const QString ExemplaryPlanalXZNodeGeomIdsPath("@DREAM3DProj_SOURCE_DIR@/Source/Plugins/Reconstruction/Test/TestFiles/planal_xz_node_geom.dream3d");
+    inline const QString ExemplaryPlanalYZNodeGeomIdsPath("@DREAM3DProj_SOURCE_DIR@/Source/Plugins/Reconstruction/Test/TestFiles/planal_yz_node_geom.dream3d");
   }
 }

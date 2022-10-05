@@ -383,7 +383,7 @@ void PartitionGeometry::dataCheck()
   m_PartitionImageGeometryResult = {};
 
   AttributeMatrix::Pointer am = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, m_AttributeMatrixPath, 1);
-  if(getErrorCode() < 0)
+  if(getErrorCode() != 0)
   {
     return;
   }
@@ -448,7 +448,7 @@ void PartitionGeometry::dataCheck()
   }
   }
 
-  if(getErrorCode() < 0)
+  if(getErrorCode() != 0)
   {
     return;
   }
@@ -456,7 +456,7 @@ void PartitionGeometry::dataCheck()
   if(m_SavePartitioningScheme)
   {
     DataContainer::Pointer ps_dc = getDataContainerArray()->createNonPrereqDataContainer(this, m_PSDataContainerPath, PartitionSchemeDataContainerID);
-    if(getErrorCode() < 0)
+    if(getErrorCode() != 0)
     {
       return;
     }
@@ -466,13 +466,13 @@ void PartitionGeometry::dataCheck()
     DataArrayPath dap = m_PSDataContainerPath;
     dap.setAttributeMatrixName(m_PSAttributeMatrixName);
     AttributeMatrix::Pointer ps_am = ps_dc->createNonPrereqAttributeMatrix(this, dap, m_NumberOfPartitionsPerAxis.convertType<size_t>(), AttributeMatrix::Type::Cell, PartitionSchemeAttributeMatrixID);
-    if(getErrorCode() < 0)
+    if(getErrorCode() != 0)
     {
       return;
     }
 
     m_PartitioningSchemeIdsPtr = ps_am->createNonPrereqArray<Int32ArrayType>(this, m_PSDataArrayName, 0, {1}, PartitionSchemeDataArrayID);
-    if(getErrorCode() < 0)
+    if(getErrorCode() != 0)
     {
       return;
     }
@@ -520,7 +520,7 @@ void PartitionGeometry::dataCheckPartitioningMode()
     break;
   }
 
-  if(getErrorCode() < 0)
+  if(getErrorCode() != 0)
   {
     return;
   }
@@ -550,13 +550,13 @@ template <typename G>
 void PartitionGeometry::dataCheckBasicMode()
 {
   dataCheckNumberOfPartitions();
-  if(getErrorCode() < 0)
+  if(getErrorCode() != 0)
   {
     return;
   }
 
   dataCheckPartitioningScheme<G>();
-  if(getErrorCode() < 0)
+  if(getErrorCode() != 0)
   {
     return;
   }
@@ -569,7 +569,7 @@ template <typename G>
 void PartitionGeometry::dataCheckAdvancedMode()
 {
   dataCheckNumberOfPartitions();
-  if(getErrorCode() < 0)
+  if(getErrorCode() != 0)
   {
     return;
   }
@@ -594,7 +594,7 @@ void PartitionGeometry::dataCheckAdvancedMode()
   }
 
   dataCheckPartitioningScheme<G>();
-  if(getErrorCode() < 0)
+  if(getErrorCode() != 0)
   {
     return;
   }
@@ -607,7 +607,7 @@ template <typename G>
 void PartitionGeometry::dataCheckBoundingBoxMode()
 {
   dataCheckNumberOfPartitions();
-  if(getErrorCode() < 0)
+  if(getErrorCode() != 0)
   {
     return;
   }
@@ -634,7 +634,7 @@ void PartitionGeometry::dataCheckBoundingBoxMode()
   }
 
   dataCheckPartitioningScheme<G>();
-  if(getErrorCode() < 0)
+  if(getErrorCode() != 0)
   {
     return;
   }
@@ -646,13 +646,13 @@ void PartitionGeometry::dataCheckBoundingBoxMode()
 void PartitionGeometry::dataCheckExistingGeometryMode()
 {
   DataContainer::Pointer existingDC = getDataContainerArray()->getPrereqDataContainer(this, m_PartitioningSchemeDataContainerName.getDataContainerName());
-  if(getErrorCode() < 0)
+  if(getErrorCode() != 0)
   {
     return;
   }
 
   ImageGeom::Pointer existingGeom = existingDC->getPrereqGeometry<ImageGeom>(this);
-  if(getErrorCode() < 0)
+  if(getErrorCode() != 0)
   {
     return;
   }
@@ -693,7 +693,7 @@ void PartitionGeometry::dataCheckPartitioningScheme()
   }
 
   createPartitioningSchemeGeometry(*geometry);
-  if(getErrorCode() < 0)
+  if(getErrorCode() != 0)
   {
     return;
   }
@@ -788,7 +788,7 @@ void PartitionGeometry::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCode() < 0)
+  if(getErrorCode() != 0)
   {
     return;
   }
