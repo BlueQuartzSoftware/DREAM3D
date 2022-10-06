@@ -385,7 +385,6 @@ private:
   //  DataArrayPath m_BoundingBoxPath = {"", "", ""};
 
   std::weak_ptr<FloatArrayType> m_BoundingBoxPtr;
-  float* m_BoundingBox = nullptr;
   std::weak_ptr<Int32ArrayType> m_PartitionIdsPtr;
   int32_t* m_PartitionIds = nullptr;
   std::weak_ptr<Int32ArrayType> m_PartitioningSchemeIdsPtr;
