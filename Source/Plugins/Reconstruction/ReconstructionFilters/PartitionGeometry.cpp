@@ -494,7 +494,7 @@ void PartitionGeometry::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename G>
+template <typename GeomType>
 void PartitionGeometry::dataCheckPartitioningMode()
 {
   if(m_StartingPartitionID < 0)
@@ -507,13 +507,13 @@ void PartitionGeometry::dataCheckPartitioningMode()
   switch(static_cast<PartitioningMode>(m_PartitioningMode))
   {
   case PartitioningMode::Basic:
-    dataCheckBasicMode<G>();
+    dataCheckBasicMode<GeomType>();
     break;
   case PartitioningMode::Advanced:
-    dataCheckAdvancedMode<G>();
+    dataCheckAdvancedMode<GeomType>();
     break;
   case PartitioningMode::BoundingBox:
-    dataCheckBoundingBoxMode<G>();
+    dataCheckBoundingBoxMode<GeomType>();
     break;
   case PartitioningMode::ExistingPartitioningScheme:
     dataCheckExistingGeometryMode();
@@ -533,7 +533,7 @@ void PartitionGeometry::dataCheckPartitioningMode()
   }
 
   DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_AttributeMatrixPath.getDataContainerName());
-  if constexpr(std::is_same_v<G, ImageGeom> || std::is_same_v<G, RectGridGeom>)
+  if constexpr(std::is_same_v<GeomType, ImageGeom> || std::is_same_v<GeomType, RectGridGeom>)
   {
     dc->createAndAddAttributeMatrix({0}, m_FeatureAttributeMatrixName, AttributeMatrix::Type::CellFeature);
   }
@@ -546,7 +546,7 @@ void PartitionGeometry::dataCheckPartitioningMode()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename G>
+template <typename GeomType>
 void PartitionGeometry::dataCheckBasicMode()
 {
   dataCheckNumberOfPartitions();
@@ -555,7 +555,7 @@ void PartitionGeometry::dataCheckBasicMode()
     return;
   }
 
-  dataCheckPartitioningScheme<G>();
+  dataCheckPartitioningScheme<GeomType>();
   if(getErrorCode() != 0)
   {
     return;
@@ -565,7 +565,7 @@ void PartitionGeometry::dataCheckBasicMode()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename G>
+template <typename GeomType>
 void PartitionGeometry::dataCheckAdvancedMode()
 {
   dataCheckNumberOfPartitions();
@@ -593,7 +593,7 @@ void PartitionGeometry::dataCheckAdvancedMode()
     return;
   }
 
-  dataCheckPartitioningScheme<G>();
+  dataCheckPartitioningScheme<GeomType>();
   if(getErrorCode() != 0)
   {
     return;
@@ -603,7 +603,7 @@ void PartitionGeometry::dataCheckAdvancedMode()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename G>
+template <typename GeomType>
 void PartitionGeometry::dataCheckBoundingBoxMode()
 {
   dataCheckNumberOfPartitions();
@@ -633,7 +633,7 @@ void PartitionGeometry::dataCheckBoundingBoxMode()
     return;
   }
 
-  dataCheckPartitioningScheme<G>();
+  dataCheckPartitioningScheme<GeomType>();
   if(getErrorCode() != 0)
   {
     return;
@@ -663,14 +663,14 @@ void PartitionGeometry::dataCheckExistingGeometryMode()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename G>
+template <typename GeomType>
 void PartitionGeometry::dataCheckPartitioningScheme()
 {
   DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_AttributeMatrixPath.getDataContainerName());
   AttributeMatrix::Pointer am = dc->getAttributeMatrix(m_AttributeMatrixPath.getAttributeMatrixName());
 
-  typename G::Pointer geometry = dc->getGeometryAs<G>();
-  if constexpr(std::is_same_v<G, ImageGeom> || std::is_same_v<G, RectGridGeom>)
+  typename GeomType::Pointer geometry = dc->getGeometryAs<GeomType>();
+  if constexpr(std::is_same_v<GeomType, ImageGeom> || std::is_same_v<GeomType, RectGridGeom>)
   {
     if(am->getNumberOfTuples() != geometry->getNumberOfElements())
     {
@@ -702,8 +702,8 @@ void PartitionGeometry::dataCheckPartitioningScheme()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename G>
-void PartitionGeometry::createPartitioningSchemeGeometry(const G& geometry)
+template <typename GeomType>
+void PartitionGeometry::createPartitioningSchemeGeometry(const GeomType& geometry)
 {
   ImageGeom::Pointer partitionImageGeometry = ImageGeom::CreateGeometry(m_PSImageGeomName);
   partitionImageGeometry->setDimensions(m_NumberOfPartitionsPerAxis.convertType<size_t>());

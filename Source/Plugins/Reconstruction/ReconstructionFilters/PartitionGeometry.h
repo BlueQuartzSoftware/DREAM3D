@@ -402,29 +402,29 @@ private:
   QString getInputHexahedralGeometryInformation() const;
   QString getInputUnknownGeometryInformation() const;
 
-  template <typename G>
-  void createPartitioningSchemeGeometry(const G& geometry);
+  template <typename GeomType>
+  void createPartitioningSchemeGeometry(const GeomType& geometry);
 
   void partitionCellBasedGeometry(const IGeometryGrid& geometry, Int32ArrayType& partitionIds, const std::optional<int>& outOfBoundsValue);
   void partitionNodeBasedGeometry(const QString& geomName, const SharedVertexList& vertexList, Int32ArrayType& partitionIds, const std::optional<int>& outOfBoundsValue);
 
-  template <typename G>
+  template <typename GeomType>
   void dataCheckPartitioningMode();
 
-  template <typename G>
+  template <typename GeomType>
   void dataCheckBasicMode();
 
-  template <typename G>
+  template <typename GeomType>
   void dataCheckAdvancedMode();
 
-  template <typename G>
+  template <typename GeomType>
   void dataCheckBoundingBoxMode();
 
   void dataCheckExistingGeometryMode();
 
   void dataCheckNumberOfPartitions();
 
-  template <typename G>
+  template <typename GeomType>
   void dataCheckPartitioningScheme();
 
 public:
