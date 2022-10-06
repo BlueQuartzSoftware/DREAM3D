@@ -388,6 +388,20 @@ void PartitionGeometry::dataCheck()
     return;
   }
 
+  if(m_StartingPartitionID < 0)
+  {
+    QString ss = QObject::tr("Starting Partition ID: The value cannot be negative.");
+    setErrorCondition(-3002, ss);
+    return;
+  }
+
+  if(m_FeatureAttributeMatrixName.isEmpty())
+  {
+    QString ss = QObject::tr("The output Feature Attribute Matrix must have a name.");
+    setErrorCondition(-3030, ss);
+    return;
+  }
+
   DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_AttributeMatrixPath.getDataContainerName());
   IGeometry::Pointer iGeometry = dc->getGeometry();
   if(iGeometry == IGeometry::NullPointer())
@@ -403,41 +417,49 @@ void PartitionGeometry::dataCheck()
   case IGeometry::Type::Image:
   {
     dataCheckPartitioningMode<ImageGeom>();
+    dc->createAndAddAttributeMatrix({0}, m_FeatureAttributeMatrixName, AttributeMatrix::Type::CellFeature);
     break;
   }
   case IGeometry::Type::RectGrid:
   {
     dataCheckPartitioningMode<RectGridGeom>();
+    dc->createAndAddAttributeMatrix({0}, m_FeatureAttributeMatrixName, AttributeMatrix::Type::CellFeature);
     break;
   }
   case IGeometry::Type::Vertex:
   {
     dataCheckPartitioningMode<VertexGeom>();
+    dc->createAndAddAttributeMatrix({0}, m_FeatureAttributeMatrixName, AttributeMatrix::Type::VertexFeature);
     break;
   }
   case IGeometry::Type::Edge:
   {
     dataCheckPartitioningMode<EdgeGeom>();
+    dc->createAndAddAttributeMatrix({0}, m_FeatureAttributeMatrixName, AttributeMatrix::Type::VertexFeature);
     break;
   }
   case IGeometry::Type::Triangle:
   {
     dataCheckPartitioningMode<TriangleGeom>();
+    dc->createAndAddAttributeMatrix({0}, m_FeatureAttributeMatrixName, AttributeMatrix::Type::VertexFeature);
     break;
   }
   case IGeometry::Type::Quad:
   {
     dataCheckPartitioningMode<QuadGeom>();
+    dc->createAndAddAttributeMatrix({0}, m_FeatureAttributeMatrixName, AttributeMatrix::Type::VertexFeature);
     break;
   }
   case IGeometry::Type::Tetrahedral:
   {
     dataCheckPartitioningMode<TetrahedralGeom>();
+    dc->createAndAddAttributeMatrix({0}, m_FeatureAttributeMatrixName, AttributeMatrix::Type::VertexFeature);
     break;
   }
   case IGeometry::Type::Hexahedral:
   {
     dataCheckPartitioningMode<HexahedralGeom>();
+    dc->createAndAddAttributeMatrix({0}, m_FeatureAttributeMatrixName, AttributeMatrix::Type::VertexFeature);
     break;
   }
   default:
@@ -497,13 +519,6 @@ void PartitionGeometry::dataCheck()
 template <typename GeomType>
 void PartitionGeometry::dataCheckPartitioningMode()
 {
-  if(m_StartingPartitionID < 0)
-  {
-    QString ss = QObject::tr("Starting Partition ID: The value cannot be negative.");
-    setErrorCondition(-3002, ss);
-    return;
-  }
-
   switch(static_cast<PartitioningMode>(m_PartitioningMode))
   {
   case PartitioningMode::Basic:
@@ -523,23 +538,6 @@ void PartitionGeometry::dataCheckPartitioningMode()
   if(getErrorCode() != 0)
   {
     return;
-  }
-
-  if(m_FeatureAttributeMatrixName.isEmpty())
-  {
-    QString ss = QObject::tr("The output Feature Attribute Matrix must have a name.");
-    setErrorCondition(-3030, ss);
-    return;
-  }
-
-  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_AttributeMatrixPath.getDataContainerName());
-  if constexpr(std::is_same_v<GeomType, ImageGeom> || std::is_same_v<GeomType, RectGridGeom>)
-  {
-    dc->createAndAddAttributeMatrix({0}, m_FeatureAttributeMatrixName, AttributeMatrix::Type::CellFeature);
-  }
-  else
-  {
-    dc->createAndAddAttributeMatrix({0}, m_FeatureAttributeMatrixName, AttributeMatrix::Type::VertexFeature);
   }
 }
 

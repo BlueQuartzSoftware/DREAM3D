@@ -392,40 +392,123 @@ private:
   int32_t* m_PartitioningSchemeIds = nullptr;
   PartitioningImageGeomResult m_PartitionImageGeometryResult;
 
+  /**
+   * @brief getInputImageGeometryInformation Helper method that returns displayable image geometry preflight information
+   */
   QString getInputImageGeometryInformation(const ImageGeom& geometry) const;
+
+  /**
+   * @brief getInputRectGridGeometryInformation Helper method that returns displayable rectilinear grid geometry preflight information
+   */
   QString getInputRectGridGeometryInformation() const;
+
+  /**
+   * @brief getInputVertexGeometryInformation Helper method that returns displayable vertex geometry preflight information
+   */
   QString getInputVertexGeometryInformation() const;
+
+  /**
+   * @brief getInputEdgeGeometryInformation Helper method that returns displayable edge geometry preflight information
+   */
   QString getInputEdgeGeometryInformation() const;
+
+  /**
+   * @brief getInputTriangleGeometryInformation Helper method that returns displayable triangle geometry preflight information
+   */
   QString getInputTriangleGeometryInformation() const;
+
+  /**
+   * @brief getInputQuadGeometryInformation Helper method that returns displayable quad geometry preflight information
+   */
   QString getInputQuadGeometryInformation() const;
+
+  /**
+   * @brief getInputTetrahedralGeometryInformation Helper method that returns displayable tetrahedral geometry preflight information
+   */
   QString getInputTetrahedralGeometryInformation() const;
+
+  /**
+   * @brief getInputHexahedralGeometryInformation Helper method that returns displayable hexahedral geometry preflight information
+   */
   QString getInputHexahedralGeometryInformation() const;
+
+  /**
+   * @brief getInputUnknownGeometryInformation Helper method that returns displayable unknown geometry preflight information
+   */
   QString getInputUnknownGeometryInformation() const;
 
-  template <typename GeomType>
-  void createPartitioningSchemeGeometry(const GeomType& geometry);
-
-  void partitionCellBasedGeometry(const IGeometryGrid& geometry, Int32ArrayType& partitionIds, const std::optional<int>& outOfBoundsValue);
-  void partitionNodeBasedGeometry(const QString& geomName, const SharedVertexList& vertexList, Int32ArrayType& partitionIds, const std::optional<int>& outOfBoundsValue);
-
+  /**
+   * @brief dataCheckPartitioningMode Helper method that data checks variables depending on the partitioning mode that is selected.
+   * This method also creates the partitioning scheme geometry if the selected partitioning mode requires one to be created.
+   */
   template <typename GeomType>
   void dataCheckPartitioningMode();
 
+  /**
+   * @brief dataCheckBasicMode Helper method that data checks variables that the Basic partitioning mode depends on.
+   * This method also creates the partitioning scheme geometry using the Basic partitioning mode inputs.
+   */
   template <typename GeomType>
   void dataCheckBasicMode();
 
+  /**
+   * @brief dataCheckAdvancedMode Helper method that data checks variables that the Advanced partitioning mode depends on.
+   * This method also creates the partitioning scheme geometry using the Advanced partitioning mode inputs.
+   */
   template <typename GeomType>
   void dataCheckAdvancedMode();
 
+  /**
+   * @brief dataCheckBoundingBoxMode Helper method that data checks variables that the Bounding Box partitioning mode depends on.
+   * This method also creates the partitioning scheme geometry using the Bounding Box partitioning mode inputs.
+   */
   template <typename GeomType>
   void dataCheckBoundingBoxMode();
 
+  /**
+   * @brief dataCheckExistingGeometryMode Helper method that data checks variables that the Existing Geometry partitioning mode depends on.
+   * The Existing Geometry partitioning mode provides its own partitioning scheme geometry, so this method simply uses this geometry instead
+   * of creating a new geometry.
+   */
   void dataCheckExistingGeometryMode();
 
+  /**
+   * @brief dataCheckNumberOfPartitions Helper method that data checks the Number Of Partitions Per Axis variable.
+   */
   void dataCheckNumberOfPartitions();
 
+  /**
+   * @brief dataCheckPartitioningScheme Helper method that checks that the number of elements (for cell-based geometries) or number of vertices
+   * (for node-based geometries) in the input geometry matches the number of tuples in the input attribute matrix.  Then it calls
+   * createPartitioningSchemeGeometry to create the new partitioning scheme.
+   * @return
+   */
   template <typename GeomType>
   void dataCheckPartitioningScheme();
+
+  /**
+   * @brief createPartitioningSchemeGeometry Creates a partitioning scheme geometry from a given geometry type.
+   * The way this function creates the partitioning scheme geometry depends on which partitioning mode is selected.
+   * For the basic mode, it calls the InitSimplePartitioningGeometry helper method to initialize a basic partitioning
+   * scheme geometry. For the advanced mode, it sets the origin and spacing of the geometry using filter inputs.
+   * For the bounding box mode, it calls the InitPartitioningGeometryUsingBoundingBox helper method to initialize a
+   * partitioning scheme geometry using a bounding box.  It then sets the PartitionImageGeometryResult class member
+   * variable with the results.
+   */
+  template <typename GeomType>
+  void createPartitioningSchemeGeometry(const GeomType& geometry);
+
+  /**
+   * @brief partitionCellBasedGeometry Partitions a cell based geometry and sets the results into the partitionIds array.
+   * If a given cell is located outside the partitioning scheme geometry, that cell will be labeled with the out-of-bounds value.
+   */
+  void partitionCellBasedGeometry(const IGeometryGrid& geometry, Int32ArrayType& partitionIds, const std::optional<int>& outOfBoundsValue);
+
+  /**
+   * @brief partitionNodeBasedGeometry Partitions a node based geometry and sets the results into the partitionIds array.
+   * If a given vertex is located outside the partitioning scheme geometry, that cell will be labeled with the out-of-bounds value.
+   */
+  void partitionNodeBasedGeometry(const QString& geomName, const SharedVertexList& vertexList, Int32ArrayType& partitionIds, const std::optional<int>& outOfBoundsValue);
 
 public:
   PartitionGeometry(const PartitionGeometry&) = delete;            // Copy Constructor Not Implemented
