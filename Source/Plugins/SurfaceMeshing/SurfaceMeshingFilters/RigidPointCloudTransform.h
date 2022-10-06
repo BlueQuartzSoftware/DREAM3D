@@ -11,6 +11,7 @@
 #include "SurfaceMeshing/SurfaceMeshingPlugin.h"
 
 #include <Eigen/Dense>
+#include <QtCore/QDateTime>
 
 typedef Eigen::Matrix<float, Eigen::Dynamic, 3, Eigen::RowMajor> MatrixNx3f;
 typedef Eigen::Matrix<std::complex<float>, Eigen::Dynamic, 3, Eigen::RowMajor> MatrixNx3cf;
@@ -92,6 +93,16 @@ public:
   Q_PROPERTY(DynamicTableData FixedKeyPoints READ getFixedKeyPoints WRITE setFixedKeyPoints)
 
   /**
+   * @brief Sets the value for Filter Parameter for Millis
+   * @param value The new value to use.
+   */
+  void RigidPointCloudTransform::setMillis(const qint64 value);
+  /**
+   * @brief Gets the Filter Parameter value for Millis
+   * @return The value for GenerationCount
+   */
+  qint64 RigidPointCloudTransform::getMillis() const;
+  /**
    * @brief Sets the value for Filter Parameter for GenerationCount
    * @param value The new value to use.
    */
@@ -142,6 +153,10 @@ public:
    * @return
    */
   QString getFilterVersion() const override;
+  /**
+   * @brief sendThreadSafeProgressMessage sends a message to GUI in a threadsafe manner
+   */
+  void RigidPointCloudTransform::sendThreadSafeProgressMessage(size_t numCompleted, size_t totalFeatures);
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -199,6 +214,7 @@ private:
   Eigen::Matrix<float, Eigen::Dynamic, 3, Eigen::RowMajor> m_MovingKeyPointsMatrix;
   Eigen::Matrix<float, Eigen::Dynamic, 3, Eigen::RowMajor> m_FixedKeyPointsMatrix;
   int m_GenerationCount = 10;
+  qint64 m_Millis = QDateTime::currentMSecsSinceEpoch();
 
 public:
   RigidPointCloudTransform(const RigidPointCloudTransform&) = delete;            // Copy Constructor Not Implemented

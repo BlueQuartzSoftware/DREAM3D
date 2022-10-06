@@ -4,12 +4,15 @@
 
 #include "RigidPointCloudTransform.h"
 
+#include <QtCore/QDateTime>
 #include <QtCore/QTextStream>
 
 #include <Eigen/Dense>
 #include <chrono>
 #include <complex>
+#include <mutex>
 #include <random>
+#include <thread>
 #include <type_traits>
 
 #include "SIMPLib/Common/Constants.h"
@@ -23,6 +26,8 @@
 #include "SIMPLib/Geometry/IGeometry2D.h"
 #include "SIMPLib/Geometry/IGeometry3D.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/Utilities/ParallelDataAlgorithm.h"
+#include "SIMPLib/Utilities/TimeUtilities.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -40,13 +45,62 @@ const QString k_TransformationWrapper = "Transformation Matrix";
 } // namespace
 
 typedef Eigen::Matrix<std::complex<float>, Eigen::Dynamic, 3, Eigen::RowMajor> MatrixNx3cf;
+typedef Eigen::Matrix<float, 4, 4, Eigen::RowMajor> AffineTransfromMatrix;
+class UpdateVertexListImpl
+{
+public:
+  UpdateVertexListImpl(RigidPointCloudTransform* filter, SharedVertexList::Pointer pointsToAlign, const AffineTransfromMatrix& TransformationMatrix)
+  : m_Filter(filter)
+  , m_PointsToAlign(pointsToAlign)
+  , m_TransformationMatrix(TransformationMatrix)
+  {
+  }
+  virtual ~UpdateVertexListImpl() = default;
+
+  void convert(size_t start, size_t end) const
+  {
+    SharedVertexList& PointsToAlign = *m_PointsToAlign;
+
+    Eigen::Matrix<float, 4, 1> coordinateColumn;
+    coordinateColumn(3, 0) = 1.0f; // insert 1 at bottom of vect
+    for(size_t i = start; i < end; i++)
+    {
+      if(m_Filter->getCancel())
+      {
+        return;
+      }
+
+      m_Filter->sendThreadSafeProgressMessage(i, PointsToAlign.getNumberOfTuples());
+
+      coordinateColumn(0, 0) = PointsToAlign[i * 3 + 0];
+      coordinateColumn(1, 0) = PointsToAlign[i * 3 + 1];
+      coordinateColumn(2, 0) = PointsToAlign[i * 3 + 2];
+
+      auto resultingCoord = m_TransformationMatrix * coordinateColumn;
+
+      PointsToAlign[i * 3 + 0] = resultingCoord(0, 0);
+      PointsToAlign[i * 3 + 1] = resultingCoord(1, 0);
+      PointsToAlign[i * 3 + 2] = resultingCoord(2, 0);
+    }
+  }
+
+  void operator()(const SIMPLRange& range) const
+  {
+    convert(range.min(), range.max());
+  }
+
+private:
+  RigidPointCloudTransform* m_Filter;
+  SharedVertexList::Pointer m_PointsToAlign;
+  const AffineTransfromMatrix& m_TransformationMatrix;
+};
+
 /**
  * @brief The AlignPointCloudsFromPointsList class adjusts a geometry's points based on alignment lists
  *
  */
 class AlignPointCloudsFromPointsList
 {
-  typedef Eigen::Matrix<float, 4, 4, Eigen::RowMajor> AffineTransfromMatrix;
   typedef Eigen::Matrix<std::complex<float>, 4, 4, Eigen::RowMajor> AffineTransfromMatrixC;
   typedef Eigen::Matrix<float, 1, 3, Eigen::RowMajor> Row;
 
@@ -89,7 +143,9 @@ public:
     {
       return;
     }
-    TransformSetOfPoints(m_PointsToAlign, affineTransform);
+    ParallelDataAlgorithm dataAlg;
+    dataAlg.setRange(0, m_PointsToAlign->getNumberOfTuples());
+    dataAlg.execute(UpdateVertexListImpl(m_Filter, m_PointsToAlign, affineTransform));
   }
 
 private:
@@ -423,37 +479,6 @@ private:
     return gradient;
   }
 
-  void TransformSetOfPoints(SharedVertexList::Pointer pointsToAlign, const AffineTransfromMatrix& TransformationMatrix)
-  {
-    Eigen::Matrix<float, 4, 1> coordinateColumn;
-    coordinateColumn(3, 0) = 1.0f; // insert 1 at bottom of vect
-    auto start = std::chrono::steady_clock::now();
-    for(size_t i = 0; i < pointsToAlign->getSize(); i += 3)
-    {
-      if(m_Filter->getCancel())
-      {
-        return;
-      }
-      auto now = std::chrono::steady_clock::now();
-      if(std::chrono::duration_cast<std::chrono::milliseconds>(now - start).count() > 1000)
-      {
-        auto percentage = static_cast<int>(100 * (static_cast<float>(i) / static_cast<float>(pointsToAlign->getSize())));
-        m_Filter->notifyStatusMessage(QObject::tr("Points updated: %1%").arg(percentage));
-        start = std::chrono::steady_clock::now();
-      }
-
-      coordinateColumn(0, 0) = pointsToAlign->getValue(i);
-      coordinateColumn(1, 0) = pointsToAlign->getValue(i + 1);
-      coordinateColumn(2, 0) = pointsToAlign->getValue(i + 2);
-
-      auto resultingCoord = TransformationMatrix * coordinateColumn;
-
-      pointsToAlign->setValue(i, resultingCoord(0, 0));
-      pointsToAlign->setValue(i + 1, resultingCoord(1, 0));
-      pointsToAlign->setValue(i + 2, resultingCoord(2, 0));
-    }
-  }
-
   std::array<float, 6> getReal(const std::array<std::complex<float>, 6>& complex)
   {
     std::array<float, 6> reals;
@@ -582,7 +607,7 @@ void RigidPointCloudTransform::setupFilterParameters()
     m_MovingKeyPoints.setColHeaders(cHeaders);
     m_MovingKeyPoints.setTableData(defaultTable);
     m_MovingKeyPoints.setDynamicRows(true);
-    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("Key Points from Moving", MovingKeyPoints, FilterParameter::Category::Parameter, RigidPointCloudTransform, false));
+    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("Key Points from Moving", MovingKeyPoints, FilterParameter::Category::Parameter, RigidPointCloudTransform));
   }
   // Table 2 - Dynamic rows and fixed columns
   {
@@ -594,7 +619,7 @@ void RigidPointCloudTransform::setupFilterParameters()
     m_FixedKeyPoints.setColHeaders(cHeaders);
     m_FixedKeyPoints.setTableData(defaultTable);
     m_FixedKeyPoints.setDynamicRows(true);
-    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("Key Points from Fixed", FixedKeyPoints, FilterParameter::Category::Parameter, RigidPointCloudTransform, false));
+    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("Key Points from Fixed", FixedKeyPoints, FilterParameter::Category::Parameter, RigidPointCloudTransform));
   }
   setFilterParameters(parameters);
 }
@@ -685,22 +710,22 @@ void RigidPointCloudTransform::dataCheck()
   transformationMatrix->createNonPrereqArray<DataArray<float>>(this, k_AffineMatrixName, 0.0f, CDims, DataArrayID);
 
   auto igeom = getDataContainerArray()->getDataContainer(getMovingGeometry())->getGeometryAs<IGeometry>();
-  if (IGeometry2D::Pointer igeom2D = std::dynamic_pointer_cast<IGeometry2D>(igeom))
+  if(IGeometry2D::Pointer igeom2D = std::dynamic_pointer_cast<IGeometry2D>(igeom))
   {
   }
-  else if (IGeometry3D::Pointer igeom3D = std::dynamic_pointer_cast<IGeometry3D>(igeom))
+  else if(IGeometry3D::Pointer igeom3D = std::dynamic_pointer_cast<IGeometry3D>(igeom))
   {
   }
-  else if (VertexGeom::Pointer vertex = std::dynamic_pointer_cast<VertexGeom>(igeom))
+  else if(VertexGeom::Pointer vertex = std::dynamic_pointer_cast<VertexGeom>(igeom))
   {
   }
-  else if (EdgeGeom::Pointer edge = std::dynamic_pointer_cast<EdgeGeom>(igeom))
+  else if(EdgeGeom::Pointer edge = std::dynamic_pointer_cast<EdgeGeom>(igeom))
   {
   }
   else
   {
-      QString ss = QObject::tr("Geometry must be of type Igeometry2D, Igeometry3D, VertexGeom, or EdgeGeom");
-      setErrorCondition(-44364, ss);
+    QString ss = QObject::tr("Geometry must be of type Igeometry2D, Igeometry3D, VertexGeom, or EdgeGeom");
+    setErrorCondition(-44364, ss);
   }
 }
 
@@ -866,6 +891,19 @@ QString RigidPointCloudTransform::ClassName()
 }
 
 // -----------------------------------------------------------------------------
+void RigidPointCloudTransform::sendThreadSafeProgressMessage(size_t numCompleted, size_t totalFeatures)
+{
+  static std::mutex mutex;
+  std::lock_guard<std::mutex> lock(mutex);
+  qint64 currentMillis = QDateTime::currentMSecsSinceEpoch();
+  if(currentMillis - getMillis() > 1000)
+  {
+    QString ss = QObject::tr("Vertex Points Completed: %1 of %2").arg(numCompleted).arg(totalFeatures);
+    notifyStatusMessage(ss);
+    setMillis(QDateTime::currentMSecsSinceEpoch());
+  }
+}
+// -----------------------------------------------------------------------------
 void RigidPointCloudTransform::setMovingGeometry(const DataArrayPath& value)
 {
   m_MovingGeometry = value;
@@ -924,4 +962,14 @@ void RigidPointCloudTransform::setGenerationCount(const int value)
 int RigidPointCloudTransform::getGenerationCount() const
 {
   return m_GenerationCount;
+}
+// -----------------------------------------------------------------------------
+void RigidPointCloudTransform::setMillis(const qint64 value)
+{
+  m_Millis = value;
+}
+// -----------------------------------------------------------------------------
+qint64 RigidPointCloudTransform::getMillis() const
+{
+  return m_Millis;
 }
