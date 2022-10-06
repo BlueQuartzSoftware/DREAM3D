@@ -70,8 +70,6 @@ public:
         return;
       }
 
-      m_Filter->sendThreadSafeProgressMessage(i, PointsToAlign.getNumberOfTuples());
-
       coordinateColumn(0, 0) = PointsToAlign[i * 3 + 0];
       coordinateColumn(1, 0) = PointsToAlign[i * 3 + 1];
       coordinateColumn(2, 0) = PointsToAlign[i * 3 + 2];
@@ -81,6 +79,7 @@ public:
       PointsToAlign[i * 3 + 0] = resultingCoord(0, 0);
       PointsToAlign[i * 3 + 1] = resultingCoord(1, 0);
       PointsToAlign[i * 3 + 2] = resultingCoord(2, 0);
+      m_Filter->sendThreadSafeProgressMessage(1, PointsToAlign.getNumberOfTuples());
     }
   }
 
@@ -896,9 +895,11 @@ void RigidPointCloudTransform::sendThreadSafeProgressMessage(size_t numCompleted
   static std::mutex mutex;
   std::lock_guard<std::mutex> lock(mutex);
   qint64 currentMillis = QDateTime::currentMSecsSinceEpoch();
+  setTotalCompleted(getTotalCompleted() + numCompleted);
   if(currentMillis - getMillis() > 1000)
   {
-    QString ss = QObject::tr("Vertex Points Completed: %1 of %2").arg(numCompleted).arg(totalFeatures);
+    auto percentage = static_cast<int>(100 * (static_cast<float>(getTotalCompleted()) / static_cast<float>(totalFeatures)));
+    QString ss = QObject::tr("Vertex Points Updated: %1%").arg(percentage);
     notifyStatusMessage(ss);
     setMillis(QDateTime::currentMSecsSinceEpoch());
   }
@@ -972,4 +973,14 @@ void RigidPointCloudTransform::setMillis(const qint64 value)
 qint64 RigidPointCloudTransform::getMillis() const
 {
   return m_Millis;
+}
+// -----------------------------------------------------------------------------
+void RigidPointCloudTransform::setTotalCompleted(const size_t value)
+{
+  m_TotalCompleted = value;
+}
+// -----------------------------------------------------------------------------
+size_t RigidPointCloudTransform::getTotalCompleted() const
+{
+  return m_TotalCompleted;
 }

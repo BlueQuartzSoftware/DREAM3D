@@ -93,13 +93,23 @@ public:
   Q_PROPERTY(DynamicTableData FixedKeyPoints READ getFixedKeyPoints WRITE setFixedKeyPoints)
 
   /**
+   * @brief Gets the Filter Parameter value for TotalCompleted
+   * @param The value for TotalCompleted
+   */
+  void RigidPointCloudTransform::setTotalCompleted(const size_t value);
+  /**
+   * @brief Gets the Filter Parameter value for TotalCompleted
+   * @return The value for TotalCompleted
+   */
+  size_t RigidPointCloudTransform::getTotalCompleted() const;
+  /**
    * @brief Sets the value for Filter Parameter for Millis
    * @param value The new value to use.
    */
   void RigidPointCloudTransform::setMillis(const qint64 value);
   /**
    * @brief Gets the Filter Parameter value for Millis
-   * @return The value for GenerationCount
+   * @return The value for Millis
    */
   qint64 RigidPointCloudTransform::getMillis() const;
   /**
@@ -215,6 +225,7 @@ private:
   Eigen::Matrix<float, Eigen::Dynamic, 3, Eigen::RowMajor> m_FixedKeyPointsMatrix;
   int m_GenerationCount = 10;
   qint64 m_Millis = QDateTime::currentMSecsSinceEpoch();
+  size_t m_TotalCompleted = 0;
 
 public:
   RigidPointCloudTransform(const RigidPointCloudTransform&) = delete;            // Copy Constructor Not Implemented
