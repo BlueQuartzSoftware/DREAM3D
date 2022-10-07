@@ -117,6 +117,22 @@ COMPILE_TOOL(
 )
 
 
+COMPILE_TOOL(
+        TARGET TriangleIntersectDemo
+        SOURCES ${DREAM3DTools_SOURCE_DIR}/TriangleIntersectDemo.cpp
+        ${SIMPLView_VERSION_SRC_FILE}
+        ${DREAM3DTools_BINARY_DIR}/${PROJECT_NAME}Configuration.h
+        DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+        VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+        VERSION_MINOR ${DREAM3D_VER_MINOR}
+        VERSION_PATCH ${DREAM3D_VER_PATCH}
+        BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+        COMPONENT     Tools
+        LINK_LIBRARIES Qt5::Core SIMPLib
+)
+
+
+
 if(0)
 
 # Create a Command line tool for the SandboxTool
