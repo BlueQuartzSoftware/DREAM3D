@@ -295,6 +295,29 @@ public:
   Q_PROPERTY(QString PSAttributeMatrixName READ getPSAttributeMatrixName WRITE setPSAttributeMatrixName)
 
   /**
+   * @brief Setter property for UseVertexMask
+   */
+  void setUseVertexMask(const bool& value);
+
+  /**
+   * @brief Getter property for UseVertexMask
+   * @return Value of UseVertexMask
+   */
+  bool getUseVertexMask() const;
+  Q_PROPERTY(bool UseVertexMask READ getUseVertexMask WRITE setUseVertexMask)
+
+  /**
+   * @brief Setter property for VertexMaskPath
+   */
+  void setVertexMaskPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for VertexMaskPath
+   * @return Value of VertexMaskPath
+   */
+  DataArrayPath getVertexMaskPath() const;
+  Q_PROPERTY(DataArrayPath VertexMaskPath READ getVertexMaskPath WRITE setVertexMaskPath)
+
+  /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
   QString getCompiledLibraryName() const override;
@@ -383,8 +406,9 @@ private:
   DataArrayPath m_AttributeMatrixPath = {"", "", ""};
   QString m_FeatureAttributeMatrixName = {"FeatureData"};
   //  DataArrayPath m_BoundingBoxPath = {"", "", ""};
+  bool m_UseVertexMask = {false};
+  DataArrayPath m_VertexMaskPath = {"", "", ""};
 
-  std::weak_ptr<FloatArrayType> m_BoundingBoxPtr;
   std::weak_ptr<Int32ArrayType> m_PartitionIdsPtr;
   int32_t* m_PartitionIds = nullptr;
   std::weak_ptr<Int32ArrayType> m_PartitioningSchemeIdsPtr;
@@ -501,13 +525,13 @@ private:
    * @brief partitionCellBasedGeometry Partitions a cell based geometry and sets the results into the partitionIds array.
    * If a given cell is located outside the partitioning scheme geometry, that cell will be labeled with the out-of-bounds value.
    */
-  void partitionCellBasedGeometry(const IGeometryGrid& geometry, Int32ArrayType& partitionIds, const std::optional<int>& outOfBoundsValue);
+  void partitionCellBasedGeometry(const IGeometryGrid& geometry, Int32ArrayType& partitionIds, int outOfBoundsValue);
 
   /**
    * @brief partitionNodeBasedGeometry Partitions a node based geometry and sets the results into the partitionIds array.
    * If a given vertex is located outside the partitioning scheme geometry, that cell will be labeled with the out-of-bounds value.
    */
-  void partitionNodeBasedGeometry(const QString& geomName, const SharedVertexList& vertexList, Int32ArrayType& partitionIds, const std::optional<int>& outOfBoundsValue);
+  void partitionNodeBasedGeometry(const QString& geomName, const SharedVertexList& vertexList, Int32ArrayType& partitionIds, int outOfBoundsValue);
 
 public:
   PartitionGeometry(const PartitionGeometry&) = delete;            // Copy Constructor Not Implemented

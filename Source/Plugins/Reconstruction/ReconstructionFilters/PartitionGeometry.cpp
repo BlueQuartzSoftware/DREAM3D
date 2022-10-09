@@ -351,6 +351,9 @@ void PartitionGeometry::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Partition Scheme Attribute Matrix", PSAttributeMatrixName, PSDataContainerPath, FilterParameter::Category::Parameter, PartitionGeometry));
 
+  linkedProps = {"VertexMaskPath"};
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Vertex Mask", UseVertexMask, FilterParameter::Category::Parameter, PartitionGeometry, linkedProps));
+
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req;
     req.amTypes = {AttributeMatrix::Type::Cell, AttributeMatrix::Type::Vertex, AttributeMatrix::Type::Face, AttributeMatrix::Type::Edge};
@@ -361,6 +364,15 @@ void PartitionGeometry::setupFilterParameters()
   param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Input Geometry Information", InputGeometryInformation, FilterParameter::Category::RequiredArray, PartitionGeometry);
   param->setReadOnly(true);
   parameters.push_back(param);
+
+  {
+    DataArraySelectionFilterParameter::RequirementType req;
+    req.amTypes = {AttributeMatrix::Type::Vertex};
+    req.daTypes = {SIMPL::TypeNames::Bool};
+    req.componentDimensions = {{1}};
+    req.dcGeometryTypes = {IGeometry::Type::Vertex, IGeometry::Type::Edge, IGeometry::Type::Quad, IGeometry::Type::Triangle, IGeometry::Type::Tetrahedral, IGeometry::Type::Hexahedral};
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Vertex Mask", VertexMaskPath, FilterParameter::Category::RequiredArray, PartitionGeometry, req));
+  }
 
   //  {
   //    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Type::Any, IGeometry::Type::Any);
@@ -473,6 +485,15 @@ void PartitionGeometry::dataCheck()
   if(getErrorCode() != 0)
   {
     return;
+  }
+
+  if(m_UseVertexMask)
+  {
+    getDataContainerArray()->getPrereqArrayFromPath<BoolArrayType>(this, m_VertexMaskPath, {1});
+    if(getErrorCode() != 0)
+    {
+      return;
+    }
   }
 
   if(m_SavePartitioningScheme)
@@ -791,12 +812,6 @@ void PartitionGeometry::execute()
     return;
   }
 
-  std::optional<int> outOfBoundsValue = {};
-  if(m_PartitioningMode == SIMPL::to_underlying(PartitioningMode::Advanced) || m_PartitioningMode == SIMPL::to_underlying(PartitioningMode::BoundingBox))
-  {
-    outOfBoundsValue = m_OutOfBoundsValue;
-  }
-
   Int32ArrayType::Pointer partitionIdsPtr = m_PartitionIdsPtr.lock();
 
   DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_AttributeMatrixPath.getDataContainerName());
@@ -806,55 +821,55 @@ void PartitionGeometry::execute()
   case IGeometry::Type::Image:
   {
     ImageGeom::Pointer geometry = dc->getGeometryAs<ImageGeom>();
-    partitionCellBasedGeometry(*geometry, *partitionIdsPtr, outOfBoundsValue);
+    partitionCellBasedGeometry(*geometry, *partitionIdsPtr, m_OutOfBoundsValue);
     break;
   }
   case IGeometry::Type::RectGrid:
   {
     RectGridGeom::Pointer geometry = dc->getGeometryAs<RectGridGeom>();
-    partitionCellBasedGeometry(*geometry, *partitionIdsPtr, outOfBoundsValue);
+    partitionCellBasedGeometry(*geometry, *partitionIdsPtr, m_OutOfBoundsValue);
     break;
   }
   case IGeometry::Type::Vertex:
   {
     VertexGeom::Pointer geometry = dc->getGeometryAs<VertexGeom>();
     SharedVertexList::Pointer vertexList = geometry->getVertices();
-    partitionNodeBasedGeometry(geometry->getName(), *vertexList, *partitionIdsPtr, outOfBoundsValue);
+    partitionNodeBasedGeometry(geometry->getName(), *vertexList, *partitionIdsPtr, m_OutOfBoundsValue);
     break;
   }
   case IGeometry::Type::Edge:
   {
     EdgeGeom::Pointer geometry = dc->getGeometryAs<EdgeGeom>();
     SharedVertexList::Pointer vertexList = geometry->getVertices();
-    partitionNodeBasedGeometry(geometry->getName(), *vertexList, *partitionIdsPtr, outOfBoundsValue);
+    partitionNodeBasedGeometry(geometry->getName(), *vertexList, *partitionIdsPtr, m_OutOfBoundsValue);
     break;
   }
   case IGeometry::Type::Triangle:
   {
     TriangleGeom::Pointer geometry = dc->getGeometryAs<TriangleGeom>();
     SharedVertexList::Pointer vertexList = geometry->getVertices();
-    partitionNodeBasedGeometry(geometry->getName(), *vertexList, *partitionIdsPtr, outOfBoundsValue);
+    partitionNodeBasedGeometry(geometry->getName(), *vertexList, *partitionIdsPtr, m_OutOfBoundsValue);
     break;
   }
   case IGeometry::Type::Quad:
   {
     QuadGeom::Pointer geometry = dc->getGeometryAs<QuadGeom>();
     SharedVertexList::Pointer vertexList = geometry->getVertices();
-    partitionNodeBasedGeometry(geometry->getName(), *vertexList, *partitionIdsPtr, outOfBoundsValue);
+    partitionNodeBasedGeometry(geometry->getName(), *vertexList, *partitionIdsPtr, m_OutOfBoundsValue);
     break;
   }
   case IGeometry::Type::Tetrahedral:
   {
     TetrahedralGeom::Pointer geometry = dc->getGeometryAs<TetrahedralGeom>();
     SharedVertexList::Pointer vertexList = geometry->getVertices();
-    partitionNodeBasedGeometry(geometry->getName(), *vertexList, *partitionIdsPtr, outOfBoundsValue);
+    partitionNodeBasedGeometry(geometry->getName(), *vertexList, *partitionIdsPtr, m_OutOfBoundsValue);
     break;
   }
   case IGeometry::Type::Hexahedral:
   {
     HexahedralGeom::Pointer geometry = dc->getGeometryAs<HexahedralGeom>();
     SharedVertexList::Pointer vertexList = geometry->getVertices();
-    partitionNodeBasedGeometry(geometry->getName(), *vertexList, *partitionIdsPtr, outOfBoundsValue);
+    partitionNodeBasedGeometry(geometry->getName(), *vertexList, *partitionIdsPtr, m_OutOfBoundsValue);
     break;
   }
   default:
@@ -877,7 +892,7 @@ void PartitionGeometry::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PartitionGeometry::partitionCellBasedGeometry(const IGeometryGrid& geometry, Int32ArrayType& partitionIds, const std::optional<int>& outOfBoundsValue)
+void PartitionGeometry::partitionCellBasedGeometry(const IGeometryGrid& geometry, Int32ArrayType& partitionIds, int outOfBoundsValue)
 {
   SizeVec3Type dims = geometry.getDimensions();
 
@@ -899,15 +914,9 @@ void PartitionGeometry::partitionCellBasedGeometry(const IGeometryGrid& geometry
           maxValue = partitionID > maxValue ? partitionID : maxValue;
           partitionIds.setValue(index, partitionID);
         }
-        else if(outOfBoundsValue.has_value())
-        {
-          partitionIds.setValue(index, *outOfBoundsValue);
-        }
         else
         {
-          QString ss = QObject::tr("Coordinate (%1, %2, %3) is out-of-bounds of geometry '%4'.").arg(QString::number(x), QString::number(y), QString::number(z), geometry.getName());
-          setErrorCondition(-3016, ss);
-          return;
+          partitionIds.setValue(index, outOfBoundsValue);
         }
       }
     }
@@ -920,32 +929,42 @@ void PartitionGeometry::partitionCellBasedGeometry(const IGeometryGrid& geometry
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PartitionGeometry::partitionNodeBasedGeometry(const QString& geomName, const SharedVertexList& vertexList, Int32ArrayType& partitionIds, const std::optional<int>& outOfBoundsValue)
+void PartitionGeometry::partitionNodeBasedGeometry(const QString& geomName, const SharedVertexList& vertexList, Int32ArrayType& partitionIds, int outOfBoundsValue)
 {
+  BoolArrayType::Pointer maskPtr = BoolArrayType::NullPointer();
+  bool* mask = nullptr;
+  if(m_UseVertexMask)
+  {
+    AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_VertexMaskPath);
+    maskPtr = am->getAttributeArrayAs<BoolArrayType>(m_VertexMaskPath.getDataArrayName());
+    mask = maskPtr->getPointer(0);
+  }
   size_t numOfVertices = vertexList.getNumberOfTuples();
   float* vertexArray = vertexList.getPointer(0);
   size_t maxValue = 0;
   for(size_t idx = 0; idx < numOfVertices; idx++)
   {
-    float x = vertexArray[idx * 3];
-    float y = vertexArray[idx * 3 + 1];
-    float z = vertexArray[idx * 3 + 2];
-    auto partitionIndexResult = m_PartitionImageGeometryResult.first->getIndex(x, y, z);
-    if(partitionIndexResult.has_value())
+    if(m_UseVertexMask && !mask[idx])
     {
-      int32_t partitionID = *partitionIndexResult + m_StartingPartitionID;
-      maxValue = partitionID > maxValue ? partitionID : maxValue;
-      partitionIds.setValue(idx, partitionID);
-    }
-    else if(outOfBoundsValue.has_value())
-    {
-      partitionIds.setValue(idx, *outOfBoundsValue);
+      partitionIds.setValue(idx, outOfBoundsValue);
     }
     else
     {
-      QString ss = QObject::tr("Coordinate (%1, %2, %3) is out-of-bounds of geometry '%4'.").arg(QString::number(x), QString::number(y), QString::number(z), geomName);
-      setErrorCondition(-3017, ss);
-      return;
+      float x = vertexArray[idx * 3];
+      float y = vertexArray[idx * 3 + 1];
+      float z = vertexArray[idx * 3 + 2];
+
+      auto partitionIndexResult = m_PartitionImageGeometryResult.first->getIndex(x, y, z);
+      if(partitionIndexResult.has_value())
+      {
+        int32_t partitionID = *partitionIndexResult + m_StartingPartitionID;
+        maxValue = partitionID > maxValue ? partitionID : maxValue;
+        partitionIds.setValue(idx, partitionID);
+      }
+      else
+      {
+        partitionIds.setValue(idx, outOfBoundsValue);
+      }
     }
   }
 
@@ -1220,6 +1239,30 @@ void PartitionGeometry::setPSAttributeMatrixName(const QString& value)
 QString PartitionGeometry::getPSAttributeMatrixName() const
 {
   return m_PSAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void PartitionGeometry::setUseVertexMask(const bool& value)
+{
+  m_UseVertexMask = value;
+}
+
+// -----------------------------------------------------------------------------
+bool PartitionGeometry::getUseVertexMask() const
+{
+  return m_UseVertexMask;
+}
+
+// -----------------------------------------------------------------------------
+void PartitionGeometry::setVertexMaskPath(const DataArrayPath& value)
+{
+  m_VertexMaskPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath PartitionGeometry::getVertexMaskPath() const
+{
+  return m_VertexMaskPath;
 }
 
 // -----------------------------------------------------------------------------
