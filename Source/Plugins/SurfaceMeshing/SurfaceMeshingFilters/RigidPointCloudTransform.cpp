@@ -293,11 +293,11 @@ private:
   template <typename T>
   static Eigen::Matrix<T, 4, 4, Eigen::RowMajor> CraftTransformationMatrix(const Eigen::Matrix<T, 3, 3, Eigen::RowMajor>& rotationMatrix, const Eigen::Matrix<T, 1, 3, Eigen::RowMajor>& translationVector)
   {
-    Eigen::Matrix<T, 4, 4, Eigen::RowMajor> transfromMatrix;
-    transfromMatrix.setIdentity(); // bottom row = [0,0,0,1]
-    transfromMatrix.block<3, 3>(0, 0) = rotationMatrix.block<3, 3>(0, 0);
-    transfromMatrix.block<3, 1>(0, 3) = translationVector.block<1, 3>(0, 0).transpose();
-    return transfromMatrix;
+    Eigen::Matrix<T, 4, 4, Eigen::RowMajor> transformMatrix;
+    transformMatrix.setIdentity(); // bottom row = [0,0,0,1]
+    transformMatrix.template block<3, 3>(0, 0) = rotationMatrix;
+    transformMatrix.template block<3, 1>(0, 3) = translationVector.template block<1, 3>(0, 0).transpose();
+    return transformMatrix;
   }
 
   std::complex<float> LossFunctionWrapper(const std::array<std::complex<float>, 6>& optimizationArray, const MatrixNx3cf& complexStaticCentroids, const MatrixNx3cf& complexMovingCentroids,
@@ -481,7 +481,7 @@ private:
         }
       }
 
-      auto workingArray = getReal(workingOptimizationArray);
+      // auto workingArray = getReal(workingOptimizationArray);
     }
 
     // update euler angles properly
