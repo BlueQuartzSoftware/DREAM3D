@@ -291,7 +291,7 @@ private:
   }
 
   template <typename T>
-  Eigen::Matrix<T, 4, 4, Eigen::RowMajor> CraftTransformationMatrix(Eigen::Matrix<T, 3, 3, Eigen::RowMajor> rotationMatrix, Eigen::Matrix<T, 1, 3, Eigen::RowMajor> translationVector)
+  static Eigen::Matrix<T, 4, 4, Eigen::RowMajor> CraftTransformationMatrix(const Eigen::Matrix<T, 3, 3, Eigen::RowMajor>& rotationMatrix, const Eigen::Matrix<T, 1, 3, Eigen::RowMajor>& translationVector)
   {
     Eigen::Matrix<T, 4, 4, Eigen::RowMajor> transfromMatrix;
     transfromMatrix.setIdentity(); // bottom row = [0,0,0,1]
