@@ -295,8 +295,8 @@ private:
   {
     Eigen::Matrix<T, 4, 4, Eigen::RowMajor> transfromMatrix;
     transfromMatrix.setIdentity(); // bottom row = [0,0,0,1]
-    transfromMatrix.block<3, 3>(0, 0) = rotationMatrix;
-    transfromMatrix.block<3, 1>(0, 3) = translationVector.transpose();
+    transfromMatrix.block<3, 3>(0, 0) = rotationMatrix.block<3, 3>(0, 0);
+    transfromMatrix.block<3, 1>(0, 3) = translationVector.block<1, 3>(0, 0).transpose();
     return transfromMatrix;
   }
 
@@ -346,7 +346,7 @@ private:
     }
   }
 
-  MatrixNx3cf TranformPoints(const MatrixNx3cf& movingCentroids, AffineTransfromMatrixC& TransformationMatrix)
+  MatrixNx3cf TranformPoints(const MatrixNx3cf& movingCentroids, AffineTransfromMatrixC TransformationMatrix)
   {
     MatrixNx3cf movedCentroids(movingCentroids);
     Eigen::Matrix<std::complex<float>, 4, 1> coordinateColumn;

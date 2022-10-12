@@ -125,32 +125,32 @@ public:
    * @brief Gets the Filter Parameter value for TotalCompleted
    * @param The value for TotalCompleted
    */
-  void RigidPointCloudTransform::setTotalCompleted(const size_t value);
+  void setTotalCompleted(const size_t value);
   /**
    * @brief Gets the Filter Parameter value for TotalCompleted
    * @return The value for TotalCompleted
    */
-  size_t RigidPointCloudTransform::getTotalCompleted() const;
+  size_t getTotalCompleted() const;
   /**
    * @brief Sets the value for Filter Parameter for Millis
    * @param value The new value to use.
    */
-  void RigidPointCloudTransform::setMillis(const qint64 value);
+  void setMillis(const qint64 value);
   /**
    * @brief Gets the Filter Parameter value for Millis
    * @return The value for Millis
    */
-  qint64 RigidPointCloudTransform::getMillis() const;
+  qint64 getMillis() const;
   /**
    * @brief Sets the value for Filter Parameter for GenerationCount
    * @param value The new value to use.
    */
-  void RigidPointCloudTransform::setGenerationCount(const int value);
+  void setGenerationCount(const int value);
   /**
    * @brief Gets the Filter Parameter value for GenerationCount
    * @return The value for GenerationCount
    */
-  int RigidPointCloudTransform::getGenerationCount() const;
+  int getGenerationCount() const;
 
   /**
    * @brief Sets the value for Filter Parameter for MovingKeyPointsMatrix
@@ -195,7 +195,7 @@ public:
   /**
    * @brief sendThreadSafeProgressMessage sends a message to GUI in a threadsafe manner
    */
-  void RigidPointCloudTransform::sendThreadSafeProgressMessage(size_t numCompleted, size_t totalFeatures);
+  void sendThreadSafeProgressMessage(size_t numCompleted, size_t totalFeatures);
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
