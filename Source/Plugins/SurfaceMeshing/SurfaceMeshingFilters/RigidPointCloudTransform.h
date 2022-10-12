@@ -125,7 +125,7 @@ public:
    * @brief Gets the Filter Parameter value for TotalCompleted
    * @param The value for TotalCompleted
    */
-  void setTotalCompleted(const size_t value);
+  void setTotalCompleted(size_t value);
   /**
    * @brief Gets the Filter Parameter value for TotalCompleted
    * @return The value for TotalCompleted
@@ -135,7 +135,7 @@ public:
    * @brief Sets the value for Filter Parameter for Millis
    * @param value The new value to use.
    */
-  void setMillis(const qint64 value);
+  void setMillis(qint64 value);
   /**
    * @brief Gets the Filter Parameter value for Millis
    * @return The value for Millis
@@ -145,7 +145,7 @@ public:
    * @brief Sets the value for Filter Parameter for GenerationCount
    * @param value The new value to use.
    */
-  void setGenerationCount(const int value);
+  void setGenerationCount(int value);
   /**
    * @brief Gets the Filter Parameter value for GenerationCount
    * @return The value for GenerationCount

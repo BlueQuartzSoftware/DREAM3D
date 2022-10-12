@@ -33,17 +33,6 @@
 
 #include "RigidPointCloudTransform.h"
 
-#include <QtCore/QDateTime>
-#include <QtCore/QTextStream>
-
-#include <Eigen/Dense>
-#include <chrono>
-#include <complex>
-#include <mutex>
-#include <random>
-#include <thread>
-#include <type_traits>
-
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
@@ -61,6 +50,18 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
+#include <QtCore/QDateTime>
+#include <QtCore/QTextStream>
+
+#include <Eigen/Dense>
+
+#include <chrono>
+#include <complex>
+#include <mutex>
+#include <random>
+#include <type_traits>
+
+
 namespace
 {
 constexpr float k_Alpha = 0.2;
@@ -74,11 +75,11 @@ const QString k_TransformationWrapper = "Transformation Matrix";
 } // namespace
 
 typedef Eigen::Matrix<std::complex<float>, Eigen::Dynamic, 3, Eigen::RowMajor> MatrixNx3cf;
-typedef Eigen::Matrix<float, 4, 4, Eigen::RowMajor> AffineTransfromMatrix;
+typedef Eigen::Matrix<float, 4, 4, Eigen::RowMajor> AffineTransformMatrix;
 class UpdateVertexListImpl
 {
 public:
-  UpdateVertexListImpl(RigidPointCloudTransform* filter, SharedVertexList::Pointer pointsToAlign, const AffineTransfromMatrix& TransformationMatrix)
+  UpdateVertexListImpl(RigidPointCloudTransform* filter, SharedVertexList::Pointer pointsToAlign, const AffineTransformMatrix& TransformationMatrix)
   : m_Filter(filter)
   , m_PointsToAlign(pointsToAlign)
   , m_TransformationMatrix(TransformationMatrix)
@@ -120,7 +121,7 @@ public:
 private:
   RigidPointCloudTransform* m_Filter;
   SharedVertexList::Pointer m_PointsToAlign;
-  const AffineTransfromMatrix& m_TransformationMatrix;
+  const AffineTransformMatrix& m_TransformationMatrix;
 };
 
 /**
@@ -210,7 +211,7 @@ private:
     return planeCoords;
   }
 
-  AffineTransfromMatrix findTranslationMatrix(const MatrixNx3f& movingCentroids, const MatrixNx3f& staticCentroids)
+  AffineTransformMatrix findTranslationMatrix(const MatrixNx3f& movingCentroids, const MatrixNx3f& staticCentroids)
   {
     std::array<std::complex<float>, 6> optimizationArray = {std::complex<float>(11.9389f, 0), std::complex<float>(-1.5032f, 0), std::complex<float>(0.4524f, 0),
                                                             std::complex<float>(3.9960f, 0),  std::complex<float>(0.0744f, 0),  std::complex<float>(0.8539f, 0)}; // [dx, dy, dz, phi1, PHI, phi2]
@@ -393,7 +394,7 @@ private:
         newCorrelation.push_back(candidateCorrelation);
       }
     }
-    if(newCorrelation.size() == 0)
+    if(newCorrelation.empty())
     { // reset to initial pairing
       for(int i = 0; i < movingBest.rows(); i++)
       {
@@ -530,9 +531,9 @@ private:
     }
     return reals;
   }
-  AffineTransfromMatrix getReal(const AffineTransfromMatrixC& complex)
+  AffineTransformMatrix getReal(const AffineTransfromMatrixC& complex)
   {
-    AffineTransfromMatrix reals;
+    AffineTransformMatrix reals;
     reals.resize(complex.rows(), Eigen::NoChange);
     for(int row = 0; row < reals.rows(); row++)
     {
@@ -565,7 +566,7 @@ private:
     }
     return reals;
   }
-  AffineTransfromMatrixC getComplex(const AffineTransfromMatrix& reals)
+  AffineTransfromMatrixC getComplex(const AffineTransformMatrix& reals)
   {
     AffineTransfromMatrixC complexes;
     complexes.resize(reals.rows(), Eigen::NoChange);
@@ -579,7 +580,7 @@ private:
     return reals;
   }
 
-  void ExportAffineTransformMatrixToDataStructure(const AffineTransfromMatrix& TransformationMatrix)
+  void ExportAffineTransformMatrixToDataStructure(const AffineTransformMatrix& TransformationMatrix)
   {
     for(int i = 0; i < m_TransformMatrix->size(); i++)
     {
