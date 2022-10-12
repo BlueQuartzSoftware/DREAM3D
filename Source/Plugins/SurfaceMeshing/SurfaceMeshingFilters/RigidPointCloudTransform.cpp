@@ -291,7 +291,8 @@ private:
   }
 
   template <typename T>
-  static Eigen::Matrix<T, 4, 4, Eigen::RowMajor> CraftTransformationMatrix(const Eigen::Matrix<T, 3, 3, Eigen::RowMajor>& rotationMatrix, const Eigen::Matrix<T, 1, 3, Eigen::RowMajor>& translationVector)
+  static Eigen::Matrix<T, 4, 4, Eigen::RowMajor> CraftTransformationMatrix(const Eigen::Matrix<T, 3, 3, Eigen::RowMajor>& rotationMatrix,
+                                                                           const Eigen::Matrix<T, 1, 3, Eigen::RowMajor>& translationVector)
   {
     Eigen::Matrix<T, 4, 4, Eigen::RowMajor> transformMatrix;
     transformMatrix.setIdentity(); // bottom row = [0,0,0,1]
@@ -723,10 +724,14 @@ void RigidPointCloudTransform::dataCheck()
   setMovingKeyPointsMatrix(movingMatrix);
   setFixedKeyPointsMatrix(fixedMatrix);
 
-  AttributeMatrix::Pointer transformationMatrix = getDataContainerArray()
-                                                      ->getDataContainer(getMovingGeometry().getDataContainerName())
-                                                      ->createNonPrereqAttributeMatrix(this, k_TransformationWrapper, {1}, AttributeMatrix::Type::Cell, AttributeMatrixID);
-
+  // Validate the Geometry
+  DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer(this, getMovingGeometry(), false);
+  if(nullptr == dc)
+  {
+    return;
+  }
+  // Validate the AttributeMatrix
+  AttributeMatrix::Pointer transformationMatrix = dc->createNonPrereqAttributeMatrix(this, k_TransformationWrapper, {1}, AttributeMatrix::Type::Cell, AttributeMatrixID);
   if(getErrorCode() < 0)
   {
     return;
@@ -738,6 +743,7 @@ void RigidPointCloudTransform::dataCheck()
   transformationMatrix->createNonPrereqArray<DataArray<float>>(this, k_AffineMatrixName, 0.0f, CDims, DataArrayID);
 
   auto igeom = getDataContainerArray()->getDataContainer(getMovingGeometry())->getGeometryAs<IGeometry>();
+
   if(IGeometry2D::Pointer igeom2D = std::dynamic_pointer_cast<IGeometry2D>(igeom))
   {
   }
@@ -752,7 +758,7 @@ void RigidPointCloudTransform::dataCheck()
   }
   else
   {
-    QString ss = QObject::tr("Geometry must be of type Igeometry2D, Igeometry3D, VertexGeom, or EdgeGeom");
+    QString ss = QObject::tr("Geometry must be of type IGeometry2D, IGeometry3D, VertexGeom, or EdgeGeom");
     setErrorCondition(-44364, ss);
   }
 }
