@@ -33,6 +33,17 @@
 
 #include "RigidPointCloudTransform.h"
 
+#include <QtCore/QDateTime>
+#include <QtCore/QTextStream>
+
+#include <Eigen/Dense>
+#include <chrono>
+#include <complex>
+#include <mutex>
+#include <random>
+#include <thread>
+#include <type_traits>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
@@ -50,18 +61,6 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
-#include <QtCore/QDateTime>
-#include <QtCore/QTextStream>
-
-#include <Eigen/Dense>
-
-#include <chrono>
-#include <complex>
-#include <mutex>
-#include <random>
-#include <type_traits>
-
-
 namespace
 {
 constexpr float k_Alpha = 0.2;
@@ -75,11 +74,11 @@ const QString k_TransformationWrapper = "Transformation Matrix";
 } // namespace
 
 typedef Eigen::Matrix<std::complex<float>, Eigen::Dynamic, 3, Eigen::RowMajor> MatrixNx3cf;
-typedef Eigen::Matrix<float, 4, 4, Eigen::RowMajor> AffineTransformMatrix;
+typedef Eigen::Matrix<float, 4, 4, Eigen::RowMajor> AffineTransfromMatrix;
 class UpdateVertexListImpl
 {
 public:
-  UpdateVertexListImpl(RigidPointCloudTransform* filter, SharedVertexList::Pointer pointsToAlign, const AffineTransformMatrix& TransformationMatrix)
+  UpdateVertexListImpl(RigidPointCloudTransform* filter, SharedVertexList::Pointer pointsToAlign, const AffineTransfromMatrix& TransformationMatrix)
   : m_Filter(filter)
   , m_PointsToAlign(pointsToAlign)
   , m_TransformationMatrix(TransformationMatrix)
@@ -121,7 +120,7 @@ public:
 private:
   RigidPointCloudTransform* m_Filter;
   SharedVertexList::Pointer m_PointsToAlign;
-  const AffineTransformMatrix& m_TransformationMatrix;
+  const AffineTransfromMatrix& m_TransformationMatrix;
 };
 
 /**
@@ -211,7 +210,7 @@ private:
     return planeCoords;
   }
 
-  AffineTransformMatrix findTranslationMatrix(const MatrixNx3f& movingCentroids, const MatrixNx3f& staticCentroids)
+  AffineTransfromMatrix findTranslationMatrix(const MatrixNx3f& movingCentroids, const MatrixNx3f& staticCentroids)
   {
     std::array<std::complex<float>, 6> optimizationArray = {std::complex<float>(11.9389f, 0), std::complex<float>(-1.5032f, 0), std::complex<float>(0.4524f, 0),
                                                             std::complex<float>(3.9960f, 0),  std::complex<float>(0.0744f, 0),  std::complex<float>(0.8539f, 0)}; // [dx, dy, dz, phi1, PHI, phi2]
@@ -295,11 +294,11 @@ private:
   static Eigen::Matrix<T, 4, 4, Eigen::RowMajor> CraftTransformationMatrix(const Eigen::Matrix<T, 3, 3, Eigen::RowMajor>& rotationMatrix,
                                                                            const Eigen::Matrix<T, 1, 3, Eigen::RowMajor>& translationVector)
   {
-    Eigen::Matrix<T, 4, 4, Eigen::RowMajor> transformMatrix;
-    transformMatrix.setIdentity(); // bottom row = [0,0,0,1]
-    transformMatrix.template block<3, 3>(0, 0) = rotationMatrix;
-    transformMatrix.template block<3, 1>(0, 3) = translationVector.template block<1, 3>(0, 0).transpose();
-    return transformMatrix;
+    Eigen::Matrix<T, 4, 4, Eigen::RowMajor> transfromMatrix;
+    transfromMatrix.setIdentity(); // bottom row = [0,0,0,1]
+    transfromMatrix.template block<3, 3>(0, 0) = rotationMatrix.template block<3, 3>(0, 0);
+    transfromMatrix.template block<3, 1>(0, 3) = translationVector.template block<1, 3>(0, 0).transpose();
+    return transfromMatrix;
   }
 
   std::complex<float> LossFunctionWrapper(const std::array<std::complex<float>, 6>& optimizationArray, const MatrixNx3cf& complexStaticCentroids, const MatrixNx3cf& complexMovingCentroids,
@@ -394,7 +393,7 @@ private:
         newCorrelation.push_back(candidateCorrelation);
       }
     }
-    if(newCorrelation.empty())
+    if(newCorrelation.size() == 0)
     { // reset to initial pairing
       for(int i = 0; i < movingBest.rows(); i++)
       {
@@ -482,8 +481,6 @@ private:
           value *= std::complex<float>(((distribution(i) - 0.5) * 0.1 + 1.0), 0.0);
         }
       }
-
-      // auto workingArray = getReal(workingOptimizationArray);
     }
 
     // update euler angles properly
@@ -531,9 +528,9 @@ private:
     }
     return reals;
   }
-  AffineTransformMatrix getReal(const AffineTransfromMatrixC& complex)
+  AffineTransfromMatrix getReal(const AffineTransfromMatrixC& complex)
   {
-    AffineTransformMatrix reals;
+    AffineTransfromMatrix reals;
     reals.resize(complex.rows(), Eigen::NoChange);
     for(int row = 0; row < reals.rows(); row++)
     {
@@ -566,7 +563,7 @@ private:
     }
     return reals;
   }
-  AffineTransfromMatrixC getComplex(const AffineTransformMatrix& reals)
+  AffineTransfromMatrixC getComplex(const AffineTransfromMatrix& reals)
   {
     AffineTransfromMatrixC complexes;
     complexes.resize(reals.rows(), Eigen::NoChange);
@@ -580,7 +577,7 @@ private:
     return reals;
   }
 
-  void ExportAffineTransformMatrixToDataStructure(const AffineTransformMatrix& TransformationMatrix)
+  void ExportAffineTransformMatrixToDataStructure(const AffineTransfromMatrix& TransformationMatrix)
   {
     for(int i = 0; i < m_TransformMatrix->size(); i++)
     {
@@ -725,14 +722,9 @@ void RigidPointCloudTransform::dataCheck()
   setMovingKeyPointsMatrix(movingMatrix);
   setFixedKeyPointsMatrix(fixedMatrix);
 
-  // Validate the Geometry
-  DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer(this, getMovingGeometry(), false);
-  if(nullptr == dc)
-  {
-    return;
-  }
-  // Validate the AttributeMatrix
-  AttributeMatrix::Pointer transformationMatrix = dc->createNonPrereqAttributeMatrix(this, k_TransformationWrapper, {1}, AttributeMatrix::Type::Cell, AttributeMatrixID);
+  AttributeMatrix::Pointer transformationMatrix = getDataContainerArray()
+                                                      ->getDataContainer(getMovingGeometry().getDataContainerName())
+                                                      ->createNonPrereqAttributeMatrix(this, k_TransformationWrapper, {1}, AttributeMatrix::Type::Cell, AttributeMatrixID);
   if(getErrorCode() < 0)
   {
     return;
@@ -744,7 +736,6 @@ void RigidPointCloudTransform::dataCheck()
   transformationMatrix->createNonPrereqArray<DataArray<float>>(this, k_AffineMatrixName, 0.0f, CDims, DataArrayID);
 
   auto igeom = getDataContainerArray()->getDataContainer(getMovingGeometry())->getGeometryAs<IGeometry>();
-
   if(IGeometry2D::Pointer igeom2D = std::dynamic_pointer_cast<IGeometry2D>(igeom))
   {
   }
@@ -759,7 +750,7 @@ void RigidPointCloudTransform::dataCheck()
   }
   else
   {
-    QString ss = QObject::tr("Geometry must be of type IGeometry2D, IGeometry3D, VertexGeom, or EdgeGeom");
+    QString ss = QObject::tr("Geometry must be of type Igeometry2D, Igeometry3D, VertexGeom, or EdgeGeom");
     setErrorCondition(-44364, ss);
   }
 }
@@ -822,6 +813,7 @@ void RigidPointCloudTransform::execute()
     setErrorCondition(-44363, ss);
     return;
   }
+  setTotalCompleted(0);
 }
 
 // -----------------------------------------------------------------------------
