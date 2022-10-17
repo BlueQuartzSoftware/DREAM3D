@@ -49,6 +49,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Utilities/ParallelDataAlgorithm.h"
 
 #include "StatsToolbox/StatsToolboxConstants.h"
 #include "StatsToolbox/StatsToolboxVersion.h"
@@ -136,12 +137,10 @@ public:
     }
   }
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  void operator()(const tbb::blocked_range<size_t>& r) const
+  void operator()(const SIMPLRange& range) const
   {
-    convert(r.begin(), r.end());
+    convert(range.min(), range.max());
   }
-#endif
 
 private:
   FindNeighborhoods* m_Filter = nullptr;
@@ -214,6 +213,7 @@ void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* rea
 void FindNeighborhoods::initialize()
 {
   m_NeighborhoodList = NeighborList<int32_t>::NullPointer();
+  m_LocalNeighborhoodList.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -346,17 +346,10 @@ void FindNeighborhoods::execute()
     bins[3 * i + 2] = static_cast<int64_t>(zbin);
   }
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(true)
-  {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalFeatures), FindNeighborhoodsImpl(this, totalFeatures, m_Centroids, bins, criticalDistance), tbb::auto_partitioner());
-  }
-  else
-#endif
-  {
-    FindNeighborhoodsImpl serial(this, totalFeatures, m_Centroids, bins, criticalDistance);
-    serial.convert(0, totalFeatures);
-  }
+  ParallelDataAlgorithm parallelAlgorithm;
+  parallelAlgorithm.setRange({0, totalFeatures});
+  parallelAlgorithm.setParallelizationEnabled(true);
+  parallelAlgorithm.execute(FindNeighborhoodsImpl(this, totalFeatures, m_Centroids, bins, criticalDistance));
 
   for(size_t i = 1; i < totalFeatures; i++)
   {
