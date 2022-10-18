@@ -15,6 +15,7 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 ### 6.5.xxx Fixed DREAM3D Issues ###
 
++ FindNeighborhoods: Fix issue where created neighborlists would not be cleared between runs of the filter. 
 + FindFeatureCentroids: Incorrect implementation was not producing correct results.
 + MergeTwins: Fix sanity check for Cubic high Laue class
 + InsertTransformationPhase: Fix bad attribute matrix generation which caused crashes when reading the .dream3d file

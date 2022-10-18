@@ -210,6 +210,7 @@ void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* rea
 void FindNeighborhoods::initialize()
 {
   m_NeighborhoodList = NeighborList<int32_t>::NullPointer();
+  m_LocalNeighborhoodList.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -346,8 +347,6 @@ void FindNeighborhoods::execute()
 
   float m_OriginX = 0.0f, m_OriginY = 0.0f, m_OriginZ = 0.0f;
   m->getGeometryAs<ImageGeom>()->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   size_t xbin = 0, ybin = 0, zbin = 0;
   std::vector<int64_t> bins(3 * totalFeatures, 0);
@@ -388,6 +387,7 @@ void FindNeighborhoods::execute()
     m_NeighborhoodList.lock()->setList(static_cast<int32_t>(i), sharedNeiLst);
   }
 
+  m_LocalNeighborhoodList.clear();
 }
 
 // -----------------------------------------------------------------------------
