@@ -32,6 +32,7 @@ set(_PublicFilters
   TriangleNormalFilter
   GenerateGeometryConnectivity
   RigidPointCloudTransform
+  LabelTriangleGeometry
 )
 
 if(SIMPL_USE_EIGEN)
