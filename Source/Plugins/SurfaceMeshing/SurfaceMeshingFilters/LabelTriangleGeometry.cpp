@@ -87,7 +87,7 @@ void LabelTriangleGeometry::updateTriangleInstancePointers()
   if(nullptr != m_RegionIdPtr.lock())
   {
     m_RegionId = m_RegionIdPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -119,7 +119,7 @@ void LabelTriangleGeometry::dataCheck()
   if(nullptr != m_NumTrianglesPtr.lock())
   {
     m_NumTriangles = m_NumTrianglesPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
   if(getErrorCode() < 0)
   {
     return;
@@ -129,7 +129,7 @@ void LabelTriangleGeometry::dataCheck()
   if(nullptr != m_RegionIdPtr.lock())
   {
     m_RegionId = m_RegionIdPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
   if(getErrorCode() < 0)
   {
     return;
@@ -155,16 +155,11 @@ void LabelTriangleGeometry::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCADDataContainerPath());
 
-  int check = triangle->findElementNeighbors();
-  if(check < 0)
-  {
-    // FIXME: Should check this error code.....
-  }
   ElementDynamicList::Pointer m_TriangleNeighbors = triangle->getElementNeighbors();
 
   size_t chunkSize = 1000;
-  std::vector<int64_t> triList(chunkSize, -1);
-  std::vector<uint64_t> triangleCounts = {0, 0};
+  std::vector<int32_t> triList(chunkSize, -1);
+  std::vector<uint32_t> triangleCounts = {0, 0};
   // first identify connected triangle sets as features
   size_t size = 0;
   int32_t regionCount = 1;
@@ -190,7 +185,7 @@ void LabelTriangleGeometry::execute()
           if(m_RegionId[neighTri] == 0)
           {
             m_RegionId[neighTri] = regionCount;
-            triangleCounts[neighTri]++;
+            triangleCounts[regionCount]++;
             triList[size] = neighTri;
             size++;
             if(size >= triList.size())
@@ -216,15 +211,11 @@ void LabelTriangleGeometry::execute()
   updateTriangleInstancePointers();
 
   // copy triangleCounts into the proper DataArray "NumTriangles" in the Feature Attribute Matrix
-  for(size_t tuple = 0; tuple < m_NumTrianglesPtr.lock()->getNumberOfTuples(); tuple++)
+  auto& numTriangles = *m_NumTrianglesPtr.lock();
+  for(size_t index = 0; index < m_NumTrianglesPtr.lock()->getSize(); index++)
   {
-    for(size_t component = 0; component < m_NumTrianglesPtr.lock()->getNumberOfComponents(); component++)
-    {
-      m_NumTriangles[tuple * component] = triangleCounts[tuple * component];
-    }
+    numTriangles[index] = triangleCounts[index];
   }
-
-  notifyStatusMessage("Complete");
 }
 
 // -----------------------------------------------------------------------------

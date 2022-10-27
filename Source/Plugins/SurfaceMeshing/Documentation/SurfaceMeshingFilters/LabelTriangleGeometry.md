@@ -2,37 +2,29 @@
 
 ## Group (Subgroup) ##
 
-AM Process Monitoring (Geometry)
+Surface Meshing (Geometry)
 
 ## Description ##
 
-This **Filter** does the following...
-
-## Parameters ##
-
-| Name | Type | Description |
-|------|------|-------------|
-| Parameter Name | Parameter Type | Description of parameter... |
+This **Filter** accepts a **Triangle Geometry** and checks the connectivity of **Triangles** and assigns them **region ID**s in a mask accordingly as well as providing a count for the number of **Triangles** in each **Region**.
 
 ## Required Geometry ###
 
-Required Geometry Type -or- Not Applicable
+**Triangle Geometry**
 
 ## Required Objects ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
-| **Data Container** | Data Container Name | N/A | N/A | Description of object... |
-| **Attribute Matrix** | Attribute Matrix Name | Element/Feature/Ensemble/etc. | N/A | Description of object... |
-| **Element/Feature/Ensemble/etc. Attribute Array** | AttributeArray Name | int32_t/float/etc. | (1)/(3)/etc. | Description of object... |
+| **Data Container** | CAD Geometry | **Triangle Geometry** | N/A | This is the **Triangle Geometry** to be operated on. |
 
 ## Created Objects ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
-| **Data Container** | Data Container Name | N/A | N/A | Description of object... |
-| **Attribute Matrix** | Attribute Matrix Name | Element/Feature/Ensemble/etc. | N/A | Description of object... |
-| **Element/Feature/Ensemble/etc. Attribute Array** | AttributeArray Name | int32_t/float/etc. | (1)/(3)/etc. | Description of object... |
+| **Face Attribute Array** | Region Ids | int32_t | (1)/(1) | The mask list for **SharedTriList** that holds traingles respective **Region ID**. |
+| **Attribute Matrix** | Cell Feature Attribute Matrix | FaceFeature | (1)/(0)  | A holding container for **NumTriangles** and respective masks. |
+| **FaceFeature Attribute Array** | NumTriangles | int64_t | (1)/(1) | This is a mask for each **Region ID** that contains the amount of **Triangles** in each **Region**. |
 
 ## License & Copyright ##
 

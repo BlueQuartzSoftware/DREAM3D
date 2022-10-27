@@ -33,6 +33,7 @@ set(_PublicFilters
   GenerateGeometryConnectivity
   RigidPointCloudTransform
   LabelTriangleGeometry
+  RemoveFlaggedTriangles
 )
 
 if(SIMPL_USE_EIGEN)
