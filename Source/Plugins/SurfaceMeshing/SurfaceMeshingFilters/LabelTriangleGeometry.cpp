@@ -153,8 +153,9 @@ void LabelTriangleGeometry::execute()
   float* triVerts = triangle->getVertexPointer(0);
   size_t numTris = triangle->getNumberOfTris();
 
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCADDataContainerPath());
+  DataContainer::Pointer dataContainerCAD = getDataContainerArray()->getDataContainer(getCADDataContainerPath());
 
+  int check = triangle->findElementNeighbors();
   ElementDynamicList::Pointer m_TriangleNeighbors = triangle->getElementNeighbors();
 
   size_t chunkSize = 1000;
@@ -207,7 +208,7 @@ void LabelTriangleGeometry::execute()
 
   // Resize the Triangle Region AttributeMatrix
   std::vector<size_t> tDims(1, triangleCounts.size());
-  m->getAttributeMatrix(getTriangleAttributeMatrixName())->resizeAttributeArrays(tDims);
+  dataContainerCAD->getAttributeMatrix(getTriangleAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateTriangleInstancePointers();
 
   // copy triangleCounts into the proper DataArray "NumTriangles" in the Feature Attribute Matrix
