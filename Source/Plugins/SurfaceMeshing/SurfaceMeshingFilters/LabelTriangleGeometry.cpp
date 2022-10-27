@@ -149,13 +149,18 @@ void LabelTriangleGeometry::execute()
 
   TriangleGeom::Pointer triangle = getDataContainerArray()->getDataContainer(getCADDataContainerPath())->getGeometryAs<TriangleGeom>();
 
-  MeshIndexType* tris = triangle->getTriPointer(0);
-  float* triVerts = triangle->getVertexPointer(0);
   size_t numTris = triangle->getNumberOfTris();
 
   DataContainer::Pointer dataContainerCAD = getDataContainerArray()->getDataContainer(getCADDataContainerPath());
 
   int check = triangle->findElementNeighbors();
+  if(check < 0)
+  {
+    QString ss = "Error finding element neighbors";
+    setErrorCondition(check, ss);
+    return;
+  }
+
   ElementDynamicList::Pointer m_TriangleNeighbors = triangle->getElementNeighbors();
 
   size_t chunkSize = 1000;

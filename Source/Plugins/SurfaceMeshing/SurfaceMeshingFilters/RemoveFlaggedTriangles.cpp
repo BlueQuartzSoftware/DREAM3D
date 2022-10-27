@@ -36,7 +36,6 @@
 
 #include <QtCore/QTextStream>
 #include <algorithm>
-#include <fstream>
 #include <vector>
 
 #include "SIMPLib/Common/Constants.h"
@@ -54,12 +53,6 @@
 #include "SIMPLib/Utilities/ParallelDataAlgorithm.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/TriangleOps.h"
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/blocked_range.h>
-#include <tbb/parallel_for.h>
-#include <tbb/partitioner.h>
-#endif
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -109,16 +102,11 @@ public:
     }
   }
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  /**
-   * @brief operator () This is called from the TBB stye of code
-   * @param r The range to compute the values
-   */
   void operator()(const SIMPLRange& range) const
   {
     generate(range.min(), range.max());
   }
-#endif
+
 private:
   const TriangleGeom& m_OriginalTriangle;
   TriangleGeom& m_ReducedTriangle;
@@ -149,16 +137,11 @@ public:
     }
   }
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  /**
-   * @brief operator () This is called from the TBB stye of code
-   * @param r The range to compute the values
-   */
   void operator()(const SIMPLRange& range) const
   {
     generate(range.min(), range.max());
   }
-#endif
+
 private:
   const DataArray<bool>& m_IDsMask;
   const DataArray<int32_t>& m_RegionIDs;
