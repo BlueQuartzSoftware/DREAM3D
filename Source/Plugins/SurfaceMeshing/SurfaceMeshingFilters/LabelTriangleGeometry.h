@@ -18,7 +18,6 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
@@ -29,6 +28,18 @@
 class SurfaceMeshing_EXPORT LabelTriangleGeometry : public AbstractFilter
 {
   Q_OBJECT
+
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(LabelTriangleGeometry SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
+  PYB11_SHARED_POINTERS(LabelTriangleGeometry)
+  PYB11_FILTER_NEW_MACRO(LabelTriangleGeometry)
+  Q_PROPERTY(DataArrayPath CADDataContainerPath READ getCADDataContainerPath WRITE setCADDataContainerPath)
+  Q_PROPERTY(QString TriangleAttributeMatrixName READ getTriangleAttributeMatrixName WRITE setTriangleAttributeMatrixName)
+  Q_PROPERTY(DataArrayPath RegionIdArrayName READ getRegionIdArrayPath WRITE setRegionIdArrayPath)
+  Q_PROPERTY(QString NumTrianglesArrayName READ getNumTrianglesArrayName WRITE setNumTrianglesArrayName)
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = LabelTriangleGeometry;

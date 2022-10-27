@@ -39,7 +39,6 @@
 #include <vector>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -48,7 +47,6 @@
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/Geometry/IGeometry.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Utilities/ParallelDataAlgorithm.h"
 
