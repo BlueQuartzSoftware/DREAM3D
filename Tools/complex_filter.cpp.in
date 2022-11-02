@@ -1,5 +1,7 @@
 #include "@FILTER_NAME@.hpp"
 
+#include "@PLUGIN_NAME@/Filters/Algorithms/@ALGORITHM_NAME@.hpp"
+
 #include "complex/DataStructure/DataPath.hpp"
 #include "complex/Filter/Actions/EmptyAction.hpp"
 @PARAMETER_INCLUDES@
@@ -110,14 +112,11 @@ IFilter::PreflightResult @FILTER_NAME@::preflightImpl(const DataStructure& dataS
 //------------------------------------------------------------------------------
 Result<> @FILTER_NAME@::executeImpl(DataStructure& dataStructure, const Arguments& filterArgs, const PipelineFilter* pipelineNode, const MessageHandler& messageHandler, const std::atomic_bool& shouldCancel) const
 {
-  /****************************************************************************
-   * Extract the actual input values from the 'filterArgs' object
-   ***************************************************************************/
-@PREFLIGHT_DEFS@
-  /****************************************************************************
-   * Write your algorithm implementation in this function
-   ***************************************************************************/
 
-  return {};
+  @ALGORITHM_NAME@InputValues inputValues;
+
+  @INPUT_VALUES_DEF@
+
+  return @ALGORITHM_NAME@(dataStructure, messageHandler, shouldCancel, &inputValues)();
 }
 } // namespace complex

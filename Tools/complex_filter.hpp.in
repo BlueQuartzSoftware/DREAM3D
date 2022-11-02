@@ -93,3 +93,4 @@ protected:
 } // namespace complex
 
 COMPLEX_DEF_FILTER_TRAITS(complex, @FILTER_NAME@, "@UUID@");
+/* LEGACY UUID FOR THIS FILTER @OLD_UUID@ */
