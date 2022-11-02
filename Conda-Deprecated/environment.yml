@@ -1,0 +1,33 @@
+name: d3d-alt
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - matplotlib
+  - mkdocs-material-extensions
+  - libharu
+  - libitk=5.2.1
+  - numpy[version='>=1.16']
+  - tqdm=4.60.0
+  - scikit-image
+  - tbb
+  - pybind11[version='>=2.6']
+  - ipyparallel
+  - qwt
+  - xorg-libxfixes
+  - pip
+  - lxml=4.6.3
+  - pyevtk
+  - xarray
+  - libitk-devel=5.2.1
+  - mypy
+  - hdf5
+  - cpp-filesystem
+  - eigen
+  - zarr
+  - python=3.8
+  - tbb-devel
+  - mkdocs
+  - mkdocs-material
+  - pillow[version='>=8.2.0']
+  - qt[version='>=5.12']

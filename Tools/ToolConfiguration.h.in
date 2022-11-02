@@ -50,7 +50,7 @@ namespace D3DTools
    
   QString GetDREAM3DBinaryRefManualDir()
   {
-    return QString::fromLatin1("@DREAM3DProj_BINARY_DIR@/Documentation/ReferenceManual");
+    return QString::fromLatin1("@DREAM3DProj_BINARY_DIR@/Documentation/mkdocs/ReferenceManual/Filters");
   }
   
   QString GetDREAM3DGeneratedHelpRoot()

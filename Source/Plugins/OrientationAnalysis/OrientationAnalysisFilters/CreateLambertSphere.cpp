@@ -103,14 +103,14 @@ void CreateLambertSphere::setupFilterParameters()
   parameters.push_back(parameter);
 
   {
-    std::vector<QString> linkedProperties = {"VertexDataContainerName", "VertexAttributeMatrixName"};
+    std::vector<QString> linkedProperties = {"VertexDataContainerName"};
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Vertex Geometry", CreateVertexGeometry, FilterParameter::Category::Parameter, CreateLambertSphere, linkedProperties));
     parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Vertex DataContainer Name", VertexDataContainerName, FilterParameter::Category::Parameter, CreateLambertSphere));
     //    parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, FilterParameter::Category::Parameter, CreateLambertSphere));
   }
 
   {
-    std::vector<QString> linkedProperties = {"EdgeDataContainerName", "EdgeAttributeMatrixName"};
+    std::vector<QString> linkedProperties = {"EdgeDataContainerName"};
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Edge Geometry", CreateEdgeGeometry, FilterParameter::Category::Parameter, CreateLambertSphere, linkedProperties));
     parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Edge DataContainer Name", EdgeDataContainerName, FilterParameter::Category::Parameter, CreateLambertSphere));
     //    parameters.push_back(SIMPL_NEW_STRING_FP("Edge Attribute Matrix", EdgeAttributeMatrixName, FilterParameter::Category::Parameter, CreateLambertSphere));
@@ -123,7 +123,7 @@ void CreateLambertSphere::setupFilterParameters()
   }
 
   {
-    std::vector<QString> linkedProperties = {"QuadDataContainerName", "FaceAttributeMatrixName", "ImageFaceDataArrayName"};
+    std::vector<QString> linkedProperties = {"QuadDataContainerName"};
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Quad Geometry", CreateQuadGeometry, FilterParameter::Category::Parameter, CreateLambertSphere, linkedProperties));
     parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Quad DataContainer Name", QuadDataContainerName, FilterParameter::Category::Parameter, CreateLambertSphere));
     //    parameters.push_back(SIMPL_NEW_STRING_FP("Quad Attribute Matrix", FaceAttributeMatrixName, FilterParameter::Category::Parameter, CreateLambertSphere));

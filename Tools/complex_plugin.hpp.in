@@ -1,0 +1,34 @@
+#pragma once
+
+#include <vector>
+
+#include "complex/Plugin/AbstractPlugin.hpp"
+#include "complex/Utilities/Parsing/HDF5/H5IDataFactory.hpp"
+
+#include "@PLUGIN_NAME@/@PLUGIN_NAME@_export.hpp"
+
+class @PLUGIN_NAME_UPPER@_EXPORT @PLUGIN_NAME@Plugin : public complex::AbstractPlugin
+{
+public:
+  @PLUGIN_NAME@Plugin();
+  ~@PLUGIN_NAME@Plugin() override;
+
+  @PLUGIN_NAME@Plugin(const @PLUGIN_NAME@Plugin&) = delete;
+  @PLUGIN_NAME@Plugin(@PLUGIN_NAME@Plugin&&) = delete;
+
+  @PLUGIN_NAME@Plugin& operator=(const @PLUGIN_NAME@Plugin&) = delete;
+  @PLUGIN_NAME@Plugin& operator=(@PLUGIN_NAME@Plugin&&) = delete;
+
+  /**
+   * @brief Returns a collection of HDF5 DataStructure factories available
+   * through the plugin.
+   * @return std::vector<complex::IH5DataFactory*>
+   */
+  std::vector<complex::H5::IDataFactory*> getDataFactories() const override;
+
+private:
+  /**
+   * @brief This will register all the filters that are contained in this plugin
+   */
+  void registerFilters();
+};

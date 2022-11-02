@@ -1,0 +1,27 @@
+#include "@PLUGIN_NAME@Plugin.hpp"
+
+using namespace complex;
+
+namespace
+{
+@FILTER_UUID_LIST@} // namespace
+
+@PLUGIN_NAME@Plugin::@PLUGIN_NAME@Plugin()
+: AbstractPlugin(k_ID, "@PLUGIN_NAME@", "@PLUGIN_DESCRIPTION@", "@PLUGIN_VENDOR@")
+{
+  registerFilters();
+}
+
+@PLUGIN_NAME@Plugin::~@PLUGIN_NAME@Plugin() = default;
+
+std::vector<complex::H5::IDataFactory*> @PLUGIN_NAME@Plugin::getDataFactories() const
+{
+  return {};
+}
+
+COMPLEX_DEF_PLUGIN(@PLUGIN_NAME@Plugin)
+
+// The below file is generated at CMake configure time. This is done because
+// the cmake system knows what filters are being compiled. This saves the
+// developer from having to upkeep these lists.
+#include "@PLUGIN_NAME@/plugin_filter_registration.h"
