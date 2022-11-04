@@ -224,7 +224,20 @@ endif()
 if(SIMPL_WRAP_PYTHON)
   include(${SIMPLProj_SOURCE_DIR}/Wrapping/Python/Binding/CreatePybind11Module.cmake)
 
-  CreatePybind11Plugin(PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_TARGET ${plug_target_name})
+  set(PYTHON_FILES
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Python/Filters/TestFilter.py
+  )
+
+  set(PYTHON_FILTERS
+    TestPythonFilter
+  )
+
+  CreatePybind11Plugin(PLUGIN_NAME ${PLUGIN_NAME}
+    PLUGIN_TARGET ${plug_target_name}
+    HAS_PYTHON_FILTERS
+    PYTHON_FILTERS ${PYTHON_FILTERS}
+    PYTHON_FILES ${PYTHON_FILES}
+  )
 endif()
 
 # -- Include the GUI Plugin codes
