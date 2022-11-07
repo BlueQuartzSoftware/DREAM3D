@@ -438,6 +438,10 @@ int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
   // for(int i = 0; i < phases.size(); i++)
   {
     int32_t phaseID = phase->getPhaseIndex();
+    if(phaseID < 0)
+    {
+      continue;
+    }
     crystalStructures->setValue(phaseID, phase->determineLaueGroup());
     materialNames->setValue(phaseID, phase->getMaterialName());
     QVector<float> lc = phase->getLatticeConstants();

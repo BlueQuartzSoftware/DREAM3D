@@ -178,10 +178,18 @@ void FindTriangleGeomCentroids::execute()
   int64_t* tris = triangles->getTriPointer(0);
 
   int64_t numFeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
-  std::vector<std::set<int64_t>> vertexSets(numFeatures);
+  std::vector<std::set<int64_t>> vertexSets(numFeatures + 1);
 
   for(int64_t i = 0; i < numTriangles; i++)
   {
+        if ((m_FaceLabels[2 * i + 0] > 0 && m_FaceLabels[2 * i + 0] >= numFeatures + 1) 
+    || (m_FaceLabels[2 * i + 1] > 0 && m_FaceLabels[2 * i + 1] >= numFeatures + 1))
+    {
+      QString msg = QString("FaceLabels have a value %1 or %2 which is larger then the number of features %3").arg(m_FaceLabels[2 * i + 0]).arg(m_FaceLabels[2 * i + 1]).arg(numFeatures);
+      setErrorCondition(-99500);
+      notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
+      return;
+    }
     if(m_FaceLabels[2 * i + 0] > 0)
     {
       vertexSets[m_FaceLabels[2 * i + 0]].insert(tris[3 * i + 0]);
@@ -193,6 +201,10 @@ void FindTriangleGeomCentroids::execute()
       vertexSets[m_FaceLabels[2 * i + 1]].insert(tris[3 * i + 0]);
       vertexSets[m_FaceLabels[2 * i + 1]].insert(tris[3 * i + 1]);
       vertexSets[m_FaceLabels[2 * i + 1]].insert(tris[3 * i + 2]);
+    }
+    if(getCancel())
+    {
+      break;
     }
   }
 

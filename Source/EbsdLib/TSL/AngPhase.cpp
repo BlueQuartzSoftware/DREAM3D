@@ -1,42 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-
-
-
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "AngPhase.h"
 #include <cstring>
@@ -44,10 +39,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AngPhase::AngPhase() :
-  m_PhaseIndex(-1),
-  m_Symmetry(0),
-  m_NumberFamilies(0)
+AngPhase::AngPhase()
+: m_PhaseIndex(-1)
+, m_Symmetry(0)
+, m_NumberFamilies(0)
 {
 }
 
@@ -88,13 +83,12 @@ void AngPhase::parseLatticeConstants(QList<QByteArray>& tokens)
   m_LatticeConstants.clear();
 
   bool ok = false;
-  m_LatticeConstants.push_back(tokens[1].toFloat(&ok)); //A
-  m_LatticeConstants.push_back(tokens[2].toFloat(&ok)); //B
-  m_LatticeConstants.push_back(tokens[3].toFloat(&ok)); //C
+  m_LatticeConstants.push_back(tokens[1].toFloat(&ok)); // A
+  m_LatticeConstants.push_back(tokens[2].toFloat(&ok)); // B
+  m_LatticeConstants.push_back(tokens[3].toFloat(&ok)); // C
   m_LatticeConstants.push_back(tokens[4].toFloat(&ok)); // Alpha
   m_LatticeConstants.push_back(tokens[5].toFloat(&ok)); // Beta
   m_LatticeConstants.push_back(tokens[6].toFloat(&ok)); // Gamma
-
 }
 
 // -----------------------------------------------------------------------------
@@ -110,12 +104,18 @@ void AngPhase::parseHKLFamilies(QList<QByteArray>& tokens)
   family->l = tokens[3].toInt(&ok, 10);
   family->s1 = tokens[4].toInt(&ok, 10);
   family->diffractionIntensity = tokens[5].toFloat(&ok);
-  if (tokens.size() > 6)
+  if(tokens.size() > 6)
   {
     family->s2 = tokens[6].toInt(&ok, 10);
   }
-  if (family->s1 > 1) { family->s1 = 1; }
-  if (family->s2 > 1) { family->s2 = 1; }
+  if(family->s1 > 1)
+  {
+    family->s1 = 1;
+  }
+  if(family->s2 > 1)
+  {
+    family->s2 = 1;
+  }
   m_HKLFamilies.push_back(family);
 }
 
@@ -163,14 +163,12 @@ void AngPhase::printSelf(QTextStream& stream)
     family->printSelf(stream);
   }
 
-
   stream << Ebsd::Ang::Categories;
   for(const auto& category : m_Categories)
   {
     stream << " " << category;
   }
   stream << QString("\n");
-
 }
 
 // -----------------------------------------------------------------------------
@@ -183,46 +181,82 @@ unsigned int AngPhase::determineLaueGroup()
 
   switch(symmetry)
   {
-    case Ebsd::Ang::PhaseSymmetry::Cubic:
-      crystal_structure = Ebsd::CrystalStructure::Cubic_High;
-      break;
-    case Ebsd::Ang::PhaseSymmetry::Tetrahedral:
-      crystal_structure = Ebsd::CrystalStructure::Cubic_Low;
-      break;
-    case Ebsd::Ang::PhaseSymmetry::DiTetragonal:
-      crystal_structure = Ebsd::CrystalStructure::Tetragonal_High;
-      break;
-    case Ebsd::Ang::PhaseSymmetry::Tetragonal:
-      crystal_structure = Ebsd::CrystalStructure::Tetragonal_Low;
-      break;
-    case Ebsd::Ang::PhaseSymmetry::Orthorhombic:
-      crystal_structure = Ebsd::CrystalStructure::OrthoRhombic;
-      break;
-    case Ebsd::Ang::PhaseSymmetry::Monoclinic_c:
-    case Ebsd::Ang::PhaseSymmetry::Monoclinic_b:
-    case Ebsd::Ang::PhaseSymmetry::Monoclinic_a:
-      crystal_structure = Ebsd::CrystalStructure::Monoclinic;
-      break;
-    case Ebsd::Ang::PhaseSymmetry::Triclinic:
-      crystal_structure = Ebsd::CrystalStructure::Triclinic;
-      break;
-    case Ebsd::Ang::PhaseSymmetry::DiHexagonal:
-      crystal_structure = Ebsd::CrystalStructure::Hexagonal_High;
-      break;
-    case Ebsd::Ang::PhaseSymmetry::Hexagonal:
-      crystal_structure = Ebsd::CrystalStructure::Hexagonal_Low;
-      break;
-    case Ebsd::Ang::PhaseSymmetry::DiTrigonal:
-      crystal_structure = Ebsd::CrystalStructure::Trigonal_High;
-      break;
-    case Ebsd::Ang::PhaseSymmetry::Trigonal:
-      crystal_structure = Ebsd::CrystalStructure::Trigonal_Low;
-      break;
+  case Ebsd::Ang::PhaseSymmetry::Cubic:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_O:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_Td:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_Oh:
+    crystal_structure = Ebsd::CrystalStructure::Cubic_High;
+    break;
+  case Ebsd::Ang::PhaseSymmetry::Tetrahedral:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_T:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_Th:
+    crystal_structure = Ebsd::CrystalStructure::Cubic_Low;
+    break;
+  case Ebsd::Ang::PhaseSymmetry::DiTetragonal:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_D4:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C4v:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_D2d:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_D4h:
+    crystal_structure = Ebsd::CrystalStructure::Tetragonal_High;
+    break;
+  case Ebsd::Ang::PhaseSymmetry::Tetragonal:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C4:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_S4:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C4h:
+    crystal_structure = Ebsd::CrystalStructure::Tetragonal_Low;
+    break;
+  case Ebsd::Ang::PhaseSymmetry::Orthorhombic:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_D2:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C2v:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_D2h:
+    crystal_structure = Ebsd::CrystalStructure::OrthoRhombic;
+    break;
+  case Ebsd::Ang::PhaseSymmetry::Monoclinic_c:
+  case Ebsd::Ang::PhaseSymmetry::Monoclinic_b:
+  case Ebsd::Ang::PhaseSymmetry::Monoclinic_a:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C2_c:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C1h_c:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C2h_c:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C2_b:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C1h_b:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C2h_b:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C2_a:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C1h_a:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C2h_a:
+    crystal_structure = Ebsd::CrystalStructure::Monoclinic;
+    break;
+  case Ebsd::Ang::PhaseSymmetry::Triclinic:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C1:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_S2:
+    crystal_structure = Ebsd::CrystalStructure::Triclinic;
+    break;
+  case Ebsd::Ang::PhaseSymmetry::DiHexagonal:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_D6:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C6v:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_D3h:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_D6h:
+    crystal_structure = Ebsd::CrystalStructure::Hexagonal_High;
+    break;
+  case Ebsd::Ang::PhaseSymmetry::Hexagonal:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C6:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C3h:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C6h:
+    crystal_structure = Ebsd::CrystalStructure::Hexagonal_Low;
+    break;
+  case Ebsd::Ang::PhaseSymmetry::DiTrigonal:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_D3:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C3v:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_D3d:
+    crystal_structure = Ebsd::CrystalStructure::Trigonal_High;
+    break;
+  case Ebsd::Ang::PhaseSymmetry::Trigonal:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_C3:
+  case Ebsd::Ang::PhaseSymmetry::k_Sym_S6:
+    crystal_structure = Ebsd::CrystalStructure::Trigonal_Low;
+    break;
 
-
-    default:
-      crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure;
-
+  default:
+    crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure;
   }
   return crystal_structure;
 }
@@ -249,7 +283,6 @@ void AngPhase::setLatticeConstantB(float a)
 void AngPhase::setLatticeConstantC(float a)
 {
   m_LatticeConstants[2] = a;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -275,4 +308,3 @@ void AngPhase::setLatticeConstantGamma(float a)
 {
   m_LatticeConstants[5] = a;
 }
-
