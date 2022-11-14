@@ -54,8 +54,6 @@ public:
   PartitionGeometryTest& operator=(PartitionGeometryTest&&) = delete;      // Move Assignment
 
   // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
   void TestGeometry(PartitionGeometry::Pointer filter, const QString& inputFile, const DataArrayPath& arrayPath, const QString& exemplaryArrayName)
   {
     DataContainerArray::Pointer dca = DataContainerArray::New();
@@ -97,21 +95,61 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //
+  void TestGeometryError(PartitionGeometry::Pointer filter, const QString& inputFile, const DataArrayPath& arrayPath, int expectedErrorCode)
+  {
+    DataContainerArray::Pointer dca = DataContainerArray::New();
+    {
+      DataContainerReader::Pointer filter = DataContainerReader::New();
+      DataContainerArrayProxy dcaProxy = filter->readDataContainerArrayStructure(inputFile);
+      filter->setInputFileDataContainerArrayProxy(dcaProxy);
+      filter->setInputFile(inputFile);
+      filter->setDataContainerArray(dca);
+      filter->execute();
+      int err = filter->getErrorCode();
+      DREAM3D_REQUIRE(err >= 0)
+    }
+
+    filter->setDataContainerArray(dca);
+    filter->execute();
+    int err = filter->getErrorCode();
+    DREAM3D_REQUIRE(err == expectedErrorCode)
+  }
+
   // -----------------------------------------------------------------------------
-  void TestBasicGeometry(const QString& inputFile, const DataArrayPath& arrayPath, const IntVec3Type& numOfPartitionsPerAxis, const QString& exemplaryArrayName)
+  PartitionGeometry::Pointer CreateBasicPartitionGeometryFilter(const QString& inputFile, const DataArrayPath& arrayPath, const IntVec3Type& numOfPartitionsPerAxis,
+                                                                PartitionGeometry::PartitioningMode partitioningMode, const std::optional<DataArrayPath>& maskArrayPath)
   {
     PartitionGeometry::Pointer filter = PartitionGeometry::New();
-    filter->setPartitioningMode(static_cast<int>(PartitionGeometry::PartitioningMode::Basic));
+    filter->setPartitioningMode(static_cast<int>(partitioningMode));
     filter->setNumberOfPartitionsPerAxis(numOfPartitionsPerAxis);
     filter->setAttributeMatrixPath(arrayPath);
     filter->setPartitionIdsArrayName(arrayPath.getDataArrayName());
 
+    if(maskArrayPath.has_value())
+    {
+      filter->setUseVertexMask(true);
+      filter->setVertexMaskPath(*maskArrayPath);
+    }
+
+    return filter;
+  }
+
+  // -----------------------------------------------------------------------------
+  void TestBasicGeometry(const QString& inputFile, const DataArrayPath& arrayPath, const IntVec3Type& numOfPartitionsPerAxis, const QString& exemplaryArrayName,
+                         const std::optional<DataArrayPath>& maskArrayPath = {})
+  {
+    PartitionGeometry::Pointer filter = CreateBasicPartitionGeometryFilter(inputFile, arrayPath, numOfPartitionsPerAxis, PartitionGeometry::PartitioningMode::Basic, maskArrayPath);
     TestGeometry(filter, inputFile, arrayPath, exemplaryArrayName);
   }
 
   // -----------------------------------------------------------------------------
-  //
+  void TestBasicGeometryError(const QString& inputFile, const DataArrayPath& arrayPath, const IntVec3Type& numOfPartitionsPerAxis, int expectedErrorCode,
+                              const std::optional<DataArrayPath>& maskArrayPath = {})
+  {
+    PartitionGeometry::Pointer filter = CreateBasicPartitionGeometryFilter(inputFile, arrayPath, numOfPartitionsPerAxis, PartitionGeometry::PartitioningMode::Basic, maskArrayPath);
+    TestGeometryError(filter, inputFile, arrayPath, expectedErrorCode);
+  }
+
   // -----------------------------------------------------------------------------
   void TestAdvancedGeometry(const QString& inputFile, const DataArrayPath& arrayPath, const IntVec3Type& numOfPartitionsPerAxis, const FloatVec3Type& partitioningSchemeOrigin,
                             const FloatVec3Type& lengthPerPartition, const QString& exemplaryArrayName)
@@ -128,8 +166,6 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
   void TestBoundingBoxGeometry(const QString& inputFile, const DataArrayPath& arrayPath, const IntVec3Type& numOfPartitionsPerAxis, const FloatVec3Type& lowerLeftCoord,
                                const FloatVec3Type& upperRightCoord, const QString& exemplaryArrayName)
   {
@@ -145,20 +181,28 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //
+  void TestExistingPartitioningSchemeGeometry(const QString& inputFile, const DataArrayPath& arrayPath, const QString& exemplaryArrayName, const DataArrayPath& partitioningSchemeDCPath)
+  {
+    PartitionGeometry::Pointer filter = PartitionGeometry::New();
+    filter->setPartitioningMode(static_cast<int>(PartitionGeometry::PartitioningMode::ExistingPartitioningScheme));
+    filter->setPartitioningSchemeDataContainerName(partitioningSchemeDCPath);
+    filter->setAttributeMatrixPath(arrayPath);
+    filter->setPartitionIdsArrayName(arrayPath.getDataArrayName());
+
+    TestGeometry(filter, inputFile, arrayPath, exemplaryArrayName);
+  }
+
   // -----------------------------------------------------------------------------
   void TestBasicImageGeometry()
   {
     QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryImageGeomIdsPath;
     IntVec3Type numOfPartitionsPerAxis = {5, 5, 5};
-    DataArrayPath arrayPath = {"DataContainer", "CellData", "PartitionIds"};
-    QString exemplaryArrayName = "ExemplaryPartitionIds";
+    DataArrayPath arrayPath = {"DataContainer", "CellData", "PartitioningSchemeIds"};
+    QString exemplaryArrayName = "ExemplaryPartitioningSchemeIds";
 
     TestBasicGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, exemplaryArrayName);
   }
 
-  // -----------------------------------------------------------------------------
-  //
   // -----------------------------------------------------------------------------
   void TestAdvancedImageGeometry()
   {
@@ -166,14 +210,12 @@ public:
     IntVec3Type numOfPartitionsPerAxis = {5, 5, 5};
     FloatVec3Type partitioningSchemeOrigin = {-10, 5, 2};
     FloatVec3Type lengthPerPartition = {5, 5, 5};
-    DataArrayPath arrayPath = {"DataContainer", "CellData", "PartitionIds"};
-    QString exemplaryArrayName = "ExemplaryPartitionIds";
+    DataArrayPath arrayPath = {"DataContainer", "CellData", "PartitioningSchemeIds"};
+    QString exemplaryArrayName = "ExemplaryPartitioningSchemeIds";
 
     TestAdvancedGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, partitioningSchemeOrigin, lengthPerPartition, exemplaryArrayName);
   }
 
-  // -----------------------------------------------------------------------------
-  //
   // -----------------------------------------------------------------------------
   void TestBoundingBoxImageGeometry()
   {
@@ -181,27 +223,34 @@ public:
     IntVec3Type numOfPartitionsPerAxis = {5, 5, 5};
     FloatVec3Type lowerLeftCoord = {-10, 5, 2};
     FloatVec3Type upperRightCoord = {15, 30, 27};
-    DataArrayPath arrayPath = {"DataContainer", "CellData", "PartitionIds"};
-    QString exemplaryArrayName = "ExemplaryPartitionIds";
+    DataArrayPath arrayPath = {"DataContainer", "CellData", "PartitioningSchemeIds"};
+    QString exemplaryArrayName = "ExemplaryPartitioningSchemeIds";
 
     TestBoundingBoxGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, lowerLeftCoord, upperRightCoord, exemplaryArrayName);
   }
 
   // -----------------------------------------------------------------------------
-  //
+  void TestExistingPartitioningSchemeImageGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryImageGeomIdsPath;
+    DataArrayPath arrayPath = {"DataContainer", "CellData", "PartitioningSchemeIds"};
+    DataArrayPath partitioningSchemeDCPath = {"PartitioningSchemeDataContainer", "", ""};
+    QString exemplaryArrayName = "ExemplaryPartitioningSchemeIds";
+
+    TestExistingPartitioningSchemeGeometry(inputFile, arrayPath, exemplaryArrayName, partitioningSchemeDCPath);
+  }
+
   // -----------------------------------------------------------------------------
   void TestBasicRectGridGeometry()
   {
     QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryRectGridGeomIdsPath;
     IntVec3Type numOfPartitionsPerAxis = {5, 5, 5};
-    DataArrayPath arrayPath = {"DataContainer", "CellData", "PartitionIds"};
-    QString exemplaryArrayName = "ExemplaryPartitionIds";
+    DataArrayPath arrayPath = {"DataContainer", "CellData", "PartitioningSchemeIds"};
+    QString exemplaryArrayName = "ExemplaryPartitioningSchemeIds";
 
     TestBasicGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, exemplaryArrayName);
   }
 
-  // -----------------------------------------------------------------------------
-  //
   // -----------------------------------------------------------------------------
   void TestAdvancedRectGridGeometry()
   {
@@ -209,14 +258,12 @@ public:
     IntVec3Type numOfPartitionsPerAxis = {5, 5, 5};
     FloatVec3Type partitioningSchemeOrigin = {0, 0, 0};
     FloatVec3Type lengthPerPartition = {6, 6, 6};
-    DataArrayPath arrayPath = {"DataContainer", "CellData", "PartitionIds"};
-    QString exemplaryArrayName = "ExemplaryPartitionIds";
+    DataArrayPath arrayPath = {"DataContainer", "CellData", "PartitioningSchemeIds"};
+    QString exemplaryArrayName = "ExemplaryPartitioningSchemeIds";
 
     TestAdvancedGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, partitioningSchemeOrigin, lengthPerPartition, exemplaryArrayName);
   }
 
-  // -----------------------------------------------------------------------------
-  //
   // -----------------------------------------------------------------------------
   void TestBoundingBoxRectGridGeometry()
   {
@@ -224,14 +271,23 @@ public:
     IntVec3Type numOfPartitionsPerAxis = {5, 5, 5};
     FloatVec3Type lowerLeftCoord = {0, 0, 0};
     FloatVec3Type upperRightCoord = {30, 30, 30};
-    DataArrayPath arrayPath = {"DataContainer", "CellData", "PartitionIds"};
-    QString exemplaryArrayName = "ExemplaryPartitionIds";
+    DataArrayPath arrayPath = {"DataContainer", "CellData", "PartitioningSchemeIds"};
+    QString exemplaryArrayName = "ExemplaryPartitioningSchemeIds";
 
     TestBoundingBoxGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, lowerLeftCoord, upperRightCoord, exemplaryArrayName);
   }
 
   // -----------------------------------------------------------------------------
-  //
+  void TestExistingPartitioningSchemeRectGridGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryRectGridGeomIdsPath;
+    DataArrayPath arrayPath = {"DataContainer", "CellData", "PartitioningSchemeIds"};
+    DataArrayPath partitioningSchemeDCPath = {"PartitioningSchemeDataContainer", "", ""};
+    QString exemplaryArrayName = "ExemplaryPartitioningSchemeIds";
+
+    TestExistingPartitioningSchemeGeometry(inputFile, arrayPath, exemplaryArrayName, partitioningSchemeDCPath);
+  }
+
   // -----------------------------------------------------------------------------
   void TestBasicTriangleGeometry()
   {
@@ -243,8 +299,6 @@ public:
     TestBasicGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, exemplaryArrayName);
   }
 
-  // -----------------------------------------------------------------------------
-  //
   // -----------------------------------------------------------------------------
   void TestAdvancedTriangleGeometry()
   {
@@ -259,8 +313,6 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
   void TestBoundingBoxTriangleGeometry()
   {
     QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryTriangleGeomIdsPath;
@@ -274,7 +326,28 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //
+  void TestExistingPartitioningSchemeTriangleGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryTriangleGeomIdsPath;
+    DataArrayPath arrayPath = {"DataContainer", "VertexData", "PartitioningSchemeIds"};
+    DataArrayPath partitioningSchemeDCPath = {"PartitioningSchemeDataContainer", "", ""};
+    QString exemplaryArrayName = "ExemplaryPartitioningSchemeIds";
+
+    TestExistingPartitioningSchemeGeometry(inputFile, arrayPath, exemplaryArrayName, partitioningSchemeDCPath);
+  }
+
+  // -----------------------------------------------------------------------------
+  void TestMaskedTriangleGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryTriangleGeomIdsPath;
+    IntVec3Type numOfPartitionsPerAxis = {5, 4, 4};
+    DataArrayPath arrayPath = {"DataContainer", "VertexData", "PartitioningSchemeIds"};
+    DataArrayPath maskPath = {"DataContainer", "VertexData", "Mask"};
+    QString exemplaryArrayName = "MaskedExemplaryPartitioningSchemeIds";
+
+    TestBasicGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, exemplaryArrayName, maskPath);
+  }
+
   // -----------------------------------------------------------------------------
   void TestBasicEdgeGeometry()
   {
@@ -286,8 +359,6 @@ public:
     TestBasicGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, exemplaryArrayName);
   }
 
-  // -----------------------------------------------------------------------------
-  //
   // -----------------------------------------------------------------------------
   void TestAdvancedEdgeGeometry()
   {
@@ -302,8 +373,6 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
   void TestBoundingBoxEdgeGeometry()
   {
     QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryEdgeGeomIdsPath;
@@ -317,7 +386,28 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //
+  void TestExistingPartitioningSchemeEdgeGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryEdgeGeomIdsPath;
+    DataArrayPath arrayPath = {"DataContainer", "VertexData", "PartitioningSchemeIds"};
+    DataArrayPath partitioningSchemeDCPath = {"PartitioningSchemeDataContainer", "", ""};
+    QString exemplaryArrayName = "ExemplaryPartitioningSchemeIds";
+
+    TestExistingPartitioningSchemeGeometry(inputFile, arrayPath, exemplaryArrayName, partitioningSchemeDCPath);
+  }
+
+  // -----------------------------------------------------------------------------
+  void TestMaskedEdgeGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryEdgeGeomIdsPath;
+    IntVec3Type numOfPartitionsPerAxis = {4, 4, 4};
+    DataArrayPath arrayPath = {"DataContainer", "VertexData", "PartitioningSchemeIds"};
+    DataArrayPath maskPath = {"DataContainer", "VertexData", "Mask"};
+    QString exemplaryArrayName = "MaskedExemplaryPartitioningSchemeIds";
+
+    TestBasicGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, exemplaryArrayName, maskPath);
+  }
+
   // -----------------------------------------------------------------------------
   void TestBasicVertexGeometry()
   {
@@ -329,8 +419,6 @@ public:
     TestBasicGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, exemplaryArrayName);
   }
 
-  // -----------------------------------------------------------------------------
-  //
   // -----------------------------------------------------------------------------
   void TestAdvancedVertexGeometry()
   {
@@ -345,8 +433,6 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
   void TestBoundingBoxVertexGeometry()
   {
     QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryVertexGeomIdsPath;
@@ -360,7 +446,28 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //
+  void TestExistingPartitioningSchemeVertexGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryVertexGeomIdsPath;
+    DataArrayPath arrayPath = {"DataContainer", "VertexData", "PartitioningSchemeIds"};
+    DataArrayPath partitioningSchemeDCPath = {"PartitioningSchemeDataContainer", "", ""};
+    QString exemplaryArrayName = "ExemplaryPartitioningSchemeIds";
+
+    TestExistingPartitioningSchemeGeometry(inputFile, arrayPath, exemplaryArrayName, partitioningSchemeDCPath);
+  }
+
+  // -----------------------------------------------------------------------------
+  void TestMaskedVertexGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryVertexGeomIdsPath;
+    IntVec3Type numOfPartitionsPerAxis = {20, 10, 5};
+    DataArrayPath arrayPath = {"DataContainer", "VertexData", "PartitioningSchemeIds"};
+    DataArrayPath maskPath = {"DataContainer", "VertexData", "Mask"};
+    QString exemplaryArrayName = "MaskedExemplaryPartitioningSchemeIds";
+
+    TestBasicGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, exemplaryArrayName, maskPath);
+  }
+
   // -----------------------------------------------------------------------------
   void TestBasicQuadGeometry()
   {
@@ -372,8 +479,6 @@ public:
     TestBasicGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, exemplaryArrayName);
   }
 
-  // -----------------------------------------------------------------------------
-  //
   // -----------------------------------------------------------------------------
   void TestAdvancedQuadGeometry()
   {
@@ -388,8 +493,6 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
   void TestBoundingBoxQuadGeometry()
   {
     QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryQuadGeomIdsPath;
@@ -403,7 +506,28 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //
+  void TestExistingPartitioningSchemeQuadGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryQuadGeomIdsPath;
+    DataArrayPath arrayPath = {"DataContainer", "VertexData", "PartitioningSchemeIds"};
+    DataArrayPath partitioningSchemeDCPath = {"PartitioningSchemeDataContainer", "", ""};
+    QString exemplaryArrayName = "ExemplaryPartitioningSchemeIds";
+
+    TestExistingPartitioningSchemeGeometry(inputFile, arrayPath, exemplaryArrayName, partitioningSchemeDCPath);
+  }
+
+  // -----------------------------------------------------------------------------
+  void TestMaskedQuadGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryQuadGeomIdsPath;
+    IntVec3Type numOfPartitionsPerAxis = {10, 5, 3};
+    DataArrayPath arrayPath = {"DataContainer", "VertexData", "PartitioningSchemeIds"};
+    DataArrayPath maskPath = {"DataContainer", "VertexData", "Mask"};
+    QString exemplaryArrayName = "MaskedExemplaryPartitioningSchemeIds";
+
+    TestBasicGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, exemplaryArrayName, maskPath);
+  }
+
   // -----------------------------------------------------------------------------
   void TestBasicTetrahedralGeometry()
   {
@@ -415,8 +539,6 @@ public:
     TestBasicGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, exemplaryArrayName);
   }
 
-  // -----------------------------------------------------------------------------
-  //
   // -----------------------------------------------------------------------------
   void TestAdvancedTetrahedralGeometry()
   {
@@ -431,8 +553,6 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
   void TestBoundingBoxTetrahedralGeometry()
   {
     QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryTetrahedralGeomIdsPath;
@@ -446,7 +566,28 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //
+  void TestExistingPartitioningSchemeTetrahedralGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryTetrahedralGeomIdsPath;
+    DataArrayPath arrayPath = {"DataContainer", "VertexData", "PartitioningSchemeIds"};
+    DataArrayPath partitioningSchemeDCPath = {"PartitioningSchemeDataContainer", "", ""};
+    QString exemplaryArrayName = "ExemplaryPartitioningSchemeIds";
+
+    TestExistingPartitioningSchemeGeometry(inputFile, arrayPath, exemplaryArrayName, partitioningSchemeDCPath);
+  }
+
+  // -----------------------------------------------------------------------------
+  void TestMaskedTetrahedralGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryTetrahedralGeomIdsPath;
+    IntVec3Type numOfPartitionsPerAxis = {100, 45, 8};
+    DataArrayPath arrayPath = {"DataContainer", "VertexData", "PartitioningSchemeIds"};
+    DataArrayPath maskPath = {"DataContainer", "VertexData", "Mask"};
+    QString exemplaryArrayName = "MaskedExemplaryPartitioningSchemeIds";
+
+    TestBasicGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, exemplaryArrayName, maskPath);
+  }
+
   // -----------------------------------------------------------------------------
   void TestBasicHexahedralGeometry()
   {
@@ -458,8 +599,6 @@ public:
     TestBasicGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, exemplaryArrayName);
   }
 
-  // -----------------------------------------------------------------------------
-  //
   // -----------------------------------------------------------------------------
   void TestAdvancedHexahedralGeometry()
   {
@@ -474,8 +613,6 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
   void TestBoundingBoxHexahedralGeometry()
   {
     QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryHexahedralGeomIdsPath;
@@ -489,7 +626,61 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //
+  void TestExistingPartitioningSchemeHexahedralGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryHexahedralGeomIdsPath;
+    DataArrayPath arrayPath = {"DataContainer", "VertexData", "PartitioningSchemeIds"};
+    DataArrayPath partitioningSchemeDCPath = {"PartitioningSchemeDataContainer", "", ""};
+    QString exemplaryArrayName = "ExemplaryPartitioningSchemeIds";
+
+    TestExistingPartitioningSchemeGeometry(inputFile, arrayPath, exemplaryArrayName, partitioningSchemeDCPath);
+  }
+
+  // -----------------------------------------------------------------------------
+  void TestMaskedHexahedralGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryHexahedralGeomIdsPath;
+    IntVec3Type numOfPartitionsPerAxis = {6, 7, 8};
+    DataArrayPath arrayPath = {"DataContainer", "VertexData", "PartitioningSchemeIds"};
+    DataArrayPath maskPath = {"DataContainer", "VertexData", "Mask"};
+    QString exemplaryArrayName = "MaskedExemplaryPartitioningSchemeIds";
+
+    TestBasicGeometry(inputFile, arrayPath, numOfPartitionsPerAxis, exemplaryArrayName, maskPath);
+  }
+
+  // -----------------------------------------------------------------------------
+  void TestPlanalXYNodeGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryPlanalXYNodeGeomIdsPath;
+    IntVec3Type numOfPartitionsPerAxis = {3, 3, 3};
+    DataArrayPath arrayPath = {"VertexDataContainer", "AttributeMatrix", "PartitioningSchemeIds"};
+    QString exemplaryArrayName = "ExemplaryPartitioningSchemeIds";
+
+    TestBasicGeometryError(inputFile, arrayPath, numOfPartitionsPerAxis, -3042);
+  }
+
+  // -----------------------------------------------------------------------------
+  void TestPlanalXZNodeGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryPlanalXZNodeGeomIdsPath;
+    IntVec3Type numOfPartitionsPerAxis = {3, 3, 3};
+    DataArrayPath arrayPath = {"VertexDataContainer", "AttributeMatrix", "PartitioningSchemeIds"};
+    QString exemplaryArrayName = "ExemplaryPartitioningSchemeIds";
+
+    TestBasicGeometryError(inputFile, arrayPath, numOfPartitionsPerAxis, -3041);
+  }
+
+  // -----------------------------------------------------------------------------
+  void TestPlanalYZNodeGeometry()
+  {
+    QString inputFile = UnitTest::PartitionGeometryTest::ExemplaryPlanalYZNodeGeomIdsPath;
+    IntVec3Type numOfPartitionsPerAxis = {3, 3, 3};
+    DataArrayPath arrayPath = {"VertexDataContainer", "AttributeMatrix", "PartitioningSchemeIds"};
+    QString exemplaryArrayName = "ExemplaryPartitioningSchemeIds";
+
+    TestBasicGeometryError(inputFile, arrayPath, numOfPartitionsPerAxis, -3040);
+  }
+
   // -----------------------------------------------------------------------------
   void operator()()
   {
@@ -499,33 +690,51 @@ public:
     DREAM3D_REGISTER_TEST(TestBasicImageGeometry())
     DREAM3D_REGISTER_TEST(TestAdvancedImageGeometry())
     DREAM3D_REGISTER_TEST(TestBoundingBoxImageGeometry())
+    DREAM3D_REGISTER_TEST(TestExistingPartitioningSchemeImageGeometry())
 
     DREAM3D_REGISTER_TEST(TestBasicRectGridGeometry())
     DREAM3D_REGISTER_TEST(TestAdvancedRectGridGeometry())
     DREAM3D_REGISTER_TEST(TestBoundingBoxRectGridGeometry())
+    DREAM3D_REGISTER_TEST(TestExistingPartitioningSchemeRectGridGeometry())
 
     DREAM3D_REGISTER_TEST(TestBasicTriangleGeometry())
     DREAM3D_REGISTER_TEST(TestAdvancedTriangleGeometry())
     DREAM3D_REGISTER_TEST(TestBoundingBoxTriangleGeometry())
+    DREAM3D_REGISTER_TEST(TestExistingPartitioningSchemeTriangleGeometry())
+    DREAM3D_REGISTER_TEST(TestMaskedTriangleGeometry())
 
     DREAM3D_REGISTER_TEST(TestBasicEdgeGeometry())
     DREAM3D_REGISTER_TEST(TestAdvancedEdgeGeometry())
     DREAM3D_REGISTER_TEST(TestBoundingBoxEdgeGeometry())
+    DREAM3D_REGISTER_TEST(TestExistingPartitioningSchemeEdgeGeometry())
+    DREAM3D_REGISTER_TEST(TestMaskedEdgeGeometry())
 
     DREAM3D_REGISTER_TEST(TestBasicVertexGeometry())
     DREAM3D_REGISTER_TEST(TestAdvancedVertexGeometry())
     DREAM3D_REGISTER_TEST(TestBoundingBoxVertexGeometry())
+    DREAM3D_REGISTER_TEST(TestExistingPartitioningSchemeVertexGeometry())
+    DREAM3D_REGISTER_TEST(TestMaskedVertexGeometry())
 
     DREAM3D_REGISTER_TEST(TestBasicQuadGeometry())
     DREAM3D_REGISTER_TEST(TestAdvancedQuadGeometry())
     DREAM3D_REGISTER_TEST(TestBoundingBoxQuadGeometry())
+    DREAM3D_REGISTER_TEST(TestExistingPartitioningSchemeQuadGeometry())
+    DREAM3D_REGISTER_TEST(TestMaskedQuadGeometry())
 
     DREAM3D_REGISTER_TEST(TestBasicTetrahedralGeometry())
     DREAM3D_REGISTER_TEST(TestAdvancedTetrahedralGeometry())
     DREAM3D_REGISTER_TEST(TestBoundingBoxTetrahedralGeometry())
+    DREAM3D_REGISTER_TEST(TestExistingPartitioningSchemeTetrahedralGeometry())
+    DREAM3D_REGISTER_TEST(TestMaskedTetrahedralGeometry())
 
     DREAM3D_REGISTER_TEST(TestBasicHexahedralGeometry())
     DREAM3D_REGISTER_TEST(TestAdvancedHexahedralGeometry())
     DREAM3D_REGISTER_TEST(TestBoundingBoxHexahedralGeometry())
+    DREAM3D_REGISTER_TEST(TestExistingPartitioningSchemeHexahedralGeometry())
+    DREAM3D_REGISTER_TEST(TestMaskedHexahedralGeometry())
+
+    DREAM3D_REGISTER_TEST(TestPlanalXYNodeGeometry())
+    DREAM3D_REGISTER_TEST(TestPlanalXZNodeGeometry())
+    DREAM3D_REGISTER_TEST(TestPlanalYZNodeGeometry())
   }
 };
