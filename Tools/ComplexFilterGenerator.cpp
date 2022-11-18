@@ -1206,8 +1206,7 @@ void GenerateHeaderFile(AbstractFilter* filter, const QString& outputDir, const 
   static QRegularExpression regExp1{"(.)([A-Z][a-z]+)"};
   static QRegularExpression regExp2{"([a-z0-9])([A-Z])"};
   const QString k_UUIDMapFileName("src/" + pluginName + "/" + QString::fromStdString(pluginName.toStdString() + "LegacyUUIDMapping.hpp").replace("/", ""));
-  const QString k_SIMPLToComplexToken("// {insert DREAM3D UUID here, insert DREAM3DNX UUID here}, // dream3d-class-name");
-  const QString k_ComplexToSIMPLToken("// {insert DREAM3DNX UUID here, insert DREAM3D UUID here}, // dream3dnx-class-name");
+  const QString k_SIMPLToComplexToken("// {complex::Uuid::FromString(insert DREAM3D UUID string here).value(), complex::Uuid::FromString(insert DREAM3DNX UUID string here).value()}, // dream3d-class-name");
 
   QString headerTemplate = ReadTemplateFile(k_HeaderFile);
   QString sourceTemplate = ReadTemplateFile(outputDir + "/" + k_UUIDMapFileName);
@@ -1238,8 +1237,7 @@ void GenerateHeaderFile(AbstractFilter* filter, const QString& outputDir, const 
   ptonew << "{Uuid::FromString(\"" << prevUuid << "\").value(), Uuid::FromString(\"" << uuid << "\").value()}, ";
   ptonew << "/* " << filterName << " */\n";
 
-  sourceTemplate = sourceTemplate.replace(k_SIMPLToComplexToken, "{\"" + prevUuid + "\", \"" + uuid + "\"}, // " + filterName + "\n    " + k_SIMPLToComplexToken);
-  sourceTemplate = sourceTemplate.replace(k_ComplexToSIMPLToken, "{\"" + uuid + "\", \"" + prevUuid + "\"}, // " + filterName + "Filter\n    " + k_ComplexToSIMPLToken);
+  sourceTemplate = sourceTemplate.replace(k_SIMPLToComplexToken, "{complex::Uuid::FromString(\"" + prevUuid + "\").value(), complex::Uuid::FromString(\"" + uuid + "\").value()}, // " + filterName + "\n    " + k_SIMPLToComplexToken);
 
   headerTemplate = headerTemplate.replace(k_FILTER_NAME, filterName + "Filter");
   headerTemplate = headerTemplate.replace(k_UUID, uuid);
