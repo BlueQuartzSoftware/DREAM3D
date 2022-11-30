@@ -183,6 +183,17 @@ public:
   Q_PROPERTY(QString SurfaceMeshMeanCurvaturesArrayName READ getSurfaceMeshMeanCurvaturesArrayName WRITE setSurfaceMeshMeanCurvaturesArrayName)
 
   /**
+   * @brief Setter property for SurfaceMeshWeingartenMatrixArrayName
+   */
+  void setSurfaceMeshWeingartenMatrixArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshWeingartenMatrixArrayName
+   * @return Value of SurfaceMeshWeingartenMatrixArrayName
+   */
+  QString getSurfaceMeshWeingartenMatrixArrayName() const;
+  Q_PROPERTY(QString SurfaceMeshWeingartenMatrixArrayName READ getSurfaceMeshWeingartenMatrixArrayName WRITE setSurfaceMeshWeingartenMatrixArrayName)
+
+  /**
    * @brief Setter property for NRing
    */
   void setNRing(int value);
@@ -225,6 +236,17 @@ public:
    */
   bool getComputeGaussianCurvature() const;
   Q_PROPERTY(bool ComputeGaussianCurvature READ getComputeGaussianCurvature WRITE setComputeGaussianCurvature)
+
+  /**
+   * @brief Setter property for ComputeWeingartenMatrix
+   */
+  void setComputeWeingartenMatrix(bool value);
+  /**
+   * @brief Getter property for ComputeWeingartenMatrix
+   * @return Value of ComputeWeingartenMatrix
+   */
+  bool getComputeWeingartenMatrix() const;
+  Q_PROPERTY(bool ComputeWeingartenMatrix READ getComputeWeingartenMatrix WRITE setComputeWeingartenMatrix)
 
   /**
    * @brief Setter property for UseNormalsForCurveFitting
@@ -383,6 +405,8 @@ private:
   double* m_SurfaceMeshGaussianCurvatures = nullptr;
   std::weak_ptr<DataArray<double>> m_SurfaceMeshMeanCurvaturesPtr;
   double* m_SurfaceMeshMeanCurvatures = nullptr;
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshWeingartenMatrixPtr;
+  double* m_SurfaceMeshWeingartenMatrix = nullptr;
 
   DataArrayPath m_FaceAttributeMatrixPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, ""};
   QString m_SurfaceMeshPrincipalCurvature1sArrayName = {SIMPL::FaceData::SurfaceMeshPrincipalCurvature1};
@@ -391,10 +415,12 @@ private:
   QString m_SurfaceMeshPrincipalDirection2sArrayName = {SIMPL::FaceData::SurfaceMeshPrincipalDirection2};
   QString m_SurfaceMeshGaussianCurvaturesArrayName = {SIMPL::FaceData::SurfaceMeshGaussianCurvatures};
   QString m_SurfaceMeshMeanCurvaturesArrayName = {SIMPL::FaceData::SurfaceMeshMeanCurvatures};
+  QString m_SurfaceMeshWeingartenMatrixArrayName = {SIMPL::FaceData::SurfaceMeshWeingartenMatrix};
   int m_NRing = {3};
   bool m_ComputePrincipalDirectionVectors = {true};
   bool m_ComputeMeanCurvature = {};
   bool m_ComputeGaussianCurvature = {};
+  bool m_ComputeWeingartenMatrix = {false};
   bool m_UseNormalsForCurveFitting = {true};
   DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels};
   DataArrayPath m_SurfaceMeshFeatureFaceIdsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFeatureFaceId};

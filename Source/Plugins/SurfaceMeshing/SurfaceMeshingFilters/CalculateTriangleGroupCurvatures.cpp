@@ -52,7 +52,7 @@
 CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int64_t nring, std::vector<int64_t> triangleIds, bool useNormalsForCurveFitting, DoubleArrayType::Pointer principleCurvature1,
                                                                    DoubleArrayType::Pointer principleCurvature2, DoubleArrayType::Pointer principleDirection1,
                                                                    DoubleArrayType::Pointer principleDirection2, DoubleArrayType::Pointer gaussianCurvature, DoubleArrayType::Pointer meanCurvature,
-                                                                   TriangleGeom::Pointer trianglesGeom, DataArray<int32_t>::Pointer surfaceMeshFaceLabels,
+                                                                   DoubleArrayType::Pointer weingartenMatrix, TriangleGeom::Pointer trianglesGeom, DataArray<int32_t>::Pointer surfaceMeshFaceLabels,
                                                                    DataArray<double>::Pointer surfaceMeshFaceNormals, DataArray<double>::Pointer surfaceMeshTriangleCentroids, AbstractFilter* parent)
 : m_NRing(nring)
 , m_TriangleIds(triangleIds)
@@ -63,6 +63,7 @@ CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int64_t nring
 , m_PrincipleDirection2(principleDirection2)
 , m_GaussianCurvature(gaussianCurvature)
 , m_MeanCurvature(meanCurvature)
+, m_WeingartenMatrix(weingartenMatrix)
 , m_TrianglesPtr(trianglesGeom)
 , m_SurfaceMeshFaceLabels(surfaceMeshFaceLabels)
 , m_SurfaceMeshFaceNormals(surfaceMeshFaceNormals)
@@ -124,6 +125,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
   bool computeGaussian = (m_GaussianCurvature.get() != nullptr);
   bool computeMean = (m_MeanCurvature.get() != nullptr);
   bool computeDirection = (m_PrincipleDirection1.get() != nullptr);
+  bool computeWeingartenMatrix = (m_WeingartenMatrix.get() != nullptr);
 
   std::vector<int64_t>::size_type tCount = m_TriangleIds.size();
   // For each triangle in the group
@@ -235,6 +237,14 @@ void CalculateTriangleGroupCurvatures::operator()() const
         // Now that we have the A, B, C, D, E, F & G constants we can solve the Eigen value/vector problem
         // to get the principal curvatures and pricipal directions.
         M << sln1(0), sln1(1), sln1(1), sln1(2);
+      }
+
+      if(computeWeingartenMatrix)
+      {
+        m_WeingartenMatrix->setComponent(i, 0, M.coeff(0, 0));
+        m_WeingartenMatrix->setComponent(i, 1, M.coeff(0, 1));
+        m_WeingartenMatrix->setComponent(i, 2, M.coeff(1, 0));
+        m_WeingartenMatrix->setComponent(i, 3, M.coeff(1, 1));
       }
 
       Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d> eig(M);
