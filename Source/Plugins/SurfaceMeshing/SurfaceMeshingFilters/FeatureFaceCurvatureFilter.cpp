@@ -87,6 +87,9 @@ void FeatureFaceCurvatureFilter::setupFilterParameters()
   linkedProps.push_back("SurfaceMeshMeanCurvaturesArrayName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Compute Mean Curvature", ComputeMeanCurvature, FilterParameter::Category::Parameter, FeatureFaceCurvatureFilter, linkedProps));
   linkedProps.clear();
+  linkedProps.push_back("SurfaceMeshWeingartenMatrixArrayName");
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Compute Weingarten Matrix", ComputeWeingartenMatrix, FilterParameter::Category::Parameter, FeatureFaceCurvatureFilter, linkedProps));
+  linkedProps.clear();
   linkedProps.push_back("SurfaceMeshFaceNormalsArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Face Normals for Curve Fitting", UseNormalsForCurveFitting, FilterParameter::Category::Parameter, FeatureFaceCurvatureFilter, linkedProps));
 
@@ -125,6 +128,9 @@ void FeatureFaceCurvatureFilter::setupFilterParameters()
                                                       FilterParameter::Category::CreatedArray, FeatureFaceCurvatureFilter));
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Mean Curvature", SurfaceMeshMeanCurvaturesArrayName, FaceAttributeMatrixPath, FaceAttributeMatrixPath, FilterParameter::Category::CreatedArray,
                                                       FeatureFaceCurvatureFilter));
+
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Weingarten Matrix", SurfaceMeshWeingartenMatrixArrayName, FaceAttributeMatrixPath, FaceAttributeMatrixPath,
+                                                      FilterParameter::Category::CreatedArray, FeatureFaceCurvatureFilter));
   setFilterParameters(parameters);
 }
 
@@ -228,6 +234,17 @@ void FeatureFaceCurvatureFilter::dataCheck()
     if(nullptr != m_SurfaceMeshMeanCurvaturesPtr.lock())
     {
       m_SurfaceMeshMeanCurvatures = m_SurfaceMeshMeanCurvaturesPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
+
+  if(m_ComputeWeingartenMatrix)
+  {
+    cDims[0] = 4;
+    tempPath.setDataArrayName(getSurfaceMeshWeingartenMatrixArrayName());
+    m_SurfaceMeshWeingartenMatrixPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>>(this, tempPath, 0, cDims);
+    if(nullptr != m_SurfaceMeshWeingartenMatrixPtr.lock())
+    {
+      m_SurfaceMeshWeingartenMatrix = m_SurfaceMeshWeingartenMatrixPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
@@ -376,16 +393,16 @@ void FeatureFaceCurvatureFilter::execute()
     {
       g->run(CalculateTriangleGroupCurvatures(m_NRing, triangleIds, m_UseNormalsForCurveFitting, m_SurfaceMeshPrincipalCurvature1sPtr.lock(), m_SurfaceMeshPrincipalCurvature2sPtr.lock(),
                                               m_SurfaceMeshPrincipalDirection1sPtr.lock(), m_SurfaceMeshPrincipalDirection2sPtr.lock(), m_SurfaceMeshGaussianCurvaturesPtr.lock(),
-                                              m_SurfaceMeshMeanCurvaturesPtr.lock(), triangleGeom, m_SurfaceMeshFaceLabelsPtr.lock(), m_SurfaceMeshFaceNormalsPtr.lock(),
-                                              m_SurfaceMeshTriangleCentroidsPtr.lock(), this));
+                                              m_SurfaceMeshMeanCurvaturesPtr.lock(), m_SurfaceMeshWeingartenMatrixPtr.lock(), triangleGeom, m_SurfaceMeshFaceLabelsPtr.lock(),
+                                              m_SurfaceMeshFaceNormalsPtr.lock(), m_SurfaceMeshTriangleCentroidsPtr.lock(), this));
     }
     else
 #endif
     {
       CalculateTriangleGroupCurvatures curvature(m_NRing, triangleIds, m_UseNormalsForCurveFitting, m_SurfaceMeshPrincipalCurvature1sPtr.lock(), m_SurfaceMeshPrincipalCurvature2sPtr.lock(),
                                                  m_SurfaceMeshPrincipalDirection1sPtr.lock(), m_SurfaceMeshPrincipalDirection2sPtr.lock(), m_SurfaceMeshGaussianCurvaturesPtr.lock(),
-                                                 m_SurfaceMeshMeanCurvaturesPtr.lock(), triangleGeom, m_SurfaceMeshFaceLabelsPtr.lock(), m_SurfaceMeshFaceNormalsPtr.lock(),
-                                                 m_SurfaceMeshTriangleCentroidsPtr.lock(), this);
+                                                 m_SurfaceMeshMeanCurvaturesPtr.lock(), m_SurfaceMeshWeingartenMatrixPtr.lock(), triangleGeom, m_SurfaceMeshFaceLabelsPtr.lock(),
+                                                 m_SurfaceMeshFaceNormalsPtr.lock(), m_SurfaceMeshTriangleCentroidsPtr.lock(), this);
       curvature();
     }
   }
@@ -596,6 +613,18 @@ QString FeatureFaceCurvatureFilter::getSurfaceMeshMeanCurvaturesArrayName() cons
 }
 
 // -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setSurfaceMeshWeingartenMatrixArrayName(const QString& value)
+{
+  m_SurfaceMeshWeingartenMatrixArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FeatureFaceCurvatureFilter::getSurfaceMeshWeingartenMatrixArrayName() const
+{
+  return m_SurfaceMeshWeingartenMatrixArrayName;
+}
+
+// -----------------------------------------------------------------------------
 void FeatureFaceCurvatureFilter::setNRing(int value)
 {
   m_NRing = value;
@@ -641,6 +670,18 @@ void FeatureFaceCurvatureFilter::setComputeGaussianCurvature(bool value)
 bool FeatureFaceCurvatureFilter::getComputeGaussianCurvature() const
 {
   return m_ComputeGaussianCurvature;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setComputeWeingartenMatrix(bool value)
+{
+  m_ComputeWeingartenMatrix = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FeatureFaceCurvatureFilter::getComputeWeingartenMatrix() const
+{
+  return m_ComputeWeingartenMatrix;
 }
 
 // -----------------------------------------------------------------------------

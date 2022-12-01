@@ -52,7 +52,7 @@ class CalculateTriangleGroupCurvatures
 public:
   CalculateTriangleGroupCurvatures(int64_t nring, std::vector<int64_t> triangleIds, bool useNormalsForCurveFitting, DoubleArrayType::Pointer principleCurvature1,
                                    DoubleArrayType::Pointer principleCurvature2, DoubleArrayType::Pointer principleDirection1, DoubleArrayType::Pointer principleDirection2,
-                                   DoubleArrayType::Pointer gaussianCurvature, DoubleArrayType::Pointer meanCurvature, TriangleGeom::Pointer trianglesGeom,
+                                   DoubleArrayType::Pointer gaussianCurvature, DoubleArrayType::Pointer meanCurvature, DoubleArrayType::Pointer weingartenMatrix, TriangleGeom::Pointer trianglesGeom,
                                    DataArray<int32_t>::Pointer surfaceMeshFaceLabels, DataArray<double>::Pointer surfaceMeshFaceNormals, DataArray<double>::Pointer surfaceMeshTriangleCentroids,
                                    AbstractFilter* parent);
 
@@ -85,6 +85,7 @@ private:
   DoubleArrayType::Pointer m_PrincipleDirection2;
   DoubleArrayType::Pointer m_GaussianCurvature;
   DoubleArrayType::Pointer m_MeanCurvature;
+  DoubleArrayType::Pointer m_WeingartenMatrix;
   TriangleGeom::Pointer m_TrianglesPtr;
   DataArray<int32_t>::Pointer m_SurfaceMeshFaceLabels;
   DataArray<double>::Pointer m_SurfaceMeshFaceNormals;
