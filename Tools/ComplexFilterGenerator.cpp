@@ -1240,7 +1240,7 @@ void GenerateHeaderFile(AbstractFilter* filter, const QString& outputDir, const 
   ptonew << "{Uuid::FromString(\"" << prevUuid << "\").value(), Uuid::FromString(\"" << uuid << "\").value()}, ";
   ptonew << "/* " << filterName << " */\n";
 
-  sourceTemplate = sourceTemplate.replace(k_NewIncludeToken, "#include \"Filters/" + filterName + "Filter.hpp\"\n" + k_NewIncludeToken);
+  sourceTemplate = sourceTemplate.replace(k_NewIncludeToken, "#include \"" + pluginName + "/Filters/" + filterName + "Filter.hpp\"\n" + k_NewIncludeToken);
   sourceTemplate = sourceTemplate.replace(k_SIMPLToComplexToken, "{complex::Uuid::FromString(\"" + prevUuid + "\").value(), complex::FilterTraits<" + filterName + "Filter>::uuid}, // " + filterName + "\n    " + k_SIMPLToComplexToken);
 
   headerTemplate = headerTemplate.replace(k_FILTER_NAME, filterName + "Filter");
