@@ -1,0 +1,37 @@
+site_name: DREAM3D
+theme:
+  name: 'material'
+  palette:
+    primary: light-blue
+    accent: light-blue
+
+site_url: http://dream3d.bluequartz.net
+
+nav:
+    - Home: 'index.md'
+    - About: 'About.md'
+    - Download: 'Download.md'
+    - Latest Release Notes: 'Latest_Release_Notes.md'
+    - License: 'License.md'
+    - DREAM3D In Use: 'DREAM3D_in_Use.md'
+    - Origins of DREAM3D: 'Origins.md'
+    
+
+docs_dir: docs
+site_dir: 'dream3d-wp.bluequartz.net'
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
+
+extra:
+  palette:
+    primary: 'blue'
+    accent: 'bluegrey'
+
+extra_css:
+  - 'assets/stylesheets/extra.css'
