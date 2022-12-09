@@ -1,5 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ * Copyright (c) 2009-2022 BlueQuartz Software, LLC
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -42,9 +42,12 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AxisAngleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -56,6 +59,15 @@
 
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
+
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID31 = 31,
+
+  DataContainerID = 1
+};
 
 namespace
 {
@@ -74,7 +86,7 @@ private:
   AxisAngleInput m_MisorientationRotation;
 
 public:
-  VisualizeGBCDPoleFigureImpl(DoubleArrayType::Pointer& poleFigureArray, std::array<int32_t, 2> dimensions, LaueOps::Pointer orient_Ops, FloatArrayType::Pointer& gbcd_DeltasArray,
+  VisualizeGBCDPoleFigureImpl(DoubleArrayType::Pointer& poleFigureArray, std::array<int32_t, 2> dimensions, LaueOps::Pointer& orient_Ops, FloatArrayType::Pointer& gbcd_DeltasArray,
                               FloatArrayType::Pointer& gbcd_LimitsArray, Int32ArrayType::Pointer& gbcd_SizesArray, DoubleArrayType::Pointer& gbcd, int32_t phaseOfInterest,
                               AxisAngleInput& misorientationRotation)
   : m_PoleFigureArray(poleFigureArray)
@@ -98,7 +110,7 @@ public:
     float* gbcdDeltas = gbcdDeltasArray->getPointer(0);
     int32_t* gbcdSizes = gbcdSizesArray->getPointer(0);
     float* gbcdLimits = gbcdLimitsArray->getPointer(0);
-    double* m_GBCD = m_GBCDPtr->getPointer(0);
+    double* gbcdValues = m_GBCDPtr->getPointer(0);
 
     float vec[3] = {0.0f, 0.0f, 0.0f};
     float vec2[3] = {0.0f, 0.0f, 0.0f};
@@ -114,7 +126,7 @@ public:
     float sym2t[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
     float mis_euler1[3] = {0.0f, 0.0f, 0.0f};
 
-    float misAngle = m_MisorientationRotation.angle * SIMPLib::Constants::k_PiOver180D;
+    float misAngle = m_MisorientationRotation.angle * SIMPLib::Constants::k_PiOver180F;
     float normAxis[3] = {m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l};
     MatrixMath::Normalize3x1(normAxis);
     // convert axis angle to matrix representation of misorientation
@@ -128,12 +140,12 @@ public:
 
     int32_t xpoints = m_Dimensions[0];
     int32_t ypoints = m_Dimensions[1];
-    int32_t zpoints = 1;
+    // int32_t zpoints = 1;
     int32_t xpointshalf = xpoints / 2;
     int32_t ypointshalf = ypoints / 2;
     float xres = 2.0f / float(xpoints);
     float yres = 2.0f / float(ypoints);
-    float zres = (xres + yres) / 2.0;
+    // float zres = (xres + yres) / 2.0;
     bool nhCheck = false;
     int32_t hemisphere = 0;
 
@@ -151,18 +163,19 @@ public:
       for(int32_t l = xStart; l < xEnd; l++)
       {
         // get (x,y) for stereographic projection pixel
-        float x = float(l - xpointshalf) * xres + (xres / 2.0);
-        float y = float(k - ypointshalf) * yres + (yres / 2.0);
+        float x = static_cast<float>(l - xpointshalf) * xres + (xres / 2.0F);
+        float y = static_cast<float>(k - ypointshalf) * yres + (yres / 2.0F);
+
         if((x * x + y * y) <= 1.0)
         {
-          float sum = 0.0f;
+          double sum = 0.0;
           int32_t count = 0;
           vec[2] = -((x * x + y * y) - 1) / ((x * x + y * y) + 1);
           vec[0] = x * (1 + vec[2]);
           vec[1] = y * (1 + vec[2]);
           MatrixMath::Multiply3x3with3x1(dgt, vec, vec2);
 
-          // Loop over all the symetry operators in the given cystal symmetry
+          // Loop over all the symmetry operators in the given crystal symmetry
           for(int32_t i = 0; i < n_sym; i++)
           {
             // get symmetry operator1
@@ -182,16 +195,16 @@ public:
               {
                 mis_euler1[1] = cosf(mis_euler1[1]);
                 // find bins in GBCD
-                int32_t location1 = int32_t((mis_euler1[0] - gbcdLimits[0]) / gbcdDeltas[0]);
-                int32_t location2 = int32_t((mis_euler1[1] - gbcdLimits[1]) / gbcdDeltas[1]);
-                int32_t location3 = int32_t((mis_euler1[2] - gbcdLimits[2]) / gbcdDeltas[2]);
+                auto location1 = static_cast<int32_t>((mis_euler1[0] - gbcdLimits[0]) / gbcdDeltas[0]);
+                auto location2 = static_cast<int32_t>((mis_euler1[1] - gbcdLimits[1]) / gbcdDeltas[1]);
+                auto location3 = static_cast<int32_t>((mis_euler1[2] - gbcdLimits[2]) / gbcdDeltas[2]);
                 // find symmetric poles using the first symmetry operator
                 MatrixMath::Multiply3x3with3x1(sym1, vec, rotNormal);
                 // get coordinates in square projection of crystal normal parallel to boundary normal
                 nhCheck = getSquareCoord(rotNormal, sqCoord);
                 // Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
-                int32_t location4 = int32_t((sqCoord[0] - gbcdLimits[3]) / gbcdDeltas[3]);
-                int32_t location5 = int32_t((sqCoord[1] - gbcdLimits[4]) / gbcdDeltas[4]);
+                auto location4 = static_cast<int32_t>((sqCoord[0] - gbcdLimits[3]) / gbcdDeltas[3]);
+                auto location5 = static_cast<int32_t>((sqCoord[1] - gbcdLimits[4]) / gbcdDeltas[4]);
                 if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 && location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] &&
                    location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
                 {
@@ -200,7 +213,7 @@ public:
                   {
                     hemisphere = 1;
                   }
-                  sum += m_GBCD[(m_PhaseOfInterest * totalGBCDBins) + 2 * ((location5 * shift4) + (location4 * shift3) + (location3 * shift2) + (location2 * shift1) + location1) + hemisphere];
+                  sum += gbcdValues[(m_PhaseOfInterest * totalGBCDBins) + 2 * ((location5 * shift4) + (location4 * shift3) + (location3 * shift2) + (location2 * shift1) + location1) + hemisphere];
                   count++;
                 }
               }
@@ -215,16 +228,16 @@ public:
               {
                 mis_euler1[1] = cosf(mis_euler1[1]);
                 // find bins in GBCD
-                int32_t location1 = int32_t((mis_euler1[0] - gbcdLimits[0]) / gbcdDeltas[0]);
-                int32_t location2 = int32_t((mis_euler1[1] - gbcdLimits[1]) / gbcdDeltas[1]);
-                int32_t location3 = int32_t((mis_euler1[2] - gbcdLimits[2]) / gbcdDeltas[2]);
+                auto location1 = static_cast<int32_t>((mis_euler1[0] - gbcdLimits[0]) / gbcdDeltas[0]);
+                auto location2 = static_cast<int32_t>((mis_euler1[1] - gbcdLimits[1]) / gbcdDeltas[1]);
+                auto location3 = static_cast<int32_t>((mis_euler1[2] - gbcdLimits[2]) / gbcdDeltas[2]);
                 // find symmetric poles using the first symmetry operator
                 MatrixMath::Multiply3x3with3x1(sym1, vec2, rotNormal2);
                 // get coordinates in square projection of crystal normal parallel to boundary normal
                 nhCheck = getSquareCoord(rotNormal2, sqCoord);
                 // Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
-                int32_t location4 = int32_t((sqCoord[0] - gbcdLimits[3]) / gbcdDeltas[3]);
-                int32_t location5 = int32_t((sqCoord[1] - gbcdLimits[4]) / gbcdDeltas[4]);
+                auto location4 = static_cast<int32_t>((sqCoord[0] - gbcdLimits[3]) / gbcdDeltas[3]);
+                auto location5 = static_cast<int32_t>((sqCoord[1] - gbcdLimits[4]) / gbcdDeltas[4]);
                 if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 && location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] &&
                    location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
                 {
@@ -233,7 +246,7 @@ public:
                   {
                     hemisphere = 1;
                   }
-                  sum += m_GBCD[(m_PhaseOfInterest * totalGBCDBins) + 2 * ((location5 * shift4) + (location4 * shift3) + (location3 * shift2) + (location2 * shift1) + location1) + hemisphere];
+                  sum += gbcdValues[(m_PhaseOfInterest * totalGBCDBins) + 2 * ((location5 * shift4) + (location4 * shift3) + (location3 * shift2) + (location2 * shift1) + location1) + hemisphere];
                   count++;
                 }
               }
@@ -258,30 +271,30 @@ public:
 private:
   /**
    * @brief getSquareCoord Computes the square based coordinate based on the incoming normal
-   * @param xstl1_norm1 Incoming normal
+   * @param crystalNormal Incoming normal
    * @param sqCoord Computed square coordinate
    * @return Boolean value for whether coordinate lies in the norther hemisphere
    */
-  bool getSquareCoord(float* xstl1_norm1, float* sqCoord) const
+  static bool getSquareCoord(float* crystalNormal, float* sqCoord)
   {
     bool nhCheck = false;
     float adjust = 1.0;
-    if(xstl1_norm1[2] >= 0.0)
+    if(crystalNormal[2] >= 0.0)
     {
       adjust = -1.0;
       nhCheck = true;
     }
-    if(fabsf(xstl1_norm1[0]) >= fabsf(xstl1_norm1[1]))
+    if(fabsf(crystalNormal[0]) >= fabsf(crystalNormal[1]))
     {
-      sqCoord[0] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPiD / 2.0f);
-      sqCoord[1] =
-          (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPiD) * atanf(xstl1_norm1[1] / xstl1_norm1[0]));
+      sqCoord[0] = (crystalNormal[0] / fabsf(crystalNormal[0])) * sqrtf(2.0f * 1.0f * (1.0f + (crystalNormal[2] * adjust))) * (SIMPLib::Constants::k_SqrtPiF / 2.0f);
+      sqCoord[1] = (crystalNormal[0] / fabsf(crystalNormal[0])) * sqrtf(2.0f * 1.0f * (1.0f + (crystalNormal[2] * adjust))) *
+                   ((2.0f / SIMPLib::Constants::k_SqrtPiF) * atanf(crystalNormal[1] / crystalNormal[0]));
     }
     else
     {
-      sqCoord[0] =
-          (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPiD) * atanf(xstl1_norm1[0] / xstl1_norm1[1]));
-      sqCoord[1] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPiD / 2.0f);
+      sqCoord[0] = (crystalNormal[1] / fabsf(crystalNormal[1])) * sqrtf(2.0f * 1.0f * (1.0f + (crystalNormal[2] * adjust))) *
+                   ((2.0f / SIMPLib::Constants::k_SqrtPiF) * atanf(crystalNormal[0] / crystalNormal[1]));
+      sqCoord[1] = (crystalNormal[1] / fabsf(crystalNormal[1])) * sqrtf(2.0f * 1.0f * (1.0f + (crystalNormal[2] * adjust))) * (SIMPLib::Constants::k_SqrtPiF / 2.0f);
     }
     return nhCheck;
   }
@@ -314,16 +327,27 @@ void VisualizeGBCDPoleFigure::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase of Interest", PhaseOfInterest, FilterParameter::Category::Parameter, VisualizeGBCDPoleFigure));
   parameters.push_back(SIMPL_NEW_AXISANGLE_FP("Misorientation Axis-Angle", MisorientationRotation, FilterParameter::Category::Parameter, VisualizeGBCDPoleFigure));
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output Regular Grid VTK File", OutputFile, FilterParameter::Category::Parameter, VisualizeGBCDPoleFigure, "*.vtk", "VTK File"));
-  parameters.push_back(SeparatorFilterParameter::Create("Face Ensemble Data", FilterParameter::Category::RequiredArray));
+
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Output Image Dimension", OutputDimension, FilterParameter::Category::Parameter, VisualizeGBCDPoleFigure));
+
+  parameters.push_back(SeparatorFilterParameter::Create("Input Face Ensemble Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::FaceEnsemble, IGeometry::Type::Triangle);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("GBCD", GBCDArrayPath, FilterParameter::Category::RequiredArray, VisualizeGBCDPoleFigure, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Input GBCD", GBCDArrayPath, FilterParameter::Category::RequiredArray, VisualizeGBCDPoleFigure, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::Category::RequiredArray, VisualizeGBCDPoleFigure, req));
   }
+
+  parameters.push_back(SeparatorFilterParameter::Create("Output Pole Figure", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Pole Figure Data Container", DataContainerName, FilterParameter::Category::CreatedArray, VisualizeGBCDPoleFigure));
+  parameters.push_back(
+      SIMPL_NEW_AM_WITH_LINKED_DC_FP("Pole Figure Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, VisualizeGBCDPoleFigure));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Pole Figure Cell Intensity", IntensityArrayName, DataContainerName, CellAttributeMatrixName, FilterParameter::Category::CreatedArray, VisualizeGBCDPoleFigure));
+
   setFilterParameters(parameters);
 }
 
@@ -365,7 +389,7 @@ void VisualizeGBCDPoleFigure::dataCheck()
   }
   FileSystemPathHelper::CheckOutputFile(this, "Output VTK File", getOutputFile(), true);
 
-  std::vector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims = {1};
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>>(this, getCrystalStructuresArrayPath(), cDims);
   if(nullptr != m_CrystalStructuresPtr.lock())
   {
@@ -380,7 +404,7 @@ void VisualizeGBCDPoleFigure::dataCheck()
 
   if(nullptr != tmpGBCDPtr.get())
   {
-    std::vector<size_t> cDims = tmpGBCDPtr->getComponentDimensions();
+    cDims = tmpGBCDPtr->getComponentDimensions();
     m_GBCDPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>>(this, getGBCDArrayPath(), cDims);
     if(nullptr != m_GBCDPtr.lock())
     {
@@ -392,6 +416,41 @@ void VisualizeGBCDPoleFigure::dataCheck()
   {
     QString ss = QObject::tr("The phase index is larger than the number of Ensembles").arg(ClassName());
     setErrorCondition(-1, ss);
+  }
+
+  if(m_OutputDimension < 0)
+  {
+    QString ss = QObject::tr("Output Dimension must be greater than zero").arg(ClassName());
+    setErrorCondition(-100, ss);
+  }
+
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer(this, getDataContainerName(), DataContainerID);
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
+
+  auto outDim = static_cast<size_t>(m_OutputDimension);
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
+  image->setDimensions({outDim, outDim, 1});
+  image->setSpacing({2.0f / outDim, 2.0f / outDim, 2.0f / outDim});
+  m->setGeometry(image);
+
+  std::vector<size_t> tDims = {outDim, outDim, 1ULL};
+  m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
+
+  cDims.assign({1});
+  DataArrayPath arrayPath = getDataContainerName();
+  arrayPath.setAttributeMatrixName(getCellAttributeMatrixName());
+  arrayPath.setDataArrayName(getIntensityArrayName());
+  m_IntensityPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType>(this, arrayPath, 0, cDims, "", DataArrayID31);
+  if(nullptr != m_IntensityPtr.lock())
+  {
+    m_Intensity = m_IntensityPtr.lock()->getPointer(0);
   }
 }
 
@@ -473,11 +532,11 @@ void VisualizeGBCDPoleFigure::execute()
   // get num components of GBCD
   std::vector<size_t> cDims = m_GBCDPtr.lock()->getComponentDimensions();
 
-  gbcdSizes[0] = cDims[0];
-  gbcdSizes[1] = cDims[1];
-  gbcdSizes[2] = cDims[2];
-  gbcdSizes[3] = cDims[3];
-  gbcdSizes[4] = cDims[4];
+  gbcdSizes[0] = static_cast<int32_t>(cDims[0]);
+  gbcdSizes[1] = static_cast<int32_t>(cDims[1]);
+  gbcdSizes[2] = static_cast<int32_t>(cDims[2]);
+  gbcdSizes[3] = static_cast<int32_t>(cDims[3]);
+  gbcdSizes[4] = static_cast<int32_t>(cDims[4]);
 
   gbcdDeltas[0] = (gbcdLimits[5] - gbcdLimits[0]) / float(gbcdSizes[0]);
   gbcdDeltas[1] = (gbcdLimits[6] - gbcdLimits[1]) / float(gbcdSizes[1]);
@@ -499,7 +558,7 @@ void VisualizeGBCDPoleFigure::execute()
   //  float sym2t[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   //  float mis_euler1[3] = {0.0f, 0.0f, 0.0f};
 
-  float misAngle = m_MisorientationRotation.angle * SIMPLib::Constants::k_PiOver180D;
+  float misAngle = m_MisorientationRotation.angle * SIMPLib::Constants::k_PiOver180F;
   float normAxis[3] = {m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l};
   MatrixMath::Normalize3x1(normAxis);
   // convert axis angle to matrix representation of misorientation
@@ -514,14 +573,14 @@ void VisualizeGBCDPoleFigure::execute()
   // get number of symmetry operators
   //  int32_t n_sym = orientOps->getNumSymOps();
 
-  int32_t xpoints = 250;
-  int32_t ypoints = 250;
+  int32_t xpoints = m_OutputDimension;
+  int32_t ypoints = m_OutputDimension;
   int32_t zpoints = 1;
   //  int32_t xpointshalf = xpoints / 2;
   //  int32_t ypointshalf = ypoints / 2;
-  float xres = 2.0f / float(xpoints);
-  float yres = 2.0f / float(ypoints);
-  float zres = (xres + yres) / 2.0;
+  float xres = 2.0f / static_cast<float>(xpoints);
+  float yres = 2.0f / static_cast<float>(ypoints);
+  float zres = (xres + yres) / 2.0F;
 
   //  bool nhCheck = false;
   //  int32_t hemisphere = 0;
@@ -533,11 +592,14 @@ void VisualizeGBCDPoleFigure::execute()
 
   //  int64_t totalGBCDBins = gbcdSizes[0] * gbcdSizes[1] * gbcdSizes[2] * gbcdSizes[3] * gbcdSizes[4] * 2;
 
-  std::vector<size_t> dims = {1ULL};
-  DoubleArrayType::Pointer poleFigureArray = DoubleArrayType::NullPointer();
-  poleFigureArray = DoubleArrayType::CreateArray(xpoints * ypoints, dims, "PoleFigure", true);
-  poleFigureArray->initializeWithZeros();
-  double* poleFigure = poleFigureArray->getPointer(0);
+//  std::vector<size_t> dims = {1ULL};
+//  DoubleArrayType::Pointer poleFigureArray = DoubleArrayType::NullPointer();
+//  poleFigureArray = DoubleArrayType::CreateArray(xpoints * ypoints, dims, "PoleFigure", true);
+//  poleFigureArray->initializeWithZeros();
+//  double* poleFigure = poleFigureArray->getPointer(0);
+
+  DoubleArrayType::Pointer poleFigurePtr = m_IntensityPtr.lock();
+  double* poleFigure = poleFigurePtr->getPointer(0);
 
   DoubleArrayType::Pointer gbcdPtr = m_GBCDPtr.lock();
 
@@ -546,7 +608,7 @@ void VisualizeGBCDPoleFigure::execute()
 
   ParallelData2DAlgorithm dataAlg;
   dataAlg.setRange(0, 0, ypoints, xpoints);
-  dataAlg.execute(VisualizeGBCDPoleFigureImpl(poleFigureArray, {xpoints, ypoints}, orientOps, gbcdDeltasArray, gbcdLimitsArray, gbcdSizesArray, gbcdPtr, m_PhaseOfInterest, m_MisorientationRotation));
+  dataAlg.execute(VisualizeGBCDPoleFigureImpl(poleFigurePtr, {xpoints, ypoints}, orientOps, gbcdDeltasArray, gbcdLimitsArray, gbcdSizesArray, gbcdPtr, m_PhaseOfInterest, m_MisorientationRotation));
 
 #if 0
   for(int32_t k = 0; k < ypoints; k++)
@@ -651,11 +713,10 @@ void VisualizeGBCDPoleFigure::execute()
   }
 #endif
 
-  FILE* f = nullptr;
-  f = fopen(m_OutputFile.toLatin1().data(), "wb");
+  FILE* f = fopen(m_OutputFile.toLatin1().data(), "wb");
   if(nullptr == f)
   {
-    QString ss = QObject::tr("Error opening output file '%1'").arg(m_OutputFile);
+    ss = QObject::tr("Error opening output file '%1'").arg(m_OutputFile);
     setErrorCondition(-1, ss);
     return;
   }
@@ -699,7 +760,7 @@ void VisualizeGBCDPoleFigure::execute()
     size_t totalWritten = fwrite(gn.data(), sizeof(float), (total), f);
     if(totalWritten != (total))
     {
-      QString ss = QObject::tr("Error writing binary VTK data to file '%1'").arg(m_OutputFile);
+      ss = QObject::tr("Error writing binary VTK data to file '%1'").arg(m_OutputFile);
       setErrorCondition(-1, ss);
       fclose(f);
       return;
@@ -708,25 +769,25 @@ void VisualizeGBCDPoleFigure::execute()
   fclose(f);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t VisualizeGBCDPoleFigure::writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step)
+int32_t VisualizeGBCDPoleFigure::writeCoords(FILE* f, const char* axis, const char* type, int64_t nPoints, float min, float step)
 {
   int32_t err = 0;
-  fprintf(f, "%s %lld %s\n", axis, (long long int)(npoints), type);
-  float* data = new float[npoints];
+  fprintf(f, "%s %lld %s\n", axis, (long long int)(nPoints), type);
+
+  std::vector<float> data(nPoints, 0.0F);
   float d;
-  for(int64_t idx = 0; idx < npoints; ++idx)
+  for(int64_t idx = 0; idx < nPoints; ++idx)
   {
-    d = idx * step + min;
+    d = static_cast<float>(idx) * step + min;
     SIMPLib::Endian::FromSystemToBig::convert(d);
     data[idx] = d;
   }
-  size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);
-  delete[] data;
-  if(totalWritten != static_cast<size_t>(npoints))
+  size_t totalWritten = fwrite(static_cast<void*>(data.data()), sizeof(float), static_cast<size_t>(nPoints), f);
+
+  if(totalWritten != static_cast<size_t>(nPoints))
   {
     QString ss = QObject::tr("Error writing binary VTK data to file '%1'").arg(m_OutputFile);
     setErrorCondition(-1, ss);
@@ -788,7 +849,7 @@ QString VisualizeGBCDPoleFigure::getGroupName() const
 // -----------------------------------------------------------------------------
 QUuid VisualizeGBCDPoleFigure::getUuid() const
 {
-  return QUuid("{85900eba-3da9-5985-ac71-1d9d290a5d31}");
+  return {"{85900eba-3da9-5985-ac71-1d9d290a5d31}"};
 }
 
 // -----------------------------------------------------------------------------
@@ -827,13 +888,13 @@ std::shared_ptr<VisualizeGBCDPoleFigure> VisualizeGBCDPoleFigure::New()
 // -----------------------------------------------------------------------------
 QString VisualizeGBCDPoleFigure::getNameOfClass() const
 {
-  return QString("VisualizeGBCDPoleFigure");
+  return {"VisualizeGBCDPoleFigure"};
 }
 
 // -----------------------------------------------------------------------------
 QString VisualizeGBCDPoleFigure::ClassName()
 {
-  return QString("VisualizeGBCDPoleFigure");
+  return {"VisualizeGBCDPoleFigure"};
 }
 
 // -----------------------------------------------------------------------------
@@ -894,4 +955,45 @@ void VisualizeGBCDPoleFigure::setCrystalStructuresArrayPath(const DataArrayPath&
 DataArrayPath VisualizeGBCDPoleFigure::getCrystalStructuresArrayPath() const
 {
   return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void VisualizeGBCDPoleFigure::setOutputDimension(const int32_t value)
+{
+  m_OutputDimension = value;
+}
+
+// -----------------------------------------------------------------------------
+int32_t VisualizeGBCDPoleFigure::getOutputDimension() const
+{
+  return m_OutputDimension;
+}
+
+void VisualizeGBCDPoleFigure::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+DataArrayPath VisualizeGBCDPoleFigure::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+void VisualizeGBCDPoleFigure::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+QString VisualizeGBCDPoleFigure::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+void VisualizeGBCDPoleFigure::setIntensityArrayName(const QString& value)
+{
+  m_IntensityArrayName = value;
+}
+
+QString VisualizeGBCDPoleFigure::getIntensityArrayName() const
+{
+  return m_IntensityArrayName;
 }
