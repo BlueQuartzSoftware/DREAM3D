@@ -225,13 +225,6 @@ protected:
    */
   void initialize();
 
-  /**
-   * @brief getSquareCoord Computes the square based coordinate based on the incoming normal
-   * @param xstl1_norm1 Incoming normal
-   * @param sqCoord Computed square coordinate
-   * @return Boolean value for whether coordinate lies in the norther hemisphere
-   */
-  bool getSquareCoord(float* xstl1_norm1, float* sqCoord);
 
 private:
   std::weak_ptr<DataArray<double>> m_GBCDPtr;
