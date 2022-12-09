@@ -434,6 +434,7 @@ void VisualizeGBCDPoleFigure::dataCheck()
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   image->setDimensions({outDim, outDim, 1});
   image->setSpacing({2.0f / outDim, 2.0f / outDim, 2.0f / outDim});
+  image->setOrigin(-1.0F, -1.0F, 0.0F);
   m->setGeometry(image);
 
   std::vector<size_t> tDims = {outDim, outDim, 1ULL};
