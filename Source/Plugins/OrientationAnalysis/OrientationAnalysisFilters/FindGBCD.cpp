@@ -79,14 +79,20 @@ enum createdPathID : RenameDataPath::DataID_t
   DataArrayID31 = 31,
 };
 
+namespace
+{
+const size_t k_NumMisoReps = 576 * 4;
+
+} // namespace
+
 /**
  * @brief The CalculateGBCDImpl class implements a threaded algorithm that calculates the
  * grain boundary character distribution (GBCD) for a surface mesh
  */
 class CalculateGBCDImpl
 {
-  size_t startOffset;
-  size_t numEntriesPerTri;
+  size_t m_TriangleChunkStartIndex;
+  size_t m_NumBinPerTriangle;
   Int32ArrayType::Pointer m_LabelsArray;
   DoubleArrayType::Pointer m_NormalsArray;
   Int32ArrayType::Pointer m_PhasesArray;
@@ -105,8 +111,8 @@ public:
   CalculateGBCDImpl(size_t i, size_t numMisoReps, Int32ArrayType::Pointer labels, DoubleArrayType::Pointer normals, FloatArrayType::Pointer eulers, Int32ArrayType::Pointer phases,
                     UInt32ArrayType::Pointer crystalStructures, Int32ArrayType::Pointer bins, BoolArrayType::Pointer hemiCheck, FloatArrayType::Pointer gbcdDeltas, Int32ArrayType::Pointer gbcdSizes,
                     FloatArrayType::Pointer gbcdLimits)
-  : startOffset(i)
-  , numEntriesPerTri(numMisoReps)
+  : m_TriangleChunkStartIndex(i)
+  , m_NumBinPerTriangle(numMisoReps)
   , m_LabelsArray(std::move(labels))
   , m_NormalsArray(std::move(normals))
   , m_PhasesArray(std::move(phases))
@@ -129,7 +135,7 @@ public:
     float* gbcdDeltas = m_GbcdDeltasArray->getPointer(0);
     float* gbcdLimits = m_GbcdLimitsArray->getPointer(0);
     int* gbcdSizes = m_GbcdSizesArray->getPointer(0);
-    int32_t* bins = m_GbcdBinsArray->getPointer(0);
+    int32_t* gbcdBins = m_GbcdBinsArray->getPointer(0);
     bool* hemiCheck = m_GbcdHemiCheckArray->getPointer(0);
 
     int32_t* labels = m_LabelsArray->getPointer(0);
@@ -156,18 +162,18 @@ public:
     int32_t gbcd_index = 0;
     float sqCoord[2] = {0.0f, 0.0f}, sqCoordInv[2] = {0.0f, 0.0f};
     bool nhCheck = false, nhCheckInv = true;
-    int32_t SYMcounter = 0;
-    auto TRIcounter = static_cast<int64_t>(start - startOffset);
-    int64_t TRIcounterShift = 0;
 
-    for(size_t i = start; i < end; i++)
+    for(size_t triangleIndex = start; triangleIndex < end; triangleIndex++)
     {
-      SYMcounter = 0;
-      feature1 = labels[2 * i];
-      feature2 = labels[2 * i + 1];
-      normal[0] = normals[3 * i];
-      normal[1] = normals[3 * i + 1];
-      normal[2] = normals[3 * i + 2];
+      size_t minGbcdBinIndex = (triangleIndex - m_TriangleChunkStartIndex) * m_NumBinPerTriangle;
+      // size_t maxGbcdBinIndex = minGbcdBinIndex + m_NumBinPerTriangle;
+
+      int32_t SYMcounter = 0;
+      feature1 = labels[2 * triangleIndex];
+      feature2 = labels[2 * triangleIndex + 1];
+      normal[0] = normals[3 * triangleIndex];
+      normal[1] = normals[3 * triangleIndex + 1];
+      normal[2] = normals[3 * triangleIndex + 2];
 
       if(feature1 < 0 || feature2 < 0)
       {
@@ -176,7 +182,6 @@ public:
 
       if(phases[feature1] == phases[feature2] && phases[feature1] > 0)
       {
-        TRIcounterShift = (TRIcounter * numEntriesPerTri);
         uint32_t cryst = crystalStructures[phases[feature1]];
         for(int32_t q = 0; q < 2; q++)
         {
@@ -240,8 +245,9 @@ public:
                 gbcd_index = GBCDIndex(gbcdDeltas, gbcdSizes, gbcdLimits, euler_mis, sqCoord);
                 if(gbcd_index != -1)
                 {
-                  hemiCheck[TRIcounterShift + SYMcounter] = nhCheck;
-                  bins[TRIcounterShift + SYMcounter] = gbcd_index;
+                  size_t gbcdBinIndex = minGbcdBinIndex + SYMcounter;
+                  hemiCheck[gbcdBinIndex] = nhCheck;
+                  gbcdBins[gbcdBinIndex] = gbcd_index;
                 }
                 SYMcounter++;
                 if(inversion == 1)
@@ -249,8 +255,9 @@ public:
                   gbcd_index = GBCDIndex(gbcdDeltas, gbcdSizes, gbcdLimits, euler_mis, sqCoordInv);
                   if(gbcd_index != -1)
                   {
-                    hemiCheck[TRIcounterShift + SYMcounter] = nhCheckInv;
-                    bins[TRIcounterShift + SYMcounter] = gbcd_index;
+                    size_t gbcdBinIndex = minGbcdBinIndex + SYMcounter;
+                    hemiCheck[gbcdBinIndex] = nhCheckInv;
+                    gbcdBins[gbcdBinIndex] = gbcd_index;
                   }
                   SYMcounter++;
                 }
@@ -263,7 +270,6 @@ public:
           }
         }
       }
-      TRIcounter++;
     }
   }
 
@@ -576,24 +582,24 @@ void FindGBCD::execute()
     return;
   }
 
+  size_t triangleChunkSize = 50000;
+
   size_t totalPhases = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
   size_t totalFaces = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
-  size_t faceChunkSize = 50000;
-  size_t numMisoReps = 576 * 4;
-  if(totalFaces < faceChunkSize)
+
+  if(totalFaces < triangleChunkSize)
   {
-    faceChunkSize = totalFaces;
+    triangleChunkSize = totalFaces;
   }
   // call the sizeGBCD function with proper chunkSize and numMisoReps to get Bins array set up properly
-  sizeGBCD(faceChunkSize, numMisoReps);
+  sizeGBCD(triangleChunkSize, k_NumMisoReps);
   int32_t totalGBCDBins = m_GbcdSizes[0] * m_GbcdSizes[1] * m_GbcdSizes[2] * m_GbcdSizes[3] * m_GbcdSizes[4] * 2;
 
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();
   uint64_t currentMillis = millis;
   uint64_t startMillis = millis;
   uint64_t estimatedTime = 0;
-  float timeDiff = 0.0f;
-  startMillis = QDateTime::currentMSecsSinceEpoch();
+
   int32_t hemisphere = 0;
 
   // create an array to hold the total face area for each phase and initialize the array to 0.0
@@ -601,39 +607,32 @@ void FindGBCD::execute()
   totalFaceAreaPtr->initializeWithValue(0.0);
   double* totalFaceArea = totalFaceAreaPtr->getPointer(0);
 
-  QString ss = QObject::tr("Calculating GBCD || 0/%1 Completed").arg(totalFaces);
-  for(size_t i = 0; i < totalFaces; i = i + faceChunkSize)
+  QString ss = QObject::tr("1/2 Starting GBCD Calculation and Summation Phase");
+  notifyStatusMessage(ss);
+
+  for(size_t i = 0; i < totalFaces; i = i + triangleChunkSize)
   {
     if(getCancel())
     {
       return;
     }
-    if(i + faceChunkSize >= totalFaces)
+    startMillis = QDateTime::currentMSecsSinceEpoch();
+
+    if(i + triangleChunkSize >= totalFaces)
     {
-      faceChunkSize = totalFaces - i;
+      triangleChunkSize = totalFaces - i;
     }
     m_GbcdBinsArray->initializeWithValue(-1);
+    m_GbcdHemiCheckArray->initializeWithValue(false);
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    tbb::parallel_for(tbb::blocked_range<size_t>(i, i + faceChunkSize),
-                      CalculateGBCDImpl(i, numMisoReps, m_SurfaceMeshFaceLabelsPtr.lock(), m_SurfaceMeshFaceNormalsPtr.lock(), m_FeatureEulerAnglesPtr.lock(), m_FeaturePhasesPtr.lock(),
-                                        m_CrystalStructuresPtr.lock(), m_GbcdBinsArray, m_GbcdHemiCheckArray, m_GbcdDeltasArray, m_GbcdSizesArray, m_GbcdLimitsArray),
-                      tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(i, i + triangleChunkSize, triangleChunkSize / std::thread::hardware_concurrency()),
+                      CalculateGBCDImpl(i, k_NumMisoReps, m_SurfaceMeshFaceLabelsPtr.lock(), m_SurfaceMeshFaceNormalsPtr.lock(), m_FeatureEulerAnglesPtr.lock(), m_FeaturePhasesPtr.lock(),
+                                        m_CrystalStructuresPtr.lock(), m_GbcdBinsArray, m_GbcdHemiCheckArray, m_GbcdDeltasArray, m_GbcdSizesArray, m_GbcdLimitsArray));
 #else
-    CalculateGBCDImpl serial(i, numMisoReps, m_SurfaceMeshFaceLabelsPtr.lock(), m_SurfaceMeshFaceNormalsPtr.lock(), m_FeatureEulerAnglesPtr.lock(), m_FeaturePhasesPtr.lock(),
+    CalculateGBCDImpl serial(i, k_NumMisoReps, m_SurfaceMeshFaceLabelsPtr.lock(), m_SurfaceMeshFaceNormalsPtr.lock(), m_FeatureEulerAnglesPtr.lock(), m_FeaturePhasesPtr.lock(),
                              m_CrystalStructuresPtr.lock(), m_GbcdBinsArray, m_GbcdHemiCheckArray, m_GbcdDeltasArray, m_GbcdSizesArray, m_GbcdLimitsArray);
-    serial.generate(i, i + faceChunkSize);
+    serial.generate(i, i + triangleChunkSize);
 #endif
-
-    currentMillis = QDateTime::currentMSecsSinceEpoch();
-    if(currentMillis - millis > 1000)
-    {
-      QString ss = QObject::tr("Calculating GBCD || Triangles %1/%2 Completed").arg(i).arg(totalFaces);
-      timeDiff = ((float)i / (float)(currentMillis - startMillis));
-      estimatedTime = (float)(totalFaces - i) / timeDiff;
-      ss = ss + QObject::tr(" || Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
-      millis = QDateTime::currentMSecsSinceEpoch();
-      notifyStatusMessage(ss);
-    }
 
     if(getCancel())
     {
@@ -643,7 +642,7 @@ void FindGBCD::execute()
     int32_t phase = 0;
     int32_t feature = 0;
     double area = 0.0;
-    for(size_t j = 0; j < faceChunkSize; j++)
+    for(size_t j = 0; j < triangleChunkSize; j++)
     {
       area = m_SurfaceMeshFaceAreas[i + j];
       feature = m_SurfaceMeshFaceLabels[2 * (i + j)];
@@ -652,25 +651,38 @@ void FindGBCD::execute()
         continue;
       }
       phase = m_FeaturePhases[feature];
-      for(size_t k = 0; k < numMisoReps; k++)
+      for(size_t k = 0; k < k_NumMisoReps; k++)
       {
-        if(m_GbcdBins[(j * numMisoReps) + (k)] >= 0)
+        size_t gbcdBinIdx = (j * k_NumMisoReps) + k;
+        if(m_GbcdBins[gbcdBinIdx] >= 0)
         {
           hemisphere = 0;
-          if(!m_HemiCheck[(j * numMisoReps) + k])
+          if(!m_HemiCheck[gbcdBinIdx])
           {
             hemisphere = 1;
           }
-          size_t gbcdBinIdx = (j * numMisoReps) + k;
+
           size_t gbcdIdx = (phase * totalGBCDBins) + (2 * m_GbcdBins[gbcdBinIdx] + hemisphere);
           m_GBCD[gbcdIdx] += area;
           totalFaceArea[phase] += area;
         }
       }
     }
+
+    currentMillis = QDateTime::currentMSecsSinceEpoch();
+    if(currentMillis - millis > 1000)
+    {
+      size_t lastTriangleIndex = i + triangleChunkSize;
+      QString ss = QObject::tr("  Calculating GBCD || Triangles %1/%2 Completed").arg(lastTriangleIndex).arg(totalFaces);
+      float currentRate = static_cast<float>(triangleChunkSize) / static_cast<float>(currentMillis - startMillis);
+      estimatedTime = static_cast<float>(totalFaces - lastTriangleIndex) / currentRate;
+      ss = ss + QObject::tr(" || Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
+      millis = QDateTime::currentMSecsSinceEpoch();
+      notifyStatusMessage(ss);
+    }
   }
 
-  ss = QObject::tr("Starting GBCD Normalization");
+  ss = QObject::tr("2/2 Starting GBCD Normalization Phase");
   notifyStatusMessage(ss);
 
   for(int32_t i = 0; i < totalPhases; i++)
@@ -681,6 +693,8 @@ void FindGBCD::execute()
     {
       m_GBCD[phaseShift + j] *= MRDfactor;
     }
+    //    std::cout << "TotalFaceArea[" << i << "]: " << totalFaceArea[i] << std::endl;
+    //    std::cout << "MRDfactor[" << i << "]: " << MRDfactor << std::endl;
   }
 }
 
