@@ -60,6 +60,8 @@
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
 
+#include <thread>
+
 enum createdPathID : RenameDataPath::DataID_t
 {
   AttributeMatrixID21 = 21,
@@ -606,10 +608,17 @@ void VisualizeGBCDPoleFigure::execute()
 
   QString ss = QObject::tr("Generating Intensity Plot for phase %1").arg(m_PhaseOfInterest);
   notifyStatusMessage(ss);
+  bool parallel = true;
+  if(parallel)
+  {
+    ParallelData2DAlgorithm dataAlg;
+    dataAlg.setRange(0, 0, ypoints, xpoints);
+    dataAlg.execute(VisualizeGBCDPoleFigureImpl(poleFigurePtr, {xpoints, ypoints}, orientOps, gbcdDeltasArray, gbcdLimitsArray, gbcdSizesArray, gbcdPtr, m_PhaseOfInterest, m_MisorientationRotation));
+  } else {
+    auto compute = VisualizeGBCDPoleFigureImpl(poleFigurePtr, {xpoints, ypoints}, orientOps, gbcdDeltasArray, gbcdLimitsArray, gbcdSizesArray, gbcdPtr, m_PhaseOfInterest, m_MisorientationRotation);
+    compute.generate(0,xpoints, 0, ypoints);
+  }
 
-  ParallelData2DAlgorithm dataAlg;
-  dataAlg.setRange(0, 0, ypoints, xpoints);
-  dataAlg.execute(VisualizeGBCDPoleFigureImpl(poleFigurePtr, {xpoints, ypoints}, orientOps, gbcdDeltasArray, gbcdLimitsArray, gbcdSizesArray, gbcdPtr, m_PhaseOfInterest, m_MisorientationRotation));
 
 #if 0
   for(int32_t k = 0; k < ypoints; k++)

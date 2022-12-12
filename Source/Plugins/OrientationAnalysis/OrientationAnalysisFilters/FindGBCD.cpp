@@ -34,8 +34,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "FindGBCD.h"
 
-#include <utility>
-
 #include <QtCore/QDateTime>
 #include <QtCore/QTextStream>
 
@@ -60,6 +58,10 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
+
+
+#include <utility>
+#include <thread>
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
