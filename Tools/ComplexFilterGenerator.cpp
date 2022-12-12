@@ -1239,7 +1239,7 @@ void GenerateHeaderFile(AbstractFilter* filter, const QString& outputDir, const 
   ptonew << "{Uuid::FromString(\"" << prevUuid << "\").value(), Uuid::FromString(\"" << uuid << "\").value()}, ";
   ptonew << "/* " << filterName << " */\n";
 
-  sourceTemplate = sourceTemplate.replace(k_NewIncludeToken, "#include \"" + pluginName + "Filters/" + filterName + "Filter.hpp\"\n" + k_NewIncludeToken);
+  sourceTemplate = sourceTemplate.replace(k_NewIncludeToken, "#include \"" + pluginName + "/Filters/" + filterName + "Filter.hpp\"\n" + k_NewIncludeToken);
   sourceTemplate = sourceTemplate.replace(k_SIMPLToComplexToken, "{complex::Uuid::FromString(\"" + prevUuid + "\").value(), complex::FilterTraits<" + filterName + "Filter>::uuid}, // " + filterName +
                                                                      "\n    " + k_SIMPLToComplexToken);
 
@@ -1327,7 +1327,7 @@ void GenerateAlgorithmFile(AbstractFilter* filter, const QString& outputDir, con
     QString paramType = s_ParameterTypeMapping[origParamClassName];
     bool hasParameter = s_ParameterAvailable[origParamClassName];
     s_ParameterCount[origParamClassName]++;
-    bool endsWithValue = propName.endsWith("Value");
+    //bool endsWithValue = propName.endsWith("Value");
 
     if(!hasParameter)
     {
@@ -1471,7 +1471,7 @@ void GenerateSourceFile(AbstractFilter* filter, const QString& outputDir, const 
     QString paramType = s_ParameterTypeMapping[origParamClassName];
     bool hasParameter = s_ParameterAvailable[origParamClassName];
     bool endsWithValue = propName.endsWith("Value");
-    auto category = parameter->getCategory();
+    //auto category = parameter->getCategory();
 
     s_ParameterCount[origParamClassName]++;
 
@@ -2061,7 +2061,7 @@ void GenerateComplexFilter(const QString& outputDir, const QString& pluginName, 
     {
       filterName.replace("Filter", "");
     }
-    writeTopLevelOutput(outputDir, pluginName, sourceTemplate, "docs/" + pluginName + "/" + filterName + ".md");
+    writeTopLevelOutput(outputDir, pluginName, sourceTemplate, "docs/" + filterName + "Filter.md");
   }
 }
 
@@ -2087,7 +2087,7 @@ int main(int argc, char** argv)
   QString inputClassName;
   QString outputDir;
 
-  bool header = false;
+  //bool header = false;
 
   for(int32_t i = 0; i < argc; i++)
   {
@@ -2143,7 +2143,7 @@ int main(int argc, char** argv)
   QMetaObjectUtilities::RegisterMetaTypes();
 
   QFileInfo fi(outputDir);
-  QString pluginName = fi.absoluteDir().dirName() + "/";
+  QString pluginName = outputDir.split("/").last();
   GenerateComplexFilter(outputDir, pluginName, inputClassName);
 
   std::cout << "You will need to update the following files:" << std::endl;
@@ -2152,7 +2152,7 @@ int main(int argc, char** argv)
             << "    The entry in that list should be '" << inputClassName.toStdString() << "Filter'\n"
             << "  'set(filter_algorithms' and add the name of the filter there.\n"
             << "    The entry in that list should be '" << inputClassName.toStdString() << "'\n"
-            << outputDir.toStdString() << "test/CMakeLists.txt\n"
+            << outputDir.toStdString() << "/test/CMakeLists.txt\n"
             << "  'set(${PLUGIN_NAME}UnitTest_SRCS' and add the name of the filter on a new line AFTER that line.\n"
             << "    The entry in that list should be '" << inputClassName.toStdString() << "Test.cpp'\n";
 
