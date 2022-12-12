@@ -263,12 +263,10 @@ public:
     }
   }
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   void operator()(const SIMPLRange2D& r) const
   {
     generate(r.minCol(), r.maxCol(), r.minRow(), r.maxRow());
   }
-#endif
 
 private:
   /**
