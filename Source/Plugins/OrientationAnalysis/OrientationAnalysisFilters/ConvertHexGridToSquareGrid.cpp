@@ -275,17 +275,7 @@ void ConvertHexGridToSquareGrid::execute()
   for(QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
   {
     QString ebsdFName = *filepath;
-    {
-      progress = static_cast<int32_t>(z - m_ZStartIndex);
-      progress = (int32_t)(100.0f * (float)(progress) / total);
-      QString msg = "Converting File: " + ebsdFName;
-      notifyStatusMessage(msg.toLatin1().data());
-    }
-    if(getCancel())
-    {
-      break;
-    }
-
+ 
     // Write the Manufacturer of the OIM file here
     // This list will grow to be the number of EBSD file formats we support
     QFileInfo fi(ebsdFName);
@@ -428,16 +418,28 @@ void ConvertHexGridToSquareGrid::execute()
     else if(ext.compare(EbsdLib::Ctf::FileExt) == 0)
     {
       QString ss = QObject::tr("Ctf files are not on a hexagonal grid and do not need to be converted");
-      setErrorCondition(-1, ss);
+      setErrorCondition(-44601, ss);
       return;
     }
     else
     {
       err = -1;
       QString ss = QObject::tr("The file extension was not detected correctly");
-      setErrorCondition(-1, ss);
+      setErrorCondition(-44600, ss);
       return;
     }
+
+    {
+      progress = static_cast<int32_t>(z - m_ZStartIndex);
+      progress = (int32_t)(100.0f * (float)(progress) / total);
+      QString msg = "Converted File: " + ebsdFName;
+      notifyStatusMessage(msg.toLatin1().data());
+    }
+    if(getCancel())
+    {
+      break;
+    }
+
   }
 }
 
