@@ -60,6 +60,7 @@ message(STATUS "****************************************************************
 message(STATUS "* DREAM.3D Configuration Summary")
 message(STATUS "* BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 OSInformation()
+message(STATUS "* SIMPL_USE_MULTITHREADED_ALGOS: ${SIMPL_USE_MULTITHREADED_ALGOS}")
 message(STATUS "* DREAM3D_DATA_DIR: ${DREAM3D_DATA_DIR}")
 message(STATUS "* SIMPL_WRAP_PYTHON: ${SIMPL_WRAP_PYTHON}")
 if(SIMPL_WRAP_PYTHON)

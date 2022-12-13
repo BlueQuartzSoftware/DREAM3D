@@ -1,5 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ * Copyright (c) 2009-2022 BlueQuartz Software, LLC
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -37,6 +37,7 @@
 
 #include <memory>
 
+#include <SIMPLib/Common/SIMPLArray.hpp>
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
@@ -65,6 +66,11 @@ class ImportExport_EXPORT VisualizeGBCDPoleFigure : public AbstractFilter
   PYB11_PROPERTY(AxisAngleInput MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
   PYB11_PROPERTY(DataArrayPath GBCDArrayPath READ getGBCDArrayPath WRITE setGBCDArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  PYB11_PROPERTY(int32_t OutputDimension READ getOutputDimension WRITE setOutputDimension)
+  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  PYB11_PROPERTY(QString IntensityArrayName READ getIntensityArrayName WRITE setIntensityArrayName)
+
   PYB11_END_BINDINGS()
   // End Python bindings declarations
 
@@ -154,6 +160,29 @@ public:
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
+   * @brief Setter property for ScanOverlap
+   */
+  void setOutputDimension(const int32_t value);
+  /**
+   * @brief Getter property for ScanOverlap
+   * @return Value of ScanOverlap
+   */
+  int32_t getOutputDimension() const;
+  Q_PROPERTY(int32_t OutputDimension READ getOutputDimension WRITE setOutputDimension)
+
+  void setDataContainerName(const DataArrayPath& value);
+  DataArrayPath getDataContainerName() const;
+  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+
+  void setCellAttributeMatrixName(const QString& value);
+  QString getCellAttributeMatrixName() const;
+  Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+
+  void setIntensityArrayName(const QString& value);
+  QString getIntensityArrayName() const;
+  Q_PROPERTY(QString IntensityArrayName READ getIntensityArrayName WRITE setIntensityArrayName)
+
+  /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
   QString getCompiledLibraryName() const override;
@@ -225,14 +254,6 @@ protected:
    */
   void initialize();
 
-  /**
-   * @brief getSquareCoord Computes the square based coordinate based on the incoming normal
-   * @param xstl1_norm1 Incoming normal
-   * @param sqCoord Computed square coordinate
-   * @return Boolean value for whether coordinate lies in the norther hemisphere
-   */
-  bool getSquareCoord(float* xstl1_norm1, float* sqCoord);
-
 private:
   std::weak_ptr<DataArray<double>> m_GBCDPtr;
   double* m_GBCD = nullptr;
@@ -244,21 +265,30 @@ private:
   AxisAngleInput m_MisorientationRotation = {};
   DataArrayPath m_GBCDArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceEnsembleAttributeMatrixName, SIMPL::EnsembleData::GBCD};
   DataArrayPath m_CrystalStructuresArrayPath = {SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures};
+  int32_t m_OutputDimension = {300};
 
   LaueOpsContainer m_OrientationOps;
+
+  DataArrayPath m_DataContainerName = {"GBCD Pole Figure", "", ""};
+  QString m_CellAttributeMatrixName = {"Cell Data"} ;
+  QString m_IntensityArrayName = {"MRD"};
+
+  std::weak_ptr<DoubleArrayType> m_IntensityPtr;
+  double* m_Intensity = nullptr;
+
   /**
    * @brief writeCoords Writes a set of Axis coordinates to that are needed
    * for a Rectilinear Grid based data set to a VTK file
    * @param f File instance pointer
    * @param axis The name of the axis that is being written
    * @param type The type of primitive being written (float, int, ...)
-   * @param npoints The total number of points in the array
+   * @param nPoints The total number of points in the array
    * @param min The minimum value of the axis
    * @param max The maximum value of the axis
    * @param step The step value between each point on the axis.
    * @return Integer error value
    */
-  int32_t writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step);
+  int32_t writeCoords(FILE* f, const char* axis, const char* type, int64_t nPoints, float min, float step);
 
 public:
   VisualizeGBCDPoleFigure(const VisualizeGBCDPoleFigure&) = delete;            // Copy Constructor Not Implemented
