@@ -131,7 +131,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
   // For each triangle in the group
   for(std::vector<int64_t>::size_type i = 0; i < tCount; ++i)
   {
-    if(m_ParentFilter->getCancel() == true)
+    if(m_ParentFilter->getCancel())
     {
       return;
     }
@@ -146,8 +146,34 @@ void CalculateTriangleGroupCurvatures::operator()() const
     UniqueFaceIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
     Q_ASSERT(triPatch.size() > 1);
 
-    DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, m_SurfaceMeshTriangleCentroids->getPointer(0), QString("_INTERNAL_USE_ONLY_Patch_Centroids"));
+    size_t beforeSize = triPatch.size();
     DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, m_SurfaceMeshFaceNormals->getPointer(0), QString("_INTERNAL_USE_ONLY_Patch_Normals"));
+    // if every triangle got removed because of NaN values in the Normals, then bail from this iteration of the loop
+    if(nullptr == patchNormals)
+    {
+      continue;
+    }
+    // If something got removed, redo this part again.
+    if(triPatch.size() != beforeSize)
+    {
+      beforeSize = triPatch.size();
+      patchNormals = extractPatchData(triId, triPatch, m_SurfaceMeshFaceNormals->getPointer(0), QString("_INTERNAL_USE_ONLY_Patch_Normals"));
+    }
+
+    beforeSize = triPatch.size();
+    DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, m_SurfaceMeshTriangleCentroids->getPointer(0), QString("_INTERNAL_USE_ONLY_Patch_Centroids"));
+    // if every triangle got removed because of NaN values in the Normals, then bail from this iteration of the loop
+    if(nullptr == patchCentroids)
+    {
+      continue;
+    }
+    // If something got removed, redo this part again.
+    if(triPatch.size() != beforeSize)
+    {
+      beforeSize = triPatch.size();
+      patchNormals = extractPatchData(triId, triPatch, m_SurfaceMeshFaceNormals->getPointer(0), QString("_INTERNAL_USE_ONLY_Patch_Normals"));
+      patchCentroids = extractPatchData(triId, triPatch, m_SurfaceMeshTriangleCentroids->getPointer(0), QString("_INTERNAL_USE_ONLY_Patch_Centroids"));
+    }
 
     // Translate the patch to the 0,0,0 origin
     double sub[3] = {patchCentroids->getComponent(0, 0), patchCentroids->getComponent(0, 1), patchCentroids->getComponent(0, 2)};
@@ -178,6 +204,10 @@ void CalculateTriangleGroupCurvatures::operator()() const
     {
       ::memcpy(out, patchCentroids->getPointer(m * 3), 3 * sizeof(double));
       MatrixMath::Multiply3x3with3x1(rot, patchCentroids->getPointer(m * 3), out);
+      if(std::isnan(out[0]) || std::isnan(out[1]) || std::isnan(out[2]))
+      {
+        break;
+      }
       ::memcpy(patchCentroids->getPointer(m * 3), out, 3 * sizeof(double));
 
       ::memcpy(out, patchNormals->getPointer(m * 3), 3 * sizeof(double));
@@ -210,7 +240,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
         A(m) = 0.5 * x * x;            // 1/2 x^2
         A(m + rows) = x * y;           // x*y
         A(m + rows * 2) = 0.5 * y * y; // 1/2 y^2
-        if(m_UseNormalsForCurveFitting == true)
+        if(m_UseNormalsForCurveFitting)
         {
           A(m + rows * 3) = x * x * x;
           A(m + rows * 4) = x * x * y;
@@ -222,12 +252,12 @@ void CalculateTriangleGroupCurvatures::operator()() const
 
       Eigen::Matrix2d M;
 
-      if(false == m_UseNormalsForCurveFitting)
+      if(!m_UseNormalsForCurveFitting)
       {
         typedef Eigen::Matrix<double, NO_NORMALS, 1> Vector3d;
         Vector3d sln1 = A.colPivHouseholderQr().solve(b);
         // Now that we have the A, B, C constants we can solve the Eigen value/vector problem
-        // to get the principal curvatures and pricipal directions.
+        // to get the principal curvatures and principal directions.
         M << sln1(0), sln1(1), sln1(1), sln1(2);
       }
       else
@@ -241,10 +271,10 @@ void CalculateTriangleGroupCurvatures::operator()() const
 
       if(computeWeingartenMatrix)
       {
-        m_WeingartenMatrix->setComponent(i, 0, M.coeff(0, 0));
-        m_WeingartenMatrix->setComponent(i, 1, M.coeff(0, 1));
-        m_WeingartenMatrix->setComponent(i, 2, M.coeff(1, 0));
-        m_WeingartenMatrix->setComponent(i, 3, M.coeff(1, 1));
+        m_WeingartenMatrix->setComponent(triId, 0, M.coeff(0, 0));
+        m_WeingartenMatrix->setComponent(triId, 1, M.coeff(0, 1));
+        m_WeingartenMatrix->setComponent(triId, 2, M.coeff(1, 0));
+        m_WeingartenMatrix->setComponent(triId, 3, M.coeff(1, 1));
       }
 
       Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d> eig(M);
@@ -258,16 +288,16 @@ void CalculateTriangleGroupCurvatures::operator()() const
       m_PrincipleCurvature1->setValue(triId, kappa1);
       m_PrincipleCurvature2->setValue(triId, kappa2);
 
-      if(computeGaussian == true)
+      if(computeGaussian)
       {
         m_GaussianCurvature->setValue(triId, kappa1 * kappa2);
       }
-      if(computeMean == true)
+      if(computeMean)
       {
         m_MeanCurvature->setValue(triId, (kappa1 + kappa2) / 2.0);
       }
 
-      if(computeDirection == true)
+      if(computeDirection)
       {
         Eigen::Matrix3d e_rot_T;
         e_rot_T.row(0) = Eigen::Vector3d(up[0], vp[0], np[0]);
@@ -293,6 +323,25 @@ void CalculateTriangleGroupCurvatures::operator()() const
 DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(int64_t triId, UniqueFaceIds_t& triPatch, double* data, const QString& name) const
 {
   std::vector<size_t> cDims(1, 3);
+
+  for(auto iter = triPatch.begin(); iter != triPatch.end();)
+  {
+    int64_t t = *iter;
+
+    if(std::isnan(data[t * 3]) || std::isnan(data[t * 3 + 1]) || std::isnan(data[t * 3 + 2]))
+    {
+      iter = triPatch.erase(iter);
+    }
+    else
+    {
+      ++iter;
+    }
+  }
+
+  if(triPatch.empty())
+  {
+    return DoubleArrayType::NullPointer();
+  }
   DataArray<double>::Pointer extractedData = DataArray<double>::CreateArray(triPatch.size(), cDims, name, true);
   // This little chunk makes sure the current seed triangles centroid and normal data appear
   // first in the returned arrays which makes the next steps a tad easier.
@@ -313,5 +362,6 @@ DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(in
   }
   triPatch.insert(triId);
 
+  extractedData->resizeTuples(triPatch.size()); // Resize the TriPatch DataArray
   return extractedData;
 }
