@@ -422,8 +422,8 @@ void ImportH5EspritData::dataCheckOEM()
   if(getReadPatternData())
   {
     cDims.resize(2);
-    cDims[0] = getPatternDims().at(1);
-    cDims[1] = getPatternDims().at(0);
+    cDims[0] = getPatternDims().at(0);
+    cDims[1] = getPatternDims().at(1);
     if(cDims[0] != 0 && cDims[1] != 0)
     {
       // Again, needing to watch the memory allocation as these EBSD files with Patterns are getting large.
