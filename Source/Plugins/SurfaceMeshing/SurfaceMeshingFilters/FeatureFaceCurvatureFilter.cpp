@@ -373,9 +373,19 @@ void FeatureFaceCurvatureFilter::execute()
 
   m_TotalFeatureFaces = sharedFeatureFaces.size();
   m_CompletedFeatureFaces = 0;
+  QString ss;
 
+/*********************************
+ * We are going to specfically invoke TBB directly instead of using ParallelTaskAlgorithm since we can just queue up all
+ * the tasks while the first tasks start up. TBB will then grab a new task from it's own queue to work on it up to the
+ * number of hardware limit of the machine. If we use ParallelTaskAlgorithm then at most we can only work on the number
+ * of tasks that equal the number of cores on the machine. We spend a lot of overhead spinning up new threads to do each
+ * task. This takes much longer (3x longer) in some cases
+ */
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   std::shared_ptr<tbb::task_group> g(new tbb::task_group);
+  ss = QObject::tr("Adding %1 Feature Faces to the work queue....").arg(maxFaceId);
+  notifyStatusMessage(ss);
 #else
 
 #endif
@@ -384,20 +394,17 @@ void FeatureFaceCurvatureFilter::execute()
 
   for(SharedFeatureFaceIterator_t iter = sharedFeatureFaces.begin(); iter != sharedFeatureFaces.end(); ++iter)
   {
-    QString ss = QObject::tr("Working on Face Id %1/%2").arg((*iter).first).arg(maxFaceId);
-    notifyStatusMessage(ss);
-
     FaceIds_t& triangleIds = (*iter).second;
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(true)
     {
       g->run(CalculateTriangleGroupCurvatures(m_NRing, triangleIds, m_UseNormalsForCurveFitting, m_SurfaceMeshPrincipalCurvature1sPtr.lock(), m_SurfaceMeshPrincipalCurvature2sPtr.lock(),
                                               m_SurfaceMeshPrincipalDirection1sPtr.lock(), m_SurfaceMeshPrincipalDirection2sPtr.lock(), m_SurfaceMeshGaussianCurvaturesPtr.lock(),
                                               m_SurfaceMeshMeanCurvaturesPtr.lock(), m_SurfaceMeshWeingartenMatrixPtr.lock(), triangleGeom, m_SurfaceMeshFaceLabelsPtr.lock(),
                                               m_SurfaceMeshFaceNormalsPtr.lock(), m_SurfaceMeshTriangleCentroidsPtr.lock(), this));
     }
-    else
-#endif
+#else
+    ss = QObject::tr("Working on Face Id %1/%2").arg((*iter).first).arg(maxFaceId);
+    notifyStatusMessage(ss);
     {
       CalculateTriangleGroupCurvatures curvature(m_NRing, triangleIds, m_UseNormalsForCurveFitting, m_SurfaceMeshPrincipalCurvature1sPtr.lock(), m_SurfaceMeshPrincipalCurvature2sPtr.lock(),
                                                  m_SurfaceMeshPrincipalDirection1sPtr.lock(), m_SurfaceMeshPrincipalDirection2sPtr.lock(), m_SurfaceMeshGaussianCurvaturesPtr.lock(),
@@ -405,12 +412,13 @@ void FeatureFaceCurvatureFilter::execute()
                                                  m_SurfaceMeshFaceNormalsPtr.lock(), m_SurfaceMeshTriangleCentroidsPtr.lock(), this);
       curvature();
     }
+#endif
   }
-  // *********************** END END END END END END  ********************************************************************
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+  ss = QObject::tr("Waiting on computations to complete.").arg(maxFaceId);
+  notifyStatusMessage(ss);
   g->wait(); // Wait for all the threads to complete before moving on.
-
 #endif
 }
 

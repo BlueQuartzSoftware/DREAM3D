@@ -314,7 +314,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
         ::memcpy(m_PrincipleDirection2->getPointer(triId * 3), dir2.data(), 3 * sizeof(double));
       }
     }
-  } // End Loop over this triangle
+  } // End Loop over this triangle  
 }
 
 // -----------------------------------------------------------------------------
