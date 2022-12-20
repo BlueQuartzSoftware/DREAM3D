@@ -127,7 +127,8 @@ public:
   {
     for(size_t index = start; index < end; index++)
     {
-      m_PreallocatedIndexMask[index] = m_IDsMask[m_RegionIDs[index]];
+      size_t regionId = m_RegionIDs[index];
+      m_PreallocatedIndexMask[index] = m_IDsMask[regionId];
     }
   }
 
@@ -162,7 +163,7 @@ void RemoveFlaggedTriangles::setupFilterParameters()
   IGeometry::Types geomTypes = {IGeometry::Type::Triangle};
   dcsReq.dcGeometryTypes = geomTypes;
   parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Triangle Geometry", TriangleGeometry, FilterParameter::Category::RequiredArray, RemoveFlaggedTriangles, dcsReq));
-  DataArraySelectionFilterParameter::RequirementType dasReq = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Category::Feature);
+  DataArraySelectionFilterParameter::RequirementType dasReq = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Category::Element);
   parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", MaskArrayPath, FilterParameter::Category::RequiredArray, RemoveFlaggedTriangles, dasReq));
   dasReq = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
   parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Region IDs", RegionIDsArrayPath, FilterParameter::Category::RequiredArray, RemoveFlaggedTriangles, dasReq));
