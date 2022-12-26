@@ -681,9 +681,9 @@ void InitDefaultParameterConstructor()
   s_DefaultConstructorMapping["DataContainerCreationFilterParameter"] = "DataPath{}";
   s_DefaultConstructorMapping["DataContainerSelectionFilterParameter"] = "DataPath{}";
   s_DefaultConstructorMapping["InputFileFilterParameter"] = "fs::path(\"DefaultInputFileName\"), FileSystemPathParameter::ExtensionsType{\"*.*\"}, FileSystemPathParameter::PathType::InputFile";
-  s_DefaultConstructorMapping["InputPathFilterParameter"] = "fs::path(\"<default file to read goes here>\"), FileSystemPathParameter::PathType::InputDir";
-  s_DefaultConstructorMapping["OutputFileFilterParameter"] = "fs::path(\"<default file to read goes here>\"), FileSystemPathParameter::PathType::OutputFile";
-  s_DefaultConstructorMapping["OutputPathFilterParameter"] = "fs::path(\"<default file to read goes here>\"), FileSystemPathParameter::PathType::OutputDir";
+  s_DefaultConstructorMapping["InputPathFilterParameter"] = "fs::path(\"<default file to read goes here>\"), FileSystemPathParameter::ExtensionsType{}, FileSystemPathParameter::PathType::InputDir";
+  s_DefaultConstructorMapping["OutputFileFilterParameter"] = "fs::path(\"<default file to read goes here>\"), FileSystemPathParameter::ExtensionsType{}, FileSystemPathParameter::PathType::OutputFile";
+  s_DefaultConstructorMapping["OutputPathFilterParameter"] = "fs::path(\"<default file to read goes here>\"), FileSystemPathParameter::ExtensionsType{}, FileSystemPathParameter::PathType::OutputDir";
   s_DefaultConstructorMapping["FileListInfoFilterParameter"] = "GeneratedFileListParameter::ValueType{}";
   s_DefaultConstructorMapping["FloatFilterParameter"] = "1.23345f";
   s_DefaultConstructorMapping["IntFilterParameter"] = "1234356";
