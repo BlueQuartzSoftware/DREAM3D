@@ -29,6 +29,8 @@ Details on the misorientation sampling approach can be found in the following pa
 
 Crystallographic point groups are identified by an integer from 1 to 32 according to the International Tables for Crystallography (Volume A). The valid numbers, along with the corresponding Hermann-Mauguin point group symbols (HM Sym), are listed here, along with the point group symbol between double quotation marks, the corresponding rotation group and its order M (in bold face):
 
+[Table adapted from http://pd.chem.ucl.ac.uk/pdnn/symm2/group32.htm](http://pd.chem.ucl.ac.uk/pdnn/symm2/group32.htm)
+
 | Laue Group | ID,HM Sym,Rot.Grp(Order) | ID,HM Sym,Rot.Grp(Order) | ID,HM Sym,Rot.Grp(Order) | ID,HM Sym,Rot.Grp(Order) | ID,HM Sym,Rot.Grp(Order) | ID,HM Sym,Rot.Grp(Order) | ID,HM Sym,Rot.Grp(Order) |
 |------|------|------|------|------|------|------|------|
 | Triclinic | [1], "1", **1(1)** | [2], "-1", **1(1)** | | | | | |
@@ -37,7 +39,24 @@ Crystallographic point groups are identified by an integer from 1 to 32 accordin
 | Tetragonal | [9], "4" , **4(4)** | [10], "-4", **4(4)**  | [11], "4/m", **4(4)** | [12], "422", **422(8)** | [13], "4mm", **422(8)** | [14], "-42m", **422(8)** | [15], "4/mmm", **422(8)** |
 | Trigonal | [16], "3", **3(3)** | [17], "-3", **3(3)** | [18], "32", **32(6)** | [19],  "3m" , **32(6)** | [20], "-3m", **32(6)** | | |
 | Hexagonal  | [21], "6", **6(6)** | [22], "-6" , **6(6)** | [23], "6/m", **6(6)** | [24], "622", **622(12)** | [25], "6mm", **622(12)** | [26], "-6m2", **622(12)**  | [27], "6/mmm", **622(12)** |
-| Cubic | [28], "23", **23(12)**| [29], "m3", **23(12)** | [30], "432", **432(24)** | [31], "-43m", **432(24)** | [32], "m-3m", **432(24)** | | | |
+| Cubic | [28], "23", **23(12)**| [29], "m-3", **23(12)** | [30], "432", **432(24)** | [31], "-43m", **432(24)** | [32], "m-3m", **432(24)** | | | |
+
+
+
+| EbsdLib Laue Group | EbsdLib Laue Group Name | HM Sym | Point Group |
+|---|---|---|---|
+| 0 | Hexagonal_High | 6/mmm | 27 |
+| 1 | Cubic_High | m-3m | 32 |
+| 2 | Hexagonal_Low | 6/m | 23 |
+| 3 | Cubic_Low | m-3 | 29 |
+| 4 | Triclinic | -1 | 2 |
+| 5 | Monoclinic | 2/m | 5 |
+| 6 | OrthoRhombic | mmm | 8 |
+| 7 | Tetragonal_Low | 4/m | 11 |
+| 8 | Tetragonal_High | 4/mmm | 15 |
+| 9 | Trigonal_Low | -3 | 17 |
+| 10 | Trigonal_High | -3m | 20 |
+
 
 ## Number of grid points ##
 
