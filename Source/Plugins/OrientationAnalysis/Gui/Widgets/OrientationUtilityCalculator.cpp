@@ -39,14 +39,6 @@
 
 using InputType = OrientationConverter<double>::OrientationType;
 
-#include "AxisAngleWidget.h"
-#include "CubochoricWidget.h"
-#include "EulerWidget.h"
-#include "HomochoricWidget.h"
-#include "OmWidget.h"
-#include "QuatWidget.h"
-#include "RodriguesWidget.h"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -69,7 +61,7 @@ OrientationUtilityCalculator::~OrientationUtilityCalculator() = default;
 void OrientationUtilityCalculator::setDataAndInputType(QVector<double> values, int32_t inputType, bool hasErrors)
 {
   m_InputData = values;
-  m_InputType =inputType;
+  m_InputType = static_cast<OrientationConverter<double>::OrientationType>(inputType);
   m_HasErrors = hasErrors;
   Q_EMIT calculatorReady(this);
 }

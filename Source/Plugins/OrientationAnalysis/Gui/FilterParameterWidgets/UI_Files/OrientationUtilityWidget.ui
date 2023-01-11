@@ -169,7 +169,7 @@
     <widget class="RodriguesWidget" name="rodriguesWidget" native="true"/>
    </item>
    <item row="1" column="1" colspan="3">
-    <widget class="AxisAngleWidget" name="axisAngleWidget" native="true"/>
+    <widget class="AxisAngleCalcWidget" name="axisAngleWidget" native="true"/>
    </item>
    <item row="9" column="1" colspan="4">
     <widget class="QLabel" name="label">
@@ -187,7 +187,7 @@
       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.Helvetica Neue DeskInterface'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Arial'; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
@@ -198,43 +198,43 @@ p, li { white-space: pre-wrap; }
   <customwidget>
    <class>EulerWidget</class>
    <extends>QWidget</extends>
-   <header location="global">EulerWidget.h</header>
+   <header location="global">Widgets/EulerWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>AxisAngleWidget</class>
+   <class>AxisAngleCalcWidget</class>
    <extends>QWidget</extends>
-   <header location="global">AxisAngleWidget.h</header>
+   <header location="global">Widgets/AxisAngleCalcWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>CubochoricWidget</class>
    <extends>QWidget</extends>
-   <header location="global">CubochoricWidget.h</header>
+   <header location="global">Widgets/CubochoricWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>HomochoricWidget</class>
    <extends>QWidget</extends>
-   <header location="global">HomochoricWidget.h</header>
+   <header location="global">Widgets/HomochoricWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>OmWidget</class>
    <extends>QWidget</extends>
-   <header location="global">OmWidget.h</header>
+   <header location="global">Widgets/OmWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>QuatWidget</class>
    <extends>QWidget</extends>
-   <header location="global">QuatWidget.h</header>
+   <header location="global">Widgets/QuatWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>RodriguesWidget</class>
    <extends>QWidget</extends>
-   <header location="global">RodriguesWidget.h</header>
+   <header location="global">Widgets/RodriguesWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

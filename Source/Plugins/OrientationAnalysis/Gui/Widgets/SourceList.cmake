@@ -11,7 +11,7 @@ set(DREAM3D_WIDGETS
     EulerWidget
     QuatWidget
     OmWidget
-    AxisAngleWidget
+    AxisAngleCalcWidget
     RodriguesWidget
     HomochoricWidget
     CubochoricWidget

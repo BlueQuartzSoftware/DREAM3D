@@ -43,6 +43,8 @@
 
 #include "OrientationUtilityCalculator.h"
 
+#include <cmath>
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -117,6 +119,14 @@ void QuatWidget::valuesUpdated(const QString& text)
 
   QuatD quat = QuaternionMathD::New(values[0], values[1], values[2], values[3]);
   QuaternionMathD::UnitQuaternion(quat);
+
+  if(std::isnan(quat.x) || std::isnan(quat.y) || std::isnan(quat.z) || std::isnan(quat.w))
+  {
+    Q_EMIT valuesChanged(QVector<double>(), OrientationConverter<double>::Quaternion, true);
+    Q_EMIT invalidValues(-5, "Unit Quaternion is invalid");
+    return;
+  }
+
   values[0] = quat.x;
   values[1] = quat.y;
   values[2] = quat.z;

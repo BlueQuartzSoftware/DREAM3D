@@ -46,7 +46,7 @@ CMP_AddDefinitions(TARGET ${plug_gui_target_name})
 # 
 target_include_directories(${plug_gui_target_name}
                           PUBLIC
-                            ${${PLUGIN_NAME}_SOURCE_DIR}/Gui/Widgets
+                            ${${PLUGIN_NAME}_SOURCE_DIR}/Gui
                             ${${PLUGIN_NAME}_SOURCE_DIR}/Gui/FilterParameterWidgets
                             ${${PLUGIN_NAME}_BINARY_DIR}/Gui/Widgets
                             ${${PLUGIN_NAME}_BINARY_DIR}/Gui/FilterParameterWidgets

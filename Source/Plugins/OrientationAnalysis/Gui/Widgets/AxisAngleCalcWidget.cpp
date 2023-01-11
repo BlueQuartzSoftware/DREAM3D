@@ -33,7 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "AxisAngleWidget.h"
+#include "AxisAngleCalcWidget.h"
 
 #include <QtGui/QDoubleValidator>
 
@@ -49,7 +49,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AxisAngleWidget::AxisAngleWidget(QWidget* parent)
+AxisAngleCalcWidget::AxisAngleCalcWidget(QWidget* parent)
 : OrientationWidget(parent)
 {
   setupUi(this);
@@ -60,12 +60,12 @@ AxisAngleWidget::AxisAngleWidget(QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AxisAngleWidget::~AxisAngleWidget() = default;
+AxisAngleCalcWidget::~AxisAngleCalcWidget() = default;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxisAngleWidget::setupGui()
+void AxisAngleCalcWidget::setupGui()
 {
   aa1->setValidator(new QDoubleValidator(aa1));
   aa2->setValidator(new QDoubleValidator(aa2));
@@ -81,7 +81,7 @@ void AxisAngleWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxisAngleWidget::updateData(OrientationUtilityCalculator* calculator)
+void AxisAngleCalcWidget::updateData(OrientationUtilityCalculator* calculator)
 {
   setStyleSheet("");
 
@@ -118,7 +118,7 @@ void AxisAngleWidget::updateData(OrientationUtilityCalculator* calculator)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxisAngleWidget::valuesUpdated(const QString& text)
+void AxisAngleCalcWidget::valuesUpdated(const QString& text)
 {
   QVector<double> values = getValues();
 
@@ -167,7 +167,7 @@ void AxisAngleWidget::valuesUpdated(const QString& text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxisAngleWidget::convertData(bool isDegrees)
+void AxisAngleCalcWidget::convertData(bool isDegrees)
 {
   QVector<double> values = getValues();
   double value = values[3];
@@ -187,7 +187,7 @@ void AxisAngleWidget::convertData(bool isDegrees)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<double> AxisAngleWidget::getValues()
+QVector<double> AxisAngleCalcWidget::getValues()
 {
   QVector<double> values;
 

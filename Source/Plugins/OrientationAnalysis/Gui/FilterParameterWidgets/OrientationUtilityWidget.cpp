@@ -35,7 +35,7 @@
 
 #include "OrientationUtilityWidget.h"
 
-#include "OrientationUtilityCalculator.h"
+#include "Gui/Widgets/OrientationUtilityCalculator.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -75,8 +75,7 @@ void OrientationUtilityWidget::setupGui()
   {
     OrientationWidget* widget = m_OrientationWidgets[i];
 
-    connect(widget, SIGNAL(valuesChanged(QVector<double>, OrientationConverter<double>::OrientationType, bool)), m_Calculator,
-            SLOT(setDataAndInputType(QVector<double>, OrientationConverter<double>::OrientationType, bool)));
+    connect(widget, SIGNAL(valuesChanged(QVector<double>, int32_t, bool)), m_Calculator, SLOT(setDataAndInputType(QVector<double>, int32_t, bool)));
     connect(widget, SIGNAL(invalidValues(int, QString)), this, SLOT(setErrorEntry(int, QString)));
     connect(widget, SIGNAL(clearErrorTable()), this, SLOT(clearErrorTable()));
     connect(m_Calculator, SIGNAL(calculatorReady(OrientationUtilityCalculator*)), widget, SLOT(updateData(OrientationUtilityCalculator*)));

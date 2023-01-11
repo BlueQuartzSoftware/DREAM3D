@@ -37,15 +37,15 @@
 
 #include "OrientationWidget.h"
 
-#include "ui_AxisAngleWidget.h"
+#include "ui_AxisAngleCalcWidget.h"
 
-class AxisAngleWidget : public OrientationWidget, private Ui::AxisAngleWidget
+class AxisAngleCalcWidget : public OrientationWidget, private Ui::AxisAngleCalcWidget
 {
   Q_OBJECT
 
 public:
-  AxisAngleWidget(QWidget* parent = nullptr);
-  virtual ~AxisAngleWidget();
+  AxisAngleCalcWidget(QWidget* parent = nullptr);
+  virtual ~AxisAngleCalcWidget();
 
 protected Q_SLOTS:
   void convertData(bool isDegrees);
@@ -59,9 +59,9 @@ private:
   QVector<double> getValues();
 
 public:
-  AxisAngleWidget(const AxisAngleWidget&) = delete; // Copy Constructor Not Implemented
-  AxisAngleWidget(AxisAngleWidget&&) = delete;      // Move Constructor Not Implemented
-  AxisAngleWidget& operator=(const AxisAngleWidget&) = delete; // Copy Assignment Not Implemented
-  AxisAngleWidget& operator=(AxisAngleWidget&&) = delete;      // Move Assignment Not Implemented
+  AxisAngleCalcWidget(const AxisAngleCalcWidget&) = delete; // Copy Constructor Not Implemented
+  AxisAngleCalcWidget(AxisAngleCalcWidget&&) = delete;      // Move Constructor Not Implemented
+  AxisAngleCalcWidget& operator=(const AxisAngleCalcWidget&) = delete; // Copy Assignment Not Implemented
+  AxisAngleCalcWidget& operator=(AxisAngleCalcWidget&&) = delete;      // Move Assignment Not Implemented
 };
 
