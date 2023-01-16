@@ -1,14 +1,14 @@
 ## Prebuilt Binaries ##
 
-The current version is 6.5.167 and is available in prebuilt binaries for MacOS, Windows and Linux operating systems:
+The current version is 6.5.168 and is available in prebuilt binaries for MacOS, Windows and Linux operating systems:
 
 | Operating System | Notes |
 |------------------|----------------------|
-| [MacOS - DREAM3D-6.5.167-OSX.dmg](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.167-OSX.dmg) | MacOS 10.15 and greater required, including macOS 11/12/13. Download is a Disk Image |
-| [MacOS - DREAM3D-6.5.167-OSX.zip](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.167-OSX.zip) | MacOS 10.15 and greater required, including macOS 11/12/13. Download is a Zip file |
-| [MacOS - DREAM3D-6.5.167-OSX-arm64.dmg](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.167-OSX-arm64.dmg) | Apple M1 Arm build. Download is a DMG File |
-| [Windows - DREAM3D-6.5.167-Win64.zip](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.167-Win64.zip) | Windows version 8 or 10 |
-| [Linux - DREAM3D-6.5.167-Linux-x86_64.tar.gz](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.167-Linux-x86_64.tar.gz) | Ubuntu 18.04 or Equivelant. Self contained tar archive.  |
+| [MacOS - DREAM3D-6.5.168-OSX.dmg](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.168-OSX.dmg) | MacOS 10.15 and greater required, including macOS 11/12/13. Download is a Disk Image |
+| [MacOS - DREAM3D-6.5.168-OSX.zip](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.168-OSX.zip) | MacOS 10.15 and greater required, including macOS 11/12/13. Download is a Zip file |
+| [MacOS - DREAM3D-6.5.168-OSX-arm64.dmg](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.168-OSX-arm64.dmg) | Apple M1 Arm build. Download is a DMG File |
+| [Windows - DREAM3D-6.5.168-Win64.zip](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.168-Win64.zip) | Windows version 8 or 10 |
+| [Linux - DREAM3D-6.5.168-Linux-x86_64.tar.gz](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.168-Linux-x86_64.tar.gz) | Ubuntu 18.04 or Equivelant. Self contained tar archive.  |
 
 
 ## Nightly Builds ##

@@ -16,16 +16,16 @@ DREAM.3D is completely open source and free for anyone to use whether that is in
 
 ## Prebuilt Binaries ##
 
-The current version is 6.5.167 and is available in prebuilt binaries for MacOS, Windows and Linux operating systems:
+The current version is 6.5.168 and is available in prebuilt binaries for MacOS, Windows and Linux operating systems:
 
 | Operating System | Notes |
 |------------------|----------------------|
-| Signed [MacOS - DREAM3D-6.5.167-OSX-x86_64.dmg](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.167-OSX-x86_64.dmg) | MacOS 10.15 and greater required, including macOS 11.0. Download is a Disk Image |
-| Unsigned [MacOS - DREAM3D-6.5.167-OSX-x86_64.zip](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.167-OSX-x86_64.zip) | MacOS 10.15 and greater required, including macOS 11.0. Download is a Zip file |
-| Signed [MacOS - DREAM3D-6.5.167-OSX-arm64.dmg](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.167-OSX-arm64.dmg) | Apple M1 Arm build. Download is a DMG File |
-| Unsigned [MacOS - DREAM3D-6.5.167-OSX-arm64.dmg](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.167-OSX-arm64.dmg) | Apple M1 Arm build. Download is a ZIP File |
-| [Windows - DREAM3D-6.5.167-Win64.zip](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.167-Win64.zip) | Windows version 8,10,11 |
-| [Linux - DREAM3D-6.5.167-Linux-x86_64.tar.gz](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.167-Linux-x86_64.tar.gz) | Ubuntu 18.04 or Equivelant. Self contained tar archive.  |
+| Signed [MacOS - DREAM3D-6.5.168-OSX-x86_64.dmg](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.168-OSX-x86_64.dmg) | MacOS 10.15 and greater required, including macOS 11.0. Download is a Disk Image |
+| Unsigned [MacOS - DREAM3D-6.5.168-OSX-x86_64.zip](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.168-OSX-x86_64.zip) | MacOS 10.15 and greater required, including macOS 11.0. Download is a Zip file |
+| Signed [MacOS - DREAM3D-6.5.168-OSX-arm64.dmg](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.168-OSX-arm64.dmg) | Apple M1 Arm build. Download is a DMG File |
+| Unsigned [MacOS - DREAM3D-6.5.168-OSX-arm64.dmg](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.168-OSX-arm64.dmg) | Apple M1 Arm build. Download is a ZIP File |
+| [Windows - DREAM3D-6.5.168-Win64.zip](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.168-Win64.zip) | Windows version 8,10,11 |
+| [Linux - DREAM3D-6.5.168-Linux-x86_64.tar.gz](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.168-Linux-x86_64.tar.gz) | Ubuntu 18.04 or Equivelant. Self contained tar archive.  |
 
 
 ## Nightly Builds ##
