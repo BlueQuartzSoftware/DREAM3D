@@ -35,16 +35,17 @@
 
 #include "CalculateTriangleGroupCurvatures.h"
 
+#include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Math/MatrixMath.h"
+#include "SurfaceMeshing/SurfaceMeshingFilters/FeatureFaceCurvatureFilter.h"
+#include "SurfaceMeshing/SurfaceMeshingFilters/FindNRingNeighbors.h"
+
+#include <Eigen/Dense>
+
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/task.h>
 #include <tbb/task_group.h>
 #endif
-
-#include <Eigen/Dense>
-
-#include "SIMPLib/Geometry/TriangleGeom.h"
-#include "SIMPLib/Math/MatrixMath.h"
-#include "SurfaceMeshing/SurfaceMeshingFilters/FindNRingNeighbors.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -53,7 +54,8 @@ CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int64_t nring
                                                                    DoubleArrayType::Pointer principleCurvature2, DoubleArrayType::Pointer principleDirection1,
                                                                    DoubleArrayType::Pointer principleDirection2, DoubleArrayType::Pointer gaussianCurvature, DoubleArrayType::Pointer meanCurvature,
                                                                    DoubleArrayType::Pointer weingartenMatrix, TriangleGeom::Pointer trianglesGeom, DataArray<int32_t>::Pointer surfaceMeshFaceLabels,
-                                                                   DataArray<double>::Pointer surfaceMeshFaceNormals, DataArray<double>::Pointer surfaceMeshTriangleCentroids, AbstractFilter* parent)
+                                                                   DataArray<double>::Pointer surfaceMeshFaceNormals, DataArray<double>::Pointer surfaceMeshTriangleCentroids,
+                                                                   FeatureFaceCurvatureFilter* parent)
 : m_NRing(nring)
 , m_TriangleIds(triangleIds)
 , m_UseNormalsForCurveFitting(useNormalsForCurveFitting)
@@ -314,7 +316,11 @@ void CalculateTriangleGroupCurvatures::operator()() const
         ::memcpy(m_PrincipleDirection2->getPointer(triId * 3), dir2.data(), 3 * sizeof(double));
       }
     }
-  } // End Loop over this triangle  
+
+  } // End Loop over this triangle
+
+  // Send some feedback
+  m_ParentFilter->sendThreadSafeProgressMessage(m_TriangleIds.size(), tCount);
 }
 
 // -----------------------------------------------------------------------------
@@ -322,7 +328,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
 // -----------------------------------------------------------------------------
 DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(int64_t triId, UniqueFaceIds_t& triPatch, double* data, const QString& name) const
 {
-  std::vector<size_t> cDims(1, 3);
+  std::vector<size_t> cDims = {3ULL};
 
   for(auto iter = triPatch.begin(); iter != triPatch.end();)
   {
@@ -331,6 +337,10 @@ DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(in
     if(std::isnan(data[t * 3]) || std::isnan(data[t * 3 + 1]) || std::isnan(data[t * 3 + 2]))
     {
       iter = triPatch.erase(iter);
+      if(*iter == triId)
+      {
+        triId = *(triPatch.begin());
+      }
     }
     else
     {
@@ -342,7 +352,14 @@ DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(in
   {
     return DoubleArrayType::NullPointer();
   }
-  DataArray<double>::Pointer extractedData = DataArray<double>::CreateArray(triPatch.size(), cDims, name, true);
+
+  size_t totalTuples = triPatch.size();
+  if(triPatch.count(triId) == 0)
+  {
+    totalTuples++;
+  }
+
+  DataArray<double>::Pointer extractedData = DataArray<double>::CreateArray(totalTuples, cDims, name, true);
   // This little chunk makes sure the current seed triangles centroid and normal data appear
   // first in the returned arrays which makes the next steps a tad easier.
   int32_t i = 0;
@@ -355,9 +372,7 @@ DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(in
   for(UniqueFaceIds_t::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
   {
     int64_t t = *iter;
-    extractedData->setComponent(i, 0, data[t * 3]);
-    extractedData->setComponent(i, 1, data[t * 3 + 1]);
-    extractedData->setComponent(i, 2, data[t * 3 + 2]);
+    extractedData->setTuple(i, data + (t * 3));
     ++i;
   }
   triPatch.insert(triId);

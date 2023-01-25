@@ -16,6 +16,8 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 #### SIMPL Changes ###
 
+Place newest Commits at the top of this list
+
 + Fix crash inside of Insert Atoms.	MicroClue <whsiao1995@hotmail.com>
 + Added LinkedPathCreationFilterParameter
 + Updated IGeometry API
@@ -72,6 +74,8 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 Place newest Commits at the top of this list
 
++ Fixed crash in FindFeatureFaceCurvatureFilter
++ Added option to save the Weingarten Matrix from FindFeatureFaceCurvatureFilter
 + FeatureInfoReader: Allowed AM Types were never set for the Element Attribute Matrix
 + Fix sanity check for feature Ids greater than num tuples in a feature attribute matrix
 + ResampleImageFilter: Remove strict dependency on TBB.

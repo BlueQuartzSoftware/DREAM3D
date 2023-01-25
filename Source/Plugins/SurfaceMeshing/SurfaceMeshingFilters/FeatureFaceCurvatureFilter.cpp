@@ -50,6 +50,8 @@
 
 #include "CalculateTriangleGroupCurvatures.h"
 
+#include <mutex>
+
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/task.h>
 #include <tbb/task_group.h>
@@ -373,6 +375,7 @@ void FeatureFaceCurvatureFilter::execute()
 
   m_TotalFeatureFaces = sharedFeatureFaces.size();
   m_CompletedFeatureFaces = 0;
+  m_TotalTriangles = numTriangles;
   QString ss;
 
 /*********************************
@@ -391,7 +394,6 @@ void FeatureFaceCurvatureFilter::execute()
 #endif
   // typedef here for conveneince
   typedef SharedFeatureFaces_t::iterator SharedFeatureFaceIterator_t;
-
   for(SharedFeatureFaceIterator_t iter = sharedFeatureFaces.begin(); iter != sharedFeatureFaces.end(); ++iter)
   {
     FaceIds_t& triangleIds = (*iter).second;
@@ -416,7 +418,7 @@ void FeatureFaceCurvatureFilter::execute()
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  ss = QObject::tr("Waiting on computations to complete.").arg(maxFaceId);
+  ss = QObject::tr("Waiting on computations to complete.");
   notifyStatusMessage(ss);
   g->wait(); // Wait for all the threads to complete before moving on.
 #endif
@@ -425,16 +427,42 @@ void FeatureFaceCurvatureFilter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-void FeatureFaceCurvatureFilter::tbbTaskProgress()
+void FeatureFaceCurvatureFilter::sendThreadSafeProgressMessage(size_t numCompleted, size_t totalFeatures)
 {
+  static std::mutex mutex;
+  std::lock_guard<std::mutex> lock(mutex);
+  qint64 currentMillis = QDateTime::currentMSecsSinceEpoch();
+  setTotalCompleted(getTotalCompleted() + numCompleted);
   m_CompletedFeatureFaces++;
-
-  QString ss = QObject::tr("%1/%2 Complete").arg(m_CompletedFeatureFaces).arg(m_TotalFeatureFaces);
-  notifyStatusMessage(ss);
+  if(currentMillis - getMillis() > 1000)
+  {
+    // auto percentage = static_cast<int>(100 * (static_cast<float>(getTotalCompleted()) / static_cast<float>(totalFeatures)));
+    QString ss = QObject::tr("Features Completed: %1/%2  Triangles Visited: %3/%4").arg(m_CompletedFeatureFaces).arg(m_TotalFeatureFaces).arg(getTotalCompleted()).arg(m_TotalTriangles);
+    notifyStatusMessage(ss);
+    setMillis(QDateTime::currentMSecsSinceEpoch());
+  }
 }
 
-#endif
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setMillis(const qint64 value)
+{
+  m_Millis = value;
+}
+// -----------------------------------------------------------------------------
+qint64 FeatureFaceCurvatureFilter::getMillis() const
+{
+  return m_Millis;
+}
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setTotalCompleted(const size_t value)
+{
+  m_TotalCompleted = value;
+}
+// -----------------------------------------------------------------------------
+size_t FeatureFaceCurvatureFilter::getTotalCompleted() const
+{
+  return m_TotalCompleted;
+}
 
 // -----------------------------------------------------------------------------
 //

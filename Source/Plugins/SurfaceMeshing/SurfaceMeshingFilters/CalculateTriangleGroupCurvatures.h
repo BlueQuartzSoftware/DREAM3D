@@ -42,6 +42,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
+class FeatureFaceCurvatureFilter;
+
 /**
  * @brief The CalculateTriangleGroupCurvatures class calculates the curvature values for a group of triangles
  * where each triangle in the group will have the 2 Principal Curvature values computed and optionally
@@ -54,7 +56,7 @@ public:
                                    DoubleArrayType::Pointer principleCurvature2, DoubleArrayType::Pointer principleDirection1, DoubleArrayType::Pointer principleDirection2,
                                    DoubleArrayType::Pointer gaussianCurvature, DoubleArrayType::Pointer meanCurvature, DoubleArrayType::Pointer weingartenMatrix, TriangleGeom::Pointer trianglesGeom,
                                    DataArray<int32_t>::Pointer surfaceMeshFaceLabels, DataArray<double>::Pointer surfaceMeshFaceNormals, DataArray<double>::Pointer surfaceMeshTriangleCentroids,
-                                   AbstractFilter* parent);
+                                   FeatureFaceCurvatureFilter* parent);
 
   virtual ~CalculateTriangleGroupCurvatures();
 
@@ -90,5 +92,5 @@ private:
   DataArray<int32_t>::Pointer m_SurfaceMeshFaceLabels;
   DataArray<double>::Pointer m_SurfaceMeshFaceNormals;
   DataArray<double>::Pointer m_SurfaceMeshTriangleCentroids;
-  AbstractFilter* m_ParentFilter;
+  FeatureFaceCurvatureFilter* m_ParentFilter;
 };

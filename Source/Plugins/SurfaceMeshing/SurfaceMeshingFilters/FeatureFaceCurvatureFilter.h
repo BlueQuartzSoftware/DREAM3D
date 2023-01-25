@@ -45,6 +45,8 @@
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
+#include <QtCore/QDateTime>
+
 /**
  * @brief The FeatureFaceCurvatureFilter class. See [Filter documentation](@ref featurefacecurvaturefilter) for details.
  */
@@ -368,9 +370,31 @@ public:
    */
   void execute() override;
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  virtual void tbbTaskProgress();
-#endif
+  /**
+   * @brief Used to send progress messages to this filter from the processing threads
+  */
+  void sendThreadSafeProgressMessage(size_t numCompleted, size_t totalFeatures);
+
+  /**
+   * @brief Gets the Filter Parameter value for TotalCompleted
+   * @param The value for TotalCompleted
+   */
+  void setTotalCompleted(size_t value);
+  /**
+   * @brief Gets the Filter Parameter value for TotalCompleted
+   * @return The value for TotalCompleted
+   */
+  size_t getTotalCompleted() const;
+  /**
+   * @brief Sets the value for Filter Parameter for Millis
+   * @param value The new value to use.
+   */
+  void setMillis(qint64 value);
+  /**
+   * @brief Gets the Filter Parameter value for Millis
+   * @return The value for Millis
+   */
+  qint64 getMillis() const;
 
 protected:
   FeatureFaceCurvatureFilter();
@@ -432,6 +456,10 @@ private:
   int32_t* m_SurfaceMeshFaceEdges;
   int32_t m_TotalFeatureFaces;
   int32_t m_CompletedFeatureFaces;
+  int32_t m_TotalTriangles;
+
+  qint64 m_Millis = QDateTime::currentMSecsSinceEpoch();
+  size_t m_TotalCompleted = 0;
 
 public:
   FeatureFaceCurvatureFilter(const FeatureFaceCurvatureFilter&) = delete;            // Copy Constructor Not Implemented
