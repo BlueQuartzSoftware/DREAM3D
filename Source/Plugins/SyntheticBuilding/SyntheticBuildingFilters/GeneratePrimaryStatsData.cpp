@@ -215,8 +215,8 @@ void GeneratePrimaryStatsData::dataCheck()
 
   initialize();
 
-  FLOAT_RANGE_CHECK(Mu, 0.0001, 10.0, -95000);
-  FLOAT_RANGE_CHECK(Sigma, 0.0, 5.0, -95001);
+  FLOAT_RANGE_CHECK(Mu, -10.0, 10.0, -95000);
+  FLOAT_RANGE_CHECK(Sigma, 0.0, 10.0, -95001);
   FLOAT_RANGE_CHECK(MinCutOff, 0, 1000000, -95002)
   FLOAT_RANGE_CHECK(MaxCutOff, 0, 1000000, -95003)
 
@@ -329,7 +329,10 @@ void GeneratePrimaryStatsData::dataCheck()
     m_PhaseNames = phaseNames.get();
 
     setPhaseIndex(tDims[0] - 1); // If we are creating the StatsDataArray then we are the first phase
-    phaseNames->setValue(m_PhaseIndex, m_PhaseName);
+    if(!getInPreflight())
+    {
+      phaseNames->setValue(m_PhaseIndex, m_PhaseName);
+    }
   }
 
   // If all goes well, then calculate the number of bins to display back on the user interface.
