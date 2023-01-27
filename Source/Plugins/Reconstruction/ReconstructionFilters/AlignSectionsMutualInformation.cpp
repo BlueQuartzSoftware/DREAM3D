@@ -469,37 +469,22 @@ void AlignSectionsMutualInformation::form_features_sections()
     float prog = ((float)slice / dims[2]) * 100;
     QString ss = QObject::tr("Aligning Sections || Identifying Features on Sections || %1% Complete").arg(QString::number(prog, 'f', 0));
     notifyStatusMessage(ss);
+
+    int64_t startPoint = slice * dims[0] * dims[1];
+    int64_t endPoint = (slice + 1) * dims[0] * dims[1];
+    int64_t currentStartPoint = startPoint;
+
     featurecount = 1;
     noseeds = false;
     while(!noseeds)
     {
       seed = -1;
-      randx = static_cast<int64_t>(float(rg.genrand_res53()) * float(dims[0]));
-      randy = static_cast<int64_t>(float(rg.genrand_res53()) * float(dims[1]));
-      for(int64_t j = 0; j < dims[1]; ++j)
+      for(int64_t point = currentStartPoint; point < endPoint; point++)
       {
-        for(int64_t i = 0; i < dims[0]; ++i)
+        if((!m_UseGoodVoxels || (m_GoodVoxels != nullptr && m_GoodVoxels[point])) && miFeatureIds[point] == 0 && m_CellPhases[point] > 0)
         {
-          x = randx + i;
-          y = randy + j;
-          z = slice;
-          if(x > dims[0] - 1)
-          {
-            x = x - dims[0];
-          }
-          if(y > dims[1] - 1)
-          {
-            y = y - dims[1];
-          }
-          point = (z * dims[0] * dims[1]) + (y * dims[0]) + x;
-          if((!m_UseGoodVoxels || m_GoodVoxels[point]) && miFeatureIds[point] == 0 && m_CellPhases[point] > 0)
-          {
-            seed = point;
-          }
-          if(seed > -1)
-          {
-            break;
-          }
+          seed = point;
+          currentStartPoint = point;
         }
         if(seed > -1)
         {
@@ -527,25 +512,24 @@ void AlignSectionsMutualInformation::form_features_sections()
           phase1 = m_CrystalStructures[m_CellPhases[currentpoint]];
           for(int32_t i = 0; i < 4; i++)
           {
-            good = true;
             neighbor = currentpoint + neighpoints[i];
             if((i == 0) && row == 0)
             {
-              good = false;
+              continue;
             }
             if((i == 3) && row == (dims[1] - 1))
             {
-              good = false;
+              continue;
             }
             if((i == 1) && col == 0)
             {
-              good = false;
+              continue;
             }
             if((i == 2) && col == (dims[0] - 1))
             {
-              good = false;
+              continue;
             }
-            if(good && miFeatureIds[neighbor] <= 0 && m_CellPhases[neighbor] > 0)
+            if(miFeatureIds[neighbor] <= 0 && m_CellPhases[neighbor] > 0)
             {
               w = std::numeric_limits<float>::max();
               currentQuatPtr = quats->getTuplePointer(neighbor);
@@ -566,9 +550,9 @@ void AlignSectionsMutualInformation::form_features_sections()
                 {
                   size = voxelslist.size();
                   voxelslist.resize(size + initialVoxelsListSize);
-                  for(std::vector<int64_t>::size_type v = size; v < voxelslist.size(); ++v)
+                  for(auto& voxelValue : voxelslist)
                   {
-                    voxelslist[v] = -1;
+                    voxelValue = -1;
                   }
                 }
               }
