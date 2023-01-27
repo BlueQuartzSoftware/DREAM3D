@@ -550,9 +550,9 @@ void AlignSectionsMutualInformation::form_features_sections()
                 {
                   size = voxelslist.size();
                   voxelslist.resize(size + initialVoxelsListSize);
-                  for(auto& voxelValue : voxelslist)
+                  for(std::vector<int64_t>::size_type v = size; v < voxelslist.size(); ++v)
                   {
-                    voxelValue = -1;
+                    voxelslist[v] = -1;
                   }
                 }
               }
