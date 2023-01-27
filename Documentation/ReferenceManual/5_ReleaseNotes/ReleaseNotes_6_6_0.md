@@ -74,7 +74,9 @@ Place newest Commits at the top of this list
 
 Place newest Commits at the top of this list
 
-+ Fixed crash in FindFeatureFaceCurvatureFilter
++ Adjusted segmentation algorithm in AlignSectionsMutualInformation to remove the random seed value generation. We just start in the 0,0 position and start looking for a viable voxel.
++ Fixed issue validating mu values in `GeneratePrimaryStatsData` filter
++ Fixed crash if user changes phase name in `GeneratePrimaryStatsData` filter
 + Added option to save the Weingarten Matrix from FindFeatureFaceCurvatureFilter
 + FeatureInfoReader: Allowed AM Types were never set for the Element Attribute Matrix
 + Fix sanity check for feature Ids greater than num tuples in a feature attribute matrix
