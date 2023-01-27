@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "AlignSectionsMutualInformation.h"
 
 #include <fstream>
@@ -222,7 +222,8 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumberOfTuples();
-  m_MIFeaturesPtr = Int32ArrayType::CreateArray((totalPoints * 1), "_INTERNAL_USE_ONLY_MIFeatureIds");
+  m_MIFeaturesPtr = Int32ArrayType::CreateArray((totalPoints * 1), "MIFeatureIds");
+  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(m_MIFeaturesPtr->getName(), m_MIFeaturesPtr);
   m_MIFeaturesPtr->initializeWithZeros();
   int32_t* miFeatureIds = m_MIFeaturesPtr->getPointer(0);
 
@@ -236,7 +237,9 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, 
   std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
-      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+      static_cast<int64_t>(udims[0]),
+      static_cast<int64_t>(udims[1]),
+      static_cast<int64_t>(udims[2]),
   };
 
   float disorientation = 0.0f;
@@ -269,6 +272,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, 
   {
     float prog = ((float)iter / dims[2]) * 100;
     QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(QString::number(prog, 'f', 0));
+
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     mindisorientation = std::numeric_limits<float>::max();
     slice = (dims[2] - 1) - iter;
@@ -435,13 +439,15 @@ void AlignSectionsMutualInformation::form_features_sections()
   std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
-      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+      static_cast<int64_t>(udims[0]),
+      static_cast<int64_t>(udims[1]),
+      static_cast<int64_t>(udims[2]),
   };
 
   int64_t point = 0;
   int64_t seed = 0;
   bool noseeds = false;
-  int32_t featurecount = 1;
+  int32_t featureCount = 1;
   int64_t neighbor = 0;
   QuatF q1 = QuaternionMathF::New();
   QuatF q2 = QuaternionMathF::New();
@@ -465,7 +471,7 @@ void AlignSectionsMutualInformation::form_features_sections()
 
   int32_t* miFeatureIds = m_MIFeaturesPtr->getPointer(0);
 
-  std::vector<int64_t> voxelslist(initialVoxelsListSize, -1);
+  std::vector<int64_t> voxelList(initialVoxelsListSize, -1);
   int64_t neighpoints[4] = {0, 0, 0, 0};
   neighpoints[0] = -dims[0];
   neighpoints[1] = -1;
@@ -479,37 +485,21 @@ void AlignSectionsMutualInformation::form_features_sections()
     float prog = ((float)slice / dims[2]) * 100;
     QString ss = QObject::tr("Aligning Sections || Identifying Features on Sections || %1% Complete").arg(QString::number(prog, 'f', 0));
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-    featurecount = 1;
+    int64_t startPoint = slice * dims[0] * dims[1];
+    int64_t endPoint = (slice + 1) * dims[0] * dims[1];
+    int64_t currentStartPoint = startPoint;
+
+    featureCount = 1;
     noseeds = false;
     while(!noseeds)
     {
       seed = -1;
-      randx = static_cast<int64_t>(float(rg.genrand_res53()) * float(dims[0]));
-      randy = static_cast<int64_t>(float(rg.genrand_res53()) * float(dims[1]));
-      for(int64_t j = 0; j < dims[1]; ++j)
+      for(int64_t point = currentStartPoint; point < endPoint; point++)
       {
-        for(int64_t i = 0; i < dims[0]; ++i)
+        if((!m_UseGoodVoxels || (m_GoodVoxels != nullptr && m_GoodVoxels[point])) && miFeatureIds[point] == 0 && m_CellPhases[point] > 0)
         {
-          x = randx + i;
-          y = randy + j;
-          z = slice;
-          if(x > dims[0] - 1)
-          {
-            x = x - dims[0];
-          }
-          if(y > dims[1] - 1)
-          {
-            y = y - dims[1];
-          }
-          point = (z * dims[0] * dims[1]) + (y * dims[0]) + x;
-          if((!m_UseGoodVoxels || m_GoodVoxels[point]) && miFeatureIds[point] == 0 && m_CellPhases[point] > 0)
-          {
-            seed = point;
-          }
-          if(seed > -1)
-          {
-            break;
-          }
+          seed = point;
+          currentStartPoint = point;
         }
         if(seed > -1)
         {
@@ -523,37 +513,36 @@ void AlignSectionsMutualInformation::form_features_sections()
       if(seed >= 0)
       {
         size = 0;
-        miFeatureIds[seed] = featurecount;
-        voxelslist[size] = seed;
+        miFeatureIds[seed] = featureCount;
+        voxelList[size] = seed;
         size++;
         for(size_t j = 0; j < size; ++j)
         {
-          int64_t currentpoint = voxelslist[j];
+          int64_t currentpoint = voxelList[j];
           col = currentpoint % dims[0];
           row = (currentpoint / dims[0]) % dims[1];
           QuaternionMathF::Copy(quats[currentpoint], q1);
           phase1 = m_CrystalStructures[m_CellPhases[currentpoint]];
           for(int32_t i = 0; i < 4; i++)
           {
-            good = true;
             neighbor = currentpoint + neighpoints[i];
             if((i == 0) && row == 0)
             {
-              good = false;
+              continue;
             }
             if((i == 3) && row == (dims[1] - 1))
             {
-              good = false;
+              continue;
             }
             if((i == 1) && col == 0)
             {
-              good = false;
+              continue;
             }
             if((i == 2) && col == (dims[0] - 1))
             {
-              good = false;
+              continue;
             }
-            if(good && miFeatureIds[neighbor] <= 0 && m_CellPhases[neighbor] > 0)
+            if(miFeatureIds[neighbor] <= 0 && m_CellPhases[neighbor] > 0)
             {
               w = std::numeric_limits<float>::max();
               QuaternionMathF::Copy(quats[neighbor], q2);
@@ -564,28 +553,28 @@ void AlignSectionsMutualInformation::form_features_sections()
               }
               if(w < misorientationTolerance)
               {
-                miFeatureIds[neighbor] = featurecount;
-                voxelslist[size] = neighbor;
+                miFeatureIds[neighbor] = featureCount;
+                voxelList[size] = neighbor;
                 size++;
-                if(std::vector<int64_t>::size_type(size) >= voxelslist.size())
+                if(std::vector<int64_t>::size_type(size) >= voxelList.size())
                 {
-                  size = voxelslist.size();
-                  voxelslist.resize(size + initialVoxelsListSize);
-                  for(std::vector<int64_t>::size_type v = size; v < voxelslist.size(); ++v)
+                  size = voxelList.size();
+                  voxelList.resize(size + initialVoxelsListSize);
+                  for(std::vector<int64_t>::size_type v = size; v < voxelList.size(); ++v)
                   {
-                    voxelslist[v] = -1;
+                    voxelList[v] = -1;
                   }
                 }
               }
             }
           }
         }
-        voxelslist.erase(std::remove(voxelslist.begin(), voxelslist.end(), -1), voxelslist.end());
-        featurecount++;
-        voxelslist.assign(initialVoxelsListSize, -1);
+        voxelList.erase(std::remove(voxelList.begin(), voxelList.end(), -1), voxelList.end());
+        featureCount++;
+        voxelList.assign(initialVoxelsListSize, -1);
       }
     }
-    featurecounts[slice] = featurecount;
+    featurecounts[slice] = featureCount;
   }
 }
 
@@ -603,8 +592,6 @@ void AlignSectionsMutualInformation::execute()
   }
 
   AlignSections::execute();
-
-
 }
 
 // -----------------------------------------------------------------------------
