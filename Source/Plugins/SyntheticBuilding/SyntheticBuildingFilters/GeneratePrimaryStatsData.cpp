@@ -343,7 +343,7 @@ void GeneratePrimaryStatsData::dataCheck()
   int numBins = StatsGen::ComputeNumberOfBins(m_Mu, m_Sigma, m_MinCutOff, m_MaxCutOff, m_BinStepSize, max, min);
   m_NumberOfBins = QString::number(numBins, 10);
   // Calculate a more understandable "Grain Size" for the user
-  float esd = std::exp(m_Mu);
+  float esd = std::exp(m_Mu + (m_Sigma * m_Sigma) / 2.0);
   QLocale loc = QLocale::system();
   m_FeatureESD = loc.toString(esd);
 }
@@ -589,7 +589,7 @@ void GeneratePrimaryStatsData::normalizePhaseFractions(StatsDataArray* statsData
   for(size_t i = 1; i < count; i++)
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(i);
-    totalPhaseFraction = totalPhaseFraction + statsData->getPhaseFraction();
+    totalPhaseFraction += totalPhaseFraction + statsData->getPhaseFraction();
   }
   // Now loop again and set the correct phase fractions
   for(size_t i = 1; i < count; i++)
