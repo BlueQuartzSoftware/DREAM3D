@@ -225,6 +225,7 @@ void StatsGeneratorWidget::loadData()
         QString progTitle = QString("%1/%2: Extracting Phase Type: %3").arg(phase).arg(ensembles - 1).arg(w->getTabTitle());
         progress.setProgTitle(progTitle);
         w->extractStatsData(m_CellEnsembleAttrMat, static_cast<int>(phase));
+        phaseTabs->setTabText(phase-1, w->getTabTitle());
       }
       phase++;
     }
