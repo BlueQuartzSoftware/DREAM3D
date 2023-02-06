@@ -91,7 +91,8 @@ float EditPhaseDialog::getPhaseFraction()
 // -----------------------------------------------------------------------------
 void EditPhaseDialog::setPhaseFraction(float d)
 {
-  phaseFraction->setText(QString::number(d));
+  QLocale loc = QLocale::system();
+  phaseFraction->setText(loc.toString(d));
 }
 
 // -----------------------------------------------------------------------------
@@ -114,7 +115,8 @@ float EditPhaseDialog::getPptFraction()
 // -----------------------------------------------------------------------------
 void EditPhaseDialog::setPptFraction(float d)
 {
-  pptFraction->setText(QString::number(d));
+  QLocale loc = QLocale::system();
+  pptFraction->setText(loc.toString(d));
 }
 
 // -----------------------------------------------------------------------------
