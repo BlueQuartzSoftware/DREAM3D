@@ -140,7 +140,7 @@ void ErodeDilateCoordinationNumber::execute()
   };
 
   int32_t good = 1;
-  int64_t point = 0;
+  int64_t count = 0;
   int64_t kstride = 0, jstride = 0;
   int32_t featurename = 0, feature = 0;
   int32_t coordination = 0;
@@ -194,15 +194,15 @@ void ErodeDilateCoordinationNumber::execute()
         jstride = dims[0] * j;
         for(int64_t i = 0; i < dims[0]; i++)
         {
-          point = kstride + jstride + i;
-          featurename = m_FeatureIds[point];
+          count = kstride + jstride + i;
+          featurename = m_FeatureIds[count];
           coordination = 0;
           current = 0;
           most = 0;
           for(int32_t l = 0; l < 6; l++)
           {
             good = 1;
-            neighpoint = point + neighpoints[l];
+            neighpoint = count + neighpoints[l];
             if(l == 0 && k == 0)
             {
               good = 0;
@@ -238,25 +238,25 @@ void ErodeDilateCoordinationNumber::execute()
                 if(current > most)
                 {
                   most = current;
-                  m_Neighbors[point] = neighpoint;
+                  m_Neighbors[count] = neighpoint;
                 }
               }
             }
           }
-          coordinationNumber[point] = coordination;
-          int32_t neighbor = m_Neighbors[point];
-          if(coordinationNumber[point] >= m_CoordinationNumber && coordinationNumber[point] > 0)
+          coordinationNumber[count] = coordination;
+          int32_t neighbor = m_Neighbors[count];
+          if(coordinationNumber[count] >= m_CoordinationNumber && coordinationNumber[count] > 0)
           {
             for(const auto& arrayName : voxelArrayNames)
             {
               IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(arrayName);
-              p->copyTuple(neighbor, point);
+              p->copyTuple(neighbor, count);
             }
           }
           for(int32_t l = 0; l < 6; l++)
           {
             good = 1;
-            neighpoint = point + neighpoints[l];
+            neighpoint = count + neighpoints[l];
             if(l == 0 && k == 0)
             {
               good = 0;
@@ -301,8 +301,8 @@ void ErodeDilateCoordinationNumber::execute()
         jstride = static_cast<int64_t>(dims[0] * j);
         for(int64_t i = 0; i < dims[0]; i++)
         {
-          point = kstride + jstride + i;
-          if(coordinationNumber[point] >= m_CoordinationNumber)
+          count = kstride + jstride + i;
+          if(coordinationNumber[count] >= m_CoordinationNumber)
           {
             counter++;
           }

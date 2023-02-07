@@ -113,6 +113,7 @@ void ErodeDilateBadData::dataCheck()
   clearErrorCode();
   clearWarningCode();
   initialize();
+  
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   if(getNumIterations() <= 0)
@@ -278,8 +279,11 @@ void ErodeDilateBadData::execute()
                 }
                 if(good == 1)
                 {
-                  feature = m_FeatureIds[neighpoint];
-                  n[feature] = 0;
+                  feature = m_FeatureIds[neighpoint];              
+                  if(feature > 0)
+                  {
+                    n[feature] = 0;
+                  }
                 }
               }
             }

@@ -66,7 +66,6 @@ ErodeDilateMask::~ErodeDilateMask() = default;
 void ErodeDilateMask::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Operation");
@@ -91,21 +90,6 @@ void ErodeDilateMask::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", MaskArrayPath, FilterParameter::Category::RequiredArray, ErodeDilateMask, req));
   }
   setFilterParameters(parameters);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ErodeDilateMask::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  setMaskArrayPath(reader->readDataArrayPath("MaskArrayPath", getMaskArrayPath()));
-  setDirection(reader->readValue("Direction", getDirection()));
-  setNumIterations(reader->readValue("NumIterations", getNumIterations()));
-  setXDirOn(reader->readValue("XDirOn", getXDirOn()));
-  setYDirOn(reader->readValue("YDirOn", getYDirOn()));
-  setZDirOn(reader->readValue("ZDirOn", getZDirOn()));
-  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -195,6 +179,7 @@ void ErodeDilateMask::execute()
         for(int64_t i = 0; i < dims[0]; i++)
         {
           count = kstride + jstride + i;
+          
           if(!m_Mask[count])
           {
             for(int32_t l = 0; l < 6; l++)
