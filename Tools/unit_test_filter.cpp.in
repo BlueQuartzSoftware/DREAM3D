@@ -29,7 +29,7 @@
 
 using namespace complex;
 
-TEST_CASE("@PLUGIN_NAME@::@FILTER_NAME@: Instantiation and Parameter Check","[@PLUGIN_NAME@][@FILTER_NAME@][.][UNIMPLEMENTED][!mayfail]")
+TEST_CASE("@PLUGIN_NAME@::@FILTER_NAME@: Valid Filter Execution","[@PLUGIN_NAME@][@FILTER_NAME@][.][UNIMPLEMENTED][!mayfail]")
 {
   // Instantiate the filter, a DataStructure object and an Arguments Object
   @FILTER_NAME@ filter;
@@ -48,12 +48,7 @@ TEST_CASE("@PLUGIN_NAME@::@FILTER_NAME@: Instantiation and Parameter Check","[@P
   REQUIRE(executeResult.result.valid());
 }
 
-//TEST_CASE("@PLUGIN_NAME@::@FILTER_NAME@: Valid filter execution")
-//{
-//
-//}
-
-//TEST_CASE("@PLUGIN_NAME@::@FILTER_NAME@: InValid filter execution")
+//TEST_CASE("@PLUGIN_NAME@::@FILTER_NAME@: InValid Filter Execution")
 //{
 //
 //}
