@@ -1206,7 +1206,7 @@ void GenerateHeaderFile(AbstractFilter* filter, const QString& outputDir, const 
 {
   static QRegularExpression regExp1{"(.)([A-Z][a-z]+)"};
   static QRegularExpression regExp2{"([a-z0-9])([A-Z])"};
-  const QString k_UUIDMapFileName("src/" + pluginName + "/" + QString::fromStdString(pluginName.toStdString() + "LegacyUUIDMapping.hpp").replace("/", ""));
+  const QString k_UUIDMapFileName("src/" + pluginName + "/" + QString::fromStdString(pluginName.toStdString() + "LegacyUUIDMapping.hpp"));
   const QString k_NewIncludeToken("// @@__HEADER__TOKEN__DO__NOT__DELETE__@@");
   const QString k_SIMPLToComplexToken("// @@__MAP__UPDATE__TOKEN__DO__NOT__DELETE__@@");
 
