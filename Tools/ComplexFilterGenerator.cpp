@@ -672,7 +672,7 @@ void InitParameterTypeMapping()
 
 void InitDefaultParameterConstructor()
 {
-  s_DefaultConstructorMapping["BooleanFilterParameter"] = "false";
+  s_DefaultConstructorMapping["BooleanFilterParameter"] = "false #error Check default values";
   s_DefaultConstructorMapping["DataArrayCreationFilterParameter"] = "DataPath{}";
   s_DefaultConstructorMapping["DataArraySelectionFilterParameter"] = "DataPath{}, complex::GetAllDataTypes() /* This will allow ANY data type. Adjust as necessary for your filter*/";
   s_DefaultConstructorMapping["ChoiceFilterParameter"] = "0, ChoicesParameter::Choices{\"Option 1\", \"Option 2\", \"Option 3\"}/* Change this to the proper choices */";
@@ -685,22 +685,22 @@ void InitDefaultParameterConstructor()
   s_DefaultConstructorMapping["OutputFileFilterParameter"] = "fs::path(\"<default file to read goes here>\"), FileSystemPathParameter::ExtensionsType{}, FileSystemPathParameter::PathType::OutputFile";
   s_DefaultConstructorMapping["OutputPathFilterParameter"] = "fs::path(\"<default file to read goes here>\"), FileSystemPathParameter::ExtensionsType{}, FileSystemPathParameter::PathType::OutputDir";
   s_DefaultConstructorMapping["FileListInfoFilterParameter"] = "GeneratedFileListParameter::ValueType{}";
-  s_DefaultConstructorMapping["FloatFilterParameter"] = "1.23345f";
-  s_DefaultConstructorMapping["IntFilterParameter"] = "1234356";
-  s_DefaultConstructorMapping["DoubleFilterParameter"] = "2.3456789";
-  s_DefaultConstructorMapping["UInt64FilterParameter"] = "13412341234212";
-  s_DefaultConstructorMapping["AxisAngleFilterParameter"] = "std::vector<float32>(4), std::vector<std::string>(4)";
-  s_DefaultConstructorMapping["IntVec2FilterParameter"] = "std::vector<int32>(2), std::vector<std::string>(2)";
-  s_DefaultConstructorMapping["IntVec3FilterParameter"] = "std::vector<int32>(3), std::vector<std::string>(3)";
-  s_DefaultConstructorMapping["FloatVec2FilterParameter"] = "std::vector<float32>(2), std::vector<std::string>(2)";
-  s_DefaultConstructorMapping["FloatVec3FilterParameter"] = "std::vector<float32>(3), std::vector<std::string>(3)";
+  s_DefaultConstructorMapping["FloatFilterParameter"] = "0.0f #error Check default values";
+  s_DefaultConstructorMapping["IntFilterParameter"] = "0 #error Check default values";
+  s_DefaultConstructorMapping["DoubleFilterParameter"] = "0.0 #error Check default values";
+  s_DefaultConstructorMapping["UInt64FilterParameter"] = "0ULL #error Check default values";
+  s_DefaultConstructorMapping["AxisAngleFilterParameter"] = "std::vector<float32>{0.0F,0.0F,1.0F,0.0F}, std::vector<std::string>{\"x\",\"y\",\"z\",\"w\"} #error Check default values";
+  s_DefaultConstructorMapping["IntVec2FilterParameter"] = "std::vector<int32>{0,0}, std::vector<std::string>{\"label1\",\"label2\"} #error Check default values";
+  s_DefaultConstructorMapping["IntVec3FilterParameter"] = "std::vector<int32>{0,0,0}, std::vector<std::string>{\"label1\",\"label2\",\"label3\"} #error Check default values";
+  s_DefaultConstructorMapping["FloatVec2FilterParameter"] = "std::vector<float32>{0.0F,0.0F}, std::vector<std::string>{\"label1\",\"label2\"} #error Check default values";
+  s_DefaultConstructorMapping["FloatVec3FilterParameter"] = "std::vector<float32>{0.0F,0.0F,0.0F}, std::vector<std::string>{\"label1\",\"label2\",\"label3\"}  #error Check default values";
   s_DefaultConstructorMapping["NumericTypeFilterParameter"] = "NumericType::int8";
   s_DefaultConstructorMapping["StringFilterParameter"] = "\"SomeString\"";
   s_DefaultConstructorMapping["SeparatorFilterParameter"] = "\"Separator\"";
   s_DefaultConstructorMapping["LinkedDataContainerSelectionFilterParameter"] = "DataPath{}";
   s_DefaultConstructorMapping["LinkedPathCreationFilterParameter"] = "DataPath{}";
-  s_DefaultConstructorMapping["MultiDataArraySelectionFilterParameter"] = "MultiArraySelectionParameter::ValueType {DataPath(), DataPath(), DataPath()}";
-  s_DefaultConstructorMapping["LinkedBooleanFilterParameter"] = "false";
+  s_DefaultConstructorMapping["MultiDataArraySelectionFilterParameter"] = "MultiArraySelectionParameter::ValueType {}";
+  s_DefaultConstructorMapping["LinkedBooleanFilterParameter"] = "false #error Check default values";
   s_DefaultConstructorMapping["LinkedChoicesFilterParameter"] = "0, ChoicesParameter::Choices{\"Option 1\", \"Option 2\", \"Option 3\"}";
   s_DefaultConstructorMapping["PreflightUpdatedValueFilterParameter"] = "{}";
 
