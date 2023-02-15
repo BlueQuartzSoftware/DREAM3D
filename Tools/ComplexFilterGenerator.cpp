@@ -2143,7 +2143,7 @@ int main(int argc, char** argv)
   QMetaObjectUtilities::RegisterMetaTypes();
 
   QFileInfo fi(outputDir);
-  QString pluginName = outputDir.split("/").last();
+  QString pluginName = outputDir.split(QDir::separator()).last();
   GenerateComplexFilter(outputDir, pluginName, inputClassName);
 
   std::cout << "You will need to update the following files:" << std::endl;
