@@ -1,3 +1,16 @@
+# DREAM.3D NX: The Next Generation of DREAM.3D Alpha Release
+
+BlueQuartz Software has officially released the next version of DREAM.3D, **DREAM.3D NX**. This version is completely rewritten from the ground up using modern C++ and Python coding standards, contains complete filter unit testing coverage and a fresh brand new interface that is still familiar to previous users. You can check out the full release notes and download your trial version at [http://www.dream3d.io](http://www.dream3d.io). There are intended to be two versions, a free version and a paid for version with the major differentiation being the paid for version has built in visualization. Please contact **dream3d@bluequartz.net** for more information to obtain a license to the full verison of DREAM.3D NX.
+
+# DREAM.3D NX Screenshots (Version 7.0.0 Alpha-1)
+
+| Version | |
+|--|--|
+| Free | ![](images/NX_Overview_Free.png) |
+| Commercial | ![](images/NX_Overview_Commercial.png) |
+
+# DREAM.3D General Information
+
 DREAM.3D consists of data analysis tools (Filters) that allow for the construction of customized workflows (Pipelines) to analyze data. DREAM.3D provides a flexible and extensible data structure that eases data transport between collaborators by storing data in a non-proprietary format.
 
 DREAM.3D makes the reconstruction of 3D data simple and straight forward. The development of additional features is ongoing and the DREAM.3D development team welcomes your feedback whether you are a first time user or seasoned user.
@@ -6,7 +19,7 @@ All source codes are publicly available through the [GitHub](http://www.github.c
 
 DREAM.3D is completely open source and free for anyone to use whether that is in a commercial, academic or research setting. We encourage every one to give it a try and provide feedback about your experience.
 
-## Features of DREAM.3D ##
+# Features of DREAM.3D
 
 + 3D Reconstruction of EBSD data from EDAX (.ang), Oxford (.ctf) and Bruker (.ctf) data files. The reconstructions can utilize an array of alignment, cleaning, segmentation algorithms and coloring algorithms.
 + Synthetic microstructures can be created using a set of automatically generated statistics or your own statistics.
@@ -14,7 +27,7 @@ DREAM.3D is completely open source and free for anyone to use whether that is in
 + Many algorithms are available to extract various statistics about your data
 + Over 100 filters from the image processing library ITK
 
-## Prebuilt Binaries ##
+# Prebuilt Binaries
 
 The current version is 6.5.168 and is available in prebuilt binaries for MacOS, Windows and Linux operating systems:
 
@@ -28,13 +41,13 @@ The current version is 6.5.168 and is available in prebuilt binaries for MacOS, 
 | [Linux - DREAM3D-6.5.168-Linux-x86_64.tar.gz](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.168-Linux-x86_64.tar.gz) | Ubuntu 18.04 or Equivelant. Self contained tar archive.  |
 
 
-## Nightly Builds ##
+# Nightly Builds
 
 The nightly version is 6.6.xxx and is available in prebuilt binaries for MacOS, Windows and Linux operating systems:
 
 [Start Here and look for todays date or the latest available date.](http://dream3d.bluequartz.net/binaries/experimental)
 
-## Python Anaconda Distribution ##
+# Python Anaconda Distribution
 
 ```lang-console
 (base) C:\Users\johnsmith> conda config --add channels conda-forge
@@ -46,16 +59,16 @@ The nightly version is 6.6.xxx and is available in prebuilt binaries for MacOS, 
 (pyD3D) C:\Users\johnsmith>conda install libharu 2.0.0
 ```
 
-## Documentation ##
+# Documentation
 
 + The HTML documentation is located [here](http://www.dream3d.io) and also available within the application itself.
 + BlueQuartz maintains a [YouTube Channel that has some instructional videos](https://www.youtube.com/channel/UCjeF8pFMzET5ZN3vsBHATpg)
 
-## Discussion Group ##
+# Discussion Group
 
 If you are looking for help using DREAM.3D there is an [free discussion group on Google](https://groups.google.com/g/dream3d-users)
 
-## Citing DREAM.3D in Publications ##
+# Citing DREAM.3D in Publications
 
 Users wishing to cite DREAM.3D in their research publications are referred to [https://link.springer.com/article/10.1186/2193-9772-3-5](https://link.springer.com/article/10.1186/2193-9772-3-5) for the proper citations.
 
