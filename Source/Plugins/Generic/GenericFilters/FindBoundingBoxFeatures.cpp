@@ -318,6 +318,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
   float xOrigin = 0.0f;
   float yOrigin = 0.0f;
   // float zOrigin = 0.0f;
+  const FloatVec3Type imageOrigin = imageGeom->getOrigin();
 
   float boundbox[6] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
   float coords[4] = {0.0f, 0.0f, 0.0f, 0.0f};
@@ -338,6 +339,8 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
   {
     xPoints = imageGeom->getYPoints();
     yPoints = imageGeom->getZPoints();
+    xOrigin = imageOrigin[1];
+    yOrigin = imageOrigin[2];
     spacing = imageGeom->getSpacing();
     centroidShift0 = 1;
     centroidShift1 = 2;
@@ -346,6 +349,8 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
   {
     xPoints = imageGeom->getXPoints();
     yPoints = imageGeom->getZPoints();
+    xOrigin = imageOrigin[0];
+    yOrigin = imageOrigin[2];
     spacing = imageGeom->getSpacing();
     centroidShift0 = 0;
     centroidShift1 = 2;
@@ -354,6 +359,8 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
   {
     xPoints = imageGeom->getXPoints();
     yPoints = imageGeom->getYPoints();
+    xOrigin = imageOrigin[0];
+    yOrigin = imageOrigin[1];
     spacing = imageGeom->getSpacing();
     centroidShift0 = 0;
     centroidShift1 = 1;
