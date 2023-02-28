@@ -10,11 +10,15 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.5.169 ##
 
+### 6.5.169 Fixed DREAM3D Issues ###
+
++ Fixed issue in QuickSurfaceMesh which caused a crash for certain microstructures.
 
 ## Version 6.5.168 ##
 
-### 6.5.169 Fixed DREAM3D Issues ###
+### 6.5.168 Fixed DREAM3D Issues ###
 
 + Fixed issue where the OrientationUtility stopped working due to move to Qt 5.15
 + Fixed crashing issue in OrientationUtility if invalid Quaternion was generated
