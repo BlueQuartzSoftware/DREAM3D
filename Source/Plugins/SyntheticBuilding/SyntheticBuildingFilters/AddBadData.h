@@ -36,6 +36,7 @@
 #pragma once
 
 #include <memory>
+#include <random>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
@@ -60,6 +61,8 @@ class SyntheticBuilding_EXPORT AddBadData : public AbstractFilter
   PYB11_PROPERTY(float PoissonVolFraction READ getPoissonVolFraction WRITE setPoissonVolFraction)
   PYB11_PROPERTY(bool BoundaryNoise READ getBoundaryNoise WRITE setBoundaryNoise)
   PYB11_PROPERTY(float BoundaryVolFraction READ getBoundaryVolFraction WRITE setBoundaryVolFraction)
+  PYB11_PROPERTY(bool UseRandomSeed READ getUseRandomSeed WRITE setUseRandomSeed)
+  PYB11_PROPERTY(uint64_t RandomSeedValue READ getRandomSeedValue WRITE setRandomSeedValue)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
 
@@ -149,6 +152,23 @@ public:
   Q_PROPERTY(float BoundaryVolFraction READ getBoundaryVolFraction WRITE setBoundaryVolFraction)
 
   /**
+   * @brief Setter property for UseRandomSeed*/
+  void setUseRandomSeed(bool value);
+  /**
+   * @brief Getter property for UseRandomSeed@return Value of UseRandomSeed*/
+  bool getUseRandomSeed() const;
+  Q_PROPERTY(bool UseRandomSeed READ getUseRandomSeed WRITE setUseRandomSeed)
+
+  /**
+   * @brief Setter property for RandomSeedValue*/
+  void setRandomSeedValue(uint64_t value);
+  /**
+   * @brief Getter property for RandomSeedValue@return Value of RandomSeedValue*/
+  uint64_t getRandomSeedValue() const;
+  Q_PROPERTY(uint64_t RandomSeedValue READ getRandomSeedValue WRITE setRandomSeedValue)
+
+
+  /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
   QString getCompiledLibraryName() const override;
@@ -235,6 +255,8 @@ private:
   float m_PoissonVolFraction = {0.0f};
   bool m_BoundaryNoise = {false};
   float m_BoundaryVolFraction = {0.0f};
+  bool m_UseRandomSeed = false;
+  uint64_t m_RandomSeedValue = std::mt19937::default_seed;
 
 public:
   AddBadData(const AddBadData&) = delete;            // Copy Constructor Not Implemented

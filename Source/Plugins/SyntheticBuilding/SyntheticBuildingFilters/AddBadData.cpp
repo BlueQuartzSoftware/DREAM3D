@@ -44,11 +44,15 @@
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/UInt64FilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
+
+#include <chrono>
+#include <random>
 
 // -----------------------------------------------------------------------------
 //
@@ -66,13 +70,19 @@ AddBadData::~AddBadData() = default;
 void AddBadData::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  std::vector<QString> linkedProps = {"PoissonVolFraction"};
+
+  std::vector<QString> linkedProps = {"RandomSeedValue"};
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Random Seed", UseRandomSeed, FilterParameter::Category::Parameter, AddBadData, linkedProps));
+  parameters.push_back(SIMPL_NEW_UINT64_FP("Random Seed Value", RandomSeedValue, FilterParameter::Category::Parameter, AddBadData));
+
+  linkedProps = {"PoissonVolFraction"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Add Random Noise", PoissonNoise, FilterParameter::Category::Parameter, AddBadData, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Volume Fraction of Random Noise", PoissonVolFraction, FilterParameter::Category::Parameter, AddBadData));
-  linkedProps.clear();
+
   linkedProps.push_back("BoundaryVolFraction");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Add Boundary Noise", BoundaryNoise, FilterParameter::Category::Parameter, AddBadData, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Volume Fraction of Boundary Noise", BoundaryVolFraction, FilterParameter::Category::Parameter, AddBadData));
+
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
@@ -146,7 +156,18 @@ void AddBadData::execute()
 void AddBadData::add_noise()
 {
   notifyStatusMessage("Adding Noise");
-  SIMPL_RANDOMNG_NEW()
+  std::random_device randomDevice;        // Will be used to obtain a seed for the random number engine
+  std::mt19937 generator(randomDevice()); // Standard mersenne_twister_engine seeded with rd()
+  std::mt19937::result_type seed = m_RandomSeedValue;
+
+  if(!m_UseRandomSeed)
+  {
+    seed = static_cast<std::mt19937::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+  }
+
+
+  generator.seed(seed);
+  std::uniform_real_distribution<float> distribution(0.0F, 1.0F);
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getGBEuclideanDistancesArrayPath().getDataContainerName());
 
@@ -159,7 +180,7 @@ void AddBadData::add_noise()
   {
     if(m_BoundaryNoise && m_GBEuclideanDistances[i] < 1)
     {
-      random = static_cast<float>(rg.genrand_res53());
+      random = distribution(generator);
       if(random < m_BoundaryVolFraction)
       {
         for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
@@ -172,7 +193,7 @@ void AddBadData::add_noise()
     }
     if(m_PoissonNoise)
     {
-      random = static_cast<float>(rg.genrand_res53());
+      random = distribution(generator);
       if(random < m_PoissonVolFraction)
       {
         for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
@@ -344,4 +365,28 @@ void AddBadData::setBoundaryVolFraction(float value)
 float AddBadData::getBoundaryVolFraction() const
 {
   return m_BoundaryVolFraction;
+}
+
+// -----------------------------------------------------------------------------
+void AddBadData::setUseRandomSeed(bool value)
+{
+  m_UseRandomSeed = value;
+}
+
+// -----------------------------------------------------------------------------
+bool AddBadData::getUseRandomSeed() const
+{
+  return m_UseRandomSeed;
+}
+
+// -----------------------------------------------------------------------------
+void AddBadData::setRandomSeedValue(uint64_t value)
+{
+  m_RandomSeedValue = value;
+}
+
+// -----------------------------------------------------------------------------
+uint64_t AddBadData::getRandomSeedValue() const
+{
+  return m_RandomSeedValue;
 }
