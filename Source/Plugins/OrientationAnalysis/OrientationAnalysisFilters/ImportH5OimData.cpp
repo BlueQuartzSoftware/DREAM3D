@@ -610,7 +610,7 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, std::vector<size_t
       UInt8ArrayType::Pointer patternData = std::dynamic_pointer_cast<UInt8ArrayType>(m_EbsdArrayMap.value(S2Q(EbsdLib::Ang::PatternData)));
       if(patternData.get() != nullptr)
       {
-        ::memcpy(patternData->getPointer(offset), ptr, sizeof(uint8_t) * totalPoints);
+        ::memcpy(patternData->getPointer(offset), ptr, sizeof(uint8_t) * totalPoints * pDims[0] * pDims[1]);
         ebsdAttrMat->insertOrAssign(patternData);
 
         // Remove the current PatternData array
