@@ -166,7 +166,7 @@ void AppendImageGeometryZSlice::dataCheck()
     setErrorCondition(-8202, ss);
   }
 
-  if(destGeomDims[0] != inputGeomDims[0])
+  if(destGeomDims[1] != inputGeomDims[1])
   {
     QString ss = QObject::tr("Input Y Dim (%1) not equal to Destination Y Dim (%2)").arg(inputGeomDims[1]).arg(destGeomDims[1]);
     setErrorCondition(-8203, ss);
