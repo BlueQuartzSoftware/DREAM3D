@@ -36,6 +36,7 @@
 #pragma once
 
 #include <memory>
+#include <random>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
@@ -67,6 +68,8 @@ class StatsToolbox_EXPORT FindFeatureClustering : public AbstractFilter
   PYB11_PROPERTY(QString ClusteringListArrayName READ getClusteringListArrayName WRITE setClusteringListArrayName)
   PYB11_PROPERTY(QString NewEnsembleArrayArrayName READ getNewEnsembleArrayArrayName WRITE setNewEnsembleArrayArrayName)
   PYB11_PROPERTY(QString MaxMinArrayName READ getMaxMinArrayName WRITE setMaxMinArrayName)
+  PYB11_PROPERTY(bool UseRandomSeed READ getUseRandomSeed WRITE setUseRandomSeed)
+  PYB11_PROPERTY(uint64_t RandomSeedValue READ getRandomSeedValue WRITE setRandomSeedValue)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
 
@@ -232,6 +235,28 @@ public:
   Q_PROPERTY(QString MaxMinArrayName READ getMaxMinArrayName WRITE setMaxMinArrayName)
 
   /**
+   * @brief Setter property for UseRandomSeed
+   */
+  void setUseRandomSeed(bool value);
+
+  /**
+   * @brief Getter property for UseRandomSeed@return Value of UseRandomSeed
+   */
+  bool getUseRandomSeed() const;
+  Q_PROPERTY(bool UseRandomSeed READ getUseRandomSeed WRITE setUseRandomSeed)
+
+  /**
+   * @brief Setter property for RandomSeedValue
+   */
+  void setRandomSeedValue(uint64_t value);
+
+  /**
+   * @brief Getter property for RandomSeedValue@return Value of RandomSeedValue
+   */
+  uint64_t getRandomSeedValue() const;
+  Q_PROPERTY(uint64_t RandomSeedValue READ getRandomSeedValue WRITE setRandomSeedValue)
+
+  /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
   QString getCompiledLibraryName() const override;
@@ -334,6 +359,8 @@ private:
   QString m_ClusteringListArrayName = {SIMPL::FeatureData::ClusteringList};
   QString m_NewEnsembleArrayArrayName = {"RDF"};
   QString m_MaxMinArrayName = {"RDFMaxMinDistances"};
+  bool m_UseRandomSeed = true;
+  uint64_t m_RandomSeedValue = std::mt19937::default_seed;
 
   NeighborList<float>::WeakPointer m_ClusteringList;
   std::vector<float> m_RandomCentroids;
