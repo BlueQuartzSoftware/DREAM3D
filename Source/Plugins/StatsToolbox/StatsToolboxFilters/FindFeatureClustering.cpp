@@ -49,6 +49,7 @@
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/UInt64FilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/RadialDistributionFunction.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -84,6 +85,10 @@ void FindFeatureClustering::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase Index", PhaseNumber, FilterParameter::Category::Parameter, FindFeatureClustering));
   std::vector<QString> linkedProps = {"BiasedFeaturesArrayPath"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Remove Biased Features", RemoveBiasedFeatures, FilterParameter::Category::Parameter, FindFeatureClustering, linkedProps));
+  linkedProps = {"RandomSeedValue"};
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Set Random Seed", UseRandomSeed, FilterParameter::Category::Parameter, FindFeatureClustering, linkedProps));
+  parameters.push_back(SIMPL_NEW_UINT64_FP("Seed Value", RandomSeedValue, FilterParameter::Category::Parameter, FindFeatureClustering));
+
   parameters.push_back(SeparatorFilterParameter::Create("Cell Feature Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -362,7 +367,7 @@ void FindFeatureClustering::find_clustering()
 
   randomRDF.resize(current_num_bins + 1);
   // Call this function to generate the random distribution, which is normalized by the total number of distances
-  randomRDF = RadialDistributionFunction::GenerateRandomDistribution(min, max, m_NumberOfBins, boxdims, boxres);
+  randomRDF = RadialDistributionFunction::GenerateRandomDistribution(min, max, m_NumberOfBins, boxdims, boxres, m_UseRandomSeed, m_RandomSeedValue);
 
   // Scale the random distribution by the number of distances in this particular instance
   normFactor = totalPPTfeatures * (totalPPTfeatures - 1);
@@ -666,4 +671,28 @@ void FindFeatureClustering::setMaxMinArrayName(const QString& value)
 QString FindFeatureClustering::getMaxMinArrayName() const
 {
   return m_MaxMinArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureClustering::setUseRandomSeed(bool value)
+{
+  m_UseRandomSeed = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindFeatureClustering::getUseRandomSeed() const
+{
+  return m_UseRandomSeed;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureClustering::setRandomSeedValue(uint64_t value)
+{
+  m_RandomSeedValue = value;
+}
+
+// -----------------------------------------------------------------------------
+uint64_t FindFeatureClustering::getRandomSeedValue() const
+{
+  return m_RandomSeedValue;
 }
