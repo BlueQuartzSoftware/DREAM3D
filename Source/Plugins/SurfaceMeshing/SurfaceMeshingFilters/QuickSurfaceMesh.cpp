@@ -100,7 +100,7 @@ using EdgeMap = std::unordered_map<Edge, int64_t, EdgeHasher>;
 QuickSurfaceMesh::QuickSurfaceMesh()
 : m_SelectedDataArrayPaths(QVector<DataArrayPath>())
 , m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
-, m_TripleLineDataContainerName("TripleLines")
+//, m_TripleLineDataContainerName("TripleLines")
 , m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName)
 , m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName)
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
@@ -1572,11 +1572,11 @@ void QuickSurfaceMesh::execute()
   {
     return;
   }
-  DataContainer::Pointer tripleLineDC = getDataContainerArray()->getDataContainer(getTripleLineDataContainerName());
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  // DataContainer::Pointer tripleLineDC = getDataContainerArray()->getDataContainer(getTripleLineDataContainerName());
+  // if(getErrorCondition() < 0)
+  // {
+  //   return;
+  // }
   IGeometryGrid::Pointer grid = m->getGeometryAs<IGeometryGrid>();
 
   size_t udims[3] = {0, 0, 0};
@@ -1611,12 +1611,13 @@ void QuickSurfaceMesh::execute()
 
   createNodesAndTriangles(m_NodeIds, nodeCount, triangleCount);
 
+#if 0
   int64_t* triangle = triangleGeom->getTriPointer(0);
 
   FloatArrayType::Pointer vertices = triangleGeom->getVertices();
-  SharedEdgeList::Pointer edges = EdgeGeom::CreateSharedEdgeList(0);
-  EdgeGeom::Pointer edgeGeom = EdgeGeom::CreateGeometry(edges, vertices, SIMPL::Geometry::EdgeGeometry);
-  tripleLineDC->setGeometry(edgeGeom);
+  // SharedEdgeList::Pointer edges = EdgeGeom::CreateSharedEdgeList(0);
+  // EdgeGeom::Pointer edgeGeom = EdgeGeom::CreateGeometry(edges, vertices, SIMPL::Geometry::EdgeGeometry);
+  // tripleLineDC->setGeometry(edgeGeom);
 
   int64_t edgeCount = 0;
   for(int64_t i = 0; i < triangleCount; i++)
@@ -1665,8 +1666,9 @@ void QuickSurfaceMesh::execute()
       edgeCount++;
     }
   }
+  #endif
 }
-
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1885,6 +1887,7 @@ void QuickSurfaceMesh::generateTripleLines()
   dca->addDataContainer(dc);
   dc->setGeometry(tripleLineEdge);
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //
