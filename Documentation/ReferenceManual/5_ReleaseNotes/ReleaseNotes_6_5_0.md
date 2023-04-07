@@ -10,17 +10,18 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.5.171 ##
 
-## Version 6.5.XX ##
+## Version 6.5.171 ##
 
-### 6.5.XX Fixed DREAM3D Issues ###
+### 6.5.171 Fixed DREAM3D Issues ###
 
 + Adjusted segmentation algorithm in AlignSectionsMutualInformation to remove the random seed value generation. We just start in the 0,0 position and start looking for a viable voxel.
 + Fixed issue validating mu values in `GeneratePrimaryStatsData` filter
 + Fixed crash if user changes phase name in `GeneratePrimaryStatsData` filter
++ Fixed issue in QuickSurfaceMesh which caused a crash for certain microstructures.
 
 ### SIMPL Changes ###
-
 
 
 ## Version 6.5.168 ##

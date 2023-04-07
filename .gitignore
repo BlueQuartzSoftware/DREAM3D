@@ -27,3 +27,4 @@ Support/Scripts/GMT/gmt.history
 .vscode
 /ExternalProjects
 .DS_Store
+CMakeUserPresets.json
