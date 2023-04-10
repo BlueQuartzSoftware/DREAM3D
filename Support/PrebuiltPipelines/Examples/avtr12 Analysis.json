@@ -1,0 +1,661 @@
+{
+    "00": {
+        "CellAttributeMatrixName": "CellData",
+        "CellEnsembleAttributeMatrixName": "CellEnsembleData",
+        "DataContainerName": "DataContainer",
+        "DegreesToRadians": 1,
+        "EdaxHexagonalAlignment": 1,
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Import Oxford Instr. EBSD Data (.ctf)",
+        "Filter_Name": "ReadCtfData",
+        "Filter_Uuid": "{d1df969c-0428-53c3-b61d-99ea2bb6da28}",
+        "InputFile": "Data/T12-MAI-2010/fw-ar-IF1-avtr12-corr.ctf"
+    },
+    "01": {
+        "CellAttributeMatrixPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Rotate Sample Reference Frame",
+        "Filter_Name": "RotateSampleRefFrame",
+        "Filter_Uuid": "{e25d9b4c-2b37-578c-b1de-cf7032b5ef19}",
+        "RotationAngle": 180,
+        "RotationAxis": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+        }
+    },
+    "02": {
+        "DestinationArrayName": "ThresholdArray",
+        "FilterVersion": "1.2.828",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Threshold Objects",
+        "Filter_Name": "MultiThresholdObjects",
+        "Filter_Uuid": "{014b7300-cf36-5ede-a751-5faf9b119dae}",
+        "SelectedThresholds": [
+            {
+                "Attribute Array Name": "Error",
+                "Attribute Matrix Name": "CellData",
+                "Comparison Operator": 2,
+                "Comparison Value": 0,
+                "Data Container Name": "DataContainer"
+            }
+        ]
+    },
+    "03": {
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Convert Orientation Representation",
+        "Filter_Name": "ConvertOrientations",
+        "Filter_Uuid": "{e5629880-98c4-5656-82b8-c9fe2b9744de}",
+        "InputOrientationArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "DataContainer"
+        },
+        "InputType": 0,
+        "OutputOrientationArrayName": "Quats",
+        "OutputType": 2
+    },
+    "04": {
+        "ConfidenceIndexArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Error",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Replace Element Attributes with Neighbor (Threshold)",
+        "Filter_Name": "ReplaceElementAttributesWithNeighborValues",
+        "Filter_Uuid": "{17410178-4e5f-58b9-900e-8194c69200ab}",
+        "Loop": 1,
+        "MinConfidence": 0,
+        "SelectedComparison": 0
+    },
+    "05": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "DataContainer"
+        },
+        "CellIPFColorsArrayName": "IPF_001",
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "DataContainer"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Generate IPF Colors",
+        "Filter_Name": "GenerateIPFColors",
+        "Filter_Uuid": "{a50e6532-8075-5de5-ab63-945feb0de7f7}",
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "ThresholdArray",
+            "Data Container Name": "DataContainer"
+        },
+        "ReferenceDir": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+        },
+        "UseGoodVoxels": 1
+    },
+    "06": {
+        "FileName": "Data/Output/T12-MAI-2010/fw-ar-IF1-avtr12-corr/fw-ar-IF1-avtr12-corr_001.png",
+        "FilterVersion": "1.0.504",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "ITK::Image Writer",
+        "Filter_Name": "ITKImageWriter",
+        "Filter_Uuid": "{11473711-f94d-5d96-b749-ec36a81ad338}",
+        "ImageArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "IPF_001",
+            "Data Container Name": "DataContainer"
+        },
+        "Plane": 0
+    },
+    "07": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "DataContainer"
+        },
+        "CellIPFColorsArrayName": "IPF_010",
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "DataContainer"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Generate IPF Colors",
+        "Filter_Name": "GenerateIPFColors",
+        "Filter_Uuid": "{a50e6532-8075-5de5-ab63-945feb0de7f7}",
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "ThresholdArray",
+            "Data Container Name": "DataContainer"
+        },
+        "ReferenceDir": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+        },
+        "UseGoodVoxels": 1
+    },
+    "08": {
+        "FileName": "Data/Output/T12-MAI-2010/fw-ar-IF1-avtr12-corr/fw-ar-IF1-avtr12-corr_010.png",
+        "FilterVersion": "1.0.504",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "ITK::Image Writer",
+        "Filter_Name": "ITKImageWriter",
+        "Filter_Uuid": "{11473711-f94d-5d96-b749-ec36a81ad338}",
+        "ImageArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "IPF_010",
+            "Data Container Name": "DataContainer"
+        },
+        "Plane": 0
+    },
+    "09": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "DataContainer"
+        },
+        "CellIPFColorsArrayName": "IPF_100",
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "DataContainer"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Generate IPF Colors",
+        "Filter_Name": "GenerateIPFColors",
+        "Filter_Uuid": "{a50e6532-8075-5de5-ab63-945feb0de7f7}",
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "ThresholdArray",
+            "Data Container Name": "DataContainer"
+        },
+        "ReferenceDir": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+        },
+        "UseGoodVoxels": 1
+    },
+    "10": {
+        "FileName": "Data/Output/T12-MAI-2010/fw-ar-IF1-avtr12-corr/fw-ar-IF1-avtr12-corr_100.png",
+        "FilterVersion": "1.0.504",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "ITK::Image Writer",
+        "Filter_Name": "ITKImageWriter",
+        "Filter_Uuid": "{11473711-f94d-5d96-b749-ec36a81ad338}",
+        "ImageArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "IPF_100",
+            "Data Container Name": "DataContainer"
+        },
+        "Plane": 0
+    },
+    "11": {
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "DataContainer"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "1.0.124",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Generate Misorientation Colors",
+        "Filter_Name": "GenerateMisorientationColors",
+        "Filter_Uuid": "{7152790d-26a4-571a-8fef-493120eced6d}",
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "ThresholdArray",
+            "Data Container Name": "DataContainer"
+        },
+        "MisorientationColorArrayName": "MisorientationColor",
+        "QuatsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Quats",
+            "Data Container Name": "DataContainer"
+        },
+        "ReferenceAngle": 0,
+        "ReferenceAxis": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+        },
+        "UseGoodVoxels": 1
+    },
+    "12": {
+        "FileName": "Data/Output/T12-MAI-2010/fw-ar-IF1-avtr12-corr/fw-ar-IF1-avtr12-corr_MISO.png",
+        "FilterVersion": "1.0.504",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "ITK::Image Writer",
+        "Filter_Name": "ITKImageWriter",
+        "Filter_Uuid": "{11473711-f94d-5d96-b749-ec36a81ad338}",
+        "ImageArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "MisorientationColor",
+            "Data Container Name": "DataContainer"
+        },
+        "Plane": 0
+    },
+    "13": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "DataContainer"
+        },
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "DataContainer"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Export Pole Figure Images",
+        "Filter_Name": "WritePoleFigure",
+        "Filter_Uuid": "{a10bb78e-fcff-553d-97d6-830a43c85385}",
+        "GenerationAlgorithm": 0,
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "ThresholdArray",
+            "Data Container Name": "DataContainer"
+        },
+        "ImageLayout": 2,
+        "ImagePrefix": "aptr12_PoleFigure_",
+        "ImageSize": 512,
+        "LambertSize": 32,
+        "MaterialNameArrayPath": {
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "MaterialName",
+            "Data Container Name": "DataContainer"
+        },
+        "NumColors": 32,
+        "OutputPath": "Data/Output/T12-MAI-2010/fw-ar-IF1-avtr12-corr",
+        "Title": "T12-MAI-2010  [fw-ar-IF1-avtr12-corr]",
+        "UseGoodVoxels": 1
+    },
+    "14": {
+        "ActiveArrayName": "Active",
+        "CellFeatureAttributeMatrixName": "CellFeatureData",
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "DataContainer"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "DataContainer"
+        },
+        "FeatureIdsArrayName": "FeatureIds",
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Segment Features (Misorientation)",
+        "Filter_Name": "EBSDSegmentFeatures",
+        "Filter_Uuid": "{7861c691-b821-537b-bd25-dc195578e0ea}",
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "ThresholdArray",
+            "Data Container Name": "DataContainer"
+        },
+        "MisorientationTolerance": 5,
+        "QuatsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Quats",
+            "Data Container Name": "DataContainer"
+        },
+        "UseGoodVoxels": 1
+    },
+    "15": {
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "DataContainer"
+        },
+        "FeatureIdsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "FeatureIds",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Fill Bad Data",
+        "Filter_Name": "FillBadData",
+        "Filter_Uuid": "{30ae0a1e-3d94-5dab-b279-c5727ab5d7ff}",
+        "IgnoredDataArrayPaths": [],
+        "MinAllowedDefectSize": 10,
+        "StoreAsNewPhase": 0
+    },
+    "16": {
+        "EquivalentDiametersArrayName": "EquivalentDiameters",
+        "FeatureAttributeMatrixName": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "",
+            "Data Container Name": "DataContainer"
+        },
+        "FeatureIdsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "FeatureIds",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Find Feature Sizes",
+        "Filter_Name": "FindSizes",
+        "Filter_Uuid": "{656f144c-a120-5c3b-bee5-06deab438588}",
+        "NumElementsArrayName": "NumElements",
+        "SaveElementSizes": 0,
+        "VolumesArrayName": "Volumes"
+    },
+    "17": {
+        "ApplyToSinglePhase": 0,
+        "FeatureIdsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "FeatureIds",
+            "Data Container Name": "DataContainer"
+        },
+        "FeaturePhasesArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Minimum Size",
+        "Filter_Name": "MinSize",
+        "Filter_Uuid": "{53ac1638-8934-57b8-b8e5-4b91cdda23ec}",
+        "IgnoredDataArrayPaths": [],
+        "MinAllowedFeatureSize": 5,
+        "NumCellsArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "NumElements",
+            "Data Container Name": "DataContainer"
+        },
+        "PhaseNumber": 0
+    },
+    "18": {
+        "AvgEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "AverageEulerAngles",
+            "Data Container Name": "DataContainer"
+        },
+        "AvgQuatsArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "AverageQuats",
+            "Data Container Name": "DataContainer"
+        },
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "DataContainer"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "DataContainer"
+        },
+        "FeatureIdsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "FeatureIds",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Find Feature Average Orientations",
+        "Filter_Name": "FindAvgOrientations",
+        "Filter_Uuid": "{bf7036d8-25bd-540e-b6de-3a5ab0e42c5f}",
+        "QuatsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Quats",
+            "Data Container Name": "DataContainer"
+        }
+    },
+    "19": {
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "DataContainer"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "DataContainer"
+        },
+        "FeatureIdsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "FeatureIds",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Find Kernel Average Misorientations",
+        "Filter_Name": "FindKernelAvgMisorientations",
+        "Filter_Uuid": "{88d332c1-cf6c-52d3-a38d-22f6eae19fa6}",
+        "KernelAverageMisorientationsArrayName": "KernelAverageMisorientations",
+        "KernelSize": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "QuatsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Quats",
+            "Data Container Name": "DataContainer"
+        }
+    },
+    "20": {
+        "CentroidsArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "Centroids",
+            "Data Container Name": "DataContainer"
+        },
+        "FeatureIdsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "FeatureIds",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Find Feature Centroids",
+        "Filter_Name": "FindFeatureCentroids",
+        "Filter_Uuid": "{6f8ca36f-2995-5bd3-8672-6b0b80d5b2ca}"
+    },
+    "21": {
+        "CalcManhattanDist": 1,
+        "DoBoundaries": 1,
+        "DoQuadPoints": 0,
+        "DoTripleLines": 0,
+        "FeatureIdsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "FeatureIds",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Find Euclidean Distance Map",
+        "Filter_Name": "FindEuclideanDistMap",
+        "Filter_Uuid": "{933e4b2d-dd61-51c3-98be-00548ba783a3}",
+        "GBDistancesArrayName": "GBManhattanDistances",
+        "NearestNeighborsArrayName": "NearestNeighbors",
+        "QPDistancesArrayName": "QPManhattanDistances",
+        "SaveNearestNeighbors": 0,
+        "TJDistancesArrayName": "TJManhattanDistances"
+    },
+    "22": {
+        "AvgQuatsArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "AverageQuats",
+            "Data Container Name": "DataContainer"
+        },
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "DataContainer"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "DataContainer"
+        },
+        "FeatureAvgMisorientationsArrayName": "FeatureAvgMisorientations",
+        "FeatureIdsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "FeatureIds",
+            "Data Container Name": "DataContainer"
+        },
+        "FeatureReferenceMisorientationsArrayName": "FeatureReferenceMisorientations",
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Find Feature Reference Misorientations",
+        "Filter_Name": "FindFeatureReferenceMisorientations",
+        "Filter_Uuid": "{428e1f5b-e6d8-5e8b-ad68-56ff14ee0e8c}",
+        "GBEuclideanDistancesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "GBEuclideanDistances",
+            "Data Container Name": "DataContainer"
+        },
+        "QuatsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Quats",
+            "Data Container Name": "DataContainer"
+        },
+        "ReferenceOrientation": 0
+    },
+    "23": {
+        "CellFeatureAttributeMatrixPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "",
+            "Data Container Name": "DataContainer"
+        },
+        "DelimiterChoiceInt": 0,
+        "FeatureDataFile": "Data/Output/T12-MAI-2010/fw-ar-IF1-avtr12-corr/FeatureData.csv",
+        "FilterVersion": "1.2.828",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Export Feature Data as CSV File",
+        "Filter_Name": "FeatureDataCSVWriter",
+        "Filter_Uuid": "{737b8d5a-8622-50f9-9a8a-bfdb57608891}",
+        "WriteNeighborListData": 0,
+        "WriteNumFeaturesLine": 1
+    },
+    "24": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "DataContainer"
+        },
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "DataContainer"
+        },
+        "ConvertToDegrees": 1,
+        "Delimiter": 2,
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Export StatsGenerator ODF Angle File",
+        "Filter_Name": "WriteStatsGenOdfAngleFile",
+        "Filter_Uuid": "{a4952f40-22dd-54ec-8c38-69c3fcd0e6f7}",
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "ThresholdArray",
+            "Data Container Name": "DataContainer"
+        },
+        "OutputFile": "Data/Output/T12-MAI-2010/fw-ar-IF1-avtr12-corr/StatsGenAngles.txt",
+        "Sigma": 1,
+        "UseGoodVoxels": 1,
+        "Weight": 1
+    },
+    "25": {
+        "FilterVersion": "6.5.171",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Calculate Frequency Histogram",
+        "Filter_Name": "CalculateArrayHistogram",
+        "Filter_Uuid": "{289f0d8c-29ab-5fbc-91bd-08aac01e37c5}",
+        "MaxRange": 1700,
+        "MinRange": 0,
+        "NewAttributeMatrixName": "Histogram",
+        "NewDataArrayName": "Eq Diam Histogram",
+        "NewDataContainer": 0,
+        "NewDataContainerName": "DataContainer",
+        "Normalize": 0,
+        "NumberOfBins": 256,
+        "SelectedArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "EquivalentDiameters",
+            "Data Container Name": "DataContainer"
+        },
+        "UserDefinedRange": 0
+    },
+    "26": {
+        "Delimiter": 0,
+        "FileExtension": ".txt",
+        "FilterVersion": "1.2.828",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Export ASCII Data",
+        "Filter_Name": "WriteASCIIData",
+        "Filter_Uuid": "{5fbf9204-2c6c-597b-856a-f4612adbac38}",
+        "MaxValPerLine": -1,
+        "OutputFilePath": "Data/Output/T12-MAI-2010/fw-ar-IF1-avtr12-corr/fw-ar-IF1-avtr12-corr/EqDiamHistogram.csv",
+        "OutputPath": "Data/Output/T12-MAI-2010/fw-ar-IF1-avtr12-corr/fw-ar-IF1-avtr12-corr/",
+        "OutputStyle": 1,
+        "SelectedDataArrayPaths": [
+            {
+                "Attribute Matrix Name": "Histogram",
+                "Data Array Name": "Eq Diam Histogram",
+                "Data Container Name": "DataContainer"
+            }
+        ]
+    },
+    "27": {
+        "FilterVersion": "1.2.828",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Write DREAM.3D Data File",
+        "Filter_Name": "DataContainerWriter",
+        "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
+        "OutputFile": "Data/Output/T12-MAI-2010/fw-ar-IF1-avtr12-corr/fw-ar-IF1-avtr12-corr.dream3d",
+        "WriteTimeSeries": 0,
+        "WriteXdmfFile": 1
+    },
+    "PipelineBuilder": {
+        "Name": "avtr12 Analysis",
+        "Number_Filters": 28,
+        "Version": 6
+    }
+}
