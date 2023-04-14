@@ -37,6 +37,8 @@
 
 #include <QtCore/QTextStream>
 
+#include <Eigen/Dense>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
@@ -58,6 +60,49 @@
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 using QuatF = Quaternion<float>;
+using Matrix3fR = Eigen::Matrix<float, 3, 3, Eigen::RowMajor>;
+
+namespace
+{
+//------------------------------------------------------------------------------
+Matrix3fR OrientationMatrixToGMatrix(const Orientation<float>& oMatrix)
+{
+  if(oMatrix.size() != 9)
+  {
+    throw std::out_of_range("Orientation matrix has invalid size.");
+  }
+  Matrix3fR g1;
+  g1(0, 0) = oMatrix[0];
+  g1(0, 1) = oMatrix[1];
+  g1(0, 2) = oMatrix[2];
+  g1(1, 0) = oMatrix[3];
+  g1(1, 1) = oMatrix[4];
+  g1(1, 2) = oMatrix[5];
+  g1(2, 0) = oMatrix[6];
+  g1(2, 1) = oMatrix[7];
+  g1(2, 2) = oMatrix[8];
+  return g1;
+}
+//------------------------------------------------------------------------------
+Matrix3fR OrientationMatrixToGMatrixTranspose(const Orientation<float>& oMatrix)
+{
+  if(oMatrix.size() != 9)
+  {
+    throw std::out_of_range("Orientation matrix has invalid size.");
+  }
+  Matrix3fR g1t;
+  g1t(0, 0) = oMatrix[0];
+  g1t(0, 1) = oMatrix[3];
+  g1t(0, 2) = oMatrix[6];
+  g1t(1, 0) = oMatrix[1];
+  g1t(1, 1) = oMatrix[4];
+  g1t(1, 2) = oMatrix[7];
+  g1t(2, 0) = oMatrix[2];
+  g1t(2, 1) = oMatrix[5];
+  g1t(2, 2) = oMatrix[8];
+  return g1t;
+}
+} // namespace
 
 // -----------------------------------------------------------------------------
 //
@@ -241,11 +286,13 @@ void FindFeatureReferenceCAxisMisorientations::execute()
   int64_t zPoints = static_cast<int64_t>(udims[2]);
   int64_t point = 0;
 
-  float g1[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-  float g1t[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-  float caxis[3] = {0.0f, 0.0f, 1.0f};
-  float c1[3] = {0.0f, 0.0f, 0.0f};
-  float AvgCAxis[3] = {0.0f, 0.0f, 0.0f};
+  Matrix3fR g1;
+  g1.fill(0.0f);
+  Matrix3fR g1T;
+  g1T.fill(0.0f);
+  const Eigen::Vector3f cAxis{0.0f, 0.0f, 1.0f};
+  Eigen::Vector3f c1{0.0f, 0.0f, 0.0f};
+  Eigen::Vector3f AvgCAxis = {0.0f, 0.0f, 0.0f};
   size_t index = 0;
   float* currentQuatPtr = nullptr;
   for(int64_t col = 0; col < xPoints; col++)
@@ -258,26 +305,29 @@ void FindFeatureReferenceCAxisMisorientations::execute()
         if(m_FeatureIds[point] > 0 && m_CellPhases[point] > 0)
         {
           currentQuatPtr = quatsPtr->getTuplePointer(point);
-          OrientationTransformation::qu2om<QuatF, Orientation<float>>({currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]}).toGMatrix(g1);
+          OrientationF oMatrix = OrientationTransformation::qu2om<QuatF, Orientation<float>>({currentQuatPtr[0], currentQuatPtr[1], currentQuatPtr[2], currentQuatPtr[3]});
+          // g1 = OrientationMatrixToGMatrix(oMatrix);
+
           // transpose the g matricies so when caxis is multiplied by it
           // it will give the sample direction that the caxis is along
-          MatrixMath::Transpose3x3(g1, g1t);
-          MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
+          g1T = OrientationMatrixToGMatrixTranspose(oMatrix);
+          // g1T = g1.transpose();
+          c1 = g1T * cAxis;
           // normalize so that the magnitude is 1
-          MatrixMath::Normalize3x1(c1);
+          c1.normalize();
 
           AvgCAxis[0] = m_AvgCAxes[3 * m_FeatureIds[point]];
           AvgCAxis[1] = m_AvgCAxes[3 * m_FeatureIds[point] + 1];
           AvgCAxis[2] = m_AvgCAxes[3 * m_FeatureIds[point] + 2];
           // normalize so that the magnitude is 1
-          MatrixMath::Normalize3x1(AvgCAxis);
+          AvgCAxis.normalize();
           w = GeometryMath::CosThetaBetweenVectors(c1, AvgCAxis);
-          SIMPLibMath::bound(w, -1.0f, 1.0f);
+          w = std::clamp(w, -1.0f, 1.0f);
           w = acosf(w);
-          w = w * SIMPLib::Constants::k_180OverPiD;
-          if(w > 90.0)
+          w = w * SIMPLib::Constants::k_180OverPiF;
+          if(w > 90.0f)
           {
-            w = 180.0 - w;
+            w = 180.0f - w;
           }
 
           m_FeatureReferenceCAxisMisorientations[point] = w;
@@ -301,10 +351,14 @@ void FindFeatureReferenceCAxisMisorientations::execute()
       notifyStatusMessage(ss);
     }
     index = i * avgMisoComps;
-    m_FeatureAvgCAxisMisorientations[i] = avgmiso[index + 1] / avgmiso[index];
-    if(avgmiso[index] == 0)
+    // m_FeatureAvgCAxisMisorientations[i] = avgmiso[index + 1] / avgmiso[index];
+    if(avgmiso[index] == 0.0f)
     {
       m_FeatureAvgCAxisMisorientations[i] = 0.0;
+    }
+    else
+    {
+      m_FeatureAvgCAxisMisorientations[i] = avgmiso[index + 1] / avgmiso[index];
     }
   }
 
@@ -319,7 +373,14 @@ void FindFeatureReferenceCAxisMisorientations::execute()
   for(size_t i = 1; i < totalFeatures; i++)
   {
     index = i * avgMisoComps;
-    m_FeatureStdevCAxisMisorientations[i] = sqrtf((1 / avgmiso[index]) * avgmiso[index + 2]);
+    if(avgmiso[index] == 0.0f)
+    {
+      m_FeatureStdevCAxisMisorientations[i] = 0.0f;
+    }
+    else
+    {
+      m_FeatureStdevCAxisMisorientations[i] = sqrtf((1 / avgmiso[index]) * avgmiso[index + 2]);
+    }
   }
 }
 
