@@ -180,6 +180,10 @@ target_sources(${plug_target_name}
   # -- Add in the plugin interface definition source files
   ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Plugin.cpp
   ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Plugin.h
+  
+  # -- Add in the plugin utilities source files
+  ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Utilities.cpp
+  ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Utilities.h
 
   # -- Add in our generated Version source files
   ${${PLUGIN_NAME}_BINARY_DIR}/${VERSION_HEADER_FILE_NAME}
