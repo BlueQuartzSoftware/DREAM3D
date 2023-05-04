@@ -59,12 +59,13 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
-#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #include "EbsdLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisUtilities.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -76,6 +77,7 @@
 
 using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
 using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+using namespace OrientationUtilities;
 
 const float FindGBCDMetricBased::k_ResolutionChoices[FindGBCDMetricBased::k_NumberResolutionChoices][2] = {{3.0f, 7.0f}, {5.0f, 5.0f}, {5.0f, 7.0f}, {5.0f, 8.0f},
                                                                                                            {6.0f, 7.0f}, {7.0f, 7.0f}, {8.0f, 8.0f}}; // { for misorient., for planes }
@@ -135,7 +137,7 @@ class TrisSelector
   QVector<int8_t>* triIncluded;
   float m_misorResol;
   int32_t m_PhaseOfInterest;
-  float (&gFixedT)[3][3];
+  const Matrix3fR& gFixedT;
 
   LaueOpsContainer m_OrientationOps;
   uint32_t cryst;
@@ -155,7 +157,7 @@ public:
 #else
                QVector<TriAreaAndNormals>* __selectedTris,
 #endif
-               QVector<int8_t>* __triIncluded, float __m_misorResol, int32_t __m_PhaseOfInterest, float (&__gFixedT)[3][3], uint32_t* __m_CrystalStructures, float* __m_Eulers, int32_t* __m_Phases,
+               QVector<int8_t>* __triIncluded, float __m_misorResol, int32_t __m_PhaseOfInterest, const Matrix3fR& __gFixedT, uint32_t* __m_CrystalStructures, float* __m_Eulers, int32_t* __m_Phases,
                int32_t* __m_FaceLabels, double* __m_FaceNormals, double* __m_FaceAreas)
   : m_ExcludeTripleLines(__m_ExcludeTripleLines)
   , m_Triangles(__m_Triangles)
@@ -180,32 +182,41 @@ public:
 
   void select(size_t start, size_t end) const
   {
-    float g1ea[3] = {0.0f, 0.0f, 0.0f};
-    float g2ea[3] = {0.0f, 0.0f, 0.0f};
+    Eigen::Vector3f g1ea = {0.0f, 0.0f, 0.0f};
+    Eigen::Vector3f g2ea = {0.0f, 0.0f, 0.0f};
 
-    float g1[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-    float g2[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+    Matrix3fR g1;
+    g1.fill(0.0f);
+    Matrix3fR g2;
+    g2.fill(0.0f);
 
-    float g1s[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-    float g2s[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+    Matrix3fR g1s;
+    g1s.fill(0.0f);
+    Matrix3fR g2s;
+    g2s.fill(0.0f);
 
-    float sym1[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-    float sym2[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+    Matrix3fR sym1;
+    sym1.fill(0.0f);
+    Matrix3fR sym2;
+    sym2.fill(0.0f);
 
-    float g2sT[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+    Matrix3fR g2sT;
+    g2sT.fill(0.0f);
 
-    float dg[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-    float dgT[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+    Matrix3fR dg;
+    dg.fill(0.0f);
+    Matrix3fR dgT;
+    dgT.fill(0.0f);
 
-    float diffFromFixed[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+    Matrix3fR diffFromFixed;
+    diffFromFixed.fill(0.0f);
 
-    float normal_lab[3] = {0.0f, 0.0f, 0.0f};
-    float normal_grain1[3] = {0.0f, 0.0f, 0.0f};
-    float normal_grain2[3] = {0.0f, 0.0f, 0.0f};
+    Eigen::Vector3f normal_lab = {0.0f, 0.0f, 0.0f};
+    Eigen::Vector3f normal_grain1 = {0.0f, 0.0f, 0.0f};
+    Eigen::Vector3f normal_grain2 = {0.0f, 0.0f, 0.0f};
 
     for(size_t triIdx = start; triIdx < end; triIdx++)
     {
-
       int32_t feature1 = m_FaceLabels[2 * triIdx];
       int32_t feature2 = m_FaceLabels[2 * triIdx + 1];
 
@@ -246,46 +257,48 @@ public:
         g2ea[whichEa] = m_Eulers[3 * feature2 + whichEa];
       }
 
-      OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g1ea, 3)).toGMatrix(g1);
-      OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g2ea, 3)).toGMatrix(g2);
+      auto oMatrix1 = OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g1ea[0], g1ea[1], g1ea[2], 3));
+      g1 = OrientationMatrixToGMatrix(oMatrix1);
+      auto oMatrix2 = OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g2ea[0], g2ea[1], g2ea[2], 3));
+      g2 = OrientationMatrixToGMatrix(oMatrix2);
 
       for(int j = 0; j < nsym; j++)
       {
         // rotate g1 by symOp
-        m_OrientationOps[cryst]->getMatSymOp(j, sym1);
-        MatrixMath::Multiply3x3with3x3(sym1, g1, g1s);
+        sym1 = EbsdLibMatrixToEigenMatrix(m_OrientationOps[cryst]->getMatSymOpF(j));
+        g1s = sym1 * g1;
         // get the crystal directions along the triangle normals
-        MatrixMath::Multiply3x3with3x1(g1s, normal_lab, normal_grain1);
+        normal_grain1 = g1s * normal_lab;
 
         for(int k = 0; k < nsym; k++)
         {
           // calculate the symmetric misorienation
-          m_OrientationOps[cryst]->getMatSymOp(k, sym2);
+          sym2 = EbsdLibMatrixToEigenMatrix(m_OrientationOps[cryst]->getMatSymOpF(k));
           // rotate g2 by symOp
-          MatrixMath::Multiply3x3with3x3(sym2, g2, g2s);
+          g2s = sym2 * g2;
           // transpose rotated g2
-          MatrixMath::Transpose3x3(g2s, g2sT);
+          g2sT = g2s.transpose();
           // calculate delta g
-          MatrixMath::Multiply3x3with3x3(g1s, g2sT, dg); // dg -- the misorientation between adjacent grains
-          MatrixMath::Transpose3x3(dg, dgT);
+          dg = g1s * g2sT; // dg -- the mis orientation between adjacent grains
+          dgT = dg.transpose();
 
           for(int transpose = 0; transpose <= 1; transpose++)
           {
             // check if dg is close to gFix
             if(transpose == 0)
             {
-              MatrixMath::Multiply3x3with3x3(dg, gFixedT, diffFromFixed);
+              diffFromFixed = dg * gFixedT;
             }
             else
             {
-              MatrixMath::Multiply3x3with3x3(dgT, gFixedT, diffFromFixed);
+              diffFromFixed = dgT * gFixedT;
             }
 
-            float diffAngle = acosf((diffFromFixed[0][0] + diffFromFixed[1][1] + diffFromFixed[2][2] - 1.0f) * 0.5f);
+            float diffAngle = acosf((diffFromFixed(0, 0) + diffFromFixed(1, 1) + diffFromFixed(2, 2) - 1.0f) * 0.5f);
 
             if(diffAngle < m_misorResol)
             {
-              MatrixMath::Multiply3x3with3x1(dgT, normal_grain1, normal_grain2); // minus sign before normal_grain2 will be added later
+              normal_grain2 = dgT * normal_grain1; // minus sign before normal_grain2 will be added later
 
               if(transpose == 0)
               {
@@ -330,7 +343,7 @@ class ProbeDistrib
   double totalFaceArea;
   int numDistinctGBs;
   double ballVolume;
-  float (&gFixedT)[3][3];
+  const Matrix3fR& gFixedT;
 
 public:
   ProbeDistrib(QVector<double>* __distribValues, QVector<double>* __errorValues, QVector<float> __samplPtsX, QVector<float> __samplPtsY, QVector<float> __samplPtsZ,
@@ -339,7 +352,7 @@ public:
 #else
                QVector<TriAreaAndNormals> __selectedTris,
 #endif
-               float __planeResolSq, double __totalFaceArea, int __numDistinctGBs, double __ballVolume, float (&__gFixedT)[3][3])
+               float __planeResolSq, double __totalFaceArea, int __numDistinctGBs, double __ballVolume, const Matrix3fR& __gFixedT)
   : distribValues(__distribValues)
   , errorValues(__errorValues)
   , samplPtsX(__samplPtsX)
@@ -360,9 +373,9 @@ public:
   {
     for(size_t ptIdx = start; ptIdx < end; ptIdx++)
     {
-      float fixedNormal1[3] = {samplPtsX.at(ptIdx), samplPtsY.at(ptIdx), samplPtsZ.at(ptIdx)};
-      float fixedNormal2[3] = {0.0f, 0.0f, 0.0f};
-      MatrixMath::Multiply3x3with3x1(gFixedT, fixedNormal1, fixedNormal2);
+      Eigen::Vector3f fixedNormal1 = {samplPtsX.at(ptIdx), samplPtsY.at(ptIdx), samplPtsZ.at(ptIdx)};
+      Eigen::Vector3f fixedNormal2 = {0.0f, 0.0f, 0.0f};
+      fixedNormal2 = gFixedT * fixedNormal1;
 
       for(int triRepresIdx = 0; triRepresIdx < static_cast<int>(selectedTris.size()); triRepresIdx++)
       {
@@ -461,7 +474,7 @@ void FindGBCDMetricBased::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("Save Relative Errors Instead of Their Absolute Values", SaveRelativeErr, FilterParameter::Category::Parameter, FindGBCDMetricBased));
   parameters.push_back(SeparatorFilterParameter::Create("Vertex Data", FilterParameter::Category::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, AttributeMatrix::Type::Vertex, IGeometry::Type::Triangle);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Node Types", NodeTypesArrayPath, FilterParameter::Category::RequiredArray, FindGBCDMetricBased, req));
   }
   parameters.push_back(SeparatorFilterParameter::Create("Face Data", FilterParameter::Category::RequiredArray));
@@ -838,17 +851,15 @@ void FindGBCDMetricBased::execute()
   }
 
   // Convert axis angle to matrix representation of misorientation
-  float gFixed[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-  float gFixedT[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-
+  Matrix3fR gFixedT;
+  gFixedT.fill(0.0f);
   {
     float gFixedAngle = static_cast<float>(m_MisorientationRotation.angle * SIMPLib::Constants::k_PiOver180D);
-    float gFixedAxis[3] = {m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l};
-    MatrixMath::Normalize3x1(gFixedAxis);
-    OrientationTransformation::ax2om<OrientationF, OrientationF>(OrientationF(gFixedAxis[0], gFixedAxis[1], gFixedAxis[2], gFixedAngle)).toGMatrix(gFixed);
+    Eigen::Vector3f gFixedAxis = {m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l};
+    gFixedAxis.normalize();
+    auto oMatrix = OrientationTransformation::ax2om<OrientationF, OrientationF>(OrientationF(gFixedAxis[0], gFixedAxis[1], gFixedAxis[2], gFixedAngle));
+    gFixedT = OrientationMatrixToGMatrixTranspose(oMatrix);
   }
-
-  MatrixMath::Transpose3x3(gFixed, gFixedT);
 
   size_t numMeshTris = m_SurfaceMeshFaceAreasPtr.lock()->getNumberOfTuples();
 

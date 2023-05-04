@@ -60,12 +60,13 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
-#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #include "EbsdLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisUtilities.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -77,6 +78,7 @@
 
 using LaueOpsShPtrType = std::shared_ptr<LaueOps>;
 using LaueOpsContainer = std::vector<LaueOpsShPtrType>;
+using namespace OrientationUtilities;
 
 namespace GBPDMetricBased
 {
@@ -172,15 +174,17 @@ public:
 
   void select(size_t start, size_t end) const
   {
-    float g1ea[3] = {0.0f, 0.0f, 0.0f};
-    float g2ea[3] = {0.0f, 0.0f, 0.0f};
+    Eigen::Vector3f g1ea = {0.0f, 0.0f, 0.0f};
+    Eigen::Vector3f g2ea = {0.0f, 0.0f, 0.0f};
 
-    float g1[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-    float g2[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+    Matrix3fR g1;
+    g1.fill(0.0f);
+    Matrix3fR g2;
+    g2.fill(0.0f);
 
-    float normal_lab[3] = {0.0f, 0.0f, 0.0f};
-    float normal_grain1[3] = {0.0f, 0.0f, 0.0f};
-    float normal_grain2[3] = {0.0f, 0.0f, 0.0f};
+    Eigen::Vector3f normal_lab = {0.0f, 0.0f, 0.0f};
+    Eigen::Vector3f normal_grain1 = {0.0f, 0.0f, 0.0f};
+    Eigen::Vector3f normal_grain2 = {0.0f, 0.0f, 0.0f};
 
     for(size_t triIdx = start; triIdx < end; triIdx++)
     {
@@ -222,11 +226,13 @@ public:
         g2ea[whichEa] = m_Eulers[3 * feature2 + whichEa];
       }
 
-      OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g1ea, 3)).toGMatrix(g1);
-      OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g2ea, 3)).toGMatrix(g2);
+      auto oMatrix1 = OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g1ea[0], g1ea[1], g1ea[2], 3));
+      g1 = OrientationMatrixToGMatrix(oMatrix1);
+      auto oMatrix2 = OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g2ea[0], g2ea[1], g2ea[2], 3));
+      g2 = OrientationMatrixToGMatrix(oMatrix2);
 
-      MatrixMath::Multiply3x3with3x1(g1, normal_lab, normal_grain1);
-      MatrixMath::Multiply3x3with3x1(g2, normal_lab, normal_grain2);
+      normal_grain1 = g1 * normal_lab;
+      normal_grain2 = g2 * normal_lab;
 
       (*selectedTris).push_back(TriAreaAndNormals(m_FaceAreas[triIdx], normal_grain1[0], normal_grain1[1], normal_grain1[2], -normal_grain2[0], -normal_grain2[1], -normal_grain2[2]));
     }
@@ -300,21 +306,22 @@ public:
 
       for(int triRepresIdx = 0; triRepresIdx < static_cast<int>(selectedTris.size()); triRepresIdx++)
       {
-        float normal1[3] = {selectedTris[triRepresIdx].normal_grain1_x, selectedTris[triRepresIdx].normal_grain1_y, selectedTris[triRepresIdx].normal_grain1_z};
+        Eigen::Vector3f normal1 = {selectedTris[triRepresIdx].normal_grain1_x, selectedTris[triRepresIdx].normal_grain1_y, selectedTris[triRepresIdx].normal_grain1_z};
 
-        float normal2[3] = {selectedTris[triRepresIdx].normal_grain2_x, selectedTris[triRepresIdx].normal_grain2_y, selectedTris[triRepresIdx].normal_grain2_z};
+        Eigen::Vector3f normal2 = {selectedTris[triRepresIdx].normal_grain2_x, selectedTris[triRepresIdx].normal_grain2_y, selectedTris[triRepresIdx].normal_grain2_z};
 
-        float sym[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+        Matrix3fR sym;
+        sym.fill(0.0f);
 
         for(int j = 0; j < nsym; j++)
         {
-          m_OrientationOps[cryst]->getMatSymOp(j, sym);
+          sym = EbsdLibMatrixToEigenMatrix(m_OrientationOps[cryst]->getMatSymOpF(j));
 
-          float sym_normal1[3] = {0.0f, 0.0f, 0.0f};
-          float sym_normal2[3] = {0.0f, 0.0f, 0.0f};
+          Eigen::Vector3f sym_normal1 = {0.0f, 0.0f, 0.0f};
+          Eigen::Vector3f sym_normal2 = {0.0f, 0.0f, 0.0f};
 
-          MatrixMath::Multiply3x3with3x1(sym, normal1, sym_normal1);
-          MatrixMath::Multiply3x3with3x1(sym, normal2, sym_normal2);
+          sym_normal1 = sym * normal1;
+          sym_normal2 = sym * normal2;
 
           for(int inversion = 0; inversion <= 1; inversion++)
           {
@@ -389,7 +396,7 @@ void FindGBPDMetricBased::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("Save Relative Errors Instead of Their Absolute Values", SaveRelativeErr, FilterParameter::Category::Parameter, FindGBPDMetricBased));
   parameters.push_back(SeparatorFilterParameter::Create("Vertex Data", FilterParameter::Category::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, AttributeMatrix::Type::Vertex, IGeometry::Type::Triangle);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Node Types", NodeTypesArrayPath, FilterParameter::Category::RequiredArray, FindGBPDMetricBased, req));
   }
   parameters.push_back(SeparatorFilterParameter::Create("Face Data", FilterParameter::Category::RequiredArray));
@@ -1054,14 +1061,15 @@ void FindGBPDMetricBased::execute()
 
   for(int ptIdx = 0; ptIdx < samplPtsX.size(); ptIdx++)
   {
-    float point[3] = {samplPtsX.at(ptIdx), samplPtsY.at(ptIdx), samplPtsZ.at(ptIdx)};
-    float sym[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+    Eigen::Vector3f point = {samplPtsX.at(ptIdx), samplPtsY.at(ptIdx), samplPtsZ.at(ptIdx)};
+    Matrix3fR sym;
+    sym.fill(0.0f);
 
     for(int j = 0; j < nsym; j++)
     {
-      m_OrientationOps[cryst]->getMatSymOp(j, sym);
-      float sym_point[3] = {0.0f, 0.0f, 0.0f};
-      MatrixMath::Multiply3x3with3x1(sym, point, sym_point);
+      sym = EbsdLibMatrixToEigenMatrix(m_OrientationOps[cryst]->getMatSymOpF(j));
+      Eigen::Vector3f sym_point = {0.0f, 0.0f, 0.0f};
+      sym_point = sym * point;
 
       if(sym_point[2] < 0.0f)
       {
