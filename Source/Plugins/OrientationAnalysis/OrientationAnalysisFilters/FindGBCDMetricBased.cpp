@@ -329,11 +329,11 @@ public:
  */
 class ProbeDistrib
 {
-  QVector<double>* distribValues = nullptr;
-  QVector<double>* errorValues = nullptr;
-  QVector<float> samplPtsX;
-  QVector<float> samplPtsY;
-  QVector<float> samplPtsZ;
+  std::vector<double>* distribValues = nullptr;
+  std::vector<double>* errorValues = nullptr;
+  std::vector<float> samplPtsX;
+  std::vector<float> samplPtsY;
+  std::vector<float> samplPtsZ;
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::concurrent_vector<TriAreaAndNormals> selectedTris;
 #else
@@ -346,7 +346,7 @@ class ProbeDistrib
   const Matrix3fR& gFixedT;
 
 public:
-  ProbeDistrib(QVector<double>* __distribValues, QVector<double>* __errorValues, QVector<float> __samplPtsX, QVector<float> __samplPtsY, QVector<float> __samplPtsZ,
+  ProbeDistrib(std::vector<double>* __distribValues, std::vector<double>* __errorValues, std::vector<float> __samplPtsX, std::vector<float> __samplPtsY, std::vector<float> __samplPtsZ,
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
                tbb::concurrent_vector<TriAreaAndNormals> __selectedTris,
 #else
@@ -401,8 +401,8 @@ public:
           }
         }
       }
-      (*errorValues)[ptIdx] = sqrt((*distribValues)[ptIdx] / totalFaceArea / double(numDistinctGBs)) / ballVolume;
 
+      (*errorValues)[ptIdx] = sqrt((*distribValues)[ptIdx] / totalFaceArea / double(numDistinctGBs)) / ballVolume;
       (*distribValues)[ptIdx] /= totalFaceArea;
       (*distribValues)[ptIdx] /= ballVolume;
     }
@@ -814,9 +814,9 @@ void FindGBCDMetricBased::execute()
 
   // generate "Golden Section Spiral", see http://www.softimageblog.com/archives/115
   int numSamplPts_WholeSph = 2 * m_NumSamplPts; // here we generate points on the whole sphere
-  QVector<float> samplPtsX(0);
-  QVector<float> samplPtsY(0);
-  QVector<float> samplPtsZ(0);
+  std::vector<float> samplPtsX(0);
+  std::vector<float> samplPtsY(0);
+  std::vector<float> samplPtsZ(0);
 
   float _inc = 2.3999632f; // = pi * (3 - sqrt(5))
   float _off = 2.0f / float(numSamplPts_WholeSph);
@@ -941,8 +941,8 @@ void FindGBCDMetricBased::execute()
     totalFaceArea += m_FaceAreas[triIdx] * double(triIncluded.at(triIdx));
   }
 
-  QVector<double> distribValues(samplPtsX.size(), 0.0);
-  QVector<double> errorValues(samplPtsX.size(), 0.0);
+  std::vector<double> distribValues(samplPtsX.size(), 0.0);
+  std::vector<double> errorValues(samplPtsX.size(), 0.0);
 
   int32_t pointsChunkSize = 100;
   if(samplPtsX.size() < pointsChunkSize)
@@ -991,11 +991,11 @@ void FindGBCDMetricBased::execute()
     float zenithDeg = static_cast<float>(SIMPLib::Constants::k_180OverPiD * zenith);
     float azimuthDeg = static_cast<float>(SIMPLib::Constants::k_180OverPiD * azimuth);
 
-    fprintf(fDist, "%.2f %.2f %.4f\n", azimuthDeg, 90.0f - zenithDeg, distribValues[ptIdx]);
+    fprintf(fDist, "%.8E %.8E %.8E\n", azimuthDeg, 90.0f - zenithDeg, distribValues[ptIdx]);
 
     if(!m_SaveRelativeErr)
     {
-      fprintf(fErr, "%.2f %.2f %.4f\n", azimuthDeg, 90.0f - zenithDeg, errorValues[ptIdx]);
+      fprintf(fErr, "%.8E %.28f %.8E\n", azimuthDeg, 90.0f - zenithDeg, errorValues[ptIdx]);
     }
     else
     {
@@ -1004,7 +1004,7 @@ void FindGBCDMetricBased::execute()
       {
         saneErr = fmin(100.0, 100.0 * errorValues[ptIdx] / distribValues[ptIdx]);
       }
-      fprintf(fErr, "%.2f %.2f %.2f\n", azimuthDeg, 90.0f - zenithDeg, saneErr);
+      fprintf(fErr, "%.8E %.8E %.2E\n", azimuthDeg, 90.0f - zenithDeg, saneErr);
     }
   }
   fclose(fDist);
