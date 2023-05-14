@@ -37,6 +37,8 @@
 
 #include <QtCore/QTextStream>
 
+#include <Eigen/Dense>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -54,11 +56,13 @@
 #include "EbsdLib/Core/Quaternion.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisUtilities.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 #include "EbsdLib/Core/EbsdLibConstants.h"
 
 using QuatF = Quaternion<float>;
+using namespace OrientationUtilities;
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -231,13 +235,13 @@ void FindFeatureNeighborCAxisMisalignments::execute()
   std::vector<std::vector<float>> misalignmentlists;
 
   float w = 0.0f;
-  float g1[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-  float g2[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-  float g1t[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-  float g2t[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-  float c1[3] = {0.0f, 0.0f, 0.0f};
-  float c2[3] = {0.0f, 0.0f, 0.0f};
-  float caxis[3] = {0.0f, 0.0f, 1.0f};
+  Matrix3fR g1T;
+  g1T.fill(0.0f);
+  Matrix3fR g2T;
+  g2T.fill(0.0f);
+  Eigen::Vector3f c1{0.0f, 0.0f, 0.0f};
+  Eigen::Vector3f c2{0.0f, 0.0f, 0.0f};
+  const Eigen::Vector3f cAxis{0.0f, 0.0f, 1.0f};
   size_t hexneighborlistsize = 0;
   //  QuatF q1 = QuaternionMathF::New();
   //  QuatF q2 = QuaternionMathF::New();
@@ -252,15 +256,15 @@ void FindFeatureNeighborCAxisMisalignments::execute()
   {
     phase1 = m_CrystalStructures[m_FeaturePhases[i]];
     currentAvgQuatPtr = avgQuatsPtr->getTuplePointer(i);
-    OrientationTransformation::qu2om<QuatF, OrientF>({currentAvgQuatPtr[0], currentAvgQuatPtr[1], currentAvgQuatPtr[2], currentAvgQuatPtr[3]}).toGMatrix(g1);
+    OrientationF oMatrix1 = OrientationTransformation::qu2om<QuatF, OrientF>({currentAvgQuatPtr[0], currentAvgQuatPtr[1], currentAvgQuatPtr[2], currentAvgQuatPtr[3]});
 
     // transpose the g matrix so when caxis is multiplied by it
     // it will give the sample direction that the caxis is along
-    MatrixMath::Transpose3x3(g1, g1t);
-    MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
+    g1T = OrientationMatrixToGMatrixTranspose(oMatrix1);
+    c1 = g1T * cAxis;
     // normalize so that the dot product can be taken below without
     // dividing by the magnitudes (they would be 1)
-    MatrixMath::Normalize3x1(c1);
+    c1.normalize();
     misalignmentlists[i].resize(neighborlist[i].size(), -1.0f);
     for(size_t j = 0; j < neighborlist[i].size(); j++)
     {
@@ -268,28 +272,28 @@ void FindFeatureNeighborCAxisMisalignments::execute()
       nname = neighborlist[i][j];
       phase2 = m_CrystalStructures[m_FeaturePhases[nname]];
       hexneighborlistsize = neighborlist[i].size();
-      if(phase1 == phase2 && (phase1 == EbsdLib::CrystalStructure::Hexagonal_High))
+      if(phase1 == phase2 && (phase1 == EbsdLib::CrystalStructure::Hexagonal_High || phase1 == EbsdLib::CrystalStructure::Hexagonal_Low))
       {
         currentAvgQuatPtr = avgQuatsPtr->getTuplePointer(nname);
-        OrientationTransformation::qu2om<QuatF, OrientF>({currentAvgQuatPtr[0], currentAvgQuatPtr[1], currentAvgQuatPtr[2], currentAvgQuatPtr[3]}).toGMatrix(g2);
+        OrientationF oMatrix2 = OrientationTransformation::qu2om<QuatF, OrientF>({currentAvgQuatPtr[0], currentAvgQuatPtr[1], currentAvgQuatPtr[2], currentAvgQuatPtr[3]});
 
         // transpose the g matrix so when caxis is multiplied by it
         // it will give the sample direction that the caxis is along
-        MatrixMath::Transpose3x3(g2, g2t);
-        MatrixMath::Multiply3x3with3x1(g2t, caxis, c2);
+        g2T = OrientationMatrixToGMatrixTranspose(oMatrix2);
+        c2 = g2T * cAxis;
         // normalize so that the dot product can be taken below without
         // dividing by the magnitudes (they would be 1)
-        MatrixMath::Normalize3x1(c2);
+        c2.normalize();
 
         w = GeometryMath::CosThetaBetweenVectors(c1, c2);
         SIMPLibMath::bound(w, -1.0f, 1.0f);
         w = acosf(w);
-        if(w > (SIMPLib::Constants::k_PiD / 2))
+        if(w > (SIMPLib::Constants::k_PiF / 2))
         {
-          w = SIMPLib::Constants::k_PiD - w;
+          w = SIMPLib::Constants::k_PiF - w;
         }
 
-        misalignmentlists[i][j] = w * SIMPLib::Constants::k_180OverPiD;
+        misalignmentlists[i][j] = w * SIMPLib::Constants::k_180OverPiF;
         if(m_FindAvgMisals)
         {
           m_AvgCAxisMisalignments[i] += misalignmentlists[i][j];
