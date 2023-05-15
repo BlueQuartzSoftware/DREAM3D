@@ -384,9 +384,9 @@ private:
   DataArrayPath m_SurfaceMeshFeatureFaceLabelsArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceFeatureAttributeMatrixName, "FaceLabels"};
   DataArrayPath m_NodeTypesArrayPath = {SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType};
 
-  void appendSamplPtsFixedZenith(QVector<float>* xVec, QVector<float>* yVec, QVector<float>* zVec, double theta, double minPhi, double maxPhi, double step);
+  void appendSamplPtsFixedZenith(std::vector<double> &xVec, std::vector<double> &yVec, std::vector<double> &zVec, double theta, double minPhi, double maxPhi, double step);
 
-  void appendSamplPtsFixedAzimuth(QVector<float>* xVec, QVector<float>* yVec, QVector<float>* zVec, double phi, double minTheta, double maxTheta, double step);
+  void appendSamplPtsFixedAzimuth(std::vector<double>& xVec, std::vector<double>& yVec, std::vector<double>& zVec, double phi, double minTheta, double maxTheta, double step);
 
 public:
   FindGBPDMetricBased(const FindGBPDMetricBased&) = delete;            // Copy Constructor Not Implemented

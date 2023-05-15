@@ -257,9 +257,9 @@ public:
         g2ea[whichEa] = m_Eulers[3 * feature2 + whichEa];
       }
 
-      auto oMatrix1 = OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g1ea[0], g1ea[1], g1ea[2], 3));
+        const OrientationF oMatrix1 = OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g1ea[0], g1ea[1], g1ea[2]));
       g1 = OrientationMatrixToGMatrix(oMatrix1);
-      auto oMatrix2 = OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g2ea[0], g2ea[1], g2ea[2], 3));
+        const OrientationF oMatrix2 = OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g2ea[0], g2ea[1], g2ea[2]));
       g2 = OrientationMatrixToGMatrix(oMatrix2);
 
       for(int j = 0; j < nsym; j++)
@@ -818,7 +818,8 @@ void FindGBCDMetricBased::execute()
   std::vector<float> samplPtsY(0);
   std::vector<float> samplPtsZ(0);
 
-  float _inc = 2.3999632f; // = pi * (3 - sqrt(5))
+  const float _inc = SIMPLib::Constants::k_PiD * (3.0 - std::sqrt(5.0));
+
   float _off = 2.0f / float(numSamplPts_WholeSph);
 
   for(int ptIdx_WholeSph = 0; ptIdx_WholeSph < numSamplPts_WholeSph; ptIdx_WholeSph++)

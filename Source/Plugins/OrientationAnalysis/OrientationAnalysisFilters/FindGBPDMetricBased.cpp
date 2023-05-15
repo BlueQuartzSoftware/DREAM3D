@@ -91,14 +91,14 @@ class TriAreaAndNormals
 {
 public:
   double area;
-  float normal_grain1_x;
-  float normal_grain1_y;
-  float normal_grain1_z;
-  float normal_grain2_x;
-  float normal_grain2_y;
-  float normal_grain2_z;
+  double normal_grain1_x;
+  double normal_grain1_y;
+  double normal_grain1_z;
+  double normal_grain2_x;
+  double normal_grain2_y;
+  double normal_grain2_z;
 
-  TriAreaAndNormals(double __area, float n1x, float n1y, float n1z, float n2x, float n2y, float n2z)
+  TriAreaAndNormals(double __area, double n1x, double n1y, double n1z, double n2x, double n2y, double n2z)
   : area(__area)
   , normal_grain1_x(n1x)
   , normal_grain1_y(n1y)
@@ -116,7 +116,7 @@ public:
 
   TriAreaAndNormals()
   {
-    TriAreaAndNormals(0.0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+    TriAreaAndNormals(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
   }
 };
 
@@ -133,7 +133,7 @@ class TrisSelector
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::concurrent_vector<TriAreaAndNormals>* selectedTris;
 #else
-  QVector<TriAreaAndNormals>* selectedTris;
+  std::vector<TriAreaAndNormals>* selectedTris;
 #endif
   int32_t m_PhaseOfInterest;
   LaueOpsContainer m_OrientationOps;
@@ -151,7 +151,7 @@ public:
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
                tbb::concurrent_vector<TriAreaAndNormals>* __selectedTris,
 #else
-               QVector<TriAreaAndNormals>* __selectedTris,
+               std::vector<TriAreaAndNormals>* __selectedTris,
 #endif
                int32_t __m_PhaseOfInterest, uint32_t* __m_CrystalStructures, float* __m_Eulers, int32_t* __m_Phases, int32_t* __m_FaceLabels, double* __m_FaceNormals, double* __m_FaceAreas)
   : m_ExcludeTripleLines(__m_ExcludeTripleLines)
@@ -174,17 +174,17 @@ public:
 
   void select(size_t start, size_t end) const
   {
-    Eigen::Vector3f g1ea = {0.0f, 0.0f, 0.0f};
-    Eigen::Vector3f g2ea = {0.0f, 0.0f, 0.0f};
+    Eigen::Vector3d g1ea = {0.0, 0.0, 0.0};
+    Eigen::Vector3d g2ea = {0.0, 0.0, 0.0};
 
-    Matrix3fR g1;
-    g1.fill(0.0f);
-    Matrix3fR g2;
-    g2.fill(0.0f);
+    Matrix3dR g1;
+    g1.fill(0.0);
+    Matrix3dR g2;
+    g2.fill(0.0);
 
-    Eigen::Vector3f normal_lab = {0.0f, 0.0f, 0.0f};
-    Eigen::Vector3f normal_grain1 = {0.0f, 0.0f, 0.0f};
-    Eigen::Vector3f normal_grain2 = {0.0f, 0.0f, 0.0f};
+    Eigen::Vector3d normal_lab = {0.0, 0.0, 0.0};
+    Eigen::Vector3d normal_grain1 = {0.0, 0.0, 0.0};
+    Eigen::Vector3d normal_grain2 = {0.0, 0.0, 0.0};
 
     for(size_t triIdx = start; triIdx < end; triIdx++)
     {
@@ -216,9 +216,9 @@ public:
         }
       }
 
-      normal_lab[0] = static_cast<float>(m_FaceNormals[3 * triIdx]);
-      normal_lab[1] = static_cast<float>(m_FaceNormals[3 * triIdx + 1]);
-      normal_lab[2] = static_cast<float>(m_FaceNormals[3 * triIdx + 2]);
+      normal_lab[0] = static_cast<double>(m_FaceNormals[3 * triIdx]);
+      normal_lab[1] = static_cast<double>(m_FaceNormals[3 * triIdx + 1]);
+      normal_lab[2] = static_cast<double>(m_FaceNormals[3 * triIdx + 2]);
 
       for(int whichEa = 0; whichEa < 3; whichEa++)
       {
@@ -226,9 +226,9 @@ public:
         g2ea[whichEa] = m_Eulers[3 * feature2 + whichEa];
       }
 
-      auto oMatrix1 = OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g1ea[0], g1ea[1], g1ea[2], 3));
+      auto oMatrix1 = OrientationTransformation::eu2om<OrientationD, OrientationD>(OrientationD(g1ea[0], g1ea[1], g1ea[2], 3));
       g1 = OrientationMatrixToGMatrix(oMatrix1);
-      auto oMatrix2 = OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g2ea[0], g2ea[1], g2ea[2], 3));
+      auto oMatrix2 = OrientationTransformation::eu2om<OrientationD, OrientationD>(OrientationD(g2ea[0], g2ea[1], g2ea[2], 3));
       g2 = OrientationMatrixToGMatrix(oMatrix2);
 
       normal_grain1 = g1 * normal_lab;
@@ -252,17 +252,17 @@ public:
  */
 class ProbeDistrib
 {
-  QVector<double>* distribValues;
-  QVector<double>* errorValues;
-  QVector<float>* samplPtsX;
-  QVector<float>* samplPtsY;
-  QVector<float>* samplPtsZ;
+  std::vector<double>& distribValues;
+  std::vector<double>& errorValues;
+  std::vector<double>& samplPtsX;
+  std::vector<double>& samplPtsY;
+  std::vector<double>& samplPtsZ;
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::concurrent_vector<TriAreaAndNormals> selectedTris;
 #else
-  QVector<TriAreaAndNormals> selectedTris;
+  std::vector<TriAreaAndNormals> selectedTris;
 #endif
-  float limitDist;
+  double limitDist;
   double totalFaceArea;
   int numDistinctGBs;
   double ballVolume;
@@ -271,13 +271,14 @@ class ProbeDistrib
   int32_t nsym;
 
 public:
-  ProbeDistrib(QVector<double>* __distribValues, QVector<double>* __errorValues, QVector<float>* __samplPtsX, QVector<float>* __samplPtsY, QVector<float>* __samplPtsZ,
+  ProbeDistrib(std::vector<double>& __distribValues, std::vector<double>& __errorValues,
+               std::vector<double>& __samplPtsX, std::vector<double>& __samplPtsY, std::vector<double>& __samplPtsZ,
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
                tbb::concurrent_vector<TriAreaAndNormals> __selectedTris,
 #else
-               QVector<TriAreaAndNormals> __selectedTris,
+               std::vector<TriAreaAndNormals> __selectedTris,
 #endif
-               float __limitDist, double __totalFaceArea, int __numDistinctGBs, double __ballVolume, int32_t __cryst)
+               double __limitDist, double __totalFaceArea, int __numDistinctGBs, double __ballVolume, int32_t __cryst)
   : distribValues(__distribValues)
   , errorValues(__errorValues)
   , samplPtsX(__samplPtsX)
@@ -302,62 +303,62 @@ public:
     {
       double __c = 0.0;
 
-      float probeNormal[3] = {(*samplPtsX).at(ptIdx), (*samplPtsY).at(ptIdx), (*samplPtsZ).at(ptIdx)};
+      double probeNormal[3] = {samplPtsX[ptIdx], samplPtsY[ptIdx], samplPtsZ[ptIdx]};
 
       for(int triRepresIdx = 0; triRepresIdx < static_cast<int>(selectedTris.size()); triRepresIdx++)
       {
-        Eigen::Vector3f normal1 = {selectedTris[triRepresIdx].normal_grain1_x, selectedTris[triRepresIdx].normal_grain1_y, selectedTris[triRepresIdx].normal_grain1_z};
+        Eigen::Vector3d normal1 = {selectedTris[triRepresIdx].normal_grain1_x, selectedTris[triRepresIdx].normal_grain1_y, selectedTris[triRepresIdx].normal_grain1_z};
 
-        Eigen::Vector3f normal2 = {selectedTris[triRepresIdx].normal_grain2_x, selectedTris[triRepresIdx].normal_grain2_y, selectedTris[triRepresIdx].normal_grain2_z};
+        Eigen::Vector3d normal2 = {selectedTris[triRepresIdx].normal_grain2_x, selectedTris[triRepresIdx].normal_grain2_y, selectedTris[triRepresIdx].normal_grain2_z};
 
-        Matrix3fR sym;
-        sym.fill(0.0f);
+        Matrix3dR sym;
+        sym.fill(0.0);
 
         for(int j = 0; j < nsym; j++)
         {
-          sym = EbsdLibMatrixToEigenMatrix(m_OrientationOps[cryst]->getMatSymOpF(j));
+          sym = EbsdLibMatrixToEigenMatrix(m_OrientationOps[cryst]->getMatSymOpD(j));
 
-          Eigen::Vector3f sym_normal1 = {0.0f, 0.0f, 0.0f};
-          Eigen::Vector3f sym_normal2 = {0.0f, 0.0f, 0.0f};
+          Eigen::Vector3d sym_normal1 = {0.0, 0.0, 0.0};
+          Eigen::Vector3d sym_normal2 = {0.0, 0.0, 0.0};
 
           sym_normal1 = sym * normal1;
           sym_normal2 = sym * normal2;
 
           for(int inversion = 0; inversion <= 1; inversion++)
           {
-            float sign = 1.0f;
+            double sign = 1.0f;
             if(inversion == 1)
             {
               sign = -1.0f;
             }
 
-            float gamma1 = acosf(sign * (probeNormal[0] * sym_normal1[0] + probeNormal[1] * sym_normal1[1] + probeNormal[2] * sym_normal1[2]));
+            double gamma1 = std::acos(sign * (probeNormal[0] * sym_normal1[0] + probeNormal[1] * sym_normal1[1] + probeNormal[2] * sym_normal1[2]));
 
-            float gamma2 = acosf(sign * (probeNormal[0] * sym_normal2[0] + probeNormal[1] * sym_normal2[1] + probeNormal[2] * sym_normal2[2]));
+            double gamma2 = std::acos(sign * (probeNormal[0] * sym_normal2[0] + probeNormal[1] * sym_normal2[1] + probeNormal[2] * sym_normal2[2]));
 
             if(gamma1 < limitDist)
             {
               // Kahan summation algorithm
               double __y = selectedTris[triRepresIdx].area - __c;
-              double __t = (*distribValues)[ptIdx] + __y;
-              __c = (__t - (*distribValues)[ptIdx]);
+              double __t = distribValues[ptIdx] + __y;
+              __c = (__t - distribValues[ptIdx]);
               __c -= __y;
-              (*distribValues)[ptIdx] = __t;
+              distribValues[ptIdx] = __t;
             }
             if(gamma2 < limitDist)
             {
               double __y = selectedTris[triRepresIdx].area - __c;
-              double __t = (*distribValues)[ptIdx] + __y;
-              __c = (__t - (*distribValues)[ptIdx]);
+              double __t = distribValues[ptIdx] + __y;
+              __c = (__t - distribValues[ptIdx]);
               __c -= __y;
-              (*distribValues)[ptIdx] = __t;
+              distribValues[ptIdx] = __t;
             }
           }
         }
       }
-      (*errorValues)[ptIdx] = sqrt((*distribValues)[ptIdx] / totalFaceArea / double(numDistinctGBs)) / ballVolume;
-      (*distribValues)[ptIdx] /= totalFaceArea;
-      (*distribValues)[ptIdx] /= ballVolume;
+      errorValues[ptIdx] = std::sqrt(distribValues[ptIdx] / totalFaceArea / double(numDistinctGBs)) / ballVolume;
+      distribValues[ptIdx] /= totalFaceArea;
+      distribValues[ptIdx] /= ballVolume;
     }
   }
 
@@ -612,33 +613,35 @@ void FindGBPDMetricBased::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBPDMetricBased::appendSamplPtsFixedZenith(QVector<float>* xVec, QVector<float>* yVec, QVector<float>* zVec, double theta, double minPhi, double maxPhi, double step)
+void FindGBPDMetricBased::appendSamplPtsFixedZenith(std::vector<double> &xVec, std::vector<double> &yVec, std::vector<double> &zVec,
+                                                    double theta, double minPhi, double maxPhi, double step)
 {
-  for(double phi = minPhi; phi <= maxPhi; phi += step)
-  {
-    (*xVec).push_back(sinf(static_cast<float>(theta)) * cosf(static_cast<float>(phi)));
-    (*yVec).push_back(sinf(static_cast<float>(theta)) * sinf(static_cast<float>(phi)));
-    (*zVec).push_back(cosf(static_cast<float>(theta)));
-  }
-  (*xVec).push_back(sinf(static_cast<float>(theta)) * cosf(static_cast<float>(maxPhi)));
-  (*yVec).push_back(sinf(static_cast<float>(theta)) * sinf(static_cast<float>(maxPhi)));
-  (*zVec).push_back(cosf(static_cast<float>(theta)));
+    for(float64 phi = minPhi; phi <= maxPhi; phi += step)
+    {
+        xVec.push_back(std::sin(theta) * std::cos(phi));
+        yVec.push_back(std::sin(theta) * std::sin(phi));
+        zVec.push_back(std::cos(theta));
+    }
+    xVec.push_back(std::sin(theta) * std::cos(maxPhi));
+    yVec.push_back(std::sin(theta) * std::sin(maxPhi));
+    zVec.push_back(std::cos(theta));
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBPDMetricBased::appendSamplPtsFixedAzimuth(QVector<float>* xVec, QVector<float>* yVec, QVector<float>* zVec, double phi, double minTheta, double maxTheta, double step)
+void FindGBPDMetricBased::appendSamplPtsFixedAzimuth(std::vector<double>& xVec, std::vector<double>& yVec, std::vector<double>& zVec,
+                                                     double phi, double minTheta, double maxTheta, double step)
 {
   for(double theta = minTheta; theta <= maxTheta; theta += step)
   {
-    (*xVec).push_back(sinf(static_cast<float>(theta)) * cosf(static_cast<float>(phi)));
-    (*yVec).push_back(sinf(static_cast<float>(theta)) * sinf(static_cast<float>(phi)));
-    (*zVec).push_back(cosf(static_cast<float>(theta)));
+    xVec.push_back(std::sin(theta) * std::cos(phi));
+    yVec.push_back(std::sin(theta) * std::sin(phi));
+    zVec.push_back(std::cos(theta));
   }
-  (*xVec).push_back(sinf(static_cast<float>(maxTheta)) * cosf(static_cast<float>(phi)));
-  (*yVec).push_back(sinf(static_cast<float>(maxTheta)) * sinf(static_cast<float>(phi)));
-  (*zVec).push_back(cosf(static_cast<float>(maxTheta)));
+  xVec.push_back(std::sin(maxTheta) * std::cos(phi));
+  yVec.push_back(std::sin(maxTheta) * std::sin(phi));
+  zVec.push_back(std::cos(maxTheta));
 }
 
 // -----------------------------------------------------------------------------
@@ -652,7 +655,7 @@ void FindGBPDMetricBased::execute()
     return;
   }
 
-  m_LimitDist *= SIMPLib::Constants::k_PiOver180D;
+  double limitDist = m_LimitDist * SIMPLib::Constants::k_PiOver180D;
 
   // We want to work with the raw pointers for speed so get those pointers.
   uint32_t* m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
@@ -676,7 +679,7 @@ void FindGBPDMetricBased::execute()
   SharedTriList::Pointer m_TrianglesPtr = triangleGeom->getTriangles();
   MeshIndexType* m_Triangles = m_TrianglesPtr->getPointer(0);
 
-  // -------------------- check if directiories are ok and if output files can be opened -----------
+  // -------------------- check if directories are ok and if output files can be opened -----------
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -741,25 +744,24 @@ void FindGBPDMetricBased::execute()
   std::vector<LaueOps::Pointer> m_OrientationOps = LaueOps::GetAllOrientationOps();
   int32_t cryst = m_CrystalStructures[m_PhaseOfInterest];
   int32_t nsym = m_OrientationOps[cryst]->getNumSymOps();
-  double ballVolume = double(nsym) * 2.0 * (1.0 - cos(m_LimitDist));
+  double ballVolume = double(nsym) * 2.0 * (1.0 - std::cos(limitDist));
 
   // ------------------------------ generation of sampling points ----------------------------------
 
-  QString ss = QObject::tr("--> Generating sampling points");
+  QString ss = QObject::tr("Generating sampling points");
   notifyStatusMessage(ss);
 
   // generate "Golden Section Spiral", see http://www.softimageblog.com/archives/115
   int numSamplPts_WholeSph = 2 * m_NumSamplPts; // here we generate points on the whole sphere
-  QVector<float> samplPtsX_HemiSph(0);
-  QVector<float> samplPtsY_HemiSph(0);
-  QVector<float> samplPtsZ_HemiSph(0);
+  std::vector<double> samplPtsX_HemiSph(0);
+  std::vector<double> samplPtsY_HemiSph(0);
+  std::vector<double> samplPtsZ_HemiSph(0);
+  std::vector<double> samplPtsX(0);
+  std::vector<double> samplPtsY(0);
+  std::vector<double> samplPtsZ(0);
 
-  QVector<float> samplPtsX(0);
-  QVector<float> samplPtsY(0);
-  QVector<float> samplPtsZ(0);
-
-  float _inc = 2.3999632f; // = pi * (3 - sqrt(5))
-  float _off = 2.0f / float(numSamplPts_WholeSph);
+    double _off = 2.0 / double(numSamplPts_WholeSph);
+    const double _inc = SIMPLib::Constants::k_PiD * (3.0 - std::sqrt(5.0));
 
   for(int ptIdx_WholeSph = 0; ptIdx_WholeSph < numSamplPts_WholeSph; ptIdx_WholeSph++)
   {
@@ -768,15 +770,15 @@ void FindGBPDMetricBased::execute()
       return;
     }
 
-    float _y = (float(ptIdx_WholeSph) * _off) - 1.0f + (0.5f * _off);
-    float _r = sqrtf(fmaxf(1.0f - _y * _y, 0.0f));
-    float _phi = float(ptIdx_WholeSph) * _inc;
+    double _y = (static_cast<float64>(ptIdx_WholeSph) * _off) - 1.0 + (0.5 * _off);
+    double _r = std::sqrt(std::fmax(1.0 - _y * _y, 0.0));
+    double _phi = static_cast<float64>(ptIdx_WholeSph) * _inc;
 
-    float z = sinf(_phi) * _r;
+    double z = std::sin(_phi) * _r;
 
-    if(z >= 0.0f)
+    if(z >= 0.0)
     {
-      samplPtsX_HemiSph.push_back(cosf(_phi) * _r);
+      samplPtsX_HemiSph.push_back(std::cos(_phi) * _r);
       samplPtsY_HemiSph.push_back(_y);
       samplPtsZ_HemiSph.push_back(z);
     }
@@ -790,34 +792,34 @@ void FindGBPDMetricBased::execute()
       return;
     }
 
-    float x = samplPtsX_HemiSph[ptIdx_HemiSph];
-    float y = samplPtsY_HemiSph[ptIdx_HemiSph];
-    float z = samplPtsZ_HemiSph[ptIdx_HemiSph];
+    double x = samplPtsX_HemiSph[ptIdx_HemiSph];
+    double y = samplPtsY_HemiSph[ptIdx_HemiSph];
+    double z = samplPtsZ_HemiSph[ptIdx_HemiSph];
 
     if(cryst == 0) // 6/mmm
     {
-      if(x < 0.0f || y < 0.0f || y > x * SIMPLib::Constants::k_1OverRoot3D)
+      if(x < 0.0 || y < 0.0 || y > x * SIMPLib::Constants::k_1OverRoot3D)
       {
         continue;
       }
     }
     if(cryst == 1) // m-3m
     {
-      if(y < 0.0f || x < y || z < x)
+      if(y < 0.0 || x < y || z < x)
       {
         continue;
       }
     }
     if(cryst == 2 || cryst == 10) // 6/m || -3m
     {
-      if(x < 0.0f || y < 0.0f || y > x * SIMPLib::Constants::k_Sqrt3D)
+      if(x < 0.0 || y < 0.0 || y > x * SIMPLib::Constants::k_Sqrt3D)
       {
         continue;
       }
     }
     if(cryst == 3) // m-3
     {
-      if(x < 0.0f || y < 0.0f || z < x || z < y)
+      if(x < 0.0 || y < 0.0 || z < x || z < y)
       {
         continue;
       }
@@ -825,28 +827,28 @@ void FindGBPDMetricBased::execute()
     // cryst = 4  =>  -1
     if(cryst == 5) // 2/m
     {
-      if(y < 0.0f)
+      if(y < 0.0)
       {
         continue;
       }
     }
     if(cryst == 6 || cryst == 7) // mmm || 4/m
     {
-      if(x < 0.0f || y < 0.0f)
+      if(x < 0.0 || y < 0.0)
       {
         continue;
       }
     }
     if(cryst == 8) // 4/mmm
     {
-      if(x < 0.0f || y < 0.0f || y > x)
+      if(x < 0.0 || y < 0.0 || y > x)
       {
         continue;
       }
     }
     if(cryst == 9) // -3
     {
-      if(y < 0.0f || x < -y * SIMPLib::Constants::k_1OverRoot3D)
+      if(y < 0.0 || x < -y * SIMPLib::Constants::k_1OverRoot3D)
       {
         continue;
       }
@@ -859,85 +861,85 @@ void FindGBPDMetricBased::execute()
 
   // Add points at the edges and vertices of a fundamental region
   const double deg = SIMPLib::Constants::k_PiOver180D;
-  const double density = m_LimitDist;
+  //const double density = limitDist;
 
   if(cryst == 0) // 6/mmm
   {
-    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
-    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 30.0 * deg, 0.0, 90.0 * deg, density);
-    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 30.0 * deg, density);
+    appendSamplPtsFixedAzimuth(samplPtsX, samplPtsY, samplPtsZ, 0.0, 0.0, 90.0 * deg, limitDist);
+    appendSamplPtsFixedAzimuth(samplPtsX, samplPtsY, samplPtsZ, 30.0 * deg, 0.0, 90.0 * deg, limitDist);
+    appendSamplPtsFixedZenith(samplPtsX, samplPtsY, samplPtsZ, 90.0 * deg, 0.0, 30.0 * deg, limitDist);
   }
   if(cryst == 1) // m-3m
   {
-    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 45.0 * deg, density);
-    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 45.0 * deg, 0.0, acos(SIMPLib::Constants::k_1OverRoot3D), density);
+    appendSamplPtsFixedAzimuth(samplPtsX, samplPtsY, samplPtsZ, 0.0, 0.0, 45.0 * deg, limitDist);
+    appendSamplPtsFixedAzimuth(samplPtsX, samplPtsY, samplPtsZ, 45.0 * deg, 0.0, std::acos(SIMPLib::Constants::k_1OverRoot3D), limitDist);
 
-    for(double phi = 0; phi <= 45.0f * deg; phi += density)
+    for(double phi = 0; phi <= 45.0f * deg; phi += limitDist)
     {
-      double cosPhi = cos(phi);
-      double sinPhi = sin(phi);
-      double atan1OverCosPhi = atan(1.0 / cosPhi);
-      double sinAtan1OverCosPhi = sin(atan1OverCosPhi);
-      double cosAtan1OverCosPhi = cos(atan1OverCosPhi);
+      double cosPhi = std::cos(phi);
+      double sinPhi = std::sin(phi);
+      double atan1OverCosPhi = std::atan(1.0 / cosPhi);
+      double sinAtan1OverCosPhi = std::sin(atan1OverCosPhi);
+      double cosAtan1OverCosPhi = std::cos(atan1OverCosPhi);
 
-      samplPtsX.push_back(static_cast<float>(sinAtan1OverCosPhi * cosPhi));
-      samplPtsY.push_back(static_cast<float>(sinAtan1OverCosPhi * sinPhi));
-      samplPtsZ.push_back(static_cast<float>(cosAtan1OverCosPhi));
+      samplPtsX.push_back(static_cast<double>(sinAtan1OverCosPhi * cosPhi));
+      samplPtsY.push_back(static_cast<double>(sinAtan1OverCosPhi * sinPhi));
+      samplPtsZ.push_back(static_cast<double>(cosAtan1OverCosPhi));
     }
   }
   if(cryst == 2 || cryst == 10) // 6/m ||  -3m
   {
-    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
-    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 60.0 * deg, 0.0, 90.0 * deg, density);
-    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 60.0 * deg, density);
+    appendSamplPtsFixedAzimuth(samplPtsX, samplPtsY, samplPtsZ, 0.0, 0.0, 90.0 * deg, limitDist);
+    appendSamplPtsFixedAzimuth(samplPtsX, samplPtsY, samplPtsZ, 60.0 * deg, 0.0, 90.0 * deg, limitDist);
+    appendSamplPtsFixedZenith(samplPtsX, samplPtsY, samplPtsZ, 90.0 * deg, 0.0, 60.0 * deg, limitDist);
   }
   if(cryst == 3) // m-3
   {
-    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 45.0 * deg, density);
-    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 45.0 * deg, density);
-    for(double phi = 0; phi <= 45.0f * deg; phi += density)
+    appendSamplPtsFixedAzimuth(samplPtsX, samplPtsY, samplPtsZ, 0.0, 0.0, 45.0 * deg, limitDist);
+    appendSamplPtsFixedAzimuth(samplPtsX, samplPtsY, samplPtsZ, 90.0 * deg, 0.0, 45.0 * deg, limitDist);
+    for(double phi = 0; phi <= 45.0f * deg; phi += limitDist)
     {
-      double cosPhi = cos(phi);
-      double sinPhi = sin(phi);
-      double atan1OverCosPhi = atan(1.0 / cosPhi);
-      double sinAtan1OverCosPhi = sin(atan1OverCosPhi);
-      double cosAtan1OverCosPhi = cos(atan1OverCosPhi);
+      double cosPhi = std::cos(phi);
+      double sinPhi = std::sin(phi);
+      double atan1OverCosPhi = std::atan(1.0 / cosPhi);
+      double sinAtan1OverCosPhi = std::sin(atan1OverCosPhi);
+      double cosAtan1OverCosPhi = std::cos(atan1OverCosPhi);
 
-      samplPtsX.push_back(static_cast<float>(sinAtan1OverCosPhi * cosPhi));
-      samplPtsY.push_back(static_cast<float>(sinAtan1OverCosPhi * sinPhi));
-      samplPtsZ.push_back(static_cast<float>(cosAtan1OverCosPhi));
+      samplPtsX.push_back(static_cast<double>(sinAtan1OverCosPhi * cosPhi));
+      samplPtsY.push_back(static_cast<double>(sinAtan1OverCosPhi * sinPhi));
+      samplPtsZ.push_back(static_cast<double>(cosAtan1OverCosPhi));
 
-      samplPtsX.push_back(static_cast<float>(sinAtan1OverCosPhi * sinPhi));
-      samplPtsY.push_back(static_cast<float>(sinAtan1OverCosPhi * cosPhi));
-      samplPtsZ.push_back(static_cast<float>(cosAtan1OverCosPhi));
+      samplPtsX.push_back(static_cast<double>(sinAtan1OverCosPhi * sinPhi));
+      samplPtsY.push_back(static_cast<double>(sinAtan1OverCosPhi * cosPhi));
+      samplPtsZ.push_back(static_cast<double>(cosAtan1OverCosPhi));
     }
   }
   if(cryst == 4) // -1
   {
-    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 360.0 * deg, density);
+    appendSamplPtsFixedZenith(samplPtsX, samplPtsY, samplPtsZ, 90.0 * deg, 0.0, 360.0 * deg, limitDist);
   }
   if(cryst == 5) // 2/m
   {
-    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 180.0 * deg, density);
-    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, -90.0 * deg, 90.0 * deg, density);
+    appendSamplPtsFixedZenith(samplPtsX, samplPtsY, samplPtsZ, 90.0 * deg, 0.0, 180.0 * deg, limitDist);
+    appendSamplPtsFixedAzimuth(samplPtsX, samplPtsY, samplPtsZ, 0.0, -90.0 * deg, 90.0 * deg, limitDist);
   }
   if(cryst == 6 || cryst == 7) // mmm || 4/m
   {
-    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
-    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 90.0 * deg, density);
-    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedAzimuth(samplPtsX, samplPtsY, samplPtsZ, 0.0, 0.0, 90.0 * deg, limitDist);
+    appendSamplPtsFixedAzimuth(samplPtsX, samplPtsY, samplPtsZ, 90.0 * deg, 0.0, 90.0 * deg, limitDist);
+    appendSamplPtsFixedZenith(samplPtsX, samplPtsY, samplPtsZ, 90.0 * deg, 0.0, 90.0 * deg, limitDist);
   }
   if(cryst == 8) // 4/mmm
   {
-    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
-    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 45.0 * deg, 0.0, 90.0 * deg, density);
-    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 45.0 * deg, density);
+    appendSamplPtsFixedAzimuth(samplPtsX, samplPtsY, samplPtsZ, 0.0, 0.0, 90.0 * deg, limitDist);
+    appendSamplPtsFixedAzimuth(samplPtsX, samplPtsY, samplPtsZ, 45.0 * deg, 0.0, 90.0 * deg, limitDist);
+    appendSamplPtsFixedZenith(samplPtsX, samplPtsY, samplPtsZ, 90.0 * deg, 0.0, 45.0 * deg, limitDist);
   }
   if(cryst == 9) // -3
   {
-    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
-    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 120.0 * deg, 0.0, 90.0 * deg, density);
-    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 120.0 * deg, density);
+    appendSamplPtsFixedAzimuth(samplPtsX, samplPtsY, samplPtsZ, 0.0, 0.0, 90.0 * deg, limitDist);
+    appendSamplPtsFixedAzimuth(samplPtsX, samplPtsY, samplPtsZ, 120.0 * deg, 0.0, 90.0 * deg, limitDist);
+    appendSamplPtsFixedZenith(samplPtsX, samplPtsY, samplPtsZ, 90.0 * deg, 0.0, 120.0 * deg, limitDist);
   }
 
   // ---------  find triangles corresponding to Phase of Interests, and their normals in crystal reference frames ---------
@@ -947,7 +949,7 @@ void FindGBPDMetricBased::execute()
   bool doParallel = true;
   tbb::concurrent_vector<GBPDMetricBased::TriAreaAndNormals> selectedTris(0);
 #else
-  QVector<GBPDMetricBased::TriAreaAndNormals> selectedTris(0);
+  std::vector<GBPDMetricBased::TriAreaAndNormals> selectedTris(0);
 #endif
 
   size_t trisChunkSize = 50000;
@@ -962,7 +964,7 @@ void FindGBPDMetricBased::execute()
     {
       return;
     }
-    ss = QObject::tr("--> Selecting triangles corresponding to Phase Of Interest");
+    ss = QString("%1: Selecting triangles corresponding to Phase Of Interest").arg(i);
     notifyStatusMessage(ss);
     if(i + trisChunkSize >= numMeshTris)
     {
@@ -1018,8 +1020,8 @@ void FindGBPDMetricBased::execute()
     totalFaceArea += selectedTris.at(i).area;
   }
 
-  QVector<double> distribValues(samplPtsX.size(), 0.0);
-  QVector<double> errorValues(samplPtsX.size(), 0.0);
+  std::vector<double> distribValues(samplPtsX.size(), 0.0);
+  std::vector<double> errorValues(samplPtsX.size(), 0.0);
 
   int32_t pointsChunkSize = 20;
   if(samplPtsX.size() < pointsChunkSize)
@@ -1033,7 +1035,7 @@ void FindGBPDMetricBased::execute()
     {
       return;
     }
-    ss = QObject::tr("--> Determining GBPD values (%1%)").arg(int(100.0 * float(i) / float(samplPtsX.size())));
+    ss = QObject::tr("Determining GBPD values (%1%)").arg(int(100.0 * float(i) / float(samplPtsX.size())));
     notifyStatusMessage(ss);
     if(i + pointsChunkSize >= samplPtsX.size())
     {
@@ -1044,60 +1046,60 @@ void FindGBPDMetricBased::execute()
     if(doParallel)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i + pointsChunkSize),
-                        GBPDMetricBased::ProbeDistrib(&distribValues, &errorValues, &samplPtsX, &samplPtsY, &samplPtsZ, selectedTris, m_LimitDist, totalFaceArea, numDistinctGBs, ballVolume, cryst),
+                        GBPDMetricBased::ProbeDistrib(distribValues, errorValues, samplPtsX, samplPtsY, samplPtsZ, selectedTris, limitDist, totalFaceArea, numDistinctGBs, ballVolume, cryst),
                         tbb::auto_partitioner());
     }
     else
 #endif
     {
-      GBPDMetricBased::ProbeDistrib serial(&distribValues, &errorValues, &samplPtsX, &samplPtsY, &samplPtsZ, selectedTris, m_LimitDist, totalFaceArea, numDistinctGBs, ballVolume, cryst);
+      GBPDMetricBased::ProbeDistrib serial(distribValues, errorValues, samplPtsX, samplPtsY, samplPtsZ, selectedTris, limitDist, totalFaceArea, numDistinctGBs, ballVolume, cryst);
       serial.probe(i, i + pointsChunkSize);
     }
   }
 
   // ------------------------------------------- writing the output --------------------------------
-  fprintf(fDist, "%.1f %.1f %.1f %.1f\n", 0.0f, 0.0f, 0.0f, 0.0f);
-  fprintf(fErr, "%.1f %.1f %.1f %.1f\n", 0.0f, 0.0f, 0.0f, 0.0f);
+  fprintf(fDist, "%.1f %.1f %.1f %.1f\n", 0.0, 0.0, 0.0, 0.0);
+  fprintf(fErr, "%.1f %.1f %.1f %.1f\n", 0.0, 0.0, 0.0, 0.0);
 
   for(int ptIdx = 0; ptIdx < samplPtsX.size(); ptIdx++)
   {
-    Eigen::Vector3f point = {samplPtsX.at(ptIdx), samplPtsY.at(ptIdx), samplPtsZ.at(ptIdx)};
-    Matrix3fR sym;
-    sym.fill(0.0f);
+    Eigen::Vector3d point = {samplPtsX.at(ptIdx), samplPtsY.at(ptIdx), samplPtsZ.at(ptIdx)};
+    Matrix3dR sym;
+    sym.fill(0.0);
 
     for(int j = 0; j < nsym; j++)
     {
-      sym = EbsdLibMatrixToEigenMatrix(m_OrientationOps[cryst]->getMatSymOpF(j));
-      Eigen::Vector3f sym_point = {0.0f, 0.0f, 0.0f};
+      sym = EbsdLibMatrixToEigenMatrix(m_OrientationOps[cryst]->getMatSymOpD(j));
+      Eigen::Vector3d sym_point = {0.0, 0.0, 0.0};
       sym_point = sym * point;
 
-      if(sym_point[2] < 0.0f)
+      if(sym_point[2] < 0.0)
       {
         sym_point[0] = -sym_point[0];
         sym_point[1] = -sym_point[1];
         sym_point[2] = -sym_point[2];
       }
 
-      float zenith = acosf(sym_point[2]);
-      float azimuth = atan2f(sym_point[1], sym_point[0]);
+      double zenith = std::acos(sym_point[2]);
+      double azimuth = std::atan2(sym_point[1], sym_point[0]);
 
-      float zenithDeg = static_cast<float>(SIMPLib::Constants::k_180OverPiD * zenith);
-      float azimuthDeg = static_cast<float>(SIMPLib::Constants::k_180OverPiD * azimuth);
+      double zenithDeg = static_cast<double>(SIMPLib::Constants::k_180OverPiD * zenith);
+      double azimuthDeg = static_cast<double>(SIMPLib::Constants::k_180OverPiD * azimuth);
 
-      fprintf(fDist, "%.2f %.2f %.4f\n", azimuthDeg, 90.0f - zenithDeg, distribValues[ptIdx]);
+      fprintf(fDist, "%.8E %.8E %.8E\n", azimuthDeg, 90.0 - zenithDeg, distribValues[ptIdx]);
 
       if(!m_SaveRelativeErr)
       {
-        fprintf(fErr, "%.2f %.2f %.4f\n", azimuthDeg, 90.0f - zenithDeg, errorValues[ptIdx]);
+        fprintf(fErr, "%.8E %.8E %.8E\n", azimuthDeg, 90.0 - zenithDeg, errorValues[ptIdx]);
       }
       else
       {
         double saneErr = 100.0;
         if(distribValues[ptIdx] > 1e-10)
         {
-          saneErr = fmin(100.0, 100.0 * errorValues[ptIdx] / distribValues[ptIdx]);
+          saneErr = std::fmin(100.0, 100.0 * errorValues[ptIdx] / distribValues[ptIdx]);
         }
-        fprintf(fErr, "%.2f %.2f %.2f\n", azimuthDeg, 90.0f - zenithDeg, saneErr);
+        fprintf(fErr, "%.8E %.8E %.8E\n", azimuthDeg, 90.0 - zenithDeg, saneErr);
       }
     }
   }
