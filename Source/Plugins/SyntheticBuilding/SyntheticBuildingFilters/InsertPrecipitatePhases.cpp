@@ -920,11 +920,6 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
         {
           QString ss = QObject::tr("Packing Precipitates || Generating Feature #%1").arg(currentnumfeatures);
           notifyStatusMessage(ss);
-
-          if(getCancel())
-          {
-            return;
-          }
         }
 
         tDims[0] = currentnumfeatures + 1;
@@ -937,6 +932,11 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
         iter = 0;
         m_NumFeatures[phase]++;
         currentnumfeatures++;
+      }
+
+      if(getCancel())
+      {
+        return;
       }
     }
   }
@@ -1169,9 +1169,11 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     {
       return;
     }
-    ss = QObject::tr("Packing Precipitates || Placing Precipitate #%1").arg(i);
-    notifyStatusMessage(ss);
-
+    if(i % 100 == 0)
+    {
+      ss = QObject::tr("Packing Precipitates || Placing Precipitate #%1").arg(i);
+      notifyStatusMessage(ss);
+    }
     PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[m_FeaturePhases[i]]);
     precipboundaryfraction = pp->getPrecipBoundaryFraction();
     random = static_cast<float>(rg.genrand_res53());
@@ -1615,6 +1617,10 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* prec
       bin = j;
       break;
     }
+    if(getCancel())
+    {
+      return;
+    }
   }
   std::array<double, 3> randx3 = {rg.genrand_res53(), rg.genrand_res53(), rg.genrand_res53()};
   OrientationD eulers = OrthoOps->determineEulerAngles(randx3.data(), bin);
@@ -1636,7 +1642,7 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* prec
   precip->m_AxisEulerAngles[1] = eulers[1];
   precip->m_AxisEulerAngles[2] = eulers[2];
   precip->m_Omega3s = omega3f;
-  precip->m_FeaturePhases = phase;
+  precip->m_FeaturePhases = phase + m_FirstPrecipitateFeature;
 }
 
 // -----------------------------------------------------------------------------
