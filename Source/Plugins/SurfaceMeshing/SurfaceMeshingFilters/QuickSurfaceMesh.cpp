@@ -1612,6 +1612,7 @@ void QuickSurfaceMesh::execute()
       edgeCount++;
     }
   }
+  
   if(m_GenerateTripleLines)
   {
       generateTripleLines();
@@ -1797,7 +1798,7 @@ void QuickSurfaceMesh::generateTripleLines()
 
   EdgeGeom::Pointer tripleLineEdge = EdgeGeom::New();
   SharedVertexList::Pointer vertices = tripleLineEdge->CreateSharedVertexList(vertexMap.size() * 3);
-
+  size_t totalVertsUsed = 0;
   for(auto vert : vertexMap)
   {
     float v0 = vert.first[0];
@@ -1807,11 +1808,20 @@ void QuickSurfaceMesh::generateTripleLines()
     vertices->setComponent(idx, 0, v0);
     vertices->setComponent(idx, 1, v1);
     vertices->setComponent(idx, 2, v2);
+    if(idx > totalVertsUsed)
+    {
+      totalVertsUsed = idx;
+    }
   }
 
+  std::cout << "TotalVertsUsed: " << totalVertsUsed << std::endl;
+  std::cout << "Total Vertices Allocated: " << vertexMap.size() * 3 << std::endl;
+  
   tripleLineEdge->setVertices(vertices);
+  tripleLineEdge->resizeVertexList(totalVertsUsed);
 
   SharedEdgeList::Pointer edges = tripleLineEdge->CreateSharedEdgeList(edgeMap.size() * 2);
+  totalVertsUsed = 0;
   for(auto edge : edgeMap)
   {
     MeshIndexType i0 = edge.first[0];
@@ -1819,8 +1829,13 @@ void QuickSurfaceMesh::generateTripleLines()
     MeshIndexType idx = edge.second;
     edges->setComponent(idx, 0, i0);
     edges->setComponent(idx, 1, i1);
+    if(idx > totalVertsUsed)
+    {
+      totalVertsUsed = idx;
+    }
   }
   tripleLineEdge->setEdges(edges);
+  tripleLineEdge->resizeEdgeList(totalVertsUsed);
 
   DataContainerArray::Pointer dca = getDataContainerArray();
   DataContainer::Pointer dc = DataContainer::New("Edges");
