@@ -111,7 +111,7 @@ void StereographicWidget::valuesUpdated(const QString& text)
 {
   QVector<double> values = getValues();
 
-  OrientationTransformation::ResultType result = OrientationTransformation::eu_check(values);
+  OrientationTransformation::ResultType result = OrientationTransformation::st_check(values);
   int errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
 
