@@ -1395,7 +1395,7 @@ void GenerateSourceFile(AbstractFilter* filter, const QString& outputDir, const 
   QString humanName = filter->getHumanLabel();
   // QString pluginName = filter->getCompiledLibraryName();
 
-  QString defaultTags = QString("\"%1\", \"%2\"").arg(filter->getGroupName(), filter->getSubGroupName());
+  QString defaultTags = QString("className(), \"%1\", \"%2\"").arg(filter->getGroupName(), filter->getSubGroupName());
   if(filter->getSubGroupName() == SIMPL::FilterSubGroups::InputFilters)
   {
     defaultTags = defaultTags + ", \"Read\", \"Import\"";
