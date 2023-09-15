@@ -147,18 +147,16 @@ void ConvertOrientations::dataCheck()
     setErrorCondition(-1000, ss);
   }
 
-  int32_t minIndex = OrientationConverter<FloatArrayType, float>::GetMinIndex();
-  int32_t maxIndex = OrientationConverter<FloatArrayType, float>::GetMaxIndex();
 
-  if(getInputType() < minIndex || getInputType() > maxIndex)
+  if(static_cast<int>(getInputType()) < 0 || getInputType() >= static_cast<int>(OrientationRepresentation::Type::Unknown))
   {
-    QString ss = QObject::tr("There was an error with the selection of the input orientation type. The valid values range from 0 to %1").arg(maxIndex);
+    QString ss = QObject::tr("There was an error with the selection of the input orientation type. The valid values range from 0 to %1").arg(static_cast<int>(OrientationRepresentation::Type::Unknown));
     setErrorCondition(-1001, ss);
   }
 
-  if(getOutputType() < minIndex || getOutputType() > maxIndex)
+  if(static_cast<int>(getOutputType()) < 0 || getOutputType() >= static_cast<int>(OrientationRepresentation::Type::Unknown))
   {
-    QString ss = QObject::tr("There was an error with the selection of the output orientation type. The valid values range from 0 to %1").arg(maxIndex);
+    QString ss = QObject::tr("There was an error with the selection of the output orientation type. The valid values range from 0 to %1").arg(static_cast<int>(OrientationRepresentation::Type::Unknown));
     setErrorCondition(-1002, ss);
   }
 
