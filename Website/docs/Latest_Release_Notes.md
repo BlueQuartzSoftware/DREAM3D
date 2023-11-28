@@ -65,7 +65,7 @@ None
 
 ## Previous Releases ##
 
-Previous releases of DREAM.3D can be [found in the archive](http://dream3d.bluequartz.net/binaries/previous/)
+Previous releases of DREAM.3D can be [found in the archive](https://dream3d.bluequartz.net/binaries/previous/)
 
 ## Version 6.5.167
 

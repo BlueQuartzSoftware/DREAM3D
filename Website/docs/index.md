@@ -22,19 +22,18 @@ The current version is 6.5.171 and is available in prebuilt binaries for MacOS, 
 
 | Operating System | Notes |
 |------------------|----------------------|
-| Signed [MacOS - DREAM3D-6.5.171-OSX-x86_64.dmg](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.171-OSX-x86_64.dmg) | MacOS 10.15 and greater required, including macOS 11.0. Download is a Disk Image |
-| Unsigned [MacOS - DREAM3D-6.5.171-OSX-x86_64.zip](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.171-OSX-x86_64.zip) | MacOS 10.15 and greater required, including macOS 11.0. Download is a Zip file |
-| Signed [MacOS - DREAM3D-6.5.171-OSX-arm64.dmg](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.171-OSX-arm64.dmg) | Apple M1 Arm build. Download is a DMG File |
-| Unsigned [MacOS - DREAM3D-6.5.171-OSX-arm64.dmg](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.171-OSX-arm64.dmg) | Apple M1 Arm build. Download is a ZIP File |
-| [Windows - DREAM3D-6.5.171-Win64.zip](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.171-Win64.zip) | Windows version 8,10,11 |
-| [Linux - DREAM3D-6.5.171-Linux-x86_64.tar.gz](http://dream3d.bluequartz.net/binaries/DREAM3D-6.5.171-Linux-x86_64.tar.gz) | Ubuntu 18.04 or Equivelant. Self contained tar archive.  |
-
+| Signed [MacOS - DREAM3D-6.5.171-OSX-x86_64.dmg](https://dream3d.bluequartz.net/binaries/DREAM3D-6.5.171-OSX-x86_64.dmg) | MacOS 10.15 and greater required, including macOS 11.0. Download is a Disk Image |
+| Unsigned [MacOS - DREAM3D-6.5.171-OSX-x86_64.zip](https://dream3d.bluequartz.net/binaries/DREAM3D-6.5.171-OSX-x86_64.zip) | MacOS 10.15 and greater required, including macOS 11.0. Download is a Zip file |
+| Signed [MacOS - DREAM3D-6.5.171-OSX-arm64.dmg](https://dream3d.bluequartz.net/binaries/DREAM3D-6.5.171-OSX-arm64.dmg) | Apple M1 Arm build. Download is a DMG File |
+| Unsigned [MacOS - DREAM3D-6.5.171-OSX-arm64.zip](https://dream3d.bluequartz.net/binaries/DREAM3D-6.5.171-OSX-arm64.zip) | Apple M1 Arm build. Download is a ZIP File |
+| [Windows - DREAM3D-6.5.171-Win64.zip](https://dream3d.bluequartz.net/binaries/DREAM3D-6.5.171-Win64.zip) | Windows version 8,10,11 |
+| [Linux - DREAM3D-6.5.171-Linux-x86_64.tar.gz](https://dream3d.bluequartz.net/binaries/DREAM3D-6.5.171-Linux-x86_64.tar.gz) | Ubuntu 18.04 or Equivelant. Self contained tar archive.  |
 
 ## Nightly Builds
 
 The nightly version is 6.6.xxx and is available in prebuilt binaries for MacOS, Windows and Linux operating systems:
 
-[Start Here and look for todays date or the latest available date.](http://dream3d.bluequartz.net/binaries/experimental)
+[Start Here and look for todays date or the latest available date.](https://dream3d.bluequartz.net/binaries/experimental)
 
 ## Python Anaconda Distribution
 
@@ -44,7 +43,7 @@ The nightly version is 6.6.xxx and is available in prebuilt binaries for MacOS, 
 (base) C:\Users\johnsmith> conda create -n pyD3D python=3.8
 (base) C:\Users\johnsmith> conda activate pyD3D
 (pyD3D) C:\Users\johnsmith> 
-(pyD3D) C:\Users\johnsmith>conda install -c http://dream3d.bluequartz.net/binaries/conda dream3d-conda
+(pyD3D) C:\Users\johnsmith>conda install -c https://dream3d.bluequartz.net/binaries/conda dream3d-conda
 (pyD3D) C:\Users\johnsmith>conda install libharu 2.0.0
 ```
 
