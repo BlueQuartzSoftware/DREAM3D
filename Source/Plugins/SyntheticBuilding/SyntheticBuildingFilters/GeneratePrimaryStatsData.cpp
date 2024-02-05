@@ -592,11 +592,11 @@ void GeneratePrimaryStatsData::normalizePhaseFractions(StatsDataArray* statsData
     totalPhaseFraction += totalPhaseFraction + statsData->getPhaseFraction();
   }
   // Now loop again and set the correct phase fractions
-  for(size_t i = 1; i < count; i++)
-  {
-    StatsData::Pointer statsData = statsDataArray->getStatsData(i);
-    statsData->setPhaseFraction(statsData->getPhaseFraction() / totalPhaseFraction);
-  }
+//  for(size_t i = 1; i < count; i++)
+//  {
+//    StatsData::Pointer statsData = statsDataArray->getStatsData(i);
+//    statsData->setPhaseFraction(statsData->getPhaseFraction() / totalPhaseFraction);
+//  }
 }
 
 // -----------------------------------------------------------------------------
