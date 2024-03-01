@@ -27,7 +27,7 @@
 #include "@PLUGIN_NAME@/Filters/@FILTER_NAME@.hpp"
 #include "@PLUGIN_NAME@/@PLUGIN_NAME@_test_dirs.hpp"
 
-using namespace complex;
+using namespace nx::core;
 
 TEST_CASE("@PLUGIN_NAME@::@FILTER_NAME@: Valid Filter Execution","[@PLUGIN_NAME@][@FILTER_NAME@][.][UNIMPLEMENTED][!mayfail]")
 {

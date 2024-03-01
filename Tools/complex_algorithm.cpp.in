@@ -1,9 +1,9 @@
 #include "@FILTER_NAME@.hpp"
 
-#include "complex/DataStructure/DataArray.hpp"
-#include "complex/DataStructure/DataGroup.hpp"
+#include "simplnx/DataStructure/DataArray.hpp"
+#include "simplnx/DataStructure/DataGroup.hpp"
 
-using namespace complex;
+using namespace nx::core;
 
 // -----------------------------------------------------------------------------
 @FILTER_NAME@::@FILTER_NAME@(DataStructure& dataStructure, const IFilter::MessageHandler& mesgHandler, const std::atomic_bool& shouldCancel, @FILTER_NAME@InputValues* inputValues)
@@ -34,7 +34,7 @@ Result<> @FILTER_NAME@::operator()()
   *    GenerateIPFColors is one example
   *
   * If you need to determine what kind of array you have (Int32Array, Float32Array, etc)
-  * look to the ExecuteDataFunction() in complex/Utilities/FilterUtilities.hpp template 
+  * look to the ExecuteDataFunction() in simplnx/Utilities/FilterUtilities.hpp template 
   * function to help with that code.
   *   An Example algorithm class is `CombineAttributeArrays` and `RemoveFlaggedVertices`
   * 

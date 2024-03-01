@@ -2,10 +2,10 @@
 
 #include "@PLUGIN_NAME@/@PLUGIN_NAME@_export.hpp"
 
-#include "complex/Filter/FilterTraits.hpp"
-#include "complex/Filter/IFilter.hpp"
+#include "simplnx/Filter/FilterTraits.hpp"
+#include "simplnx/Filter/IFilter.hpp"
 
-namespace complex
+namespace nx::core
 {
 /**
  * @class @FILTER_NAME@
@@ -25,6 +25,13 @@ public:
 
   // Parameter Keys
 @PARAMETER_KEYS@
+  /**
+   * @brief Reads SIMPL json and converts it simplnx Arguments.
+   * @param json
+   * @return Result<Arguments>
+   */
+  static Result<Arguments> FromSIMPLJson(const nlohmann::json& json);
+  
   /**
    * @brief Returns the name of the filter.
    * @return
@@ -92,5 +99,5 @@ protected:
 };
 } // namespace complex
 
-COMPLEX_DEF_FILTER_TRAITS(complex, @FILTER_NAME@, "@UUID@");
+SIMPLNX_DEF_FILTER_TRAITS(nx::core, @FILTER_NAME@, "@UUID@");
 /* LEGACY UUID FOR THIS FILTER @OLD_UUID@ */

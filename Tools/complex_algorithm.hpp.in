@@ -2,16 +2,16 @@
 
 #include "@PLUGIN_NAME@/@PLUGIN_NAME@_export.hpp"
 
-#include "complex/DataStructure/DataPath.hpp"
-#include "complex/DataStructure/DataStructure.hpp"
-#include "complex/Filter/IFilter.hpp"
+#include "simplnx/DataStructure/DataPath.hpp"
+#include "simplnx/DataStructure/DataStructure.hpp"
+#include "simplnx/Filter/IFilter.hpp"
 @PARAMETER_INCLUDES@
 
 /**
 * This is example code to put in the Execute Method of the filter.
 @EXECUTE_EXAMPLE_CODE@*/
 
-namespace complex
+namespace nx::core
 {
 
 struct @PLUGIN_NAME_UPPER@_EXPORT @FILTER_NAME@InputValues

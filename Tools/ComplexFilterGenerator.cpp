@@ -1240,7 +1240,7 @@ void GenerateHeaderFile(AbstractFilter* filter, const QString& outputDir, const 
   ptonew << "/* " << filterName << " */\n";
 
   sourceTemplate = sourceTemplate.replace(k_NewIncludeToken, "#include \"" + pluginName + "/Filters/" + filterName + "Filter.hpp\"\n" + k_NewIncludeToken);
-  sourceTemplate = sourceTemplate.replace(k_SIMPLToComplexToken, "{complex::Uuid::FromString(\"" + prevUuid + "\").value(), complex::FilterTraits<" + filterName + "Filter>::uuid}, // " + filterName +
+  sourceTemplate = sourceTemplate.replace(k_SIMPLToComplexToken, "{nx::core::Uuid::FromString(\"" + prevUuid + "\").value(), {nx::core::FilterTraits<" + filterName + "Filter>::uuid, &" + filterName + "Filter::FromSIMPLJson}}, // " + filterName +
                                                                      "\n    " + k_SIMPLToComplexToken);
 
   headerTemplate = headerTemplate.replace(k_FILTER_NAME, filterName + "Filter");
@@ -1347,7 +1347,7 @@ void GenerateAlgorithmFile(AbstractFilter* filter, const QString& outputDir, con
     else if(origParamClassName == "LinkedBooleanFilterParameter")
     {
       // parameterOut << "  args.insertOrAssign(" << filterName << "::k_" << propName << "_Key, std::make_any<" << paramType << ">(" << unitTestDefaultValue << "));\n";
-      //      includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
+      //      includeOut << "#include \"simplnx/Parameters/" << propInclude << ".hpp\"\n";
     }
     else if(origParamClassName == "LinkedChoicesFilterParameter")
     {
@@ -1362,7 +1362,7 @@ void GenerateAlgorithmFile(AbstractFilter* filter, const QString& outputDir, con
         parameterOut << "/*[x]*/";
       }
       // parameterOut << "  args.insertOrAssign(" << filterName << "::k_" << propName << "_Key, std::make_any<" << paramType << ">(" << unitTestDefaultValue << "));\n";
-      includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
+      includeOut << "#include \"simplnx/Parameters/" << propInclude << ".hpp\"\n";
     }
 
     if(propInclude == "FileSystemPathParameter")
@@ -1504,7 +1504,7 @@ void GenerateSourceFile(AbstractFilter* filter, const QString& outputDir, const 
           linkedOut << "  params.linkParameters(k_" << propName << "_Key, k_" << linkedProp << "_Key, true);\n";
         }
       }
-      includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
+      includeOut << "#include \"simplnx/Parameters/" << propInclude << ".hpp\"\n";
     }
     else if(origParamClassName == "LinkedChoicesFilterParameter")
     {
@@ -1533,7 +1533,7 @@ void GenerateSourceFile(AbstractFilter* filter, const QString& outputDir, const 
           linkedOut << "//TODO: THIS NEEDS TO BE FIXED\n";
         }
       }
-      includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
+      includeOut << "#include \"simplnx/Parameters/" << propInclude << ".hpp\"\n";
     }
     else if(origParamClassName == "PreflightUpdatedValueFilterParameter")
     {
@@ -1550,7 +1550,7 @@ void GenerateSourceFile(AbstractFilter* filter, const QString& outputDir, const 
         parameterOut << "/*[x]*/";
       }
       parameterOut << "  params.insert(std::make_unique<" << propClass << ">(k_" << propName << "_Key, \"" << propHuman << "\", \"\", " << defaultValue << "));\n";
-      includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
+      includeOut << "#include \"simplnx/Parameters/" << propInclude << ".hpp\"\n";
     }
 
     if(origParamClassName == "DataArrayCreationFilterParameter")
@@ -1558,22 +1558,22 @@ void GenerateSourceFile(AbstractFilter* filter, const QString& outputDir, const 
       actionsOut << "  // This block is commented out because it needs some variables to be filled in.\n";
       actionsOut << "  {\n    // auto createArrayAction = std::make_unique<CreateArrayAction>(complex::NumericType::FILL_ME_IN, std::vector<usize>{NUM_TUPLES_VALUE}, NUM_COMPONENTS, p" << propName
                  << (endsWithValue ? "" : "Value") << ");\n";
-      actionsOut << "    // resultOutputActions.value().actions.push_back(std::move(createArrayAction));\n  }\n";
-      includeSet.insert("#include \"complex/Filter/Actions/CreateArrayAction.hpp\"\n");
+      actionsOut << "    // resultOutputActions.value().appendAction(std::move(createArrayAction));\n  }\n";
+      includeSet.insert("#include \"simplnx/Filter/Actions/CreateArrayAction.hpp\"\n");
       dataArrayCreation++;
     }
     else if(origParamClassName == "AttributeMatrixCreationFilterParameter")
     {
       actionsOut << "  {\n    auto createDataGroupAction = std::make_unique<CreateDataGroupAction>(p" << propName << (endsWithValue ? "" : "Value") << ");\n";
-      actionsOut << "    resultOutputActions.value().actions.push_back(std::move(createDataGroupAction));\n  }\n";
-      includeSet.insert("#include \"complex/Filter/Actions/CreateDataGroupAction.hpp\"\n");
+      actionsOut << "    resultOutputActions.value().appendAction(std::move(createDataGroupAction));\n  }\n";
+      includeSet.insert("#include \"simplnx/Filter/Actions/CreateDataGroupAction.hpp\"\n");
       dataArrayCreation++;
     }
     else if(origParamClassName == "DataContainerCreationFilterParameter")
     {
       actionsOut << "  {\n    auto createDataGroupAction = std::make_unique<CreateDataGroupAction>(p" << propName << (endsWithValue ? "" : "Value") << ");\n";
-      actionsOut << "    resultOutputActions.value().actions.push_back(std::move(createDataGroupAction));\n  }\n";
-      includeSet.insert("#include \"complex/Filter/Actions/CreateDataGroupAction.hpp\"\n");
+      actionsOut << "    resultOutputActions.value().appendAction(std::move(createDataGroupAction));\n  }\n";
+      includeSet.insert("#include \"simplnx/Filter/Actions/CreateDataGroupAction.hpp\"\n");
       dataArrayCreation++;
     }
 
@@ -1725,7 +1725,7 @@ void GenerateUnitTestSourceFile(const AbstractFilter::Pointer& filter, const QSt
     else if(origParamClassName == "LinkedBooleanFilterParameter")
     {
       parameterOut << "  args.insertOrAssign(" << filterName << "Filter::k_" << propName << "_Key, std::make_any<" << paramType << ">(" << unitTestDefaultValue << "));\n";
-      includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
+      includeOut << "#include \"simplnx/Parameters/" << propInclude << ".hpp\"\n";
     }
     else if(origParamClassName == "LinkedChoicesFilterParameter")
     {
@@ -1740,7 +1740,7 @@ void GenerateUnitTestSourceFile(const AbstractFilter::Pointer& filter, const QSt
         parameterOut << "/*[x]*/";
       }
       parameterOut << "  args.insertOrAssign(" << filterName << "Filter::k_" << propName << "_Key, std::make_any<" << paramType << ">(" << unitTestDefaultValue << "));\n";
-      includeOut << "#include \"complex/Parameters/" << propInclude << ".hpp\"\n";
+      includeOut << "#include \"simplnx/Parameters/" << propInclude << ".hpp\"\n";
     }
 
     if(propInclude == "FileSystemPathParameter")
