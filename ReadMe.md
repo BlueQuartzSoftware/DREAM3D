@@ -6,6 +6,17 @@ THIS PROJECT HAS BEEN DEPRECATED. NONE OF THE BUGS WILL BE FIXED. IF YOU WOULD L
 
 THERE ARE MORE THAN A FEW BUGS THAT HAVE BEEN FOUND DURING THE RE-WRITE OF THIS LIBRARY INTO THE [SIMPLNX](https://www.github.com/bluequartzsoftware/simplnx). WE STRONGLY ADVISE USING THAT LIBRARY INSTEAD OF THIS ONE.
 
+## Known Issues in DREAM.3D 6.5.171 ##
+
+DREAM.3D 6.5.171 is the last 6.x release. The [Known Issues in DREAM.3D 6.5.171](KNOWN_ISSUES_6.5.171.md) page lists the defects that we found in it. For each defect, the page gives:
+
++ The filters that are affected
++ The severity: crash, wrong result, precision, or error / usability
++ When the defect affects your results, and a workaround if there is one
++ If the same defect is in DREAM3D-NX, and if it is fixed there
+
+Use the index on that page to find the filters in your pipelines. We update the page when we find new information. The revision history at the top of the page shows the date of the last change.
+
 
 ## ABOUT ##
 
